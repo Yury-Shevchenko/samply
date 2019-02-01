@@ -4,4 +4,3 @@ public/uploads
 *.log
 variables.env
 variables.env.now
-keys_dev.js
