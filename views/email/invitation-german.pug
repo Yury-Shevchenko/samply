@@ -1,0 +1,9 @@
+extends email-layout
+
+block content
+  h2 Einladung
+  p Sie sind eingeladen, an der Studie #{participant.project} teilzunehmen. Dies ist Ihr individueller privater Link zur Studie. Bitte klicken Sie auf den folgenden Button, um mit der Studie fortzufahren.  
+  +button(singupURL, 'Gehe zur Studie →')
+  p Wenn Sie die obige Schaltfläche nicht anklicken können, besuchen Sie bitte #{singupURL}
+  br
+  p Wenn Sie diese E-Mail nicht als gültig erkennen, ignorieren Sie sie bitte.

@@ -1,0 +1,33 @@
+doctype html
+html
+  head
+    title= `${title || h.siteName}`
+    script(src="/javascripts/modules/lab.js" nonce=`${noncevalue}`)
+    link(rel="stylesheet" href="/dist/lab.css")
+
+  body
+    div(class="container fullscreen" data-labjs-section="main")
+      main(class="content-vertical-center content-horizontal-center")
+          div
+            h2 #{layout.lab_js_loading_title}
+            p #{layout.lab_js_loading_1}
+            p #{layout.lab_js_loading_2}
+
+    script(nonce=`${noncevalue}`).
+      const params = !{JSON.stringify(params)}
+      window.addEventListener('message', (event) => {
+        //events at the end of the script
+      })
+
+    //-upload script
+    script(defer type='text/javascript' nonce=`${noncevalue}`).
+      !{test.file}
+
+    script(defer nonce=`${noncevalue}`).
+      const raw = !{JSON.stringify(test.css) || false};
+      if(raw){
+        const node = document.createElement('style');
+        const style = raw.split('data:text/css,')[1];
+        node.innerHTML = window.decodeURIComponent(style);
+        document.body.appendChild(node);
+      }

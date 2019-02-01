@@ -1,0 +1,52 @@
+mixin userCard(person = {}, i)
+
+  .user
+    tr
+      td #{i + 1 + skip}
+      td= person.participant_id
+      if (project.invitations.map(e => e.token).indexOf(person.participant_code) > - 1)
+        td= `${person.participant_code} ✅`
+      else
+        td= person.participant_code
+      if (project.showCompletionCode)
+        if (person.confirmationCodes && person.participantInProject && person.confirmationCodes.filter(e => e.project_id.toString() == person.participantInProject.toString()) && person.confirmationCodes.filter(e => e.project_id.toString() == person.participantInProject.toString()).length > 0)
+          td= `${person.confirmationCodes.filter(e => e.project_id.toString() == person.participantInProject.toString())[0].individual_code}`
+        else
+          td= ``
+      td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
+      if (person.level > 10)
+        td= l.table_researcher
+      else
+        td= l.table_participant
+      td= person.numberTests
+      td
+        if(person.numberTests > 0)
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/alldata/${person._id}/${person.participant_id}`) #{l.table_download}
+
+      if(person.numberTests > 0 && person.numberDeleteRequests > 0)
+        td= person.numberDeleteRequests
+      else
+        td
+
+      td= person.name
+      td= `${person.language.charAt(0).toUpperCase()}${person.language.slice(1,3)}`
+
+
+      td
+        if(person.numberTests > 0)
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/users/${person._id}/${person.participant_id}`) #{l.table_open}
+
+      td
+        if(person.numberTests > 0)
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/allmetadata/${person._id}/${person.participant_id}`) #{l.table_download}
+      
+      if(person.notifications && person.notifications.length > 0)
+        td= person.notifications.length
+      else 
+        td  
+
+
+      if user.level > 100
+        td
+          a(href=`/removeuser/${person._id}/${person.participant_id}`)
+              != h.icon('remove')

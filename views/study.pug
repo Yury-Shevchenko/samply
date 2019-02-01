@@ -1,0 +1,32 @@
+extends layout
+
+include mixins/_publicTestCard
+
+block content
+  .inner
+
+    h2= project.name
+    p
+    .card 
+      if(author && (author.name || author.institute))   
+        .reviews
+          .review
+            .review__header
+              .review__author
+                p= author.name
+              p= author.institute
+              p= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
+            .review__header
+              p= project.description
+        
+      p
+      if(tests && tests.length > 0)
+        .stores
+          each test in tests
+            +publicTestCard(test)
+      else 
+        p(style="font-style: italic; text-align: center; color: darkred;") #{l.no_tests_in_study}
+
+
+        //- pre= h.dump(project)
+        //- pre= h.dump(tests)

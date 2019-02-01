@@ -1,0 +1,16 @@
+extends layout
+
+include mixins/_loginForm
+include mixins/_forgot
+include mixins/_adminPanels
+
+block header
+  +adminPanels()
+
+block content
+  .inner
+    if user
+      h2 ID #{user.identity}
+    if !user
+      +loginForm()
+      //-+forgotForm()

@@ -1,0 +1,9 @@
+extends layout
+
+include mixins/_projectForm
+
+block content
+  .inner
+    h2 #{l.title_edit}
+    .card
+      +projectForm(project)

@@ -1,0 +1,51 @@
+mixin projectCard(project = {})
+
+  - let projectClass
+  if user.project && user.project._id
+    - projectClass = user.project._id.toString() == project._id.toString() ? 'project_chosen' : 'project_not_chosen'
+  else
+    - projectClass = 'task_not_chosen'
+
+  .store
+    div(class = projectClass)
+      .store__hero
+        h2.title
+          a(href=`/projects/${project.name}`) #{project.name}
+
+      .store__details
+        .project__actions
+          if user.project && user.project._id
+            if (user._id.toString() == project.creator.toString())
+              .store__action
+                a(href=`/projects/${project._id}/edit`)
+                  != h.icon('edit')
+              .store__action
+                a(href=`/projects/deleteproject/${project._id}`)
+                  != h.icon('delete')
+
+        if(project.tests)
+          if(project.tests.length == 1)
+            p= `${project.tests.length} ${l.counter_task}`
+          else if(project.tests.length > 1)
+            p= `${project.tests.length} ${l.counter_tasks}`
+
+        if(project.participants)
+          if(project.participants.length == 1)
+            p= `${project.participants.length} ${l.counter_participant}`
+          else if(project.participants.length > 1)
+            p= `${project.participants.length} ${l.counter_participants}`
+
+        if(project.members)
+          if(project.members.length == 1)
+            p= `${project.members.length} ${l.counter_member}`
+          else if(project.members.length > 1)
+            p= `${project.members.length} ${l.counter_members}`
+
+          .project_icons
+            .project_icon
+              if(project.currentlyActive)
+                a(href=`/changestatusofproject/${project._id}/off`)
+                  != h.icon('switchOn')
+              else
+                a(href=`/changestatusofproject/${project._id}/on`)
+                  != h.icon('switchOff')

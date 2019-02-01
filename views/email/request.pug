@@ -1,0 +1,30 @@
+extends email-layout
+
+block content
+  h2 New request
+  p Hello. New request came.
+  
+  p Email: #{researcher.email}
+  p Name: #{researcher.name}
+  p Institute: #{researcher.institute}
+  p Language: #{researcher.language}
+  p Created #{researcher.created}
+  
+  br 
+  strong Subscription
+  p Subscription #{researcher.subscription}
+  p Subscription plan #{researcher.subscription_plan}
+  p Subscription status #{researcher.subscription_status}
+  p Subscription expires #{researcher.subscription_expires}
+  
+  
+  br 
+  strong Task   
+  p Description of the task 
+  p #{task.taskDescription}
+  
+  p Example
+  p #{task.example}
+  
+  p Time 
+  p #{task.time}

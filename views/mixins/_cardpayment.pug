@@ -1,0 +1,119 @@
+mixin cardpayment(plan, period)
+
+  h5 #{l.billingInfo}
+  
+  form#payment-form(action=`/subscription/cardpayment?plan=${plan}&period=${period}`, method='post')
+    .form-row
+      label(for='card-element' style="font-size: 1.6rem;")
+        | #{l.creditDebitCard}
+      #card-element
+      #card-errors(role='alert')
+      p 
+      .c-form-row.c-form-row--stacked
+      p 
+      table.table(style="font-size: 1.6rem;")
+        tbody
+          tr
+            if plan == 'professional' 
+              if period == 'month'
+                td #{layout.monthly} #{layout.professionalPlan} 
+                td €10/#{layout.month}
+              if period == 'quarter'
+                td #{layout.quarterly} #{layout.professionalPlan} 
+                td €8/#{layout.month}
+              if period == 'year'
+                td #{layout.annual} #{layout.professionalPlan} 
+                td €6/#{layout.month}
+              
+            if plan == 'laboratory'
+              if period == 'month'
+                td #{layout.monthly} #{layout.laboratoryPlan} 
+                td €25/#{layout.month}
+              if period == 'quarter'
+                td #{layout.quarterly} #{layout.laboratoryPlan} 
+                td €20/#{layout.month}
+              if period == 'year'
+                td #{layout.annual} #{layout.laboratoryPlan} 
+                td €15/#{layout.month}
+      p
+      span(style="font-size: 1.6rem;") #{layout.billedAsOnePayment}
+        if plan == 'professional' 
+          if period == 'month'
+            | €10
+          if period == 'quarter'
+            | €24
+          if period == 'year'
+            | €72
+        if plan == 'laboratory' 
+          if period == 'month'
+            | €25
+          if period == 'quarter'
+            | €60
+          if period == 'year'
+            | €180    
+      p
+    input.button(type="submit" value=l.completeSubscription) 
+  
+    script(nonce=`${noncevalue}`).
+      const style = {
+        base: {
+          color: '#32325d',
+          lineHeight: '20px',
+          fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+          fontSmoothing: 'antialiased',
+          fontSize: '18px',
+          '::placeholder': {
+            color: '#aab7c4'
+          }
+        },
+        invalid: {
+          color: '#fa755a',
+          iconColor: '#fa755a',
+        }
+      };
+
+      // Create an instance of the card Element.
+      const card = elements.create('card', {style});
+
+      // Add an instance of the card Element into the `card-element` <div>.
+      card.mount('#card-element');
+      
+      card.addEventListener('change', ({error}) => {
+        const displayError = document.getElementById('card-errors');
+        if (error) {
+          displayError.textContent = error.message;
+        } else {
+          displayError.textContent = '';
+        }
+      });
+      
+      // Create a token or display an error when the form is submitted.
+      const form = document.getElementById('payment-form');
+      
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const {token, error} = await stripe.createToken(card);
+
+        if (error) {
+          // Inform the customer that there was an error.
+          const errorElement = document.getElementById('card-errors');
+          errorElement.textContent = error.message;
+        } else {
+          // Send the token to your server.
+          stripeTokenHandler(token);
+        }
+      });
+          
+      const stripeTokenHandler = (token) => {
+        // Insert the token ID into the form so it gets submitted to the server
+        const form = document.getElementById('payment-form');
+        const hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripeToken');
+        hiddenInput.setAttribute('value', token.id);
+        form.appendChild(hiddenInput);
+
+        // Submit the form
+        form.submit();
+      }

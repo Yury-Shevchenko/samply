@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href="/tests/all", class=(currentPath.startsWith('/tests/all') ? 'nav__link--active' : '')) #{layout.allTasks}
+          li.nav__item: a.nav__link(href="/tests/my", class=(currentPath.startsWith('/tests/my') ? 'nav__link--active' : '')) #{layout.myTasks}
+          li.nav__item: a.nav__link(href="/tests/add", class=(currentPath.startsWith('/tests/add') ? 'nav__link--active' : '')) #{layout.addTask}
+    p
+    if test
+      //- a(href=`/tests/${test._id}/remove`) Remove test
+      //- pre= h.dump(resultsCount)
+      //- pre= h.dump(parametersCount)
+      //-pre= h.dump(test)
+      h2 #{l.deleteTask}
+
+      form(action=`/tests/${test._id}/remove` method = 'POST' class='card' id="testform")
+
+        h5= test.name
+        p
+        p= test.description
+        p
+        label
+          | #{l.savedResults}
+          strong #{resultsCount}
+        label
+          | #{l.modifiedVersions}
+          strong #{parametersCount}
+
+        p
+          | #{l.confirmMessage_1}
+          strong #{test.name}
+          | #{l.confirmMessage_2}
+
+        input(type='text' name='confirmation')
+        p
+
+
+        input(type='submit' id="btnAddTest" value=l.delete class="button")

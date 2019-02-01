@@ -1,0 +1,301 @@
+extends layout
+
+
+block content
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
+          li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
+          li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
+          li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
+          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) Notifications
+          li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
+          li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
+    p
+    h2 Notifications
+    .card
+      if project && project.name
+        
+        script(src='/javascripts/datepicker/jquery-3.3.1.min.js' nonce=`${noncevalue}`)
+        link(href='/javascripts/datepicker/datetimepicker.css', rel='stylesheet', type='text/css' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/javascripts/datepicker/datetimepicker.js' nonce=`${noncevalue}`)
+        link(rel='stylesheet', href='/javascripts/datepicker/font-awesome.min.css' nonce=`${noncevalue}`)
+        link(href='/javascripts/datepicker/jquerysctipttop.css', rel='stylesheet', type='text/css' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/javascripts/datepicker/moment-with-locales.min.js' nonce=`${noncevalue}`)
+               
+        .notificationsPanel
+          button(id="create_schedule_notification" class="button") Register schedule
+          button(id="create_interval_notification" class="button") Register interval
+          #notification_status_schedule 
+          //- #notification_status_interval
+          button(id="create_relative_notification" class="button") Register relative interval
+          
+          #dateTimePicker  
+            .container_picker
+              #picker 
+              input#dateresult(class='scheduleInput' type='hidden', value='')
+              button(type="button" value="Add a field" id="addDateTimePicker") +
+              
+          #intervalTimePicker
+            #intervalPeriodPicker(class="notificationsPanel")  
+              .container_picker
+                #interval_picker_starting_date 
+                input#interval_starting_date(class='intervalInput' type='hidden', value='')
+                         
+              .container_picker
+                #interval_picker_ending_date 
+                input#interval_ending_date(class='intervalInput' type='hidden', value='')
+             
+            #cronintervalPicker(class="cronintervalPicker")
+              h7(style="text-align: center;") Seconds
+              h7(style="text-align: center;") Minutes 
+              h7(style="text-align: center;") Hours
+              h7(style="text-align: center;") Day of Month 
+              h7(style="text-align: center;") Months 
+              h7(style="text-align: center;") Day of week 
+              input(type='text' id='int_sec')
+              input(type='text' id='int_min')
+              input(type='text' id='int_hour')
+              input(type='text' id='int_day')
+              input(type='text' id='int_month')  
+              input(type='text' id='int_week')  
+          
+        if (project && project.notifications && project.notifications.length > 0)
+          h2 Scheduled notifications
+          table.table
+            thead
+              td Type
+              td Date
+              td Interval 
+              td Start
+              td End
+              td Delete
+            each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
+                tr(style=`background-color:${notification.mode === 'interval' ? '#fdf4a7' : ((notification.date - new Date()) > 0 ? 'white' : '#f3f0f0')}`) 
+                  td= notification.mode
+                  td= h.moment(notification.date).locale(language).format('MM-DD-YY, H:mm')
+                  td= notification.interval
+                  td= h.moment(notification.int_start).locale(language).format('MM-DD-YY, H:mm')
+                  td= h.moment(notification.int_end).locale(language).format('MM-DD-YY, H:mm')
+                  td
+                    a(href=`/removenotification/${notification.id}`)
+                        != h.icon('remove')
+          p  
+          button(id="delete_notification" class="button" style="background-color:red; color:white") Delete all notifications    
+                         
+        script(defer type='text/javascript' nonce=`${noncevalue}`).
+          $(document).ready( function () {
+              $('#picker').dateTimePicker();
+              $('#interval_picker_starting_date').dateTimePicker();
+              $('#interval_picker_ending_date').dateTimePicker();
+          }) 
+          var pickerNum = 1;
+          document.addEventListener('DOMContentLoaded', function (){
+            document.getElementById('addDateTimePicker').addEventListener('click', function addPicker() { 
+              pickerNum = pickerNum + 1;
+              var container = document.getElementById("dateTimePicker");  
+              var newPicker = document.createElement('div');
+              newPicker.id = `container-picker-${pickerNum}`;
+              newPicker.classList.add('container_picker');
+              newPicker.style = 'width: 250px; margin: 20px auto;';
+              var picker = document.createElement('div');
+              picker.id = `picker-${pickerNum}`;
+              newPicker.appendChild(picker);
+              var input = document.createElement('input');
+              input.classList.add('scheduleInput');
+              input.type = 'hidden';
+              input.value = ''
+              input.id = `dateresult-${pickerNum}`
+              newPicker.appendChild(input);
+              var removePickerBtn = document.createElement('button');
+              removePickerBtn.innerText = 'x';
+              removePickerBtn.classList.add('removePickerButton');
+              removePickerBtn.id = `-${pickerNum}`;
+              removePickerBtn.addEventListener('click', removePicker);
+              newPicker.appendChild(removePickerBtn);
+              container.appendChild(newPicker);
+              $(`#picker-${pickerNum}`).dateTimePicker();
+            });
+          }); 
+        
+        
+        script(nonce=`${noncevalue}`).
+          const createNotificationButton = document.querySelector('#create_schedule_notification');
+          const createIntervalButton = document.querySelector('#create_interval_notification');
+          const deleteNotificationButton = document.querySelector('#delete_notification') || 'not_defined';
+          const createRelativeButton = document.querySelector('#create_relative_notification');
+            
+          function createNotification(){
+            createNotificationButton.disabled = true;
+            document.getElementById('notification_status_schedule').innerText = 'Registering notification ...';
+            const scheduleInputs = document.querySelectorAll('.scheduleInput');
+            const scheduleArray = Array.from(scheduleInputs);
+            const schedule = scheduleArray.map(e => e.value).filter(v => v !== '' && new Date(v) - new Date() > 0);//["2019-01-31 14:12", "2019-01-30 16:12"]        
+            console.log('Sending test notification');
+            fetch('/createnotification', {
+              method:'POST',
+              headers: {
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+              },
+              body: JSON.stringify({
+                name: 'notify',
+                mode: 'schedule', 
+                date: schedule,
+                interval: 0
+              })
+            }) 
+              .then(res => {
+                console.log('Response', res);
+                if(res.url && res.ok){
+                  window.location = res.url;
+                }
+                createNotificationButton.disabled = false;
+                document.getElementById('notification_status_schedule').innerText = '';
+              })
+              .catch(err => {
+                console.log(err);
+                createNotificationButton.disabled = false;
+                document.getElementById('notification_status_schedule').innerText = '';
+              })
+          };
+          
+          function deleteAllNotifications(){
+            deleteNotificationButton.disabled = true;
+            console.log('Deleting notification');
+            const name = 'notify';
+            fetch('/deletenotification', {
+              method:'POST',
+              headers: {
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+              },
+              body: JSON.stringify({
+                name: name,
+              })
+            }) 
+              .then(res => {
+                console.log('Response', res);
+                if(res.url && res.ok){
+                  window.location = res.url;
+                }
+                deleteNotificationButton.disabled = false;
+              })
+              .catch(err => {
+                console.log(err);
+                deleteNotificationButton.disabled = false;
+              })
+          };
+          
+          function removePicker(){
+            const id = this.id;
+            var container = document.getElementById("dateTimePicker");   
+            const containerPicker = document.getElementById(`container-picker${id}`); 
+            const inputToClean = document.getElementById(`dateresult${id}`);
+            inputToClean.value = "";
+            container.removeChild(containerPicker);
+          };
+          
+          function createInterval(){
+            createIntervalButton.disabled = true;
+            document.getElementById('notification_status_schedule').innerText = 'Registering interval notification ...';
+            const int_start = document.getElementById('interval_starting_date').value;
+            const int_end = document.getElementById('interval_ending_date').value;
+            const sec = document.getElementById('int_sec').value;
+            const min = document.getElementById('int_min').value;
+            const hour = document.getElementById('int_hour').value;
+            const day = document.getElementById('int_day').value;
+            const month = document.getElementById('int_month').value;
+            const week = document.getElementById('int_week').value;
+            
+            const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
+            console.log(interval);
+            fetch('/createnotificationinterval', {
+              method:'POST',
+              headers: {
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+              },
+              body: JSON.stringify({
+                name: 'notify',
+                mode: 'interval',
+                interval: interval,
+                int_start: int_start,
+                int_end: int_end,
+              })
+            }) 
+              .then(res => {
+                console.log('Response', res);
+                if(res.url && res.ok){
+                  window.location = res.url;
+                }
+                createIntervalButton.disabled = false;
+                document.getElementById('notification_status_interval').innerText = '';
+              })
+              .catch(err => {
+                console.log(err);
+                createIntervalButton.disabled = false;
+                document.getElementById('notification_status_interval').innerText = '';
+              })
+          }
+          
+          function createRelativeNotification(){
+            console.log("trying hard...")
+            createRelativeButton.disabled = true;
+            const int_start = document.getElementById('interval_starting_date').value;
+            const int_end = document.getElementById('interval_ending_date').value;
+            const sec = document.getElementById('int_sec').value;
+            const min = document.getElementById('int_min').value;
+            const hour = document.getElementById('int_hour').value;
+            const day = document.getElementById('int_day').value;
+            const month = document.getElementById('int_month').value;
+            const week = document.getElementById('int_week').value;
+            
+            const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
+            console.log(interval);
+            
+            fetch('/createrelativenotification', {
+              method:'POST',
+              headers: {
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+              },
+              body: JSON.stringify({
+                name: 'notify',
+                mode: 'relative',
+                interval: interval,
+                int_start: int_start,
+                int_end: int_end,
+              })
+            }) 
+              .then(res => {
+                console.log('Response', res);
+                //- if(res.url && res.ok){
+                //-   window.location = res.url;
+                //- }
+                createRelativeButton.disabled = false;
+                //- document.getElementById('notification_status_interval').innerText = '';
+              })
+              .catch(err => {
+                console.log(err);
+                createRelativeButton.disabled = false;
+                //- document.getElementById('notification_status_interval').innerText = '';
+              })
+          }
+          
+          createNotificationButton.addEventListener('click', createNotification);
+          if(deleteNotificationButton !== 'not_defined'){
+            deleteNotificationButton.addEventListener('click', deleteAllNotifications);
+          };
+          createIntervalButton.addEventListener('click', createInterval);
+          createRelativeButton.addEventListener('click', createRelativeNotification);
+
+      else
+        p Create or activate a project
+
+
+
+    pre= h.dump(project)

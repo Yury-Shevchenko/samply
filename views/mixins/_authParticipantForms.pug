@@ -1,0 +1,20 @@
+mixin authParticipantForms(action)
+
+  .authform
+
+    a(href=`/code` class="authButton")
+      .authsign
+        img(src='/images/auth/code.png')
+        .div #{action}<br />#{layout.participant_auth} #{layout.participant_id}
+    a(href=`/auth/facebook` class="authButton")
+      .authsign
+        img(src='/images/auth/facebook.png')
+        .div #{action}<br />Facebook
+    a(href=`/auth/google` class="authButton")
+      .authsign
+        img(src='/images/auth/google.png')
+        .div #{action}<br />Google
+    a(href=`/auth/github` class="authButton")
+      .authsign
+        img(src='/images/auth/github.png')
+        .div #{action}<br />Github

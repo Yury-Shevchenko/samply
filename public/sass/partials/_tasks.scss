@@ -1,0 +1,154 @@
+.inputCheckBox {
+  display: grid;
+  grid-template-columns: 1fr 15fr;
+  align-items: center;
+  input { display:inline-block; }
+  label {
+    display: block;
+    position:relative;
+    margin: 0.67rem;
+    padding: 0.67rem;
+    //background-color: #ffe;
+    background-color: white;
+    // border: 1px solid darken(adjust-hue(#ffe, -23deg),15%);
+    transition: all 0.4s ease-in-out;
+  }
+}
+
+.tasks{
+  display: grid;
+  // grid-gap: 20px;
+  // //grid-template-columns: 2fr 6fr;
+  //justify-items: start;
+  //align-items: start;
+  width: auto;
+}
+
+.task{
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+.task_not_chosen{
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr;
+  opacity: 0.5;
+}
+
+.task_chosen{
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+.parameters{
+  display: grid;
+  //margin: 1em;
+  grid-template-columns: minmax(200px, auto);
+  //grid-template-columns: 1000px;
+}
+
+.formsforparameters{
+  // display: grid;
+  // grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+
+//add test (privacy)
+i.yes {
+  display: none;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid darken(#ffe, 10%);
+  background-color: lighten(#ffe, 20%);
+  position: absolute;
+  top: 1rem; right: 1rem;
+}
+i.yes:after {
+  content: '✅'
+}
+
+#yes {
+  display:block;
+}
+#test_privacy {
+  display: grid;
+  grid-template-columns: 1fr 15fr;
+  grid-template-rows: 1fr 1fr;
+  align-items: center;
+  input { display:inline-block; }
+  label {
+    display: block;
+    position:relative;
+    margin: 0.67rem;
+    padding: 0.67rem;
+    //background-color: #ffe;
+    background-color: white;
+    border: 1px solid darken(adjust-hue(#ffe, -23deg),15%);
+    transition: all 0.4s ease-in-out;
+  }
+
+  input#wnr1:checked {
+    &~ label[for='wnr1'] {
+      //background-color: #eee!important;
+      background-color: #ffe !important;
+      &> i.yes {
+        @extend #yes;
+      }
+    }
+  }
+  input#wnr2:checked {
+    &~ label[for='wnr2'] {
+      //background-color: #eee!important;
+      background-color: #ffe !important;
+      &> i.yes {
+        @extend #yes;
+      }
+    }
+  }
+}
+
+//tooltips
+.tooltip {
+    position: absolute;
+    bottom: 3px;
+    left: 3px;
+    opacity: 0.7;
+    // left: 3px;
+    // display: inline-block;
+    //border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 150px;
+    background-color: #e7eaff;
+    color: black;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px 10px;
+    position: absolute;
+    z-index: 1;
+    top: 100%;
+    left: 50%;
+    margin-left: -60px;
+
+    /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.invitation_row {
+  display: grid;
+  grid-template-columns: auto 30px;
+}
+
+.checkmark{
+  text-align: center;
+}

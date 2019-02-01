@@ -1,0 +1,83 @@
+mixin labjsuploadForm(test = {})
+
+  form(action=`/add/${test._id || ''}` method = 'POST' class='card' enctype="multipart/form-data")
+    
+    if !user
+      h5 #{layout.signup_or_login}
+      label(for="email") #{layout.email}
+      input(type="email" name="email" value=email)
+      label(for="password") #{layout.password}
+      input(type="password" name="password" value=password)
+      label(for="password-confirm") #{layout.password_confirm}
+      input(type="password" name="password-confirm" value=password-confirm)
+      p
+
+    label(for='name') #{l.edit_name}
+    input(type='text' name='name' value=test.name)
+
+    label(for ='description') #{l.edit_description}
+    textarea(name='description')= test.description
+
+    label(for='version') #{l.version}
+    input(type='text' name='version' value=test.version)
+
+    label(for='script') #{l.edit_labjs_file}
+    if test.script
+      p= `${l.edit_uploaded} ${h.moment(test.script, 'MMMM Do YYYY, h:mm:ss a', true).locale(language).calendar()}`
+
+    label(for='photo') #{l.edit_photo}
+    input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
+    if test.photo
+      img(src=`/uploads/${test.photo}`, alt=test.name width=200)
+      input(type='hidden' name='photo' value=test.photo )
+    if !test.photo
+      script(nonce=`${noncevalue}`).
+        document.addEventListener('DOMContentLoaded', function (){
+          document.getElementById('lucky').addEventListener('click', function removePictureUpload() {
+            if (document.getElementById('photo').style.display == 'none'){
+              document.getElementById('photo').style.display = 'block';
+            } else {
+              document.getElementById('photo').style.display = 'none';
+            }
+          });
+        });
+      
+      div.inputCheckBox
+        input(type = 'checkbox' id = 'lucky' name = 'lucky' checked = false)
+        label(for='lucky')
+          span.
+             #{l.feeling_lucky}
+    
+    - const choices = ['Negative valence', 'Positive valence', 'Cognitive systems', 'Social processes','Arousal and Regulatory systems']
+    - const tags = test.tags || []
+
+    label(for='tags') #{l.edit_tags}
+    ul.tags
+      each choice in choices
+        .tag.tag__choice
+          input(type = 'checkbox' id=choice value=choice name='tags' checked=(tags.includes(choice)))
+          label(for=choice) #{choice}
+
+    div.span4#test_privacy
+      input(type='radio', name='open', value='true', style="visibility: true;" checked=(test.open==true))#wnr1
+
+      label(for='wnr1')
+        i.yes
+        span.
+          #{l.edit_public}
+        br
+        small #{l.edit_public_description}
+
+      input(type='radio', name='open', value='false', style="visibility: true;" checked=test.open==false || (typeof(test.open) === 'undefined'))#wnr2
+
+      label(for='wnr2')
+        i.yes
+        span.
+          #{l.edit_private}
+        br
+        small #{l.edit_private_description}
+
+
+    input(type='submit' value=l.edit_save class="button")
+
+    //- pre= h.dump(test)

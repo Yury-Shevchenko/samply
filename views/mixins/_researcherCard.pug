@@ -1,0 +1,20 @@
+mixin researcherCard(person = {}, i)
+
+  .user
+      tr
+        td #{i + 1}
+        td= person.email||(person.facebook && person.facebook.email)||(person.github && person.github.email)||(person.google && person.google.email)||'No email'
+        td= person.participant_id
+        td= person.name
+        td= person.institute
+        td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
+
+        td= person.language
+        td= (person.project && person.project.name) || person.participantInProject
+        td= person.numberResearcherTests
+        td= person.numberResearcherCreatedProjects
+
+        if user.level > 100
+          td
+            a(href=`/removeuser/${person._id}/${person.identity}`)
+              != h.icon('remove')

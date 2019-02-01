@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
+  .inner
+    p
+    .card
+      .card-message
+        h4 #{l.title}
+        p.card-message !{l.intro}
+
+        .plan-compare 
+          a(type="link" href=`/researcher/register` style="display:grid") 
+            .panel
+              <span class="plan-current">#{l.forResearchers}</span>
+              p.
+              p.plan_emails #{l.res_1}
+              p.plan_emails-label #{l.res_1_text}
+              p.plan_emails #{l.res_2}
+              p.plan_emails-label #{l.res_2_text}
+              p.plan_emails #{l.res_3}
+              p.plan_emails-label #{l.res_3_text}
+              p.plan_emails #{l.res_4}
+              p.plan_emails-label #{l.res_4_text}
+              p.plan_emails #{l.res_5}
+              p.plan_emails-label #{l.res_5_text}
+            
+          a(type="link" href=`/participant/register` style="display:grid") 
+            .panel
+              <span class="plan-current">#{l.forParticipants}</span>
+              p.
+              p.plan_emails #{l.part_1}
+              p.plan_emails-label #{l.part_1_text}
+              p.plan_emails #{l.part_2}
+              p.plan_emails-label #{l.part_2_text}
+              p.plan_emails #{l.part_3}
+              p.plan_emails-label #{l.part_3_text}
+
+    

@@ -1,0 +1,11 @@
+mixin loginResearcher()
+  form.form(action="/auth/researcher/email/login" method="POST")
+    h5 #{layout.login} 
+    label(for="email") #{layout.email}
+    input(type="email" name="email")
+    label(for="password") #{layout.password}
+    input(type="password" name="password")
+    p
+    input.button(type="submit" value=layout.log_in)
+    p
+      a(style={color:'black'} href=`/researcher/forgot`) #{layout.message_forgot_password}

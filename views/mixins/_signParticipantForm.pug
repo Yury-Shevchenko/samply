@@ -1,0 +1,15 @@
+mixin signParticipantForm()
+  form.form(action="/auth/participant/email/sign" method="POST")
+    h5 #{layout.sign_intro}
+    label(for="name") #{layout.sign_name}
+    input(type="text" name="name" value=name placeholder="John Doe")
+    label(for="email") #{layout.email}
+    input(type="email" name="email" value=email)
+    label(for="password") #{layout.password}
+    input(type="password" name="password" value=password)
+    label(for="password-confirm") #{layout.password_confirm}
+    input(type="password" name="password-confirm" value=password-confirm)
+    input(type="hidden" name="project" value=project)
+    input(type="hidden" name="code" value=code)
+    p(style='white-space:pre;')
+    input.button(type="submit" value=layout.signup)

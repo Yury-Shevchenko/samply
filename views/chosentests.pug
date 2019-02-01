@@ -1,0 +1,53 @@
+extends layout
+
+include mixins/_chosenTestCard
+include mixins/_parametersForm
+
+block content
+  .tasks
+    .items
+      if project && project.testsData
+        each test in project.testsData
+          +chosenTestCard(test)
+
+    .parameters
+      if (param && param.parameters)
+        h4 Your parameters
+        +parametersForm(param.parameters)
+      else if (test && test.params)
+        h4 Original parameters
+        +parametersForm(test.params)
+
+
+      if(results)
+        if results[0]
+          table.table
+            thead
+              td Number
+              td Open lab ID
+              td Code
+              td Participant name
+              td Date
+              td Type
+              td Raw data
+              //-td Meta data
+            each result, i in results
+              tr
+                td #{i + 1}
+                td= result.participant_id
+                td= result.participant_code
+                td= result.participant_name
+                td= h.moment(result.created).locale(language).format('MMMM Do YYYY, h:mm:ss a')
+                td= result.uploadType
+                td
+                  a(href=`/database/${result.slug}/${result.participant_id}/${result._id}`) Download
+                //- td
+                //-   p
+                //-     a(style={color:'black'} href=`/allmetadata/${result.user_id}/${result.participant_id}`) Download
+        else
+          h2 There is no data for this test
+
+        //-pre= h.dump(results)
+        //- pre= h.dump(test)
+        //- pre= h.dump(param)
+        //-pre= h.dump(project)

@@ -1,0 +1,44 @@
+mixin projectForm(project = {})
+
+  form(action=`/projects/${project._id || ''}` method = 'POST')
+    label(for='name') #{l.name}
+    input(type='text' name='name' value=project.name required)
+      
+    label(for='description') #{l.description}
+    textarea(type='text' name='description')= project.description
+    p
+    div.inputCheckBox
+      input(type= 'checkbox' id= 'showCompletionCode' name= 'showCompletionCode' checked = project.showCompletionCode)
+      label(for='showCompletionCode')
+        span.
+          #{l.showCompletionCode}
+
+    .div(id="membersList")
+      label(for="members") #{l.invite_members}
+      if membersEmails && membersEmails.length > 0
+        each memberEmail in membersEmails
+          .invitation_row
+            input(type='text' name='members' value=memberEmail)
+            .checkmark 
+              p ✅
+      p
+      input(type='text' name='members')
+    .div(id="newMember")
+      
+    script(nonce=`${noncevalue}`).
+      document.addEventListener('DOMContentLoaded', function (){
+        document.getElementById('addFieldButton').addEventListener('click', function addField() { 
+          var container = document.getElementById("newMember");
+          var input = document.createElement("input");
+          input.type = "text";
+          input.name = "members";
+          container.appendChild(input);
+        });
+      });
+
+    button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
+    p
+
+
+    input(type='submit' value=l.submit class="button")
+    //- pre= h.dump(project)

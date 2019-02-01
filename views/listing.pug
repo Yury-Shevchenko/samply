@@ -1,0 +1,28 @@
+extends layout
+
+include mixins/_publicTestCard
+
+block content
+  .inner
+
+    p
+    h2 #{layout.tasks}
+    p
+
+    .stores
+      each test in tests
+        +publicTestCard(test)
+
+    .pagination
+      .pagination__prev
+        if page > 1
+          a(href=`/listing/page/${page - 1}`) #{l.pagination_prev}
+      .pagination__text
+        p= `${l.pagination_page_1} ${page} ${l.pagination_page_2} ${pages} - ${count} ${l.pagination_page_3}`
+      .pagination__next
+        if page < pages
+          a(href=`/listing/page/${parseFloat(page) + 1}`) #{l.pagination_next}
+
+
+    //- pre= h.dump(tags)
+    //- pre= h.dump(tests)

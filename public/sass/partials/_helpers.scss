@@ -1,0 +1,55 @@
+.hide {
+  text-indent: -999999px;
+  font-size: 0;
+}
+
+.button {
+  border: 0;
+  border-radius: 5px;
+  //background: #e7eaff;
+  background: rgba(135, 206, 250, 0.6);
+  color: $black;
+  font-family: 'Bebas';
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.button:hover {
+  //background: #d8ddfc;
+  background: rgba(135, 206, 250, 0.3);
+  cursor: pointer;
+}
+
+.avatar {
+ min-width: 50px;
+ height: 50px;
+ border-radius: 50%;
+ align-self: center;
+}
+
+.card {
+  background: white;
+  padding: 3rem;
+  box-shadow: 0 1px 10px rgba(0,0,0,0.15);
+  height: inherit;
+  @media all and (max-width: 600px) {
+    padding: 1rem;
+  }
+}
+
+.card-message{
+  font-size: 1.8rem;
+  line-height: 1.5;
+  -webkit-margin-after: 1em;
+  margin: 1rem;
+}
+
+pre.error {
+  padding: 5rem;
+  background: white;
+  line-height: 3;
+  white-space: pre-line;
+}

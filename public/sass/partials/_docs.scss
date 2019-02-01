@@ -1,0 +1,36 @@
+.page {
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: 1fr 5fr;
+  align-items: start;
+}
+
+.toc {
+  background-color: #22252b;
+  top: 130px;
+  bottom: 0;
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+.toc ul{
+  color: #fff;
+  margin: 0 0 2em;
+  padding-left: 0;
+}
+
+.toc ul li{
+  padding: 2px 0;
+  list-style: none;
+  font: normal 1em Helvetica Neue,Arial,Helvetica,sans-serif;
+}
+
+.toc a{
+  color: #fff;
+  font: normal 0.9em Helvetica Neue,Arial,Helvetica,sans-serif;
+}
+
+.docs-content {
+  background-color: #fff;
+
+}

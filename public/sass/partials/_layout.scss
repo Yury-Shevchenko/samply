@@ -1,0 +1,74 @@
+html {
+  font-size: 10px;
+}
+
+body {
+  //background: $purple;
+  background: #fcfcff;
+  &:before {
+    // content: '';
+    // display: block;
+    // //background: $grad;
+    // background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed;
+    // height: 10px;
+    // width: 100%;
+  }
+}
+
+.inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  @media all and (max-width: 900px) {
+    padding: 2rem;
+  }
+}
+
+.cameraPanel video, .cameraPanel canvas {
+  width: 512px;
+  max-width: 100%;
+  display: none;
+  margin: auto;
+}
+
+.cameraPanel #pick-image {
+  display: none;
+}
+
+.cameraPanel #capture-btn {
+  margin: 10px auto;
+}
+
+.mdl-spinner {
+  margin: auto;
+}
+
+#location-loader {
+  display: none;
+}
+
+.container_picker{
+  width: 250px;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+}
+
+.notificationsPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 20px;
+}
+
+.intervalPicker{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 120px));
+  grid-column-gap: 20px;
+  align-items: stretch;
+  font-size: larger;
+}
+
+.cronintervalPicker{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-column-gap: 5px;
+}

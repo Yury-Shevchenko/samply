@@ -1,0 +1,57 @@
+extends layout
+
+include mixins/_constructorTestCard
+include mixins/_selectedTestCard
+
+block content
+
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
+          li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
+          li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
+          li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
+          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) Notifications
+          li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
+          li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
+    p
+    h2 #{layout.chooseTasks}
+    .userTable
+      .tags
+        if tags
+          each t in tags
+            li.tag
+              a.tag__link(href = `/constructor/${t._id}` class=(t._id === tag ? 'tag__link--active' : ''))
+                span.tag__text= layout[t._id]
+                span.tag__count= t.count
+
+      .constructor
+        .card
+          if project && project.name
+            h5 #{`${project.name}`}
+          else
+            h5 #{l.title_project}
+          .items
+            if project
+              if project.testsData && project.testsData.length > 0
+                each test in project.testsData
+                  +selectedTestCard(test)
+              else
+                p #{l.not_chosen_message}
+            else
+              p !{l.no_project_message}
+
+        .card
+          h5 #{l.title_tasks}
+          .stores
+            if tests
+              each test in tests
+                +constructorTestCard(test)
+
+      //- pre=h.dump(tags)
+      //- pre=h.dump(project)
+      //- pre=h.dump(tests)
+      //- pre=h.dump(user)

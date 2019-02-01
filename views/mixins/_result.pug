@@ -1,0 +1,24 @@
+mixin result(result)
+  .review__header
+    .review__author
+      p= result.name
+    time.review__time(datetime=result.created)= h.moment(result.created).locale(language).format('MMMM Do YYYY, h:mm:ss a')
+    p= `${result.project_name}`
+    a(href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.result_download}
+
+    if user.level > 10
+      if result.uploadType == 'incremental'
+        p= `${l.result_incremental}`
+        p= `${result.fileSize} ${l.results_rows}`
+      else 
+        p= `${l.result_full}`
+        p= `${result.fileSize} ${l.results_rows}`
+      a(href=`/removefromdatabase/${result.test}/${result._id}`) #{l.result_delete}
+    else 
+      if result.deleteRequest
+        p 
+          a(href=`/deleterequest/${result.test}/${result._id}`) #{l.cancel_delete_request} 
+      else 
+        p 
+          a(href=`/deleterequest/${result.test}/${result._id}`) #{l.send_delete_request} 
+      

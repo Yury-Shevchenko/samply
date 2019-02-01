@@ -1,0 +1,43 @@
+extends layout
+
+include mixins/_publicProjectCard
+
+block content
+  .inner
+    
+    if !user
+      h2 #{layout.studies}
+    
+    if user 
+      if user.participantInProject
+        h2 #{layout.change_project}
+        .card
+          form.form(action="/account" method="POST")
+            label(for="participantInProject") #{layout.project}
+            .custom-select-header
+              select(name="participantInProject")
+                option(value='' style="" selected=(typeof(user.participantInProject) === "undefined")) – #{layout.choose_project} –
+                each project in projects
+                  option(value=project._id, selected=((project.name === study) || (!study && user.participantInProject.toString() === project._id.toString())))= project.name
+            p 
+            input.button(type="submit" value= layout.change_project_confirm)  
+          
+      else 
+        h2 #{layout.choose_project}
+      
+    .projects
+      each project in projects
+        +publicProjectCard(project)
+    
+    .pagination
+      .pagination__prev
+        if page > 1
+          a(href=`/studies/page/${page - 1}`) #{layout.pagination_prev}
+      .pagination__text
+        p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
+      .pagination__next
+        if page < pages
+          a(href=`/studies/page/${parseFloat(page) + 1}`) #{layout.pagination_next}
+
+    //- pre= h.dump(projects)
+    //- pre= h.dump(user)

@@ -1,0 +1,21 @@
+mixin enterForm()
+  form.form(action="/enter" method="POST")
+    //-h2 #{title}
+    h2 Please enter your participant ID. If it is your first time here, please 
+      a(class='button' href='/sign') sign up.
+    label(for="participant_id") Participant ID
+    input(type="text" name="participant_id" value=participant_id)
+
+    if(joined_project)
+      label(for="joined_project") Project
+      input(type="text" name="joined_project" value=joined_project readonly="readonly" style="background-color:#cccccc")
+    else if (projects)
+      label(for="joined_project") Project
+      select(name="joined_project" style="background-color: #FFC40E;font-size: 24px;")
+        each project in projects
+          option(value=project.created_project, selected=(project.created_project==joined_project))= project.created_project
+    else
+      p No projects
+
+    p(style='white-space:pre;')
+    input.button(type="submit" value="Log In")

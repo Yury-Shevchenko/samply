@@ -1,0 +1,9 @@
+extends email-layout
+
+block content
+  h2 Invitation
+  p Hello. You are invited to take part in the study #{participant.project}. This is your individual private link to the study. Please click the following button to continue on with the study. 
+  +button(singupURL, 'Go to the Study →')
+  p If you can't click the above button please visit #{singupURL}
+  br
+  p If you don't recognize this email as valid, please ignore it.

@@ -1,0 +1,44 @@
+extends layout
+
+block content
+  .inner
+    if user
+      h5 #{layout.message_logged_in}
+
+    if !user
+      form.form(action="/auth/code" method="POST")
+        
+        h5 #{layout.message_code}
+        
+        h6(for="code") #{layout.participant_code}
+        if (code)
+          input(type="text" name="code" value=code readonly=code hidden=true)
+          p= code
+        else 
+          input(type="text" name="code")
+        p 
+        
+        if (joined_project)
+          h6(for="participantInProject") #{layout.project}
+          input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
+          p= joined_project.name
+          if(joined_project.description)
+            h6 #{layout.description}
+            p= joined_project.description
+          
+        if (projects)    
+          h6(for="participantInProject") #{layout.choose_project}
+          .custom-select-header 
+            select(name="participantInProject" id="choose_project" style="font-size: 24px;")
+              option(value='' style="" selected=!joined_project) – #{layout.choose_project} –
+              each project in projects
+                option(value=project._id, selected=(project.name==joined_project))= project.name
+          
+ 
+        
+        p
+        input.button(type="submit" value=layout.enter)
+
+      //- pre=h.dump(projects)
+      //- pre=h.dump(joined_project)
+      //- pre=h.dump(code)

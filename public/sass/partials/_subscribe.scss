@@ -1,0 +1,208 @@
+.plan-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  justify-content: inherit;
+  grid-gap: 10px;
+}
+
+.plan {
+
+}
+
+.clickedPlan {
+  border: 2px solid #42cdad !important;
+  background: #f1fff5 !important;
+}
+
+.chosenStudy {
+  border: 2px solid #42cdad !important;
+  background: #64f78e !important;
+  .project__hero:before{
+    background-color: #d4f6c8
+  }
+}
+
+.panel {
+  margin-right: 0px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0px 40px;
+  background: #fdfdfd;
+  text-align: center;
+  position: relative;
+  box-sizing: border-box;
+  min-width: 200px;
+  width: auto;
+  text-decoration: none;
+  transition: all .1s linear;
+}
+
+.panel:hover {
+  border: 2px solid #ddd;
+  //padding: 0px 40px;
+  //border-right-color: rgb(221, 221, 221);
+  //#e4ffc6
+  //background: #f1fff5;
+}
+
+.plan--old, .plan--old:hover, .plan--pending:hover {
+  border: 1px solid #ddd;
+  border-right-color: rgb(221, 221, 221);
+  background: #fdfdfd;
+}
+
+.plan--old, .plan--old:hover {
+  opacity: .75;
+}
+
+.plan:first-child, .plan:nth-child(3n+1) {
+    // margin-left: 0;
+}
+
+.plan-compare > .plan {
+  -ms-flex-preferred-size: 50%;
+  flex-basis: 50%;
+  margin-right: 0;
+}
+
+.plan-compare--switch > .plan:first-of-type {
+  border-radius: 4px 0 0 4px;
+  border-right-color: transparent;
+}
+
+.plan-compare--switch::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  content: '→';
+  z-index: 1;
+  margin-left: 1px;
+  border-radius: 50px;
+  padding: 10px 12px 12px;
+  background-color: #4fc47f;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.plan--old .plan_icon {
+  opacity: .5;
+}
+
+.plan_icon {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  height: 27px;
+  margin: 0 0 .25em;
+}
+
+.plan--old .plan_emails, .plan--old .plan_monthly {
+  color: #aaa;
+}
+
+.plan_emails {
+  margin: 0;
+  color: #007dcc;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.plan_emails-label {
+  margin: 0 0 2em;
+  color: #aaa;
+  font-size: 1.5rem;
+}
+
+.plan_price {
+  transition: all .1s linear;
+}
+
+.plan_monthly{
+  font-size: 1.5rem;
+}
+
+// .plan .plan-current {
+//   position: absolute;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   top: 0;
+// }
+
+.plan-current {
+  display: inline-block;
+  border-radius: 0 0 4px 4px;
+  padding: 2px 5px;
+  background-color: #4fc47f;
+  color: #fff;
+  font-weight: 700;
+  font-size: 2rem;
+  //white-space: nowrap;
+}
+
+.c-form-row--stacked {
+  display: block;
+  margin-bottom: 1.5em;
+}
+
+.c-form-row {
+  display: -ms-flexbox;
+  //display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -ms-flex-align: baseline;
+  align-items: baseline;
+  margin-bottom: 1em;
+  //sfont-size: 2rem;
+}
+
+.c-form-row--stacked .c-form-row_label {
+  margin-right: 0;
+  margin-bottom: .5em;
+  text-align: left;
+}
+
+.c-form-row--stacked .c-form-row_error, .c-form-row--stacked .c-form-row_field, .c-form-row--stacked .c-form-row_label, .c-form-row--stacked .c-form-row_text, .c-form-row--stacked .c-form-row_warning {
+  -ms-flex: none;
+  flex: none;
+}
+
+.c-form-row_label {
+  -ms-flex: 0 0 26%;
+  flex: 0 0 26%;
+  margin-bottom: .5em;
+  text-align: right;
+}
+
+.help-tooltip {
+  display: inline-block;
+  width: 1.2em;
+  margin-left: .4em;
+  border: 1px solid #aaa;
+  border-radius: 50%;
+  padding: 1px;
+  vertical-align: .1em;
+  color: #aaa;
+  font-weight: 700;
+  font-size: 9px;
+  line-height: 1.3em;
+  text-align: center;
+  cursor: help;
+}
+
+.c-form-row--stacked .c-form-row_error, .c-form-row--stacked .c-form-row_field, .c-form-row--stacked .c-form-row_label, .c-form-row--stacked .c-form-row_text, .c-form-row--stacked .c-form-row_warning {
+  -ms-flex: none;
+  flex: none;
+}
+
+.c-form-row_error, .c-form-row_field, .c-form-row_text, .c-form-row_warning {
+  -ms-flex: 0 0 70%;
+  flex: 0 0 70%;
+  position: relative;
+}

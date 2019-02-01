@@ -1,0 +1,100 @@
+.stores {
+  display: grid;
+  grid-gap: 10px;
+  justify-content: space-evenly;
+  grid-template-columns: repeat(auto-fill, 200px);
+}
+
+.store {
+  position: relative;
+  min-height: 200px;
+  background:white;
+  margin: 10px 0;
+  width: auto;
+  box-shadow: $shad;
+  border-radius: 5px;
+  &--wide {
+    width: 100%;
+  }
+  &__details {
+    padding: 1rem;
+    display: grid;
+    text-align: center;
+    p {
+      line-height: 1.2;
+      margin-bottom: 0;
+    }
+  }
+  &__bottom {
+    bottom: 0;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+  }
+  @media all and (max-width: 850px) {
+    width: 100%;
+  }
+  @media all and (max-width: 550px) {
+    width: 100%;
+  }
+}
+
+.store__actions {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 5px;
+  display: flex;
+  color: white;
+  align-items: center;
+  justify-content: space-around;
+  min-height: 50px;
+  background: rgba(38, 23, 23, 0.2);
+  border-radius: 15px;
+}
+
+.store__action {
+  font-size: 10px;
+  svg {
+    width: 25px;
+    fill: white
+  }
+  &--edit {
+    a {
+      border-bottom: 0;
+    }
+  }
+}
+
+.store__hero {
+  position: relative;
+  padding: 20px 5px 20px 5px;
+  text-align: center;
+  &:before {
+    display: block;
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    background: linear-gradient(45deg, lightskyblue 32%, deepskyblue 90%);
+    // background:
+    //   linear-gradient(45deg, hsla(190, 95%, 43%, 1) 0%, hsla(190, 95%, 43%, 0) 70%),
+    //   linear-gradient(135deg, hsla(219, 93%, 48%, 1) 10%, hsla(219, 93%, 48%, 0) 80%),
+    //   linear-gradient(225deg, hsla(293, 93%, 48%, 1) 10%, hsla(293, 93%, 48%, 0) 80%),
+    //   linear-gradient(315deg, hsla(130, 96%, 45%, 1) 100%, hsla(130, 96%, 45%, 0) 70%);
+    opacity: 0.3;
+    z-index: 1;
+    // clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+  }
+  img {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    position: absolute;
+    left: 0;
+    object-fit: cover;
+    // clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+  }
+}

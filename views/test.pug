@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  .single
+    .single__hero
+      img.single__image(src= `/uploads/${test.photo || 'store.png'}`)
+      h2.title.title--single
+        if user
+          a(href=`/test/${test.slug}/${user._id}`) #{test.name}
+        else
+          a() #{test.name}
+
+    .single__details.inner
+      p
+      h2.title(style='text-align:center; margin-bottom: 30px; line-height: 2;' )
+        if user
+          a(target="_blank" href=`/test/${test.slug}/${user._id}`) #{l.test_card_run}
+        else
+          | #{layout.please_register}
+          span(style="border-bottom: solid tomato;")
+            a(href=`/researcher/register`) #{layout.researcher}
+          | #{layout.or}
+          span(style="border-bottom: solid darkblue;")
+            a(href=`/participant/register`) #{layout.participant}
+          | #{layout.to_try_test}
+      p
+      p
+
+      if (test.description)
+        p= test.description
+      if (test.version)
+        p= `${l.version}: ${test.version}`
+      if (test.script)
+        p= `${l.edit_uploaded}: ${test.script}`
+      if (author != 'missing')
+        if (author.name || author.institute)
+          h6= `${l.authorInformation}`
+          if (author.name)
+            p= `${author.name}`
+          if (author.institute)
+            p= `${author.institute}`
+
+      p
+
+      if (test.tags && test.tags.length > 0)
+        ul.tags(style="margin-top: 30px;")
+          each tag in test.tags
+            li.tag
+              span.tag__text #{layout[tag]}

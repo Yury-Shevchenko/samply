@@ -1,0 +1,36 @@
+mixin chosenTestCard(test = {})
+
+  - const testClass = slug ? test.slug == slug ? 'task_chosen' : 'task_not_chosen' : 'task'
+
+  div(class = testClass)
+    .selectedtest
+      .store__hero
+        img(src=`/uploads/${test.photo || 'store.png' }`)
+        h6.title 
+          a(href=`/tasks/${test.slug}`) #{test.name}
+      .store__details
+        .project__actions
+          .store__action
+            a.heart__button(target="_blank" href=`/test/${test.slug}/${user._id}/${param_language}`)
+              .blackbtns(style='fill:black')
+                != h.icon('play-button-black')
+          .store__action 
+            a.heart__button(href=`/tasks/${test.slug}`)
+              .blackbtns(style='fill:black')
+                != h.icon('description')
+          if (test && test.params && test.params.length > 0)
+            .store__action 
+              a.heart__button(href=`/tasks/${test.slug}/original`)
+                .blackbtns(style='fill:black')
+                  != h.icon('parameters')
+            .store__action 
+              a.heart__button(href=`/tasks/${test.slug}/modified`)
+                .blackbtns(style='fill:black')
+                  != h.icon('customize')
+          
+        //- h7
+        //-   a(target="_blank" href=`/test/${test.slug}/${user._id}/${param_language}`) #{l.run}
+        //- h7
+        //-   a(href=`/tasks/${test.slug}/original`) #{l.parameters}
+        //- h7
+        //-   a(href=`/tasks/${test.slug}/modified`) #{l.customized}

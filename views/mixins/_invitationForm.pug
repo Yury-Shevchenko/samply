@@ -1,0 +1,21 @@
+mixin invitationForm(project = {})
+
+  form(action=`/users/${project.name || ''}` method = 'POST')
+
+    label(for="invitations") #{l.message_invitation}
+    textarea(name="invitationsList" rows="10")
+    p
+    input(type='submit' value=l.button_invite class="button")
+    p 
+    
+    if project && project.invitations && project.invitations.length > 0 
+      label(for="members") #{l.message_invited_participants}
+      table
+        thead 
+          td #{l.email}
+          td #{l.code}
+        each invitation in project.invitations
+          if invitation && invitation.email
+            tr 
+              td= `${invitation.email}`
+              td= `${invitation.token}`

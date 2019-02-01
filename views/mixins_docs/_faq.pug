@@ -1,0 +1,15 @@
+mixin faq()
+
+  //- h5
+  //-   .headerLink #{l.question_1}
+  //- p.card-message
+  //-   | !{l.answer_1}
+  
+  
+  
+    
+  h5
+    .headerLink #{l.ask_question_header}
+  form(action=`/faq` method = 'POST')
+    textarea(name='question' placeholder=l.type_in_your_question required)
+    input(type='submit' value=l.send_question_btn class="button")

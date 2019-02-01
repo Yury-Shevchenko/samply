@@ -1,0 +1,25 @@
+extends email-layout
+
+block content
+  h2 New question from FAQ
+  p Hello. New question came.
+  
+  p Status: #{researcher.level}
+  p Email: #{researcher.email}
+  p Name: #{researcher.name}
+  p Institute: #{researcher.institute}
+  p Language: #{researcher.language}
+  p Created #{researcher.created}
+  p Open Lab Code: #{researcher.openLabId}
+  p Code: #{researcher.code}
+  
+  br 
+  strong Subscription
+  p Subscription #{researcher.subscription}
+  p Subscription plan #{researcher.subscription_plan}
+  p Subscription status #{researcher.subscription_status}
+  p Subscription expires #{researcher.subscription_expires}
+  
+  br 
+  strong Question   
+  p #{question}

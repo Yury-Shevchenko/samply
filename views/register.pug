@@ -1,0 +1,32 @@
+extends layout
+
+//-include mixins/_adminPanels
+
+//- block header
+//-   +adminPanels()
+
+block content
+  .inner
+    form.form(action="/auth/email/register" method="POST")
+      h5 #{layout.register_title}
+      //-label(for="identity") ID
+      //-input(type="number" name="identity" placeholder="a unique number" required)
+      //-label(for="name") Name
+      //-input(type="text" name="name" placeholder="any name" required)
+      label(for="email") #{layout.email}
+      input(type="email" name="email" value=email)
+      label(for="password") #{layout.password}
+      input(type="password" name="password" value=password)
+      label(for="password-confirm") #{layout.password_confirm}
+      input(type="password" name="password-confirm" value=password-confirm)
+      //-label(for="language") Language
+      //-select(name="language" style="background-color: #FFC40E;font-size: 24px;")
+        - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}]
+        each option in options
+          option(value=option.value, selected=(option.value=="german"))= option.label
+      //-label(for="project") Project
+      //-select(name="project" style="background-color: #FFC40E;font-size: 24px;")
+        each project in projects
+          option(value=project.leaderproject, selected=(project.leaderproject=="rdoc"))= project.leaderproject
+      p
+      input.button(type="submit" value=layout.signup)

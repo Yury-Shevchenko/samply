@@ -1,0 +1,43 @@
+.userTable{
+  max-width: 1100px;
+  margin: 0 auto;
+  @media all and (max-width: 1500px) {
+    padding: 2rem;
+  }
+}
+
+.researchersTable{
+  max-width: 1800px;
+  margin: 0 auto;
+  @media all and (max-width: 1500px) {
+    padding: 2rem;
+  }
+}
+
+.program {
+  display: grid;
+  grid-gap: 5px;
+  // grid-template-columns: repeat(auto-fit, minmax(250px, auto));
+  // grid-auto-rows: 100px auto;
+}
+
+.results{
+  display: grid;
+  grid-gap: 5px;
+  grid-template-columns: 200px auto;
+  grid-auto-rows: 100px auto;
+}
+
+.header-program-tests {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.users {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.user{
+
+}

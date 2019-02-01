@@ -1,0 +1,27 @@
+extends layout
+
+include mixins_docs/_intro
+include mixins_docs/_upload
+include mixins_docs/_project
+include mixins_docs/_data
+include mixins_docs/_help
+include mixins_docs/_faq
+
+block content
+  
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href=`/docs/intro`, class=(currentPath.startsWith(`/docs/intro`) ? 'nav__link--active' : '')) #{l.intro_title}
+          li.nav__item: a.nav__link(href=`/docs/upload`, class=(currentPath.startsWith(`/docs/upload`) ? 'nav__link--active' : '')) #{l.upload_title}
+          li.nav__item: a.nav__link(href=`/docs/project`, class=(currentPath.startsWith(`/docs/project`) ? 'nav__link--active' : '')) #{l.project_title}
+          li.nav__item: a.nav__link(href=`/docs/data`, class=(currentPath.startsWith(`/docs/data`) ? 'nav__link--active' : '')) #{l.data_title}
+          li.nav__item: a.nav__link(href=`/docs/help`, class=(currentPath.startsWith(`/docs/help`) ? 'nav__link--active' : '')) #{l.help_title}
+          li.nav__item: a.nav__link(href=`/docs/faq`, class=(currentPath.startsWith(`/docs/faq`) ? 'nav__link--active' : '')) #{l.faq_title}
+    
+    .card 
+      .card-message
+        +#{page}()
+    

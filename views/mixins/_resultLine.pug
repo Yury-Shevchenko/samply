@@ -1,0 +1,25 @@
+mixin resultLine(result = {}, i)
+
+  .user
+    tr
+      td #{i + 1}
+      td= result.participant_id
+      td= result.participant_code
+      td= h.moment(result.created).locale(language).format('MM-DD-YY, H:mm:ss')
+      if result.aggregated && result.aggregated.length > 0
+        td
+          each row in result.aggregated
+            each val, index in row
+              .line
+                strong #{index} 
+                | : 
+                | #{val}
+      else 
+        td 
+      if result.uploadType == 'incremental'
+        td= `${l.result_incremental}`
+      else
+        td= `${l.result_full}`
+      td= `${result.fileSize}`
+      td
+        a(style="border-bottom: 2px solid #FFC40E;" href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.results_download}

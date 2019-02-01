@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
+          li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
+          li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
+          li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
+          li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
+    p
+      
+    if project
+      
+      h2 #{l.deleteProject}
+
+      form(action=`/projects/removeproject/${project._id}` method = 'POST' class='card' id="testform")
+
+        h5= project.name
+        p
+
+        label
+          | #{l.numberMembers}
+          strong #{project.members.length}
+        label
+          | #{l.numberTests}
+          strong #{project.tests.length}
+        label
+          | #{l.numberResults}
+          strong #{resultsCount}
+        label
+          | #{l.numberParticipants}
+          strong #{participantsCount}
+
+        p
+          | #{l.confirmMessage_1} 
+          strong #{project.name}
+          | #{l.confirmMessage_2} 
+          strong #{l.confirmMessage_3} 
+          | #{l.confirmMessage_4} 
+
+        input(type='text' name='confirmation')
+        p
+
+
+        input(type='submit' id="btnAddTest" value=l.delete class="button")

@@ -1,0 +1,20 @@
+mixin parametersForm(data = {})
+
+  form(action=`/tasks/${(param && param.test) || test._id}/${(param && param.slug) || test.slug}` method = 'POST' id ="myForm")
+
+    input.nav__link(type='submit' value='Save' class="button" style='margin-top: 20px')
+    p
+    if(param)
+        each key in Object.keys(data).sort()
+          .formsforparameters
+            label(for= key) #{key}
+            input(type='text' name= key value= data[key])
+
+    else if (test)
+      - const sortedData = data.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
+      each key in sortedData
+        .formsforparameters
+          label(for= key.name) #{key.name}
+          input(type='text' name= key.name value= key.value)
+
+  //-a.nav__link(href=`/uploadparameters/${taskname}/${testID}/${user._id}/${lang}` class="button" style='margin-top: 40px') Reset parameters

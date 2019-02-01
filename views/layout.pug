@@ -1,0 +1,141 @@
+doctype html
+html
+  head
+    title= `${title || h.siteName}`
+    link(rel="preload" href='/fonts/BebasNeue Bold.ttf' as="font" type="font/ttf" crossorigin)
+    link(rel="preload" href='/fonts/OpenSans-Regular.ttf' as="font" type="font/ttf" crossorigin)
+    link(rel='stylesheet', href='/dist/style.css')
+    //- script(src='https://js.stripe.com/v3/' nonce=`${noncevalue}`)
+    link(rel="shortcut icon" type="image/png" href="/images/icons/rat.png")
+    link(rel="manifest" href="/manifest.json")
+    
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    //- script(src="/javascripts/modules/analytics.js" async defer nonce=`${noncevalue}`)
+  body
+    block header
+      header.top
+        nav.nav.nav__top
+          .nav__section.nav__section--pages
+            if !user
+              li.nav__item.nav__link
+                script(nonce=`${noncevalue}`).
+                  document.addEventListener('DOMContentLoaded', function (){
+                    document.getElementById('activeLanguage').addEventListener('change', function activateLanguage() {
+                      const language = document.getElementById("activeLanguage").value;
+                      if(language != ''){
+                        window.location.href = `/languages/${language}`
+                      }
+                    });
+                  });
+                h8
+                  .custom-select
+                    select(name="activeLanguage" id="activeLanguage")
+                      - const languages = [{ name: 'English', value: 'english'},{ name: 'Deutsch', value: 'german'},{ name: 'Русский', value: 'russian'}]
+                      if (user)
+                        each language in languages
+                          option(value=language.value selected=(user && user.language == language.value))= language.name
+                      else
+                        each language in languages
+                          option(value=language.value selected=(locale_language == language.value))= language.name
+                  li.nav__item
+                    a.nav__link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__link--active' : ''))
+                      h6 #{layout.studies}
+                  li.nav__item
+                    a.nav__link(href='/listing', class=(currentPath.startsWith('/listing') ? 'nav__link--active' : ''))
+                      h6 #{layout.tasks}
+
+
+            if user
+              if user.level < 10
+                li.nav__item
+                  a.nav__link(href='/testing', class=(currentPath.startsWith('/testing') ? 'nav__link--active' : ''))
+                    h6 #{layout.user_testing}
+                li.nav__item
+                  a.nav__link(href='/results', class=(currentPath.startsWith('/results') ? 'nav__link--active' : ''))
+                    h6 #{layout.results}
+                li.nav__item
+                  a.nav__link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__link--active' : ''))
+                    h6 #{layout.studies}
+                li.nav__item
+                  a.nav__link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__link--active' : ''))
+                    h6 #{layout.help}
+              if user.level > 100
+                li.nav__item: a.nav__link(href="/researchers", class=(currentPath.startsWith('/researchers') ? 'nav__link--active' : ''))
+                  h6 #{layout.researchers}
+              if user.level > 10
+                li.nav__item
+                  a.nav__link(href='/docs/intro', class=(currentPath.startsWith('/docs') ? 'nav__link--active' : ''))
+                    != h.icon('document')
+
+                li.nav__item
+                  a.nav__link(href='/tests/all', class=(currentPath.startsWith('/tests') ? 'nav__link--active' : ''))
+                    h6 #{layout.tasks}
+                li.nav__item
+                  a.nav__link(href='/projects', class=(currentPath.startsWith('/projects') || currentPath.startsWith('/constructor') || currentPath.startsWith('/tasks') || currentPath.startsWith('/invitations') || currentPath.startsWith('/testing') || currentPath.startsWith('/results') ? 'nav__link--active' : ''))
+                    h6 #{layout.projects}
+                li.nav__item
+                  a.nav__link(href='/data', class=(currentPath.startsWith('/users') ||  currentPath.startsWith('/data') ? 'nav__link--active' : ''))
+                    h6 #{layout.data}
+
+                .nav__section.nav__section--search
+                  .search
+                    input.search__input(type="text" placeholder=layout.search_message name="search")
+                    .search__results
+
+          .nav__section.nav__section--user
+
+            if user
+              if user.level > 10 && user.project && user.projects && user.projects.length > 0
+                script(nonce=`${noncevalue}`).
+                  document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById('activeProject').addEventListener('change', function doThings() {
+                      const project = document.getElementById("activeProject").value;
+                      if(project != ''){
+                        window.location.href = `/projects/${project}`;
+                      }
+                    });
+                  });
+
+                li.nav__item.nav__link
+                  h7
+                    .custom-select-header
+                      select(name="activeProject" id="activeProject")
+                        - const projects = user.projects.concat(user.invitedprojects)
+                        option(value='') #{layout.choose_project}
+                        each project in projects
+                          if(project.name.length < 40)
+                            option(value=project.name selected=(user.project._id.toString() == project._id.toString()))= project.name
+                          else
+                            option(value=project.name selected=(user.project._id.toString() == project._id.toString()))= `${project.name.substring(0,20)}...`
+
+              li.nav__item: a.nav__link(href="/account", class=(currentPath.startsWith('/account') || currentPath.startsWith('/subscribe') ? 'nav__link--active' : ''))
+                h6 #{layout.profile}
+              li.nav__item: a.nav__link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__link--active' : ''))
+                h6 #{layout.logout}
+            else
+              li.nav__item: a.nav__link(href="/researcher/login", class=(currentPath.startsWith('/researcher') ? 'nav__link--active' : ''))
+                h6 #{layout.forResearchers}
+              li.nav__item: a.nav__link(href="/participant/login", class=(currentPath.startsWith('/participant') ? 'nav__link--active' : ''))
+                h6 #{layout.forParticipants}
+
+    block messages
+      if locals.flashes
+        .inner
+          .flash-messages
+            - const categories = Object.keys(locals.flashes)
+            each category in categories
+              each message in flashes[category]
+                .flash(class=`flash--${category}`)
+                  p.flash__text!= message
+                  script(nonce=`${noncevalue}`).
+                    document.addEventListener('DOMContentLoaded', function (){
+                      document.getElementById('button_flash').addEventListener('click', function removeFlash() {
+                        document.getElementById('button_flash').parentElement.remove()
+                      });
+                    });
+                  button.flash__remove(id="button_flash") &times;
+    .content
+      block content
+
+    block scripts
+      script(src="/dist/App.bundle.js" nonce=`${noncevalue}`)

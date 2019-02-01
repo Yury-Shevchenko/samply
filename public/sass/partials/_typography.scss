@@ -1,0 +1,218 @@
+// @font-face {
+//     font-family: 'panama';
+//     src: url('/fonts/panama-bold-webfont.woff2') format('woff2'),
+//          url('/fonts/panama-bold-webfont.woff') format('woff');
+//     font-weight: normal;
+//     font-style: normal;
+//
+// }
+//
+
+// @font-face {
+//     font-family: 'Bebas';
+//     src: url('/fonts/BebasNeue.woff') format('woff2');
+//     font-weight: normal;
+//     font-style: normal;
+// }
+
+@font-face {
+    font-family: 'Open Sans';
+    src: url('/fonts/OpenSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+ }
+
+ @font-face {
+     font-family: 'Open Sans';
+     src: url('/fonts/OpenSans-Bold.ttf') format('truetype');
+     font-weight: bold;
+     font-style: normal;
+  }
+
+  @font-face {
+      font-family: 'Open Sans';
+      src: url('/fonts/OpenSans-Italic.ttf') format('truetype');
+      font-weight: normal;
+      font-style: italic;
+   }
+
+// @font-face {
+//     font-family: 'Bebas';
+//     src: url('/fonts/BebasNeue Regular.otf') format('truetype');
+//     font-weight: normal;
+//     font-style: normal;
+//  }
+
+@font-face {
+    font-family: 'Bebas';
+    src: url('/fonts/BebasNeue Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+ }
+
+html {
+  font-size:10px;
+}
+
+body {
+  font-size:1.5rem;
+  color:$black;
+}
+
+h1 {
+  font-size: 7rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+h2 {
+  font-size: 4rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+h3 {
+  font-size: 5rem;
+  color: #fff;
+  font-family: 'Bebas';
+  //font: normal 1.313em Rockwell W01, Helvetica Neue, Arial, Helvetica, sans-serif;
+  margin: 0 0 .25em;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  letter-spacing: 0.5px;
+}
+
+h4 {
+  font-size: 4rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  //letter-spacing:-1px;
+  margin-top: 0em;
+  margin-bottom: 1em;
+  letter-spacing: 0.5px;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0em;
+  -webkit-margin-end: 0em;
+}
+
+h5 {
+  font-size: 3rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  margin-top: 0em;
+  margin-bottom: 1em;
+  -webkit-margin-before: 1em;
+  -webkit-margin-after: 1em;
+  -webkit-margin-start: 0em;
+  -webkit-margin-end: 0em;
+  //letter-spacing:-1px;
+  letter-spacing: 0.5px;
+}
+
+h6 {
+  font-size: 2.5rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  -webkit-margin-before: 0.1em;
+  -webkit-margin-after: 0.1em;
+  -webkit-margin-start: 0.1em;
+  -webkit-margin-end: 0.1em;
+  //letter-spacing:-1px;
+  letter-spacing: 0.5px;
+}
+
+h7 {
+  font-size: 2rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  letter-spacing: 0.5px;
+  padding: 0px 5px 0px 5px;
+}
+
+h8 {
+  font-size: 1.5rem;
+  font-family: 'Bebas';
+  font-weight: 600;
+  -webkit-margin-before: 0em;
+  -webkit-margin-after: 0em;
+  -webkit-margin-start: 0px;
+  -webkit-margin-end: 0px;
+  letter-spacing: 0.5px;
+  padding: 0px 10px 0px 10px;
+}
+
+.headerLink {
+  border-bottom: 2px solid #faeecb;
+  &:hover, &--active {
+    border-bottom: 2px solid $yellow;
+    svg {
+      transform: scale(1.2)
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+  color:$black;
+}
+
+p a {
+  border-bottom: 2px solid $yellow;
+}
+
+p {
+  line-height: 2;
+  font-size: 1.6rem;
+}
+
+.title {
+  word-wrap: break-word;
+  position: relative;
+  z-index: 2;
+  margin:0;
+  //font-size: 36px;
+  font-size: 25px;
+  z-index: 2;
+  line-height:1.1;
+  // transform: skew(0, -3deg);
+  &--long {
+    font-size: 30px;
+  }
+  &:before {
+    content: '';
+    width:50px;
+    left:0;
+    top:0;
+    height:100%;
+    // top:10%;
+    display: block;
+    position: absolute;
+    z-index: -1;
+    transform:skew(-5deg)
+  }
+  line-height:1.1;
+  // inline link inside
+  a {
+    border-bottom: 0;
+    $yellowa: rgba(255, 255, 255, 0.8);
+    background-image: linear-gradient(to right, $yellowa 100%, $yellowa 50%);
+  }
+}
+
+.title--single {
+  max-width: 600px;
+  margin-top: -9rem;
+  font-size: 8rem;
+  text-align: center;
+}

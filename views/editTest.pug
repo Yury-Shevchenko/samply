@@ -1,0 +1,21 @@
+extends layout
+
+include mixins/_testForm
+ 
+block content
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href="/tests/all", class=(currentPath.startsWith('/tests/all') ? 'nav__link--active' : '')) #{layout.allTasks}
+          li.nav__item: a.nav__link(href="/tests/my", class=(currentPath.startsWith('/tests/my') ? 'nav__link--active' : '')) #{layout.myTasks}
+          li.nav__item: a.nav__link(href="/tests/add", class=(currentPath.startsWith('/tests/add') ? 'nav__link--active' : '')) #{layout.addTask}
+    p
+    if test
+      h2= `${l.edit_title} ${test.name}`
+    else
+      h2 #{l.add_title}
+    .card
+      +testForm(test)
+    p

@@ -1,0 +1,7 @@
+node_modules/
+public/uploads
+.DS_Store
+*.log
+variables.env
+variables.env.now
+keys_dev.js

@@ -1,0 +1,73 @@
+extends layout
+
+block content
+
+  .inner
+
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
+          li.nav__item: a.nav__link(href="/users", class=(currentPath.startsWith('/users') ? 'nav__link--active' : '')) #{layout.participants}
+    p
+
+    .userTable
+      if results[0]
+        h2= `${l.title_one_user} ${participant}`
+      else
+        h2 #{l.message_no_user}
+
+      .card
+        if results[0]
+          table.table
+            thead
+              td #{l.table_number}
+              td #{l.table_one_task}
+              td #{l.table_code}
+              td #{l.table_date}
+              td #{l.table_aggregated}
+              td #{l.table_one_type}
+              td #{l.table_one_size}
+              if user.level > 10
+                td #{l.table_one_data}
+              if user.level > 10
+                td #{l.table_delete_request}
+              if user.level > 10
+                td #{l.table_one_delete}
+            each result, i in results
+              tr
+                td #{i + 1}
+                td= result.name
+                td= result.participant_code
+                td= h.moment(result.created).locale(language).format('MM-DD-YYYY, h:mm:ss a')
+                if result.aggregated && result.aggregated.length > 0
+                  td
+                    each row in result.aggregated
+                      each val, index in row
+                        .line
+                          strong #{index} 
+                          | : 
+                          | #{val}
+                else 
+                  td 
+                if result.uploadType == "incremental"
+                  td #{l.table_one_incremental}
+                else
+                  td #{l.table_one_full}
+                td= result.fileSize
+                if user.level > 10
+                  td
+                    a(style="border-bottom: 2px solid #FFC40E;" href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.table_one_download}
+                if user.level > 10
+                  if (result.deleteRequest)
+                    td #{l.table_delete_my_data}
+                  else
+                    td #{l.table_keep_my_data}
+                if user.level > 10
+                  td
+                    a(href=`/removefromdatabase/${result.test}/${result._id}`)
+                      != h.icon('remove')
+
+          //- pre=h.dump(user)
+          //- pre=h.dump(results)
