@@ -88,7 +88,7 @@ app.use(flash());
 app.use((req, res, next) => {
   //Content security policy
   const noncevalue = crypto.randomBytes(20).toString('hex');
-  // res.setHeader('Content-Security-Policy', `worker-src http://localhost; script-src https://labjs-beta.netlify.com https://labjs.felixhenninger.com 'nonce-${noncevalue}' 'unsafe-eval' `);
+  res.setHeader('Content-Security-Policy', `worker-src http://localhost https://open-lab.online; script-src https://labjs-beta.netlify.com https://labjs.felixhenninger.com 'nonce-${noncevalue}' 'unsafe-eval' `);
   res.locals.noncevalue = noncevalue;
 
   res.locals.h = helpers;
