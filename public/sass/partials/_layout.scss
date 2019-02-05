@@ -73,3 +73,11 @@ body {
   grid-template-columns: repeat(6, 1fr);
   grid-column-gap: 5px;
 }
+
+#enable_notifications{
+  display: none;
+}
+
+#disable_notifications{
+  display: none;
+}

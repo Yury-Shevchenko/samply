@@ -1,16 +1,11 @@
-console.log('Notification service is turned on');
-
 const enableNotificationsButton = document.querySelector('#enable_notifications');
 const disableNotificationsButton = document.querySelector('#disable_notifications');
-// const sendNotificationButton = document.querySelector('#send_notification');
 const notificationStatus = document.querySelector('#notification_status');
 
 function displayConfirmNotification(){
   if('serviceWorker' in navigator){
     var options = {
       body: 'You are successfully subscribed to Open Lab notification service',
-      //- icon: '/src/images/icons/app-icon-96x96.png',
-      //- image: '/src/images/sf-boat.jpg',
       dir: 'ltr',
       lang: 'en-US',//BCP 47
       vibrate: [100, 50, 200],//vibration pause vibration in ms
@@ -52,7 +47,9 @@ function configurePushSub(){
     return;
   }
   var reg;
-  navigator.serviceWorker.ready
+  navigator.serviceWorker.register('/service-worker.js').then(function () {
+    return navigator.serviceWorker.ready
+  })
     .then(swreg => {
       reg = swreg;
       return swreg.pushManager.getSubscription();//check subscription of this browser and this device
@@ -126,37 +123,15 @@ function sendNotification(){
   })
 }
 
-function checkNotificationSubscription() {
-  if(!('serviceWorker' in navigator)){
-    return;
-  }
-  var reg;
-  navigator.serviceWorker.ready
-    .then(swreg => {
-      reg = swreg;
-      return swreg.pushManager.getSubscription();//check subscription of this browser and this device
-    })
-    .then(sub => {
-      if(sub === null){
-        notificationStatus.innerText = "Please subscribe to receive notifications about the tests";
-      } else {
-        notificationStatus.innerText = "You are subscribed to notifications";
-        enableNotificationsButton.style.display = "none";
-        disableNotificationsButton.style.display = "inline-block";
-      }
-    })
-    .catch(err => {
-      console.error(err);
-    })
-};
 
 function unsubscribeNotifications() {
-
   if(!('serviceWorker' in navigator)){
     return;
   }
   var reg;
-  navigator.serviceWorker.ready
+  navigator.serviceWorker.register('/service-worker.js').then(function () {
+    return navigator.serviceWorker.ready
+  })
     .then(swreg => {
       reg = swreg;
       return swreg.pushManager.getSubscription();//check subscription of this browser and this device
@@ -185,17 +160,45 @@ function unsubscribeNotifications() {
     })
 }
 
+function checkNotificationSubscription() {
+  if(!('serviceWorker' in navigator)){
+    return;
+  }
+  var reg;
 
-//TODO: fix the styling of buttons in css
-enableNotificationsButton.style.display = "none";
-// sendNotificationButton.style.display = "none";
+  navigator.serviceWorker.register('/service-worker.js').then(function () {
+    return navigator.serviceWorker.ready
+  })
+    .then(function (swreg) {
+      if (navigator.serviceWorker.controller) {
+        console.log("ready", swreg)
+        reg = swreg;
+        return swreg.pushManager.getSubscription();//check subscription of this browser and this device
+      } else {
+        var listener = navigator.serviceWorker.addEventListener('controllerchange', () => {
+          navigator.serviceWorker.removeEventListener('controllerchange', listener)
+          console.log("now ready - do something", swreg)
+          reg = swreg;
+          return swreg.pushManager.getSubscription();
+        })
+      }
+    })
+    .then(sub => {
+      if(sub === null){
+        notificationStatus.innerText = "Please subscribe to receive notifications about the tests";
+        enableNotificationsButton.style.display = "inline-block";
+      } else {
+        notificationStatus.innerText = "You are subscribed to notifications";
+        disableNotificationsButton.style.display = "inline-block";
+      }
+    })
+    .catch(err => {
+      console.error(err);
+    })
+};
 
 if ('Notification' in window && 'serviceWorker' in navigator) {
-  enableNotificationsButton.style.display = "inline-block";
   enableNotificationsButton.addEventListener('click', askForNotificationPermission);
-  disableNotificationsButton.style.display = "none";
   disableNotificationsButton.addEventListener('click', unsubscribeNotifications);
-  // sendNotificationButton.style.display = "inline-block";
-  // sendNotificationButton.addEventListener('click', sendNotification);
   checkNotificationSubscription();
 }

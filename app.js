@@ -30,31 +30,6 @@ app.set('view engine', 'pug'); // we use the engine pug, mustache or EJS work gr
 //app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static('public'));
 
-//Agenda setup
-// const agenda = new Agenda({
-//   name:'open-lab-notifications',
-//   db: {address: process.env.DATABASE, collection: 'Job'},
-// });
-// agenda.on('ready', function() {
-//   console.log("Ok Lets get start");
-//   agenda.start();
-//   // agenda.jobs({name: 'notify'})
-//   //   .then(res => {
-//   //     console.log('Jobs', res);
-//   //   })
-// });
-// // // agenda.start();
-// async function graceful() {
-//   console.log("The system is turning off...");
-//   await agenda.stop();
-//   process.exit(0);
-// }
-// process.on('SIGTERM', graceful);
-// process.on('SIGINT' , graceful);
-
-// var agenda = new Agenda({db: {address: process.env.DATABASE, collection: 'Job'}});
-// app.use('/dash', Agendash(agenda));
-
 app.post('/subscription/webhook', bodyParser.raw({ type: '*/*' }), userController.webhook);
 
 // Takes the raw requests and turns them into usable properties on req.body
