@@ -10,7 +10,7 @@ const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
 const passport = require('passport');
 var cors = require('cors');
-
+  
 //home page
 router.get('/', testController.homePage);
 router.get('/about', testController.aboutPage);
@@ -254,7 +254,7 @@ router.post('/subscription/cardpayment', authController.isLoggedIn, catchErrors(
 router.post('/subscription/cancel', authController.isLoggedIn, catchErrors(userController.cancelsubscription));
 router.post('/subscription/reactivate', authController.isLoggedIn, catchErrors(userController.reactivatesubscription));
 
-//languages         
+//languages
 router.get('/languages/:language', userController.changeLanguage);
 
 //test programming request
