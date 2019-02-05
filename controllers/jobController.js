@@ -362,6 +362,7 @@ exports.registerPushNotification = async (req, res) => {
   });
   console.log('project', project);
   if(project && project.notifications && project.notifications.length > 0){
+    console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
       if(sub.mode && sub.mode === 'Individual'){
 
@@ -411,6 +412,10 @@ exports.registerPushNotification = async (req, res) => {
 exports.unsubscribePushNotification = async (req, res) => {
   // console.log("The data received on the server to unsubscribe");
   await User.findById(req.user._id, (err, user) => {
+    agenda.cancel({
+      'data.projectid': req.user.participantInProject,
+      'data.userid': req.user._id,
+    }, (err, numRemoved) => {});
     user.notifications = [];//TODO: delete only concrete subscription (?)
     user.save((saveErr, updatedUser) => {
       if (saveErr) {
