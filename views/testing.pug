@@ -78,32 +78,34 @@ block content
         else
           p= `${l.message_welcome}!`
 
-      .notificationsPanel
-        button(id="enable_notifications" class="button") Enable notifications
-        button(id="disable_notifications" class="button") Disable notifications
-        //- button(id="send_notification" class="button") Send notification
-        #notification_status Pending
+      if (project.useNotifications)
+        .notificationsPanel
+          button(id="enable_notifications" class="button") Enable notifications
+          button(id="disable_notifications" class="button") Disable notifications
+          #notification_status 
+          p 
+          p 
 
-      .videoPanel
-        button(id="start_video" class="button") Start video
-        button(id="stop_video" class="button") Stop video
-
-      .cameraPanel
-        video#player(autoplay='')
-        canvas#canvas(width='320px', height='240px')
-        button(class="button" id="capture-btn")
-          | Capture
-        #pick-image
-          h6 Pick an Image instead
-          input#image-picker(type='file', accept='image/*')
-
-      .locationPanel
-        .input-section
-          button(type='button' class="button" id="location-btn")
-            | Get
-            | Location
-          #location-loader.mdl-spinner.mdl-js-spinner.is-active
-        #location-input
+      //- .videoPanel
+      //-   button(id="start_video" class="button") Start video
+      //-   button(id="stop_video" class="button") Stop video
+      //- 
+      //- .cameraPanel
+      //-   video#player(autoplay='')
+      //-   canvas#canvas(width='320px', height='240px')
+      //-   button(class="button" id="capture-btn")
+      //-     | Capture
+      //-   #pick-image
+      //-     h6 Pick an Image instead
+      //-     input#image-picker(type='file', accept='image/*')
+      //- 
+      //- .locationPanel
+      //-   .input-section
+      //-     button(type='button' class="button" id="location-btn")
+      //-       | Get
+      //-       | Location
+      //-     #location-loader.mdl-spinner.mdl-js-spinner.is-active
+      //-   #location-input
 
       .dashboard
         .dashboardBody

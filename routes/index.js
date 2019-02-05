@@ -254,7 +254,7 @@ router.post('/subscription/cardpayment', authController.isLoggedIn, catchErrors(
 router.post('/subscription/cancel', authController.isLoggedIn, catchErrors(userController.cancelsubscription));
 router.post('/subscription/reactivate', authController.isLoggedIn, catchErrors(userController.reactivatesubscription));
 
-//languages
+//languages         
 router.get('/languages/:language', userController.changeLanguage);
 
 //test programming request
@@ -271,7 +271,7 @@ router.get('/studies/page/:page', catchErrors(projectController.listPublicProjec
 router.get('/studies/:study', catchErrors(projectController.showProjectDescription));
 //help
 router.get('/help', authController.isLoggedIn, catchErrors(userController.help));
- 
+
 //reseacher notifications bar
 router.get('/notifications', authController.isAdminLoggedIn, catchErrors(projectController.manageNotifications));
 router.post('/createnotification', authController.isAdminLoggedIn, catchErrors(jobController.createNotification));

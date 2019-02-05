@@ -8,13 +8,13 @@ const workboxSW = new self.WorkboxSW();
 //REGEXP
 // /.*(?:googleapis|gstatic)\.com.*/
 //1 - router 2- what to do
-workboxSW.router.registerRoute('/studies', workboxSW.strategies.staleWhileRevalidate({
-  cacheName: 'openlab-studies',
-  cacheExpiration: {
-    maxEntries: 3,
-    maxAgeSeconds: 60 * 60 * 24 * 30 //month
-  }
-}));
+// workboxSW.router.registerRoute('/studies', workboxSW.strategies.staleWhileRevalidate({
+//   cacheName: 'openlab-studies',
+//   cacheExpiration: {
+//     maxEntries: 3,
+//     maxAgeSeconds: 60 * 60 * 24 * 30 //month
+//   }
+// }));
 //staleWhileRevalidate: cache then network, with dynamic caching
 // workboxSW.router.registerRoute('/test/:test/:id', workboxSW.strategies.staleWhileRevalidate({
 //   cacheName: 'openlab-tests'
@@ -63,7 +63,7 @@ workboxSW.router.registerRoute('/studies', workboxSW.strategies.staleWhileRevali
 
 //listen to push messages
 self.addEventListener('push', event => {
-  // console.log('Push notification received', event);
+  console.log('Push notification received', event);
   //Fallback (if there is no data)
   var data = {title: 'New test', content: 'Please check the new test', openUrl: '/testing'};
   //check whether data exists
@@ -79,7 +79,7 @@ self.addEventListener('push', event => {
   var options = {
     body: data.content,
     icon: '/images/icons/rat.png', //can be url
-    image: 'https://www.visit-mannheim.de/extension/portal-mannheim/var/storage/images/media/bibliothek/grosse-bildbuehnen-1440x900px/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px/19637-9-ger-DE/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px_liscms-l.jpg',
+    // image: 'https://www.visit-mannheim.de/extension/portal-mannheim/var/storage/images/media/bibliothek/grosse-bildbuehnen-1440x900px/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px/19637-9-ger-DE/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px_liscms-l.jpg',
     //badge: '',
     data: {
       url: data.openUrl

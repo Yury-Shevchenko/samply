@@ -63,7 +63,7 @@ workboxSW.router.registerRoute('/studies', workboxSW.strategies.staleWhileRevali
 
 //listen to push messages
 self.addEventListener('push', event => {
-  // console.log('Push notification received', event);
+  console.log('Push notification received', event);
   //Fallback (if there is no data)
   var data = {title: 'New test', content: 'Please check the new test', openUrl: '/testing'};
   //check whether data exists
@@ -79,7 +79,7 @@ self.addEventListener('push', event => {
   var options = {
     body: data.content,
     icon: '/images/icons/rat.png', //can be url
-    image: 'https://www.visit-mannheim.de/extension/portal-mannheim/var/storage/images/media/bibliothek/grosse-bildbuehnen-1440x900px/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px/19637-9-ger-DE/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px_liscms-l.jpg',
+    // image: 'https://www.visit-mannheim.de/extension/portal-mannheim/var/storage/images/media/bibliothek/grosse-bildbuehnen-1440x900px/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px/19637-9-ger-DE/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px_liscms-l.jpg',
     //badge: '',
     data: {
       url: data.openUrl
@@ -159,11 +159,11 @@ self.addEventListener('notificationclose', (event) => {
 workboxSW.precache([
   {
     "url": "dist/App.bundle.js.map",
-    "revision": "fa209f48fb6d599c06ddd20cec2d3f13"
+    "revision": "ec46af147de4df3d770d5ee9f2e756c6"
   },
   {
     "url": "dist/style.css.map",
-    "revision": "63cb349e0de7e2d1f5f6699885b7fd77"
+    "revision": "1b1b18ec3d88bcda0c500003c6edc3ec"
   },
   {
     "url": "fonts/BebasNeue Bold.ttf",

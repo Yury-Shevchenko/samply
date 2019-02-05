@@ -23,6 +23,25 @@
   cursor: pointer;
 }
 
+.buttonContainer {
+  border: 0.5;
+  border-radius: 5px;
+  //background: #e7eaff;
+  background: rgba(238, 242, 244, 0.6);
+  color: $black;
+  font-family: 'Bebas';
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.buttonContainer:hover {
+  background: #11fa71;
+  cursor: pointer;
+}
+
 .avatar {
  min-width: 50px;
  height: 50px;

@@ -55,20 +55,21 @@ body {
 
 .notificationsPanel {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-column-gap: 20px;
+  // grid-template-columns: 1fr 1fr;
+  // grid-column-gap: 20px;
 }
 
-.intervalPicker{
+.notificationContainer{
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(40px, 120px));
-  grid-column-gap: 20px;
-  align-items: stretch;
-  font-size: larger;
+  // grid-template-columns: repeat(auto-fit, minmax(40px, 120px));
+  // grid-column-gap: 20px;
+  // align-items: stretch;
+  // font-size: larger;
 }
 
 .cronintervalPicker{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  // grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: repeat(6, 1fr);
   grid-column-gap: 5px;
 }

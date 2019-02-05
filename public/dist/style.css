@@ -40,26 +40,17 @@ body {
 
 .notificationsPanel {
   display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr 1fr;
-      grid-template-columns: 1fr 1fr;
-  grid-column-gap: 20px; }
+  display: grid; }
 
-.intervalPicker {
+.notificationContainer {
   display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: (minmax(40px, 120px))[auto-fit];
-      grid-template-columns: repeat(auto-fit, minmax(40px, 120px));
-  grid-column-gap: 20px;
-  -ms-flex-align: stretch;
-      align-items: stretch;
-  font-size: larger; }
+  display: grid; }
 
 .cronintervalPicker {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  -ms-grid-columns: (1fr)[6];
+      grid-template-columns: repeat(6, 1fr);
   grid-column-gap: 5px; }
 
 html {
@@ -1430,6 +1421,22 @@ and also iPads specifically.
 
 .button:hover {
   background: rgba(135, 206, 250, 0.3);
+  cursor: pointer; }
+
+.buttonContainer {
+  border: 0.5;
+  border-radius: 5px;
+  background: rgba(238, 242, 244, 0.6);
+  color: #303030;
+  font-family: 'Bebas';
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+  padding: 10px; }
+
+.buttonContainer:hover {
+  background: #11fa71;
   cursor: pointer; }
 
 .avatar {

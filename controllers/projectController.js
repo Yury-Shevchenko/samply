@@ -61,6 +61,7 @@ exports.createProject = async (req, res) => {
           members: membersData,
           currentlyActive: req.body.currentlyActive,
           showCompletionCode: req.body.showCompletionCode == 'on',
+          useNotifications: req.body.useNotifications == 'on',
         }
       )).save();
       if (typeof(req.user.project._id) == "undefined"){
@@ -99,6 +100,7 @@ exports.updateProject = async (req, res) => {
     project.name = req.body.name;
     project.description = req.body.description;
     project.showCompletionCode = req.body.showCompletionCode == 'on';
+    project.useNotifications = req.body.useNotifications == 'on';
     project.members = membersData;
     await project.save();
     req.flash('success', `${res.locals.layout.flash_project_updated}`);
