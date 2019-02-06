@@ -174,7 +174,7 @@ exports.getOneUserData = async (req, res) => {
 };
 
 exports.getResearchers = async (req, res) => {
-  const users = await User
+  const users = await User 
     .getResearchers()
     .sort( {created: 'asc'} )
   res.render('researchers', {title: 'Researchers', users});

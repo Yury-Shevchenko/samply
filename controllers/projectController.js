@@ -235,3 +235,8 @@ exports.manageNotifications = async(req,res) => {
   });
   res.render('notifications', {project});
 };
+
+exports.debugprojects = async(req,res) => {
+  const projects = await Project.debugProjects();
+  res.render('debugprojects', {projects: projects});
+};

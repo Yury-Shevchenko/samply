@@ -147,7 +147,7 @@ userSchema.statics.getUsersOfProject = function(project) {
         //averageRating: {$avg: '$results.rating'},
         numberTests: {$size:
           { $setUnion: '$results.test' }
-        }, 
+        },
         //results: '$results',
         numberDeleteRequests: { $sum: '$results.deleteRequests' },
         notifications: '$$ROOT.notifications',
