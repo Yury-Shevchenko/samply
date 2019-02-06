@@ -125,7 +125,9 @@ block content
                          
         script(defer type='text/javascript' nonce=`${noncevalue}`).
           $(document).ready( function () {
-              $('#picker').dateTimePicker();
+              $('#picker').dateTimePicker({
+                selectData: "now",
+              });
               $('#interval_picker_starting_date').dateTimePicker();
               $('#interval_picker_ending_date').dateTimePicker();
               $('input[name="datetimes_regular"]').daterangepicker({

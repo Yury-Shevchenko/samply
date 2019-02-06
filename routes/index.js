@@ -285,7 +285,7 @@ router.post('/createrelativenotification', authController.isAdminLoggedIn, catch
 router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
 router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));
 
-
+  
 router.post('/uploadimage', catchErrors(userController.uploadImage));
 
 module.exports = router;

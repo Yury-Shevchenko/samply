@@ -13,8 +13,12 @@ function createNotification(){
   document.getElementById('notification_status_schedule').innerText = 'Registering notification ...';
   const scheduleInputs = document.querySelectorAll('.scheduleInput');
   const scheduleArray = Array.from(scheduleInputs);
-  const schedule = scheduleArray.map(e => e.value).filter(v => v !== '' && new Date(v) - new Date() > 0);//["2019-01-31 14:12", "2019-01-30 16:12"]
-  console.log('Sending test notification');
+  const schedule = scheduleArray
+    .map(e => e.value)
+    .filter(v => v !== '')
+    .map(d => new Date(d).toISOString())
+    //.filter(v => v !== '' && new Date(v) - new Date() > 0);//["2019-01-31 14:12", "2019-01-30 16:12"]
+  console.log('Sending test notification', schedule);
   fetch('/createnotification', {
     method:'POST',
     headers: {

@@ -89,7 +89,8 @@ exports.createNotification = async(req, res) => {
   if(dates.length > 0){
     await dates.map(d => {
       const id = uniqid();
-      const date = new Date(d);
+      //const date = new Date(d);
+      const date = d;
       console.log("The job is scheduled for the date", date);
       project.notifications.push({
         id: id,
