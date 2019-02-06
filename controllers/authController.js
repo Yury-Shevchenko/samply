@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const promisify = require('es6-promisify');
 const User = mongoose.model('User');
 const mail = require('../handlers/mail');
-
+  
 exports.logout = (req, res) => {
   req.logout();
   req.flash('success', `${res.locals.layout.flash_logged_out}`);

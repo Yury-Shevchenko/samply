@@ -7,15 +7,16 @@ const Agenda = require('agenda');
 const uniqid = require('uniqid');
 
 const agenda = new Agenda({
-  name:'open-lab-notifications',
+  name: 'open-lab-notifications',
   db: {address: process.env.DATABASE, collection: 'Job'},
 });
+
 agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
-    console.log('I am sending right now notifcations for the project', job.attrs.data.projectid);
-    sendNotification(job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
-    done();
+    console.log('one_time_notification for the project', job.attrs.data.projectid);
+    sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
+    // done();
   });
 
   agenda.define('regular_notification', (job, done) => {
@@ -89,6 +90,7 @@ exports.createNotification = async(req, res) => {
     await dates.map(d => {
       const id = uniqid();
       const date = new Date(d);
+      console.log("The job is scheduled for the date", date);
       project.notifications.push({
         id: id,
         name: req.body.name,
@@ -318,14 +320,14 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
     }
 };
 
-async function sendNotification(project_id, title, message) {
+async function sendNotification(done, project_id, title, message) {
   const users = await User.getUsersOfProject(project_id);
   await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
   if (users){
-      users.map(user => {
+      var promises = users.map(user => {
         if (user.notifications && user.notifications.length > 0){
           const subs = user.notifications;
-          console.log('Suscriptions of the user', user.participant_code, subs);
+          // console.log('Suscriptions of the user', user.participant_code, subs);
           subs.forEach(function(sub){
             const pushConfig = {
               endpoint: sub.endpoint,
@@ -334,22 +336,36 @@ async function sendNotification(project_id, title, message) {
                 p256dh: sub.keys.p256dh
               }
             };
-            console.log(title, message);
+            // console.log(title, message);
             webpush.sendNotification(pushConfig, JSON.stringify({
                 'title': title,
                 'content': message,
                 'openUrl': '/testing'
               })) //payload is limited to 4kb
               .then(res => {
-                console.log("Notification was sent", res.statusCode);
+                // console.log("Notification was sent", res.statusCode);
+                return(res.statusCode);
               })
               .catch(err => {
-                console.log("The error happened", err.statusCode);
+                // console.log("The error happened", err.statusCode);
+                return(err.statusCode);
                 //TODO: remove subscription if it is not valid anymore (check it in response)
               })
           })
         }
       })
+      Promise.all(promises)
+        .then(function(results) {
+          console.log("Notifications were sent");
+          done()
+        })
+        .catch(err => {
+          console.log("Error occured during the notification sending", err);
+          done(err)
+        })
+    } else {
+      console.log("No user in the project found");
+      done();
     }
 };
 
