@@ -1,14 +1,16 @@
 //register service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker
-    .register('/service-worker.js', {scope: '/'})
-    .then(function(){
-      console.log("SW registered")
+    .register('/service-worker.js')
+    .then(function(registration){
+      console.log("SW registered", registration)
     })
     .catch(function(error){
-      console.log(error);
+      console.error(error);
     })
-}
+} else {
+  conso.log("SW is not supported");
+};
 
 var diferredPrompt;
 

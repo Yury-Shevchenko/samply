@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  //- script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
+  script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
   .inner
     p
     .card
@@ -9,8 +9,8 @@ block content
         h4 #{l.title}
         p.card-message !{l.intro}
 
-        .plan-compare 
-          a(type="link" href=`/researcher/register` style="display:grid") 
+        .plan-compare
+          a(type="link" href=`/researcher/register` style="display:grid")
             .panel
               <span class="plan-current">#{l.forResearchers}</span>
               p.
@@ -24,8 +24,8 @@ block content
               p.plan_emails-label #{l.res_4_text}
               p.plan_emails #{l.res_5}
               p.plan_emails-label #{l.res_5_text}
-            
-          a(type="link" href=`/participant/register` style="display:grid") 
+
+          a(type="link" href=`/participant/register` style="display:grid")
             .panel
               <span class="plan-current">#{l.forParticipants}</span>
               p.
@@ -35,5 +35,3 @@ block content
               p.plan_emails-label #{l.part_2_text}
               p.plan_emails #{l.part_3}
               p.plan_emails-label #{l.part_3_text}
-
-    

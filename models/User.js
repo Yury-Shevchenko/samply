@@ -74,7 +74,8 @@ const userSchema = new Schema({
           keys            : {
             auth          : String,
             p256dh        : String,
-          }
+          },
+          date            : { type: Date, default: Date.now },
         }
     ],
     // created_project  : {

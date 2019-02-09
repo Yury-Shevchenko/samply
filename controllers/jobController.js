@@ -21,8 +21,8 @@ agenda.on('ready', function() {
 
   agenda.define('regular_notification', (job, done) => {
     console.log('I am sending regular notifcations for the project', job.attrs.data.projectid);
-    sendNotification(job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
-    done();
+    sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
+    // done();
   });
 
   agenda.define('start_manager', (job, done) => {
@@ -33,7 +33,9 @@ agenda.on('ready', function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
     });
-    newjob.repeatEvery(job.attrs.data.interval);
+    newjob.repeatEvery(job.attrs.data.interval, {
+      skipImmediate: true
+    });
     newjob.save();
     done();
   });
@@ -62,7 +64,9 @@ agenda.on('ready', function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
     });
-    newjob.repeatEvery(job.attrs.data.interval);
+    newjob.repeatEvery(job.attrs.data.interval,{
+      skipImmediate: true
+    });
     newjob.save();
     done();
   });
@@ -78,6 +82,13 @@ agenda.on('ready', function() {
 
   agenda.start();
   console.log("Ok, Lets get start");
+
+  async function graceful() {
+    await agenda.stop();
+  }
+
+  process.on('SIGTERM', graceful);
+  process.on('SIGINT' , graceful);
 });
 
 //One time notifications
@@ -130,8 +141,8 @@ exports.createInterval = async (req, res) => {
     name: 1, notifications: 1,
   });
   const id = uniqid();
-  const int_start = new Date(req.body.int_start);
-  const int_end = new Date(req.body.int_end);
+  const int_start = req.body.int_start;
+  const int_end = req.body.int_end;
   console.log('Dates', int_start, int_end);
   project.notifications.push({
     id: id,
@@ -180,17 +191,17 @@ exports.createRelativeSchedule = async (req, res) => {
     name: 1, notifications: 1,
   });
   const id = uniqid();
-  const int_start = new Date(req.body.int_start);
-  const int_end = new Date(req.body.int_end);
-  console.log(int_start, int_end);
+  // const int_start = new Date(req.body.int_start);
+  // const int_end = new Date(req.body.int_end);
+  const duration = req.body.duration * 1000;
+  console.log("Duration in ms", duration);
 
   project.notifications.push({
     id: id,
     name: req.body.name,
     mode: req.body.mode,
     interval: req.body.interval,
-    int_start: int_start,
-    int_end: int_end,
+    duration: duration,
     title: req.body.title || 'Open Lab',
     message: req.body.message || 'Please complete a test.',
   });
@@ -201,13 +212,15 @@ exports.createRelativeSchedule = async (req, res) => {
   if (users){
     users.map(user => {
       if (user.notifications && user.notifications.length > 0){
+        //for the existing users with approved notifications start notifications from the point when the user was created
+        //TODO later change it to the time when user approved notification
         console.log("User with a notification. ID:", user._id, " Created at", user.created);
         //specify the moment when the user should start and stop to recieve notifications
         // const user_int_start = new Date(Date.now() + 10000);
-        const timeShift = 180000;
-        const user_int_start = new Date(Date.parse(user.created) + timeShift);
-        console.log('new date', user_int_start);
-        const user_int_end = int_end;
+        const timeBuffer= 60000;
+        const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
+        const user_int_end = new Date(Date.parse(user.created) + duration);
+        console.log('start', user_int_start, 'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: user._id,
@@ -382,13 +395,10 @@ exports.registerPushNotification = async (req, res) => {
     console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
       if(sub.mode && sub.mode === 'Individual'){
-
-        // const timeShift = 180000;
-        // const user_int_start = new Date(Date.parse(user.created) + timeShift);
-        // console.log('new date', user_int_start);
-        const user_int_start = new Date(Date.now() + 10000);
-        const user_int_end = sub.int_end;
-        console.log('Important', req.user._id, project._id, sub.id, sub.interval);
+        const timeBuffer = 10000;
+        const user_int_start = new Date(Date.now() + timeBuffer);
+        const user_int_end = new Date(Date.now() + sub.duration);
+        console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: req.user._id,

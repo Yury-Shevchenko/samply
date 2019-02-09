@@ -89,9 +89,10 @@ function createInterval(){
   const message = messageContent.value;
   const titleNotification = titleContent.value;
   document.getElementById('notification_status_schedule').innerText = 'Registering interval notification ...';
-  const int_start = $('input[name="datetimes_regular"]').data('daterangepicker').startDate._d;
-  const int_end = $('input[name="datetimes_regular"]').data('daterangepicker').endDate._d;
-  const sec = document.getElementById('int_sec_regular').value;
+  const int_start = $('input[name="datetimes_regular"]').data('daterangepicker').startDate._d.toISOString();
+  const int_end = $('input[name="datetimes_regular"]').data('daterangepicker').endDate._d.toISOString();
+  // const sec = document.getElementById('int_sec_regular').value;
+  const sec = 0;
   const min = document.getElementById('int_min_regular').value;
   const hour = document.getElementById('int_hour_regular').value;
   const day = document.getElementById('int_day_regular').value;
@@ -137,9 +138,11 @@ function createRelativeNotification(){
   const message = messageContent.value;
   const titleNotification = titleContent.value;
   createRelativeButton.disabled = true;
-  const int_start = $('input[name="datetimes_individual"]').data('daterangepicker').startDate._d;
-  const int_end = $('input[name="datetimes_individual"]').data('daterangepicker').endDate._d;
-  const sec = document.getElementById('int_sec_individual').value;
+  // const int_start = $('input[name="datetimes_individual"]').data('daterangepicker').startDate._d;
+  // const int_end = $('input[name="datetimes_individual"]').data('daterangepicker').endDate._d;
+  // const sec = document.getElementById('int_sec_individual').value;
+  const duration = $('#duration')[0].value; //in seconds
+  const sec = 0;
   const min = document.getElementById('int_min_individual').value;
   const hour = document.getElementById('int_hour_individual').value;
   const day = document.getElementById('int_day_individual').value;
@@ -147,7 +150,7 @@ function createRelativeNotification(){
   const week = document.getElementById('int_week_individual').value;
 
   const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
-  console.log('individual times:', int_start, int_end, interval);
+  // console.log('individual times:', int_start, int_end);
 
   fetch('/createrelativenotification', {
     method:'POST',
@@ -159,10 +162,9 @@ function createRelativeNotification(){
       name: 'notify',
       mode: 'Individual',
       interval: interval,
-      int_start: int_start,
-      int_end: int_end,
       message: message,
       title: titleNotification,
+      duration: duration,
     })
   })
     .then(res => {

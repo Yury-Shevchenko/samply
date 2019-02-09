@@ -278,7 +278,7 @@ router.post('/createnotification', authController.isAdminLoggedIn, catchErrors(j
 router.post('/deletenotification', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
 router.post('/createnotificationinterval', authController.isAdminLoggedIn, catchErrors(jobController.createInterval));
-
+  
 router.post('/createrelativenotification', authController.isAdminLoggedIn, catchErrors(jobController.createRelativeSchedule));
 
 //user-side notifications

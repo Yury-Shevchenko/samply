@@ -49,9 +49,9 @@ body {
 .cronintervalPicker {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: (1fr)[6];
-      grid-template-columns: repeat(6, 1fr);
-  grid-column-gap: 5px; }
+  -ms-grid-columns: (1fr)[5];
+      grid-template-columns: repeat(5, 1fr);
+  grid-column-gap: 10px; }
 
 #enable_notifications {
   display: none; }
