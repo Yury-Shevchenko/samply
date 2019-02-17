@@ -174,6 +174,7 @@ module.exports =
       'change_project': 'Change the study',
       'change_project_confirm': 'Confirm',
       'notifications': 'Notifications',
+      'install_app': 'Install App',
     },
 
     'passport': {

@@ -312,8 +312,8 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
           console.log("Personal notification was sent", res.statusCode);
         })
         .catch(err => {
-          // console.log("The error happened", err.statusCode, "The user is", user);
-          console.log("The error happened", err, "The user is", user.code.id);
+          console.log("The error happened", err.statusCode, "The user is", user.code.id);
+          // console.log("The error happened", err, "The user is", user.code.id);
           //TODO: remove subscription if it is not valid anymore (check it in response)
           //TODO record in the user profile that was an error with user subscription
         })

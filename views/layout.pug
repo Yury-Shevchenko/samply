@@ -8,7 +8,7 @@ html
     //- script(src='https://js.stripe.com/v3/' nonce=`${noncevalue}`)
     link(rel="shortcut icon" type="image/png" href="/images/icons/rat.png")
     link(rel="manifest" href="/manifest.json")
-    //- script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
+    script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
 
     meta(name="viewport" content="width=device-width, initial-scale=1")
     //- script(src="/javascripts/modules/analytics.js" async defer nonce=`${noncevalue}`)
@@ -17,6 +17,10 @@ html
       header.top
         nav.nav.nav__top
           .nav__section.nav__section--pages
+            .installAppButton(id="installApp" style="display:none") 
+              li.nav__item
+                a.nav__link
+                    h6 #{layout.install_app}
             if !user
               li.nav__item.nav__link
                 script(nonce=`${noncevalue}`).
@@ -108,7 +112,7 @@ html
                             option(value=project.name selected=(user.project._id.toString() == project._id.toString()))= project.name
                           else
                             option(value=project.name selected=(user.project._id.toString() == project._id.toString()))= `${project.name.substring(0,20)}...`
-
+                
               li.nav__item: a.nav__link(href="/account", class=(currentPath.startsWith('/account') || currentPath.startsWith('/subscribe') ? 'nav__link--active' : ''))
                 h6 #{layout.profile}
               li.nav__item: a.nav__link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__link--active' : ''))

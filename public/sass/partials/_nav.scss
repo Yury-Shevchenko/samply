@@ -17,6 +17,7 @@
   &__section {
     display: flex;
     flex-wrap: inherit;
+    align-items: center;
     &--search {
       flex: 1 1 auto;
       align-items: center;
@@ -42,7 +43,7 @@
     transition: transform 0.2s;
     border-bottom: 5px solid transparent;
     svg {
-      width: 40px;
+      width: 30px;
       transition: all 0.2s;
       fill: white;
       margin-bottom: 1rem;

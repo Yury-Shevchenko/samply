@@ -814,7 +814,9 @@ label {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-wrap: inherit;
-        flex-wrap: inherit; }
+        flex-wrap: inherit;
+    -ms-flex-align: center;
+        align-items: center; }
     .nav__section--search {
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
@@ -840,7 +842,7 @@ label {
     transition: transform 0.2s;
     border-bottom: 5px solid transparent; }
     .nav__link svg {
-      width: 40px;
+      width: 30px;
       transition: all 0.2s;
       fill: white;
       margin-bottom: 1rem; }
@@ -1441,6 +1443,9 @@ and also iPads specifically.
 
 .buttonContainer:hover {
   background: #11fa71;
+  cursor: pointer; }
+
+.installAppButton:hover {
   cursor: pointer; }
 
 .avatar {

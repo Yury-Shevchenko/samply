@@ -10,7 +10,7 @@ const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
 const passport = require('passport');
 var cors = require('cors');
-
+         
 //home page
 router.get('/', testController.homePage);
 router.get('/about', testController.aboutPage);
@@ -279,7 +279,7 @@ router.post('/createintervalnotification', authController.isAdminLoggedIn, catch
 router.post('/createindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIndividualNotification));
 router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
-  
+
 //user-side notifications
 router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
 router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));

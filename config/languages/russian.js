@@ -173,6 +173,7 @@ module.exports =
       'change_project': 'Сменить исследование',
       'change_project_confirm': 'Подтвердить',
       'notifications': 'Оповещения',
+      'install_app': 'Установить приложение',
     },
 
     'passport': {
