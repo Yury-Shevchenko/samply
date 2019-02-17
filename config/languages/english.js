@@ -126,7 +126,7 @@ module.exports =
       'flash_labjs_upload_success': 'Successfully uploaded',
       'flash_labjs_edit_message': 'Please edit the information below and save the changes.',
       'flash_labjs_upload_invalid' : 'Task upload is invalid or has expired',
-      'flash_labjs_finalize': 'Please edit the information below and click "Save" to add the task.', 
+      'flash_labjs_finalize': 'Please edit the information below and click "Save" to add the task.',
       'flash_profile_updated' : 'Updated the profile!',
       'flash_profile_error_update': 'An error occurred while updating the profile.',
       'flash_user_deleted' : 'The user is deleted!',
@@ -173,6 +173,7 @@ module.exports =
       'help': 'Help',
       'change_project': 'Change the study',
       'change_project_confirm': 'Confirm',
+      'notifications': 'Notifications',
     },
 
     'passport': {
@@ -599,7 +600,45 @@ module.exports =
           'ask_question_header': 'Do you have a problem?',
           'type_in_your_question': 'Ask your question here',
           'send_question_btn': 'Send',
-        }
+        },
+
+        'notifications': {
+          'message_create_project': `To set up notifications, activate or create a study <a href="/projects">here</a>.`,
+          'testing_message': 'We are testing notifications now, so it might not work as expected. The participants should use Chrome to recieve notifications.',
+          'title': 'Title',
+          'title_placeholder': 'Open Lab',
+          'message': 'Message',
+          'message_placeholder': 'Please compete a test',
+          'schedule': 'Schedule',
+          'interval': 'Interval',
+          'individual': 'Individual',
+          'schedule_explanation_1': 'The schedule type of notifications is used for one-time notifications that are sent to all participants of your study.',
+          'schedule_explanation_2': 'Select the date and time for the notification(s) to be sent. You can add more time points if you wish.',
+          'add': 'Add',
+          'interval_explanation_1': 'The interval notification is used for regular notifications that are sent to all participants of your study.',
+          'interval_explanation_2': 'Choose the time period and interval for regular notifications. For example, the interval "0 15 * * Sat" creates a notification that is sent to each user every Saturday at 15:00.',
+          'cron_explanation': 'The interval is specified in a cron format. The description and examples are <a target="_blank" href="https://crontab.guru/">here</a>.',
+          'minute': 'Minute',
+          'hour': 'Hour',
+          'day_month': 'Day (Month)',
+          'month': 'Month',
+          'day_week': 'Day (Week)',
+          'individual_explanation_1': 'The individual notifications depend on the time when a participant approved notifications from your study.',
+          'individual_explanation_2': 'Select the time period and interval for notifications. For example, a 7 days duration with the interval "0 12 * * *" creates a notification that is sent to a new user every day at 12:00 p.m. for one week.',
+          'scheduled_notifications': 'Scheduled notifications',
+          'table_type': 'Type',
+          'table_title': 'Title',
+          'table_message': 'Message',
+          'table_date': 'Date',
+          'table_interval': 'Interval',
+          'table_start': 'Start',
+          'table_end': 'End',
+          'table_delete': 'Delete',
+          'delete_notifications': 'Delete all notifications',
+          'registering_busy_message': 'Registering notification ...',
+
+        },
+
 
 
 }

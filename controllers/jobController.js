@@ -14,19 +14,17 @@ const agenda = new Agenda({
 agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
-    console.log('one_time_notification for the project', job.attrs.data.projectid);
+    // console.log('one_time_notification for the project', job.attrs.data.projectid);
     sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
-    // done();
   });
 
   agenda.define('regular_notification', (job, done) => {
-    console.log('I am sending regular notifcations for the project', job.attrs.data.projectid);
+    // console.log('I am sending regular notifcations for the project', job.attrs.data.projectid);
     sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
-    // done();
   });
 
   agenda.define('start_manager', (job, done) => {
-    console.log('Starting interval notifications');
+    // console.log('Starting interval notifications');
     const newjob = agenda.create('regular_notification', {
       projectid: job.attrs.data.projectid,
       id: job.attrs.data.id,
@@ -41,7 +39,7 @@ agenda.on('ready', function() {
   });
 
   agenda.define('end_manager', (job, done) => {
-    console.log('Ending interval notifications');
+    // console.log('Ending interval notifications');
     agenda.cancel({
       'data.projectid': job.attrs.data.projectid,
       'data.id': job.attrs.data.id
@@ -50,13 +48,13 @@ agenda.on('ready', function() {
   });
 
   agenda.define('personal_regular_notification', (job, done) => {
-    console.log('I am sending right now personal notification for the user', job.attrs.data.userid);
+    // console.log('I am sending right now personal notification for the user', job.attrs.data.userid);
     sendPersonalNotification(job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message);
     done();
   });
 
   agenda.define('start_personal_manager', (job, done) => {
-    console.log('Starting relative interval notifications for user', job.attrs.data.userid);
+    // console.log('Starting relative interval notifications for user', job.attrs.data.userid, 'at',  job.attrs.data.interval);
     const newjob = agenda.create('personal_regular_notification', {
       userid: job.attrs.data.userid,
       projectid: job.attrs.data.projectid,
@@ -64,7 +62,7 @@ agenda.on('ready', function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
     });
-    newjob.repeatEvery(job.attrs.data.interval,{
+    newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true
     });
     newjob.save();
@@ -72,7 +70,7 @@ agenda.on('ready', function() {
   });
 
   agenda.define('end_personal_manager', (job, done) => {
-    console.log('Stopping relative interval notifications for user', job.attrs.data.userid);
+    // console.log('Stopping relative interval notifications for user', job.attrs.data.userid);
     agenda.cancel({
       'data.projectid': job.attrs.data.projectid,
       'data.id': job.attrs.data.id
@@ -81,7 +79,7 @@ agenda.on('ready', function() {
   });
 
   agenda.start();
-  console.log("Ok, Lets get start");
+  // console.log("Ok, Lets get start");
 
   async function graceful() {
     await agenda.stop();
@@ -91,18 +89,14 @@ agenda.on('ready', function() {
   process.on('SIGINT' , graceful);
 });
 
-//One time notifications
-exports.createNotification = async(req, res) => {
+exports.createScheduleNotification = async(req, res) => {
   let project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1,
   });
-  const dates = req.body.date;
-  if(dates.length > 0){
-    await dates.map(d => {
+  if(req.body.date && req.body.date.length > 0){
+    await req.body.date.map(date => {
       const id = uniqid();
-      //const date = new Date(d);
-      const date = d;
-      console.log("The job is scheduled for the date", date);
+      // console.log("The job is scheduled for the date", date);
       project.notifications.push({
         id: id,
         name: req.body.name,
@@ -131,8 +125,7 @@ exports.createNotification = async(req, res) => {
   }
 }
 
-//Interval notification
-exports.createInterval = async (req, res) => {
+exports.createIntervalNotification = async (req, res) => {
   if(req.body.int_start === '' || req.body.int_end === '' || req.body.interval === ''){
     res.status(400).send();
     return;
@@ -143,7 +136,7 @@ exports.createInterval = async (req, res) => {
   const id = uniqid();
   const int_start = req.body.int_start;
   const int_end = req.body.int_end;
-  console.log('Dates', int_start, int_end);
+  // console.log('Dates', int_start, int_end);
   project.notifications.push({
     id: id,
     name: req.body.name,
@@ -181,9 +174,9 @@ exports.createInterval = async (req, res) => {
   });
 };
 
-//Relative notifications, dependent on the user data
-exports.createRelativeSchedule = async (req, res) => {
-  if(req.body.int_start === '' || req.body.int_end === ''){
+
+exports.createIndividualNotification = async (req, res) => {
+  if(req.body.interval === '' || req.body.duration === ''){
     res.status(400).send();
     return;
   }
@@ -191,11 +184,8 @@ exports.createRelativeSchedule = async (req, res) => {
     name: 1, notifications: 1,
   });
   const id = uniqid();
-  // const int_start = new Date(req.body.int_start);
-  // const int_end = new Date(req.body.int_end);
   const duration = req.body.duration * 1000;
-  console.log("Duration in ms", duration);
-
+  // console.log("Duration in ms", duration);
   project.notifications.push({
     id: id,
     name: req.body.name,
@@ -206,21 +196,19 @@ exports.createRelativeSchedule = async (req, res) => {
     message: req.body.message || 'Please complete a test.',
   });
 
-  console.log('Project', project);
   const users = await User.getUsersOfProject(req.user.project._id);
-
   if (users){
     users.map(user => {
       if (user.notifications && user.notifications.length > 0){
         //for the existing users with approved notifications start notifications from the point when the user was created
         //TODO later change it to the time when user approved notification
-        console.log("User with a notification. ID:", user._id, " Created at", user.created);
+        // console.log("User with a notification. ID:", user._id, " Created at", user.created);
         //specify the moment when the user should start and stop to recieve notifications
         // const user_int_start = new Date(Date.now() + 10000);
-        const timeBuffer= 60000;
+        const timeBuffer = 60000;
         const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
         const user_int_end = new Date(Date.parse(user.created) + duration);
-        console.log('start', user_int_start, 'end', user_int_end);
+        // console.log('start', user_int_start, 'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: user._id,
@@ -255,7 +243,6 @@ exports.createRelativeSchedule = async (req, res) => {
 
 exports.deleteProjectNotifications = async(req, res) => {
   const projectID = req.user.project._id;
-  console.log('project id', projectID);
   let project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1,
   });
@@ -263,7 +250,6 @@ exports.deleteProjectNotifications = async(req, res) => {
   agenda.cancel({
     'data.projectid': projectID
   }, function(err, numRemoved) {
-    console.log('Number of removed notifications', numRemoved);
     console.log('Error', err);
   });
   await project.save((saveErr, updatedproject) => {
@@ -307,7 +293,7 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
   await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
 
   if (user.notifications && user.notifications.length > 0){
-    console.log("Personal user Open lab ID", user.openLabId);
+    // console.log("Personal user Open lab ID", user.openLabId);
     const subs = user.notifications;
     subs.forEach(function(sub){
       const pushConfig = {
@@ -326,7 +312,8 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
           console.log("Personal notification was sent", res.statusCode);
         })
         .catch(err => {
-          console.log("The error happened", err.statusCode, "The user is ", user.openLabId);
+          // console.log("The error happened", err.statusCode, "The user is", user);
+          console.log("The error happened", err, "The user is", user.code.id);
           //TODO: remove subscription if it is not valid anymore (check it in response)
           //TODO record in the user profile that was an error with user subscription
         })
@@ -385,20 +372,19 @@ async function sendNotification(done, project_id, title, message) {
 
 //user functions
 exports.registerPushNotification = async (req, res) => {
-
   // console.log('user', req.user);
   const project = await Project.findOne({_id: req.user.participantInProject},{
     name: 1, notifications: 1,
   });
-  console.log('project', project);
+  // console.log('project', project);
   if(project && project.notifications && project.notifications.length > 0){
-    console.log('Notifications in the project', project.notifications);
+    // console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
       if(sub.mode && sub.mode === 'Individual'){
         const timeBuffer = 10000;
         const user_int_start = new Date(Date.now() + timeBuffer);
         const user_int_end = new Date(Date.now() + sub.duration);
-        console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
+        // console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: req.user._id,

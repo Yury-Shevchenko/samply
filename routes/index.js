@@ -274,13 +274,12 @@ router.get('/help', authController.isLoggedIn, catchErrors(userController.help))
 
 //reseacher notifications bar
 router.get('/notifications', authController.isAdminLoggedIn, catchErrors(projectController.manageNotifications));
-router.post('/createnotification', authController.isAdminLoggedIn, catchErrors(jobController.createNotification));
-router.post('/deletenotification', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
+router.post('/createschedulenotification', authController.isAdminLoggedIn, catchErrors(jobController.createScheduleNotification));
+router.post('/createintervalnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIntervalNotification));
+router.post('/createindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIndividualNotification));
+router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
-router.post('/createnotificationinterval', authController.isAdminLoggedIn, catchErrors(jobController.createInterval));
   
-router.post('/createrelativenotification', authController.isAdminLoggedIn, catchErrors(jobController.createRelativeSchedule));
-
 //user-side notifications
 router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
 router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));

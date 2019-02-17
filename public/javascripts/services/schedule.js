@@ -1,81 +1,160 @@
-const createNotificationButton = document.querySelector('#create_schedule_notification');
-const createIntervalButton = document.querySelector('#create_interval_notification');
-const deleteNotificationButton = document.querySelector('#delete_notification') || 'not_defined';
-const createRelativeButton = document.querySelector('#create_relative_notification');
+const createScheduleNotificationsBtn = document.querySelector('#create_schedule_notification');
+const createIntervalNotificationBtn = document.querySelector('#create_interval_notification');
+const createIndividualNotificationBtn = document.querySelector('#create_individual_notification');
+const deleteAllNotificationsBtn = document.querySelector('#delete_all_notifications') || 'not_defined';
 const messageContent = document.querySelector('#messageContent');
 const titleContent = document.querySelector('#titleContent');
 
-
-function createNotification(){
-  createNotificationButton.disabled = true;
-  const message = messageContent.value;
-  const titleNotification = titleContent.value;
-  document.getElementById('notification_status_schedule').innerText = 'Registering notification ...';
-  const scheduleInputs = document.querySelectorAll('.scheduleInput');
-  const scheduleArray = Array.from(scheduleInputs);
+function createScheduleNotification(){
+  createScheduleNotificationsBtn.disabled = true;
+  document.getElementById('notification_status_schedule').style.visibility = 'visible';
+  const scheduleArray = Array.from(document.querySelectorAll('.scheduleInput'));
   const schedule = scheduleArray
     .map(e => e.value)
     .filter(v => v !== '')
     .map(d => new Date(d).toISOString())
-    //.filter(v => v !== '' && new Date(v) - new Date() > 0);//["2019-01-31 14:12", "2019-01-30 16:12"]
-  console.log('Sending test notification', schedule);
-  fetch('/createnotification', {
+  // console.log('Sending test notification', schedule);
+  fetch('/createschedulenotification', {
     method:'POST',
     headers: {
       'Content-Type':'application/json',
       'Accept':'application/json',
     },
     body: JSON.stringify({
-      name: 'notify',
+      name: 'notification',
       mode: 'Schedule',
       date: schedule,
-      message: message,
-      title: titleNotification,
+      message: messageContent.value,
+      title: titleContent.value,
     })
   })
     .then(res => {
-      console.log('Response', res);
+      // console.log('Response', res);
       if(res.url && res.ok){
         window.location = res.url;
       }
-      createNotificationButton.disabled = false;
-      document.getElementById('notification_status_schedule').innerText = '';
+      createScheduleNotificationsBtn.disabled = false;
+      document.getElementById('notification_status_schedule').style.visibility = 'hidden';
     })
     .catch(err => {
       console.log(err);
-      createNotificationButton.disabled = false;
-      document.getElementById('notification_status_schedule').innerText = '';
+      createScheduleNotificationsBtn.disabled = false;
+      document.getElementById('notification_status_schedule').style.visibility = 'hidden';
     })
 };
 
-function deleteAllNotifications(){
-  deleteNotificationButton.disabled = true;
-  console.log('Deleting notification');
-  const name = 'notify';
-  fetch('/deletenotification', {
+function createIntervalNotification(){
+  createIntervalNotificationBtn.disabled = true;
+  document.getElementById('notification_status_schedule').style.visibility = 'visible';
+  const int_start = $('input[name="datetimes_regular"]').data('daterangepicker').startDate._d.toISOString();
+  const int_end = $('input[name="datetimes_regular"]').data('daterangepicker').endDate._d.toISOString();
+  const sec = Math.floor((Math.random() * 60));//get the random value for the seconds
+  const min = document.getElementById('int_min_regular').value;
+  const hour = document.getElementById('int_hour_regular').value;
+  const day = document.getElementById('int_day_regular').value;
+  const month = document.getElementById('int_month_regular').value;
+  const week = document.getElementById('int_week_regular').value;
+  const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
+  // console.log('regular times:', int_start, int_end, interval);
+  fetch('/createintervalnotification', {
     method:'POST',
     headers: {
       'Content-Type':'application/json',
       'Accept':'application/json',
     },
     body: JSON.stringify({
-      name: name,
+      name: 'notification',
+      mode: 'Interval',
+      interval: interval,
+      int_start: int_start,
+      int_end: int_end,
+      message: messageContent.value,
+      title: titleContent.value,
     })
   })
     .then(res => {
-      console.log('Response', res);
+      // console.log('Response', res);
       if(res.url && res.ok){
         window.location = res.url;
       }
-      deleteNotificationButton.disabled = false;
+      createIntervalNotificationBtn.disabled = false;
+      document.getElementById('notification_status_schedule').style.visibility = 'hidden';
     })
     .catch(err => {
       console.log(err);
-      deleteNotificationButton.disabled = false;
+      createIntervalNotificationBtn.disabled = false;
+      document.getElementById('notification_status_schedule').style.visibility = 'hidden';
+    })
+}
+
+function createIndividualNotification(){
+  createIndividualNotificationBtn.disabled = true;
+  document.getElementById('notification_status_schedule').style.visibility = 'visible';
+  const duration = $('#duration')[0].value; //in seconds
+  const sec = Math.floor((Math.random() * 60));//get the random value for the seconds
+  const min = document.getElementById('int_min_individual').value;
+  const hour = document.getElementById('int_hour_individual').value;
+  const day = document.getElementById('int_day_individual').value;
+  const month = document.getElementById('int_month_individual').value;
+  const week = document.getElementById('int_week_individual').value;
+  const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
+  console.log('interval ', interval);
+  // console.log('individual times:', int_start, int_end);
+  fetch('/createindividualnotification', {
+    method:'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'Accept':'application/json',
+    },
+    body: JSON.stringify({
+      name: 'notification',
+      mode: 'Individual',
+      interval: interval,
+      message: messageContent.value,
+      title: titleContent.value,
+      duration: duration,
+    })
+  })
+    .then(res => {
+      // console.log('Response', res);
+      if(res.url && res.ok){
+        window.location = res.url;
+      }
+      createIndividualNotificationBtn.disabled = false;
+      document.getElementById('notification_status_schedule').style.visibility = 'hidden';
+    })
+    .catch(err => {
+      console.log(err);
+      createIndividualNotificationBtn.disabled = false;
+      document.getElementById('notification_status_schedule').style.visibility = 'hidden';
+    })
+}
+
+function deleteAllNotifications(){
+  deleteAllNotificationsBtn.disabled = true;
+  fetch('/deleteprojectnotifications', {
+    method:'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'Accept':'application/json',
+    },
+    body: JSON.stringify({
+      name: 'notification',
+    })
+  })
+    .then(res => {
+      if(res.url && res.ok){
+        window.location = res.url;
+      }
+      deleteAllNotificationsBtn.disabled = false;
+    })
+    .catch(err => {
+      console.log(err);
+      deleteAllNotificationsBtn.disabled = false;
     })
 };
 
-function removePicker(){
+function removeScheduleDateTimePicker(){
   const id = this.id;
   var container = document.getElementById("dateTimePicker");
   const containerPicker = document.getElementById(`container-picker${id}`);
@@ -84,107 +163,9 @@ function removePicker(){
   container.removeChild(containerPicker);
 };
 
-function createInterval(){
-  createIntervalButton.disabled = true;
-  const message = messageContent.value;
-  const titleNotification = titleContent.value;
-  document.getElementById('notification_status_schedule').innerText = 'Registering interval notification ...';
-  const int_start = $('input[name="datetimes_regular"]').data('daterangepicker').startDate._d.toISOString();
-  const int_end = $('input[name="datetimes_regular"]').data('daterangepicker').endDate._d.toISOString();
-  // const sec = document.getElementById('int_sec_regular').value;
-  const sec = 0;
-  const min = document.getElementById('int_min_regular').value;
-  const hour = document.getElementById('int_hour_regular').value;
-  const day = document.getElementById('int_day_regular').value;
-  const month = document.getElementById('int_month_regular').value;
-  const week = document.getElementById('int_week_regular').value;
-
-  const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
-  console.log('regular times:', int_start, int_end, interval);
-
-  fetch('/createnotificationinterval', {
-    method:'POST',
-    headers: {
-      'Content-Type':'application/json',
-      'Accept':'application/json',
-    },
-    body: JSON.stringify({
-      name: 'notify',
-      mode: 'Interval',
-      interval: interval,
-      int_start: int_start,
-      int_end: int_end,
-      message: message,
-      title: titleNotification,
-    })
-  })
-    .then(res => {
-      console.log('Response', res);
-      if(res.url && res.ok){
-        window.location = res.url;
-      }
-      createIntervalButton.disabled = false;
-      document.getElementById('notification_status_schedule').innerText = '';
-    })
-    .catch(err => {
-      console.log(err);
-      createIntervalButton.disabled = false;
-      document.getElementById('notification_status_schedule').innerText = '';
-    })
-}
-
-function createRelativeNotification(){
-  document.getElementById('notification_status_schedule').innerText = 'Registering relative notification ...';
-  const message = messageContent.value;
-  const titleNotification = titleContent.value;
-  createRelativeButton.disabled = true;
-  // const int_start = $('input[name="datetimes_individual"]').data('daterangepicker').startDate._d;
-  // const int_end = $('input[name="datetimes_individual"]').data('daterangepicker').endDate._d;
-  // const sec = document.getElementById('int_sec_individual').value;
-  const duration = $('#duration')[0].value; //in seconds
-  const sec = 0;
-  const min = document.getElementById('int_min_individual').value;
-  const hour = document.getElementById('int_hour_individual').value;
-  const day = document.getElementById('int_day_individual').value;
-  const month = document.getElementById('int_month_individual').value;
-  const week = document.getElementById('int_week_individual').value;
-
-  const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
-  // console.log('individual times:', int_start, int_end);
-
-  fetch('/createrelativenotification', {
-    method:'POST',
-    headers: {
-      'Content-Type':'application/json',
-      'Accept':'application/json',
-    },
-    body: JSON.stringify({
-      name: 'notify',
-      mode: 'Individual',
-      interval: interval,
-      message: message,
-      title: titleNotification,
-      duration: duration,
-    })
-  })
-    .then(res => {
-      console.log('Response', res);
-      if(res.url && res.ok){
-        window.location = res.url;
-      }
-      createRelativeButton.disabled = false;
-      document.getElementById('notification_status_schedule').innerText = '';
-    })
-    .catch(err => {
-      console.log(err);
-      createRelativeButton.disabled = false;
-      document.getElementById('notification_status_schedule').innerText = '';
-    })
-}
-
-createNotificationButton.addEventListener('click', createNotification);
-if(deleteNotificationButton !== 'not_defined'){
-  deleteNotificationButton.addEventListener('click', deleteAllNotifications);
+createScheduleNotificationsBtn.addEventListener('click', createScheduleNotification);
+if(deleteAllNotificationsBtn !== 'not_defined'){
+  deleteAllNotificationsBtn.addEventListener('click', deleteAllNotifications);
 };
-createIntervalButton.addEventListener('click', createInterval);
-createRelativeButton.addEventListener('click', createRelativeNotification);
+createIntervalNotificationBtn.addEventListener('click', createIntervalNotification);
+createIndividualNotificationBtn.addEventListener('click', createIndividualNotification);

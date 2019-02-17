@@ -4,6 +4,35 @@ importScripts('/javascripts/indexeddb/utility.js');
 
 const workboxSW = new self.WorkboxSW();
 
+//installing and activating
+self.addEventListener('install', function(event){
+  console.log('[Service Worker] Installing Service Worker ...', event);
+});
+
+self.addEventListener('activate', function(event){
+  console.log('[Service Worker] Activating Service Worker ...', event);
+  return self.clients.claim();
+});
+
+//routing
+workboxSW.router.registerRoute(/\/test\/.*$/, workboxSW.strategies.staleWhileRevalidate({
+  cacheName: 'tests',
+  cacheExpiration: {
+    maxAgeSeconds: 60 * 60 * 24 * 7 //week
+  }
+}));
+
+//saving data when a user is offline
+// workboxSW.router.registerRoute('/save', function(args){
+//   console.log("the data are sent for saving");
+//   return fetch(args.event.request)
+//     .then(function(res){
+//       console.log("Response", res);
+//     })
+// });
+
+
+//handle notifications
 function isClientFocused() {
   return clients.matchAll({
     type: 'window',
@@ -27,7 +56,6 @@ self.addEventListener('push', event => {
   var data = {title: 'New test', content: 'Please check the new test', openUrl: '/testing'};
   if(event.data) {
     try{
-      //data = JSON.parse(event.data.text());
       data = event.data.json();
     }
     catch(error){
@@ -45,8 +73,8 @@ self.addEventListener('push', event => {
         title: 'Go to the test',
       },
       {
-        action: 'busy',
-        title: 'I am busy now',
+        action: 'no',
+        title: 'Not now',
       }
     ],
     data: {
@@ -70,11 +98,11 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function(event) {
   var notification = event.notification;
 
-  if (!event.action) {
-    // Was a normal notification click
-    console.log('Notification Click.');
-    return;
-  }
+  // if (!event.action) {
+  //   // Was a normal notification click
+  //   console.log('Notification Click.');
+  //   return;
+  // }
 
   if (event.action === 'busy') {
     console.log('Busy was chosen');
@@ -123,14 +151,56 @@ self.addEventListener('notificationclose', (event) => {
   // event.waitUntil(promiseChain);
 })
 
+//background synchronization
+self.onsync = function(event) {
+  if(event.tag == 'sync-task-parameters') {
+    console.log('[Service Worker] Syncing new Posts');
+  }
+}
+
+// self.addEventListener('sync', function(event) {
+//   console.log('[Service Worker] Background syncing', event);
+//   if (event.tag === 'sync-task-parameters') {
+//
+//     // event.waitUntil(
+//     //   readAllData('sync-parameters')
+//     //     .then(function(data) {
+//     //       for (var dt of data) {
+//     //         var postData = new FormData();
+//     //         postData.append('id', dt.id);
+//     //         postData.append('parameters', dt.parameters);
+//     //         fetch(`/tasks/${dt.task_id}/${dt.task_slug}/${dt.param_language}`, {
+//     //           method: 'POST',
+//     //           body: postData
+//     //         })
+//     //           .then(function(res) {
+//     //             console.log('Sent data', res);
+//     //             if (res.ok) {
+//     //               res.json()
+//     //                 .then(function(resData) {
+//     //                   deleteItemFromData('sync-parameters', resData.id);
+//     //                 });
+//     //             }
+//     //           })
+//     //           .catch(function(err) {
+//     //             console.log('Error while sending data', err);
+//     //           });
+//     //       }
+//     //
+//     //     })
+//     // );
+//   }
+// });
+
+
 workboxSW.precache([
   {
     "url": "dist/App.bundle.js.map",
-    "revision": "7537fc5f027d0b9b074b5000c4403d7e"
+    "revision": "90566c21166e021bedaf99777c2420f5"
   },
   {
     "url": "dist/style.css.map",
-    "revision": "99ab586c21da3c83699b4223c6ec642b"
+    "revision": "7e89904241b1fe8db60a26ef8bb67cc2"
   },
   {
     "url": "fonts/BebasNeue Bold.ttf",

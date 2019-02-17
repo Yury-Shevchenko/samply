@@ -4,7 +4,8 @@ include mixins/_chosenTestCard
 include mixins/_resultLine
 
 block content
-
+  script(src='/javascripts/indexeddb/idb.js' nonce=`${noncevalue}`)
+  script(src='/javascripts/indexeddb/utility.js' nonce=`${noncevalue}`)
   .inner
     p
     header.top
@@ -14,7 +15,7 @@ block content
           li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
           li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
           li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) Notifications
+          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
           li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
           li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
     p
@@ -110,7 +111,7 @@ block content
                         input(type='text' name= key value= savedParameter.parameters[key])
                 else
                   if(test && test.params && test.params.length != 0)
-                    - const sortedData = test.params.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
+                    - let sortedData = test.params.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} );
                     form(action=`/tasks/${test._id}/${test.slug}/${param_language}` method = 'POST' id ="myForm")
                       input.nav__link(type='submit' value=`${l.save} ${test.name}` class="button" style='margin-top: 20px')
                       p
@@ -124,6 +125,68 @@ block content
                         .formsforparameters
                           label(for= key.name) #{key.name}
                           input(type='text' name= key.name value= key.value)
+
+                    //- script(nonce=`${noncevalue}`).
+                      const form = document.querySelector('#myForm');
+                      function sendData(){
+                        const arr = Array.from(document.querySelectorAll('.formsforparameters'));
+                        const params = arr.map(e => {
+                          return({[e.children[0].innerText]: e.children[1].value})
+                        })
+                        const parameters = params.reduce((obj, item) => (obj[Object.keys(item)] = Object.values(item)[0], obj) ,{});
+
+                        fetch(`/tasks/5c5ef185b09601170c65e77d/delay-task/english`, {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            id: new Date().toISOString(),
+                            parameters: parameters
+                          })
+                        })
+                          .then(function(res){
+                            console.log('send data', res);
+                            if(res.url && res.ok){
+                              window.location = res.url;
+                            }
+                          })
+                      };
+                      form.addEventListener('submit', function(event){
+                        event.preventDefault();
+                        if ('serviceWorker' in navigator && 'SyncManager' in window){
+                          navigator.serviceWorker.ready
+                            .then(function(sw){
+                              const arr = Array.from(document.querySelectorAll('.formsforparameters'));
+                              const params = arr.map(e => {
+                                return({[e.children[0].innerText]: e.children[1].value})
+                              })
+                              const parameters = params.reduce((obj, item) => (obj[Object.keys(item)] = Object.values(item)[0], obj) ,{});
+                              var post = {
+                                id: new Date().toISOString(),
+                                parameters: parameters,
+                                test_id: "5c5ef185b09601170c65e77d",
+                                test_slug: 'delay-task',
+                                param_language: 'English'
+                              };
+                              writeData('sync-parameters', post)
+                                .then(function(){
+                                  sw.sync.register('sync-task-parameters');
+                                })
+                                .then(function(){
+                                  console.log("The sync task is registered");
+                                  //show visual feedback to user
+                                })
+                                .catch(function(error){
+                                  console.error(error);
+                                })
+                            });
+                        } else {
+                          //fallback
+                          sendData();
+                        }
+                      });
 
               else
                 form(action=`/tasks/${test._id}/${test.slug}/${param_language}` method = 'POST' id ="myForm")

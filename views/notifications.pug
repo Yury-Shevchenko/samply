@@ -1,6 +1,5 @@
 extends layout
 
-
 block content
   .inner
     p
@@ -11,11 +10,11 @@ block content
           li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
           li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
           li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) Notifications
+          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
           li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
           li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
     p
-    h2 Notifications
+    h2 #{layout.notifications}
     .card
       if project && project.name
         
@@ -31,87 +30,82 @@ block content
         link(href='/javascripts/datepicker/bootstrap-duration-picker.css', rel='stylesheet', type='text/css' nonce=`${noncevalue}`)
 
         .notificationsPanel
-          p We are testing notifications now, so it might not work as expected. The participants should use Chrome to recieve notifications.
-          h6 Title
-          input#titleContent(type='text', value = 'Open Lab')
-          h6 Message
-          input#messageContent(type='text', value = 'Please complete a test.')
+          p #{l.testing_message}
+          h6 #{l.title} 
+          input#titleContent(type='text', value = l.title_placeholder)
+          h6 #{l.message} 
+          input#messageContent(type='text', value = l.message_placeholder)
           p
-          #notification_status_schedule
+          #notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
           p 
           #controlButtons(style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-column-gap: 15px;")
-            button(class="buttonContainer" id="scheduleNotification") Schedule 
-            button(class="buttonContainer" id="intervalNotification") Interval   
-            button(class="buttonContainer" id="individualNotification") Individual  
+            button(class="buttonContainer" id="scheduleNotification") #{l.schedule}   
+            button(class="buttonContainer" id="intervalNotification") #{l.interval}     
+            button(class="buttonContainer" id="individualNotification") #{l.individual}    
           
           p
           .notificationContainer(id="scheduleNotificationContainer" style="display:none") 
-            p The schedule type of notifications is used for one-time notifications that are sent to all participants of your study.
-            p Select the date and time for the notification(s) to be sent. You can add more time points if you wish.
+            p #{l.schedule_explanation_1}
+            p #{l.schedule_explanation_2}
             #dateTimePicker  
               .container_picker
                 #picker 
                 input#dateresult(class='scheduleInput' type='hidden', value='')
                 button(type="button" value="Add a field" id="addDateTimePicker") +
-            button(id="create_schedule_notification" class="button") Add
+            button(id="create_schedule_notification" class="button") #{l.add}
   
           .notificationContainer(id="intervalNotificationContainer" style="display:none")
-            p The interval notification is used for regular notifications that are sent to all participants of your study.
-            p Choose the time period and interval for regular notifications. For example, the interval "0 15 * * * Sat" creates a notification that is sent to each user every Saturday at 15:00.
+            p #{l.interval_explanation_1}
+            p #{l.interval_explanation_2}
             input(type="text", name="datetimes_regular")
-            p The interval is specified in a cron format. The description and examples are <a target="_blank" href="https://crontab.guru/">here</a>.
+            p !{l.cron_explanation}  
             #cronintervalPicker_regular(class="cronintervalPicker")
-              //- h7(style="text-align: center;") Seconds
-              h7(style="text-align: center;") Minute 
-              h7(style="text-align: center;") Hour
-              h7(style="text-align: center;") Day (Month) 
-              h7(style="text-align: center;") Month
-              h7(style="text-align: center;") Day (Week) 
-              //- input(type='text' id='int_sec_regular')
+              h7(style="text-align: center;") #{l.minute}  
+              h7(style="text-align: center;") #{l.hour} 
+              h7(style="text-align: center;") #{l.day_month} 
+              h7(style="text-align: center;") #{l.month} 
+              h7(style="text-align: center;") #{l.day_week} 
               input(type='text' id='int_min_regular')
               input(type='text' id='int_hour_regular')
               input(type='text' id='int_day_regular')
               input(type='text' id='int_month_regular')  
               input(type='text' id='int_week_regular')  
             p  
-            button(id="create_interval_notification" class="button") Add
+            button(id="create_interval_notification" class="button") #{l.add}
               
           
           .notificationContainer(id="individualNotificationContainer" style="display:none")
-            p The individual notifications depend on the time when a participant approved notifications from your study.
-            p Select the time period and interval for notifications. For example, a 7 days duration with the interval "0 12 * * *" creates a notification that is sent to a new user every day for a week at 12:00 noon.
-            //- input(type="text", name="datetimes_individual")
+            p #{l.individual_explanation_1}
+            p #{l.individual_explanation_2}
             input(type="text" class="form-control" id="duration")
-            p The interval is specified in a cron format. The description and examples are <a target="_blank" href="https://crontab.guru/">here</a>. 
+            p !{l.cron_explanation}  
             #cronintervalPicker_individual(class="cronintervalPicker")
-              //- h7(style="text-align: center;") Seconds
-              h7(style="text-align: center;") Minute 
-              h7(style="text-align: center;") Hour
-              h7(style="text-align: center;") Day (Month) 
-              h7(style="text-align: center;") Month
-              h7(style="text-align: center;") Day (Week) 
-              //- input(type='text' id='int_sec_individual')
+              h7(style="text-align: center;") #{l.minute} 
+              h7(style="text-align: center;") #{l.hour} 
+              h7(style="text-align: center;") #{l.day_month} 
+              h7(style="text-align: center;") #{l.month} 
+              h7(style="text-align: center;") #{l.day_week} 
               input(type='text' id='int_min_individual')
               input(type='text' id='int_hour_individual')
               input(type='text' id='int_day_individual')
               input(type='text' id='int_month_individual')  
               input(type='text' id='int_week_individual')  
             p  
-            button(id="create_relative_notification" class="button") Add
+            button(id="create_individual_notification" class="button") #{l.add}
             
           
         if (project && project.notifications && project.notifications.length > 0)
-          h2 Scheduled notifications
+          h2 #{l.scheduled_notifications} 
           table.table
             thead
-              td Type
-              td Title 
-              td Message
-              td Date
-              td Interval 
-              td Start
-              td End
-              td Delete
+              td #{l.table_type} 
+              td #{l.table_title}  
+              td #{l.table_message} 
+              td #{l.table_date} 
+              td #{l.table_interval}  
+              td #{l.table_start} 
+              td #{l.table_end} 
+              td #{l.table_delete} 
             each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
               tr(style=`background-color:${(notification.mode === 'Interval' || notification.mode === 'Individual') ? '#fdf4a7' : ((notification.date - new Date()) > 0 ? 'white' : '#f3f0f0')}`) 
                 td= notification.mode
@@ -125,7 +119,7 @@ block content
                   a(href=`/removenotification/${notification.id}`)
                     != h.icon('remove')
           p  
-          button(id="delete_notification" class="button" style="background-color:red; color:white") Delete all notifications    
+          button(id="delete_all_notifications" class="button" style="background-color:red; color:white") #{l.delete_notifications} 
                          
         script(defer type='text/javascript' nonce=`${noncevalue}`).
           $(document).ready( function () {
@@ -143,13 +137,12 @@ block content
                 }
               });
               $('#duration').durationPicker({
-                showSeconds: false
+                showSeconds: true
               });
           }) 
           var pickerNum = 1;
           document.addEventListener('DOMContentLoaded', function (){
             document.querySelectorAll('.buttonContainer').addEventListener('click', function changeContainer(){
-              console.log(this.id);
               document.querySelector(`#scheduleNotificationContainer`).style.display = "none";
               document.querySelector(`#intervalNotificationContainer`).style.display = "none";
               document.querySelector(`#individualNotificationContainer`).style.display = "none";
@@ -177,7 +170,7 @@ block content
               removePickerBtn.innerText = 'x';
               removePickerBtn.classList.add('removePickerButton');
               removePickerBtn.id = `-${pickerNum}`;
-              removePickerBtn.addEventListener('click', removePicker);
+              removePickerBtn.addEventListener('click', removeScheduleDateTimePicker);
               newPicker.appendChild(removePickerBtn);
               container.appendChild(newPicker);
               $(`#picker-${pickerNum}`).dateTimePicker();
@@ -187,8 +180,6 @@ block content
         script(type='text/javascript', src='/javascripts/services/schedule.js' nonce=`${noncevalue}`)
           
       else
-        p Create or activate a project
+        p !{l.message_create_project}
 
-
-
-    //- pre= h.dump(project)
+    pre= h.dump(project)

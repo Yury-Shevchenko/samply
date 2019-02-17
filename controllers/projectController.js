@@ -229,14 +229,14 @@ exports.showProjectDescription = async(req, res) => {
   res.render('study', {project, tests, author});
 };
 
-exports.manageNotifications = async(req,res) => {
+exports.manageNotifications = async(req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1,
   });
   res.render('notifications', {project});
 };
 
-exports.debugprojects = async(req,res) => {
+exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});
 };

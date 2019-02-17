@@ -14,7 +14,7 @@ block content
             li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
             li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
             li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-            li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) Notifications
+            li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
             li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
             li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
       p
@@ -82,14 +82,14 @@ block content
         .notificationsPanel
           button(id="enable_notifications" class="button") Enable notifications
           button(id="disable_notifications" class="button") Disable notifications
-          #notification_status 
-          p 
-          
+          #notification_status
+          p
+
 
       //- .videoPanel
       //-   button(id="start_video" class="button") Start video
       //-   button(id="stop_video" class="button") Stop video
-      //- 
+      //-
       //- .cameraPanel
       //-   video#player(autoplay='')
       //-   canvas#canvas(width='320px', height='240px')
@@ -98,7 +98,7 @@ block content
       //-   #pick-image
       //-     h6 Pick an Image instead
       //-     input#image-picker(type='file', accept='image/*')
-      //- 
+      //-
       //- .locationPanel
       //-   .input-section
       //-     button(type='button' class="button" id="location-btn")
