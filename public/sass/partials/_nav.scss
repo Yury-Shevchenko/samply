@@ -46,10 +46,10 @@
       width: 30px;
       transition: all 0.2s;
       fill: white;
-      margin-bottom: 1rem;
+      // margin-bottom: 1rem;
     }
     &:hover, &--active {
-      border-bottom: 5px solid deepskyblue;
+      border-bottom: 3px solid deepskyblue;
       // border-bottom-color: deepskyblue;
       //border-right-color: rgba(0,0,0,0.05);
       svg {

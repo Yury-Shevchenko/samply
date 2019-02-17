@@ -317,7 +317,6 @@ select {
 
 .custom-select-header {
   width: 300px;
-  border: 1px solid #ccc;
   border-radius: 5px;
   overflow: hidden;
   background: #fafafa url("/images/icons/chevron-arrow-down.png") no-repeat 95% 50%; }
@@ -843,10 +842,9 @@ label {
     .nav__link svg {
       width: 30px;
       transition: all 0.2s;
-      fill: white;
-      margin-bottom: 1rem; }
+      fill: white; }
     .nav__link:hover, .nav__link--active {
-      border-bottom: 5px solid deepskyblue; }
+      border-bottom: 3px solid deepskyblue; }
       .nav__link:hover svg, .nav__link--active svg {
         -ms-transform: scale(1.2);
             transform: scale(1.2); }
