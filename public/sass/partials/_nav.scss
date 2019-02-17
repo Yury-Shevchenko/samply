@@ -41,7 +41,7 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.2s;
-    border-bottom: 5px solid transparent;
+    // border-bottom: 5px solid transparent;
     svg {
       width: 30px;
       transition: all 0.2s;
@@ -49,7 +49,8 @@
       margin-bottom: 1rem;
     }
     &:hover, &--active {
-      border-bottom-color: deepskyblue;
+      border-bottom: 5px solid deepskyblue;
+      // border-bottom-color: deepskyblue;
       //border-right-color: rgba(0,0,0,0.05);
       svg {
         transform: scale(1.2)

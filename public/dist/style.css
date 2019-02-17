@@ -839,15 +839,14 @@ label {
         align-items: center;
     -ms-flex-pack: center;
         justify-content: center;
-    transition: transform 0.2s;
-    border-bottom: 5px solid transparent; }
+    transition: transform 0.2s; }
     .nav__link svg {
       width: 30px;
       transition: all 0.2s;
       fill: white;
       margin-bottom: 1rem; }
     .nav__link:hover, .nav__link--active {
-      border-bottom-color: deepskyblue; }
+      border-bottom: 5px solid deepskyblue; }
       .nav__link:hover svg, .nav__link--active svg {
         -ms-transform: scale(1.2);
             transform: scale(1.2); }
