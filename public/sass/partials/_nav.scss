@@ -26,6 +26,44 @@
   &__item {
     display: flex;
   }
+  &__main_link {
+    font-weight: bold;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    text-transform: uppercase;
+    padding: 1rem 1.5rem 0.5rem 1.5rem;
+    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+    svg {
+      width: 30px;
+      transition: all 0.2s;
+      fill: white;
+    }
+    &:hover, &--active {
+      background: #e7eaff;
+      svg {
+        transform: scale(1.2)
+      }
+      h6 {
+        transform: scale(1.1);
+        color: midnightblue;
+      }
+    }
+    &--logo {
+      &:hover {
+        svg {
+          transform: none;
+        }
+      }
+      svg {
+        width: 200px;
+        margin: 0;
+      }
+    }
+  }
   &__link {
     //background: $black;
     //background: #041248;
