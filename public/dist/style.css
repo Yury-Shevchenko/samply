@@ -1475,7 +1475,7 @@ and also iPads specifically.
   background: #11fa71;
   cursor: pointer; }
 
-.installAppButton:hover {
+#installApp:hover {
   cursor: pointer; }
 
 .avatar {
