@@ -316,7 +316,7 @@ select {
   outline: none; }
 
 .custom-select-header {
-  width: 300px;
+  width: 100%;
   border-radius: 5px;
   overflow: hidden;
   background: #fafafa url("/images/icons/chevron-arrow-down.png") no-repeat 95% 50%; }
@@ -822,8 +822,8 @@ label {
       -ms-flex-align: center;
           align-items: center; }
   .nav__item {
-    display: -ms-flexbox;
-    display: flex; }
+    display: -ms-grid;
+    display: grid; }
   .nav__main_link {
     font-weight: bold;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -845,7 +845,8 @@ label {
       fill: white; }
     .nav__main_link:hover, .nav__main_link--active {
       background: #e7eaff;
-      border-bottom: 1px solid deepskyblue; }
+      border-bottom: 1px solid deepskyblue;
+      border-radius: 3px; }
       .nav__main_link:hover svg, .nav__main_link--active svg {
         -ms-transform: scale(1.2);
             transform: scale(1.2); }
@@ -868,8 +869,6 @@ label {
     display: flex;
     -ms-flex-direction: column;
         flex-direction: column;
-    -ms-flex-align: center;
-        align-items: center;
     -ms-flex-pack: center;
         justify-content: center;
     transition: transform 0.2s; }

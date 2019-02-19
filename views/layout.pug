@@ -17,10 +17,10 @@ html
       header.top
         nav.nav.nav__top
           .nav__section.nav__section--pages
-            .installAppButton(id="installApp" style="display:none") 
-              li.nav__item
-                a.nav__main_link
-                    h6 #{layout.install_app}
+            li.nav__item(id="installApp" style="display:none") 
+              a.nav__main_link
+                h6 #{layout.install_app}
+                    //- .installAppButton
             if !user
               li.nav__item.nav__main_link
                 script(nonce=`${noncevalue}`).
