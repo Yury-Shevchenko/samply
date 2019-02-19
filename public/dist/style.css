@@ -845,7 +845,6 @@ label {
       fill: white; }
     .nav__main_link:hover, .nav__main_link--active {
       background: #e7eaff;
-      border-bottom: 1px solid deepskyblue;
       border-radius: 3px; }
       .nav__main_link:hover svg, .nav__main_link--active svg {
         -ms-transform: scale(1.2);
