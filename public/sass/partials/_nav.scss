@@ -44,6 +44,7 @@
     }
     &:hover, &--active {
       background: #e7eaff;
+      border-bottom: 1px solid deepskyblue;
       svg {
         transform: scale(1.2)
       }
@@ -69,7 +70,7 @@
     //background: #041248;
     //color: white;
     font-weight: bold;
-    border-right: 1px solid rgba(255,255,255,0.1);
+    // border-right: 1px solid rgba(255,255,255,0.1);
     text-transform: uppercase;
     //padding: 1.2rem 2rem 1rem 2rem;
     padding: 1rem 1.5rem 0.5rem 1.5rem;

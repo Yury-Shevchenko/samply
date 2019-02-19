@@ -844,7 +844,8 @@ label {
       transition: all 0.2s;
       fill: white; }
     .nav__main_link:hover, .nav__main_link--active {
-      background: #e7eaff; }
+      background: #e7eaff;
+      border-bottom: 1px solid deepskyblue; }
       .nav__main_link:hover svg, .nav__main_link--active svg {
         -ms-transform: scale(1.2);
             transform: scale(1.2); }
@@ -860,7 +861,6 @@ label {
       margin: 0; }
   .nav__link {
     font-weight: bold;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
     text-transform: uppercase;
     padding: 1rem 1.5rem 0.5rem 1.5rem;
     display: block;
