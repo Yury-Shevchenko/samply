@@ -345,10 +345,12 @@ async function sendNotification(done, project_id, title, message) {
               })) //payload is limited to 4kb
               .then(res => {
                 // console.log("Notification was sent", res.statusCode);
+                console.log("Notification was sent", res);
                 return(res.statusCode);
               })
               .catch(err => {
                 // console.log("The error happened", err.statusCode);
+                console.log("The error happened", err);
                 return(err.statusCode);
                 //TODO: remove subscription if it is not valid anymore (check it in response)
               })
