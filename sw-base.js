@@ -81,17 +81,18 @@ self.addEventListener('push', event => {
       url: data.openUrl
     }
   };
-  const promiseChain = isClientFocused()
-    .then((clientIsFocused) => {
-      if (clientIsFocused) {
-        console.log('Don\'t need to show a notification.');
-        return;
-      }
-      // Client isn't focused, we need to show a notification.
-      return self.registration.showNotification(data.title, options);
-    });
 
-  event.waitUntil(promiseChain);
+  // const promiseChain = isClientFocused()
+    // .then((clientIsFocused) => {
+    //   if (clientIsFocused) {
+    //     console.log('Don\'t need to show a notification.');
+    //     return;
+    //   }
+    //   // Client isn't focused, we need to show a notification.
+    //   return self.registration.showNotification(data.title, options);
+    // });
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
 
@@ -113,7 +114,7 @@ self.addEventListener('notificationclick', function(event) {
       clients.matchAll({
         type: 'window',
         includeUncontrolled: true
-      }) 
+      })
         .then(function(clis) {
           // var client = clis.find(function(c) {
           //   return c.visibilityState === 'visible';

@@ -81,17 +81,18 @@ self.addEventListener('push', event => {
       url: data.openUrl
     }
   };
-  const promiseChain = isClientFocused()
-    .then((clientIsFocused) => {
-      if (clientIsFocused) {
-        console.log('Don\'t need to show a notification.');
-        return;
-      }
-      // Client isn't focused, we need to show a notification.
-      return self.registration.showNotification(data.title, options);
-    });
 
-  event.waitUntil(promiseChain);
+  // const promiseChain = isClientFocused()
+    // .then((clientIsFocused) => {
+    //   if (clientIsFocused) {
+    //     console.log('Don\'t need to show a notification.');
+    //     return;
+    //   }
+    //   // Client isn't focused, we need to show a notification.
+    //   return self.registration.showNotification(data.title, options);
+    // });
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
 
@@ -196,11 +197,11 @@ self.onsync = function(event) {
 workboxSW.precache([
   {
     "url": "dist/App.bundle.js.map",
-    "revision": "90566c21166e021bedaf99777c2420f5"
+    "revision": "eddafdc2a3ba0d70991fc2b20068006c"
   },
   {
     "url": "dist/style.css.map",
-    "revision": "7e89904241b1fe8db60a26ef8bb67cc2"
+    "revision": "b1de3d81d35465668b30aaba8eb138ad"
   },
   {
     "url": "fonts/BebasNeue Bold.ttf",
