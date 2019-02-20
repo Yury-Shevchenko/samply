@@ -359,7 +359,7 @@ async function sendNotification(done, project_id, title, message) {
       })
       Promise.all(promises)
         .then(function(results) {
-          console.log("Notifications were sent");
+          console.log("Notifications were sent", results);
           done()
         })
         .catch(err => {
