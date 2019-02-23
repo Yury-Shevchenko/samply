@@ -30,7 +30,7 @@ const testSchema = new mongoose.Schema({
   //json: mongoose.Schema.Types.Mixed,
   json: String,
   params: mongoose.Schema.Types.Mixed,
-  version: String,
+  production: String,
   author: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'

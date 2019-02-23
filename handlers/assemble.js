@@ -12,7 +12,7 @@ const fs = require('fs');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
 
-exports.convertJSON = async (state, foldername, currentVersion = 'alpha', stateModifier=state => state, additionalFiles={}) => {
+exports.convertJSON = async (state, foldername, production = 'alpha', stateModifier=state => state, additionalFiles={}) => {
   // Apply modification function to copy of current state
   const updatedState = stateModifier(cloneDeep(state));
   const redirects = {
@@ -34,7 +34,7 @@ exports.convertJSON = async (state, foldername, currentVersion = 'alpha', stateM
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
 
-  console.log("Version", currentVersion);
+  console.log("production", production);
   // console.log("Version", state.version);
   // console.log("updatedState", updatedState.components.root);
   // Filter files that are not embedded in components
@@ -116,7 +116,7 @@ exports.convertJSON = async (state, foldername, currentVersion = 'alpha', stateM
           ([path, data]) => [path, { source: path, ...data }]
         )),
         params: params,
-        version: currentVersion
+        production: production
       }
 
   // Reassemble state object that now includes the generated script,
