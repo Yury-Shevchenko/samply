@@ -33,17 +33,7 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
 
-  //console.log(params);
-
-  for (let [key, value] of Object.entries(updatedState.components)){
-    if (value.files && value.files.rows && value.files.rows.length > 0) {
-      value.files.rows.map(o => {
-        o.map(e => {
-          e.poolPath = 'https://res.cloudinary.com/dfshkvgf3/image/upload/openlab/' + foldername + '/'+ e.poolPath;
-        })
-      });
-    }
-  }
+  console.log("Version", state.version);
 
   // Filter files that are not embedded in components
   const filesInUse = embeddedFiles(updatedState.components)
@@ -56,64 +46,73 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
       file.source == 'embedded'
   )
 
-  //upload images to Cloudinary through the direct API
-  await Promise.all( Object.entries(files).map (item => {
-      if (item && item[1] && item[1].source == "embedded") {
-        const name = item[0].split('embedded/')[1];
-        const truncatedName = name.split('.')[0];
-        const string = item[1].content;
-        const regex = /^data:.+\/(.+);base64,(.*)$/;
-        const matches = string.match(regex);
-        const ext = matches[1];
-        const data = matches[2];
-        const buffer = new Buffer(data, 'base64');
-        const imageData = new FormData();
-        imageData.append('file', buffer, {filename: 'image'});
-        imageData.append('upload_preset', 'openlab');
-        const location = foldername + '/embedded/' + truncatedName;
-        imageData.append('public_id', location);
-        const resource_type = 'auto';
-        fetch(`https://api.cloudinary.com/v1_1/dfshkvgf3/${resource_type}/upload`, {
-          method: 'POST',
-          body: imageData,
-          resource_type: resource_type,
-        })
-          .then(res => {
-            console.log("response", res);
-            return res.json();
+  const uploadFile =  async (item) => {
+    const name = item[0].split('embedded/')[1];
+    const truncatedName = name.split('.')[0];
+    const string = item[1].content;
+    const regex = /^data:.+\/(.+);base64,(.*)$/;
+    const matches = string.match(regex);
+    const ext = matches[1];
+    const data = matches[2];
+    const buffer = new Buffer(data, 'base64');
+    const imageData = new FormData();
+    imageData.append('file', buffer, {filename: 'image'});
+    imageData.append('upload_preset', 'openlab');
+    const location = foldername + '/embedded/' + truncatedName;
+    imageData.append('public_id', location);
+    const resource_type = 'auto';
+    const fetched = await fetch(`https://api.cloudinary.com/v1_1/dfshkvgf3/${resource_type}/upload`, {
+      method: 'POST',
+      body: imageData,
+      resource_type: resource_type,
+    });
+    const response = await fetched.json();
+    const url = response.secure_url;
+    for (let [key, value] of Object.entries(updatedState.components)){
+      if (value.files && value.files.rows && value.files.rows.length > 0) {
+        value.files.rows.map(o => {
+          o.map(e => {
+            if (e.poolPath == item[0]){
+              e.poolPath = url;
+            }
           })
-          .then(body => {
-            console.log("Uploaded to: ", body.secure_url)
-          })
-          .catch(error => {
-            console.log('Error', error);
-          })
-        // fs.writeFile('public/embedded/' + name, buffer, (err) => {
-        //   if (err) throw err;
-        //   //console.log('The file has been saved!');
-        // });
+        });
       }
-    }))
+    }
+    return url;
+  }
+
+  const arr = Object.entries(files).filter(i => {return (i && i[1] && i[1].source == "embedded")});
+  // console.log("Number of files to upload", arr.length);
+
+  await Promise.all(arr.map(item => {
+    return uploadFile(item)
+  }))
+    // .then(data => {
+    //   console.log("Data", data);
+    // })
+
+    return {
+        files: {
+          'script': {
+            content: readDataURI(makeDataURI(
+              makeScript(updatedState),
+              'application/javascript',
+            ))
+          },
+          ...updatedState.files.files,
+          ...additionalFiles,
+        },
+        bundledFiles: fromPairs(Object.entries(updatedState.files.bundledFiles).map(
+          // Add source path to data, so that bundled files can be moved
+          ([path, data]) => [path, { source: path, ...data }]
+        )),
+        params: params
+      }
 
   // Reassemble state object that now includes the generated script,
   // as well as any additional files required for the deployment target
-  return {
-    files: {
-      'script': {
-        content: readDataURI(makeDataURI(
-          makeScript(updatedState),
-          'application/javascript',
-        ))
-      },
-      ...updatedState.files.files,
-      ...additionalFiles,
-    },
-    bundledFiles: fromPairs(Object.entries(updatedState.files.bundledFiles).map(
-      // Add source path to data, so that bundled files can be moved
-      ([path, data]) => [path, { source: path, ...data }]
-    )),
-    params: params
-  }
+
 }
 
 
