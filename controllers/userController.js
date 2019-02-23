@@ -93,7 +93,7 @@ exports.labjs = async (req, res) => {
       req.body.file = script.files.script.content.data;
       req.body.css = script.files['style.css'].content;
       req.body.params = script.params;
-      req.body.version = script.version;
+      req.body.production = script.production;
       req.body.script = moment().format('MMMM Do YYYY, h:mm:ss a');
       req.body.json = json_string;
       req.body.open = false;
