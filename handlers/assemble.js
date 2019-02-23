@@ -72,7 +72,7 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
         imageData.append('upload_preset', 'openlab');
         const location = foldername + '/embedded/' + truncatedName;
         imageData.append('public_id', location);
-        fetch('https://api.cloudinary.com/v1_1/dfshkvgf3/image/upload', {
+        fetch('https://api.cloudinary.com/v1_1/dfshkvgf3/raw/upload', {
           method: 'POST',
           body: imageData,
           resource_type: 'raw',
