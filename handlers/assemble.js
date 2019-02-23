@@ -12,7 +12,7 @@ const fs = require('fs');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
 
-exports.convertJSON = async (state, foldername, version = 'alpha', stateModifier=state => state, additionalFiles={}) => {
+exports.convertJSON = async (state, foldername, currentVersion = 'alpha', stateModifier=state => state, additionalFiles={}) => {
   // Apply modification function to copy of current state
   const updatedState = stateModifier(cloneDeep(state));
   const redirects = {
@@ -34,7 +34,7 @@ exports.convertJSON = async (state, foldername, version = 'alpha', stateModifier
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
 
-  console.log("Version", version);
+  console.log("Version", currentVersion);
   // console.log("Version", state.version);
   // console.log("updatedState", updatedState.components.root);
   // Filter files that are not embedded in components
@@ -92,7 +92,7 @@ exports.convertJSON = async (state, foldername, version = 'alpha', stateModifier
     return (i && i[1] && (i[1].source == "embedded" || i[1].source == "embedded-global"))
   });
   // console.log("Number of files to upload", arr.length);
-   
+
   await Promise.all(arr.map(item => {
     return uploadFile(item)
   }))
@@ -116,7 +116,7 @@ exports.convertJSON = async (state, foldername, version = 'alpha', stateModifier
           ([path, data]) => [path, { source: path, ...data }]
         )),
         params: params,
-        version: version
+        version: currentVersion
       }
 
   // Reassemble state object that now includes the generated script,
