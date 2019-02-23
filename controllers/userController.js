@@ -84,9 +84,9 @@ exports.labjs = async (req, res) => {
       if(req.user){
         req.body.author = req.user._id;
       };
-      console.log("Request", req);
+      console.log("Request header referer", req.headers.referer);
       //check from where the upload comes
-      const version = req.referrer == 'https://labjs-beta.netlify.com/' ? 'beta': 'alpha';
+      const version = req.headers.referer == 'https://labjs-beta.netlify.com/' ? 'beta': 'alpha';
       const json_string = req.files.script[0].buffer.toString();
       const json = JSON.parse(json_string);
       const script = await assemble.convertJSON(json, req.body.name, version = version);
