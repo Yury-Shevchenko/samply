@@ -605,7 +605,7 @@ module.exports =
 
         'notifications': {
           'message_create_project': `To set up notifications, activate or create a study <a href="/projects">here</a>.`,
-          'testing_message': 'We are testing notifications now, so it might not work as expected. The participants should use Chrome to recieve notifications.',
+          'testing_message': 'We are testing notifications now, so it might not work as expected. The participants should use Chrome (Desktop) to recieve notifications.',
           'title': 'Title',
           'title_placeholder': 'Open Lab',
           'message': 'Message',

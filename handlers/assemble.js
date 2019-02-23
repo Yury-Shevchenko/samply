@@ -75,7 +75,10 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
         fetch('https://api.cloudinary.com/v1_1/dfshkvgf3/image/upload', {method: 'POST', body: imageData})
           .then(res => res.json())
           .then(body => {
-            //console.log("Uploaded to: ", body.secure_url)
+            console.log("Uploaded to: ", body.secure_url)
+          })
+          .catch(error => {
+            console.log('Error', error);
           })
         // fs.writeFile('public/embedded/' + name, buffer, (err) => {
         //   if (err) throw err;
