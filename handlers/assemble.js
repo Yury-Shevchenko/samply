@@ -73,7 +73,10 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
         const location = foldername + '/embedded/' + truncatedName;
         imageData.append('public_id', location);
         fetch('https://api.cloudinary.com/v1_1/dfshkvgf3/image/upload', {method: 'POST', body: imageData})
-          .then(res => res.json())
+          .then(res => {
+            console.log("response", res);
+            return res.json();
+          })
           .then(body => {
             console.log("Uploaded to: ", body.secure_url)
           })
