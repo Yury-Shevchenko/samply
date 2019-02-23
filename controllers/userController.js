@@ -84,12 +84,16 @@ exports.labjs = async (req, res) => {
       if(req.user){
         req.body.author = req.user._id;
       };
+      console.log("Request", req);
+      //check from where the upload comes
+      const version = req.referrer == 'https://labjs-beta.netlify.com/' ? 'beta': 'alpha';
       const json_string = req.files.script[0].buffer.toString();
       const json = JSON.parse(json_string);
-      const script = await assemble.convertJSON(json, req.body.name);
+      const script = await assemble.convertJSON(json, req.body.name, version = version);
       req.body.file = script.files.script.content.data;
       req.body.css = script.files['style.css'].content;
       req.body.params = script.params;
+      req.body.version = script.version;
       req.body.script = moment().format('MMMM Do YYYY, h:mm:ss a');
       req.body.json = json_string;
       req.body.open = false;
@@ -174,7 +178,7 @@ exports.getOneUserData = async (req, res) => {
 };
 
 exports.getResearchers = async (req, res) => {
-  const users = await User 
+  const users = await User
     .getResearchers()
     .sort( {created: 'asc'} )
   res.render('researchers', {title: 'Researchers', users});

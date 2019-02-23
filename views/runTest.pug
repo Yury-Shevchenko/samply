@@ -2,8 +2,14 @@ doctype html
 html
   head
     title= `${title || h.siteName}`
-    script(src="/javascripts/modules/lab.js" nonce=`${noncevalue}`)
-    link(rel="stylesheet" href="/dist/lab.css")
+    //- script(src="/javascripts/modules/lab.js" nonce=`${noncevalue}`)
+    //- link(rel="stylesheet" href="/dist/lab.css")
+    if (test && test.version && test.version == 'beta')
+      script(src="https://labjs-beta.netlify.com/api/_defaultStatic/lib/lab.js" nonce=`${noncevalue}`)
+      link(rel="stylesheet" href="https://labjs-beta.netlify.com/api/_defaultStatic/lib/lab.css")
+    else 
+      script(src="https://labjs.felixhenninger.com/api/_defaultStatic/lib/lab.js" nonce=`${noncevalue}`)
+      link(rel="stylesheet" href="https://labjs.felixhenninger.com/api/_defaultStatic/lib/lab.css")    
 
   body
     div(class="container fullscreen" data-labjs-section="main")

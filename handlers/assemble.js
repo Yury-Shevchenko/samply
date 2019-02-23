@@ -4,6 +4,7 @@ const toString = require('lodash/toString');
 const toNumber = require('lodash/toNumber');
 const zip = require('lodash/zip');
 const pickBy = require('lodash/pickBy');
+const groupBy = require('lodash/groupBy');
 const isEmpty = require('lodash/isEmpty');
 const flatMap = require('lodash/flatMap');
 const serialize = require('serialize-javascript')
@@ -11,7 +12,7 @@ const fs = require('fs');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
 
-exports.convertJSON = async (state, foldername, stateModifier=state => state, additionalFiles={}) => {
+exports.convertJSON = async (state, foldername, version = 'alpha', stateModifier=state => state, additionalFiles={}) => {
   // Apply modification function to copy of current state
   const updatedState = stateModifier(cloneDeep(state));
   const redirects = {
@@ -33,8 +34,9 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
 
-  console.log("Version", state.version);
-
+  console.log("Version", version);
+  // console.log("Version", state.version);
+  // console.log("updatedState", updatedState.components.root);
   // Filter files that are not embedded in components
   const filesInUse = embeddedFiles(updatedState.components)
 
@@ -45,9 +47,10 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
       filesInUse.includes(filename) ||
       file.source == 'embedded'
   )
+  // console.log('files', files);
 
   const uploadFile =  async (item) => {
-    const name = item[0].split('embedded/')[1];
+    const name = item[0].split(`${item[1].source == "embedded" ? "embedded" : "static"}/`)[1];
     const truncatedName = name.split('.')[0];
     const string = item[1].content;
     const regex = /^data:.+\/(.+);base64,(.*)$/;
@@ -58,7 +61,8 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
     const imageData = new FormData();
     imageData.append('file', buffer, {filename: 'image'});
     imageData.append('upload_preset', 'openlab');
-    const location = foldername + '/embedded/' + truncatedName;
+    // const location = foldername + '/embedded/' + truncatedName;
+    const location = `${foldername}/${truncatedName}`;
     imageData.append('public_id', location);
     const resource_type = 'auto';
     const fetched = await fetch(`https://api.cloudinary.com/v1_1/dfshkvgf3/${resource_type}/upload`, {
@@ -79,12 +83,16 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
         });
       }
     }
+    //TODO Find all links to the static files and change them to point to Cloudinary
+
     return url;
   }
 
-  const arr = Object.entries(files).filter(i => {return (i && i[1] && i[1].source == "embedded")});
+  const arr = Object.entries(files).filter(i => {
+    return (i && i[1] && (i[1].source == "embedded" || i[1].source == "embedded-global"))
+  });
   // console.log("Number of files to upload", arr.length);
-
+   
   await Promise.all(arr.map(item => {
     return uploadFile(item)
   }))
@@ -107,7 +115,8 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
           // Add source path to data, so that bundled files can be moved
           ([path, data]) => [path, { source: path, ...data }]
         )),
-        params: params
+        params: params,
+        version: version
       }
 
   // Reassemble state object that now includes the generated script,
@@ -115,7 +124,7 @@ exports.convertJSON = async (state, foldername, stateModifier=state => state, ad
 
 }
 
-
+//https://github.com/FelixHenninger/lab.js/blob/master/packages/builder/src/logic/util/files.js
 const embeddedFiles = components => {
   // Collect files embedded in components
   // (extract files from component file setting,
@@ -130,6 +139,7 @@ const embeddedFiles = components => {
   )
 }
 
+//https://github.com/FelixHenninger/lab.js/blob/master/packages/builder/src/logic/io/assemble/script.js
 // Generic grid processing
 const processGrid = (grid, colnames=null, types=undefined) =>
   grid.rows
@@ -156,8 +166,10 @@ const processMessageHandlers = (messageHandlers) =>
       .filter(h => h.message.trim() !== '' && h.code.trim() !== '')
       // TODO: Evaluate the safety implications
       // of the following de-facto-eval.
-      // eslint-disable-next-line no-new-func
-      .map(h => [h.message, new Function(h.code)])
+      .map(h => [
+        h.message,
+        adaptiveFunction(h.code)
+      ])
   )
 
 const processParameters = parameters =>
@@ -204,6 +216,18 @@ const processTemplateParameters = grid =>
     grid.columns.map(c => c.type)
   )
 
+const processShuffleGroups = columns =>
+  Object.values(
+    // Collect columns with the same shuffleGroup property
+    groupBy(
+      columns.filter(c => c.shuffleGroup !== undefined),
+      'shuffleGroup'
+    )
+  ).map(
+    // Extract column names
+    g => g.map(c => c.name)
+  )
+
 // Process any single node in isolation
 const processNode = node => {
   // Options to exclude from JSON output
@@ -236,6 +260,9 @@ const processNode = node => {
     templateParameters: node.templateParameters
       ? processTemplateParameters(node.templateParameters)
       : node.templateParameters,
+    shuffleGroups: node.templateParameters
+      ? processShuffleGroups(node.templateParameters.columns || [])
+      : node.shuffleGroups,
   })
 }
 
@@ -302,6 +329,7 @@ const makeScript = (state) => {
   return makeStudyScript(studyTreeJSON)
 }
 
+//https://github.com/FelixHenninger/lab.js/blob/master/packages/builder/src/logic/util/makeType.js
 const makeType = (value, type) => {
   if (type === undefined) {
     // Return value unchanged
@@ -332,6 +360,7 @@ const makeType = (value, type) => {
   }
 }
 
+//https://github.com/FelixHenninger/lab.js/blob/master/packages/builder/src/logic/util/dataURI.js
 const makeDataURI = (data, mime='') =>
   // Make data url from string
   `data:${ mime },${ encodeURIComponent(data) }`
@@ -372,8 +401,48 @@ const blobFromDataURI = uri => {
   }
 }
 
+const sizeFromDataURI = uri =>
+  // Calculate a file size in KB
+  //
+  // base64 encoding inflates the file, storing 6 bits in every 8-bit
+  // character; the initial data URI indicator and the trailing equal
+  // sign don't count toward the file size.
+  //
+  // TODO: Even with all of these corrections, this is an approximation,
+  // and will differ from OS file managers. Corrections are welcome!
+  Math.ceil(
+    0.75 * (uri.length - uri.indexOf(',') - 1)
+    / 1000
+)
+
 const updateDataURI = (uri, updater, ...args) => {
   const { data, mime } = readDataURI(uri)
   const newData = updater(data, ...args)
   return makeDataURI(newData, mime)
 }
+
+//https://github.com/FelixHenninger/lab.js/blob/master/packages/builder/src/logic/util/async.js
+// Regex for detecting awaits in a code snippet
+const awaitRegex = /(^|[^\w])await\s+/m
+
+// Async function constructor
+// The eval call here is needed to circumvent CRA's polyfills,
+// and probably can be removed at some later point
+// eslint-disable-next-line no-new-func
+const AsyncFunction = new Function(
+  'return Object.getPrototypeOf(async function(){}).constructor'
+)()
+
+const adaptiveFunction = code =>
+  // Build an async function if await appears in the source
+  // NOTE: This is a relatively coarse and naive check.
+  // It works for us™ because we don't need to be careful
+  // about accidentally declaring a function async:
+  // In the situations where we apply them, the return values
+  // are not important, just that the function returns at all.
+  // Alternatively, we could check whether parsing the function
+  // works, and listen for syntax errors. I'm lazy. -F
+  code.match(awaitRegex)
+    ? new AsyncFunction(code)
+    // eslint-disable-next-line no-new-func
+: new Function(code)
