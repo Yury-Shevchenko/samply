@@ -20,18 +20,22 @@ const testSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  // script: String,
+  updated: {
+    type: Date,
+    default: Date.now
+  },
   token: String,
   tokenExpires: Date,
   timer: Number,
   photo: String,
-  script: String,
   file: String,
   css: String,
   //json: mongoose.Schema.Types.Mixed,
   json: String,
   params: mongoose.Schema.Types.Mixed,
   production: String,
-  labjsVersion: String, 
+  labjsVersion: String,
   author: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'
