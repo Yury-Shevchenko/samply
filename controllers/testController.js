@@ -530,7 +530,7 @@ exports.listPublicTests = async(req, res) => {
 exports.showAllTasksForAdmin = async (req, res) => {
   const tests = await Test
     .find({ },{
-      name: 1, slug: 1, description: 1, author: 1, photo: 1, open: 1,
+      name: 1, slug: 1, description: 1, author: 1, photo: 1, open: 1, created: 1, updated: 1, production: 1, labjsVersion: 1
     })
   res.render('alltestsforadmin', {tests});
 };
