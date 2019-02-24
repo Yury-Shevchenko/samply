@@ -97,7 +97,8 @@ exports.createTest = async (req, res, next) => {
     req.body.file = script.files.script.content.data;
     req.body.css = script.files['style.css'].content;
     req.body.params = script.params;
-    req.body.script = moment().format('MMMM Do YYYY, h:mm:ss a');
+    req.body.created = new Date().toISOString();
+    req.body.updated = new Date().toISOString();
     req.body.json = json_string;
     req.body.production = script.production;
     req.body.labjsVersion = json.version;
@@ -128,10 +129,10 @@ exports.updateTest = async (req, res, next) => {
     req.body.file = script.files.script.content.data;
     req.body.css = script.files['style.css'].content;
     req.body.params = script.params;
-    req.body.script = moment().format('MMMM Do YYYY, h:mm:ss a');
     req.body.json = json_string;
     req.body.production = script.production;
     req.body.labjsVersion = json.version;
+    req.body.updated = new Date().toISOString();
   };
   const test = await Test.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true, //return the new user instead of the old one

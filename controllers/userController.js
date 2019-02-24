@@ -78,7 +78,7 @@ const multerOptions = {
 exports.uploadfromlabjs = multer(multerOptions).fields([
   {name: 'script'}
 ]);
-  
+
 exports.labjs = async (req, res) => {
   if(req.files.script){
       if(req.user){
@@ -93,12 +93,13 @@ exports.labjs = async (req, res) => {
       req.body.params = script.params;
       req.body.production = script.production;
       req.body.labjsVersion = json.version;
-      req.body.script = moment().format('MMMM Do YYYY, h:mm:ss a');
       req.body.json = json_string;
       req.body.open = false;
       req.body.token = crypto.randomBytes(20).toString('hex');
       req.body.tokenExpires = Date.now() + 3600000; //1 hour to upload the test
-      const test = await (new Test(req.body)).save()
+      req.body.created = new Date().toISOString();
+      req.body.updated = new Date().toISOString();
+      const test = await (new Test(req.body)).save();
       req.flash('success', `${res.locals.layout.flash_labjs_upload_success} <strong>${req.body.name}</strong>. ${res.locals.layout.flash_labjs_edit_message}`);
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'POST');

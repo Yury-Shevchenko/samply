@@ -11,8 +11,8 @@ mixin testForm(test = {})
     input(type='text' name='version' value=test.version)
     label(for='script') #{l.edit_labjs_file}
     input(type="file" name='script' id='script' accept=".json")
-    if test.script
-      p= `${l.edit_uploaded} ${h.moment(test.script, 'MMMM Do YYYY, h:mm:ss a', true).local().locale(language).calendar()}`
+    if test.updated
+      p= `${l.edit_uploaded} ${h.moment(test.updated, 'MMMM Do YYYY, h:mm:ss a', true).local().locale(language).calendar()}`
     label(for='photo') #{l.edit_photo}
     input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
     if test.photo
@@ -74,26 +74,6 @@ mixin testForm(test = {})
       p !{l.upgradeNeededMessage}
 
     input(type='submit' id="btnAddTest" value=l.edit_save class="button")
-
-    //- script.
-      const checkSubscription = () => {
-        if( `#{user.subscription}` && Date.now() < `#{user.subscriptionExpires}` * 1000 ){
-          console.log("User has active subscription");
-
-        } else {
-          console.log("No subscription");
-          document.getElementById('paymentinformation').style.display = 'block';
-          document.getElementById("btnAddTest").disabled = true;
-          document.getElementById("btnAddTest").style.display = 'none';
-        }
-      };
-
-      const removePaymentInfo = () => {
-        document.getElementById('paymentinformation').style.display = 'none';
-        document.getElementById("btnAddTest").disabled = false;
-        document.getElementById("btnAddTest").style.display = 'block';
-      };
-
 
   //-pre= h.dump(test)
   //- pre= h.dump(user)
