@@ -23,7 +23,7 @@ mixin labjsuploadForm(test = {})
 
     label(for='script') #{l.edit_labjs_file}
     if test.updated
-      p= `${l.edit_uploaded} ${h.moment.utc(test.updated, 'MMMM Do YYYY, h:mm:ss a', true).local().locale(language).calendar()}`
+      p= `${l.edit_uploaded} ${h.moment.utc(test.updated).local().locale(language).format('MMMM Do YYYY, h:mm a')}`
 
     label(for='photo') #{l.edit_photo}
     input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
