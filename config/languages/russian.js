@@ -393,7 +393,7 @@ module.exports =
         'edit_name': 'Имя',
         'edit_description' : 'Описание',
         'edit_labjs_file' : 'Скрипт Lab.js в формате JSON',
-        'edit_uploaded' : 'Загружено',
+        'edit_uploaded' : 'Обновлено',
         'edit_photo' : 'Фотография для обложки',
         'edit_tags' : 'Ярлыки',
         'edit_public' : 'Открытый доступ',

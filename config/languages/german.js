@@ -393,7 +393,7 @@ module.exports = {
       'edit_name': 'Name',
       'edit_description' : 'Beschreibung',
       'edit_labjs_file' : 'Lab.js JSON-Datei',
-      'edit_uploaded' : 'Hochgeladen',
+      'edit_uploaded' : 'Aktualisiert',
       'edit_photo' : 'Cover Photo  ',
       'edit_tags' : 'Tags',
       'edit_public' : 'Öffentlich',

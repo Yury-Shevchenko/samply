@@ -396,7 +396,7 @@ module.exports =
         'edit_name': 'Name',
         'edit_description' : 'Description',
         'edit_labjs_file' : 'Lab.js JSON file',
-        'edit_uploaded' : 'Uploaded',
+        'edit_uploaded' : 'Updated',
         'edit_photo' : 'Cover Photo  ',
         'edit_tags' : 'Tags',
         'edit_public' : 'Public',
