@@ -31,6 +31,7 @@ const testSchema = new mongoose.Schema({
   json: String,
   params: mongoose.Schema.Types.Mixed,
   production: String,
+  labjsVersion: String, 
   author: {
     type: mongoose.Schema.ObjectId,
     ref: 'User'

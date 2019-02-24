@@ -33,8 +33,7 @@ exports.convertJSON = async (state, foldername, production = 'alpha', stateModif
     .reduce((flat, next) => flat.concat(next), [])
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
-
-  console.log("production", production);
+    
   // console.log("Version", state.version);
   // console.log("updatedState", updatedState.components.root);
   // Filter files that are not embedded in components

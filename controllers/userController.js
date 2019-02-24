@@ -78,15 +78,13 @@ const multerOptions = {
 exports.uploadfromlabjs = multer(multerOptions).fields([
   {name: 'script'}
 ]);
-
+  
 exports.labjs = async (req, res) => {
   if(req.files.script){
       if(req.user){
         req.body.author = req.user._id;
       };
-      console.log("Request header referer", req.headers.referer);
-      //check from where the upload comes
-      const prod = req.headers.referer == 'https://labjs-beta.netlify.com/' ? 'beta': 'alpha';
+      const prod = req.headers.referer == 'https://labjs-beta.netlify.com/' ? 'beta': 'alpha';//check from where the upload comes
       const json_string = req.files.script[0].buffer.toString();
       const json = JSON.parse(json_string);
       const script = await assemble.convertJSON(json, req.body.name, production = prod);
@@ -94,6 +92,7 @@ exports.labjs = async (req, res) => {
       req.body.css = script.files['style.css'].content;
       req.body.params = script.params;
       req.body.production = script.production;
+      req.body.labjsVersion = json.version;
       req.body.script = moment().format('MMMM Do YYYY, h:mm:ss a');
       req.body.json = json_string;
       req.body.open = false;

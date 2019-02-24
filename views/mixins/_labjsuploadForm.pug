@@ -23,7 +23,7 @@ mixin labjsuploadForm(test = {})
 
     label(for='script') #{l.edit_labjs_file}
     if test.script
-      p= `${l.edit_uploaded} ${h.moment(test.script, 'MMMM Do YYYY, h:mm:ss a', true).locale(language).calendar()}`
+      p= `${l.edit_uploaded} ${h.moment(test.script, 'MMMM Do YYYY, h:mm:ss a', true).local().locale(language).calendar()}`
 
     label(for='photo') #{l.edit_photo}
     input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
@@ -48,7 +48,11 @@ mixin labjsuploadForm(test = {})
           span.
              #{l.feeling_lucky}
     
-    - const choices = ['Negative valence', 'Positive valence', 'Cognitive systems', 'Social processes','Arousal and Regulatory systems']
+    - let choices = ['Negative valence', 'Positive valence', 'Cognitive systems', 'Social processes','Arousal and Regulatory systems']
+    if(language == "de")
+      - choices = ['Negative Valenz', 'Positive Valenz', 'Kognitive Systeme', 'Soziale Prozesse', 'Aktivierung und Regulierungssysteme']
+    if(language == "ru")
+      - choices = ['Негативная валентность', 'Позитивная валентность','Когнитивные системы', 'Социальные процессы', 'Возбуждение и регуляторные системы']
     - const tags = test.tags || []
 
     label(for='tags') #{l.edit_tags}
