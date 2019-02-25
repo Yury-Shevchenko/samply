@@ -19,7 +19,7 @@ const testSchema = new mongoose.Schema({
   created: {
     type: Date,
     default: Date.now
-  },
+  }, 
   // script: String,
   updated: {
     type: Date,

@@ -3,16 +3,16 @@ mixin testForm(test = {})
   //- form(action=`https://open-lab.online/tests/labjs` method = 'POST' class='card' enctype="multipart/form-data")
   //- form(action=`/tests/labjs` method = 'POST' enctype="multipart/form-data")
   form(action=`/add/${test._id || ''}` method = 'POST' enctype="multipart/form-data" id="testform")
-    label(for='name') #{l.edit_name}
+    label(for='name' style="font-weight:600") #{l.edit_name}
     input(type='text' name='name' value=test.name required)
     label(for ='description') #{l.edit_description}
     textarea(name='description')= test.description
     label(for='version') #{l.version}
     input(type='text' name='version' value=test.version)
-    label(for='script') #{l.edit_labjs_file}
+    label(for='script' style="font-weight:600") #{l.edit_labjs_file}
     input(type="file" name='script' id='script' accept=".json")
     if test.updated
-      p= `${l.edit_uploaded}: ${h.moment.utc(test.updated).local().locale(language).format('dddd, MMMM Do YYYY')}`
+      label(style="color: hsl(0,0%,45%)")= `${l.edit_uploaded}: ${h.moment.utc(test.updated).local().locale(language).format('dddd, MMMM Do YYYY')}`
     label(for='photo') #{l.edit_photo}
     input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
     if test.photo
@@ -48,7 +48,7 @@ mixin testForm(test = {})
       each choice in choices
         .tag.tag__choice
           input(type = 'checkbox' id=choice value=choice name='tags' checked=(tags.includes(choice)))
-          label(for=choice) #{layout[choice]}
+          label(for=choice) #{choice}
 
     div.span4#test_privacy
       input(type='radio', name='open', value='true', style="visibility: true;" checked=(test.open==true))#wnr1

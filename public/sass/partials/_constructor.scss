@@ -37,9 +37,9 @@
 
 .tags {
   display: grid;
-  grid-gap: 5px;
-  padding: 3rem;
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  grid-gap: 2px;
+  // padding: 1rem;
+  // box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
   grid-template-columns: repeat(auto-fill, minmax(200px,auto));
   //justify-content: space-around;
   //margin: 1em;
