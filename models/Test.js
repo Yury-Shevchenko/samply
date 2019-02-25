@@ -22,8 +22,7 @@ const testSchema = new mongoose.Schema({
   },
   // script: String,
   scriptUpdated: {
-    type: Date,
-    default: Date.now
+    type: Date
   },
   token: String,
   tokenExpires: Date,
