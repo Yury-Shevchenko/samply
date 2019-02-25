@@ -22,7 +22,7 @@ mixin labjsuploadForm(test = {})
     input(type='text' name='version' value=test.version)
 
     label(for='script' style="font-weight:600") #{l.edit_labjs_file}
-    if test.updated
+    if test.scriptUpdated
       label(style="color: hsl(0,0%,45%)")= `${l.edit_uploaded}: ${h.moment.utc(test.updated).local().locale(language).format('dddd, MMMM Do YYYY')}`
 
     label(for='photo') #{l.edit_photo}

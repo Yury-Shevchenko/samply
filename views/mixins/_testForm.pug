@@ -11,7 +11,7 @@ mixin testForm(test = {})
     input(type='text' name='version' value=test.version)
     label(for='script' style="font-weight:600") #{l.edit_labjs_file}
     input(type="file" name='script' id='script' accept=".json")
-    if test.updated
+    if test.scriptUpdated
       label(style="color: hsl(0,0%,45%)")= `${l.edit_uploaded}: ${h.moment.utc(test.updated).local().locale(language).format('dddd, MMMM Do YYYY')}`
     label(for='photo') #{l.edit_photo}
     input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")

@@ -98,7 +98,7 @@ exports.labjs = async (req, res) => {
       req.body.token = crypto.randomBytes(20).toString('hex');
       req.body.tokenExpires = Date.now() + 3600000; //1 hour to upload the test
       req.body.created = new Date().toISOString();
-      req.body.updated = new Date().toISOString();
+      req.body.scriptUpdated = new Date().toISOString();
       const test = await (new Test(req.body)).save();
       req.flash('success', `${res.locals.layout.flash_labjs_upload_success} <strong>${req.body.name}</strong>. ${res.locals.layout.flash_labjs_edit_message}`);
       res.setHeader('Access-Control-Allow-Origin', '*');

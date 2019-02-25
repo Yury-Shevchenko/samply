@@ -98,7 +98,7 @@ exports.createTest = async (req, res, next) => {
     req.body.css = script.files['style.css'].content;
     req.body.params = script.params;
     req.body.created = new Date().toISOString();
-    req.body.updated = new Date().toISOString();
+    req.body.scriptUpdated = new Date().toISOString();
     req.body.json = json_string;
     req.body.production = script.production;
     req.body.labjsVersion = json.version;
@@ -119,7 +119,7 @@ exports.updateTest = async (req, res, next) => {
   }
   if(req.user){
     req.body.author = req.user._id;
-  }
+  } 
   req.body.token = undefined;
   req.body.tokenExpires = undefined;
   if(req.files.script){
@@ -132,7 +132,7 @@ exports.updateTest = async (req, res, next) => {
     req.body.json = json_string;
     req.body.production = script.production;
     req.body.labjsVersion = json.version;
-    req.body.updated = new Date().toISOString();
+    req.body.scriptUpdated = new Date().toISOString();
   };
   const test = await Test.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true, //return the new user instead of the old one
