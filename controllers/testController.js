@@ -119,7 +119,7 @@ exports.updateTest = async (req, res, next) => {
   }
   if(req.user){
     req.body.author = req.user._id;
-  } 
+  }
   req.body.token = undefined;
   req.body.tokenExpires = undefined;
   if(req.files.script){
@@ -530,7 +530,7 @@ exports.listPublicTests = async(req, res) => {
 exports.showAllTasksForAdmin = async (req, res) => {
   const tests = await Test
     .find({ },{
-      name: 1, slug: 1, description: 1, author: 1, photo: 1, open: 1, created: 1, updated: 1, production: 1, labjsVersion: 1
+      name: 1, slug: 1, description: 1, author: 1, photo: 1, open: 1, created: 1, scriptUpdated: 1, production: 1, labjsVersion: 1
     })
   res.render('alltestsforadmin', {tests});
 };
