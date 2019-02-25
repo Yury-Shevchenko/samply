@@ -22,8 +22,9 @@
       position: relative;
       z-index: 2;
       & + label {
-        background: $grey;
+        background: #e6e6e67d;
         padding: 1rem 1rem 1rem 4rem;
+        border-radius: 5px;
       }
       &:checked + label {
         //background: $yellow;

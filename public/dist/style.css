@@ -724,7 +724,8 @@ label {
   height: -moz-min-content;
   height: min-content;
   display: -ms-flexbox;
-  display: flex; }
+  display: flex;
+  padding: 5px; }
   .search__results {
     background: white;
     position: absolute;
@@ -845,7 +846,7 @@ label {
       transition: all 0.2s;
       fill: white; }
     .nav__main_link:hover, .nav__main_link--active {
-      background: #e7eaff;
+      background: #fcfcff9c;
       border-radius: 3px; }
       .nav__main_link:hover svg, .nav__main_link--active svg {
         -ms-transform: scale(1.2);
@@ -1152,8 +1153,9 @@ and also iPads specifically.
       position: relative;
       z-index: 2; }
       .tag__choice input + label {
-        background: #e6e6e6;
-        padding: 1rem 1rem 1rem 4rem; }
+        background: #e6e6e67d;
+        padding: 1rem 1rem 1rem 4rem;
+        border-radius: 5px; }
       .tag__choice input:checked + label {
         background: #e7eaff; }
   .tag__link {
@@ -1489,7 +1491,7 @@ and also iPads specifically.
 .card {
   background: white;
   padding: 3rem;
-  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   height: inherit; }
   @media all and (max-width: 600px) {
     .card {
@@ -1663,7 +1665,6 @@ i.yes:after {
     margin: 0.67rem;
     padding: 0.67rem;
     background-color: white;
-    border: 1px solid #ffdba2;
     transition: all 0.4s ease-in-out; }
   #test_privacy input#wnr1:checked ~ label[for='wnr1'] {
     background-color: #ffe !important; }

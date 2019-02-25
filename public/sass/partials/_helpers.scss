@@ -69,7 +69,8 @@
 .card {
   background: white;
   padding: 3rem;
-  box-shadow: 0 1px 10px rgba(0,0,0,0.15);
+  // box-shadow: 0 1px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
   height: inherit;
   @media all and (max-width: 600px) {
     padding: 1rem;
