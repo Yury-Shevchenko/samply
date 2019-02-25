@@ -18,7 +18,7 @@ block content
       if project && project.name
         h2 #{`${project.name}`}
       else
-        p !{l.create_your_project}
+        p(style="color:hsl(0,0%,45%)") !{l.create_your_project}
         
       .program
         
@@ -33,19 +33,19 @@ block content
           .parameters
             if (project)
               if (project.tests.length == 0)
-                h4 #{l.noTests}
+                p(style="color:hsl(0,0%,45%)") #{l.noTests}
               else 
                 if(typeof(slug) == "undefined")
-                  h4 #{l.chooseTest}
+                  p(style="color:hsl(0,0%,45%)") #{l.chooseTest}
                 else 
                   if(typeof(test) == "undefined")
-                    h4 #{l.testNotFound}
+                    p(style="color:hsl(0,0%,45%)") #{l.testNotFound}
                   else 
                     if(typeof(results) == 'undefined')
-                      h4 #{l.noResults}
+                      p(style="color:hsl(0,0%,45%)") #{l.noResults}
                     else 
                       if(results.length == 0)
-                        h4 #{l.noResultsYet}
+                        p(style="color:hsl(0,0%,45%)") #{l.noResultsYet}
                       else 
                         if(user.project && user.project.name)
                           p

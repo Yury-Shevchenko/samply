@@ -10,7 +10,7 @@ mixin projectCard(project = {})
     div(class = projectClass)
       .store__hero
         h2.title
-          a(href=`/projects/${project.name}`) #{project.name}
+          a(href=`/projects/${project._id}`) #{project.name}
 
       .store__details
         .project__actions

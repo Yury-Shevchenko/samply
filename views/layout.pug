@@ -110,9 +110,9 @@ html
                         option(value='') #{layout.choose_project}
                         each project in projects
                           if(project.name.length < 40)
-                            option(value=project.name selected=(user.project._id.toString() == project._id.toString()))= project.name
+                            option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= project.name
                           else
-                            option(value=project.name selected=(user.project._id.toString() == project._id.toString()))= `${project.name.substring(0,20)}...`
+                            option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
                 
               li.nav__item: a.nav__main_link(href="/account", class=(currentPath.startsWith('/account') || currentPath.startsWith('/subscribe') ? 'nav__main_link--active' : ''))
                 h6 #{layout.profile}

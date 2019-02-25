@@ -412,7 +412,7 @@ module.exports =
         'confirmMessage_1': 'Type the name of the task ',
         'confirmMessage_2': ' to confirm that you want to delete the task. This action is not reversable. Please take into account that the deletion of the task will affect the studies that use it.',
         'delete': 'Delete',
-        'version': 'Version',
+        'version': 'Task version',
         'authorInformation': 'Author information',
         'feeling_lucky' : `I'm feeling lucky to choose a random picture.`,
       },

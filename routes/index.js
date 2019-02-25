@@ -10,7 +10,7 @@ const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
 const passport = require('passport');
 var cors = require('cors');
-      
+   
 //home page
 router.get('/', testController.homePage);
 router.get('/about', testController.aboutPage);
@@ -237,7 +237,7 @@ router.post('/save', authController.isLoggedIn, catchErrors(resultController.sav
 
 //Project controller
 router.get('/projects', authController.isAdminLoggedIn, catchErrors(projectController.getUserProjects));
-router.get('/projects/:name', authController.isAdminLoggedIn, catchErrors(projectController.activateProject));
+router.get('/projects/:id', authController.isAdminLoggedIn, catchErrors(projectController.activateProject));
 router.post('/projects', authController.isAdminLoggedIn, catchErrors(projectController.createProject));
 router.post('/projects/:id', authController.isAdminLoggedIn, catchErrors(projectController.updateProject));
 //edit the project

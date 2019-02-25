@@ -409,7 +409,7 @@ module.exports = {
       'confirmMessage_1': 'Bitte geben Sie den Namen des Tests ',
       'confirmMessage_2': ' ein, um zu bestätigen, dass Sie den Test löschen möchten. Diese Aktion ist nicht umkehrbar. Bitte beachten Sie, dass das Löschen der Aufgabe auf die Studien auswirkt, die sie verwenden.',
       'delete': 'Löschen',
-      'version': 'Version',
+      'version': 'Aufgabenversion',
       'authorInformation': 'Informationen über den Autor',
       'feeling_lucky' : `Ich möchte dieser Stuide ein zufälliges Bild zuordnen.`
     },

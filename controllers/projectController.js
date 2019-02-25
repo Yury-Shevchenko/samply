@@ -32,14 +32,14 @@ exports.getUserProjects = async (req, res) => {
 };
 
 exports.activateProject = async (req, res) => {
-  const activeProject = await Project.findOne({name: req.params.name});
+  const activeProject = await Project.findOne({_id: req.params.id});
   const updatedUser = await User.findOneAndUpdate({
     _id: req.user._id
   }, { project: activeProject }, {
     new: true,
     upsert: true
   }).exec();
-  req.flash('success', `${req.params.name} ${res.locals.layout.flash_activate_project}`);
+  req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
   res.redirect('back');
 };
 

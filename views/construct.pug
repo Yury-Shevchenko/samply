@@ -40,10 +40,10 @@ block content
                 each test in project.testsData
                   +selectedTestCard(test)
               else
-                p #{l.not_chosen_message}
+                p(style="color:hsl(0,0%,45%)") #{l.not_chosen_message}
             else
-              p !{l.no_project_message}
-
+              p(style="color:hsl(0,0%,45%)") !{l.no_project_message}
+ 
         .card
           h5 #{l.title_tasks}
           .stores

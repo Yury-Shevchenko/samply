@@ -27,19 +27,19 @@ block content
             td
               p
                 a(href=`/code/${project.name}/?generate=true`) https://open-lab.online/code/#{project.name}/?generate=true
-            td #{l.temp_code_strategy}
+              p #{l.temp_code_strategy}
           tr
             td #{l.signing_code}
             td
               p
                 a(href=`/code/${project.name}/`) https://open-lab.online/code/#{project.name}/
-            td #{l.code_strategy}
+              p #{l.code_strategy}
           tr
             td #{l.signing_email}
             td
               p
                 a(href=`/sign/${project.name}/`) https://open-lab.online/sign/#{project.name}/
-            td #{l.email_strategy}
+              p #{l.email_strategy}
 
       else
         p !{l.message_create_project}
