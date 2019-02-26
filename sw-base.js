@@ -10,17 +10,20 @@ self.addEventListener('install', function(event){
 });
 
 self.addEventListener('activate', function(event){
-  console.log('[Service Worker] Activating Service Worker ...', event);
+  console.log('[Service Worker] Activating Service Worker');
   return self.clients.claim();
 });
 
+
+workboxSW.precache([]);
+
 //routing
-workboxSW.router.registerRoute(/\/test\/.*$/, workboxSW.strategies.staleWhileRevalidate({
-  cacheName: 'tests',
-  cacheExpiration: {
-    maxAgeSeconds: 60 * 60 * 24 * 7 //week
-  }
-}));
+// workboxSW.router.registerRoute(/\/test\/.*$/, workboxSW.strategies.staleWhileRevalidate({
+//   cacheName: 'tests',
+//   cacheExpiration: {
+//     maxAgeSeconds: 60 * 60 * 24 * 7 //week
+//   }
+// }));
 
 //saving data when a user is offline
 // workboxSW.router.registerRoute('/save', function(args){
@@ -192,6 +195,3 @@ self.onsync = function(event) {
 //     // );
 //   }
 // });
-
-
-workboxSW.precache([]);

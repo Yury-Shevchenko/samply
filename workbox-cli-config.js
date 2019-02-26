@@ -1,8 +1,8 @@
 module.exports = {
-  "globDirectory": "public\\",
+  "globDirectory": "public/",
   "globPatterns": [
-    "**/*.{map,ttf,otf,woff,woff2,json}",
-    "images/photos/*.{jpg,png}"
+    // "**/*.{ttf,otf,woff,woff2,json}",
+    // "images/photos/*.{jpg,png}"
   ],
   "swSrc": "sw-base.js",
   "swDest": "public/service-worker.js",

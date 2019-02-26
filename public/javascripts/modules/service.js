@@ -3,13 +3,13 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker
     .register('/service-worker.js')
     .then(function(registration){
-      console.log("SW registered", registration)
+      console.log("SW registered")
     })
     .catch(function(error){
       console.error(error);
     })
 } else {
-  conso.log("SW is not supported");
+  console.log("SW is not supported");
 };
 
 

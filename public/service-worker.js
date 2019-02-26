@@ -10,17 +10,20 @@ self.addEventListener('install', function(event){
 });
 
 self.addEventListener('activate', function(event){
-  console.log('[Service Worker] Activating Service Worker ...', event);
+  console.log('[Service Worker] Activating Service Worker');
   return self.clients.claim();
 });
 
+
+workboxSW.precache([]);
+
 //routing
-workboxSW.router.registerRoute(/\/test\/.*$/, workboxSW.strategies.staleWhileRevalidate({
-  cacheName: 'tests',
-  cacheExpiration: {
-    maxAgeSeconds: 60 * 60 * 24 * 7 //week
-  }
-}));
+// workboxSW.router.registerRoute(/\/test\/.*$/, workboxSW.strategies.staleWhileRevalidate({
+//   cacheName: 'tests',
+//   cacheExpiration: {
+//     maxAgeSeconds: 60 * 60 * 24 * 7 //week
+//   }
+// }));
 
 //saving data when a user is offline
 // workboxSW.router.registerRoute('/save', function(args){
@@ -192,71 +195,3 @@ self.onsync = function(event) {
 //     // );
 //   }
 // });
-
-
-workboxSW.precache([
-  {
-    "url": "dist/App.bundle.js.map",
-    "revision": "eddafdc2a3ba0d70991fc2b20068006c"
-  },
-  {
-    "url": "dist/style.css.map",
-    "revision": "b1de3d81d35465668b30aaba8eb138ad"
-  },
-  {
-    "url": "fonts/BebasNeue Bold.ttf",
-    "revision": "1e99b0442583593743adb5d91d7c0669"
-  },
-  {
-    "url": "fonts/BebasNeue Regular.otf",
-    "revision": "a105cda50ada8b1d3c5a401a5411f8ae"
-  },
-  {
-    "url": "fonts/fontawesome-webfont.ttf",
-    "revision": "b06871f281fee6b241d60582ae9369b9"
-  },
-  {
-    "url": "fonts/fontawesome-webfont.woff",
-    "revision": "fee66e712a8a08eef5805a46892932ad"
-  },
-  {
-    "url": "fonts/fontawesome-webfont.woff2",
-    "revision": "af7ae505a9eed503f8b8e6982036873e"
-  },
-  {
-    "url": "fonts/OpenSans-Bold.ttf",
-    "revision": "50145685042b4df07a1fd19957275b81"
-  },
-  {
-    "url": "fonts/OpenSans-Italic.ttf",
-    "revision": "c7dcce084c445260a266f92db56f5517"
-  },
-  {
-    "url": "fonts/OpenSans-Regular.ttf",
-    "revision": "629a55a7e793da068dc580d184cc0e31"
-  },
-  {
-    "url": "fonts/panama-bold-webfont.woff",
-    "revision": "629097e5ba87d71f789ebfc1fe26f5e8"
-  },
-  {
-    "url": "fonts/panama-bold-webfont.woff2",
-    "revision": "fb592398564bc10e76d060da13a35279"
-  },
-  {
-    "url": "javascripts/modules/lab.js.map",
-    "revision": "6f75697bfe04bdedcb5559e1c40fec98"
-  },
-  {
-    "url": "manifest.json",
-    "revision": "8aeac47aaf92a1b6485d1655ee7a3666"
-  },
-  {
-    "url": "workbox-sw.prod.v2.1.3.js.map",
-    "revision": "1cbd1bf8f8f05f7504355e0f7674b67e"
-  },
-  {
-    "url": "images/photos/over.jpg",
-    "revision": "b5cc7fa8be0c30b640646e8ee5fff73d"
-  }
-]);
