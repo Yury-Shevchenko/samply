@@ -97,6 +97,7 @@ testSchema.statics.showMyTests = function(userID) {
       description: '$$ROOT.description',
       author: '$$ROOT.author',
       photo: '$$ROOT.photo',
+      production: '$$ROOT.production',
       // results: '$results',
       numberResults: {$size:
         { $setUnion: '$results._id' }
