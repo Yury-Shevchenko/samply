@@ -11,6 +11,7 @@ const serialize = require('serialize-javascript')
 const fs = require('fs');
 const FormData = require('form-data');
 const fetch = require('node-fetch');
+const cloudinary = require('cloudinary');
 
 exports.convertJSON = async (state, foldername, production = 'alpha', stateModifier=state => state, additionalFiles={}) => {
   // Apply modification function to copy of current state
@@ -33,10 +34,7 @@ exports.convertJSON = async (state, foldername, production = 'alpha', stateModif
     .reduce((flat, next) => flat.concat(next), [])
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
-    
-  // console.log("Version", state.version);
-  // console.log("updatedState", updatedState.components.root);
-  // Filter files that are not embedded in components
+
   const filesInUse = embeddedFiles(updatedState.components)
 
   const files = pickBy(
@@ -46,51 +44,49 @@ exports.convertJSON = async (state, foldername, production = 'alpha', stateModif
       filesInUse.includes(filename) ||
       file.source == 'embedded'
   )
-  // console.log('files', files);
 
-  const uploadFile =  async (item) => {
+  const uploadFile = async (item) => {
     const name = item[0].split(`${item[1].source == "embedded" ? "embedded" : "static"}/`)[1];
-    const truncatedName = name.split('.')[0];
     const string = item[1].content;
-    const regex = /^data:.+\/(.+);base64,(.*)$/;
-    const matches = string.match(regex);
-    const ext = matches[1];
-    const data = matches[2];
-    const buffer = new Buffer(data, 'base64');
-    const imageData = new FormData();
-    imageData.append('file', buffer, {filename: 'image'});
-    imageData.append('upload_preset', 'openlab');
-    // const location = foldername + '/embedded/' + truncatedName;
+    const truncatedName = name.split('.')[0];
     const location = `${foldername}/${truncatedName}`;
-    imageData.append('public_id', location);
-    const resource_type = 'auto';
-    const fetched = await fetch(`https://api.cloudinary.com/v1_1/dfshkvgf3/${resource_type}/upload`, {
-      method: 'POST',
-      body: imageData,
-      resource_type: resource_type,
-    });
-    const response = await fetched.json();
-    const url = response.secure_url;
-    for (let [key, value] of Object.entries(updatedState.components)){
-      if (value.files && value.files.rows && value.files.rows.length > 0) {
-        value.files.rows.map(o => {
-          o.map(e => {
-            if (e.poolPath == item[0]){
-              e.poolPath = url;
-            }
-          })
-        });
-      }
-    }
-    //TODO Find all links to the static files and change them to point to Cloudinary
+    const upload_preset = "openlab";
+    const options = {
+      public_id: location,
+      resource_type: 'auto'
+    };
+    await cloudinary.v2.uploader.unsigned_upload(
+      string,
+      upload_preset,
+      options,
+      function(error, result) {
+        console.log(result.secure_url);
+        for (let [key, value] of Object.entries(updatedState.components)){
+          if (value.files && value.files.rows && value.files.rows.length > 0) {
+            value.files.rows.map(o => {
+              o.map(e => {
+                if (e.poolPath == item[0]){
+                  e.poolPath = result.secure_url;
+                }
+              })
+            });
+          }
+        }
 
-    return url;
+      }
+    );
+    // const dir = 'public/embedded/' + foldername;
+    // !fs.existsSync(dir) && fs.mkdirSync(dir);
+    // const writableStream = fs.createWriteStream(dir + '/' + name);
+    // getUri(string, (err, res) => {
+    //   if (err) throw err;
+    // res.pipe(writableStream);
+    // })
   }
 
   const arr = Object.entries(files).filter(i => {
     return (i && i[1] && (i[1].source == "embedded" || i[1].source == "embedded-global"))
   });
-  // console.log("Number of files to upload", arr.length);
 
   await Promise.all(arr.map(item => {
     return uploadFile(item)
@@ -131,6 +127,7 @@ const embeddedFiles = components => {
   const componentFiles = Object.entries(components)
     .map(([_, { files }]) => files && files.rows ? files.rows : [])
     .filter(files => files.length > 0)
+  // console.log("component files", componentFiles[0]);
 
   return flatMap(
     componentFiles,
