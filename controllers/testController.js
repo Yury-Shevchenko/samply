@@ -193,7 +193,7 @@ exports.getAllTests = async (req, res) => {
         }
       ]
     },{
-      name: 1, slug: 1, description: 1, author: 1, photo: 1, open: 1,
+      name: 1, slug: 1, description: 1, author: 1, photo: 1, open: 1, production: 1,
     })
     .skip(skip)
     .limit(limit);
