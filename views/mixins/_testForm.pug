@@ -5,6 +5,7 @@ mixin testForm(test = {})
   form(action=`/add/${test._id || ''}` method = 'POST' enctype="multipart/form-data" id="testform")
     label(for='name' style="font-weight:600") #{l.edit_name}
     input(type='text' name='name' value=test.name required)
+    input(type='hidden' name='slug' value=test.slug)
     label(for ='description') #{l.edit_description}
     textarea(name='description')= test.description
     label(for='version') #{l.version}

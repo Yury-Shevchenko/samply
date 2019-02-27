@@ -60,7 +60,7 @@ exports.convertJSON = async (state, foldername, production = 'alpha', stateModif
       upload_preset,
       options,
       function(error, result) {
-        console.log(result.secure_url);
+        // console.log(result.secure_url);
         for (let [key, value] of Object.entries(updatedState.components)){
           if (value.files && value.files.rows && value.files.rows.length > 0) {
             value.files.rows.map(o => {

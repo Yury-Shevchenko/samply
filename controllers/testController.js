@@ -13,6 +13,7 @@ const Result = mongoose.model('Result');
 const Param = mongoose.model('Param');
 const keys = require('../config/keys');
 const assemble = require('../handlers/assemble');
+const slug = require('slugs');
 
 const multerOptions = {
   storage: multer.memoryStorage(),
@@ -134,6 +135,17 @@ exports.updateTest = async (req, res, next) => {
     req.body.labjsVersion = json.version;
     req.body.scriptUpdated = new Date().toISOString();
   };
+
+  let newSlug = slug(req.body.name);
+  if (newSlug != req.body.slug){
+    const slugRegEx = new RegExp(`^(${newSlug})((-[0-9]*$)?)$`, 'i');//regular expression
+    const testsWithSlug = await Test.find({ slug: slugRegEx, _id: { $ne: req.params.id } });
+    if(testsWithSlug.length){
+      newSlug = `${newSlug}-${testsWithSlug.length + 1}`;
+    }
+    req.body.slug = newSlug;
+  };
+  
   const test = await Test.findOneAndUpdate({ _id: req.params.id }, req.body, {
     new: true, //return the new user instead of the old one
     runValidators: true
