@@ -415,7 +415,7 @@ module.exports =
         'version': 'Task version',
         'authorInformation': 'Author information',
         'feeling_lucky' : `I'm feeling lucky to choose a random picture.`,
-      },
+      },    
 
       'results': {
         'title': 'Results',
@@ -426,6 +426,7 @@ module.exports =
         'results_rows': 'records',
         'send_delete_request': 'Request to delete the data',
         'cancel_delete_request': 'Cancel the deletion request',
+        'no_results': 'No results yet',
       },
 
       'researcher' : {

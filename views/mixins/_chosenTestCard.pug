@@ -18,7 +18,7 @@ mixin chosenTestCard(test = {})
             a.heart__button(href=`/tasks/${test.slug}`)
               .blackbtns(style='fill:black')
                 != h.icon('description')
-          if (test && test.params && test.params.length > 0)
+          if (true || (test && test.params && test.params.length > 0))
             .store__action 
               a.heart__button(href=`/tasks/${test.slug}/original`)
                 .blackbtns(style='fill:black')

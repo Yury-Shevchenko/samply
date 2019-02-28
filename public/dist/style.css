@@ -1668,8 +1668,12 @@ i.yes:after {
     transition: all 0.4s ease-in-out; }
   #test_privacy input#wnr1:checked ~ label[for='wnr1'] {
     background-color: #ffe !important; }
+    #test_privacy input#wnr1:checked ~ label[for='wnr1'] span {
+      font-weight: 600; }
   #test_privacy input#wnr2:checked ~ label[for='wnr2'] {
     background-color: #ffe !important; }
+    #test_privacy input#wnr2:checked ~ label[for='wnr2'] span {
+      font-weight: 600; }
 
 .tooltip {
   position: absolute;

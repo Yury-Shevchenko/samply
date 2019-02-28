@@ -423,6 +423,7 @@ module.exports = {
       'results_rows': 'Zeilen',
       'send_delete_request': 'Aufforderung zum Löschen der Daten',
       'cancel_delete_request': 'Stornieren Sie den Löschauftrag',
+      'no_results': 'Noch keine Ergebnisse',
     },
 
     'researcher' : {

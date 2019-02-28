@@ -183,7 +183,7 @@ testSchema.statics.getTagsList = function(id){
     { $group: { _id: '$tags' , count: {$sum: 1}} },
     { $sort: { count: -1 } }
   ]);
-};
+}; 
 
 //find results where the tests _id property === results test property
 testSchema.virtual('results', {

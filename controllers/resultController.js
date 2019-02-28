@@ -108,6 +108,40 @@ exports.downloadprojectmetadata = async (req, res) => {
   const processor = input.pipe(res);
 };
 
+//download summary statistics for all users of the project
+exports.downloadSummaryData = async (req, res) => {
+  let keys = [];
+  const name = req.user.project.name;
+  res.setHeader('Content-disposition', 'attachment; filename=' + name +'.csv');
+  const input = new stream.Readable({ objectMode: true });
+  input._read = () => {};
+  var cursor = await Result
+    .find({project: req.user.project._id},{rawdata:1})
+    .cursor()
+    .on('data', obj => {
+
+      const preKeys = flatMap(obj.rawdata, function(e){
+        return(Object.keys(e));
+      });
+      const tempkeys = Array.from(new Set(preKeys));
+      console.log('Keys', tempkeys);
+      const new_items = tempkeys.filter(x => !keys.includes(x));
+      let parsed;
+      if (new_items.length > 0){
+        keys = keys.concat(new_items);
+        parsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
+      } else {
+        const preparsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
+        parsed = preparsed.replace(/(.*\r\n)/,'');
+      };
+      input.push(parsed);
+
+    })
+    .on('end', function() { input.push(null) })
+    .on('error', function(err) { console.log(err) });
+  const processor = input.pipe(res);
+};
+
 //download csv file for particular test and user
 exports.downloadResultTestUser = async (req, res) => {
   const result = await Result.findOne({ _id: req.params.filename });
@@ -265,7 +299,9 @@ exports.saveIncrementalResults = async (req, res) => {
       parameters: params,
       aggregated: aggregated
     });
+
     await fullResult.save();
+
     res.send('Saved all results');
   } else {
     res.send('Unknown upload data type');
@@ -274,16 +310,28 @@ exports.saveIncrementalResults = async (req, res) => {
 
 //show the results for each test
 exports.showDataByTests = async (req, res) => {
-  let test, results;
+  let test, results, projectTests;
   const project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, testsData: 1, tests: 1
+    name: 1, tests: 1, tests: 1
   });
+  if(project){
+    const unsortedProjectTests = await Test
+      .find({
+        _id: { $in: project.tests},
+        author: { $exists: true }
+      })
+      .select({slug:1, name:1, photo:1})
+    //order projectTests
+    projectTests = unsortedProjectTests.sort( (a, b) => {
+      return project.tests.indexOf(a.id) - project.tests.indexOf(b.id);
+    });
+  };
   const slug = req.params.slug;
   if (slug && project){
     test = await Test.findOne({slug: slug},{_id:1, name:1, slug:1});
     results = await Result.getResults({ test: test._id, project: req.user.project._id });//returns an array
   }
-  res.render('resultsByTests', {project, slug, test, results});
+  res.render('resultsByTests', {project, slug, test, results, projectTests});
 };
 
 

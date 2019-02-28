@@ -41,7 +41,7 @@ block content
 
 
   else
-    - const arrayTests = project.testsData.map(function(test) {return test.slug;});
+    - const arrayTests = projectTests.map(function(test) {return test.slug;});
     - const arrayResults = results.map(function(result) {return result.taskslug;});
     - const doneArray = arrayTests.filter(function(test) {return arrayResults.includes(test)});
     - const remainingArray = arrayTests.filter(function(test) {return !arrayResults.includes(test)});
@@ -55,7 +55,7 @@ block content
         .inner
           h2= `${l.title}`
       .single__hero
-        - const comingTask = project.testsData.filter(function(test){return test.slug == nextTask})[0]
+        - const comingTask = projectTests.filter(function(test){return test.slug == nextTask})[0]
         if comingTask
           img.single__image(src= `/uploads/${comingTask.photo || 'store.png'}`)
         else
@@ -80,6 +80,7 @@ block content
 
       if (project.useNotifications)
         .notificationsPanel
+          //- button(class="js-push-button" disabled) Enable Push Messages
           button(id="enable_notifications" class="button") Enable notifications
           button(id="disable_notifications" class="button") Disable notifications
           #notification_status
@@ -109,7 +110,7 @@ block content
 
       .dashboard
         .dashboardBody
-          each test in project.testsData
+          each test in projectTests
             if test.slug == nextTask
               strong #{test.name}
               strong #{test.description}
@@ -122,6 +123,7 @@ block content
               p #{l.table_done}
 
   script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
+  //- script(src="/javascripts/services/notify.js" nonce=`${noncevalue}`)
   //- script(src="/javascripts/services/media.js" nonce=`${noncevalue}`)
   //- script(src="/javascripts/services/geolocation.js" nonce=`${noncevalue}`)
 

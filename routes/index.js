@@ -10,7 +10,7 @@ const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
 const passport = require('passport');
 var cors = require('cors');
- 
+
 //home page
 router.get('/', testController.homePage);
 router.get('/about', testController.aboutPage);
@@ -225,6 +225,7 @@ router.get('/database/:slug/:id/:filename', authController.isLoggedIn, catchErro
 //get all data from the project
 router.get('/downloadprojectdata', authController.isAdminLoggedIn, catchErrors(resultController.downloadprojectdata));
 router.get('/downloadprojectmetadata', authController.isAdminLoggedIn, catchErrors(resultController.downloadprojectmetadata));
+router.get('/downloadsummarydata', authController.isAdminLoggedIn, catchErrors(resultController.downloadSummaryData));
 //download results of particular test in the project
 router.get('/downloadtestresults/:name/:test', authController.isAdminLoggedIn, catchErrors(resultController.downloadTestResults));
 //delete the data of the task and the user

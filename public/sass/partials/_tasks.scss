@@ -96,6 +96,9 @@ i.yes:after {
       &> i.yes {
         @extend #yes;
       }
+      span {
+        font-weight: 600;
+      }
     }
   }
   input#wnr2:checked {
@@ -104,6 +107,9 @@ i.yes:after {
       background-color: #ffe !important;
       &> i.yes {
         @extend #yes;
+      }
+      span {
+        font-weight: 600;
       }
     }
   }

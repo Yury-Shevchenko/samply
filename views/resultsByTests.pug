@@ -25,8 +25,8 @@ block content
         .tasks
           .card
             .items
-              if project && project.testsData
-                each test in project.testsData
+              if project && projectTests && projectTests.length && projectTests.length > 0
+                each test in projectTests
                   +chosenTestResults(test)
 
         .card

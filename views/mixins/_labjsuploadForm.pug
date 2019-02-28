@@ -2,31 +2,22 @@ mixin labjsuploadForm(test = {})
 
   form(action=`/add/${test._id || ''}` method = 'POST' class='card' enctype="multipart/form-data")
     
-    if !user
-      h5 #{layout.signup_or_login}
-      label(for="email") #{layout.email}
-      input(type="email" name="email" value=email)
-      label(for="password") #{layout.password}
-      input(type="password" name="password" value=password)
-      label(for="password-confirm") #{layout.password_confirm}
-      input(type="password" name="password-confirm" value=password-confirm)
-      p
-
     label(for='name' style="font-weight:600") #{l.edit_name}
     input(type='text' name='name' value=test.name)
+    p
+    if(false)
+      label(for ='description') #{l.edit_description}
+      textarea(name='description')= test.description
 
-    label(for ='description') #{l.edit_description}
-    textarea(name='description')= test.description
+      label(for='version') #{l.version}
+      input(type='text' name='version' value=test.version)
 
-    label(for='version') #{l.version}
-    input(type='text' name='version' value=test.version)
+      label(for='script' style="font-weight:600") #{l.edit_labjs_file}
+      if test.scriptUpdated
+        label(style="color: hsl(0,0%,45%)")= `${l.edit_uploaded}: ${h.moment.utc(test.updated).local().locale(language).format('dddd, MMMM Do YYYY')}`
 
-    label(for='script' style="font-weight:600") #{l.edit_labjs_file}
-    if test.scriptUpdated
-      label(style="color: hsl(0,0%,45%)")= `${l.edit_uploaded}: ${h.moment.utc(test.updated).local().locale(language).format('dddd, MMMM Do YYYY')}`
-
-    label(for='photo') #{l.edit_photo}
-    input(type='file' name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
+    label(for='photo' style="color: hsl(0,0%,45%)") #{l.edit_photo}
+    input(type='file' style="color: hsl(0,0%,45%)" name='photo' id='photo' accept="image/gif, image/png, image/jpeg")
     if test.photo
       img(src=`/uploads/${test.photo}`, alt=test.name width=200)
       input(type='hidden' name='photo' value=test.photo )
@@ -34,34 +25,38 @@ mixin labjsuploadForm(test = {})
       script(nonce=`${noncevalue}`).
         document.addEventListener('DOMContentLoaded', function (){
           document.getElementById('lucky').addEventListener('click', function removePictureUpload() {
-            if (document.getElementById('photo').style.display == 'none'){
-              document.getElementById('photo').style.display = 'block';
+            if (document.getElementById('photo').disabled){
+              //- document.getElementById('photo').style.display = 'block';
+              document.getElementById('photo').disabled = false;
             } else {
-              document.getElementById('photo').style.display = 'none';
+              document.getElementById('photo').disabled = true;
+              document.getElementById('photo').value = ""
+              //- document.getElementById('photo').style.display = 'none';
             }
           });
         });
       
-      div.inputCheckBox
+      div.inputCheckBox(style="color: hsl(0,0%,45%)")
         input(type = 'checkbox' id = 'lucky' name = 'lucky' checked = false)
         label(for='lucky')
           span.
              #{l.feeling_lucky}
     
-    - let choices = ['Negative valence', 'Positive valence', 'Cognitive systems', 'Social processes','Arousal and Regulatory systems']
-    if(language == "de")
-      - choices = ['Negative Valenz', 'Positive Valenz', 'Kognitive Systeme', 'Soziale Prozesse', 'Aktivierung und Regulierungssysteme']
-    if(language == "ru")
-      - choices = ['Негативная валентность', 'Позитивная валентность','Когнитивные системы', 'Социальные процессы', 'Возбуждение и регуляторные системы']
-    - const tags = test.tags || []
+    if(false)
+      - let choices = ['Negative valence', 'Positive valence', 'Cognitive systems', 'Social processes','Arousal and Regulatory systems']
+      if(language == "de")
+        - choices = ['Negative Valenz', 'Positive Valenz', 'Kognitive Systeme', 'Soziale Prozesse', 'Aktivierung und Regulierungssysteme']
+      if(language == "ru")
+        - choices = ['Негативная валентность', 'Позитивная валентность','Когнитивные системы', 'Социальные процессы', 'Возбуждение и регуляторные системы']
+      - const tags = test.tags || []
 
-    label(for='tags') #{l.edit_tags}
-    ul.tags
-      each choice in choices
-        .tag.tag__choice
-          input(type = 'checkbox' id=choice value=choice name='tags' checked=(tags.includes(choice)))
-          label(for=choice) #{choice}
-
+      label(for='tags') #{l.edit_tags}
+      ul.tags
+        each choice in choices
+          .tag.tag__choice
+            input(type = 'checkbox' id=choice value=choice name='tags' checked=(tags.includes(choice)))
+            label(for=choice) #{choice}
+    p
     div.span4#test_privacy
       input(type='radio', name='open', value='true', style="visibility: true;" checked=(test.open==true))#wnr1
 
@@ -82,6 +77,17 @@ mixin labjsuploadForm(test = {})
         small #{l.edit_private_description}
 
     p
+    if !user
+      .signOrLogin
+        h5 #{layout.signup_or_login}
+        label(for="email") #{layout.email}
+        input(type="email" name="email" value=email)
+        label(for="password") #{layout.password}
+        input(type="password" name="password" value=password)
+        label(for="password-confirm") #{layout.password_confirm}
+        input(type="password" name="password-confirm" value=password-confirm)
+        p
+          
     input(type='submit' value=l.edit_save class="button")
 
     //- pre= h.dump(test)

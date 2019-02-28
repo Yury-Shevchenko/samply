@@ -34,10 +34,10 @@ block content
             h5 #{`${project.name}`}
           else
             h5 #{l.title_project}
-          .items
-            if project
-              if project.testsData && project.testsData.length > 0
-                each test in project.testsData
+          .items 
+            if project  
+              if projectTests && projectTests.length > 0
+                each test in projectTests
                   +selectedTestCard(test)
               else
                 p(style="color:hsl(0,0%,45%)") #{l.not_chosen_message}
@@ -52,6 +52,7 @@ block content
                 +constructorTestCard(test)
 
       //- pre=h.dump(tags)
+      //- pre=h.dump(projectTests)
       //- pre=h.dump(project)
       //- pre=h.dump(tests)
       //- pre=h.dump(user)

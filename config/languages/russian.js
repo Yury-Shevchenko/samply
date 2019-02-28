@@ -423,6 +423,7 @@ module.exports =
         'results_rows': 'записи(-ей)',
         'send_delete_request': 'Запросить удаление данных ',
         'cancel_delete_request': 'Отменить удаление данных',
+        'no_results': 'Пока нет результатов',
       },
 
       'researcher' : {
