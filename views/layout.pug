@@ -19,7 +19,8 @@ html
           .nav__section.nav__section--pages
             li.nav__item(id="installApp" style="display:none") 
               a.nav__main_link
-                h6 #{layout.install_app}
+                if(layout && layout.install_app)
+                  h6 #{layout.install_app}
                     //- .installAppButton
             if !user
               li.nav__item.nav__main_link
