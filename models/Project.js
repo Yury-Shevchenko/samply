@@ -29,7 +29,6 @@ const projectSchema = new mongoose.Schema({
   },
   currentlyActive  : Boolean,
   tests            : [{ type : mongoose.Schema.ObjectId, ref: 'Test' }],
-  testsData        : [mongoose.Schema.Types.Mixed],
   invitations      : [{ email: String, token: String }],
   notifications    : [
     {

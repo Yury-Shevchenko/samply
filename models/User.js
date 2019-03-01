@@ -78,12 +78,6 @@ const userSchema = new Schema({
           date            : { type: Date, default: Date.now },
         }
     ],
-    // created_project  : {
-    //     type         : String
-    // },
-    //relationships between chosen tests and the user(researcher)
-    // tests            : [{ type : mongoose.Schema.ObjectId, ref: 'Test' }],
-    // testsData        : [mongoose.Schema.Types.Mixed]
 }, { toJSON: { virtuals: true } });
 
 //methods

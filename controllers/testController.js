@@ -378,22 +378,13 @@ exports.featureTest = async (req, res) => {
   const addedTests = project.tests.map(obj => obj.toString());
   const operator = addedTests.includes(req.params.id)? '$pull' : '$addToSet';
   const test = await Test.findOne({_id: req.params.id},{
-    _id: 1,
-    // author:1,
-    // slug:1,
-    // name:1,
-    // description:1,
-    // tags:1,
-    // photo:1,
-    // position:1,
-    // params:1
+    _id: 1
   });
 
   if(operator === '$pull'){
     const user_pull = await Project
       .findOneAndUpdate({_id: req.user.project._id},
         { ['$pull'] : {
-          // testsData: { '_id' : mongoose.Types.ObjectId(req.params.id) },
           tests: req.params.id
         } },
         { new : true }
@@ -403,7 +394,6 @@ exports.featureTest = async (req, res) => {
     const user_push = await Project
       .findOneAndUpdate({_id: req.user.project._id},
         { ['$addToSet'] : {
-          // testsData: test,
           tests: req.params.id
         } },
         { new : true }
@@ -443,7 +433,7 @@ exports.getProgramTests = async (req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
     name: 1, tests: 1,
   });
- 
+
   const unsortedProjectTests = await Test
     .find({
       _id: { $in: project.tests},
@@ -522,7 +512,6 @@ exports.testing = async (req, res) => {
 
     results = await Result.getResultsForUserTesting({ author: req.user._id, project: project._id });
     const arrayTests = projectTests.map(function(test) {return test.slug;});
-    // const arrayTests = project.testsData.map(function(test) {return test.slug;});
     const arrayResults = results.map(function(result) {return result.taskslug;});
     const remainingArray = arrayTests.filter(function(test) {return !arrayResults.includes(test)});
     if(remainingArray.length == 0 && req.user.level < 10){

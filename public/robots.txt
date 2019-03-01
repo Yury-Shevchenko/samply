@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /tests/
+Disallow: /test/
+Disallow: /projects/
+Disallow: /data/
+Disallow: /users/
+Disallow: /account/

@@ -10,10 +10,10 @@ const Param = mongoose.model('Param');
 const Project = mongoose.model('Project');
 
 //show the results on the page with chosen tests
-exports.getResultsOfTest = async (req, res) => {
-  const results = await Result.getResults({ test: req.params.task, project_id: req.user._id });//returns an array
-  res.render('chosentests', {results, task: req.params.task, slug: req.params.slug});
-};
+// exports.getResultsOfTest = async (req, res) => {
+//   const results = await Result.getResults({ test: req.params.task, project_id: req.user._id });//returns an array
+//   res.render('chosentests', {results, task: req.params.task, slug: req.params.slug});
+// };
 
 //show the results of one user on a separate page
 exports.showMyResults = async (req, res) => {
