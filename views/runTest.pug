@@ -2,17 +2,15 @@ doctype html
 html
   head
     title= `${title || h.siteName}`
-    //- script(src="/labjs/lib/lab.js" nonce=`${noncevalue}`)
-    //- link(rel="stylesheet" href="/labjs/lib/lab.css")
+    script(src="/labjs/plugins/gps.js" nonce=`${noncevalue}`)
+
     if (test && test.production && test.production == 'beta')
       script(src="https://labjs-beta.netlify.com/api/_defaultStatic/lib/lab.js" nonce=`${noncevalue}`)
       link(rel="stylesheet" href="https://labjs-beta.netlify.com/api/_defaultStatic/lib/lab.css")
     else
       script(src="/labjs/lib/lab.js" nonce=`${noncevalue}`)
       link(rel="stylesheet" href="/labjs/lib/lab.css")
-      //- script(src="https://labjs.felixhenninger.com/api/_defaultStatic/lib/lab.js" nonce=`${noncevalue}`)
-      //- link(rel="stylesheet" href="https://labjs.felixhenninger.com/api/_defaultStatic/lib/lab.css")
-
+  
   body
     div(class="container fullscreen" data-labjs-section="main")
       main(class="content-vertical-center content-horizontal-center")
