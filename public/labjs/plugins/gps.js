@@ -1,7 +1,7 @@
 const updateLocation = (e) => {
   if (study && study.options && study.options.datastore){
     //replace with the recent location
-    study.options.datastore.set(e.detail.location);
+    // study.options.datastore.set(e.detail.location);
     //push a new location
     study.options.datastore.commit(e.detail.location);
     // console.log("Updated the location", e.detail.location)
@@ -25,8 +25,12 @@ class gps {
       window.addEventListener('changelocation', updateLocation);
       window.watchId = navigator.geolocation.watchPosition(function(position){
         // console.log(position)
-        let location = {location: {lat: position.coords.latitude, lng: position.coords.longitude, accuracy: position.coords.accuracy, location_time: position.timestamp}};
-        let event = new CustomEvent('changelocation', {detail: location});
+        let event = new CustomEvent('changelocation', {detail: { location: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          location_time: position.timestamp
+        }}});
         window.dispatchEvent(event);
       }, function(error){
         console.error(error);
