@@ -23,6 +23,11 @@
   letter-spacing: 0.5px;
 }
 
+.authButton:hover {
+  // border: 1px solid #ddd;
+  background: #f1fff5;
+}
+
 .authsign {
   display: grid;
   grid-gap: 5px;

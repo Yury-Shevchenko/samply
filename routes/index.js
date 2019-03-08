@@ -10,7 +10,7 @@ const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
 const passport = require('passport');
 var cors = require('cors');
-         
+
 //home page
 router.get('/', testController.homePage);
 router.get('/about', testController.aboutPage);
@@ -18,7 +18,7 @@ router.get('/researcher', testController.researcherPage);
 router.get('/researcher/:action', testController.researcherPage);
 router.get('/participant', testController.participantPage);
 router.get('/participant/:action', testController.participantPage);
-
+   
 //authentification strategies
 // for participants with a participant code
 router.get('/code', userController.code);
@@ -230,7 +230,9 @@ router.get('/downloadsummarydata', authController.isAdminLoggedIn, catchErrors(r
 router.get('/downloadtestresults/:name/:test', authController.isAdminLoggedIn, catchErrors(resultController.downloadTestResults));
 //delete the data of the task and the user
 router.get('/removefromdatabase/:slug/:filename', authController.isAdminLoggedIn, catchErrors(resultController.removeResultsData));
+router.get('/opendataforparticipant/:slug/:filename', authController.isAdminLoggedIn, catchErrors(resultController.openDataForParticipant));
 router.get('/deleterequest/:slug/:filename', authController.isLoggedIn, catchErrors(resultController.changeStatusOfDeleteRequest));
+router.get('/datarequest/:slug/:filename', authController.isLoggedIn, catchErrors(resultController.changeStatusOfDataRequest));
 
 //For participant
 //post results of the test

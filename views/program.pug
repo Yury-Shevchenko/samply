@@ -34,9 +34,6 @@ block content
               if projectTests && projectTests.length && projectTests.length > 0
                 each test in projectTests
                   +chosenTestCard(test)
-              //- if project && project.testsData
-              //-   each test in project.testsData
-              //-     +chosenTestCard(test)
 
         if(allParams && allParams != 'nope' && allParams.length > 0)
           .card

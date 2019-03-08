@@ -7,10 +7,11 @@ module.exports =
       'forParticipants': 'For participants',
       'signup': 'Sign Up',
       'login': 'Log In',
+      'enterCode': 'Enter with code',
       'howitworks': 'How it works',
       'pricing': 'Pricing',
       'pricingPlans': 'Pricing plans',
-      'freeSandbox': 'Free Sandbox',
+      'freeSandbox': 'Free plan',
       'participantsPerProject' : 'Participants per study',
       'project' : 'Study',
       'pricingProjects' : 'Studies',
@@ -371,6 +372,7 @@ module.exports =
         'table_one_data': 'Data',
         'table_one_download': 'Get',
         'table_one_delete': 'Delete',
+        'table_access': 'Access',
         'table_one_incremental' : 'Incremental',
         'table_one_full': 'Full',
         'table_role': 'Role',
@@ -378,6 +380,7 @@ module.exports =
         'table_researcher': 'R',
         'table_delete_request': 'Request',
         'table_delete_my_data':'Delete my data',
+        'table_see_my_data':'Access my data',
         'table_keep_my_data': '',
         'table_delete_requests': 'Requests',
         'download_all_meta_data': 'Download all metadata',
@@ -415,7 +418,7 @@ module.exports =
         'version': 'Task version',
         'authorInformation': 'Author information',
         'feeling_lucky' : `I'm feeling lucky to choose a random picture.`,
-      },    
+      },
 
       'results': {
         'title': 'Results',
@@ -427,6 +430,8 @@ module.exports =
         'send_delete_request': 'Request to delete the data',
         'cancel_delete_request': 'Cancel the deletion request',
         'no_results': 'No results yet',
+        'send_data_request': 'Request to see the data',
+        'cancel_data_request': 'Cancel the data request',
       },
 
       'researcher' : {

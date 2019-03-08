@@ -1409,7 +1409,7 @@ and also iPads specifically.
   background: white;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.05); }
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05); }
   .pagination__next {
     -ms-flex: 0 0 auto;
         flex: 0 0 auto;
@@ -1771,6 +1771,9 @@ i.yes:after {
       justify-content: center;
   letter-spacing: 0.5px; }
 
+.authButton:hover {
+  background: #f1fff5; }
+
 .authsign {
   display: -ms-grid;
   display: grid;
@@ -1879,7 +1882,8 @@ i.yes:after {
   transition: all .1s linear; }
 
 .panel:hover {
-  border: 2px solid #ddd; }
+  border: 1px solid #ddd;
+  background: #f1fff5; }
 
 .plan--old, .plan--old:hover, .plan--pending:hover {
   border: 1px solid #ddd;

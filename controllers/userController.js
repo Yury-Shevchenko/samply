@@ -163,7 +163,7 @@ exports.getData = async (req, res) => {
     return;
   }
   res.render('data', {users, page, pages, count, skip, project});
-};
+}; 
 
 exports.invitations = async (req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{

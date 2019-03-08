@@ -7,6 +7,7 @@ module.exports =
       'forParticipants': 'Для участников',
       'signup': 'Зарегистрироваться',
       'login': 'Войти',
+      'enterCode': 'Ввести код',
       'howitworks': 'Как это работает',
       'pricing': 'Стоимость',
       'pricingPlans': 'Планы подписки',
@@ -368,6 +369,7 @@ module.exports =
         'table_one_data': 'Данные',
         'table_one_download': 'Скачать',
         'table_one_delete': 'Удалить',
+        'table_access': 'Доступ',
         'table_one_incremental' : 'Пошаговый',
         'table_one_full': 'Полный',
         'table_role': 'Роль',
@@ -375,6 +377,7 @@ module.exports =
         'table_researcher': 'Исследователь',
         'table_delete_request': 'Запрос',
         'table_delete_my_data': 'Удалить мои данные',
+        'table_see_my_data': 'Увидеть мои данные',
         'table_keep_my_data': '',
         'table_delete_requests': 'Запросы',
         'download_all_meta_data': 'Скачать все метаданные',
@@ -424,6 +427,8 @@ module.exports =
         'send_delete_request': 'Запросить удаление данных ',
         'cancel_delete_request': 'Отменить удаление данных',
         'no_results': 'Пока нет результатов',
+        'send_data_request': 'Запросить данные',
+        'cancel_data_request': 'Отменить запрос данных',
       },
 
       'researcher' : {

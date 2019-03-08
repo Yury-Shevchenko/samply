@@ -17,11 +17,7 @@ html
       header.top
         nav.nav.nav__top
           .nav__section.nav__section--pages
-            li.nav__item(id="installApp" style="display:none") 
-              a.nav__main_link
-                if(layout && layout.install_app)
-                  h6 #{layout.install_app}
-                    //- .installAppButton
+          
             if !user
               li.nav__item.nav__main_link
                 script(nonce=`${noncevalue}`).
@@ -91,6 +87,10 @@ html
           .nav__section.nav__section--user
 
             if user
+              li.nav__item(id="installApp" style="display:none") 
+                a.nav__main_link
+                  if(layout && layout.install_app)
+                    h6 #{layout.install_app}  
               if user.level > 10 && user.project && user.projects && user.projects.length > 0
                 script(nonce=`${noncevalue}`).
                   document.addEventListener('DOMContentLoaded', function () {
@@ -114,7 +114,7 @@ html
                             option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= project.name
                           else
                             option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
-                
+                                    
               li.nav__item: a.nav__main_link(href="/account", class=(currentPath.startsWith('/account') || currentPath.startsWith('/subscribe') ? 'nav__main_link--active' : ''))
                 h6 #{layout.profile}
               li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : ''))

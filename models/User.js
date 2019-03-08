@@ -116,6 +116,7 @@ userSchema.statics.getUsersOfProject = function(project) {
           },
           {$project: {project: 1, test: 1,
             deleteRequests: { $cond: ['$deleteRequest', 1, 0] },
+            dataRequests: { $cond: ['$dataRequest', 1, 0] },
           }},
         ],
         as: 'results'
@@ -145,6 +146,7 @@ userSchema.statics.getUsersOfProject = function(project) {
         },
         //results: '$results',
         numberDeleteRequests: { $sum: '$results.deleteRequests' },
+        numberDataRequests: { $sum: '$results.dataRequests' },
         notifications: '$$ROOT.notifications',
       }
     },

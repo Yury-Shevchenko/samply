@@ -23,8 +23,8 @@ mixin userCard(person = {}, i)
         if(person.numberTests > 0)
             a(style="border-bottom: 2px solid #FFC40E;" href=`/alldata/${person._id}/${person.participant_id}`) #{l.table_download}
 
-      if(person.numberTests > 0 && person.numberDeleteRequests > 0)
-        td= person.numberDeleteRequests
+      if(person.numberTests > 0)
+        td= person.numberDataRequests + person.numberDeleteRequests
       else
         td
 

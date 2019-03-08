@@ -4,9 +4,9 @@ mixin result(result)
       p= result.name
     time.review__time(datetime=result.created)= h.moment(result.created).locale(language).format('MMMM Do YYYY, h:mm:ss a')
     p= `${result.project_name}`
-    a(href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.result_download}
-
+    
     if user.level > 10
+      a(href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.result_download}
       if result.uploadType == 'incremental'
         p= `${l.result_incremental}`
         p= `${result.fileSize} ${l.results_rows}`
@@ -15,10 +15,22 @@ mixin result(result)
         p= `${result.fileSize} ${l.results_rows}`
       a(href=`/removefromdatabase/${result.test}/${result._id}`) #{l.result_delete}
     else 
-      if result.deleteRequest
-        p 
-          a(href=`/deleterequest/${result.test}/${result._id}`) #{l.cancel_delete_request} 
-      else 
-        p 
-          a(href=`/deleterequest/${result.test}/${result._id}`) #{l.send_delete_request} 
+      if result.openDataForParticipant
+        a(href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.result_download}
+        
+        if result.deleteRequest
+          p 
+            a(href=`/deleterequest/${result.test}/${result._id}`) #{l.cancel_delete_request} 
+        else 
+          p 
+            a(href=`/deleterequest/${result.test}/${result._id}`) #{l.send_delete_request}
+      else   
+        if result.dataRequest
+          p 
+            a(href=`/datarequest/${result.test}/${result._id}`) #{l.cancel_data_request} 
+        else 
+          p 
+            a(href=`/datarequest/${result.test}/${result._id}`) #{l.send_data_request} 
+      
+       
       

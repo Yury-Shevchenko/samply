@@ -33,6 +33,14 @@ const resultSchema = new mongoose.Schema({
   deleteRequest: {
     type: Boolean,
     default: false
+  },
+  dataRequest: {
+    type: Boolean,
+    default: false
+  },
+  openDataForParticipant: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -67,6 +75,8 @@ resultSchema.statics.getUserResults = function(feature) {
       uploadType: '$$ROOT.uploadType',
       fileSize: {$size: '$$ROOT.rawdata'},
       deleteRequest: '$$ROOT.deleteRequest',
+      dataRequest: '$$ROOT.dataRequest',
+      openDataForParticipant: '$$ROOT.openDataForParticipant',
       aggregated: '$$ROOT.aggregated',
     }},
     { $sort: { created: 1 } }
@@ -123,7 +133,7 @@ resultSchema.statics.getResultsForUserTesting = function(feature) {
 //get my results from different projects
 resultSchema.statics.getMyResults = function(feature) {
   return this.aggregate([
-    //{ $match: { 'uploadType' : 'full'} },
+    { $match: { 'uploadType' : 'full'} },
     //{ $match: { 'project' : mongoose.Types.ObjectId(feature.project) } },
     { $lookup: {
       from: 'users', localField: 'author', foreignField: '_id', as: 'author'
@@ -150,7 +160,9 @@ resultSchema.statics.getMyResults = function(feature) {
       slug: '$$ROOT.originTest.slug',
       uploadType: '$$ROOT.uploadType',
       fileSize: {$size: '$$ROOT.rawdata'},
-      deleteRequest: '$$ROOT.deleteRequest'
+      deleteRequest: '$$ROOT.deleteRequest',
+      dataRequest: '$$ROOT.dataRequest',
+      openDataForParticipant: '$$ROOT.openDataForParticipant',
     }},
     { $sort: { created: 1 } }
   ]);

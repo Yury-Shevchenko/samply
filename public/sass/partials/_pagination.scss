@@ -4,7 +4,8 @@
   background: white;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  box-shadow: $shad;
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  // box-shadow: $shad;
   &__next {
     flex: 0 0 auto;
     padding: 1rem 3rem 1rem 1rem;

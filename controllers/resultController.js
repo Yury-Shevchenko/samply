@@ -193,12 +193,39 @@ exports.removeResultsData = async (req, res) => {
   res.redirect('back');
 };
 
+exports.openDataForParticipant = async (req, res) => {
+  const result = await Result.findOne({ _id: req.params.filename });
+  if (result){
+    result.openDataForParticipant = !result.openDataForParticipant;
+    await result.save();
+    req.flash('success', `${res.locals.layout.flash_request_recorded}`);
+    res.redirect('back');
+  } else {
+    req.flash('error', `${res.locals.layout.flash_not_authorized}`);
+    res.redirect('back');
+  }
+};
+
 //post delete request
 exports.changeStatusOfDeleteRequest = async (req, res) => {
   //check whether the result is authored by a user
   const result = await Result.findOne({ _id: req.params.filename });
   if (result && result.author && result.author._id && req.user._id.toString() == result.author._id.toString() ){
     result.deleteRequest = !result.deleteRequest;
+    await result.save();
+    req.flash('success', `${res.locals.layout.flash_request_recorded}`);
+    res.redirect('back');
+  } else {
+    req.flash('error', `${res.locals.layout.flash_not_authorized}`);
+    res.redirect('back');
+  }
+};
+
+exports.changeStatusOfDataRequest = async (req, res) => {
+  //check whether the result is authored by a user
+  const result = await Result.findOne({ _id: req.params.filename });
+  if (result && result.author && result.author._id && req.user._id.toString() == result.author._id.toString() ){
+    result.dataRequest = !result.dataRequest;
     await result.save();
     req.flash('success', `${res.locals.layout.flash_request_recorded}`);
     res.redirect('back');

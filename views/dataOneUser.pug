@@ -34,6 +34,7 @@ block content
               if user.level > 10
                 td #{l.table_delete_request}
               if user.level > 10
+                td #{l.table_access}
                 td #{l.table_one_delete}
             each result, i in results
               tr
@@ -60,11 +61,21 @@ block content
                   td
                     a(style="border-bottom: 2px solid #FFC40E;" href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.table_one_download}
                 if user.level > 10
-                  if (result.deleteRequest)
+                  if (result.dataRequest && result.deleteRequest)      
+                    td #{l.table_see_my_data}, #{l.table_delete_my_data}
+                  else if (result.dataRequest)
+                    td #{l.table_see_my_data}
+                  else if (result.deleteRequest)
                     td #{l.table_delete_my_data}
                   else
                     td #{l.table_keep_my_data}
                 if user.level > 10
+                  td
+                    a(href=`/opendataforparticipant/${result.test}/${result._id}`)
+                      if result.openDataForParticipant
+                        != h.icon('unlock')
+                      else 
+                        != h.icon('lock')
                   td
                     a(href=`/removefromdatabase/${result.test}/${result._id}`)
                       != h.icon('remove')
