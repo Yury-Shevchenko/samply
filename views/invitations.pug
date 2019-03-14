@@ -19,28 +19,45 @@ block content
     p
     h2 #{layout.invitations}
     .card
-      if project && project.name
+      if project && project.name  
         p #{l.invite}
         table.table
           tr
             td #{l.signing_temp_code}
             td
-              p
-                a(href=`/code/${project.name}/?generate=true`) https://open-lab.online/code/#{project.name}/?generate=true
+              input(type="text" value=`https://open-lab.online/code/${project.name.replace(/\s+/g, '%20')}/?generate=true` id="random" readonly)
+              button(class="copyButton" id="randomButton") #{l.copy_link}
               p #{l.temp_code_strategy}
           tr
             td #{l.signing_code}
             td
-              p
-                a(href=`/code/${project.name}/`) https://open-lab.online/code/#{project.name}/
+              input(type="text" value=`https://open-lab.online/code/${project.name.replace(/\s+/g, '%20')}/` id="code" readonly)
+              button(class="copyButton" id="codeButton") #{l.copy_link}
               p #{l.code_strategy}
           tr
             td #{l.signing_email}
             td
-              p
-                a(href=`/sign/${project.name}/`) https://open-lab.online/sign/#{project.name}/
+              input(type="text" value=`https://open-lab.online/sign/${project.name.replace(/\s+/g, '%20')}/` id="email" readonly)
+              button(class="copyButton" id="emailButton") #{l.copy_link}
               p #{l.email_strategy}
-
+        
+        script(nonce=`${noncevalue}`).
+          document.addEventListener('DOMContentLoaded', function (){
+            const btns = document.getElementsByClassName('copyButton');
+            for(let i = 0; i < btns.length; i++) {
+              btns[i].addEventListener("click", function(e) {
+                const textId = e.currentTarget.id.split("Button")[0]
+                const copyText = document.getElementById(textId);
+                copyText.select();
+                document.execCommand("copy");
+                //- alert(copyText.value);
+                document.getElementById(e.currentTarget.id).style.background = "#f3e9e9";
+                
+              })
+            }
+          });
+        
+              
       else
         p !{l.message_create_project}
 

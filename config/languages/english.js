@@ -518,7 +518,8 @@ module.exports =
           'temp_code_strategy': 'A random participation code will be created for every user. Use this link if you publish the study online.',
           'code_strategy': 'Users will be prompted to sign up with entering a participation code. Use this way of authentication if your participants already have their unique codes assigned by your study.',
           'email_strategy': 'Users will be prompted to sign up with an email and a password. Use this authentication strategy if your participants already have an account on Open Lab or ready to create a new one.',
-
+          'copy_link': 'Copy link',
+          'link_copied': 'Copied the link: ',
         },
 
         'subscribe': {

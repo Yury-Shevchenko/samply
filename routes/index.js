@@ -18,7 +18,7 @@ router.get('/researcher', testController.researcherPage);
 router.get('/researcher/:action', testController.researcherPage);
 router.get('/participant', testController.participantPage);
 router.get('/participant/:action', testController.participantPage);
-   
+
 //authentification strategies
 // for participants with a participant code
 router.get('/code', userController.code);
@@ -100,7 +100,7 @@ router.post('/account/reset/:token',
 );
 //logout
 router.get('/logout', authController.logout);
-
+ 
 //for researchers list users with their results
 router.get('/users', authController.isAdminLoggedIn, catchErrors(userController.getData));
 router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(userController.getData));

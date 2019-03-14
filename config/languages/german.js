@@ -516,6 +516,8 @@ module.exports = {
         'temp_code_strategy': 'Für jeden Benutzer wird ein Zufallscode erstellt. Benutzen Sie diesen Link, wenn Sie die Studie online veröffentlichen.',
         'code_strategy': 'Die Benutzer werden aufgefordert, sich mit der Eingabe eines Teilnahmecodes anzumelden. Verwenden Sie diese Art der Authentifizierung, wenn Ihre Teilnehmer bereits über ihre individuellen Codes verfügen, die von Ihrer Studie vergeben wurden.',
         'email_strategy': 'Die Benutzer werden aufgefordert, sich mit einer E-Mail und einem Passwort anzumelden. Verwenden Sie diese Authentifizierungsstrategie, wenn Ihre Teilnehmer bereits ein Profil bei Open Lab haben oder bereit sind, ein neues zu erstellen.',
+        'copy_link': 'Link kopieren',
+        'link_copied': 'Der Link wurde kopiert: ',
       },
 
       'subscribe': {

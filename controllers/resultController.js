@@ -97,7 +97,7 @@ exports.downloadprojectmetadata = async (req, res) => {
       let parsed;
       if(!first){
         parsed = preparsed.replace(/(.*\r\n)/,'');
-      } else {
+      } else { 
         parsed = preparsed;
         first = false;
       };

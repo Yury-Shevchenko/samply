@@ -44,7 +44,7 @@ block content
                 td #{l.table_metadata}
                 td Not-s
 
-                if user.level > 100
+                if user.level > 10
                   td #{l.table_delete_user}
               each person, i in users
                 +userCard(person, i)

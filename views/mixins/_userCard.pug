@@ -46,7 +46,9 @@ mixin userCard(person = {}, i)
         td  
 
 
-      if user.level > 100
+      if user.level > 100 || (person.participant_code && person.level < 10)
         td
           a(href=`/removeuser/${person._id}/${person.participant_id}`)
               != h.icon('remove')
+      else 
+        td
