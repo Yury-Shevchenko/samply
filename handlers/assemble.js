@@ -28,12 +28,18 @@ exports.convertJSON = async (state, foldername, production = 'alpha', stateModif
     { type: 'lab.plugins.Transmit', url: '/save', callbacks: redirects}
     //https://github.com/FelixHenninger/lab.js/blob/master/packages/library/src/plugins/transmit.js
   ]
+  const main_sequence_number = Object.values(updatedState.components)
+    .filter(el => el.id == 'root')
+    .map(e => e.children[0])
+  //console.log("main_sequence_number", main_sequence_number);
   const params = Object.values(updatedState.components)
+    .filter(el => el.id == main_sequence_number)
     .map(e => e.parameters)
     .map(r => r.rows)
     .reduce((flat, next) => flat.concat(next), [])
     .reduce((flat, next) => flat.concat(next), [])
     .filter(p => typeof(p) != "undefined" && p.name != '')
+  //console.log("Params", params);
 
   const filesInUse = embeddedFiles(updatedState.components)
 
