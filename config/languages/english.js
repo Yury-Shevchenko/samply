@@ -6,6 +6,7 @@ module.exports =
       'forResearchers': 'For researchers',
       'forParticipants': 'For participants',
       'signup': 'Sign Up',
+      'signup_button': 'Create new account',
       'login': 'Log In',
       'enterCode': 'Enter with code',
       'howitworks': 'How it works',
@@ -314,6 +315,9 @@ module.exports =
         'apply': 'Apply saved parameters to ',
         'delete': 'Delete',
         'task_has_parameters': 'The task has a set of pre-defined parameters specified by the author.',
+        'addField': 'Add a new field',
+        'add': 'Add',
+        'nameForNewParameter' : 'name of the new parameter',
       },
 
       'testing': {

@@ -216,9 +216,9 @@ block content
                       });
                     });
                 p
-                h5 Add a new field
-                input(type="text" name= "new_field" id="new_field" value="name of the new field")
-                button.button(type="button" value="Add a field" id="addFieldButton") Add a field
+                h5 #{l.addField} 
+                input(type="text" name= "new_field" id="new_field" value=l.nameForNewParameter)
+                button.button(type="button" value="Add a field" id="addFieldButton") #{l.add} 
                 p
             else
 

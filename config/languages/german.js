@@ -6,6 +6,7 @@ module.exports = {
     'forResearchers': 'Für ForscherInnen',
     'forParticipants': 'Für TeilnehmerInnen',
     'signup': 'Registrieren',
+    'signup_button': 'Neuen Account erstellen',
     'login': 'Anmelden',
     'enterCode': 'Code eintragen',
     'howitworks': 'Wie es funktioniert',
@@ -311,6 +312,9 @@ module.exports = {
       'apply': 'Gespeicherte Parameter anwenden auf ',
       'delete': 'Löschen',
       'task_has_parameters': 'Die Aufgabe hat vordefinierte Parameter, die vom Autor festgelegt wurden.',
+      'addField': 'Ein neues Feld hinzufügen',
+      'add': 'Hinzufügen',
+      'nameForNewParameter': 'Name des neuen Parameters',
     },
 
     'testing': {

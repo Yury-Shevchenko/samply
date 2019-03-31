@@ -6,6 +6,7 @@ module.exports =
       'forResearchers': 'Для исследователей',
       'forParticipants': 'Для участников',
       'signup': 'Зарегистрироваться',
+      'signup_button': 'Создать новый аккаунт',
       'login': 'Войти',
       'enterCode': 'Ввести код',
       'howitworks': 'Как это работает',
@@ -311,6 +312,9 @@ module.exports =
         'apply': 'Применить сохраненные параметры к тесту ',
         'delete': 'Удалить',
         'task_has_parameters': 'Для данного теста есть список параметров, определенных автором.',
+        'addField': 'Добавить новое поле',
+        'add': 'Добавить',
+        'nameForNewParameter' : 'имя для нового параметра',
       },
 
       'testing': {
