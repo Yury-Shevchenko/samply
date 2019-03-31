@@ -95,7 +95,7 @@ block content
               label(for="language") #{l.language}
               .custom-select
                 select(name="param_language" id="activeLanguageParameter")
-                  - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}, {value: 'russian', label: 'Русский'}]
+                  - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}, {value: 'russian', label: 'Русский'}, {value: 'french', label: 'Français'}]
                   each option in options
                     option(value=option.value, selected=(param_language === option.value))= option.label
 
@@ -197,6 +197,29 @@ block content
                     .formsforparameters
                       label(for= key) #{key}
                       input(type='text' name= key value= modified[key])
+                  
+                  script(nonce=`${noncevalue}`).
+                    document.addEventListener('DOMContentLoaded', function (){
+                      document.getElementById('addFieldButton').addEventListener('click', function addField() { 
+                        var container_form = document.getElementById("myForm");
+                        var nameOfNewField = document.getElementById("new_field").value;
+                        var input = document.createElement("input");
+                        input.type = "text";
+                        input.name = nameOfNewField;
+                        var new_field_holder = document.createElement("div");
+                        new_field_holder.className = 'formsforparameters';
+                        var label = document.createElement('label');
+                        label.innerText = nameOfNewField;
+                        new_field_holder.appendChild(label);
+                        new_field_holder.appendChild(input);
+                        container_form.appendChild(new_field_holder);
+                      });
+                    });
+                p
+                h5 Add a new field
+                input(type="text" name= "new_field" id="new_field" value="name of the new field")
+                button.button(type="button" value="Add a field" id="addFieldButton") Add a field
+                p
             else
 
 
