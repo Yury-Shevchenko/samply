@@ -29,8 +29,10 @@ mixin userCard(person = {}, i)
         td
 
       td= person.name
-      td= `${person.language.charAt(0).toUpperCase()}${person.language.slice(1,3)}`
-
+      if(person.language)
+        td= `${person.language.charAt(0).toUpperCase()}${person.language.slice(1,3)}`
+      else 
+        td
 
       td
         if(person.numberTests > 0)

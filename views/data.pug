@@ -15,14 +15,14 @@ block content
     .userTable
       h2 #{l.title}
 
-      if(user.project && user.project.name)
+      if(project && user.project && user.project.name)
         p
           a(style={color:'black'} href=`/downloadprojectdata/`) #{l.download_all_data}
         p
           a(style={color:'black'} href=`/downloadprojectmetadata/`) #{l.download_all_meta_data}
         //- p
         //-   a(style={color:'black'} href=`/downloadsummarydata/`) Download summary data
-
+        
         .card
           .users
             table.table
@@ -31,7 +31,7 @@ block content
                 td №
                 td #{l.table_openlabid}
                 td #{l.table_code}
-                if (project.showCompletionCode)
+                if (project && project.showCompletionCode)
                   td #{l.table_confirmation_code}
                 td #{l.table_date}
                 td #{l.table_role}
