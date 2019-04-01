@@ -6,8 +6,9 @@ body {
   background: #fcfcff; }
 
 .inner {
-  max-width: 1100px;
-  margin: 0 auto; }
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 1rem; }
   @media all and (max-width: 900px) {
     .inner {
       padding: 2rem; } }
@@ -1805,7 +1806,7 @@ i.yes:after {
   font-size: 2rem; }
 
 .userTable {
-  max-width: 1100px;
+  max-width: 1300px;
   margin: 0 auto; }
   @media all and (max-width: 1500px) {
     .userTable {
