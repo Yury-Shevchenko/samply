@@ -163,7 +163,7 @@ exports.getData = async (req, res) => {
     return;
   }
   res.render('data', {users, page, pages, count, skip, project});
-}; 
+};
 
 exports.invitations = async (req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
@@ -210,7 +210,7 @@ exports.inviteParticipants = async (req, res) => {
     sentEmails = project.invitations.filter(e => typeof(e) != 'undefined' && e != null &&  e.email != null).map(e => e.email);
   }
   const newInvitationEmails = emails.filter(e => e !=null && e != '' && sentEmails.indexOf(e) == -1);
-  if ( (sentEmails.length + newInvitationEmails.length > 1000 && req.user.subscription_plan == 'professional') || !req.user.subscription){
+  if ( (sentEmails.length + newInvitationEmails.length > process.env.PROF_PLAN_INVITATIONS_LIMIT && req.user.subscription_plan == 'professional') || !req.user.subscription){
     req.flash('error', `${res.locals.layout.flash_invitation_overlimit}`);
     res.redirect('back');
     return;
