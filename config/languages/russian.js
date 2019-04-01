@@ -56,7 +56,7 @@ module.exports =
       'customizeParameters' : 'Настроить параметры',
       'tryDemo' : 'Попробовать демо',
       'demoResults' : 'Демо результаты',
-      'results' : 'Результаты',
+      'results' : 'Результаты по тестам',
       'participants': 'Участники',
       'invitations': 'Приглашения',
       'upgradeNeededMessage': 'Пожалуйста, <a href="/subscribe")>перейдите на улучшенный план</a>, чтобы иметь возможность добавлять неограниченное количество новых проектов.',

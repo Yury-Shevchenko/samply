@@ -56,7 +56,7 @@ module.exports = {
     'customizeParameters' : 'Parameter anpassen',
     'tryDemo' : 'Demo testen',
     'demoResults' : 'Demo-Ergebnisse',
-    'results' : 'Ergebnisse',
+    'results' : 'Ergebnisse nach Aufgaben',
     'participants': 'Teilnehmer',
     'invitations': 'Einladungen',
     'upgradeNeededMessage': 'Bitte <a href="/subscribe")>erweitern</a> Sie Ihren Tarif, um eine unbegrenzte Anzahl von Studien hinzuzufügen.',

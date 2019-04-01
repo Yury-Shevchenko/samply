@@ -56,7 +56,7 @@ module.exports =
       'customizeParameters' : 'Customize parameters',
       'tryDemo' : 'Try demo',
       'demoResults' : 'Demo results',
-      'results' : 'Results',
+      'results' : 'Results by tasks',
       'participants': 'Participants',
       'invitations': 'Invitations',
       'upgradeNeededMessage': 'Please <a href="/subscribe")>upgrade</a> your plan in order to add unlimited amount of studies.',

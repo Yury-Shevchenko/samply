@@ -8,8 +8,8 @@ block content
     header.top
       nav.nav
         .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
           li.nav__item: a.nav__link(href="/users", class=(currentPath.startsWith('/users') ? 'nav__link--active' : '')) #{layout.participants}
+          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
 
     p
     .userTable
@@ -22,7 +22,7 @@ block content
           a(style={color:'black'} href=`/downloadprojectmetadata/`) #{l.download_all_meta_data}
         //- p
         //-   a(style={color:'black'} href=`/downloadsummarydata/`) Download summary data
-        
+
         .card
           .users
             table.table

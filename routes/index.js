@@ -100,15 +100,15 @@ router.post('/account/reset/:token',
 );
 //logout
 router.get('/logout', authController.logout);
- 
+
 //for researchers list users with their results
+router.get('/data', authController.isLoggedIn, catchErrors(resultController.showDataByTests));
+router.get('/data/:slug', authController.isLoggedIn, catchErrors(resultController.showDataByTests));
 router.get('/users', authController.isAdminLoggedIn, catchErrors(userController.getData));
 router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(userController.getData));
 router.get('/users/:id/:participant', authController.isAdminLoggedIn, catchErrors(userController.getOneUserData));
 router.post('/users/:project', authController.isAdminLoggedIn, catchErrors(userController.inviteParticipants));
-router.get('/data', authController.isLoggedIn, catchErrors(resultController.showDataByTests));
-router.get('/data/:slug', authController.isLoggedIn, catchErrors(resultController.showDataByTests));
-
+ 
 //invitations
 router.get('/invitations', authController.isAdminLoggedIn, catchErrors(userController.invitations));
 

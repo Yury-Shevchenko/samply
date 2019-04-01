@@ -10,18 +10,19 @@ block content
     header.top
       nav.nav
         .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
           li.nav__item: a.nav__link(href="/users", class=(currentPath.startsWith('/users') ? 'nav__link--active' : '')) #{layout.participants}
+          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
+
     p
     .userTable
-      
+
       if project && project.name
         h2 #{`${project.name}`}
       else
         p(style="color:hsl(0,0%,45%)") !{l.create_your_project}
-        
+
       .program
-        
+
         .tasks
           .card
             .items
@@ -34,26 +35,26 @@ block content
             if (project)
               if (project.tests.length == 0)
                 p(style="color:hsl(0,0%,45%)") #{l.noTests}
-              else 
+              else
                 if(typeof(slug) == "undefined")
                   p(style="color:hsl(0,0%,45%)") #{l.chooseTest}
-                else 
+                else
                   if(typeof(test) == "undefined")
                     p(style="color:hsl(0,0%,45%)") #{l.testNotFound}
-                  else 
+                  else
                     if(typeof(results) == 'undefined')
                       p(style="color:hsl(0,0%,45%)") #{l.noResults}
-                    else 
+                    else
                       if(results.length == 0)
                         p(style="color:hsl(0,0%,45%)") #{l.noResultsYet}
-                      else 
+                      else
                         if(user.project && user.project.name)
                           p
                             a(style={color:'black'} href=`/downloadtestresults/${test.name}/${test._id}`) #{l.results_download_test_results}
-                            
+
                         table.table
                           thead
-                            td № 
+                            td №
                             td #{l.results_table_openlabid}
                             td #{l.results_table_code}
                             td #{l.results_table_date}
@@ -63,9 +64,9 @@ block content
                             td #{l.results_table_data}
                           each result, i in results
                             +resultLine(result, i)
-                        
 
-     
+
+
                 //- pre= h.dump(project)
                 //- pre= h.dump(test)
                 //- pre= h.dump(results)
