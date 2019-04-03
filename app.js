@@ -71,6 +71,7 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   res.locals.currentPath = req.path;
   res.locals.visitor_language = req.session.visitor_language;
+  //console.log("languages:", req.headers['accept-language']);
 
   const path = String(req.path).split('/')[1] || 'index';
   if (res.locals.user != null && res.locals.user.language && language[res.locals.user.language]){
@@ -80,6 +81,7 @@ app.use((req, res, next) => {
     if(res.locals.language == 'ge'){res.locals.language = 'de'};
   } else {
     if (res.locals.visitor_language){
+      //console.log("languages:", res.locals.visitor_language);
       const visitor_lang = res.locals.visitor_language;
       res.locals.locale_language = visitor_lang || 'english';
       res.locals.l = language[visitor_lang][path] || language['english'][path];
@@ -99,6 +101,11 @@ app.use((req, res, next) => {
           res.locals.l = language['russian'][path];
           res.locals.layout = language['russian']['layout'];
           res.locals.language = 'ru';
+        } else if (lang  == "fr"){
+          res.locals.locale_language = 'french'
+          res.locals.l = language['french'][path];
+          res.locals.layout = language['french']['layout'];
+          res.locals.language = 'fr';
         } else {
           res.locals.locale_language = 'english'
           res.locals.l = language['english'][path];

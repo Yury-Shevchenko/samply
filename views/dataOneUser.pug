@@ -8,8 +8,8 @@ block content
     header.top
       nav.nav
         .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
           li.nav__item: a.nav__link(href="/users", class=(currentPath.startsWith('/users') ? 'nav__link--active' : '')) #{layout.participants}
+          li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
     p
 
     .userTable
@@ -47,11 +47,11 @@ block content
                     each row in result.aggregated
                       each val, index in row
                         .line
-                          strong #{index} 
-                          | : 
+                          strong #{index}
+                          | :
                           | #{val}
-                else 
-                  td 
+                else
+                  td
                 if result.uploadType == "incremental"
                   td #{l.table_one_incremental}
                 else
@@ -61,7 +61,7 @@ block content
                   td
                     a(style="border-bottom: 2px solid #FFC40E;" href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.table_one_download}
                 if user.level > 10
-                  if (result.dataRequest && result.deleteRequest)      
+                  if (result.dataRequest && result.deleteRequest)
                     td #{l.table_see_my_data}, #{l.table_delete_my_data}
                   else if (result.dataRequest)
                     td #{l.table_see_my_data}
@@ -74,7 +74,7 @@ block content
                     a(href=`/opendataforparticipant/${result.test}/${result._id}`)
                       if result.openDataForParticipant
                         != h.icon('unlock')
-                      else 
+                      else
                         != h.icon('lock')
                   td
                     a(href=`/removefromdatabase/${result.test}/${result._id}`)
