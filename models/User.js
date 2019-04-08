@@ -102,7 +102,6 @@ userSchema.methods.validCode = function(password) {
 //get users of a particular project (for /data)
 userSchema.statics.getUsersOfProject = function(project) {
   return this.aggregate([
-    { $match: { 'level' : { $lt: 10 }} },//filter only users
     { $match: {
       $or: [
         { 'participant_projects' : { $eq: project } }, //filter users in the past
@@ -110,6 +109,7 @@ userSchema.statics.getUsersOfProject = function(project) {
         ]
       }
     },
+    { $match: { 'level' : { $lt: 10 }} },//filter only users
     { $lookup:
       {
         from: 'results',
