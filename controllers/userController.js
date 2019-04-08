@@ -154,7 +154,7 @@ exports.getData = async (req, res) => {
     .sort( {created: 'asc'} )
     .skip(skip)
     .limit(limit);
-  const countPromise = User.where({ participantInProject: req.user.project._id }).countDocuments();
+  const countPromise = User.countDocuments({$or: [{participantInProject: req.user.project._id}, {participant_projects: req.user.project._id}]});
   const [users, count, project] = await Promise.all([ usersPromise, countPromise, activeProjectPromise ]);
   const pages = Math.ceil(count / limit);
   if(!users.length && skip){
