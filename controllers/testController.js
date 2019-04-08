@@ -520,11 +520,19 @@ exports.testing = async (req, res) => {
         confirmationCode = uniqid();
         await User.findOneAndUpdate({
           _id: req.user._id
-        }, { $push: {participantHistory: {
-          project_id: project._id,
-          project_name: project.name,
-          individual_code: confirmationCode,
-        } }}, {
+        }, {
+          $push: {
+            participantHistory:
+              {
+                project_id: project._id,
+                project_name: project.name,
+                individual_code: confirmationCode,
+              }
+            },
+          $push: {
+            participant_projects: project._id
+          }
+        }, {
           new: true
         }).exec();
       } else {

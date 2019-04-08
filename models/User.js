@@ -50,6 +50,9 @@ const userSchema = new Schema({
         type         : mongoose.Schema.ObjectId,
         ref          : 'Project'
     },
+    participant_projects: [
+      {type : mongoose.Schema.ObjectId, ref : 'Project'}
+    ],
     project: {
       _id : {type : mongoose.Schema.ObjectId, ref : 'Project'},
       name : String
@@ -99,6 +102,14 @@ userSchema.methods.validCode = function(password) {
 //get users of a particular project (for /data)
 userSchema.statics.getUsersOfProject = function(project) {
   return this.aggregate([
+    { $match: { 'level' : { $lt: 10 }} },//filter only users
+    { $match: {
+      $or: [
+        { 'participant_projects' : { $eq: project } }, //filter users in the past
+        { 'participantInProject' : { $eq: project } }//filter current users
+        ]
+      }
+    },
     { $lookup:
       {
         from: 'results',
@@ -122,13 +133,13 @@ userSchema.statics.getUsersOfProject = function(project) {
         as: 'results'
       }
     },
-    { $match: {
-      $or: [
-        { 'results.project' : { $eq: project } }, //filter only results of the current project
-        { 'participantInProject' : { $eq: project } }//filter users
-        ]
-      }
-    },
+    // { $match: {
+    //   $or: [
+    //     { 'results.project' : { $eq: project } }, //filter only results of the current project
+    //     { 'participantInProject' : { $eq: project } }//filter users
+    //     ]
+    //   }
+    // },
     //{ $match: { 'level' : { $lt: 10 }} },//filter only users
     { $project: {
         name: '$$ROOT.name',
