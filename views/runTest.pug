@@ -2,7 +2,7 @@ doctype html
 html
   head
     title= `${title || h.siteName}`
-    script(src="/labjs/plugins/gps.js" nonce=`${noncevalue}`)
+    //- script(src="/labjs/plugins/gps.js" nonce=`${noncevalue}`)
 
     if (test && test.production && test.production == 'beta')
       script(src="https://labjs-beta.netlify.com/api/_defaultStatic/lib/lab.js" nonce=`${noncevalue}`)
