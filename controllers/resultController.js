@@ -58,23 +58,26 @@ exports.downloadprojectdata = async (req, res) => {
   const input = new stream.Readable({ objectMode: true });
   input._read = () => {};
   var cursor = await Result
-    .find({project: req.user.project._id},{rawdata:1})
+    .find({project: req.user.project._id},{rawdata:1, author:1})
     .cursor()
     .on('data', obj => {
-      const preKeys = flatMap(obj.rawdata, function(e){
-        return(Object.keys(e));
-      });
-      const tempkeys = Array.from(new Set(preKeys));
-      const new_items = tempkeys.filter(x => !keys.includes(x));
-      let parsed;
-      if (new_items.length > 0){
-        keys = keys.concat(new_items);
-        parsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
-      } else {
-        const preparsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
-        parsed = preparsed.replace(/(.*\r\n)/,'');
-      };
-      input.push(parsed);
+      //return only the results of participants (level < 10)
+      if(obj.author.level < 10){
+        const preKeys = flatMap(obj.rawdata, function(e){
+          return(Object.keys(e));
+        });
+        const tempkeys = Array.from(new Set(preKeys));
+        const new_items = tempkeys.filter(x => !keys.includes(x));
+        let parsed;
+        if (new_items.length > 0){
+          keys = keys.concat(new_items);
+          parsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
+        } else {
+          const preparsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
+          parsed = preparsed.replace(/(.*\r\n)/,'');
+        };
+        input.push(parsed);
+      }
     })
     .on('end', function() { input.push(null) })
     .on('error', function(err) { console.log(err) });
@@ -89,19 +92,22 @@ exports.downloadprojectmetadata = async (req, res) => {
   const input = new stream.Readable({ objectMode: true });
   input._read = () => {};
   var cursor = await Result
-    .find({project: req.user.project._id},{rawdata:1})
+    .find({project: req.user.project._id},{rawdata:1, author:1})
     .cursor()
     .on('data', obj => {
-      const metadata = obj.rawdata[0].meta;
-      const preparsed = papaparse.unparse([metadata]) + '\r\n';
-      let parsed;
-      if(!first){
-        parsed = preparsed.replace(/(.*\r\n)/,'');
-      } else { 
-        parsed = preparsed;
-        first = false;
-      };
-      input.push(parsed);
+      //return only the results of participants (level < 10)
+      if(obj.author.level < 10){
+        const metadata = obj.rawdata[0].meta;
+        const preparsed = papaparse.unparse([metadata]) + '\r\n';
+        let parsed;
+        if(!first){
+          parsed = preparsed.replace(/(.*\r\n)/,'');
+        } else {
+          parsed = preparsed;
+          first = false;
+        };
+        input.push(parsed);
+      }
     })
     .on('end', function() { input.push(null) })
     .on('error', function(err) { console.log(err) });
@@ -116,26 +122,26 @@ exports.downloadSummaryData = async (req, res) => {
   const input = new stream.Readable({ objectMode: true });
   input._read = () => {};
   var cursor = await Result
-    .find({project: req.user.project._id},{rawdata:1})
+    .find({project: req.user.project._id},{rawdata:1, author:1})
     .cursor()
     .on('data', obj => {
-
-      const preKeys = flatMap(obj.rawdata, function(e){
-        return(Object.keys(e));
-      });
-      const tempkeys = Array.from(new Set(preKeys));
-      console.log('Keys', tempkeys);
-      const new_items = tempkeys.filter(x => !keys.includes(x));
-      let parsed;
-      if (new_items.length > 0){
-        keys = keys.concat(new_items);
-        parsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
-      } else {
-        const preparsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
-        parsed = preparsed.replace(/(.*\r\n)/,'');
-      };
-      input.push(parsed);
-
+        if(obj.author.level < 10){
+        const preKeys = flatMap(obj.rawdata, function(e){
+          return(Object.keys(e));
+        });
+        const tempkeys = Array.from(new Set(preKeys));
+        console.log('Keys', tempkeys);
+        const new_items = tempkeys.filter(x => !keys.includes(x));
+        let parsed;
+        if (new_items.length > 0){
+          keys = keys.concat(new_items);
+          parsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
+        } else {
+          const preparsed = papaparse.unparse({data: obj.rawdata, fields: keys}) + '\r\n';
+          parsed = preparsed.replace(/(.*\r\n)/,'');
+        };
+        input.push(parsed);
+      }
     })
     .on('end', function() { input.push(null) })
     .on('error', function(err) { console.log(err) });
