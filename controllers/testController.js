@@ -164,7 +164,7 @@ exports.transfer = (req, res) => {
 //show the tests created by the user
 exports.getMyTests = async (req, res) => {
   const page = req.params.page || 1;
-  const limit = 10;
+  const limit = 18;
   const skip = (page * limit) - limit;
   const testsPromise = Test
     .showMyTests(req.user._id)
@@ -185,7 +185,7 @@ exports.getMyTests = async (req, res) => {
 //show the tests created by the user
 exports.getAllTests = async (req, res) => {
   const page = req.params.page || 1;
-  const limit = 10;
+  const limit = 18;
   const skip = (page * limit) - limit;
   const tag = req.params.tag;
   const tagQuery = tag || { $exists: true };
@@ -570,7 +570,7 @@ exports.runTest = async (req, res) => {
 
 exports.listPublicTests = async(req, res) => {
   const page = req.params.page || 1;
-  const limit = 20;
+  const limit = 18;
   const skip = (page * limit) - limit;
   const testsPromise = Test
     .find({
