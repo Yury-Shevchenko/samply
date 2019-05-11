@@ -1,0 +1,20 @@
+extends layout
+
+include mixins/_result
+
+block content
+
+  .inner
+
+    h2 #{l.title}
+
+    if results && results.length && results.length > 0
+      .reviews
+        each res in results
+          .review
+            +result(res)
+    else
+      p(style="color:hsl(0,0%,45%)") #{l.no_results}
+
+
+    //- pre= h.dump(results)
