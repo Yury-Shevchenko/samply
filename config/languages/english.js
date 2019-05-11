@@ -57,6 +57,7 @@ module.exports =
       'tryDemo' : 'Try demo',
       'demoResults' : 'Demo results',
       'results' : 'Results by tasks',
+      'myResults': 'Results',
       'participants': 'Participants',
       'invitations': 'Invitations',
       'upgradeNeededMessage': 'Please <a href="/subscribe")>upgrade</a> your plan in order to add unlimited amount of studies.',
@@ -68,7 +69,7 @@ module.exports =
       'mailInvitations': 'Personalized email invitations',
       'build': 'Build',
       'testing': 'Demo',
-      'user_testing': 'Run',
+      'user_testing': 'Start',
       'researchers': 'Research',
       'users': 'Run',
       'tests': 'Tasks',
@@ -425,6 +426,20 @@ module.exports =
       },
 
       'results': {
+        'title': 'Your results',
+        'result_download': 'Download',
+        'result_delete': 'Delete',
+        'result_full': 'Full',
+        'result_incremental': 'Incremental',
+        'results_rows': 'records',
+        'send_delete_request': 'Request to delete the data',
+        'cancel_delete_request': 'Cancel the deletion request',
+        'no_results': 'No results yet',
+        'send_data_request': 'Request to see the data',
+        'cancel_data_request': 'Cancel the data request',
+      },
+
+      'myresults': {
         'title': 'Your results',
         'result_download': 'Download',
         'result_delete': 'Delete',

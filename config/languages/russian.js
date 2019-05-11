@@ -57,6 +57,7 @@ module.exports =
       'tryDemo' : 'Попробовать демо',
       'demoResults' : 'Демо результаты',
       'results' : 'Результаты по тестам',
+      'myResults': 'Результаты',
       'participants': 'Участники',
       'invitations': 'Приглашения',
       'upgradeNeededMessage': 'Пожалуйста, <a href="/subscribe")>перейдите на улучшенный план</a>, чтобы иметь возможность добавлять неограниченное количество новых проектов.',
@@ -422,6 +423,20 @@ module.exports =
       },
 
       'results': {
+        'title': 'Ваши Результаты',
+        'result_download': 'Скачать',
+        'result_delete': 'Удалить',
+        'result_full': 'Полный',
+        'result_incremental': 'Пошаговый',
+        'results_rows': 'записи(-ей)',
+        'send_delete_request': 'Запросить удаление данных ',
+        'cancel_delete_request': 'Отменить удаление данных',
+        'no_results': 'Пока нет результатов',
+        'send_data_request': 'Запросить данные',
+        'cancel_data_request': 'Отменить запрос данных',
+      },
+
+      'myresults': {
         'title': 'Ваши Результаты',
         'result_download': 'Скачать',
         'result_delete': 'Удалить',

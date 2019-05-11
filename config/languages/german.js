@@ -57,6 +57,7 @@ module.exports = {
     'tryDemo' : 'Demo testen',
     'demoResults' : 'Demo-Ergebnisse',
     'results' : 'Ergebnisse nach Aufgaben',
+    'myResults': 'Ergebnisse',
     'participants': 'Teilnehmer',
     'invitations': 'Einladungen',
     'upgradeNeededMessage': 'Bitte <a href="/subscribe")>erweitern</a> Sie Ihren Tarif, um eine unbegrenzte Anzahl von Studien hinzuzufügen.',
@@ -422,6 +423,20 @@ module.exports = {
     },
 
     'results': {
+      'title': 'Ihre Ergebnisse',
+      'result_download': 'Herunterladen',
+      'result_delete': 'Löschen',
+      'result_full': 'Komplett',
+      'result_incremental': 'Inkremental',
+      'results_rows': 'Zeilen',
+      'send_delete_request': 'Aufforderung zum Löschen der Daten',
+      'cancel_delete_request': 'Stornieren Sie den Löschauftrag',
+      'no_results': 'Noch keine Ergebnisse',
+      'send_data_request': 'Anfrage zur Einsicht der Daten',
+      'cancel_data_request': 'Abbrechen der Datenanforderung',
+    },
+
+    'myresults': {
       'title': 'Ihre Ergebnisse',
       'result_download': 'Herunterladen',
       'result_delete': 'Löschen',

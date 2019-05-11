@@ -213,8 +213,10 @@ router.get('/test/:slug/:id/:lang', authController.isLoggedIn, catchErrors(testC
 //PARAMETERS controller
 router.post('/tasks/:task/:slug/:lang', authController.isLoggedIn, catchErrors(paramController.postParameters)); //change parameters of the task
 router.get('/parameters/delete/:id', authController.isLoggedIn, catchErrors(paramController.deleteParameters));
-     
+  
 //RESULTS controller
+//for participants
+router.get('/myresults', authController.isLoggedIn, catchErrors(resultController.showParticipantResults));
 //For researcher
 router.get('/results', authController.isLoggedIn, catchErrors(resultController.showMyResults));
 //download all results of one user

@@ -169,6 +169,35 @@ resultSchema.statics.getMyResults = function(feature) {
   ]);
 };
 
+//get my results from different projects
+resultSchema.statics.getParticipantResults = function(feature) {
+  return this.aggregate([
+    { $match: { 'author' : mongoose.Types.ObjectId(feature.author) } },
+    { $match: { 'uploadType' : 'full'} },
+    { $lookup: {
+      from: 'tests', localField: 'test', foreignField: '_id', as: 'originTest'
+      }
+    },
+    { $lookup: {
+      from: 'projects', localField: 'project', foreignField: '_id', as: 'originProject'
+      }
+    },
+    { $project: {
+      created: '$$ROOT.created',
+      project_name: '$$ROOT.originProject.name',
+      participant_id: '$$ROOT.author.openLabId',
+      test: '$$ROOT.test',
+      name: '$$ROOT.originTest.name',
+      slug: '$$ROOT.originTest.slug',
+      uploadType: '$$ROOT.uploadType',
+      fileSize: {$size: '$$ROOT.rawdata'},
+      deleteRequest: '$$ROOT.deleteRequest',
+      dataRequest: '$$ROOT.dataRequest',
+      openDataForParticipant: '$$ROOT.openDataForParticipant',
+    }},
+    { $sort: { created: 1 } }
+  ]);
+};
 
 //method to get results with the defined data
 resultSchema.statics.getResults = function(feature) {

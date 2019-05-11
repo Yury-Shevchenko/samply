@@ -16,6 +16,12 @@ const Project = mongoose.model('Project');
 // };
 
 //show the results of one user on a separate page
+exports.showParticipantResults = async (req, res) => {
+  const results = await Result.getParticipantResults({ author: req.user._id });
+  res.render('showParticipantResults', {results});
+};
+
+//show the results of one user on a separate page
 exports.showMyResults = async (req, res) => {
   const results = await Result.getMyResults({ author: req.user._id });
   res.render('showResults', {results});

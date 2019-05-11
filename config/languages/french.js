@@ -438,6 +438,20 @@ module.exports =
         'cancel_data_request': 'Cancel the data request',
       },
 
+      'myresults': {
+        'title': 'Results',
+        'result_download': 'Download',
+        'result_delete': 'Delete',
+        'result_full': 'Full',
+        'result_incremental': 'Incremental',
+        'results_rows': 'records',
+        'send_delete_request': 'Request to delete the data',
+        'cancel_delete_request': 'Cancel the deletion request',
+        'no_results': 'No results yet',
+        'send_data_request': 'Request to see the data',
+        'cancel_data_request': 'Cancel the data request',
+      },
+
       'researcher' : {
         'header_steps': 'Steps to collect your data online',
         'step_1': `Use existing templates or create your own study with <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,

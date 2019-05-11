@@ -20,7 +20,7 @@ mixin result(result)
         a(href=`/removefromdatabase/${result.test}/${result._id}`) #{l.result_delete}
     else 
       if result.openDataForParticipant
-        a(href=`/database/${result.slug}/${result.participant_id}/${result._id}`) #{l.result_download}
+        a(href=`/database/${result.slug}/${result._id}`) #{l.result_download}
         
         if result.deleteRequest
           p 
