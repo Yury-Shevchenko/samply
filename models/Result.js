@@ -133,13 +133,14 @@ resultSchema.statics.getResultsForUserTesting = function(feature) {
 //get my results from different projects
 resultSchema.statics.getMyResults = function(feature) {
   return this.aggregate([
-    { $match: { 'uploadType' : 'full'} },
+    { $match: { 'author' : mongoose.Types.ObjectId(feature.author) } },
+    // { $match: { 'uploadType' : 'full'} },
     //{ $match: { 'project' : mongoose.Types.ObjectId(feature.project) } },
-    { $lookup: {
-      from: 'users', localField: 'author', foreignField: '_id', as: 'author'
-      }
-    },
-    { $match: { 'author._id' : mongoose.Types.ObjectId(feature.author) } },
+    // { $lookup: {
+    //   from: 'users', localField: 'author', foreignField: '_id', as: 'author'
+    //   }
+    // },
+    // { $match: { 'author._id' : mongoose.Types.ObjectId(feature.author) } },
     { $lookup: {
       from: 'tests', localField: 'test', foreignField: '_id', as: 'originTest'
       }
@@ -152,9 +153,9 @@ resultSchema.statics.getMyResults = function(feature) {
       created: '$$ROOT.created',
       project_name: '$$ROOT.originProject.name',
       participant_id: '$$ROOT.author.openLabId',
-      participant_name: '$$ROOT.author.name',
-      participant_code: '$$ROOT.author.code.id',
-      user_id: '$$ROOT.author._id',
+      // participant_name: '$$ROOT.author.name',
+      // participant_code: '$$ROOT.author.code.id',
+      // user_id: '$$ROOT.author._id',
       test: '$$ROOT.test',
       name: '$$ROOT.originTest.name',
       slug: '$$ROOT.originTest.slug',

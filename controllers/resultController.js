@@ -18,7 +18,7 @@ const Project = mongoose.model('Project');
 //show the results of one user on a separate page
 exports.showMyResults = async (req, res) => {
   const results = await Result.getMyResults({ author: req.user._id });
-  res.render('showResults', {title: 'My results', results});
+  res.render('showResults', {results});
 };
 
 //download metadata for a user as a csv file
@@ -151,7 +151,7 @@ exports.downloadSummaryData = async (req, res) => {
 //download csv file for particular test and user
 exports.downloadResultTestUser = async (req, res) => {
   const result = await Result.findOne({ _id: req.params.filename });
-  const name = req.params.id + '_' + req.params.slug;
+  const name = req.params.slug;
   const keys = result.rawdata.map(e => Object.keys(e)).reduce( (a,b) => Array.from(new Set(a.concat(b))) );
   const csv_file = papaparse.unparse({
      fields: keys,
@@ -250,11 +250,12 @@ exports.saveIncrementalResults = async (req, res) => {
 
   if(req.body.data && req.body.data.length !== 0){
     req.body.data.map(row => {
-      row["openLabId"] = req.user.openLabId || "unknown";
-      row["type"] =  req.body.metadata.payload || "unknown";
-      row["task"]= slug || "unknown";
+      row["openLabId"] = req.user.openLabId || "undefined";
+      row["type"] =  req.body.metadata.payload || "undefined";
+      row["task"]= slug || "undefined";
       row['project'] = req.user.participantInProject || req.user.project._id;
       row['status'] = req.user.level > 10 ? 'researcher' : 'participant';
+      row['code'] = (req.user.code && req.user.code.id) || "undefined";
     })
   };
 

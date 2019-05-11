@@ -422,7 +422,7 @@ module.exports = {
     },
 
     'results': {
-      'title': 'Ergebnisse',
+      'title': 'Ihre Ergebnisse',
       'result_download': 'Herunterladen',
       'result_delete': 'Löschen',
       'result_full': 'Komplett',

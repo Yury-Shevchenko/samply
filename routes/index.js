@@ -108,7 +108,7 @@ router.get('/users', authController.isAdminLoggedIn, catchErrors(userController.
 router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(userController.getData));
 router.get('/users/:id/:participant', authController.isAdminLoggedIn, catchErrors(userController.getOneUserData));
 router.post('/users/:project', authController.isAdminLoggedIn, catchErrors(userController.inviteParticipants));
- 
+
 //invitations
 router.get('/invitations', authController.isAdminLoggedIn, catchErrors(userController.invitations));
 
@@ -213,7 +213,7 @@ router.get('/test/:slug/:id/:lang', authController.isLoggedIn, catchErrors(testC
 //PARAMETERS controller
 router.post('/tasks/:task/:slug/:lang', authController.isLoggedIn, catchErrors(paramController.postParameters)); //change parameters of the task
 router.get('/parameters/delete/:id', authController.isLoggedIn, catchErrors(paramController.deleteParameters));
-
+     
 //RESULTS controller
 //For researcher
 router.get('/results', authController.isLoggedIn, catchErrors(resultController.showMyResults));
@@ -221,7 +221,7 @@ router.get('/results', authController.isLoggedIn, catchErrors(resultController.s
 router.get('/alldata/:id/:identity', authController.isLoggedIn, catchErrors(resultController.downloadResultsUser));
 router.get('/allmetadata/:id/:identity', authController.isLoggedIn, catchErrors(resultController.downloadMetadataUser));
 //download results for particular test and user
-router.get('/database/:slug/:id/:filename', authController.isLoggedIn, catchErrors(resultController.downloadResultTestUser));
+router.get('/database/:slug/:filename', authController.isLoggedIn, catchErrors(resultController.downloadResultTestUser));
 //get all data from the project
 router.get('/downloadprojectdata', authController.isAdminLoggedIn, catchErrors(resultController.downloadprojectdata));
 router.get('/downloadprojectmetadata', authController.isAdminLoggedIn, catchErrors(resultController.downloadprojectmetadata));

@@ -422,7 +422,7 @@ module.exports =
       },
 
       'results': {
-        'title': 'Результаты',
+        'title': 'Ваши Результаты',
         'result_download': 'Скачать',
         'result_delete': 'Удалить',
         'result_full': 'Полный',

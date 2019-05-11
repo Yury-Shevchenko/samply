@@ -182,7 +182,7 @@ exports.getMyTests = async (req, res) => {
   res.render('tests', {title: 'My tests', tests, page, pages, count, type: 'my'});
 };
 
-//show the tests created by the user
+//show all tests
 exports.getAllTests = async (req, res) => {
   const page = req.params.page || 1;
   const limit = 18;

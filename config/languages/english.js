@@ -425,7 +425,7 @@ module.exports =
       },
 
       'results': {
-        'title': 'Results',
+        'title': 'Your results',
         'result_download': 'Download',
         'result_delete': 'Delete',
         'result_full': 'Full',
