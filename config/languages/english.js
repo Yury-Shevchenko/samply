@@ -266,6 +266,8 @@ module.exports =
         'delete': 'Delete',
         'description': 'Description',
         'showCompletionCode': 'Display the unique completion code at the end of all tasks',
+        'completionMessage': 'Message to participants after completion of tasks',
+        'askNotifications': 'Ask users to allow notifications (we are currently testing notifications, participants should use Chrome on a desktop computer).',
       },
 
       'constructor': {

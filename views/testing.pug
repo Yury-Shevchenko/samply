@@ -61,7 +61,10 @@ block content
         else
           img.single__image(src= `/images/photos/${'over.jpg'}`)
         if nextTask == "allDone"
-          h1.title.title--single(style="color: #3b4051;") #{l.message_done}
+          if(project.completionMessage && project.completionMessage !== '')
+            h1.title.title--single(style="color: #3b4051; background: azure") !{project.completionMessage}
+          else
+            h1.title.title--single(style="color: #3b4051; background: azure") #{l.message_done}
         else
           h1.title.title--single
             a(href=`/test/${nextTask}/${user._id}`) #{l.message_next}
@@ -127,7 +130,7 @@ block content
   //- script(src="/javascripts/services/media.js" nonce=`${noncevalue}`)
   //- script(src="/javascripts/services/geolocation.js" nonce=`${noncevalue}`)
 
-        //- pre= h.dump(project)
+  //- pre= h.dump(project)
         //- pre= h.dump(projects)
         //- pre= h.dump(results)
         //- pre= h.dump(confirmationCode)

@@ -57,6 +57,7 @@ exports.createProject = async (req, res) => {
         {
           name: req.body.name,
           description: req.body.description,
+          completionMessage: req.body.completionMessage,
           creator: req.user._id,
           members: membersData,
           currentlyActive: req.body.currentlyActive,
@@ -99,6 +100,7 @@ exports.updateProject = async (req, res) => {
     const project = await Project.findOne({ _id: req.params.id });
     project.name = req.body.name;
     project.description = req.body.description;
+    project.completionMessage = req.body.completionMessage;
     project.showCompletionCode = req.body.showCompletionCode == 'on';
     project.useNotifications = req.body.useNotifications == 'on';
     project.members = membersData;

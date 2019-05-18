@@ -6,7 +6,11 @@ mixin projectForm(project = {})
       
     label(for='description') #{l.description}
     textarea(type='text' name='description')= project.description
+
+    label(for='completionMessage') #{l.completionMessage}
+    textarea(type='text' name='completionMessage')= project.completionMessage
     p
+      
     div.inputCheckBox
       input(type= 'checkbox' id= 'showCompletionCode' name= 'showCompletionCode' checked = project.showCompletionCode)
       label(for='showCompletionCode')
@@ -16,7 +20,7 @@ mixin projectForm(project = {})
       input(type= 'checkbox' id= 'useNotifications' name= 'useNotifications' checked = project.useNotifications)
       label(for='useNotifications')
         span.
-          Ask users to allow notifications (we are testing notifications now, participants should use Chrome) 
+          #{l.askNotifications}
 
     .div(id="membersList")
       label(for="members") #{l.invite_members}

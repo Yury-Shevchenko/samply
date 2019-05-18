@@ -23,6 +23,10 @@ const projectSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  completionMessage: {
+    type: String,
+    default: ''
+  },
   useNotifications: {
     type: Boolean,
     default: false

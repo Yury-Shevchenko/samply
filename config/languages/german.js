@@ -263,6 +263,8 @@ module.exports = {
       'delete': 'Löschen',
       'description': 'Beschreibung',
       'showCompletionCode': 'Den individuellen Erledigungscode am Ende aller Aufgaben anzeigen',
+      'completionMessage': 'Nachricht an die Teilnehmer nach Abschluss der Aufgaben',
+      'askNotifications': 'Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).',
     },
 
     'constructor': {
