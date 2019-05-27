@@ -454,11 +454,12 @@ module.exports = {
 
     'researcher' : {
       'title': `Willkommen bei Open Lab`,
-      'header_steps': `Die Schritte, um Ihre Daten online zu sammeln`,
+      'header_steps': `Die Schritte`,
       'step_1': `Verwenden Sie vorhandene Vorlagen oder erstellen Sie Ihre eigene Studie mit <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
       'step_2': `Importieren Sie die Experimentdatei in Open Lab`,
       'step_3': `Senden Sie den Einladungslink an Ihre Teilnehmer und überwachen Sie deren Fortschritt in Echtzeit`,
-      'header_features': `Besonderheiten von Open Lab`,
+      'step_4': `Für weitere Information lesen Sie bitte die <a href='../docs/intro'>Dokumentation</a> oder besuchen Sie unseren <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> für Fragen und Hilfe.`,
+      'header_features': `Besonderheiten`,
       'feature_1': `Sie müssen zur Erhebung einer Studie keinen eigenen Server einrichten.`,
       'feature_2': `Open Lab kann jede Art von Skript hosten, die in <a target='_blank' href='https://labjs.felixhenninger.com/'>lab.js</a>. erstellt wurden.`,
       'feature_3': `Mehr Teilnehmer aus der Gemeinschaft der Open Lab-Benutzer können für Ihre Studie angemeldet werden.`,
@@ -466,7 +467,7 @@ module.exports = {
       'feature_5': `Das HTTPS-Datenübertragungsprotokoll stellt sicher, dass die Daten während der Übertragung verschlüsselt werden.`,
       'feature_6': `Das Benutzerauthentifizierungssystem ermöglicht es Ihnen, komplexe Studien zu erstellen, in denen Menschen an zeitlich getrennten Experimenten teilnehmen.`,
       'feature_7': `Open Lab bietet ein System zur Datenverwaltung einschließlich der Speicherung von Daten während eines Experiments.`,
-      'header_advantages': `Vorteile von Open Lab`,
+      'header_advantages': `Vorteile`,
       'advantage_1': `Immer mehr sozialwissenschaftliche Studien werden online durchgeführt.
         Allerdings gibt es Hindernisse bei der Nutzung des Internets.
         Erstens, technische Schwierigkeiten bei der Durchführung eines Online-Experiments.
@@ -481,7 +482,6 @@ module.exports = {
         Die Experimente werden automatisch dokumentiert und gespeichert, so dass eine Zusammenarbeit mit Kollegen und Metaanalysen früherer Studien möglich sind.
         Das HTTPS-Protokoll stellt sicher, dass die Daten der Teilnehmer während der Übertragung verschlüsselt werden.
         Der Benutzerzugriff auf Experimente kann durch verschiedene Authentifizierungsstrategien wie Teilnehmercodes, E-Mails, Passwörter oder Konten in sozialen Netzwerken geschützt werden.`,
-      'slack_chat': `Bitte nehmen Sie am <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> teil, um Fragen zu stellen und Hilfe zu erhalten.`,
       },
 
       'data' : {
@@ -553,11 +553,16 @@ module.exports = {
 
       'docs': {
         'intro_title': 'Einführung',
+        'introduction_title': 'Einführung',
+        'introduction_1': 'Willkommen bei Open Lab, einer Plattform für Online-Experimente! ',
+        'introduction_2': 'Wir freuen uns, Sie hier zu haben. Diese Dokumentation ist für Forscher geschrieben, also registrieren Sie sich bitte zuerst als Forscher. ',
+        'introduction_3': 'Die Registrierung ist einfach und erfordert nur eine E-Mail und ein Passwort. ',
         'navigation_title': 'Navigation',
-        'navigation_1': 'Die Felder Aufgaben, Studien und Daten bieten Zugriff auf drei Hauptschritte zur Durchführung einer Online-Studie.',
-        'navigation_1_1': 'Durchsuchen Sie verfügbare Aufgaben oder laden Sie Ihre eigene Aufgabe hoch.',
-        'navigation_1_2': 'Erstellen Sie Ihre Studie',
-        'navigation_1_3': 'Überprüfen und Herunterladen der gesammelten Daten',
+        'navigation_1': 'Nach der Registrierung als Forscher können Sie die verfügbaren Aufgaben erforschen und Ihre eigene Studie durchführen. ' +
+        'Das Navigationsmenü in der Kopfzeile enthält die Links zu drei Hauptschritten für die Durchführung einer Online-Studie. ',
+        'navigation_1_1': `<a href='../docs/upload'>Aufgaben</a> Durchsuchen Sie verfügbare Aufgaben oder laden Sie Ihre eigene Aufgabe hoch.`,
+        'navigation_1_2': `<a href='../docs/project'>Studien</a> Erstellen Sie Ihre Studie`,
+        'navigation_1_3': `<a href='../docs/data'>Daten</a> Überprüfen und Herunterladen der gesammelten Daten`,
         'navigation_2': 'Geben Sie im Feld Search Tasks den Namen der Aufgabe ein, nach der Sie suchen möchten.',
         'navigation_3': 'Es kann jeweils nur eine Studie aktiviert werden. Wenn Sie mehr als eine Studie haben, können Sie über das Dropdown-Menü "Studie auswählen" auf der rechten Seite zwischen diesen wechseln.',
         'navigation_4': 'Unter "Profil" können Sie Ihren Namen, Ihre E-Mail-Adresse und Ihre Spracheinstellungen bearbeiten. Derzeit werden Englisch, Deutsch und Russisch unterstützt.',

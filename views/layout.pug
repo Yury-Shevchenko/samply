@@ -32,7 +32,7 @@ html
                 h8
                   .custom-select
                     select(name="activeLanguage" id="activeLanguage")
-                      - const languages = [{ name: 'English', value: 'english'},{ name: 'Deutsch', value: 'german'},{ name: 'Русский', value: 'russian'}, {name: 'Français', value: 'french'}]
+                      - const languages = [{ name: 'English', value: 'english'},{ name: 'Deutsch', value: 'german'},{ name: 'Русский', value: 'russian'}]
                       if (user)
                         each language in languages
                           option(value=language.value selected=(user && user.language == language.value))= language.name
@@ -68,7 +68,6 @@ html
                 li.nav__item
                   a.nav__main_link(href='/docs/intro', class=(currentPath.startsWith('/docs') ? 'nav__main_link--active' : ''))
                     != h.icon('document')
-
                 li.nav__item
                   a.nav__main_link(href='/tests/all', class=(currentPath.startsWith('/tests') ? 'nav__main_link--active' : ''))
                     h6 #{layout.tasks}

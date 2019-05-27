@@ -456,11 +456,12 @@ module.exports =
       },
 
       'researcher' : {
-        'header_steps': 'Steps to collect your data online',
-        'step_1': `Use existing templates or create your own study with <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
+        'header_steps': 'Steps',
+        'step_1': `Use existing templates or create your own study with <a target="blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
         'step_2': `Import the experiment file into Open Lab`,
         'step_3': `Send the invitation link to participants and monitor their progress in real time`,
-        'header_features': `Special features of Open Lab`,
+        'step_4': `Please check the <a href='../docs/intro'>documentation</a> for more information or join our <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help.`,
+        'header_features': `Special features`,
         'feature_1': `You do not need to set up your own server to run a study.`,
         'feature_2': `Open Lab can host any type of scripts created in <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js</a>.`,
         'feature_3': `Your study can enroll more participants from the community of Open Lab users.`,
@@ -468,7 +469,7 @@ module.exports =
         'feature_5': `HTTPS data transfer protocol ensures that data is encrypted during transmission.`,
         'feature_6': `The user authentication system allows you to create complex studies in which people take part in experiments separated in time.`,
         'feature_7': `Open Lab provides a system of data management including saving of data during an experiment.`,
-        'header_advantages': 'Advantages of Open Lab',
+        'header_advantages': 'Advantages',
         'advantage_1': `More and more studies in social sciences are being implemented online.
             However, there are barriers to the use of the Internet.
             First, technical difficulties in conducting an online-experiment.
@@ -483,7 +484,6 @@ module.exports =
             The experiments are automatically documented and stored so that cooperation with colleagues and meta-analyses of previous studies are possible.
             The HTTPS protocol ensures that participants' data is encrypted during transmission.
             User access to experiments can be protected by various authentication strategies such as participant codes, e-mails, passwords or accounts on social networks.`,
-        'slack_chat': `Please, join the <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help. `,
         },
 
         'data' : {
@@ -557,22 +557,27 @@ module.exports =
 
         'docs': {
           'intro_title': 'Introduction',
+          'introduction_title': 'Introduction',
+          'introduction_1': 'Welcome to Open Lab, a platform for running online experiments! ',
+          'introduction_2': 'We are glad to have you here. This documentation is written for researchers, so please first register as a researcher. ',
+          'introduction_3': 'The registration is simple and requires only an email and a password. ',
           'navigation_title': 'Navigation',
-          'navigation_1': 'The Tasks, Studies, Data panes provide access to three main steps of running an online study:',
-          'navigation_1_1': 'Browse available tasks and upload your own task',
-          'navigation_1_2': 'Set up your study',
-          'navigation_1_3': 'Review and download collected data',
-          'navigation_2': 'In the Search Tasks field, enter the name of the task you want to search for.',
-          'navigation_3': 'Only one study can be activated at a time. If you have more than one study, you can switch between them by using the “Choose study” drop-down menu on the right.',
-          'navigation_4': 'Under “Account”, you can edit your name, email address and language. English, German and Russian are currently supported.',
-          'upload_title': 'Uploading the study',
+          'navigation_1': 'After registering as a researcher, you can explore available tasks and run your own study. ' +
+          'The navigation menu in the header contains the links to three main steps for conducting an online study.',
+          'navigation_1_1': `<a href='../docs/upload'>Tasks</a> Browse available tasks and upload your own task`,
+          'navigation_1_2': `<a href='../docs/project'>Studies</a> Set up your study`,
+          'navigation_1_3': `<a href='../docs/data'>Data</a> Review and download collected data`,
+          'navigation_2': 'In the Search tasks field, you can enter the name of the task you want to search for.',
+          'navigation_3': 'Only one study can be activated at a time. If you have more than one study, you can switch between them by using the “Choose a study” drop-down menu on the right.',
+          'navigation_4': 'Under “Account”, you can edit your name, email address and language. English, German and Russian are supported at the moment.',
+          'upload_title': 'Uploade a task',
           'upload_allTasks_title': `<a target='blank' href='../tests/all'>All tasks</a>`,
           'upload_allTasks_1': `A dashboard with all publicly viewable tasks gives you quick access to the range of tasks already running in Open Lab. You can try the task by running it or, if you want to see the code behind it, download the json file, go to the <a target='blank' href="https://labjs.felixhenninger.com/">lab.js builder</a> and open the file there.`,
           'upload_myTasks_title': `<a target='blank' href='../tests/my'>My tasks</a>`,
           'upload_myTasks_1': 'It is a separate dashboard for the tasks you have added. It is empty at the beginning, but will be filled with your tasks. After you have added your first task, you can run the task, edit it, download the json file or delete the task using shortcut buttons on the task card.',
           'upload_newTask_title': `<a target='blank' href='../tests/add'>New task</a>`,
           'upload_newTask_1': 'Adding a new task is straightforward. Enter the name and description of the task, select the json file, and add a cover photo, if you wish. Tags are not necessary, but can help other researchers to find your task. At the end, choose how the task should be displayed. Public tasks are available to other researchers so they can see, run them and download the json file. If you don’t want to share your task yet, make it private so that only you and your participants can see it. After saving, your task will appear on “My tasks” page.',
-          'project_title': 'Managing the study',
+          'project_title': 'Manage your study',
           'project_projects_title': `<a target='blank' href='../projects'>Studies</a> `,
           'project_projects_1': 'The Open Lab is organized by studies. A study contains a number of tasks and aggregates the data of the participants. After registering as a researcher, the first page you see suggests creating a new study. Just give it a name and click “Enter”. If you already know someone in the Open Lab with whom you want to share the study, you can enter their email address (or leave it blank and do it later).',
           'project_projects_2': 'After adding a study, you will see the card of the new study, which shows the name and status of the study along with two buttons (to edit and delete the study). The toggle switch at the bottom of the card is grey – this means that your study is currently not publicly available, i.e., hidden from Open Lab participants. However, you can invite participants with a special link that provided to you. When you are ready with tasks and want to open your study to the public, you can toggle the button to activate it.',
@@ -586,7 +591,7 @@ module.exports =
           'project_demo_1': `You can already start each task individually, but this demo page will show you what the whole experiment will look like for participants. A participant will see the name of the test, its description and the status (completed or not yet completed). The tasks on the list appear in the order you specified in the study. Once a task is completed, a participant cannot repeat it.`,
           'project_demoResults_title': `<a target='blank' href='../results'>Demo results</a>  `,
           'project_demoResults_1': `To give you an idea what the raw data looks like, you can view and download your own demo results here. The data is stored as a CSV-file with comma-separated values. The data during the experiment is saved in two formats: “incremental” – a new part of the data is logged each time there is a sufficient time window during the experiment (e.g., when a participant reads the instruction of a new experimental block), and “full” – the data is transferred at the end of the experiment. So if a participant interrupts the task, only the incremental data up to the last snapshot will be saved. The results of the demo also show you how many records (rows) are stored in the data file.`,
-          'data_title': 'Collecting data',
+          'data_title': 'Collect data',
           'data_results_title': `<a target='blank' href='../data'>Results</a> `,
           'data_results_1': 'By clicking on the tasks on the left, you can switch between results for different tasks. The table contains information about a participant and the type of data. The Open Lab ID is a unique number assigned to each user regardless of the participant code and name. You can either download data for a specific participant or download all results for that task.',
           'data_participants_title': `<a target='blank' href='../users'>Participants</a> `,

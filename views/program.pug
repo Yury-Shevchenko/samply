@@ -95,7 +95,7 @@ block content
               label(for="language") #{l.language}
               .custom-select
                 select(name="param_language" id="activeLanguageParameter")
-                  - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}, {value: 'russian', label: 'Русский'}, {value: 'french', label: 'Français'}]
+                  - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}, {value: 'russian', label: 'Русский'}]
                   each option in options
                     option(value=option.value, selected=(param_language === option.value))= option.label
 
@@ -197,10 +197,10 @@ block content
                     .formsforparameters
                       label(for= key) #{key}
                       input(type='text' name= key value= modified[key])
-                  
+
                   script(nonce=`${noncevalue}`).
                     document.addEventListener('DOMContentLoaded', function (){
-                      document.getElementById('addFieldButton').addEventListener('click', function addField() { 
+                      document.getElementById('addFieldButton').addEventListener('click', function addField() {
                         var container_form = document.getElementById("myForm");
                         var nameOfNewField = document.getElementById("new_field").value;
                         var input = document.createElement("input");
@@ -216,9 +216,9 @@ block content
                       });
                     });
                 p
-                h5 #{l.addField} 
+                h5 #{l.addField}
                 input(type="text" name= "new_field" id="new_field" value=l.nameForNewParameter)
-                button.button(type="button" value="Add a field" id="addFieldButton") #{l.add} 
+                button.button(type="button" value="Add a field" id="addFieldButton") #{l.add}
                 p
             else
 
