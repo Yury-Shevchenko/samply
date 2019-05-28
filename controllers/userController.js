@@ -37,21 +37,57 @@ exports.sign = async (req, res) => {
 };
 
 exports.code = async (req, res) => {
-  let joined_project, projects;
+  let joined_project, projects, temporary_code;
   if(req.params.project){
+    // the specific project was requested
     joined_project = await Project.findOne({ name: req.params.project });
-  } else {
-    projects = await Project.getCurrentProjects();
-  };
-  let temporary_code;
-  if(req.query.generate == 'true'){
-    if (req.params.code){
-      temporary_code = uniqid() + '-' + req.params.code;
+    // user is logged in
+    if(req.user){
+      // the project exists
+      if (joined_project && joined_project._id){
+        User.findById(req.user._id, (err, user) => {
+          user.participantInProject = joined_project._id;
+          user.save((saveErr, updatedUser) => {
+            if(saveErr) {
+              console.log("Authorisation error", saveErr);
+            }
+            res.redirect('/testing');
+          });
+        });
+      } else {
+        // no project found
+        req.flash('error', `There is no project with the name ${req.params.project} found. Please choose the project from the list.`);
+        res.redirect('/studies');
+      }
     } else {
-      temporary_code = uniqid();
+      // user is not logged in
+      if (joined_project && joined_project._id){
+        // project exists
+        if(req.query.generate == 'true'){
+          if (req.params.code){
+            temporary_code = uniqid() + '-' + req.params.code;
+          } else {
+            temporary_code = uniqid();
+          }
+        };
+        res.render('code', {title: 'Enter with code', message: req.flash('codeMessage'), projects, joined_project, code: temporary_code || req.params.code});
+      } else {
+        // no project found
+        req.flash('error', `There is no project with the name ${req.params.project} found. Please choose the project from the list.`);
+        res.redirect('/code');
+      }
+    }
+  } else {
+    // the project was not specified
+    if(req.user){
+      // user is logged in
+      res.redirect('/studies');
+    } else {
+      // user is not logged in
+      projects = await Project.getCurrentProjects();
+      res.render('code', {title: 'Enter with code', message: req.flash('codeMessage'), projects, joined_project, code: temporary_code || req.params.code});
     }
   };
-  res.render('code', {title: 'Enter with code', message: req.flash('codeMessage'), projects, joined_project, code: temporary_code || req.params.code});
 };
 
 exports.register = (req, res) => {
