@@ -42,7 +42,7 @@ exports.code = async (req, res) => {
     // the specific project was requested
     joined_project = await Project.findOne({ name: req.params.project });
     // user is logged in
-    if(req.user){
+    if(req.user && req.user.level & req.user.level < 10){
       // the project exists
       if (joined_project && joined_project._id){
         User.findById(req.user._id, (err, user) => {
