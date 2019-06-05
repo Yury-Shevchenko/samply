@@ -411,7 +411,8 @@ exports.registerPushNotification = async (req, res) => {
   }
 
   const sub = req.body;
-  // console.log("The data received on the server", sub);
+  //console.log("The data received on the server", sub);
+  console.log("The user is", req.user);
   await User.findById(req.user._id, (err, user) => {
     user.notifications.push(sub);
     user.save((saveErr, updatedUser) => {
