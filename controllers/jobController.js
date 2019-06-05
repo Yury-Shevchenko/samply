@@ -374,19 +374,19 @@ async function sendNotification(done, project_id, title, message) {
 
 //user functions
 exports.registerPushNotification = async (req, res) => {
-  // console.log('user', req.user);
+  console.log('user', req.user);
   const project = await Project.findOne({_id: req.user.participantInProject},{
     name: 1, notifications: 1,
   });
-  // console.log('project', project);
+  console.log('project', project);
   if(project && project.notifications && project.notifications.length > 0){
-    // console.log('Notifications in the project', project.notifications);
+    console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
       if(sub.mode && sub.mode === 'Individual'){
         const timeBuffer = 10000;
         const user_int_start = new Date(Date.now() + timeBuffer);
         const user_int_end = new Date(Date.now() + sub.duration);
-        // console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
+        console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: req.user._id,
