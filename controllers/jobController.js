@@ -374,6 +374,7 @@ async function sendNotification(done, project_id, title, message) {
 
 //user functions
 exports.registerPushNotification = async (req, res) => {
+  console.log('req', req);
   console.log('user', req.user);
   const project = await Project.findOne({_id: req.user.participantInProject},{
     name: 1, notifications: 1,
