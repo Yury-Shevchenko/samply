@@ -213,7 +213,7 @@ router.get('/test/:slug/:id/:lang', authController.isLoggedIn, catchErrors(testC
 //PARAMETERS controller
 router.post('/tasks/:task/:slug/:lang', authController.isLoggedIn, catchErrors(paramController.postParameters)); //change parameters of the task
 router.get('/parameters/delete/:id', authController.isLoggedIn, catchErrors(paramController.deleteParameters));
-  
+
 //RESULTS controller
 //for participants
 router.get('/myresults', authController.isLoggedIn, catchErrors(resultController.showParticipantResults));
@@ -286,8 +286,12 @@ router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catch
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
 
 //user-side notifications
-router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
-router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));
+// router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
+// router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));
+
+router.post('/registernotification', catchErrors(jobController.registerPushNotification));
+router.post('/unregisternotification', catchErrors(jobController.unsubscribePushNotification));
+
 
 router.get('/debugprojects',
   authController.isSuperAdminLoggedIn,
