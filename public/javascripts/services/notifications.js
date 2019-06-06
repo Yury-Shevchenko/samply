@@ -145,7 +145,8 @@ function unsubscribeNotifications() {
     .then(function(sub) {
       if(sub){
         return fetch('/unregisternotification', {
-          method:'POST'
+          method:'POST',
+          credentials: 'include'
         })
       }
     })
