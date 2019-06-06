@@ -292,7 +292,7 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
   const user = await User.findOne({_id: user_id});
   await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
 
-  if (user.notifications && user.notifications.length > 0){
+  if (user && user.notifications && user.notifications.length > 0){
     // console.log("Personal user Open lab ID", user.openLabId);
     const subs = user.notifications;
     subs.forEach(function(sub){

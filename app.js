@@ -32,7 +32,6 @@ app.use(express.static('public'));
 
 app.post('/subscription/webhook', bodyParser.raw({ type: '*/*' }), userController.webhook);
 
-
 // populates req.cookies with any cookies that came along with the request
 app.use(cookieParser());
 
@@ -42,8 +41,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Exposes a bunch of methods for validating data. Used heavily on userController.validateRegister
 app.use(expressValidator());
-
-
 
 // Sessions allow us to store data on visitors from request to request
 // This keeps users logged in and allows us to send flash messages
