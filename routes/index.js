@@ -286,12 +286,8 @@ router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catch
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
 
 //user-side notifications
-// router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
-// router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));
-
-router.post('/registernotification', catchErrors(jobController.registerPushNotification));
-router.post('/unregisternotification', catchErrors(jobController.unsubscribePushNotification));
-
+router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
+router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));
 
 router.get('/debugprojects',
   authController.isSuperAdminLoggedIn,

@@ -82,7 +82,7 @@ function configurePushSub(){
             'Accept':'application/json',
           },
           body: JSON.stringify(newSub),
-          credentials: 'include'
+          // credentials: 'include'
         })
       }
     })

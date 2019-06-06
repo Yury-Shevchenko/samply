@@ -275,7 +275,7 @@ exports.removeNotificationByID = async(req, res) => {
     'data.projectid': projectID,
     'data.id': notificationID
   }, (err, numRemoved) => {
-    console.log('Number of removed notifications', numRemoved);
+    // console.log('Number of removed notifications', numRemoved);
   });
   await project.save((saveErr, updatedproject) => {
     if (saveErr) {
@@ -309,10 +309,10 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
         'openUrl': '/testing'
       })) //payload is limited to 4kb
         .then(res => {
-          console.log("Personal notification was sent", res.statusCode);
+          // console.log("Personal notification was sent", res.statusCode);
         })
         .catch(err => {
-          console.log("The error happened", err.statusCode, "The user is", user.code.id);
+          // console.log("The error happened", err.statusCode, "The user is", user.code.id);
           // console.log("The error happened", err, "The user is", user.code.id);
           //TODO: remove subscription if it is not valid anymore (check it in response)
           //TODO record in the user profile that was an error with user subscription
@@ -345,12 +345,12 @@ async function sendNotification(done, project_id, title, message) {
               })) //payload is limited to 4kb
               .then(res => {
                 // console.log("Notification was sent", res.statusCode);
-                console.log("Notification was sent", res);
+                // console.log("Notification was sent", res);
                 return(res.statusCode);
               })
               .catch(err => {
                 // console.log("The error happened", err.statusCode);
-                console.log("The error happened", err);
+                // console.log("The error happened", err);
                 return(err.statusCode);
                 //TODO: remove subscription if it is not valid anymore (check it in response)
               })
@@ -374,20 +374,20 @@ async function sendNotification(done, project_id, title, message) {
 
 //user functions
 exports.registerPushNotification = async (req, res) => {
-  console.log('req', req);
-  console.log('user', req.user);
+  // console.log('req', req);
+  // console.log('user', req.user);
   const project = await Project.findOne({_id: req.user.participantInProject},{
     name: 1, notifications: 1,
   });
-  console.log('project', project);
+  // console.log('project', project);
   if(project && project.notifications && project.notifications.length > 0){
-    console.log('Notifications in the project', project.notifications);
+    // console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
       if(sub.mode && sub.mode === 'Individual'){
         const timeBuffer = 10000;
         const user_int_start = new Date(Date.now() + timeBuffer);
         const user_int_end = new Date(Date.now() + sub.duration);
-        console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
+        // console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: req.user._id,
@@ -413,7 +413,7 @@ exports.registerPushNotification = async (req, res) => {
 
   const sub = req.body;
   //console.log("The data received on the server", sub);
-  console.log("The user is", req.user);
+  // console.log("The user is", req.user);
   await User.findById(req.user._id, (err, user) => {
     user.notifications.push(sub);
     user.save((saveErr, updatedUser) => {
