@@ -823,7 +823,8 @@ label {
   margin: 0;
   padding: 0;
   -ms-flex-pack: justify;
-      justify-content: space-between; }
+      justify-content: space-between;
+  background: #ffffff87; }
   .nav__section {
     display: -ms-flexbox;
     display: flex;
