@@ -1,12 +1,12 @@
 .projects {
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 5px;
   justify-content: space-evenly;
   grid-template-columns: repeat(auto-fill, 250px);
 }
 
 .project {
-  // border-radius: 10px;
+  border-radius: 6px;
   position: relative;
   min-height: 250px;
   background:white;
@@ -57,7 +57,7 @@
 }
 
 .project:hover {
-  border: 1px solid #ddd;
+  box-shadow: 1px 0px 20px #f3e4e4;
 }
 
 .project__actions {
@@ -113,6 +113,7 @@
     top: 0;
     right: 0;
     background: #f1f3ff;
+    border-radius: 6px;
     // background:
     //   linear-gradient(45deg, hsla(190, 95%, 43%, 1) 0%, hsla(190, 95%, 43%, 0) 70%),
     //   linear-gradient(135deg, hsla(219, 93%, 48%, 1) 10%, hsla(219, 93%, 48%, 0) 80%),

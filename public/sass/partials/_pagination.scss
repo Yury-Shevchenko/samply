@@ -1,10 +1,12 @@
 .pagination {
   display: flex;
   align-items: center;
-  background: white;
+  // background: #ffffff73;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  // box-shadow: 0 0 0px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  // max-width: fit-content;
   // box-shadow: $shad;
   &__next {
     flex: 0 0 auto;

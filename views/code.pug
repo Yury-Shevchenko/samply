@@ -16,42 +16,38 @@ block content
         h5 #{layout.message_logged_in}
 
       if !user
-        form.loginForm(action="/auth/code" method="POST")
+        .loginForm
+          form(action="/auth/code" method="POST")
+            h5 Use participant code
+            if (code)
+              input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+              p= code
+            else 
+              input(type="text" name="code" placeholder="Participant code" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+             
+            if (joined_project)
+              input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
+              p= joined_project.name
+              if(joined_project.description)
+                h6 #{layout.description}
+                p= joined_project.description
+              
+            if (projects)    
+              .custom-select-header 
+                select(name="participantInProject" id="choose_project" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
+                  option(value='' style="" selected=!joined_project) #{layout.choose_project}
+                  each project in projects
+                    option(value=project._id, selected=(project.name==joined_project))= project.name
+            p
+            input.button(type="submit" value=layout.enter)
+            p
           
-          h5 Use participant code
-          
-          //- h7(for="code") #{layout.participant_code}
-          if (code)
-            input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-            p= code
-          else 
-            input(type="text" name="code" placeholder="Participant code" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-           
-          
-          if (joined_project)
-            //- h7(for="participantInProject") #{layout.project}
-            input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
-            p= joined_project.name
-            if(joined_project.description)
-              h6 #{layout.description}
-              p= joined_project.description
+          a(style={color:'black'} href=`/participant/login`) 
+            div.button(style="width:100%") Login to your account
             
-          if (projects)    
-            //- h7(for="participantInProject") #{layout.choose_project}
-            .custom-select-header 
-              select(name="participantInProject" id="choose_project" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
-                option(value='' style="" selected=!joined_project) #{layout.choose_project}
-                each project in projects
-                  option(value=project._id, selected=(project.name==joined_project))= project.name
-          p
-          input.button(type="submit" value=layout.enter)
-          p
-          
-          button.button(style="width: 100%")
-            a(style={color:'black'} href=`/participant/login`) Login to your account
+          a(style={color:'black'} href=`/participant/register`)     
+            div.button(style="width:100%") Create new account
             
-          button.button(style="width: 100%")
-            a(style={color:'black'} href=`/participant/register`) Create new account
         
     script(nonce=`${noncevalue}`).
       document.body.style['backgroundSize'] = 'cover';

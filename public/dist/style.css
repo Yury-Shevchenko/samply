@@ -823,8 +823,7 @@ label {
   margin: 0;
   padding: 0;
   -ms-flex-pack: justify;
-      justify-content: space-between;
-  background: #fcfcff; }
+      justify-content: space-between; }
   .nav__section {
     display: -ms-flexbox;
     display: flex;
@@ -842,7 +841,6 @@ label {
     display: grid; }
   .nav__main_link {
     font-weight: bold;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
     text-transform: uppercase;
     padding: 1rem 1.5rem 0.5rem 1.5rem;
     display: block;
@@ -862,15 +860,10 @@ label {
     .nav__main_link:hover, .nav__main_link--active {
       background: #fcfcff9c;
       border-radius: 3px; }
-      .nav__main_link:hover svg, .nav__main_link--active svg {
-        -ms-transform: scale(1.2);
-            transform: scale(1.2); }
       .nav__main_link:hover h6, .nav__main_link--active h6 {
-        -ms-transform: scale(1.1);
-            transform: scale(1.1);
         color: midnightblue; }
     .nav__main_link--passive h6 {
-      color: lightgrey; }
+      color: #a6a6a6a6; }
     .nav__main_link--logo:hover svg {
       -ms-transform: none;
           transform: none; }
@@ -893,15 +886,11 @@ label {
       width: 30px;
       transition: all 0.2s;
       fill: white; }
-    .nav__link:hover, .nav__link--active {
-      border-bottom: 3px solid deepskyblue; }
-      .nav__link:hover svg, .nav__link--active svg {
-        -ms-transform: scale(1.2);
-            transform: scale(1.2); }
-      .nav__link:hover h6, .nav__link--active h6 {
-        -ms-transform: scale(1.1);
-            transform: scale(1.1);
-        color: midnightblue; }
+    .nav__link:hover svg, .nav__link--active svg {
+      -ms-transform: scale(1.2);
+          transform: scale(1.2); }
+    .nav__link:hover h6, .nav__link--active h6 {
+      color: midnightblue; }
     .nav__link--logo:hover svg {
       -ms-transform: none;
           transform: none; }
@@ -1422,10 +1411,9 @@ and also iPads specifically.
   display: flex;
   -ms-flex-align: center;
       align-items: center;
-  background: white;
   margin-top: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05); }
+  border-radius: 6px; }
   .pagination__next {
     -ms-flex: 0 0 auto;
         flex: 0 0 auto;
@@ -2060,13 +2048,14 @@ i.yes:after {
 .projects {
   display: -ms-grid;
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 5px;
   -ms-flex-pack: space-evenly;
       justify-content: space-evenly;
   -ms-grid-columns: (250px)[auto-fill];
       grid-template-columns: repeat(auto-fill, 250px); }
 
 .project {
+  border-radius: 6px;
   position: relative;
   min-height: 250px;
   background: white;
@@ -2109,7 +2098,7 @@ i.yes:after {
       width: 100%; } }
 
 .project:hover {
-  border: 1px solid #ddd; }
+  box-shadow: 1px 0px 20px #f3e4e4; }
 
 .project__actions {
   position: relative;
@@ -2159,6 +2148,7 @@ i.yes:after {
     top: 0;
     right: 0;
     background: #f1f3ff;
+    border-radius: 6px;
     z-index: 1; }
   .project__hero img {
     height: 100%;

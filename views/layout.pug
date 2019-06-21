@@ -19,15 +19,21 @@ html
 
             if !user
               li.nav__item.nav__main_link
-                script(nonce=`${noncevalue}`).
-                  document.addEventListener('DOMContentLoaded', function (){
-                    document.getElementById('activeLanguage').addEventListener('change', function activateLanguage() {
-                      const language = document.getElementById("activeLanguage").value;
-                      if(language != ''){
-                        window.location.href = `/languages/${language}`
-                      }
-                    });
-                  });
+                li.nav__item(style = "display:grid; grid-template-columns: 1fr auto 1fr;")
+                  a.nav__main_link(href='/languages/german', class=(locale_language == 'german' ? 'nav__main_link' : 'nav__main_link--passive'))
+                    h6 DE
+                  p /  
+                  a.nav__main_link(href='/languages/english', class=(locale_language == 'english' ? 'nav__main_link' : 'nav__main_link--passive'))
+                    h6 EN
+                //- script(nonce=`${noncevalue}`).
+                //-   document.addEventListener('DOMContentLoaded', function (){
+                //-     document.getElementById('activeLanguage').addEventListener('change', function activateLanguage() {
+                //-       const language = document.getElementById("activeLanguage").value;
+                //-       if(language != ''){
+                //-         window.location.href = `/languages/${language}`
+                //-       }
+                //-     });
+                //-   });
 
                   
                   //- li.nav__item
@@ -128,13 +134,7 @@ html
                 h6 #{layout && layout.forResearchers}
               li.nav__item: a.nav__main_link(href="/code", class=(currentPath.startsWith('/code') ? 'nav__main_link--active' : ''))
                 h6 #{layout && layout.forParticipants}
-              li.nav__item(style = "display:grid; grid-template-columns: repeat(3, 1fr);")
-                a.nav__main_link(href='/languages/german', class=(locale_language == 'german' ? 'nav__main_link--active' : 'nav__main_link--passive'))
-                  h6 DE
-                a.nav__main_link 
-                  h6 /  
-                a.nav__main_link(href='/languages/english', class=(locale_language == 'english' ? 'nav__main_link--active' : 'nav__main_link--passive'))
-                  h6 EN
+              
 
     block messages
       if locals.flashes

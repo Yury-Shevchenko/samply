@@ -39,5 +39,10 @@ block content
         if page < pages
           a(href=`/studies/page/${parseFloat(page) + 1}`) #{layout.pagination_next}
 
+    script(nonce=`${noncevalue}`).
+      document.body.style['backgroundSize'] = 'cover';
+      document.body.style['backgroundRepeat'] = 'no-repeat';
+      document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";
+            
     //- pre= h.dump(projects)
     //- pre= h.dump(user)

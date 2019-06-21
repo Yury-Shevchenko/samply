@@ -9,8 +9,10 @@ mixin loginResearcher()
     input.button(type="submit" value=layout.log_in)
     p
       a(style={color:'black'} href=`/researcher/forgot`) #{layout.message_forgot_password}
-    button.button(style="width: 100%")
-      a(style={color:'black'} href=`/researcher/register`) Create a researcher account
+    
+    a(style={color:'black'} href=`/researcher/register`) 
+      div.button(style="width: 100%") Create a researcher account
+      
       
     script(nonce=`${noncevalue}`).
       document.body.style['backgroundSize'] = 'cover';
