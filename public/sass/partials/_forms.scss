@@ -20,7 +20,28 @@ label {
 }
 
 .form {
+  //max-width: 500px;
   background: white;
+  padding: 2rem;
+  //box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  & + .form {
+    margin-top: 4rem;
+  }
+  // I know this isn't bem but meh
+  h2 {
+    margin: 0;
+    font-size: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid $grey;
+  }
+}
+
+.loginForm {
+  min-width: 345px;
+  max-width: 345px;
+  // background: white;
+  text-align:center;
   padding: 2rem;
   //box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
   & + .form {

@@ -263,7 +263,7 @@ module.exports = {
       'delete': 'Löschen',
       'description': 'Beschreibung',
       'showCompletionCode': 'Den individuellen Erledigungscode am Ende aller Aufgaben anzeigen',
-      'completionMessage': 'Nachricht an die Teilnehmer nach Abschluss der Aufgaben',
+      'welcomeMessage': 'Begrüßungstext, der den Teilnehmern nach der Registrierung in Ihrer Studie angezeigt wird.',
       'askNotifications': 'Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).',
     },
 
@@ -635,7 +635,7 @@ module.exports = {
 
       'notifications': {
         'message_create_project': `Um Benachrichtigungen einzurichten, aktivieren oder erstellen Sie eine Studie <a href="/projects">hier</a>.`,
-        'testing_message': 'Wir testen jetzt Benachrichtigungen, so dass es möglicherweise nicht wie erwartet funktioniert. Die Teilnehmer sollten Chrome verwenden, um Benachrichtigungen zu erhalten.',
+        'testing_message': 'Die Teilnehmer sollten ein Android-Telefon oder Google Chrome auf Desktops verwenden, um Benachrichtigungen zu aktivieren und zu erhalten.',
         'title': 'Titel',
         'title_placeholder': 'Open Lab',
         'message': 'Nachricht',

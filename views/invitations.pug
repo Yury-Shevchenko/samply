@@ -5,18 +5,18 @@ include mixins/_invitationForm
 
 block content
   .inner
-    p
-    header.top
-      nav.nav
-        .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
-          li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
-          li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
-          li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
-          li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
-          li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
-    p
+    //- p
+    //- header.top
+    //-   nav.nav
+    //-     .nav__section.nav__section--pages
+    //-       li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
+    //-       //- li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
+    //-       //- li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
+    //-       li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
+    //-       li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
+    //-       //- li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
+    //-       //- li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
+    //- p
     h2 #{layout.invitations}
     .card
       if project && project.name  

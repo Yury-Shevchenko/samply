@@ -12,12 +12,12 @@ block content
     header.top
       nav.nav
         .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/researcher/register", class=(currentPath.startsWith('/researcher/register') ? 'nav__link--active' : '')) #{layout.signup} 
-          li.nav__item: a.nav__link(href="/researcher/login", class=(currentPath.startsWith('/researcher/login') ? 'nav__link--active' : '')) #{layout.login}
-          li.nav__item: a.nav__link(href="/researcher/howitworks", class=(currentPath.startsWith('/researcher/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks} 
-          li.nav__item: a.nav__link(href="/researcher/pricing", class=(currentPath.startsWith('/researcher/pricing') ? 'nav__link--active' : '')) #{layout.pricing} 
+          //- li.nav__item: a.nav__link(href="/researcher/register", class=(currentPath.startsWith('/researcher/register') ? 'nav__link--active' : '')) #{layout.signup} 
+          //- li.nav__item: a.nav__link(href="/researcher/login", class=(currentPath.startsWith('/researcher/login') ? 'nav__link--active' : '')) #{layout.login}
+          //- li.nav__item: a.nav__link(href="/researcher/howitworks", class=(currentPath.startsWith('/researcher/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks} 
+          //- li.nav__item: a.nav__link(href="/researcher/pricing", class=(currentPath.startsWith('/researcher/pricing') ? 'nav__link--active' : '')) #{layout.pricing} 
     
-    .card
+    .loginCard
       if !action || action == "register"
         +registerResearcher()
         
@@ -28,8 +28,8 @@ block content
         +loginResearcher()
         +forgotForm()    
       
-      if action == "pricing"
-        +pricingResearcher()
+      //- if action == "pricing"
+      //-   +pricingResearcher()
         
       if action == "howitworks"
         +howitworksResearcher()

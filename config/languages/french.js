@@ -455,11 +455,12 @@ module.exports =
       },
 
       'researcher' : {
-        'header_steps': 'Steps to collect your data online',
-        'step_1': `Use existing templates or create your own study with <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
+        'header_steps': 'Steps',
+        'step_1': `Use existing templates or create your own study with <a target="blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
         'step_2': `Import the experiment file into Open Lab`,
         'step_3': `Send the invitation link to participants and monitor their progress in real time`,
-        'header_features': `Special features of Open Lab`,
+        'step_4': `Please check the <a href='../docs/intro'>documentation</a> for more information or join our <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help.`,
+        'header_features': `Special features`,
         'feature_1': `You do not need to set up your own server to run a study.`,
         'feature_2': `Open Lab can host any type of scripts created in <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js</a>.`,
         'feature_3': `Your study can enroll more participants from the community of Open Lab users.`,
@@ -467,7 +468,7 @@ module.exports =
         'feature_5': `HTTPS data transfer protocol ensures that data is encrypted during transmission.`,
         'feature_6': `The user authentication system allows you to create complex studies in which people take part in experiments separated in time.`,
         'feature_7': `Open Lab provides a system of data management including saving of data during an experiment.`,
-        'header_advantages': 'Advantages of Open Lab',
+        'header_advantages': 'Advantages',
         'advantage_1': `More and more studies in social sciences are being implemented online.
             However, there are barriers to the use of the Internet.
             First, technical difficulties in conducting an online-experiment.
@@ -482,7 +483,6 @@ module.exports =
             The experiments are automatically documented and stored so that cooperation with colleagues and meta-analyses of previous studies are possible.
             The HTTPS protocol ensures that participants' data is encrypted during transmission.
             User access to experiments can be protected by various authentication strategies such as participant codes, e-mails, passwords or accounts on social networks.`,
-        'slack_chat': `Please, join the <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help. `,
         },
 
         'data' : {

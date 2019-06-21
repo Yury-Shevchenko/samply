@@ -17,24 +17,6 @@ self.addEventListener('activate', function(event){
 
 workboxSW.precache([]);
 
-//routing
-// workboxSW.router.registerRoute(/\/test\/.*$/, workboxSW.strategies.staleWhileRevalidate({
-//   cacheName: 'tests',
-//   cacheExpiration: {
-//     maxAgeSeconds: 60 * 60 * 24 * 7 //week
-//   }
-// }));
-
-//saving data when a user is offline
-// workboxSW.router.registerRoute('/save', function(args){
-//   console.log("the data are sent for saving");
-//   return fetch(args.event.request)
-//     .then(function(res){
-//       console.log("Response", res);
-//     })
-// });
-
-
 //handle notifications
 function isClientFocused() {
   return clients.matchAll({
@@ -67,8 +49,8 @@ self.addEventListener('push', event => {
   }
   var options = {
     body: data.content,
-    icon: '/images/icons/rat.png',
-    badge: '/images/icons/rat.png',
+    icon: '/images/icons/lamp.png',
+    badge: '/images/icons/lamp.png',
     vibrate: [300,110,300],
     actions: [
       {
@@ -161,37 +143,3 @@ self.onsync = function(event) {
     console.log('[Service Worker] Syncing new Posts');
   }
 }
-
-// self.addEventListener('sync', function(event) {
-//   console.log('[Service Worker] Background syncing', event);
-//   if (event.tag === 'sync-task-parameters') {
-//
-//     // event.waitUntil(
-//     //   readAllData('sync-parameters')
-//     //     .then(function(data) {
-//     //       for (var dt of data) {
-//     //         var postData = new FormData();
-//     //         postData.append('id', dt.id);
-//     //         postData.append('parameters', dt.parameters);
-//     //         fetch(`/tasks/${dt.task_id}/${dt.task_slug}/${dt.param_language}`, {
-//     //           method: 'POST',
-//     //           body: postData
-//     //         })
-//     //           .then(function(res) {
-//     //             console.log('Sent data', res);
-//     //             if (res.ok) {
-//     //               res.json()
-//     //                 .then(function(resData) {
-//     //                   deleteItemFromData('sync-parameters', resData.id);
-//     //                 });
-//     //             }
-//     //           })
-//     //           .catch(function(err) {
-//     //             console.log('Error while sending data', err);
-//     //           });
-//     //       }
-//     //
-//     //     })
-//     // );
-//   }
-// });

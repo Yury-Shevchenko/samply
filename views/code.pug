@@ -2,34 +2,34 @@ extends layout
 
 block content
   .inner
-    p
-    header.top
-      nav.nav
-        .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/participant/register", class=(currentPath.startsWith('/participant/register') ? 'nav__link--active' : '')) #{layout.signup}
-          li.nav__item: a.nav__link(href="/participant/login", class=(currentPath.startsWith('/participant/login') ? 'nav__link--active' : '')) #{layout.login}
-          li.nav__item: a.nav__link(href="/code", class=(currentPath.startsWith('/code') ? 'nav__link--active' : '')) #{layout.enterCode}
-          li.nav__item: a.nav__link(href="/participant/howitworks", class=(currentPath.startsWith('/participant/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks}
+    //- p
+    //- header.top
+    //-   nav.nav
+    //-     .nav__section.nav__section--pages
+    //-       li.nav__item: a.nav__link(href="/participant/register", class=(currentPath.startsWith('/participant/register') ? 'nav__link--active' : '')) #{layout.signup}
+    //-       li.nav__item: a.nav__link(href="/participant/login", class=(currentPath.startsWith('/participant/login') ? 'nav__link--active' : '')) #{layout.login}
+    //-       li.nav__item: a.nav__link(href="/code", class=(currentPath.startsWith('/code') ? 'nav__link--active' : '')) #{layout.enterCode}
+    //-       li.nav__item: a.nav__link(href="/participant/howitworks", class=(currentPath.startsWith('/participant/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks}
 
-    .card
+    .loginCard
       if user
         h5 #{layout.message_logged_in}
 
       if !user
-        form.form(action="/auth/code" method="POST")
+        form.loginForm(action="/auth/code" method="POST")
           
-          h5 #{layout.message_code}
+          h5 Use participant code
           
-          h7(for="code") #{layout.participant_code}
+          //- h7(for="code") #{layout.participant_code}
           if (code)
-            input(type="text" name="code" value=code readonly=code hidden=true)
+            input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
             p= code
           else 
-            input(type="text" name="code")
-          p 
+            input(type="text" name="code" placeholder="Participant code" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+           
           
           if (joined_project)
-            h7(for="participantInProject") #{layout.project}
+            //- h7(for="participantInProject") #{layout.project}
             input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
             p= joined_project.name
             if(joined_project.description)
@@ -37,17 +37,26 @@ block content
               p= joined_project.description
             
           if (projects)    
-            h7(for="participantInProject") #{layout.choose_project}
+            //- h7(for="participantInProject") #{layout.choose_project}
             .custom-select-header 
-              select(name="participantInProject" id="choose_project" style="font-size: 24px;")
-                option(value='' style="" selected=!joined_project) – #{layout.choose_project} –
+              select(name="participantInProject" id="choose_project" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
+                option(value='' style="" selected=!joined_project) #{layout.choose_project}
                 each project in projects
                   option(value=project._id, selected=(project.name==joined_project))= project.name
-            
-   
-          
           p
           input.button(type="submit" value=layout.enter)
+          p
+          
+          button.button(style="width: 100%")
+            a(style={color:'black'} href=`/participant/login`) Login to your account
+            
+          button.button(style="width: 100%")
+            a(style={color:'black'} href=`/participant/register`) Create new account
+        
+    script(nonce=`${noncevalue}`).
+      document.body.style['backgroundSize'] = 'cover';
+      document.body.style['backgroundRepeat'] = 'no-repeat';
+      document.body.style['backgroundImage'] = "url('/images/photos/participant-login.jpg')";
 
         //- pre=h.dump(projects)
         //- pre=h.dump(joined_project)

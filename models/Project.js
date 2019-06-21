@@ -23,7 +23,7 @@ const projectSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  completionMessage: {
+  welcomeMessage: {
     type: String,
     default: ''
   },
@@ -37,15 +37,19 @@ const projectSchema = new mongoose.Schema({
   notifications    : [
     {
       id           : String,
-      name         : String,
-      mode         : String,
+      target       : String,
+      schedule     : String,
+      randomize    : Boolean,
       date         : { type: Date, default: Date.now },
       interval     : { type: String, default: 'not_defined' },
+      interval_max : { type: String, default: 'not_defined' },
       int_start    : { type: Date, default: Date.now },
       int_end      : { type: Date, default: Date.now },
       title        : { type: String, default: 'Open Lab' },
       message      : { type: String, default: 'Please complete a test.' },
-      duration     : { type: Number, default: 0 }
+      duration     : { type: Number, default: 0 },
+      url          : { type: String, default: '' },
+      participantId: { type: Number },
     }
   ]
 });

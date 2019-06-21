@@ -4,7 +4,7 @@ var CACHE_DYNAMIC_NAME = 'dynamic-v1';
 
 var STATIC_FILES = [
   // '/',
-  '/images/icons/rat.png',
+  '/images/icons/lamp.png',
   '/fonts/BebasNeue%20Bold.ttf',
   '/fonts/OpenSans-Regular.ttf',
   '/fonts/OpenSans-Bold.ttf',
@@ -176,7 +176,7 @@ self.addEventListener('push', event => {
   //show notification
   var options = {
     body: data.content,
-    icon: '/images/icons/rat.png', //can be url
+    icon: '/images/icons/lamp.png', //can be url
     image: 'https://www.visit-mannheim.de/extension/portal-mannheim/var/storage/images/media/bibliothek/grosse-bildbuehnen-1440x900px/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px/19637-9-ger-DE/mannheim_barockschloss_-c-stadtmarketing-mannheim-gmbh_achim-mende_117_1440x900px_liscms-l.jpg',
     //badge: '',
     data: {

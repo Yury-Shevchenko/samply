@@ -7,15 +7,15 @@ mixin projectForm(project = {})
     label(for='description') #{l.description}
     textarea(type='text' name='description')= project.description
 
-    label(for='completionMessage') #{l.completionMessage}
-    textarea(type='text' name='completionMessage')= project.completionMessage
+    label(for='welcomeMessage') #{l.welcomeMessage}
+    textarea(type='text' name='welcomeMessage')= project.welcomeMessage
     p
       
-    div.inputCheckBox
-      input(type= 'checkbox' id= 'showCompletionCode' name= 'showCompletionCode' checked = project.showCompletionCode)
-      label(for='showCompletionCode')
-        span.
-          #{l.showCompletionCode}
+    //- div.inputCheckBox
+    //-   input(type= 'checkbox' id= 'showCompletionCode' name= 'showCompletionCode' checked = project.showCompletionCode)
+    //-   label(for='showCompletionCode')
+    //-     span.
+    //-       #{l.showCompletionCode}
     div.inputCheckBox
       input(type= 'checkbox' id= 'useNotifications' name= 'useNotifications' checked = project.useNotifications)
       label(for='useNotifications')

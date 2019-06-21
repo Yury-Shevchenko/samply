@@ -6,18 +6,18 @@ include mixins/_projectForm
 block content
   .inner
 
-    p
-    header.top
-      nav.nav
-        .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
-          li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
-          li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
-          li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
-          li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
-          li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
-    p
+    //- p
+    //- header.top
+    //-   nav.nav
+    //-     .nav__section.nav__section--pages
+    //-       li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
+    //-       //- li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
+    //-       //- li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
+    //-       li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
+    //-       li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
+    //-       //- li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
+    //-       //- li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
+    //- p
 
     if(user.projects && user.projects.length > 0)
       h2 #{l.title_proejcts}
@@ -33,17 +33,19 @@ block content
 
     .card
       h5 #{l.title_new}
-
-      if (user.projects.length == 0)
-        +projectForm()
-      else
-        if (user.subscription && (Date.now() < user.subscription_expires * 1000))
-          if ((user.projects.length < 5 && user.subscription_plan == 'professional') || (user.subscription_plan == 'laboratory'))
-            +projectForm()
-          else
-            p !{layout.upgradeNeededMessage}
-        else
-          p !{layout.subscriptionNeededMessage}
+      
+      +projectForm()
+      
+      //- if (user.projects.length == 0)
+      //-   +projectForm()
+      //- else
+      //-   if (user.subscription && (Date.now() < user.subscription_expires * 1000))
+      //-     if ((user.projects.length < 5 && user.subscription_plan == 'professional') || (user.subscription_plan == 'laboratory'))
+      //-       +projectForm()
+      //-     else
+      //-       p !{layout.upgradeNeededMessage}
+      //-   else
+      //-     p !{layout.subscriptionNeededMessage}
 
     //- pre= h.dump(user)
     //- pre= h.dump(projects)

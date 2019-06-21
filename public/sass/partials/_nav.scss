@@ -12,7 +12,7 @@
   background: #fcfcff;
   &__top{
     //background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed;
-    background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed;
+    // background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed;
   }
   &__section {
     display: flex;
@@ -53,6 +53,11 @@
       h6 {
         transform: scale(1.1);
         color: midnightblue;
+      }
+    }
+    &--passive {
+      h6 {
+        color: lightgrey;
       }
     }
     &--logo {

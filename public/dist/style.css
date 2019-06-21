@@ -318,12 +318,13 @@ select {
 
 .custom-select-header {
   width: 100%;
-  border-radius: 5px;
+  padding: 10px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
   overflow: hidden;
   background: #fafafa url("/images/icons/chevron-arrow-down.png") no-repeat 95% 50%; }
 
 .custom-select-header select {
-  padding: 5px 8px;
   padding-right: 40px;
   width: 100%;
   border: none;
@@ -718,6 +719,20 @@ label {
     margin-bottom: 2rem;
     border-bottom: 1px solid #e6e6e6; }
 
+.loginForm {
+  min-width: 345px;
+  max-width: 345px;
+  text-align: center;
+  padding: 2rem; }
+  .loginForm + .form {
+    margin-top: 4rem; }
+  .loginForm h2 {
+    margin: 0;
+    font-size: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #e6e6e6; }
+
 .search {
   position: relative;
   width: 100%;
@@ -810,8 +825,6 @@ label {
   -ms-flex-pack: justify;
       justify-content: space-between;
   background: #fcfcff; }
-  .nav__top {
-    background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed; }
   .nav__section {
     display: -ms-flexbox;
     display: flex;
@@ -856,6 +869,8 @@ label {
         -ms-transform: scale(1.1);
             transform: scale(1.1);
         color: midnightblue; }
+    .nav__main_link--passive h6 {
+      color: lightgrey; }
     .nav__main_link--logo:hover svg {
       -ms-transform: none;
           transform: none; }
@@ -1451,7 +1466,7 @@ and also iPads specifically.
 .button {
   border: 0;
   border-radius: 5px;
-  background: rgba(135, 206, 250, 0.6);
+  background: #c9f5db;
   color: #303030;
   font-family: 'Bebas';
   font-size: 2.5rem;
@@ -1461,7 +1476,7 @@ and also iPads specifically.
   padding: 10px; }
 
 .button:hover {
-  background: rgba(135, 206, 250, 0.3);
+  background: rgba(29, 191, 105, 0.9);
   cursor: pointer; }
 
 .buttonContainer {
@@ -1490,12 +1505,25 @@ and also iPads specifically.
       align-self: center; }
 
 .card {
+  display: -ms-grid;
+  display: grid;
   background: white;
   padding: 3rem;
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.2);
   height: inherit; }
   @media all and (max-width: 600px) {
     .card {
+      padding: 1rem; } }
+
+.loginCard {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-column-align: center;
+      justify-items: center;
+  padding: 3rem;
+  height: inherit; }
+  @media all and (max-width: 600px) {
+    .loginCard {
       padding: 1rem; } }
 
 .card-message {
@@ -1780,8 +1808,7 @@ i.yes:after {
   color: #303030;
   font-family: 'Bebas';
   font-weight: 600;
-  margin: 5%;
-  padding: 5%;
+  padding: 4%;
   display: -ms-grid;
   display: grid;
   -ms-grid-rows: min-content;

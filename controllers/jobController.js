@@ -15,12 +15,16 @@ agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
     // console.log('one_time_notification for the project', job.attrs.data.projectid);
-    sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
+    sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
   });
 
   agenda.define('regular_notification', (job, done) => {
     // console.log('I am sending regular notifcations for the project', job.attrs.data.projectid);
-    sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message);
+    if(job.attrs.data.participantId && job.attrs.data.participantId > 0){
+      sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    } else {
+      sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    }
   });
 
   agenda.define('start_manager', (job, done) => {
@@ -30,6 +34,8 @@ agenda.on('ready', function() {
       id: job.attrs.data.id,
       title: job.attrs.data.title,
       message: job.attrs.data.message,
+      url: job.attrs.data.url,
+      participantId: job.attrs.data.participantId,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true
@@ -47,20 +53,21 @@ agenda.on('ready', function() {
     done();
   });
 
-  agenda.define('personal_regular_notification', (job, done) => {
+  agenda.define('personal_notification', (job, done) => {
     // console.log('I am sending right now personal notification for the user', job.attrs.data.userid);
-    sendPersonalNotification(job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message);
+    sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     done();
   });
 
   agenda.define('start_personal_manager', (job, done) => {
     // console.log('Starting relative interval notifications for user', job.attrs.data.userid, 'at',  job.attrs.data.interval);
-    const newjob = agenda.create('personal_regular_notification', {
+    const newjob = agenda.create('personal_notification', {
       userid: job.attrs.data.userid,
       projectid: job.attrs.data.projectid,
       id: job.attrs.data.id,
       title: job.attrs.data.title,
       message: job.attrs.data.message,
+      url: job.attrs.data.url,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true
@@ -90,27 +97,49 @@ agenda.on('ready', function() {
 });
 
 exports.createScheduleNotification = async(req, res) => {
+  // check whether the request body contains required information
+  if(!req.body || !req.body.target || !req.body.schedule){
+    console.log("Some information in request is missing");
+    return res.status(400).end();
+  }
+  // update the information inside the project
   let project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1,
   });
+
   if(req.body.date && req.body.date.length > 0){
     await req.body.date.map(date => {
       const id = uniqid();
-      // console.log("The job is scheduled for the date", date);
       project.notifications.push({
         id: id,
-        name: req.body.name,
-        mode: req.body.mode,
+        target: req.body.target,
+        schedule: req.body.schedule,
+        randomize: req.body.randomize,
         date: date,
-        title: req.body.title || 'Open Lab',
-        message: req.body.message || 'Please complete a test.',
+        title: req.body.title,
+        message: req.body.message,
+        url: req.body.url,
+        participantId: req.body.participantId,
       });
-      agenda.schedule(date, 'one_time_notification', {
-        projectid: req.user.project._id,
-        id: id,
-        title: req.body.title || 'Open Lab',
-        message: req.body.message || 'Please complete a test.',
-      });
+      // if there is a participant id, create a personalized notification job
+      if (req.body.participantId) {
+        agenda.schedule(date, 'personal_notification', {
+          userid: req.body.participantId,
+          projectid: req.user.project._id,
+          id: id,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+        });
+      } else {
+        agenda.schedule(date, 'one_time_notification', {
+          projectid: req.user.project._id,
+          id: id,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+        });
+      }
     });
     await project.save((saveErr, updatedproject) => {
       if (saveErr) {
@@ -139,13 +168,16 @@ exports.createIntervalNotification = async (req, res) => {
   // console.log('Dates', int_start, int_end);
   project.notifications.push({
     id: id,
-    name: req.body.name,
-    mode: req.body.mode,
+    target: req.body.target,
+    schedule: req.body.schedule,
+    randomize: req.body.randomize,
     interval: req.body.interval,
     int_start: int_start,
     int_end: int_end,
-    title: req.body.title || 'Open Lab',
-    message: req.body.message || 'Please complete a test.',
+    title: req.body.title,
+    message: req.body.message,
+    url: req.body.url,
+    participantId: req.body.participantId,
   });
 
   agenda.schedule(int_start, 'start_manager', {
@@ -154,6 +186,8 @@ exports.createIntervalNotification = async (req, res) => {
     interval: req.body.interval,
     title: req.body.title,
     message: req.body.message,
+    url: req.body.url,
+    participantId: req.body.participantId,
   });
 
   agenda.schedule(int_end, 'end_manager', {
@@ -162,6 +196,8 @@ exports.createIntervalNotification = async (req, res) => {
     interval: req.body.interval,
     title: req.body.title,
     message: req.body.message,
+    url: req.body.url,
+    participantId: req.body.participantId,
   });
 
   await project.save((saveErr, updatedproject) => {
@@ -180,6 +216,15 @@ exports.createIndividualNotification = async (req, res) => {
     res.status(400).send();
     return;
   }
+
+  const int1 = req.body.interval;
+  const interval1_cron = String(`${int1.sec} ${int1.min} ${int1.hour} ${int1.day} ${int1.month} ${int1.week}`);
+  let int2, interval2_cron;
+  if(req.body.interval_2){
+    int2 = req.body.interval_2;
+    interval2_cron = String(`${int2.sec} ${int2.min} ${int2.hour} ${int2.day} ${int2.month} ${int2.week}`);
+  }
+
   let project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1,
   });
@@ -188,12 +233,15 @@ exports.createIndividualNotification = async (req, res) => {
   // console.log("Duration in ms", duration);
   project.notifications.push({
     id: id,
-    name: req.body.name,
-    mode: req.body.mode,
-    interval: req.body.interval,
+    target: req.body.target,
+    schedule: req.body.schedule,
+    randomize: req.body.randomize,
+    interval: interval1_cron,
+    interval_max: interval2_cron,
     duration: duration,
-    title: req.body.title || 'Open Lab',
-    message: req.body.message || 'Please complete a test.',
+    title: req.body.title,
+    message: req.body.message,
+    url: req.body.url,
   });
 
   const users = await User.getUsersOfProject(req.user.project._id);
@@ -201,30 +249,57 @@ exports.createIndividualNotification = async (req, res) => {
     users.map(user => {
       if (user.notifications && user.notifications.length > 0){
         //for the existing users with approved notifications start notifications from the point when the user was created
-        //TODO later change it to the time when user approved notification
+        // TODO later change it to the time when user approved notification
         // console.log("User with a notification. ID:", user._id, " Created at", user.created);
-        //specify the moment when the user should start and stop to recieve notifications
+        // specify the moment when the user should start and stop to recieve notifications
         // const user_int_start = new Date(Date.now() + 10000);
         const timeBuffer = 60000;
         const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
         const user_int_end = new Date(Date.parse(user.created) + duration);
         // console.log('start', user_int_start, 'end', user_int_end);
 
+        let interval;
+        if(req.body.randomize && req.body.interval_2){
+          // get a random value between int1 and int2
+          const gR = (min, max) => {
+            if(min === '*' || max === '*'){
+              return '*'
+            } else {
+              return Math.round(Math.random() * (parseFloat(max) - parseFloat(min)) + parseFloat(min));
+            }
+          };
+          const rI = {
+            sec: gR(int1.sec, int2.sec),
+            min: gR(int1.min, int2.min),
+            hour: gR(int1.hour, int2.hour),
+            day: gR(int1.day, int2.day),
+            month: gR(int1.month, int2.month),
+            week: gR(int1.week, int2.week)
+          };
+          interval = String(`${rI.sec} ${rI.min} ${rI.hour} ${rI.day} ${rI.month} ${rI.week}`)
+          console.log('randomInterval', rI)
+          console.log('interval in cron', interval)
+        } else {
+          interval = req.body.interval;
+        }
+
         agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: user._id,
+          userid: user.participant_id,
           projectid: req.user.project._id,
           id: id,
-          interval: req.body.interval,
+          interval: interval,
           title: req.body.title,
           message: req.body.message,
+          url: req.body.url,
         });
         agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: user._id,
+          userid: user.openLabId,
           projectid: req.user.project._id,
           id: id,
           interval: req.body.interval,
           title: req.body.title,
           message: req.body.message,
+          url: req.body.url,
         });
 
       }
@@ -288,8 +363,8 @@ exports.removeNotificationByID = async(req, res) => {
   });
 }
 
-async function sendPersonalNotification(project_id, user_id, title, message) {
-  const user = await User.findOne({_id: user_id});
+async function sendPersonalNotification(done, project_id, user_id, title, message, url) {
+  const user = await User.findOne({openLabId: user_id});
   await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
 
   if (user && user.notifications && user.notifications.length > 0){
@@ -306,9 +381,10 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
       webpush.sendNotification(pushConfig, JSON.stringify({
         'title': title,
         'content': message,
-        'openUrl': '/testing'
+        'openUrl': url.replace('%PARTICIPANT_CODE%', user.openLabId),
       })) //payload is limited to 4kb
         .then(res => {
+          done();
           // console.log("Personal notification was sent", res.statusCode);
         })
         .catch(err => {
@@ -316,12 +392,13 @@ async function sendPersonalNotification(project_id, user_id, title, message) {
           // console.log("The error happened", err, "The user is", user.code.id);
           //TODO: remove subscription if it is not valid anymore (check it in response)
           //TODO record in the user profile that was an error with user subscription
+          done(err);
         })
       })
     }
 };
 
-async function sendNotification(done, project_id, title, message) {
+async function sendNotification(done, project_id, title, message, url) {
   const users = await User.getUsersOfProject(project_id);
   await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
   if (users){
@@ -341,7 +418,7 @@ async function sendNotification(done, project_id, title, message) {
             webpush.sendNotification(pushConfig, JSON.stringify({
                 'title': title,
                 'content': message,
-                'openUrl': '/testing'
+                'openUrl': url.replace('%PARTICIPANT_CODE%', user.participant_id),
               })) //payload is limited to 4kb
               .then(res => {
                 // console.log("Notification was sent", res.statusCode);
@@ -372,7 +449,7 @@ async function sendNotification(done, project_id, title, message) {
     }
 };
 
-//user functions
+// user functions
 exports.registerPushNotification = async (req, res) => {
   // console.log('req', req);
   // console.log('user', req.user);
@@ -390,12 +467,13 @@ exports.registerPushNotification = async (req, res) => {
         // console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: req.user._id,
+          userid: req.user.openLabId,
           projectid: project._id,
           id: sub.id,
           interval: sub.interval,
           title: sub.title,
           message: sub.message,
+          url: sub.url,
         });
 
         agenda.schedule(user_int_end, 'end_personal_manager', {

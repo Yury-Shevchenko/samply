@@ -2,19 +2,22 @@ extends layout
 
 block content
   .inner
-    p
-    header.top
-      nav.nav
-        .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
-          li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
-          li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
-          li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-          li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
-          li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
-          li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
-    p
-    h2 #{layout.notifications}
+    //- p
+    //- header.top
+    //-   nav.nav
+    //-     .nav__section.nav__section--pages
+    //-       li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
+    //-       //- li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
+    //-       //- li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
+    //-       li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
+    //-       li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
+    //-       //- li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
+    //-       //- li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
+    //- p
+    if participant && participant.openLabId
+      h2= `${layout.notifications} for participant ${participant.openLabId}`
+    else
+      h2= `${layout.notifications}`
     .card
       if project && project.name
         
@@ -28,24 +31,44 @@ block content
         script(type='text/javascript', src='/javascripts/datepicker/daterangepicker.min.js' nonce=`${noncevalue}`)
         script(type='text/javascript', src='/javascripts/datepicker/bootstrap-duration-picker.js' nonce=`${noncevalue}`)  
         link(href='/javascripts/datepicker/bootstrap-duration-picker.css', rel='stylesheet', type='text/css' nonce=`${noncevalue}`)
-
+        
         .notificationsPanel
           p #{l.testing_message}
-          h6 #{l.title} 
-          input#titleContent(type='text', value = l.title_placeholder)
-          h6 #{l.message} 
-          input#messageContent(type='text', value = l.message_placeholder)
+          h6 Choose participants 
+          .custom-select-header
+            select(name="activeTarget" id="activeTarget")
+              option(value='all' selected=(participant && participant.openLabId)) All participants
+              each part in ids
+                option(value=part selected=(participant && participant.openLabId === part) )= part
           p
-          #notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
-          p 
-          #controlButtons(style="display: grid; grid-template-columns: 1fr 1fr 1fr; grid-column-gap: 15px;")
-            button(class="buttonContainer" id="scheduleNotification") #{l.schedule}   
-            button(class="buttonContainer" id="intervalNotification") #{l.interval}     
-            button(class="buttonContainer" id="individualNotification") #{l.individual}    
+          h6 #{l.title} 
+          input#titleContent(type='text', value = "Study")
+          h6 #{l.message} 
+          input#messageContent(type='text', value = "Follow the link to complete the survey")
+          h6 URL
+          input#urlContent(type='text', value = 'https://')
+          if participant && participant.openLabId
+            h6 Participant ID
+            input#participantId(type='text', value = participant.openLabId readonly, style ="background-color:lightgrey")
+          p If you need to refer to the participant ID in the URL, use %PARTICIPANT_CODE%, for example https://survey.com/?id=%PARTICIPANT_CODE%
+            
+          p#notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
+          p Choose the type of notification
+          #controlButtons(style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 15px; grid-row-gap: 15px;")
+            button(class="buttonContainer" id="scheduleNotification") One-time  
+            button(class="buttonContainer" id="randomNotification") One-time (random)
+            button(class="buttonContainer" id="intervalNotification") Repeat     
+            button(class="buttonContainer" id="individualNotification") Repeat (event-dependent)    
+            button(class="buttonContainer" id="randomIndividualNotification") Repeat (event-dependent, random) 
           
           p
           .notificationContainer(id="scheduleNotificationContainer" style="display:none") 
-            p #{l.schedule_explanation_1}
+           
+            if participant && participant.openLabId
+              p= `One-time notifications are sent only to the participant with id ${participant.openLabId}.`
+            else 
+              p= `One-time notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
+            
             p #{l.schedule_explanation_2}
             #dateTimePicker  
               .container_picker
@@ -55,8 +78,15 @@ block content
             button(id="create_schedule_notification" class="button") #{l.add}
   
           .notificationContainer(id="intervalNotificationContainer" style="display:none")
-            p #{l.interval_explanation_1}
+          
+            if participant && participant.openLabId
+              p= `Regular notifications are sent only to the participant with id ${participant.openLabId}.`
+            else 
+              p= `Regular notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
+          
             p #{l.interval_explanation_2}
+            
+            p The time period for notifications 
             input(type="text", name="datetimes_regular")
             p !{l.cron_explanation}  
             #cronintervalPicker_regular(class="cronintervalPicker")
@@ -75,7 +105,8 @@ block content
               
           
           .notificationContainer(id="individualNotificationContainer" style="display:none")
-            p #{l.individual_explanation_1}
+          
+            p Event-dependent notifications work the same way as repeat notifications, but their time period starts at the moment when a participant approves notifications.
             p #{l.individual_explanation_2}
             input(type="text" class="form-control" id="duration")
             p !{l.cron_explanation}  
@@ -93,6 +124,51 @@ block content
             p  
             button(id="create_individual_notification" class="button") #{l.add}
             
+          .notificationContainer(id="randomNotificationContainer" style="display:none") 
+            if participant && participant.openLabId
+              p= `One-time notifications are sent only to the participant with id ${participant.openLabId}.`
+            else 
+              p= `One-time notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
+          
+            p Choose the period of time when to send a notification. The exact time of the notification will be chosen randomly. 
+            #randomTimePicker  
+              .container_picker
+                input(type="text", name="random_datetimes_regular")
+              button(id="create_random_notification" class="button") #{l.add}
+          
+          .notificationContainer(id="randomIndividualNotificationContainer" style="display:none") 
+            p Choose the periods of time in which to send a notification. The exact time for each participant will be chosen randomly. 
+            input(type="text" class="form-control" id="durationRandomIndividual")
+            p !{l.cron_explanation}
+            p Choose the start and the end of the interval. The specific interval for each participants will be chosen randomly.
+            h7 Start of the interval  
+            #cronintervalPicker_individual(class="cronintervalPicker")
+              h7(style="text-align: center;") #{l.minute} 
+              h7(style="text-align: center;") #{l.hour} 
+              h7(style="text-align: center;") #{l.day_month} 
+              h7(style="text-align: center;") #{l.month} 
+              h7(style="text-align: center;") #{l.day_week} 
+              input(type='text' id='int_min_individual_1')
+              input(type='text' id='int_hour_individual_1')
+              input(type='text' id='int_day_individual_1')
+              input(type='text' id='int_month_individual_1')  
+              input(type='text' id='int_week_individual_1')  
+            p 
+            h7 End of the interval 
+            #cronintervalPicker_individual_2(class="cronintervalPicker")
+              h7(style="text-align: center;") #{l.minute} 
+              h7(style="text-align: center;") #{l.hour} 
+              h7(style="text-align: center;") #{l.day_month} 
+              h7(style="text-align: center;") #{l.month} 
+              h7(style="text-align: center;") #{l.day_week} 
+              input(type='text' id='int_min_individual_2')
+              input(type='text' id='int_hour_individual_2')
+              input(type='text' id='int_day_individual_2')
+              input(type='text' id='int_month_individual_2')  
+              input(type='text' id='int_week_individual_2')  
+            p 
+             
+            button(id="create_random_individual_notification" class="button") #{l.add}
           
         if (project && project.notifications && project.notifications.length > 0)
           h2 #{l.scheduled_notifications} 
@@ -101,6 +177,7 @@ block content
               td #{l.table_type} 
               td #{l.table_title}  
               td #{l.table_message} 
+              td url
               td #{l.table_date} 
               td #{l.table_interval}  
               td #{l.table_start} 
@@ -111,6 +188,7 @@ block content
                 td= notification.mode
                 td= notification.title 
                 td= notification.message
+                td= notification.url
                 td= notification.mode === 'Schedule' ? h.moment.utc(notification.date).local().locale(language).format('dddd, MMMM Do YYYY, H:mm') : ''
                 td= notification.mode === 'Schedule' ? '' : notification.interval.slice(2)
                 td= notification.mode === 'Schedule' ? '' : h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')
@@ -120,9 +198,27 @@ block content
                     != h.icon('remove')
           p  
           button(id="delete_all_notifications" class="button" style="background-color:red; color:white") #{l.delete_notifications} 
-                         
+        
+        if participant && participant.openLabId
+          script(nonce=`${noncevalue}`).
+            document.getElementById('individualNotification').disabled = true;
+            document.getElementById('individualNotification').style['color'] = 'lightgrey';
+            document.getElementById('randomIndividualNotification').disabled = true;
+            document.getElementById('randomIndividualNotification').style['color'] = 'lightgrey';
+            
+                             
         script(defer type='text/javascript' nonce=`${noncevalue}`).
           $(document).ready( function () {
+              // activate function to select participants
+              document.getElementById('activeTarget').addEventListener('change', function doThings() {
+                const participant = document.getElementById("activeTarget").value;
+                if(participant > 0){
+                  window.location.href = `/notifications/${participant}`;
+                } else {
+                  window.location.href = `/notifications`;
+                }
+              });
+              // populate timers
               $('#picker').dateTimePicker({
                 selectData: "now",
               });
@@ -136,7 +232,18 @@ block content
                   format: 'M/DD hh:mm A'
                 }
               });
+              $('input[name="random_datetimes_regular"]').daterangepicker({
+                timePicker: true,
+                startDate: moment().startOf('hour'),
+                endDate: moment().startOf('hour').add(32, 'hour'),
+                locale: {
+                  format: 'M/DD hh:mm A'
+                }
+              });
               $('#duration').durationPicker({
+                showSeconds: true
+              });
+              $('#durationRandomIndividual').durationPicker({
                 showSeconds: true
               });
           }) 
@@ -146,6 +253,8 @@ block content
               document.querySelector(`#scheduleNotificationContainer`).style.display = "none";
               document.querySelector(`#intervalNotificationContainer`).style.display = "none";
               document.querySelector(`#individualNotificationContainer`).style.display = "none";
+              document.querySelector(`#randomNotificationContainer`).style.display = "none";
+              document.querySelector(`#randomIndividualNotificationContainer`).style.display = "none";
               document.querySelector(`#${this.id}Container`).style.display = "inline-block";
               document.querySelectorAll('.buttonContainer').forEach( b => {b.style.background = "rgba(238, 242, 244, 0.6)"});
               this.style.background = "#11fa71";
@@ -177,9 +286,17 @@ block content
             });
           }); 
         
-        script(type='text/javascript', src='/javascripts/services/schedule.js' nonce=`${noncevalue}`)
-          
+        script(type='text/javascript', src='/schedule/prepare.js' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/schedule/uniform.js' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/schedule/interval.js' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/schedule/individual.js' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/schedule/randomUniform.js' nonce=`${noncevalue}`)
+        script(type='text/javascript', src='/schedule/user-specific-interval-random.js' nonce=`${noncevalue}`)
+        
       else
         p !{l.message_create_project}
 
+    //- pre= h.dump(ids)
+    //- pre= h.dump(participant)
     //- pre= h.dump(project)
+    //- 

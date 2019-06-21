@@ -1,0 +1,117 @@
+extends layout
+
+include mixins/_testCard
+
+block content
+
+  if(!project || typeof(project) == 'null')
+    if (user.level < 10)
+      .inner
+        .card
+          form.form(action="/account" method="POST")
+            h2 #{l.message_choose_project}
+            p
+            .custom-select-header
+              select(name="participantInProject")
+                each project in projects
+                  option(value=project._id, selected=(project.name === study))= project.name
+
+            p(style='white-space:pre;')
+            input.button( type="submit" value=l.message_enter )
+
+
+  else
+    - const arrayTests = projectTests.map(function(test) {return test.slug;});
+    - const arrayResults = results.map(function(result) {return result.taskslug;});
+    - const doneArray = arrayTests.filter(function(test) {return arrayResults.includes(test)});
+    - const remainingArray = arrayTests.filter(function(test) {return !arrayResults.includes(test)});
+    - const nextTask = remainingArray[0] || "allDone";
+
+    .inner
+      if(user.level < 10)
+        if user.participant_id
+          h2= `${l.message_participant_id}: ${user.participant_id}`
+      else
+        h2= `${l.title}`
+        
+      .single__hero
+        - const comingTask = projectTests.filter(function(test){return test.slug == nextTask})[0]
+        //- if comingTask
+        //-   img.single__image(src= `/uploads/${comingTask.photo || 'store.png'}`)
+        //- else
+        //-   img.single__image(src= `/images/photos/${'over.jpg'}`)
+        if nextTask == "allDone"
+          if(project.completionMessage && project.completionMessage !== '')
+            h1.title.title--single(style="color: #3b4051; background: azure") !{project.completionMessage}
+          else
+            h1.title.title--single(style="color: #3b4051; background: azure") #{l.message_done}
+        else
+          h1.title.title--single
+            a(href=`/test/${nextTask}/${user._id}`) #{l.message_next}
+
+    .single__details.inner
+      if(confirmationCode)
+        if(project.showCompletionCode)
+          .confirmationCode(style="display: grid; grid-template-columns: 2fr 1fr;")
+            h4(style="color: #3b4051;") #{l.your_code}
+            p #{confirmationCode}
+      else
+        if(user.name)
+          p= `${l.message_welcome}, ${user.name}!`
+        else
+          p= `${l.message_welcome}!`
+
+      if (project.useNotifications)
+        .notificationsPanel
+          //- button(class="js-push-button" disabled) Enable Push Messages
+          button(id="enable_notifications" class="button") Enable notifications
+          button(id="disable_notifications" class="button") Disable notifications
+          #notification_status
+          p
+
+
+      //- .videoPanel
+      //-   button(id="start_video" class="button") Start video
+      //-   button(id="stop_video" class="button") Stop video
+      //-
+      //- .cameraPanel
+      //-   video#player(autoplay='')
+      //-   canvas#canvas(width='320px', height='240px')
+      //-   button(class="button" id="capture-btn")
+      //-     | Capture
+      //-   #pick-image
+      //-     h6 Pick an Image instead
+      //-     input#image-picker(type='file', accept='image/*')
+      //-
+      //- .locationPanel
+      //-   .input-section
+      //-     button(type='button' class="button" id="location-btn")
+      //-       | Get
+      //-       | Location
+      //-     #location-loader.mdl-spinner.mdl-js-spinner.is-active
+      //-   #location-input
+
+      .dashboard
+        .dashboardBody
+          each test in projectTests
+            if test.slug == nextTask
+              strong #{test.name}
+              strong #{test.description}
+            else if doneArray.includes(test.slug)
+              p #{test.name}
+              p #{test.description}
+            if test.slug == nextTask
+              a(class='button', href=`/test/${nextTask}/${user._id}`) #{l.table_not_done}
+            else if doneArray.includes(test.slug)
+              p #{l.table_done}
+
+  script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
+  //- script(src="/javascripts/services/notify.js" nonce=`${noncevalue}`)
+  //- script(src="/javascripts/services/media.js" nonce=`${noncevalue}`)
+  //- script(src="/javascripts/services/geolocation.js" nonce=`${noncevalue}`)
+
+  //- pre= h.dump(project)
+        //- pre= h.dump(projects)
+        //- pre= h.dump(results)
+        //- pre= h.dump(confirmationCode)
+        //- pre= h.dump(user)

@@ -1,15 +1,20 @@
 mixin signParticipantForm()
-  form.form(action="/auth/participant/email/sign" method="POST")
+  form.loginForm(action="/auth/participant/email/sign" method="POST")
     h5 #{layout.sign_intro}
-    label(for="name") #{layout.sign_name}
-    input(type="text" name="name" value=name placeholder="John Doe")
-    label(for="email") #{layout.email}
-    input(type="email" name="email" value=email)
-    label(for="password") #{layout.password}
-    input(type="password" name="password" value=password)
-    label(for="password-confirm") #{layout.password_confirm}
-    input(type="password" name="password-confirm" value=password-confirm)
+    //- label(for="name") #{layout.sign_name}
+    input(type="text" name="name" value=name placeholder="Name" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+    //- label(for="email") #{layout.email}
+    input(type="email" name="email" value=email placeholder="Email")
+    //- label(for="password") #{layout.password}
+    input(type="password" name="password" value=password placeholder="Password")
+    //- label(for="password-confirm") #{layout.password_confirm}
+    input(type="password" name="password-confirm" value=password-confirm placeholder="Confirm password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
     input(type="hidden" name="project" value=project)
     input(type="hidden" name="code" value=code)
     p(style='white-space:pre;')
     input.button(type="submit" value=layout.signup_button)
+    
+    script(nonce=`${noncevalue}`).
+      document.body.style['backgroundSize'] = 'cover';
+      document.body.style['backgroundRepeat'] = 'no-repeat';
+      document.body.style['backgroundImage'] = "url('/images/photos/participant-login.jpg')";

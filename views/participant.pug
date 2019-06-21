@@ -8,16 +8,16 @@ include mixins/_howitworksParticipant
 
 block content
   .inner
-    p
-    header.top
-      nav.nav
-        .nav__section.nav__section--pages
-          li.nav__item: a.nav__link(href="/participant/register", class=(currentPath.startsWith('/participant/register') ? 'nav__link--active' : '')) #{layout.signup}
-          li.nav__item: a.nav__link(href="/participant/login", class=(currentPath.startsWith('/participant/login') ? 'nav__link--active' : '')) #{layout.login}
-          li.nav__item: a.nav__link(href="/code", class=(currentPath.startsWith('/code') ? 'nav__link--active' : '')) #{layout.enterCode}
-          li.nav__item: a.nav__link(href="/participant/howitworks", class=(currentPath.startsWith('/participant/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks}
+    //- p
+    //- header.top
+    //-   nav.nav
+    //-     .nav__section.nav__section--pages
+    //-       li.nav__item: a.nav__link(href="/participant/register", class=(currentPath.startsWith('/participant/register') ? 'nav__link--active' : '')) #{layout.signup}
+    //-       li.nav__item: a.nav__link(href="/participant/login", class=(currentPath.startsWith('/participant/login') ? 'nav__link--active' : '')) #{layout.login}
+    //-       li.nav__item: a.nav__link(href="/code", class=(currentPath.startsWith('/code') ? 'nav__link--active' : '')) #{layout.enterCode}
+    //-       li.nav__item: a.nav__link(href="/participant/howitworks", class=(currentPath.startsWith('/participant/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks}
 
-    .card
+    .loginCard
       if !action || action == "register"
         +signParticipantForm()
         +authParticipantForms(layout.auth_sign)

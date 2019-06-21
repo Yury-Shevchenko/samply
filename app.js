@@ -19,6 +19,14 @@ const crypto = require('crypto');
 const Agenda = require('agenda');
 const Agendash = require('agendash');
 
+//test lsl
+// const lsl = require('node-lsl');
+// const streams = lsl.resolve_byprop('type', 'EEG');
+// let streamInlet = new lsl.StreamInlet(streams[0]);
+// streamInlet.streamChunks(12, 1000);
+// streamInlet.on('chunk', console.log);
+// streamInlet.on('closed', () => console.log('LSL inlet closed'));
+
 // create express app
 const app = express();
 

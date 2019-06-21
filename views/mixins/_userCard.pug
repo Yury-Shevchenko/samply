@@ -15,42 +15,48 @@ mixin userCard(person = {}, i)
           td= ``
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       if (person.level > 10)
-        td= l.table_researcher
+        td Researcher
       else
-        td= l.table_participant
-      td= person.numberTests
-      td
-        if(person.numberTests > 0)
-            a(style="border-bottom: 2px solid #FFC40E;" href=`/alldata/${person._id}/${person.participant_id}`) #{l.table_download}
-
-      if(person.numberTests > 0)
-        td= person.numberDataRequests + person.numberDeleteRequests
-      else
-        td
+        td Participant
+      //- td= person.numberTests
+      //- td
+      //-   if(person.numberTests > 0)
+      //-       a(style="border-bottom: 2px solid #FFC40E;" href=`/alldata/${person._id}/${person.participant_id}`) #{l.table_download}
+      //- 
+      //- if(person.numberTests > 0)
+      //-   td= person.numberDataRequests + person.numberDeleteRequests
+      //- else
+      //-   td
 
       td= person.name
       if(person.language)
-        td= `${person.language.charAt(0).toUpperCase()}${person.language.slice(1,3)}`
+        td= `${person.language.charAt(0).toUpperCase()}${person.language.slice(1)}`
       else 
         td
 
-      td
-        if(person.numberTests > 0)
-            a(style="border-bottom: 2px solid #FFC40E;" href=`/users/${person._id}/${person.participant_id}`) #{l.table_open}
+      //- td
+      //-   if(person.numberTests > 0)
+      //-       a(style="border-bottom: 2px solid #FFC40E;" href=`/users/${person._id}/${person.participant_id}`) #{l.table_open}
 
-      td
-        if(person.numberTests > 0)
-            a(style="border-bottom: 2px solid #FFC40E;" href=`/allmetadata/${person._id}/${person.participant_id}`) #{l.table_download}
+      //- td
+      //-   if(person.numberTests > 0)
+      //-       a(style="border-bottom: 2px solid #FFC40E;" href=`/allmetadata/${person._id}/${person.participant_id}`) #{l.table_download}
       
       if(person.notifications && person.notifications.length > 0)
         td= person.notifications.length
       else 
         td  
-
-
+  
+      if(person.notifications && person.notifications.length > 0)
+        td 
+          a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.participant_id}`) Schedule
+      else 
+        td 
+        
       if user.level > 100 || (person.participant_code && person.level < 10)
         td
-          a(href=`/removeuser/${person._id}/${person.participant_id}`)
-              != h.icon('remove')
+          a(href=`/removeuser/${person._id}/${person.participant_id}`) 
+            <i class="far fa-trash-alt"></i>
+              //- != h.icon('remove')
       else 
         td

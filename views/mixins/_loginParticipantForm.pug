@@ -1,11 +1,16 @@
 mixin loginParticipantForm()
-  form.form(action="/auth/participant/email/login" method="POST")
+  form.loginForm(action="/auth/participant/email/login" method="POST")
     h5 #{layout.login}
-    label(for="email") #{layout.email}
-    input(type="email" name="email")
-    label(for="password") #{layout.password}
-    input(type="password" name="password")
+    //- label(for="email") #{layout.email}
+    input(type="email" name="email" placeholder="Email" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+    //- label(for="password") #{layout.password}
+    input(type="password" name="password" placeholder="Password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
     p
     input.button(type="submit" value=layout.log_in)
     p
       a(style={color:'black'} href=`/participant/forgot`) #{layout.message_forgot_password} 
+    
+    script(nonce=`${noncevalue}`).
+      document.body.style['backgroundSize'] = 'cover';
+      document.body.style['backgroundRepeat'] = 'no-repeat';
+      document.body.style['backgroundImage'] = "url('/images/photos/participant-login.jpg')";

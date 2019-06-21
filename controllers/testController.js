@@ -489,58 +489,58 @@ exports.getProgramTests = async (req, res) => {
   res.render('program', {project, slug, test, original, modified, allParams, savedParameter, param_language, projectTests});
 };
 
-//for participants
-//show the screen with all tests in a sequence
+// for participants
+// show the screen with all tests in a sequence
 exports.testing = async (req, res) => {
   const study = req.query.study;
   const project = await Project.findOne({ _id: req.user.participantInProject || req.user.project._id },{
-    name: 1, showCompletionCode: 1, completionMessage: 1, useNotifications: 1, tests: 1,
+    name: 1, showCompletionCode: 1, welcomeMessage: 1, useNotifications: 1, tests: 1,
   });
 
   const projects = await Project.getCurrentProjects();
-  let tests, results, confirmationCode, projectTests;
-  if(project){
-    const unsortedProjectTests = await Test
-      .find({
-        _id: { $in: project.tests},
-        author: { $exists: true }
-      })
-      .select({slug:1, name:1})
-    projectTests = unsortedProjectTests.sort( (a, b) => {
-      return project.tests.indexOf(a.id) - project.tests.indexOf(b.id);
-    });
-
-    results = await Result.getResultsForUserTesting({ author: req.user._id, project: project._id });
-    const arrayTests = projectTests.map(function(test) {return test.slug;});
-    const arrayResults = results.map(function(result) {return result.taskslug;});
-    const remainingArray = arrayTests.filter(function(test) {return !arrayResults.includes(test)});
-    if(remainingArray.length == 0 && req.user.level < 10){
-      const recordedCode = req.user.participantHistory.filter(e => e.project_id.toString() == req.user.participantInProject.toString());
-      if (recordedCode.length == 0){
-        confirmationCode = uniqid();
-        await User.findOneAndUpdate({
-          _id: req.user._id
-        }, {
-          $push: {
-            participantHistory:
-              {
-                project_id: project._id,
-                project_name: project.name,
-                individual_code: confirmationCode,
-              }
-            },
-          $push: {
-            participant_projects: project._id
-          }
-        }, {
-          new: true
-        }).exec();
-      } else {
-        confirmationCode = req.user.participantHistory.filter(e => e.project_id.toString() == req.user.participantInProject.toString())[0].individual_code;
-      }
-    };
-  };
-  res.render('testing', {project, projects, results, study, confirmationCode, projectTests});
+  res.render('testing', {project, projects, study});
+  // let tests, results, confirmationCode, projectTests;
+  // if(project){
+  //   const unsortedProjectTests = await Test
+  //     .find({
+  //       _id: { $in: project.tests},
+  //       author: { $exists: true }
+  //     })
+  //     .select({slug:1, name:1})
+  //   projectTests = unsortedProjectTests.sort( (a, b) => {
+  //     return project.tests.indexOf(a.id) - project.tests.indexOf(b.id);
+  //   });
+  //
+  //   results = await Result.getResultsForUserTesting({ author: req.user._id, project: project._id });
+  //   const arrayTests = projectTests.map(function(test) {return test.slug;});
+  //   const arrayResults = results.map(function(result) {return result.taskslug;});
+  //   const remainingArray = arrayTests.filter(function(test) {return !arrayResults.includes(test)});
+  //   if(remainingArray.length == 0 && req.user.level < 10){
+  //     const recordedCode = req.user.participantHistory.filter(e => e.project_id.toString() == req.user.participantInProject.toString());
+  //     if (recordedCode.length == 0){
+  //       confirmationCode = uniqid();
+  //       await User.findOneAndUpdate({
+  //         _id: req.user._id
+  //       }, {
+  //         $push: {
+  //           participantHistory:
+  //             {
+  //               project_id: project._id,
+  //               project_name: project.name,
+  //               individual_code: confirmationCode,
+  //             }
+  //           },
+  //         $push: {
+  //           participant_projects: project._id
+  //         }
+  //       }, {
+  //         new: true
+  //       }).exec();
+  //     } else {
+  //       confirmationCode = req.user.participantHistory.filter(e => e.project_id.toString() == req.user.participantInProject.toString())[0].individual_code;
+  //     }
+  //   };
+  // };
 };
 
 //run the test for a particular user

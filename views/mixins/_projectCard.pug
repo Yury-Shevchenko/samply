@@ -23,11 +23,11 @@ mixin projectCard(project = {})
                 a(href=`/projects/deleteproject/${project._id}`)
                   != h.icon('delete')
 
-        if(project.tests)
-          if(project.tests.length == 1)
-            p= `${project.tests.length} ${l.counter_task}`
-          else if(project.tests.length > 1)
-            p= `${project.tests.length} ${l.counter_tasks}`
+        //- if(project.tests)
+        //-   if(project.tests.length == 1)
+        //-     p= `${project.tests.length} ${l.counter_task}`
+        //-   else if(project.tests.length > 1)
+        //-     p= `${project.tests.length} ${l.counter_tasks}`
 
         if(project.participants)
           if(project.participants.length == 1)

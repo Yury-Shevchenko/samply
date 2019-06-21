@@ -1,6 +1,6 @@
 extends layout
 
-include mixins/_publicTestCard
+//- include mixins/_publicTestCard
 
 block content
   .inner
@@ -19,13 +19,13 @@ block content
             .review__header
               p= project.description
         
-      p
-      if(tests && tests.length > 0)
-        .stores
-          each test in tests
-            +publicTestCard(test)
-      else 
-        p(style="font-style: italic; text-align: center; color: darkred;") #{l.no_tests_in_study}
+      //- p
+      //- if(tests && tests.length > 0)
+      //-   .stores
+      //-     each test in tests
+      //-       +publicTestCard(test)
+      //- else 
+      //-   p(style="font-style: italic; text-align: center; color: darkred;") #{l.no_tests_in_study}
 
 
         //- pre= h.dump(project)

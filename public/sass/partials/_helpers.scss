@@ -6,8 +6,9 @@
 .button {
   border: 0;
   border-radius: 5px;
-  //background: #e7eaff;
-  background: rgba(135, 206, 250, 0.6);
+  background: #c9f5db;
+  //background: rgba(135, 206, 250, 0.6);
+  // background: rgba(44, 247, 139, 0.9);
   color: $black;
   font-family: 'Bebas';
   font-size: 2.5rem;
@@ -19,7 +20,7 @@
 
 .button:hover {
   //background: #d8ddfc;
-  background: rgba(135, 206, 250, 0.3);
+  background: rgba(29, 191, 105, 0.9);
   cursor: pointer;
 }
 
@@ -67,10 +68,25 @@
 }
 
 .card {
+  display: grid;
+  // justify-items: center;
   background: white;
   padding: 3rem;
   // box-shadow: 0 1px 10px rgba(0,0,0,0.15);
   box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
+  height: inherit;
+  @media all and (max-width: 600px) {
+    padding: 1rem;
+  }
+}
+
+.loginCard {
+  display: grid;
+  justify-items: center;
+  // background: white;
+  padding: 3rem;
+  // box-shadow: 0 1px 10px rgba(0,0,0,0.15);
+  // box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
   height: inherit;
   @media all and (max-width: 600px) {
     padding: 1rem;

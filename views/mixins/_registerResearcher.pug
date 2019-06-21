@@ -1,11 +1,19 @@
 mixin registerResearcher()
-  form.form(action="/auth/researcher/email/register" method="POST")
+  form.loginForm(action="/auth/researcher/email/register" method="POST")
     h5 #{layout.signup}
-    label(for="email") #{layout.email}
-    input(type="email" name="email" value=email)
-    label(for="password") #{layout.password}
-    input(type="password" name="password" value=password)
-    label(for="password-confirm") #{layout.password_confirm}
-    input(type="password" name="password-confirm" value=password-confirm)
+    //- label(for="email") #{layout.email}
+    input(type="email" name="email" value=email placeholder="Email" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+    //- label(for="password") #{layout.password}
+    input(type="password" name="password" value=password placeholder="Password")
+    //- label(for="password-confirm") #{layout.password_confirm}
+    input(type="password" name="password-confirm" value=password-confirm placeholder="Confirm password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
     p
-    input.button(type="submit" value=layout.signup_button)
+    input.button(type="submit" value="Continue")
+
+    script(nonce=`${noncevalue}`).
+      document.body.style['backgroundImage'] = "url('/images/photos/lake-researcher-create-account-2.jpg')";
+      //- document.body.style['backgroundPosition'] = 'center';
+      document.body.style['backgroundSize'] = 'cover';
+      document.body.style['backgroundRepeat'] = 'no-repeat';
+      
+    

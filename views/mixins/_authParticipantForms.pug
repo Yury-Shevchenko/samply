@@ -1,20 +1,19 @@
 mixin authParticipantForms(action)
 
-  .authform
-
-    a(href=`/code` class="authButton")
+  .loginForm
+    a(href=`/code` class="authButton" style="width: 100%; border-top-left-radius: 6px; border-top-right-radius: 6px;" )
       .authsign
         img(src='/images/auth/code.png')
-        .div #{action}<br />#{layout.participant_auth} #{layout.participant_id}
-    a(href=`/auth/facebook` class="authButton")
+        .div(style="display: grid; align-items: center;") #{action}<br />#{layout.participant_auth} #{layout.participant_id}
+    a(href=`/auth/facebook` class="authButton" style="width: 100%")
       .authsign
         img(src='/images/auth/facebook.png')
-        .div #{action}<br />Facebook
-    a(href=`/auth/google` class="authButton")
+        .div(style="display: grid; align-items: center;") #{action}<br />Facebook
+    a(href=`/auth/google` class="authButton" style="width: 100%")
       .authsign
         img(src='/images/auth/google.png')
-        .div #{action}<br />Google
-    a(href=`/auth/github` class="authButton")
+        .div(style="display: grid; align-items: center;") #{action}<br />Google
+    a(href=`/auth/github` class="authButton" style="width: 100%; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
       .authsign
         img(src='/images/auth/github.png')
-        .div #{action}<br />Github
+        .div(style="display: grid; align-items: center;") #{action}<br />Github

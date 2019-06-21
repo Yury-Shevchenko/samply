@@ -8,6 +8,7 @@ const resultController  = require('../controllers/resultController');
 const paramController  = require('../controllers/paramController');
 const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
+const notificationController = require('../controllers/notificationController');
 const passport = require('passport');
 var cors = require('cors');
 
@@ -279,11 +280,16 @@ router.get('/help', authController.isLoggedIn, catchErrors(userController.help))
 
 //reseacher notifications bar
 router.get('/notifications', authController.isAdminLoggedIn, catchErrors(projectController.manageNotifications));
+router.get('/notifications/:id', authController.isAdminLoggedIn, catchErrors(projectController.manageNotifications));
+
 router.post('/createschedulenotification', authController.isAdminLoggedIn, catchErrors(jobController.createScheduleNotification));
 router.post('/createintervalnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIntervalNotification));
 router.post('/createindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIndividualNotification));
 router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
+
+// api for registering notifications
+// router.post('/createnotification', authController.isAdminLoggedIn, catchErrors(notificationController.createNotification));
 
 //user-side notifications
 router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));

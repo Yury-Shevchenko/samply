@@ -102,28 +102,32 @@ function configurePushSub(){
 }
 
 function askForNotificationPermission(){
-  Notification.requestPermission((result)=>{
-    console.log('User choice', result);
-    if(result !== 'granted'){
-      console.log('No notifications granted');
-    } else {
+  Notification.requestPermission()
+    .then((result)=>{
+      if (result === 'denied') {
+        alert("You disabled notifications. To allow notifications, change the settingd of your browser.")
+        console.log('Permission wasn\'t granted. Allow a retry.');
+        return;
+      }
+      if (result === 'default') {
+        console.log('The permission request was dismissed.');
+        return;
+      }
       configurePushSub();
-    }
-  })
+    })
 };
 
-function sendNotification(){
-  console.log('Sending test notification');
-  fetch('/sendnotification', {
-    method:'POST',
-    headers: {
-      'Content-Type':'application/json',
-      'Accept':'application/json',
-    },
-    body: JSON.stringify({title: 'New post', message: 'New message'})
-  })
-}
-
+// function sendNotification(){
+//   console.log('Sending test notification');
+//   fetch('/sendnotification', {
+//     method:'POST',
+//     headers: {
+//       'Content-Type':'application/json',
+//       'Accept':'application/json',
+//     },
+//     body: JSON.stringify({title: 'New post', message: 'New message'})
+//   })
+// }
 
 function unsubscribeNotifications() {
   if(!('serviceWorker' in navigator)){
@@ -155,7 +159,7 @@ function unsubscribeNotifications() {
       alert("You are unsubscribed");
       enableNotificationsButton.style.display = "inline-block";
       disableNotificationsButton.style.display = "none";
-      notificationStatus.innerText = "Please subscribe to receive notifications about the tests";
+      // notificationStatus.innerText = "";
     })
     .catch(err => {
       console.error(err);
@@ -169,6 +173,7 @@ function checkNotificationSubscription() {
   var reg;
 
   navigator.serviceWorker.register('/service-worker.js').then(function () {
+    console.log("Trying register")
     return navigator.serviceWorker.ready
   })
     .then(function (swreg) {
@@ -187,7 +192,7 @@ function checkNotificationSubscription() {
     })
     .then(sub => {
       if(sub === null){
-        notificationStatus.innerText = "Please subscribe to receive notifications about the tests";
+        // notificationStatus.innerText = "Please subscribe to receive notifications about the tests";
         enableNotificationsButton.style.display = "inline-block";
       } else {
         notificationStatus.innerText = "You are subscribed to notifications";
@@ -199,8 +204,10 @@ function checkNotificationSubscription() {
     })
 };
 
-if ('Notification' in window && 'serviceWorker' in navigator) {
-  enableNotificationsButton.addEventListener('click', askForNotificationPermission);
-  disableNotificationsButton.addEventListener('click', unsubscribeNotifications);
-  checkNotificationSubscription();
-}
+window.addEventListener('load', function() {
+  if ('Notification' in window && 'serviceWorker' in navigator) {
+    enableNotificationsButton.addEventListener('click', askForNotificationPermission);
+    disableNotificationsButton.addEventListener('click', unsubscribeNotifications);
+    checkNotificationSubscription();
+  }
+})
