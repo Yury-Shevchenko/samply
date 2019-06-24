@@ -494,7 +494,7 @@ exports.getProgramTests = async (req, res) => {
 exports.testing = async (req, res) => {
   const study = req.query.study;
   const project = await Project.findOne({ _id: req.user.participantInProject || req.user.project._id },{
-    name: 1, showCompletionCode: 1, welcomeMessage: 1, useNotifications: 1, tests: 1,
+    name: 1, showCompletionCode: 1, welcomeMessage: 1, useNotifications: 1, tests: 1, 
   });
 
   const projects = await Project.getCurrentProjects();

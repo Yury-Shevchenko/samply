@@ -17,6 +17,31 @@ block content
 
       else
 
+        //- script(nonce=`${noncevalue}`).
+        //-   document.addEventListener('DOMContentLoaded', function () {
+        //-     document.getElementById('activeParticipantProject').addEventListener('change', function doThings() {
+        //-       const project = document.getElementById("activeParticipantProject").value;
+        //-       if(project != ''){
+        //-         //- console.log('project value', project);
+        //-         window.location.href = `/participantprojects/${project}`;
+        //-       }
+        //-     });
+        //-   });
+        //- 
+        //- //- li.nav__item.nav__main_link
+        //- nav__section.nav__section--search
+        //-   h6
+        //-     .custom-select-header
+        //-       select(name="activeParticipantProject" id="activeParticipantProject")
+        //-         //- include public projects and projects where user has participated
+        //-         const allProjects = projects.concat(user.participant_projects)
+        //-         option(value='') #{layout.choose_project}
+        //-         each project in projects
+        //-           if(project.name.length < 40)
+        //-             option(value=project._id selected=(user.participantInProject && (user.participantInProject.toString() == project._id.toString()) ))= project.name
+        //-           else
+        //-             option(value=project._id selected=(user.participantInProject && (user.participantInProject.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
+                  
         h6(style="color: #3b4051") !{project.welcomeMessage}
         
         p= `To participate in the study ${project.name}, please do the following:` 
@@ -24,16 +49,23 @@ block content
         p 1. Install the application on your Android phone
         button.button(id="installApp") Install
               
-        if (project.useNotifications)
-          p 2. Allow this application to send you notifications
-          .notificationsPanel
-            button(id="enable_notifications" class="button") Allow
-            button(id="disable_notifications" class="button") Cancel subscription 
-            #notification_status
+        p 2. Allow this application to send you notifications
+        .notificationsPanel
+          button(id="enable_notifications" class="button") Allow
+          button(id="disable_notifications" class="button") Cancel notifications
+          #notification_status
+        
+        p= `3. Subscribe to notifications from the study ${project.name}`
+        .notificationsPanel
+          if(user.participant_projects.map(id => id.toString()).includes(user.participantInProject.toString()))
+            button(id="unsubscribeFromStudy" class="button") Unsubscribe
+          else
+            button(id="subscribeForStudy" class="button") Subscribe
+          
+          #subscription_status
             
     script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
 
-
-    pre= h.dump(user)
-    pre= h.dump(project)
-    pre= h.dump(projects)
+    //- pre= h.dump(user)
+    //- pre= h.dump(project)
+    //- pre= h.dump(projects)

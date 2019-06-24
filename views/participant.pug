@@ -20,11 +20,11 @@ block content
     .loginCard
       if !action || action == "register"
         +signParticipantForm()
-        +authParticipantForms(layout.auth_sign)
+        //- +authParticipantForms(layout.auth_sign)
 
       if action == "login"
         +loginParticipantForm()
-        +authParticipantForms(layout.auth_login)
+        //- +authParticipantForms(layout.auth_login)
 
       if action == "forgot"
         +loginParticipantForm()

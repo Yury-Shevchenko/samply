@@ -30,7 +30,7 @@ module.exports = {
     'quarterly' : 'Vierteljährlicher',
     'monthly': 'Monatlicher',
     'billedAsOnePayment': 'Die Rechnung wird als eine Zahlung von ',
-    'worksParticipants_1': `Die Teilnahme am Open Lab als Teilnehmer ermöglicht Ihnen den Zugang zu verschiedenen Studien, die von Forschern erstellt wurden.
+    'worksParticipants_1': `Die Teilnahme am Samply als Teilnehmer ermöglicht Ihnen den Zugang zu verschiedenen Studien, die von Forschern erstellt wurden.
         Es gibt viele Gründe, warum Sie sich für ein Online-Studium interessieren könnten: finanzielle Belohnung, Interesse am Thema oder einfach Neugierde.`,
     'worksParticipants_2': `Die Art und Weise, wie die Teilnehmer belohnt werden, hängt von der Studie ab.
         Forscher fördern oft ihre Studien und bieten monetäre Belohnungen wie Zahlungen oder die Teilnahme an Lotterien an.
@@ -207,29 +207,24 @@ module.exports = {
   },
 
   'index' : {
-    'title': `Willkommen bei Open Lab`,
-    'intro': 'Der Zweck von Open Lab ist es, Online-Experimente einfach, transparent und sicher durchzuführen. ' +
-     'Es ist für Forscher gedacht, die ihre Studie im Internet erstellen und durchführen möchten. ' +
-     'Open Lab ist integriert mit dem ' + '<a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>' + ', mit dem Sie Ihre eigene Studie erstellen können. ' +
-     'Die Open Lab Server-Anwendung kümmert sich um den Online-Betrieb Ihres Experiments und das Sammeln, Speichern und Verwalten von Daten.',
+    'title': `Willkommen bei Samply`,
+    'intro': 'Mit Samply können Sie Benachrichtigungen für Studienteilnehmer erstellen und planen. ' +
+     ' Sie können den Inhalt von Benachrichtigungen bearbeiten und Links zu Ihrer Umfrage oder zu Online-Tests senden. ' +
+     'Als Teilnehmer müssen Sie ein Android-Handy verwenden, um Benachrichtigungen zu erhalten.',
     'forResearchers': 'Für Forscher',
     'forParticipants': 'Für Teilnehmer',
-    'res_1': 'Hosting Ihrer in lab.js erstellten Studie',
-    'res_1_text': 'Es ist nicht nötig, einen eigenen Server einzurichten. Verwenden Sie vorhandene Vorlagen oder laden Sie mit einem Klick eine Studie aus lab.js hoch.',
-    'res_2': 'Teilnehmer-Managementsystem',
-    'res_2_text': 'Datenerfassung in Echtzeit verfolgen.',
-    'res_3': 'Datensicherheit',
-    'res_3_text': 'HTTPS, Benutzerauthentifizierungssystem, persönliche Einladungen.',
-    'res_4': 'Teilnehmerpool',
-    'res_4_text': 'Finden Sie mehr Teilnehmer innerhalb der Open Lab Community.',
-    'res_5': 'Zusammenarbeit mit Kollegen',
-    'res_5_text': 'Studien und Aufgaben teilen.',
+    'res_1': 'Verwaltungssystem für Benachrichtigungen',
+    'res_1_text': 'Benachrichtigungen planen und koordinieren',
+    'res_2': 'Datensicherheit',
+    'res_2_text': 'HTTPS, Benutzerauthentifizierungssystem, persönliche Einladungen.',
+    'res_3': 'Zusammenarbeit mit Kollegen',
+    'res_3_text': 'Gemeinsamer Zugang zu Studien',
     'part_1': 'Teilnahme an Online-Studien',
     'part_1_text': 'Aus vielen Gründen: finanzielle Belohnung, Interesse am Thema oder einfach nur Neugierde.',
     'part_2': 'Einfache und komfortable Autorisierung',
     'part_2_text': 'Einmal registriert, müssen sie für weitere Studien keinen neuen Account anlegen.',
-    'part_3': 'Einhaltung des Datenschutzes',
-    'part_3_text': 'Kontrollieren Sie, welche Art von Daten den Forschern zur Verfügung stehen. Fordern Sie die Löschung Ihrer Daten an, wenn Sie dies wünschen.',
+    'part_3': 'Benachrichtigungen',
+    'part_3_text': 'Benachrichtigungen über Ihr Mobiltelefon erhalten',
     },
 
     'projects': {
@@ -453,20 +448,20 @@ module.exports = {
     },
 
     'researcher' : {
-      'title': `Willkommen bei Open Lab`,
+      'title': `Willkommen bei Samply`,
       'header_steps': `Die Schritte`,
       'step_1': `Verwenden Sie vorhandene Vorlagen oder erstellen Sie Ihre eigene Studie mit <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
-      'step_2': `Importieren Sie die Experimentdatei in Open Lab`,
+      'step_2': `Importieren Sie die Experimentdatei in Samply`,
       'step_3': `Senden Sie den Einladungslink an Ihre Teilnehmer und überwachen Sie deren Fortschritt in Echtzeit`,
       'step_4': `Für weitere Information lesen Sie bitte die <a href='../docs/intro'>Dokumentation</a> oder besuchen Sie unseren <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> für Fragen und Hilfe.`,
       'header_features': `Besonderheiten`,
       'feature_1': `Sie müssen zur Erhebung einer Studie keinen eigenen Server einrichten.`,
-      'feature_2': `Open Lab kann jede Art von Skript hosten, die in <a target='_blank' href='https://labjs.felixhenninger.com/'>lab.js</a>. erstellt wurden.`,
-      'feature_3': `Mehr Teilnehmer aus der Gemeinschaft der Open Lab-Benutzer können für Ihre Studie angemeldet werden.`,
+      'feature_2': `Samply kann jede Art von Skript hosten, die in <a target='_blank' href='https://labjs.felixhenninger.com/'>lab.js</a>. erstellt wurden.`,
+      'feature_3': `Mehr Teilnehmer aus der Gemeinschaft der Samply-Benutzer können für Ihre Studie angemeldet werden.`,
       'feature_4': `Sie können Ihre Experimente mit Kollegen teilen.`,
       'feature_5': `Das HTTPS-Datenübertragungsprotokoll stellt sicher, dass die Daten während der Übertragung verschlüsselt werden.`,
       'feature_6': `Das Benutzerauthentifizierungssystem ermöglicht es Ihnen, komplexe Studien zu erstellen, in denen Menschen an zeitlich getrennten Experimenten teilnehmen.`,
-      'feature_7': `Open Lab bietet ein System zur Datenverwaltung einschließlich der Speicherung von Daten während eines Experiments.`,
+      'feature_7': `Samply bietet ein System zur Datenverwaltung einschließlich der Speicherung von Daten während eines Experiments.`,
       'header_advantages': `Vorteile`,
       'advantage_1': `Immer mehr sozialwissenschaftliche Studien werden online durchgeführt.
         Allerdings gibt es Hindernisse bei der Nutzung des Internets.
@@ -477,7 +472,7 @@ module.exports = {
       'advantage_3': `Drittens ist die Datensicherheit für einen Forscher, der gerade erst beginnt, seine eigene Studie zu programmieren, schwierig.
         Nicht jeder verfügbare Dienst unterstützt eine sichere Datenübertragung zwischen Teilnehmer und Server.
         Auch die persönlichen Daten (z.B. E-Mail-Adresse) werden oft zusammen mit den Ergebnissen des Experiments gespeichert.`,
-      'advantage_4': `Um diese Einschränkungen zu überwinden, bietet Open Lab einem Forscher die Möglichkeit, eine Online-Studie ohne technische Schwierigkeiten durchzuführen.
+      'advantage_4': `Um diese Einschränkungen zu überwinden, bietet Samply einem Forscher die Möglichkeit, eine Online-Studie ohne technische Schwierigkeiten durchzuführen.
         Dies spart Zeit, welche für wichtigere methodische und datenanalytische Aspekte der Arbeit aufgewandt werden kann.
         Die Experimente werden automatisch dokumentiert und gespeichert, so dass eine Zusammenarbeit mit Kollegen und Metaanalysen früherer Studien möglich sind.
         Das HTTPS-Protokoll stellt sicher, dass die Daten der Teilnehmer während der Übertragung verschlüsselt werden.
@@ -536,7 +531,7 @@ module.exports = {
         'code' : 'Code',
         'temp_code_strategy': 'Für jeden Benutzer wird ein Zufallscode erstellt. Benutzen Sie diesen Link, wenn Sie die Studie online veröffentlichen.',
         'code_strategy': 'Die Benutzer werden aufgefordert, sich mit der Eingabe eines Teilnahmecodes anzumelden. Verwenden Sie diese Art der Authentifizierung, wenn Ihre Teilnehmer bereits über ihre individuellen Codes verfügen, die von Ihrer Studie vergeben wurden.',
-        'email_strategy': 'Die Benutzer werden aufgefordert, sich mit einer E-Mail und einem Passwort anzumelden. Verwenden Sie diese Authentifizierungsstrategie, wenn Ihre Teilnehmer bereits ein Profil bei Open Lab haben oder bereit sind, ein neues zu erstellen.',
+        'email_strategy': 'Die Benutzer werden aufgefordert, sich mit einer E-Mail und einem Passwort anzumelden. Verwenden Sie diese Authentifizierungsstrategie, wenn Ihre Teilnehmer bereits ein Profil bei Samply haben oder bereit sind, ein neues zu erstellen.',
         'copy_link': 'Link kopieren',
         'link_copied': 'Der Link wurde kopiert: ',
       },
@@ -554,7 +549,7 @@ module.exports = {
       'docs': {
         'intro_title': 'Einführung',
         'introduction_title': 'Einführung',
-        'introduction_1': 'Willkommen bei Open Lab, einer Plattform für Online-Experimente! ',
+        'introduction_1': 'Willkommen bei Samply, einer Plattform für Online-Experimente! ',
         'introduction_2': 'Wir freuen uns, Sie hier zu haben. Diese Dokumentation ist für Forscher geschrieben, also registrieren Sie sich bitte zuerst als Forscher. ',
         'introduction_3': 'Die Registrierung ist einfach und erfordert nur eine E-Mail und ein Passwort. ',
         'navigation_title': 'Navigation',
@@ -568,28 +563,28 @@ module.exports = {
         'navigation_4': 'Unter "Profil" können Sie Ihren Namen, Ihre E-Mail-Adresse und Ihre Spracheinstellungen bearbeiten. Derzeit werden Englisch, Deutsch und Russisch unterstützt.',
         'upload_title': 'Hochladen der Studie',
         'upload_allTasks_title': `<a target='blank' href='../tests/all'>Alle Aufgaben</a>`,
-        'upload_allTasks_1': `Ein Dashboard mit allen öffentlich einsehbaren Aufgaben ermöglicht Ihnen einen schnellen Zugriff auf die bereits in Open Lab laufenden Aufgaben. Sie können den Test durchführen oder, wenn Sie den Code dahinter sehen möchten, die json-Datei herunterladen, zur <a target="blank" href="https://labjs.felixhenninger.com/">lab.js builder</a> gehen und die Datei dort öffnen.`,
+        'upload_allTasks_1': `Ein Dashboard mit allen öffentlich einsehbaren Aufgaben ermöglicht Ihnen einen schnellen Zugriff auf die bereits in Samply laufenden Aufgaben. Sie können den Test durchführen oder, wenn Sie den Code dahinter sehen möchten, die json-Datei herunterladen, zur <a target="blank" href="https://labjs.felixhenninger.com/">lab.js builder</a> gehen und die Datei dort öffnen.`,
         'upload_myTasks_title': `<a target='blank' href='../tests/my'>Meine Augaben</a>`,
         'upload_myTasks_1': 'Hierbei handelt es sich um ein separates Dashboard für die von Ihnen hinzugefügten Aufgaben. Dieses ist zu Anfang leer, wird aber mit Ihren Aufgaben gefüllt. Nachdem Sie Ihre erste Aufgabe hinzugefügt haben, können Sie die Aufgabe ausführen, bearbeiten, die Json-Datei herunterladen oder die Aufgabe löschen.',
         'upload_newTask_title': `<a target='blank' href='../tests/add'>Neue Aufgabe</a>`,
         'upload_newTask_1': 'Das Hinzufügen einer neuen Aufgabe ist einfach. Geben Sie den Namen und die Beschreibung der Aufgabe ein, wählen Sie die Json-Datei aus und fügen Sie, wenn Sie möchten, ein Titelbild hinzu. Tags sind nicht notwendig, können aber anderen Forschern helfen, Ihre Aufgabe zu finden. Wählen Sie am Ende aus, wie die Aufgabe angezeigt werden soll. Öffentliche Aufgaben stehen anderen Forschern zur Verfügung, so dass sie diese sehen, ausführen und die json-Datei herunterladen können. Wenn Sie Ihre Aufgabe noch nicht teilen möchten, stellen Sie sie privat, so dass nur Sie und Ihre Teilnehmer diese sehen können. Nach dem Speichern erscheint Ihre Aufgabe auf der Seite "Meine Aufgaben".',
         'project_title': 'Management der Studie',
         'project_projects_title': `<a target='blank' href='../projects'>Studien</a> `,
-        'project_projects_1': 'Das Open Lab ist nach Studien organisiert. Eine Studie enthält eine Reihe von Aufgaben und aggregiert die Daten der Teilnehmer. Nach der Registrierung als Forscher schlägt die erste Seite, die Sie sehen, vor, eine neue Studie zu erstellen. Geben Sie diesen einfach einen Namen und klicken Sie auf "Enter". Wenn Sie einen anderen Forscher im Open Lab bereits kennen, mit dem Sie die Studie teilen möchten, können Sie dessen E-Mail-Adresse eingeben (oder leer lassen und es später bearbeiten).',
-        'project_projects_2': 'Nachdem Sie eine Studie hinzugefügt haben, sehen Sie die Karte der neuen Studie, die den Namen und den Status der Studie zusammen mit zwei Schaltflächen (zum Bearbeiten und Löschen der Studie) anzeigt. Der Kippschalter auf der Unterseite der Karte ist grau - das bedeutet, dass Ihre Studie derzeit nicht öffentlich zugänglich ist, d.h. vor Open Lab-Teilnehmern versteckt ist. Sie können jedoch Teilnehmer mit einem speziellen Link einladen, der Ihnen zur Verfügung steht. Wenn Sie mit Aufgaben fertig sind und Ihre Studie veröffentlichen möchten, können Sie die Schaltfläche umschalten, um sie zu aktivieren.',
+        'project_projects_1': 'Das Samply ist nach Studien organisiert. Eine Studie enthält eine Reihe von Aufgaben und aggregiert die Daten der Teilnehmer. Nach der Registrierung als Forscher schlägt die erste Seite, die Sie sehen, vor, eine neue Studie zu erstellen. Geben Sie diesen einfach einen Namen und klicken Sie auf "Enter". Wenn Sie einen anderen Forscher im Samply bereits kennen, mit dem Sie die Studie teilen möchten, können Sie dessen E-Mail-Adresse eingeben (oder leer lassen und es später bearbeiten).',
+        'project_projects_2': 'Nachdem Sie eine Studie hinzugefügt haben, sehen Sie die Karte der neuen Studie, die den Namen und den Status der Studie zusammen mit zwei Schaltflächen (zum Bearbeiten und Löschen der Studie) anzeigt. Der Kippschalter auf der Unterseite der Karte ist grau - das bedeutet, dass Ihre Studie derzeit nicht öffentlich zugänglich ist, d.h. vor Samply-Teilnehmern versteckt ist. Sie können jedoch Teilnehmer mit einem speziellen Link einladen, der Ihnen zur Verfügung steht. Wenn Sie mit Aufgaben fertig sind und Ihre Studie veröffentlichen möchten, können Sie die Schaltfläche umschalten, um sie zu aktivieren.',
         'project_projects_3': 'Wenn Ihre Studie Forschungsmitglieder oder Teilnehmer hat, wird sie auf der Studienkarte angezeigt.',
         'project_tasks_title': `<a target='blank' href='../constructor'>Aufgaben auswählen</a> `,
         'project_tasks_1': `Der nächste Schritt nach der Erstellung einer neuen Studie besteht darin, Aufgaben hinzuzufügen. Sie können Aufgaben aus der Liste der verfügbaren Aufgaben auswählen und sie der Liste auf der rechten Seite hinzufügen, indem Sie auf die grüne Plus-Taste klicken. Die Reihenfolge auf der Liste entspricht der Reihenfolge, in der Ihre Teilnehmer die Aufgaben sehen werden. Dies ermöglicht es, dass eine Studie mehr als eine Aufgabe umfasst.`,
         'project_parameters_title': `<a target='blank' href='../tasks'>Parameter anpassen</a>  `,
         'project_parameters_1': `Die Verwendung von Parametern ermöglicht die Anpassung Ihrer Studie, ohne dass Sie die json-Datei ändern und erneut hochladen müssen. Wenn eine Studie Parameter hat, können Sie diese zunächst neben der Aufgabe aufgelistet sehen. Zweitens können Sie sie auf der Registerkarte " Personalisiert " ändern und speichern. Nach dem Speichern wird die Aufgabe mit Ihren neuen Parametern ausgeführt.`,
-        'project_parameters_2': `Um Parameter in Ihrem Experimentskript zu erstellen, platzieren Sie alle Ihre Einzelkomponenten in einer allgemeinen Reihenfolge im lab.js Builder. Fügen Sie für die Hauptsequenzkomponente Parameter auf der Spezialseite hinzu. Nun, innerhalb Ihres Experiments, können Sie sich auf Parameter als <a target='blank' href='https://labjs.readthedocs.io/en/latest/reference/core.html#options.parameters'>this.parameters.parameter_name</a> beziehen. Wenn das JSON-Skript in Open Lab hochgeladen wird, werden die Parameter ausgelesen und in der Registerkarte "Parameter" aufgelistet.`,
+        'project_parameters_2': `Um Parameter in Ihrem Experimentskript zu erstellen, platzieren Sie alle Ihre Einzelkomponenten in einer allgemeinen Reihenfolge im lab.js Builder. Fügen Sie für die Hauptsequenzkomponente Parameter auf der Spezialseite hinzu. Nun, innerhalb Ihres Experiments, können Sie sich auf Parameter als <a target='blank' href='https://labjs.readthedocs.io/en/latest/reference/core.html#options.parameters'>this.parameters.parameter_name</a> beziehen. Wenn das JSON-Skript in Samply hochgeladen wird, werden die Parameter ausgelesen und in der Registerkarte "Parameter" aufgelistet.`,
         'project_demo_title': `<a target='blank' href='../testing'>Demo testen</a>  `,
         'project_demo_1': `Sie können jede Aufgabe schon individuell starten, aber diese Demo-Seite zeigt Ihnen, wie das gesamte Experiment für die Teilnehmer aussehen wird. Ein Teilnehmer sieht den Namen des Tests, seine Beschreibung und den Status (erledigt oder noch nicht erledigt). Die Aufgaben auf der Liste erscheinen in der Reihenfolge, die Sie imn der Studie angegeben haben. Sobald eine Aufgabe erledigt ist, kann ein Teilnehmer sie nicht mehr wiederholen.`,
         'project_demoResults_title': `<a target='blank' href='../results'>Demo-Ergebnisse</a>  `,
         'project_demoResults_1': `Um Ihnen einen Eindruck davon zu vermitteln, wie die Rohdaten aussehen, können Sie hier Ihre eigenen Demo-Ergebnisse ansehen und herunterladen. Die Daten werden als CSV-Datei mit kommagetrennten Werten gespeichert. Die Daten während des Experiments werden in zwei Formaten gespeichert: "inkrementell" - ein neuer Teil der Daten wird jedes Mal protokolliert, wenn während des Experiments ein ausreichendes Zeitfenster vorhanden ist (z.B. wenn ein Teilnehmer die Anweisung eines neuen Versuchsblocks liest), und " komplett " - die Daten werden am Ende des Experiments übertragen. Wenn also ein Teilnehmer die Aufgabe unterbricht, werden nur die inkrementellen Daten bis zum letzten Snapshot gespeichert. Die Ergebnisse der Demo zeigen Ihnen auch, wie viele Datensätze (Zeilen) in der Datendatei gespeichert sind.`,
         'data_title': 'Datenerhebung',
         'data_results_title': `<a target='blank' href='../data'>Ergebnisse</a> `,
-        'data_results_1': 'Durch Anklicken der Aufgaben auf der linken Seite können Sie zwischen den Ergebnissen für verschiedene Aufgaben wechseln. Die Tabelle enthält Informationen über einen Teilnehmer und die Art der Daten. Die Open Lab ID ist eine eindeutige Nummer, die jedem Benutzer unabhängig von Teilnehmercode und Name zugewiesen wird. Sie können entweder Daten für einen bestimmten Teilnehmer herunterladen oder alle Ergebnisse für diese Aufgabe herunterladen.',
+        'data_results_1': 'Durch Anklicken der Aufgaben auf der linken Seite können Sie zwischen den Ergebnissen für verschiedene Aufgaben wechseln. Die Tabelle enthält Informationen über einen Teilnehmer und die Art der Daten. Die Samply ID ist eine eindeutige Nummer, die jedem Benutzer unabhängig von Teilnehmercode und Name zugewiesen wird. Sie können entweder Daten für einen bestimmten Teilnehmer herunterladen oder alle Ergebnisse für diese Aufgabe herunterladen.',
         'data_participants_title': `<a target='blank' href='../users'>Teilnehmer</a> `,
         'data_participants_1': `Die Ergebnisse werden in der Teilnehmerliste dargestellt. Die Teilnehmer werden in der Reihenfolge ihrer Anmeldezeit vorgestellt. Neben der individuellen ID-Nummer, Code, Name und Zeitpunkt der Registrierung gibt die Tabelle Auskunft über den Anwenderstatus (Teilnehmer oder Forscher), die Benutzersprache und die Anzahl der durchgeführten Tests. Sie können die Daten für jeden Teilnehmer herunterladen. Metadaten enthalten Informationen über die technischen Eigenschaften des Browsers des Benutzers. Sie können eine detailliertere Tabelle mit den Ergebnissen der einzelnen Tests für einen bestimmten Benutzer öffnen.`,
         'data_invitations_title': `<a target='blank' href='../invitations'>Einladungen</a> `,
@@ -637,7 +632,7 @@ module.exports = {
         'message_create_project': `Um Benachrichtigungen einzurichten, aktivieren oder erstellen Sie eine Studie <a href="/projects">hier</a>.`,
         'testing_message': 'Die Teilnehmer sollten ein Android-Telefon oder Google Chrome auf Desktops verwenden, um Benachrichtigungen zu aktivieren und zu erhalten.',
         'title': 'Titel',
-        'title_placeholder': 'Open Lab',
+        'title_placeholder': 'Samply',
         'message': 'Nachricht',
         'message_placeholder': 'Bitte nehmen Sie an einem Test teil',
         'schedule': 'Zeitplan',

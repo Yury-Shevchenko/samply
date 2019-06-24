@@ -43,6 +43,18 @@ exports.activateProject = async (req, res) => {
   res.redirect('back');
 };
 
+exports.activateParticipantProject = async (req, res) => {
+  const activeProject = await Project.findOne({_id: req.params.id});
+  const updatedUser = await User.findOneAndUpdate({
+    _id: req.user._id
+  }, { participantInProject: activeProject._id }, {
+    new: true,
+    upsert: true
+  }).exec();
+  req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
+  res.redirect('back');
+};
+
 exports.createProject = async (req, res) => {
   if (req.body.name != ''){
     try {
@@ -62,7 +74,7 @@ exports.createProject = async (req, res) => {
           members: membersData,
           currentlyActive: req.body.currentlyActive,
           showCompletionCode: req.body.showCompletionCode == 'on',
-          useNotifications: req.body.useNotifications == 'on',
+          // useNotifications: req.body.useNotifications == 'on',
         }
       )).save();
       if (typeof(req.user.project._id) == "undefined"){
@@ -102,7 +114,7 @@ exports.updateProject = async (req, res) => {
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
     project.showCompletionCode = req.body.showCompletionCode == 'on';
-    project.useNotifications = req.body.useNotifications == 'on';
+    // project.useNotifications = req.body.useNotifications == 'on';
     project.members = membersData;
     await project.save();
     req.flash('success', `${res.locals.layout.flash_project_updated}`);
@@ -250,4 +262,44 @@ exports.manageNotifications = async(req, res) => {
 exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});
+};
+
+exports.subscribeforstudy = async(req, res) => {
+  // add id of the study into the user.participant_projects
+  const newUser = await User.findOneAndUpdate({_id: req.user._id},
+      { ['$addToSet'] : {
+        participant_projects: req.user.participantInProject
+      } },
+      { new : true });
+  if(newUser){
+    res.status(201).json({message: 'You are successfully subscribed.'});
+  } else {
+    res.status(400).json({message: 'There was an error during the user update'});
+  }
+
+  // await User.findById(req.user._id, (err, user) => {
+  //   user.participant_projects.push(user.participantInProject);
+  //   user.save((saveErr, updatedUser) => {
+  //     if (saveErr) {
+  //       res.status(400).json({message: 'There was an error during the user update'});
+  //     } else {
+  //       res.status(201).json({message: 'You are successfully subscribed.'});
+  //     }
+  //   });
+  // });
+
+};
+
+exports.unsubscribefromstudy = async(req, res) => {
+  // remove id of the study from the user.participant_projects
+  const newUser = await User.findOneAndUpdate({_id: req.user._id},
+      { ['$pull'] : {
+        participant_projects: req.user.participantInProject
+      } },
+      { new : true });
+  if(newUser){
+    res.status(201).json({message: 'You are successfully unsubscribed.'});
+  } else {
+    res.status(400).json({message: 'There was an error during the user update'});
+  }
 };

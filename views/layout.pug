@@ -61,13 +61,13 @@ html
               if user.level < 10
                 li.nav__item
                   a.nav__main_link(href='/testing', class=(currentPath.startsWith('/testing') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.user_testing}
-                li.nav__item
-                  a.nav__main_link(href='/myresults', class=(currentPath.startsWith('/myresults') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.myResults}
+                    h6 Dashboard
                 li.nav__item
                   a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))
                     h6 #{layout.studies}
+                //- li.nav__item
+                //-   a.nav__main_link(href='/myresults', class=(currentPath.startsWith('/myresults') ? 'nav__main_link--active' : ''))
+                //-     h6 History
                 li.nav__item
                   a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
                     h6 #{layout.help}
@@ -82,8 +82,36 @@ html
 
           .nav__section.nav__section--user
             if user
-              //- if user.level > 10 && user.project && user.projects && user.projects.length > 0
-              if user.level > 10 
+            
+              if user.level < 10
+              
+                //- script(nonce=`${noncevalue}`).
+                //-   document.addEventListener('DOMContentLoaded', function () {
+                //-     document.getElementById('activeParticipantProject').addEventListener('change', function doThings() {
+                //-       const project = document.getElementById("activeParticipantProject").value;
+                //-       if(project != ''){
+                //-         //- console.log('project value', project);
+                //-         window.location.href = `/participantprojects/${project}`;
+                //-       }
+                //-     });
+                //-   });
+                //- 
+                //- //- li.nav__item.nav__main_link
+                //- nav__section.nav__section--search
+                //-   h6
+                //-     .custom-select-header
+                //-       select(name="activeParticipantProject" id="activeParticipantProject")
+                //-         //- include public projects and projects where user has participated
+                //-         const allProjects = projects.concat(user.participant_projects)
+                //-         option(value='') #{layout.choose_project}
+                //-         each project in projects
+                //-           if(project.name.length < 40)
+                //-             option(value=project._id selected=(user.participantInProject && (user.participantInProject.toString() == project._id.toString()) ))= project.name
+                //-           else
+                //-             option(value=project._id selected=(user.participantInProject && (user.participantInProject.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
+              
+              
+              else if user.level > 10 
                 script(nonce=`${noncevalue}`).
                   document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('activeProject').addEventListener('change', function doThings() {

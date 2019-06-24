@@ -1,7 +1,7 @@
 extends layout
 
 block headers
-  meta(name="Description" content="Open lab, lab.js experiments, hosting browser-based experiments, running offline and online studies, participant management system, secure connection, integration with MTurk")
+  meta(name="Description" content="Samply, notifications, experience-based sampling")
 
 block content
   .inner
@@ -22,10 +22,6 @@ block content
               p.plan_emails-label #{l.res_2_text}
               p.plan_emails #{l.res_3}
               p.plan_emails-label #{l.res_3_text}
-              p.plan_emails #{l.res_4}
-              p.plan_emails-label #{l.res_4_text}
-              p.plan_emails #{l.res_5}
-              p.plan_emails-label #{l.res_5_text}
 
           a(type="link" href=`/participant/register` style="display:grid")
             .panel
@@ -37,3 +33,9 @@ block content
               p.plan_emails-label #{l.part_2_text}
               p.plan_emails #{l.part_3}
               p.plan_emails-label #{l.part_3_text}
+              
+    script(nonce=`${noncevalue}`).
+      document.body.style['backgroundSize'] = 'cover';
+      document.body.style['backgroundRepeat'] = 'no-repeat';
+      document.body.style['backgroundImage'] = "url('/images/photos/lake.jpg')";
+              

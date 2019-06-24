@@ -280,7 +280,7 @@ exports.createIndividualNotification = async (req, res) => {
           console.log('randomInterval', rI)
           console.log('interval in cron', interval)
         } else {
-          interval = req.body.interval;
+          interval = interval1_cron;
         }
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
@@ -490,7 +490,7 @@ exports.registerPushNotification = async (req, res) => {
   }
 
   const sub = req.body;
-  //console.log("The data received on the server", sub);
+  // console.log("The data received on the server", sub);
   // console.log("The user is", req.user);
   await User.findById(req.user._id, (err, user) => {
     user.notifications.push(sub);
@@ -511,7 +511,8 @@ exports.unsubscribePushNotification = async (req, res) => {
       'data.projectid': req.user.participantInProject,
       'data.userid': req.user._id,
     }, (err, numRemoved) => {});
-    user.notifications = [];//TODO: delete only concrete subscription (?)
+    user.notifications = [];
+    // TODO: delete only concrete subscription (?)
     user.save((saveErr, updatedUser) => {
       if (saveErr) {
         res.status(400).json({message: 'There was an error during the user update'});

@@ -1,6 +1,6 @@
 mixin publicProjectCard(project = {})
   
-  a(href= (user ? (user.participantInProject ? `/studies/?study=${project.name}` : `/testing/?study=${project.name}` )  : `/studies/${project.name}`) ) 
+  a(href= (user ? (user.participantInProject.toString() !== project._id.toString() ? `/participantprojects/${project._id}` : `/testing` )  : `/studies/${project.name}`) ) 
     .project(class=`${(user && user.participantInProject && project._id && user.participantInProject.toString() === project._id.toString() ) ? 'chosenStudy': ''}`)
       .project__hero
         h2.project__title #{project.name}

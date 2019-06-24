@@ -29,7 +29,7 @@ const projectSchema = new mongoose.Schema({
   },
   useNotifications: {
     type: Boolean,
-    default: false
+    default: true
   },
   currentlyActive  : Boolean,
   tests            : [{ type : mongoose.Schema.ObjectId, ref: 'Test' }],

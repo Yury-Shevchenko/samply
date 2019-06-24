@@ -2,6 +2,10 @@ const enableNotificationsButton = document.querySelector('#enable_notifications'
 const disableNotificationsButton = document.querySelector('#disable_notifications');
 const notificationStatus = document.querySelector('#notification_status');
 
+const subscribeButton = document.querySelector('#subscribeForStudy');
+const unsubscribeButton = document.querySelector('#unsubscribeFromStudy');
+const subscription_status = document.querySelector('#subscription_status');
+
 function displayConfirmNotification(){
   if('serviceWorker' in navigator){
     var options = {
@@ -204,10 +208,68 @@ function checkNotificationSubscription() {
     })
 };
 
+function subscribeForStudy(){
+  console.log('Subscribing for study');
+  fetch('/subscribeforstudy', {
+    method:'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'Accept':'application/json',
+    }
+  })
+  .then(res => {
+    if(res.url && res.ok){
+      console.log("Success")
+      window.location = '/testing';
+    }
+    // subscribeButton.disabled = true;
+    // subscribeButton.style.display = "none";
+    // unsubscribeButton.disabled = false;
+    // unsubscribeButton.style.display = "inline-block";
+  })
+  .catch(err => {
+    console.log(err);
+    // subscribeButton.disabled = false;
+    // subscribeButton.style.display = "inline-block";
+    // unsubscribeButton.disabled = true;
+    // unsubscribeButton.style.display = "none";
+  })
+};
+
+function unsubscribeFromStudy(){
+  console.log('Unubscribing from study');
+  fetch('/unsubscribefromstudy', {
+    method:'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'Accept':'application/json',
+    }
+  })
+  .then(res => {
+    if(res.url && res.ok){
+      console.log("Success")
+      window.location = '/testing';
+    }
+    // subscribeButton.disabled = false;
+    // subscribeButton.style.display = "inline-block";
+    // unsubscribeButton.disabled = true;
+    // unsubscribeButton.style.display = "none";
+  })
+  .catch(err => {
+    console.log(err);
+    // subscribeButton.disabled = true;
+    // subscribeButton.style.display = "none";
+    // unsubscribeButton.disabled = false;
+    // unsubscribeButton.style.display = "inline-block";
+  })
+};
+
 window.addEventListener('load', function() {
   if ('Notification' in window && 'serviceWorker' in navigator) {
     enableNotificationsButton.addEventListener('click', askForNotificationPermission);
     disableNotificationsButton.addEventListener('click', unsubscribeNotifications);
+    if(subscribeButton) subscribeButton.addEventListener('click', subscribeForStudy);
+    if(unsubscribeButton) unsubscribeButton.addEventListener('click', unsubscribeFromStudy);
     checkNotificationSubscription();
   }
 })

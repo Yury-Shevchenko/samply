@@ -246,6 +246,12 @@ router.get('/projects', authController.isAdminLoggedIn, catchErrors(projectContr
 router.get('/projects/:id', authController.isAdminLoggedIn, catchErrors(projectController.activateProject));
 router.post('/projects', authController.isAdminLoggedIn, catchErrors(projectController.createProject));
 router.post('/projects/:id', authController.isAdminLoggedIn, catchErrors(projectController.updateProject));
+
+// for participants
+router.get('/participantprojects/:id', authController.isLoggedIn, catchErrors(projectController.activateParticipantProject));
+router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(projectController.subscribeforstudy));
+router.post('/unsubscribefromstudy', authController.isLoggedIn, catchErrors(projectController.unsubscribefromstudy));
+
 //edit the project
 router.get('/projects/:id/edit', authController.isAdminLoggedIn, catchErrors(projectController.editProject));
 router.get('/projects/deleteproject/:id', authController.isAdminLoggedIn, catchErrors(projectController.trydeleteProject));

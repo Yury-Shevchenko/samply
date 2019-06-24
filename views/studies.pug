@@ -10,17 +10,17 @@ block content
     
     if user 
       if user.participantInProject
-        h2 #{layout.change_project}
-        .card
-          form.form(action="/account" method="POST")
-            label(for="participantInProject") #{layout.project}
-            .custom-select-header
-              select(name="participantInProject")
-                option(value='' style="" selected=(typeof(user.participantInProject) === "undefined")) – #{layout.choose_project} –
-                each project in projects
-                  option(value=project._id, selected=((project.name === study) || (!study && user.participantInProject.toString() === project._id.toString())))= project.name
-            p 
-            input.button(type="submit" value= layout.change_project_confirm)  
+        h2 Studies
+        //- .card
+          //- form.form(action="/account" method="POST")
+          //-   label(for="participantInProject") #{layout.project}
+          //-   .custom-select-header
+          //-     select(name="participantInProject")
+          //-       option(value='' style="" selected=(typeof(user.participantInProject) === "undefined")) – #{layout.choose_project} –
+          //-       each project in projects
+          //-         option(value=project._id, selected=((project.name === study) || (!study && user.participantInProject.toString() === project._id.toString())))= project.name
+          //-   p 
+          //-   input.button(type="submit" value= layout.change_project_confirm)  
           
       else 
         h2 #{layout.choose_project}
