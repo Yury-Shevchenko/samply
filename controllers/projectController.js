@@ -10,21 +10,21 @@ exports.getUserProjects = async (req, res) => {
   const projects = await Project.find({creator: req.user._id}, {
     name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
   });
-  const limitSandbox = process.env.FREE_PLAN_PARTICIPANTS_LIMIT;
-  const limitProf = process.env.PROF_PLAN_PARTICIPANTS_LIMIT;
-  if (projects){
-    if (!req.user.subscription || Date.now() > req.user.subscription_expires * 1000 || (req.user.subscription && req.user.subscription_plan == 'professional')){
-      await Promise.all(projects.map(async (item) => {
-        const project = await Project.findOne({ _id: item._id });
-        const participantsNumber = project.participants.length;
-        if (project.currentlyActive  && ((participantsNumber > limitSandbox && (!req.user.subscription || Date.now() > req.user.subscription_expires * 1000)) || (participantsNumber > limitProf && req.user.subscription && req.user.subscription_plan == 'professional') )) {
-          project.currentlyActive = false;
-          await project.save();
-          req.flash('error', `${res.locals.layout.flash_limit_of_participants_reached_1} ${project.name} ${res.locals.layout.flash_limit_of_participants_reached_2}`);
-        }
-      }));
-    }
-  }
+  // const limitSandbox = process.env.FREE_PLAN_PARTICIPANTS_LIMIT;
+  // const limitProf = process.env.PROF_PLAN_PARTICIPANTS_LIMIT;
+  // if (projects){
+  //   if (!req.user.subscription || Date.now() > req.user.subscription_expires * 1000 || (req.user.subscription && req.user.subscription_plan == 'professional')){
+  //     await Promise.all(projects.map(async (item) => {
+  //       const project = await Project.findOne({ _id: item._id });
+  //       const participantsNumber = project.participants.length;
+  //       if (project.currentlyActive  && ((participantsNumber > limitSandbox && (!req.user.subscription || Date.now() > req.user.subscription_expires * 1000)) || (participantsNumber > limitProf && req.user.subscription && req.user.subscription_plan == 'professional') )) {
+  //         project.currentlyActive = false;
+  //         await project.save();
+  //         req.flash('error', `${res.locals.layout.flash_limit_of_participants_reached_1} ${project.name} ${res.locals.layout.flash_limit_of_participants_reached_2}`);
+  //       }
+  //     }));
+  //   }
+  // }
   const invitedprojects = await Project.find({members: req.user._id}, {
     name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
   });

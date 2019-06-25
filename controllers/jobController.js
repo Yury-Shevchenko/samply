@@ -7,7 +7,7 @@ const Agenda = require('agenda');
 const uniqid = require('uniqid');
 
 const agenda = new Agenda({
-  name: 'open-lab-notifications',
+  name: 'samply-notifications',
   db: {address: process.env.DATABASE, collection: 'Job'},
 });
 
@@ -463,8 +463,8 @@ exports.registerPushNotification = async (req, res) => {
   if(project && project.notifications && project.notifications.length > 0){
     // console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
-      if(sub.mode && sub.mode === 'Individual'){
-        const timeBuffer = 10000;
+      if(sub.target && sub.target === 'user-specific'){
+        const timeBuffer = 5000;
         const user_int_start = new Date(Date.now() + timeBuffer);
         const user_int_end = new Date(Date.now() + sub.duration);
         // console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);

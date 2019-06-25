@@ -123,7 +123,7 @@ projectSchema.pre('save', function(next){
 projectSchema.virtual('participants', {
   ref: 'User',//what model to link
   localField: '_id',//which field in the current model
-  foreignField: 'participantInProject',//should match field in the other model
+  foreignField: 'participant_projects',//should match field in the other model
   justOne: false
 });
 

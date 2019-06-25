@@ -188,7 +188,7 @@ block content
             each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
               tr
                 td= notification.name
-                td= notification.name === 'Repeat' ? '' : h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm') 
+                td= (notification.name === 'One-time' || notification.name === 'One-time (random)') ? h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
                 td= notification.name === 'Repeat' ? h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
                 td= notification.name === 'Repeat' ? h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
                 td= (notification.name === 'Repeat' || notification.name === 'Event-dependent') ? notification.interval.slice(2) : ''
