@@ -1,12 +1,12 @@
 {
-  "name": "Open Lab App",
-  "short_name": "Open Lab",
+  "name": "Samply App",
+  "short_name": "Samply",
   "theme_color": "#00bfff",
   "background_color": "#87cefa",
   "display": "standalone",
   "scope": ".",
   "start_url": "/",
-  "description": "Run experiments offline",
+  "description": "Send and manage notifications",
   "dir": "ltr",
   "icons": [
     {

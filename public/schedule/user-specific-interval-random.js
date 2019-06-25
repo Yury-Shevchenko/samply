@@ -56,6 +56,7 @@ function createRandomIndividualNotification(){
       title: titleContent.value,
       url: urlContent.value,
       duration: duration,
+      name: 'Event-dependent (random)',
     })
   })
     .then(res => {

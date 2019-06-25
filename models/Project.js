@@ -50,6 +50,7 @@ const projectSchema = new mongoose.Schema({
       duration     : { type: Number, default: 0 },
       url          : { type: String, default: '' },
       participantId: { type: Number },
+      name         : String,
     }
   ]
 });

@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  .inner
+  .inner(style="max-width: 2000px; padding: 4rem;")
     //- p
     //- header.top
     //-   nav.nav
@@ -58,8 +58,8 @@ block content
             button(class="buttonContainer" id="scheduleNotification") One-time  
             button(class="buttonContainer" id="randomNotification") One-time (random)
             button(class="buttonContainer" id="intervalNotification") Repeat     
-            button(class="buttonContainer" id="individualNotification") Repeat (event-dependent)    
-            button(class="buttonContainer" id="randomIndividualNotification") Repeat (event-dependent, random) 
+            button(class="buttonContainer" id="individualNotification") Event-dependent    
+            button(class="buttonContainer" id="randomIndividualNotification") Event-dependent (random) 
           
           p
           .notificationContainer(id="scheduleNotificationContainer" style="display:none") 
@@ -175,24 +175,28 @@ block content
           table.table
             thead
               td #{l.table_type} 
+              td Sending time 
+              td Start of repeat
+              td End of repeat
+              td Repeat interval
+              td Event-dependent time period
+              td Range of repeating interval
               td #{l.table_title}  
               td #{l.table_message} 
               td url
-              td #{l.table_date} 
-              td #{l.table_interval}  
-              td #{l.table_start} 
-              td #{l.table_end} 
               td #{l.table_delete} 
             each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
-              tr(style=`background-color:${(notification.mode === 'Interval' || notification.mode === 'Individual') ? '#fdf4a7' : ((notification.date - new Date()) > 0 ? 'white' : '#f3f0f0')}`) 
-                td= notification.mode
+              tr
+                td= notification.name
+                td= notification.name === 'Repeat' ? '' : h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm') 
+                td= notification.name === 'Repeat' ? h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
+                td= notification.name === 'Repeat' ? h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
+                td= (notification.name === 'Repeat' || notification.name === 'Event-dependent') ? notification.interval.slice(2) : ''
+                td= (notification.name === 'Event-dependent' || notification.name === 'Event-dependent (random)') ? `${h.moment.duration(notification.duration).toISOString()} - ${h.moment.duration(notification.duration).humanize()}` : ''
+                td= notification.name === 'Event-dependent (random)' ? `${notification.interval.slice(2)} - ${notification.interval_max.slice(2)}` : ''
                 td= notification.title 
                 td= notification.message
                 td= notification.url
-                td= notification.mode === 'Schedule' ? h.moment.utc(notification.date).local().locale(language).format('dddd, MMMM Do YYYY, H:mm') : ''
-                td= notification.mode === 'Schedule' ? '' : notification.interval.slice(2)
-                td= notification.mode === 'Schedule' ? '' : h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')
-                td= notification.mode === 'Schedule' ? '' : h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')
                 td
                   a(href=`/removenotification/${notification.id}`)
                     != h.icon('remove')

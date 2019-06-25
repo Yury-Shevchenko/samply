@@ -43,6 +43,7 @@ function createIntervalNotification(){
       message: messageContent.value,
       title: titleContent.value,
       url: urlContent.value,
+      name: 'Repeat',
     })
   })
     .then(res => {

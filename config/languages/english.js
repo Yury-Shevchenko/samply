@@ -281,7 +281,7 @@ module.exports =
         'subtitle_results_1': 'Results for ',
         'subtitle_results_2': ' of study ',
         'results_table_number': 'Number',
-        'results_table_openlabid': 'Open lab ID',
+        'results_table_openlabid': 'Samply ID',
         'results_table_code': 'Code',
         'results_table_name': 'Name',
         'results_table_date': 'Date',

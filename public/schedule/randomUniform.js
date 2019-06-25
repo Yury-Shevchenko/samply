@@ -42,6 +42,7 @@ function createRandomNotification(){
       message: messageContent.value,
       title: titleContent.value,
       url: urlContent.value,
+      name: 'One-time (random)'
     })
   })
     .then(res => {

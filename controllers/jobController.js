@@ -120,6 +120,7 @@ exports.createScheduleNotification = async(req, res) => {
         message: req.body.message,
         url: req.body.url,
         participantId: req.body.participantId,
+        name: req.body.name,
       });
       // if there is a participant id, create a personalized notification job
       if (req.body.participantId) {
@@ -178,6 +179,7 @@ exports.createIntervalNotification = async (req, res) => {
     message: req.body.message,
     url: req.body.url,
     participantId: req.body.participantId,
+    name: req.body.name,
   });
 
   agenda.schedule(int_start, 'start_manager', {
@@ -242,6 +244,7 @@ exports.createIndividualNotification = async (req, res) => {
     title: req.body.title,
     message: req.body.message,
     url: req.body.url,
+    name: req.body.name,
   });
 
   const users = await User.getUsersOfProject(req.user.project._id);

@@ -42,6 +42,7 @@ function createIndividualNotification(){
       title: titleContent.value,
       url: urlContent.value,
       duration: duration,
+      name: 'Event-dependent',
     })
   })
     .then(res => {
