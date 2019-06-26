@@ -72,8 +72,10 @@ html
                   a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
                     h6 #{layout.help}
               if user.level > 100
-                li.nav__item: a.nav__main_link(href="/researchers", class=(currentPath.startsWith('/researchers') ? 'nav__main_link--active' : ''))
-                  h6 #{layout.researchers}
+                li.nav__item: a.nav__main_link(href="/debugprojects", class=(currentPath.startsWith('/debugprojects') ? 'nav__main_link--active' : ''))
+                  h6 Supervision
+                //- li.nav__item: a.nav__main_link(href="/researchers", class=(currentPath.startsWith('/researchers') ? 'nav__main_link--active' : ''))
+                //-   h6 #{layout.researchers}
 
                 //- .nav__section.nav__section--search
                 //-   .search

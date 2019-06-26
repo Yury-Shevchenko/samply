@@ -1,8 +1,15 @@
 extends layout
- 
+
+include mixins/_debugProjectCard
+
 block content
   .inner
     p
     .card
-      pre=h.dump(projects)
- 
+      h4 You are in the supervision mode. Click on the project to activate it.
+      .projects
+        each project in projects
+          +debugProjectCard(project)
+    
+    //- pre=h.dump(projects)
+    //- pre=h.dump(user)

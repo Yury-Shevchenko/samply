@@ -35,18 +35,20 @@ block content
         .notificationsPanel
           p #{l.testing_message}
           h6 Choose participants 
-          .custom-select-header
+          .custom-select-header(style="max-width:300px")
             select(name="activeTarget" id="activeTarget")
               option(value='all' selected=(participant && participant.openLabId)) All participants
               each part in ids
                 option(value=part selected=(participant && participant.openLabId === part) )= part
           p
+          h6 Fill in the information for your notification
+          p
           h6 #{l.title} 
-          input#titleContent(type='text', value = "Study")
+          input#titleContent(type='text', value = '')
           h6 #{l.message} 
-          input#messageContent(type='text', value = "Follow the link to complete the survey")
+          input#messageContent(type='text', value = '')
           h6 URL
-          input#urlContent(type='text', value = 'https://')
+          input#urlContent(type='text', value = '')
           if participant && participant.openLabId
             h6 Participant ID
             input#participantId(type='text', value = participant.openLabId readonly, style ="background-color:lightgrey")
@@ -201,7 +203,7 @@ block content
                   a(href=`/removenotification/${notification.id}`)
                     != h.icon('remove')
           p  
-          button(id="delete_all_notifications" class="button" style="background-color:red; color:white") #{l.delete_notifications} 
+          button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
         
         if participant && participant.openLabId
           script(nonce=`${noncevalue}`).

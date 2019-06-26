@@ -32,15 +32,22 @@ exports.getUserProjects = async (req, res) => {
 };
 
 exports.activateProject = async (req, res) => {
-  const activeProject = await Project.findOne({_id: req.params.id});
-  const updatedUser = await User.findOneAndUpdate({
-    _id: req.user._id
-  }, { project: activeProject }, {
-    new: true,
-    upsert: true
-  }).exec();
-  req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
-  res.redirect('back');
+  // check whether is is user's project or the user has a superadmin permission
+  if (req.user.level > 100 || req.user.projects.filter(project => project._id.toString() === req.params.id).length > 0){
+    const activeProject = await Project.findOne({_id: req.params.id});
+    const updatedUser = await User.findOneAndUpdate({
+      _id: req.user._id
+    }, { project: activeProject }, {
+      new: true,
+      upsert: true
+    }).exec();
+    req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
+    res.redirect('back');
+  } else {
+    req.flash('error', `You do not have rights to access this project.`);
+    res.redirect('back');
+  }
+
 };
 
 exports.activateParticipantProject = async (req, res) => {

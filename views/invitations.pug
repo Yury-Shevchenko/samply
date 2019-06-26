@@ -25,19 +25,19 @@ block content
           tr
             td #{l.signing_temp_code}
             td
-              input(type="text" value=`https://open-lab.online/code/${project.name.replace(/\s+/g, '%20')}/?generate=true` id="random" readonly)
+              input(type="text" value=`https://samply.tk/code/${project.name.replace(/\s+/g, '%20')}/?generate=true` id="random" readonly)
               button(class="copyButton" id="randomButton") #{l.copy_link}
               p #{l.temp_code_strategy}
           tr
             td #{l.signing_code}
             td
-              input(type="text" value=`https://open-lab.online/code/${project.name.replace(/\s+/g, '%20')}/` id="code" readonly)
+              input(type="text" value=`https://samply.tk/code/${project.name.replace(/\s+/g, '%20')}/` id="code" readonly)
               button(class="copyButton" id="codeButton") #{l.copy_link}
               p #{l.code_strategy}
           tr
             td #{l.signing_email}
             td
-              input(type="text" value=`https://open-lab.online/sign/${project.name.replace(/\s+/g, '%20')}/` id="email" readonly)
+              input(type="text" value=`https://samply.tk/sign/${project.name.replace(/\s+/g, '%20')}/` id="email" readonly)
               button(class="copyButton" id="emailButton") #{l.copy_link}
               p #{l.email_strategy}
         

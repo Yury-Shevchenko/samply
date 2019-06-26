@@ -83,15 +83,15 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', function(event) {
   var notification = event.notification;
-
+  debugger;
   // if (!event.action) {
   //   // Was a normal notification click
   //   console.log('Notification Click.');
   //   return;
   // }
 
-  if (event.action === 'busy') {
-    console.log('Busy was chosen');
+  if (event.action === 'no') {
+    console.log('Not now was chosen');
     notification.close();
   } else {
     const urlToOpen = new URL(notification.data.url, self.location.origin).href;
