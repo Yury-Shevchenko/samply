@@ -120,10 +120,10 @@ self.addEventListener('notificationclick', function(event) {
   var notification = event.notification;
 
   if (event.action === 'no') {
-    if(notification.data) saveResults(notification.data, 'not now');
+    if(notification && notification.data) saveResults(notification.data, 'not now');
     notification.close();
   } else {
-    if(notification.data) saveResults(notification.data, 'go to test');
+    if(notification && notification.data) saveResults(notification.data, 'go to test');
     const urlToOpen = notification.data.openUrl;
     // const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
     event.waitUntil(
@@ -161,7 +161,7 @@ self.addEventListener('notificationclick', function(event) {
 
 //if a user closed the notification
 self.addEventListener('notificationclose', (event) => {
-  if(notification.data) saveResults(event.notification.data, 'closed');
+  if(event.notification && event.notification.data) saveResults(event.notification.data, 'closed');
 })
 
 //background synchronization
