@@ -249,103 +249,118 @@ exports.changeStatusOfDataRequest = async (req, res) => {
 
 //save results during the task
 exports.saveIncrementalResults = async (req, res) => {
-  const slug = req.body.url.split('/')[4];
-  const test = await Test
-    .findOne({ slug })
-    .select({slug:1});
+  console.log('Body', req.body);
 
-  if(req.body.data && req.body.data.length !== 0){
-    req.body.data.map(row => {
-      row["openLabId"] = req.user.openLabId || "undefined";
-      row["type"] =  req.body.metadata.payload || "undefined";
-      row["task"]= slug || "undefined";
-      row['project'] = req.user.participantInProject || req.user.project._id;
-      row['status'] = req.user.level > 10 ? 'researcher' : 'participant';
-      row['code'] = (req.user.code && req.user.code.id) || "undefined";
-    })
-  };
+  // save in the database
+  const result = new Result({
+    author: req.body.author,
+    project: req.body.project,
+    samplyid: req.body.samplyid,
+    name: req.body.name,
+    data: req.body.data,
+    usertimestamp: req.body.timestamp,
+  });
+  await result.save();
 
-  if (req.body.metadata.payload == 'incremental'){
-    let result = await Result.findOne({transfer: req.body.metadata.id, uploadType: req.body.metadata.payload});
-    if(!result){
-      const parameters = await Param.getParameters({
-        slug: slug,
-        language: req.user.language,
-        author: req.user.participantInProject || req.user.project._id
-      });
-      let params = "no-change-of-params";
-      if(parameters){
-        if(parameters[0]){
-          if (parameters[0].parameters){
-          params = parameters[0].parameters;
-          }
-        }
-      }
-      const result = new Result({
-        transfer: req.body.metadata.id,
-        author: req.user._id,
-        openLabId: req.user.openLabId,
-        project: req.user.participantInProject || req.user.project._id,
-        test: test._id,
-        taskslug: slug,
-        rawdata: req.body.data,
-        uploadType: req.body.metadata.payload,
-        parameters: params
-      });
-      await result.save();
-    } else {
-      const updatedResult = await Result.findOneAndUpdate({
-        transfer: req.body.metadata.id,
-        uploadType: req.body.metadata.payload
-      }, { $push: {rawdata: {$each: req.body.data } }}, {
-        new: true
-      }).exec();
-    };
-    res.send('saved');
+  res.send('Saved');
 
-  } else if(req.body.metadata.payload == 'full'){
-    const parameters = await Param.getParameters({
-      slug: slug,
-      language: req.user.language,
-      author: req.user.participantInProject || req.user.project._id
-    });
-    let params = "no-change-of-params";
-    if(parameters){
-      if(parameters[0]){
-        if (parameters[0].parameters){
-        params = parameters[0].parameters;
-        }
-      }
-    }
-
-    let aggregated;
-    if(req.body.data && req.body.data.length !== 0){
-      aggregated = req.body.data
-        .filter(row => {
-          return (typeof(row.aggregated) !== 'undefined')
-        })
-        .map(e => e.aggregated)
-    };
-
-    const fullResult = new Result({
-      transfer: req.body.metadata.id,
-      author: req.user._id,
-      openLabId: req.user.openLabId,
-      project: req.user.participantInProject || req.user.project._id,
-      test: test._id,
-      taskslug: slug,
-      rawdata: req.body.data,
-      uploadType: req.body.metadata.payload,
-      parameters: params,
-      aggregated: aggregated
-    });
-
-    await fullResult.save();
-
-    res.send('Saved all results');
-  } else {
-    res.send('Unknown upload data type');
-  }
+  // const slug = req.body.url.split('/')[4];
+  // const test = await Test
+  //   .findOne({ slug })
+  //   .select({slug:1});
+  //
+  // if(req.body.data && req.body.data.length !== 0){
+  //   req.body.data.map(row => {
+  //     row["openLabId"] = req.user.openLabId || "undefined";
+  //     row["type"] =  req.body.metadata.payload || "undefined";
+  //     row["task"]= slug || "undefined";
+  //     row['project'] = req.user.participantInProject || req.user.project._id;
+  //     row['status'] = req.user.level > 10 ? 'researcher' : 'participant';
+  //     row['code'] = (req.user.code && req.user.code.id) || "undefined";
+  //   })
+  // };
+  //
+  // if (req.body.metadata.payload == 'incremental'){
+  //   let result = await Result.findOne({transfer: req.body.metadata.id, uploadType: req.body.metadata.payload});
+  //   if(!result){
+  //     const parameters = await Param.getParameters({
+  //       slug: slug,
+  //       language: req.user.language,
+  //       author: req.user.participantInProject || req.user.project._id
+  //     });
+  //     let params = "no-change-of-params";
+  //     if(parameters){
+  //       if(parameters[0]){
+  //         if (parameters[0].parameters){
+  //         params = parameters[0].parameters;
+  //         }
+  //       }
+  //     }
+  //     const result = new Result({
+  //       transfer: req.body.metadata.id,
+  //       author: req.user._id,
+  //       openLabId: req.user.openLabId,
+  //       project: req.user.participantInProject || req.user.project._id,
+  //       test: test._id,
+  //       taskslug: slug,
+  //       rawdata: req.body.data,
+  //       uploadType: req.body.metadata.payload,
+  //       parameters: params
+  //     });
+  //     await result.save();
+  //   } else {
+  //     const updatedResult = await Result.findOneAndUpdate({
+  //       transfer: req.body.metadata.id,
+  //       uploadType: req.body.metadata.payload
+  //     }, { $push: {rawdata: {$each: req.body.data } }}, {
+  //       new: true
+  //     }).exec();
+  //   };
+  //   res.send('saved');
+  //
+  // } else if(req.body.metadata.payload == 'full'){
+  //   const parameters = await Param.getParameters({
+  //     slug: slug,
+  //     language: req.user.language,
+  //     author: req.user.participantInProject || req.user.project._id
+  //   });
+  //   let params = "no-change-of-params";
+  //   if(parameters){
+  //     if(parameters[0]){
+  //       if (parameters[0].parameters){
+  //       params = parameters[0].parameters;
+  //       }
+  //     }
+  //   }
+  //
+  //   let aggregated;
+  //   if(req.body.data && req.body.data.length !== 0){
+  //     aggregated = req.body.data
+  //       .filter(row => {
+  //         return (typeof(row.aggregated) !== 'undefined')
+  //       })
+  //       .map(e => e.aggregated)
+  //   };
+  //
+  //   const fullResult = new Result({
+  //     transfer: req.body.metadata.id,
+  //     author: req.user._id,
+  //     openLabId: req.user.openLabId,
+  //     project: req.user.participantInProject || req.user.project._id,
+  //     test: test._id,
+  //     taskslug: slug,
+  //     rawdata: req.body.data,
+  //     uploadType: req.body.metadata.payload,
+  //     parameters: params,
+  //     aggregated: aggregated
+  //   });
+  //
+  //   await fullResult.save();
+  //
+  //   res.send('Saved all results');
+  // } else {
+  //   res.send('Unknown upload data type');
+  // }
 };
 
 //show the results for each test

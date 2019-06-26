@@ -385,6 +385,9 @@ async function sendPersonalNotification(done, project_id, user_id, title, messag
         'title': title,
         'content': message,
         'openUrl': url.replace('%PARTICIPANT_CODE%', user.openLabId),
+        'author': user._id,
+        'project': project_id,
+        'samplyid': user.openLabId,
       })) //payload is limited to 4kb
         .then(res => {
           done();
@@ -422,6 +425,9 @@ async function sendNotification(done, project_id, title, message, url) {
                 'title': title,
                 'content': message,
                 'openUrl': url.replace('%PARTICIPANT_CODE%', user.participant_id),
+                'author': user._id,
+                'project': project_id,
+                'samplyid': user.participant_id,
               })) //payload is limited to 4kb
               .then(res => {
                 // console.log("Notification was sent", res.statusCode);

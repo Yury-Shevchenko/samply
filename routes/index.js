@@ -239,7 +239,7 @@ router.get('/datarequest/:slug/:filename', authController.isLoggedIn, catchError
 
 //For participant
 //post results of the test
-router.post('/save', authController.isLoggedIn, catchErrors(resultController.saveIncrementalResults));
+router.post('/save', catchErrors(resultController.saveIncrementalResults));
 
 //Project controller
 router.get('/projects', authController.isAdminLoggedIn, catchErrors(projectController.getUserProjects));

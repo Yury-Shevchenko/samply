@@ -16,32 +16,40 @@ const resultSchema = new mongoose.Schema({
     ref: 'Project'
     //required: 'You must supply a project!'
   },
-  test: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Test',
-    required: 'You must supply a test!'
+  samplyid: Number,
+  name: String,
+  data: {
+    title: String,
+    content: String,
+    openUrl: String,
   },
-  taskslug: String,
-  transfer: String,
-  uploadType: String,
-  result: mongoose.Schema.Types.Mixed,
-  parameters: mongoose.Schema.Types.Mixed,
-  meta: mongoose.Schema.Types.Mixed,
-  keys: mongoose.Schema.Types.Mixed,
-  rawdata: mongoose.Schema.Types.Mixed,
-  aggregated: mongoose.Schema.Types.Mixed,
-  deleteRequest: {
-    type: Boolean,
-    default: false
-  },
-  dataRequest: {
-    type: Boolean,
-    default: false
-  },
-  openDataForParticipant: {
-    type: Boolean,
-    default: false
-  }
+  usertimestamp: Number,
+  // test: {
+  //   type: mongoose.Schema.ObjectId,
+  //   ref: 'Test',
+  //   required: 'You must supply a test!'
+  // },
+  // taskslug: String,
+  // transfer: String,
+  // uploadType: String,
+  // result: mongoose.Schema.Types.Mixed,
+  // parameters: mongoose.Schema.Types.Mixed,
+  // meta: mongoose.Schema.Types.Mixed,
+  // keys: mongoose.Schema.Types.Mixed,
+  // rawdata: mongoose.Schema.Types.Mixed,
+  // aggregated: mongoose.Schema.Types.Mixed,
+  // deleteRequest: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // dataRequest: {
+  //   type: Boolean,
+  //   default: false
+  // },
+  // openDataForParticipant: {
+  //   type: Boolean,
+  //   default: false
+  // }
 });
 
 //get results of particular user

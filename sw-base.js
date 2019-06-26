@@ -38,7 +38,16 @@ function isClientFocused() {
 
 self.addEventListener('push', event => {
   console.log('Push notification received', event);
-  var data = {title: 'New test', content: 'Please check the new test', openUrl: '/testing'};
+
+  var data = {
+    title: 'New test',
+    content: 'Please check the new test',
+    openUrl: '/testing',
+    author: '5d108c051e7ed9050a283989',
+    project: '5d1091b3ea5dc1052dd171b3',
+    samplyid: '1234567890',
+  };
+
   if(event.data) {
     try{
       data = event.data.json();
@@ -47,6 +56,28 @@ self.addEventListener('push', event => {
       console.log(error)
     }
   }
+
+  // make a fetch request to record the data
+  fetch('/save', {
+    method:'POST',
+    headers: {
+      'Content-Type':'application/json',
+      'Accept':'application/json',
+    },
+    body: JSON.stringify({
+      author: data.author,
+      project: data.project,
+      samplyid: data.samplyid,
+      name: 'received',
+      data: {
+        title: data.title,
+        content: data.content,
+        openUrl: data.openUrl,
+      },
+      timestamp: Date.now(),
+    })
+  })
+
   var options = {
     body: data.content,
     icon: '/images/icons/lamp.png',
@@ -83,7 +114,7 @@ self.addEventListener('push', event => {
 
 self.addEventListener('notificationclick', function(event) {
   var notification = event.notification;
-  debugger;
+  // debugger;
   // if (!event.action) {
   //   // Was a normal notification click
   //   console.log('Notification Click.');
