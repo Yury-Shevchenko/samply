@@ -80,6 +80,7 @@ self.addEventListener('push', event => {
       console.log(error)
     }
   }
+  console.log('data', data);
 
   saveResults(data, 'received');
 
@@ -123,7 +124,8 @@ self.addEventListener('notificationclick', function(event) {
     notification.close();
   } else {
     saveResults(notification.data, 'go to test');
-    const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
+    const urlToOpen = notification.data.openUrl;
+    // const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
     event.waitUntil(
       clients.matchAll({
         type: 'window',
