@@ -36,24 +36,7 @@ function isClientFocused() {
   });
 }
 
-function saveResults(event, name){
-  var data = {
-    title: 'New test',
-    content: 'Please check the new test',
-    openUrl: 'https://samply.tk',
-    author: '5d108c051e7ed9050a283989',
-    project: '5d1091b3ea5dc1052dd171b3',
-    samplyid: '1234567890',
-  };
-
-  if(event.data) {
-    try{
-      data = event.data.json();
-    }
-    catch(error){
-      console.log(error)
-    }
-  }
+function saveResults(data, name){
   console.log('Data to save', data);
 
   fetch('/save', {
@@ -75,15 +58,30 @@ function saveResults(event, name){
       timestamp: Date.now(),
     })
   })
-
-  return data;
-
 }
 
 
 self.addEventListener('push', event => {
   // console.log('Push notification received', event);
-  const data = saveResults(event, 'received');
+  var data = {
+    title: 'Samply study',
+    content: 'Please check the new test',
+    openUrl: 'https://samply.tk',
+    author: '5d108c051e7ed9050a283989',
+    project: '5d1091b3ea5dc1052dd171b3',
+    samplyid: '1234567890',
+  };
+
+  if(event.data) {
+    try{
+      data = event.data.json();
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
+  saveResults(data, 'received');
 
   var options = {
     body: data.content,
@@ -114,11 +112,10 @@ self.addEventListener('notificationclick', function(event) {
   var notification = event.notification;
 
   if (event.action === 'no') {
-    // console.log('Not now was chosen');
-    saveResults(event, 'not now');
+    saveResults(notification.data, 'not now');
     notification.close();
   } else if(event.action === 'go') {;
-    const data = saveResults(event, 'go to test');
+    saveResults(notification.data, 'go to test');
 
     event.waitUntil(
       clients.matchAll({
@@ -134,7 +131,7 @@ self.addEventListener('notificationclick', function(event) {
           for (let i = 0; i < clis.length; i++) {
             client = clis[i];
             // console.log("client", client);
-            if (client.url === data.openUrl) {
+            if (client.url === notification.data.openUrl) {
               matchingClient = client;
               break;
             }
@@ -142,10 +139,10 @@ self.addEventListener('notificationclick', function(event) {
           if(matchingClient){
             matchingClient.focus();
           } else if (client) {
-            client.navigate(data.openUrl);
+            client.navigate(notification.data.openUrl);
             client.focus();
           } else {
-            clients.openWindow(data.openUrl);
+            clients.openWindow(notification.data.openUrl);
           }
           notification.close();
         })
