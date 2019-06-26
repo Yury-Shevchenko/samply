@@ -110,7 +110,7 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function(event) {
   console.log('event', event);
   console.log('event.notification', event.notification);
-  console.log('event.data, event.data');
+  console.log('event.data', event.data);
   console.log('event.data.json()', event.data.json());
 
   var notification = event.notification;
@@ -118,7 +118,7 @@ self.addEventListener('notificationclick', function(event) {
   if (event.action === 'no') {
     saveResults(notification.data, 'not now');
     notification.close();
-  } else if(event.action === 'go') {;
+  } else {
     saveResults(notification.data, 'go to test');
     const urlToOpen = new URL(notification.data.url, self.location.origin).href;
     event.waitUntil(
