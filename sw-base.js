@@ -99,7 +99,12 @@ self.addEventListener('push', event => {
       }
     ],
     data: {
-      url: data.openUrl
+      title: data.title,
+      content: data.content,
+      url: data.openUrl,
+      author: data.author,
+      project: data.project,
+      samplyid: data.samplyid,
     }
   };
 
@@ -111,7 +116,6 @@ self.addEventListener('notificationclick', function(event) {
   console.log('event', event);
   console.log('event.notification', event.notification);
   console.log('event.data', event.data);
-  console.log('event.data.json()', event.data.json());
 
   var notification = event.notification;
 
