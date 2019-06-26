@@ -51,9 +51,10 @@ function saveResults(event, name){
       data = event.data.json();
     }
     catch(error){
-      // console.log(error)
+      console.log(error)
     }
   }
+  console.log('Data to save', data);
 
   fetch('/save', {
     method:'POST',
@@ -152,7 +153,7 @@ self.addEventListener('notificationclick', function(event) {
   }
 });
 
-//if user closed the notification
+//if a user closed the notification
 self.addEventListener('notificationclose', (event) => {
   saveResults(event, 'closed');
 })

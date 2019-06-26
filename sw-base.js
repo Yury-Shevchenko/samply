@@ -51,9 +51,10 @@ function saveResults(event, name){
       data = event.data.json();
     }
     catch(error){
-      // console.log(error)
+      console.log(error)
     }
   }
+  console.log('Data to save', data);
 
   fetch('/save', {
     method:'POST',
