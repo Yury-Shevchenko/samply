@@ -9,7 +9,7 @@ const subscription_status = document.querySelector('#subscription_status');
 function displayConfirmNotification(){
   if('serviceWorker' in navigator){
     var options = {
-      body: 'You are successfully subscribed to Open Lab notification service',
+      body: 'You are successfully subscribed to Samply notification service',
       dir: 'ltr',
       lang: 'en-US',//BCP 47
       vibrate: [100, 50, 200],//vibration pause vibration in ms

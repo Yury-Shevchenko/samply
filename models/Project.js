@@ -45,7 +45,7 @@ const projectSchema = new mongoose.Schema({
       interval_max : { type: String, default: 'not_defined' },
       int_start    : { type: Date, default: Date.now },
       int_end      : { type: Date, default: Date.now },
-      title        : { type: String, default: 'Open Lab' },
+      title        : { type: String, default: 'Samply' },
       message      : { type: String, default: 'Please complete a test.' },
       duration     : { type: Number, default: 0 },
       url          : { type: String, default: '' },

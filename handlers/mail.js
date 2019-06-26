@@ -40,7 +40,7 @@ exports.invite = async (options) => {
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
   const mailOptions = {
-    from: `Open Lab <no-reply@open-lab.online>`,
+    from: `Samply <no-reply@samply.tk>`,
     to: options.participant.email,
     subject: options.subject,
     html,
