@@ -108,6 +108,10 @@ self.addEventListener('push', event => {
 
 
 self.addEventListener('notificationclick', function(event) {
+  console.log('event', event);
+  console.log('event.notification', event.notification);
+  console.log('event.data, event.data');
+  console.log('event.data.json()', event.data.json());
 
   var notification = event.notification;
 
@@ -116,7 +120,7 @@ self.addEventListener('notificationclick', function(event) {
     notification.close();
   } else if(event.action === 'go') {;
     saveResults(notification.data, 'go to test');
-
+    const urlToOpen = new URL(notification.data.url, self.location.origin).href;
     event.waitUntil(
       clients.matchAll({
         type: 'window',
@@ -131,7 +135,7 @@ self.addEventListener('notificationclick', function(event) {
           for (let i = 0; i < clis.length; i++) {
             client = clis[i];
             // console.log("client", client);
-            if (client.url === notification.data.openUrl) {
+            if (client.url === urlToOpen) {
               matchingClient = client;
               break;
             }
@@ -139,10 +143,10 @@ self.addEventListener('notificationclick', function(event) {
           if(matchingClient){
             matchingClient.focus();
           } else if (client) {
-            client.navigate(notification.data.openUrl);
+            client.navigate(urlToOpen);
             client.focus();
           } else {
-            clients.openWindow(notification.data.openUrl);
+            clients.openWindow(urlToOpen);
           }
           notification.close();
         })
