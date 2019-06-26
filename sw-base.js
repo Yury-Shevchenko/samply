@@ -62,7 +62,7 @@ function saveResults(data, name){
 
 
 self.addEventListener('push', event => {
-  // console.log('Push notification received', event);
+  console.log('Push notification received', event);
   var data = {
     title: 'Samply study',
     content: 'Please check the new test',
@@ -97,7 +97,7 @@ self.addEventListener('push', event => {
       {
         action: 'no',
         title: 'Not now',
-      }
+      }  
     ],
     data: {
       title: data.title,
@@ -123,39 +123,41 @@ self.addEventListener('notificationclick', function(event) {
     if(notification && notification.data) saveResults(notification.data, 'not now');
     notification.close();
   } else {
-    if(notification && notification.data) saveResults(notification.data, 'go to test');
-    const urlToOpen = notification.data.openUrl;
-    // const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
-    event.waitUntil(
-      clients.matchAll({
-        type: 'window',
-        includeUncontrolled: true
-      })
-        .then(function(clis) {
-          // var client = clis.find(function(c) {
-          //   return c.visibilityState === 'visible';
-          // });
-          let client = null;
-          let matchingClient = null;
-          for (let i = 0; i < clis.length; i++) {
-            client = clis[i];
-            // console.log("client", client);
-            if (client.url === urlToOpen) {
-              matchingClient = client;
-              break;
-            }
-          }
-          if(matchingClient){
-            matchingClient.focus();
-          } else if (client) {
-            client.navigate(urlToOpen);
-            client.focus();
-          } else {
-            clients.openWindow(urlToOpen);
-          }
-          notification.close();
+    if(notification && notification.data){
+      saveResults(notification.data, 'go to test');
+      const urlToOpen = notification.data.openUrl;
+      // const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
+      event.waitUntil(
+        clients.matchAll({
+          type: 'window',
+          includeUncontrolled: true
         })
-    );
+          .then(function(clis) {
+            // var client = clis.find(function(c) {
+            //   return c.visibilityState === 'visible';
+            // });
+            let client = null;
+            let matchingClient = null;
+            for (let i = 0; i < clis.length; i++) {
+              client = clis[i];
+              // console.log("client", client);
+              if (client.url === urlToOpen) {
+                matchingClient = client;
+                break;
+              }
+            }
+            if(matchingClient){
+              matchingClient.focus();
+            } else if (client) {
+              client.navigate(urlToOpen);
+              client.focus();
+            } else {
+              clients.openWindow(urlToOpen);
+            }
+            notification.close();
+          })
+      );
+    }
   }
 });
 

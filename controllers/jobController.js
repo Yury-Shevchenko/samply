@@ -390,8 +390,8 @@ async function sendPersonalNotification(done, project_id, user_id, title, messag
         'samplyid': user.openLabId,
       })) //payload is limited to 4kb
         .then(res => {
-          done();
           // console.log("Personal notification was sent", res.statusCode);
+          done();
         })
         .catch(err => {
           // console.log("The error happened", err.statusCode, "The user is", user.code.id);
