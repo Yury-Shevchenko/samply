@@ -249,7 +249,7 @@ exports.changeStatusOfDataRequest = async (req, res) => {
 
 //save results during the task
 exports.saveIncrementalResults = async (req, res) => {
-  console.log('Body', req.body);
+  // console.log('Body', req.body);
 
   // save in the database
   const result = new Result({
