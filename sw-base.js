@@ -101,7 +101,7 @@ self.addEventListener('push', event => {
     data: {
       title: data.title,
       content: data.content,
-      url: data.openUrl,
+      openUrl: data.openUrl,
       author: data.author,
       project: data.project,
       samplyid: data.samplyid,
@@ -115,7 +115,6 @@ self.addEventListener('push', event => {
 self.addEventListener('notificationclick', function(event) {
   console.log('event', event);
   console.log('event.notification', event.notification);
-  console.log('event.data', event.data);
 
   var notification = event.notification;
 
@@ -124,7 +123,7 @@ self.addEventListener('notificationclick', function(event) {
     notification.close();
   } else {
     saveResults(notification.data, 'go to test');
-    const urlToOpen = new URL(notification.data.url, self.location.origin).href;
+    const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
     event.waitUntil(
       clients.matchAll({
         type: 'window',
