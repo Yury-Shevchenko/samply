@@ -1,0 +1,10 @@
+mixin debugProjectCard(project = {})
+  a(href=`/projects/${project._id}`) 
+    .project
+      .project__hero
+        h2.project__title #{project.name}
+      .project__details
+        p= project.description
+      .project__bottom
+        p(style="font-size:1.2rem; font-style: italic;")= project.author_name
+        p(style="font-size:1.2rem")= project.author_institute
