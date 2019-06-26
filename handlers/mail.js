@@ -27,7 +27,7 @@ exports.send = async (options) => {
   const text = htmlToText.fromString(html);
   //postmark sending
   client.sendEmail({
-    "From": "no-reply@open-lab.online",
+    "From": "no-reply@samply.tk",
     "To": options.participant.email,
     "Subject": options.subject,
     "TextBody": text,
@@ -56,7 +56,7 @@ exports.request = async (options) => {
   const text = htmlToText.fromString(html);
   //postmark sending
   client.sendEmail({
-    "From": "no-reply@open-lab.online",
+    "From": "no-reply@samply.tk",
     "To": email_address,
     "Subject": 'New task request',
     "TextBody": text,
@@ -70,7 +70,7 @@ exports.sendQuestion = async (options) => {
   const text = htmlToText.fromString(html);
   //mailtrap sending
   const mailOptions = {
-    from: `no-reply@open-lab.online`,
+    from: `no-reply@samply.tk`,
     to: email_address,
     subject: 'New question',
     html,

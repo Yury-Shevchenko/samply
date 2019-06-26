@@ -152,7 +152,7 @@ self.addEventListener('notificationclick', function(event) {
 
 //if a user closed the notification
 self.addEventListener('notificationclose', (event) => {
-  saveResults(event, 'closed');
+  saveResults(event.notification.data, 'closed');
 })
 
 //background synchronization
