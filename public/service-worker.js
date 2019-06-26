@@ -6,11 +6,11 @@ const workboxSW = new self.WorkboxSW();
 
 //installing and activating
 self.addEventListener('install', function(event){
-  console.log('[Service Worker] Installing Service Worker ...', event);
+  // console.log('[Service Worker] Installing Service Worker ...', event);
 });
 
 self.addEventListener('activate', function(event){
-  console.log('[Service Worker] Activating Service Worker');
+  // console.log('[Service Worker] Activating Service Worker');
   return self.clients.claim();
 });
 
@@ -36,13 +36,11 @@ function isClientFocused() {
   });
 }
 
-self.addEventListener('push', event => {
-  console.log('Push notification received', event);
-
+function saveResults(event, name){
   var data = {
     title: 'New test',
     content: 'Please check the new test',
-    openUrl: '/testing',
+    openUrl: 'https://samply.tk',
     author: '5d108c051e7ed9050a283989',
     project: '5d1091b3ea5dc1052dd171b3',
     samplyid: '1234567890',
@@ -53,11 +51,10 @@ self.addEventListener('push', event => {
       data = event.data.json();
     }
     catch(error){
-      console.log(error)
+      // console.log(error)
     }
   }
 
-  // make a fetch request to record the data
   fetch('/save', {
     method:'POST',
     headers: {
@@ -68,7 +65,7 @@ self.addEventListener('push', event => {
       author: data.author,
       project: data.project,
       samplyid: data.samplyid,
-      name: 'received',
+      name: name,
       data: {
         title: data.title,
         content: data.content,
@@ -77,6 +74,15 @@ self.addEventListener('push', event => {
       timestamp: Date.now(),
     })
   })
+
+  return data;
+
+}
+
+
+self.addEventListener('push', event => {
+  // console.log('Push notification received', event);
+  const data = saveResults(event, 'received');
 
   var options = {
     body: data.content,
@@ -98,34 +104,21 @@ self.addEventListener('push', event => {
     }
   };
 
-  // const promiseChain = isClientFocused()
-    // .then((clientIsFocused) => {
-    //   if (clientIsFocused) {
-    //     console.log('Don\'t need to show a notification.');
-    //     return;
-    //   }
-    //   // Client isn't focused, we need to show a notification.
-    //   return self.registration.showNotification(data.title, options);
-    // });
-
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
 
 self.addEventListener('notificationclick', function(event) {
+
   var notification = event.notification;
-  // debugger;
-  // if (!event.action) {
-  //   // Was a normal notification click
-  //   console.log('Notification Click.');
-  //   return;
-  // }
 
   if (event.action === 'no') {
-    console.log('Not now was chosen');
+    // console.log('Not now was chosen');
+    saveResults(event, 'not now');
     notification.close();
-  } else {
-    const urlToOpen = new URL(notification.data.url, self.location.origin).href;
+  } else if(event.action === 'go') {;
+    const data = saveResults(event, 'go to test');
+
     event.waitUntil(
       clients.matchAll({
         type: 'window',
@@ -139,8 +132,8 @@ self.addEventListener('notificationclick', function(event) {
           let matchingClient = null;
           for (let i = 0; i < clis.length; i++) {
             client = clis[i];
-            console.log("client", client);
-            if (client.url === urlToOpen) {
+            // console.log("client", client);
+            if (client.url === data.openUrl) {
               matchingClient = client;
               break;
             }
@@ -148,10 +141,10 @@ self.addEventListener('notificationclick', function(event) {
           if(matchingClient){
             matchingClient.focus();
           } else if (client) {
-            client.navigate(urlToOpen);
+            client.navigate(data.openUrl);
             client.focus();
           } else {
-            clients.openWindow(urlToOpen);
+            clients.openWindow(data.openUrl);
           }
           notification.close();
         })
@@ -159,18 +152,14 @@ self.addEventListener('notificationclick', function(event) {
   }
 });
 
-//if user did not interact with application - might be used for analytics
+//if user closed the notification
 self.addEventListener('notificationclose', (event) => {
-  console.log('Notification was closed', event);
-  //can be used for analytics
-  // const dismissedNotification = event.notification;
-  // const promiseChain = notificationCloseAnalytics();
-  // event.waitUntil(promiseChain);
+  saveResults(event, 'closed');
 })
 
 //background synchronization
 self.onsync = function(event) {
   if(event.tag == 'sync-task-parameters') {
-    console.log('[Service Worker] Syncing new Posts');
+    // console.log('[Service Worker] Syncing new Posts');
   }
 }
