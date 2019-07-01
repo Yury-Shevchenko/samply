@@ -249,8 +249,8 @@ router.post('/projects/:id', authController.isAdminLoggedIn, catchErrors(project
 
 // for participants
 router.get('/participantprojects/:id', authController.isLoggedIn, catchErrors(projectController.activateParticipantProject));
-router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(projectController.subscribeforstudy));
-router.post('/unsubscribefromstudy', authController.isLoggedIn, catchErrors(projectController.unsubscribefromstudy));
+router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(jobController.subscribeforstudy));
+router.post('/unsubscribefromstudy', authController.isLoggedIn, catchErrors(jobController.unsubscribefromstudy));
 
 //edit the project
 router.get('/projects/:id/edit', authController.isAdminLoggedIn, catchErrors(projectController.editProject));

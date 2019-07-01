@@ -459,21 +459,20 @@ async function sendNotification(done, project_id, title, message, url) {
 };
 
 // user functions
-exports.registerPushNotification = async (req, res) => {
-  // console.log('req', req);
-  // console.log('user', req.user);
+exports.subscribeforstudy = async(req, res) => {
+
   const project = await Project.findOne({_id: req.user.participantInProject},{
     name: 1, notifications: 1,
   });
-  // console.log('project', project);
+
   if(project && project.notifications && project.notifications.length > 0){
-    // console.log('Notifications in the project', project.notifications);
+    console.log('Notifications in the project', project.notifications);
     project.notifications.map(sub => {
       if(sub.target && sub.target === 'user-specific'){
         const timeBuffer = 5000;
         const user_int_start = new Date(Date.now() + timeBuffer);
         const user_int_end = new Date(Date.now() + sub.duration);
-        // console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
+        console.log('User info', req.user._id, project._id, sub.id, sub.interval, 'start', user_int_start,'end', user_int_end);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
           userid: req.user.openLabId,
@@ -486,7 +485,7 @@ exports.registerPushNotification = async (req, res) => {
         });
 
         agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: req.user._id,
+          userid: req.user.openLabId,
           projectid: project._id,
           id: sub.id,
           interval: sub.interval,
@@ -497,10 +496,40 @@ exports.registerPushNotification = async (req, res) => {
       }
     })
   }
+  // add id of the study into the user.participant_projects
+  const newUser = await User.findOneAndUpdate({_id: req.user._id},
+      { ['$addToSet'] : {
+        participant_projects: req.user.participantInProject
+      } },
+      { new : true });
+  if(newUser){
+    res.status(201).json({message: 'You are successfully subscribed.'});
+  } else {
+    res.status(400).json({message: 'There was an error during the user update'});
+  }
 
+};
+
+exports.unsubscribefromstudy = async(req, res) => {
+  // remove id of the study from the user.participant_projects
+  agenda.cancel({
+    'data.projectid': req.user.participantInProject,
+    'data.userid': req.user.openLabId,
+  }, (err, numRemoved) => {});
+  const newUser = await User.findOneAndUpdate({_id: req.user._id},
+      { ['$pull'] : {
+        participant_projects: req.user.participantInProject
+      } },
+      { new : true });
+  if(newUser){
+    res.status(201).json({message: 'You are successfully unsubscribed.'});
+  } else {
+    res.status(400).json({message: 'There was an error during the user update'});
+  }
+};
+
+exports.registerPushNotification = async (req, res) => {
   const sub = req.body;
-  // console.log("The data received on the server", sub);
-  // console.log("The user is", req.user);
   await User.findById(req.user._id, (err, user) => {
     user.notifications.push(sub);
     user.save((saveErr, updatedUser) => {
@@ -517,8 +546,7 @@ exports.unsubscribePushNotification = async (req, res) => {
   // console.log("The data received on the server to unsubscribe");
   await User.findById(req.user._id, (err, user) => {
     agenda.cancel({
-      'data.projectid': req.user.participantInProject,
-      'data.userid': req.user._id,
+      'data.userid': req.user.openLabId,
     }, (err, numRemoved) => {});
     user.notifications = [];
     // TODO: delete only concrete subscription (?)

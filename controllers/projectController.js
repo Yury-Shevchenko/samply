@@ -270,32 +270,32 @@ exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});
 };
-
-exports.subscribeforstudy = async(req, res) => {
-  // add id of the study into the user.participant_projects
-  const newUser = await User.findOneAndUpdate({_id: req.user._id},
-      { ['$addToSet'] : {
-        participant_projects: req.user.participantInProject
-      } },
-      { new : true });
-  if(newUser){
-    res.status(201).json({message: 'You are successfully subscribed.'});
-  } else {
-    res.status(400).json({message: 'There was an error during the user update'});
-  }
-
-};
-
-exports.unsubscribefromstudy = async(req, res) => {
-  // remove id of the study from the user.participant_projects
-  const newUser = await User.findOneAndUpdate({_id: req.user._id},
-      { ['$pull'] : {
-        participant_projects: req.user.participantInProject
-      } },
-      { new : true });
-  if(newUser){
-    res.status(201).json({message: 'You are successfully unsubscribed.'});
-  } else {
-    res.status(400).json({message: 'There was an error during the user update'});
-  }
-};
+//
+// exports.subscribeforstudy = async(req, res) => {
+//   // add id of the study into the user.participant_projects
+//   const newUser = await User.findOneAndUpdate({_id: req.user._id},
+//       { ['$addToSet'] : {
+//         participant_projects: req.user.participantInProject
+//       } },
+//       { new : true });
+//   if(newUser){
+//     res.status(201).json({message: 'You are successfully subscribed.'});
+//   } else {
+//     res.status(400).json({message: 'There was an error during the user update'});
+//   }
+//
+// };
+//
+// exports.unsubscribefromstudy = async(req, res) => {
+//   // remove id of the study from the user.participant_projects
+//   const newUser = await User.findOneAndUpdate({_id: req.user._id},
+//       { ['$pull'] : {
+//         participant_projects: req.user.participantInProject
+//       } },
+//       { new : true });
+//   if(newUser){
+//     res.status(201).json({message: 'You are successfully unsubscribed.'});
+//   } else {
+//     res.status(400).json({message: 'There was an error during the user update'});
+//   }
+// };
