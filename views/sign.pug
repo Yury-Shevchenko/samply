@@ -5,13 +5,13 @@ include mixins/_authParticipantForms
 
 block content
   .inner
-    if user
-      .card 
+    .loginCard
+      if user
         h2 #{layout.message_logged_in}
 
-    if !user
-      +signParticipantForm()
-      if (!project && !code)
-        +authParticipantForms(layout.auth_sign)
-        p
-        p !{layout.sign_message}
+      else
+        +signParticipantForm()
+        if (!project && !code)
+          +authParticipantForms(layout.auth_sign)
+          p
+          p !{layout.sign_message}

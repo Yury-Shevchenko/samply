@@ -284,17 +284,6 @@ exports.subscribeforstudy = async(req, res) => {
     res.status(400).json({message: 'There was an error during the user update'});
   }
 
-  // await User.findById(req.user._id, (err, user) => {
-  //   user.participant_projects.push(user.participantInProject);
-  //   user.save((saveErr, updatedUser) => {
-  //     if (saveErr) {
-  //       res.status(400).json({message: 'There was an error during the user update'});
-  //     } else {
-  //       res.status(201).json({message: 'You are successfully subscribed.'});
-  //     }
-  //   });
-  // });
-
 };
 
 exports.unsubscribefromstudy = async(req, res) => {
