@@ -294,6 +294,13 @@ router.post('/createindividualnotification', authController.isAdminLoggedIn, cat
 router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
 
+
+router.get('/history', authController.isLoggedIn, catchErrors(resultController.showHistory));
+router.get('/history/page/:page', authController.isLoggedIn, catchErrors(resultController.showHistory));
+router.get('/removerecord/:id', authController.isAdminLoggedIn, catchErrors(resultController.removeRecordById));
+
+
+
 // api for registering notifications
 // router.post('/createnotification', authController.isAdminLoggedIn, catchErrors(notificationController.createNotification));
 

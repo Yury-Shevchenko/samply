@@ -37,7 +37,7 @@ function isClientFocused() {
 }
 
 function saveResults(data, name){
-  console.log('Data to save', data);
+  // console.log('Data to save', data);
 
   fetch('/save', {
     method:'POST',
@@ -62,7 +62,7 @@ function saveResults(data, name){
 
 
 self.addEventListener('push', event => {
-  console.log('Push notification received', event);
+  // console.log('Push notification received', event);
   var data = {
     title: 'Samply study',
     content: 'Please check the new test',
@@ -80,7 +80,7 @@ self.addEventListener('push', event => {
       console.log(error)
     }
   }
-  console.log('data', data);
+  // console.log('data', data);
 
   saveResults(data, 'received');
 
@@ -114,8 +114,8 @@ self.addEventListener('push', event => {
 
 
 self.addEventListener('notificationclick', function(event) {
-  console.log('event', event);
-  console.log('event.notification', event.notification);
+  // console.log('event', event);
+  // console.log('event.notification', event.notification);
 
   var notification = event.notification;
 

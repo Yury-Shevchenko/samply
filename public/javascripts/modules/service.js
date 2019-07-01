@@ -17,6 +17,7 @@ window.onbeforeinstallprompt = function(beforeInstallPromptEvent) {
   beforeInstallPromptEvent.preventDefault();
   const installButton = document.querySelector('#installApp');
   if(installButton){
+    const installationStatus = document.querySelector('#installation_status');
     installButton.style.display = "block";
     installButton.addEventListener("click", function(mouseEvent) {
       // installButton.disabled = true;
@@ -25,9 +26,11 @@ window.onbeforeinstallprompt = function(beforeInstallPromptEvent) {
         if(choiceResult.outcome === 'dismissed') {
           console.log('User cancelled installation');
           installButton.disabled = true;
+          if(installationStatus) installationStatus.innerText = "You have cancelled the installation of Samply.";
         } else {
           console.log('User added to home screen');
           installButton.style.display = "none";
+          if(installationStatus) installationStatus.innerText = "You have installed Samply.";
         }
       });
     });

@@ -25,10 +25,12 @@ const generateHTML = (filename, options = {} ) => {
 exports.send = async (options) => {
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
-  //postmark sending
+  // postmark sending
   client.sendEmail({
-    "From": "no-reply@samply.tk",
+    // "From": "no-reply@samply.tk",
     "To": options.participant.email,
+    "From": "yshevche@mail.uni-mannheim.de",
+    // "To": "yshevche@mail.uni-mannheim.de",
     "Subject": options.subject,
     "TextBody": text,
     "HtmlBody": html,

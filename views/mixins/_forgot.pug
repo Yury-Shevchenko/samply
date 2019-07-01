@@ -1,7 +1,6 @@
 mixin forgotForm()
   form.loginForm(action="/account/forgot" method="POST" style="width: 100%")
     h2 #{layout.forgot_title}
-    //- label(for="email") #{layout.email}
     input(type="email" name="email" placeholder="Email" )
     p
     input.button(type="submit" value=layout.forgot_send_button style="width: 100%")

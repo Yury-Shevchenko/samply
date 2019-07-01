@@ -71,6 +71,14 @@ html
                 li.nav__item
                   a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
                     h6 #{layout.help}
+                li.nav__item
+                  a.nav__main_link
+                    button.button(id="installApp" style="display:none") Install app
+                //- li.nav__item(class="installApp" style="display:none")
+                //-   if(layout && layout.install_app)
+                //-     h6 #{layout.install_app}
+                
+                  
               if user.level > 100
                 li.nav__item: a.nav__main_link(href="/debugprojects", class=(currentPath.startsWith('/debugprojects') ? 'nav__main_link--active' : ''))
                   h6 Supervision
@@ -152,7 +160,9 @@ html
                 li.nav__item
                   a.nav__main_link(href='/users', class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : ''))
                     h6 #{layout.participants}
-              li.nav__item: a.nav__main_link(href="/account", class=(currentPath.startsWith('/account') || currentPath.startsWith('/subscribe') ? 'nav__main_link--active' : ''))
+                li.nav__item: a.nav__main_link(href="/history", class= currentPath.startsWith('/history') ? 'nav__main_link--active' : '')
+                  h6 History
+              li.nav__item: a.nav__main_link(href="/account", class= currentPath.startsWith('/account') ? 'nav__main_link--active' : '')
                 h6 #{layout.profile}
               li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : ''))
                 h6 #{layout.logout}

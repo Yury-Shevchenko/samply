@@ -171,7 +171,9 @@ function unsubscribeNotifications() {
 }
 
 function checkNotificationSubscription() {
+  notificationStatus.innerText = "Checking your status ...";
   if(!('serviceWorker' in navigator)){
+    notificationStatus.innerText = "Sorry, your device or browser does not support notifications.";
     return;
   }
   var reg;
@@ -196,10 +198,10 @@ function checkNotificationSubscription() {
     })
     .then(sub => {
       if(sub === null){
-        // notificationStatus.innerText = "Please subscribe to receive notifications about the tests";
+        notificationStatus.innerText = "You can allow notifications from Samply";
         enableNotificationsButton.style.display = "inline-block";
       } else {
-        notificationStatus.innerText = "You are subscribed to notifications";
+        notificationStatus.innerText = "You have allowed notifications from Samply";
         disableNotificationsButton.style.display = "inline-block";
       }
     })
@@ -222,6 +224,7 @@ function subscribeForStudy(){
       console.log("Success")
       window.location = '/testing';
     }
+    subscription_status.innerText = 'You are subscribed';
     // subscribeButton.disabled = true;
     // subscribeButton.style.display = "none";
     // unsubscribeButton.disabled = false;
@@ -250,6 +253,7 @@ function unsubscribeFromStudy(){
       console.log("Success")
       window.location = '/testing';
     }
+    subscription_status.innerText = 'You are unsubscribed';
     // subscribeButton.disabled = false;
     // subscribeButton.style.display = "inline-block";
     // unsubscribeButton.disabled = true;
