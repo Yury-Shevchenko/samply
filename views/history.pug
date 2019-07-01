@@ -1,0 +1,46 @@
+extends layout
+
+block content
+  .inner
+    .userTable
+    
+      h2= `History of notifications ${typeof(participant) === 'number' ? 'for participant' + participant : ''}`
+      table.table
+        thead
+          td N.
+          td Event
+          td ID
+          td Time (user)
+          td Time (server)
+          td Title
+          td Message
+          td url
+          td Delete
+        each notification, i in history
+          tr
+            td #{i + 1 + skip}
+            td= notification.name
+            //- td= notification.samplyid
+            td
+              a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${notification.samplyid}`) #{notification.samplyid}
+            td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss') 
+            td= h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')
+            td= notification.data.title 
+            td= notification.data.content
+            td= notification.data.openUrl
+            td
+              a(href=`/removerecord/${notification._id}`)
+                != h.icon('remove')
+                
+                
+      .pagination
+        .pagination__prev
+          if page > 1
+            a(href=`/history/page/${page - 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
+        .pagination__text
+          p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
+        .pagination__next
+          if page < pages
+            a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_next}
+                      
+      //- pre=h.dump(history)
