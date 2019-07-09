@@ -20,7 +20,7 @@ module.exports =
       'history_notifications_Message': 'Message',
       'history_notifications_url': 'Web link',
       'history_notifications_Delete': 'Delete',
-      'install_instruction': 'Install the application on your Android phone. We recommend using Google Chrome as your browser. If you use a different browser, please switch to Google Chrome before installing the app.',
+      'install_instruction': '1. Install the application on your Android phone. We recommend using Google Chrome as your browser. If you use a different browser, please switch to Google Chrome before installing the app.',
       'check_green_button': 'Click on the green "Install App" button in the menu above. If it is not present, try reloading the page. Otherwise, your device or browser may not support this application.',
       'subscribe_notifications': '2. Subscribe to notifications ',
       'subscribe_to': 'Subscribe',
