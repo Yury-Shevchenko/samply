@@ -5,10 +5,10 @@ mixin publicProjectCard(project = {})
     .project__hero
       h2.project__title #{project.name}
     .project__details
-      p= project.description
+      p(style="font-size:1.2rem")= project.description
     .project__bottom
-      p(style="font-size:1.2rem; font-style: italic;")= project.author_name
-      p(style="font-size:1.2rem")= project.author_institute
+      p(style="font-size:1rem; font-style: italic;")= project.author_name
+      p(style="font-size:1rem")= project.author_institute
       if(user && user.level < 10)
         if(user.participant_projects && user.participant_projects.map(e => e.toString()).includes(project._id.toString()))
           a(href=`/participantprojects/${project._id}`)

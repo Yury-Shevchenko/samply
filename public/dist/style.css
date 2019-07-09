@@ -2089,7 +2089,6 @@ i.yes:after {
       margin-bottom: 0; }
   .project__bottom {
     bottom: 0;
-    position: absolute;
     text-align: center;
     width: 100%;
     text-align: -webkit-center; }
