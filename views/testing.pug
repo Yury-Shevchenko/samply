@@ -2,47 +2,57 @@ extends layout
 
 block content
   .inner
-    .card
-      
-      if(!project || typeof(project) == 'null')
-        form.form(action="/account" method="POST")
-          h2 #{l.message_choose_project}
-          p
-          .custom-select-header
-            select(name="participantInProject")
-              each project in projects
-                option(value=project._id, selected=(project.name === study))= project.name
-          p(style='white-space:pre;')
-          input.button( type="submit" value=l.message_enter )
-
-      else
+    if(user && user.level < 10)
+      .card
         
-        h6(style="color: #3b4051") !{project.welcomeMessage}
-          
-        p= `To participate in the study ${project.name}, please do the following:` 
-          
-        p 1. Install the application on your Android phone
-        //- button.button(class="installApp" style="display:none") Install
-        #installation_status Check the green button "Install app" in the menu above. If it is not there, try to reload the page. Otherwise, your device or browser might not support this application.
-                
-        p 2. Allow this application to send you notifications 
-        .notificationsPanel
-          button(id="enable_notifications" class="button" style="max-width:150px") Allow
-          button(id="disable_notifications" class="button" style="max-width:150px") Cancel notifications
-          #notification_status
-          
-        p= `3. Subscribe to notifications from the study ${project.name}`
-        .notificationsPanel
-          if(user.participant_projects.map(id => id.toString()).includes(user.participantInProject.toString()))
-            button(id="unsubscribeFromStudy" class="button" style="max-width:150px") Unsubscribe
-            #subscription_status You are subscribed
-          else
-            button(id="subscribeForStudy" class="button" style="max-width:150px") Subscribe
-             
-          
-              
-    script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
+        if(!project || typeof(project) == 'null')
+          form.form(action="/account" method="POST")
+            h2 #{l.message_choose_project}
+            p
+            .custom-select-header
+              select(name="participantInProject")
+                each project in projects
+                  option(value=project._id, selected=(project.name === study))= project.name
+            p(style='white-space:pre;')
+            input.button( type="submit" value=l.message_enter )
 
-    //- pre= h.dump(user)
-      //- pre= h.dump(project)
-      //- pre= h.dump(projects)
+        else
+          
+          if(user.participant_projects.map(id => id.toString()).includes(user.participantInProject.toString()))
+            #notification_status
+            button(id="unsubscribeFromStudy" class="button" style="max-width:150px") #{layout.unsubscribe} 
+            #subscription_status= `${layout.click_to_unsuscribe}`
+          
+          else 
+            
+            h6(style="color: #3b4051") !{project.welcomeMessage}
+            p= `${layout.to_participate} ${project.name}${layout.do_the_following}` 
+            
+            
+            
+            p #{layout.install_instruction}
+            //- button.button(class="installApp" style="display:none") Install
+            #installation_status #{layout.check_green_button}
+            p #{layout.subscribe_notifications} 
+            .notificationsPanel
+              button(id="enable_notifications" class="button" style="max-width:150px") #{layout.subscribe_to}
+              //- button(id="subscribeForStudy" class="button" style="max-width:150px") Subscribe for this study
+              button(id="disable_notifications" class="button" style="max-width:150px") Cancel notifications
+              #notification_status
+          
+            
+          //- p= `3. Subscribe to notifications from the study ${project.name}`
+          //- .notificationsPanel
+          //-   if(user.participant_projects.map(id => id.toString()).includes(user.participantInProject.toString()))
+          //-     button(id="unsubscribeFromStudy" class="button" style="max-width:150px") Unsubscribe
+          //-     #subscription_status You are subscribed
+          //-   else
+          //-     button(id="subscribeForStudy" class="button" style="max-width:150px") Subscribe
+               
+            
+                
+      script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
+
+      //- pre= h.dump(user)
+        //- pre= h.dump(project)
+        //- pre= h.dump(projects)

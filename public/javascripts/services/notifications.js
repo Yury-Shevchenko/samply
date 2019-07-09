@@ -23,7 +23,7 @@ function displayConfirmNotification(){
     };
     notificationStatus.innerText = "You are subscribed to notifications";
     enableNotificationsButton.style.display = "none";
-    disableNotificationsButton.style.display = "inline-block";
+    // disableNotificationsButton.style.display = "inline-block";
     navigator.serviceWorker.ready
       .then(swreg => {
         swreg.showNotification('Successfully subscribed!', options)
@@ -62,17 +62,18 @@ function configurePushSub(){
       if(sub === null){
         var vapidPublicKey = 'BJ-KXZLw9zvIdVFMGpmiasjO4q9KVZIhAHHresr5AJv32rnnGicDdk13YizCJDR51TTNTfah29McZQB-FOHtQhA';
         var convertedVapidPublicKey = urlBase64ToUint8Array(vapidPublicKey);
-        //Create new subscription
+        // Create new subscription
         return reg.pushManager.subscribe({
           userVisibleOnly: true,//push notifications are only visible to the user
           applicationServerKey: convertedVapidPublicKey,
         });
       } else {
-        //Already have subscription
+        // Already have a subscription
         notificationStatus.innerText = "You are subscribed to notifications";
         enableNotificationsButton.style.display = "none";
-        console.log("You already have subscription", sub);
-        throw new Error("You already have subscription");
+        console.log("You already have a subscription on this device", sub);
+        // throw new Error("You already have subscription");
+        return sub;
       }
     })
     .then(newSub => {
@@ -94,6 +95,7 @@ function configurePushSub(){
       console.log('Results from server are received', res);
       if(res && res.ok){
         displayConfirmNotification();
+        window.location = '/studies';
       }
       // return res.json();
     })
@@ -171,7 +173,7 @@ function unsubscribeNotifications() {
 }
 
 function checkNotificationSubscription() {
-  notificationStatus.innerText = "Checking your status ...";
+  notificationStatus.innerText = "";
   if(!('serviceWorker' in navigator)){
     notificationStatus.innerText = "Sorry, your device or browser does not support notifications.";
     return;
@@ -198,11 +200,15 @@ function checkNotificationSubscription() {
     })
     .then(sub => {
       if(sub === null){
-        notificationStatus.innerText = "You can allow notifications from Samply";
-        enableNotificationsButton.style.display = "inline-block";
+        // notificationStatus.innerText = "You can allow notifications";
+        if(subscribeButton) subscribeButton.style.display = "none";
+        if(enableNotificationsButton) enableNotificationsButton.style.display = "inline-block";
       } else {
-        notificationStatus.innerText = "You have allowed notifications from Samply";
-        disableNotificationsButton.style.display = "inline-block";
+        console.log('You have already subscription on this device', sub);
+        // subscribeButton.style.display = "inline-block";
+        if(enableNotificationsButton) enableNotificationsButton.style.display = "inline-block";
+        // notificationStatus.innerText = "You have allowed notifications";
+        // disableNotificationsButton.style.display = "inline-block";
       }
     })
     .catch(err => {
@@ -222,7 +228,7 @@ function subscribeForStudy(){
   .then(res => {
     if(res.url && res.ok){
       console.log("Success")
-      window.location = '/testing';
+      window.location = '/studies';
     }
     subscription_status.innerText = 'You are subscribed';
     // subscribeButton.disabled = true;
@@ -240,7 +246,7 @@ function subscribeForStudy(){
 };
 
 function unsubscribeFromStudy(){
-  console.log('Unubscribing from study');
+  console.log('Unsubscribing from study');
   fetch('/unsubscribefromstudy', {
     method:'POST',
     headers: {
@@ -251,7 +257,7 @@ function unsubscribeFromStudy(){
   .then(res => {
     if(res.url && res.ok){
       console.log("Success")
-      window.location = '/testing';
+      window.location = '/studies';
     }
     subscription_status.innerText = 'You are unsubscribed';
     // subscribeButton.disabled = false;
@@ -270,8 +276,8 @@ function unsubscribeFromStudy(){
 
 window.addEventListener('load', function() {
   if ('Notification' in window && 'serviceWorker' in navigator) {
-    enableNotificationsButton.addEventListener('click', askForNotificationPermission);
-    disableNotificationsButton.addEventListener('click', unsubscribeNotifications);
+    if(enableNotificationsButton) enableNotificationsButton.addEventListener('click', askForNotificationPermission);
+    // disableNotificationsButton.addEventListener('click', unsubscribeNotifications);
     if(subscribeButton) subscribeButton.addEventListener('click', subscribeForStudy);
     if(unsubscribeButton) unsubscribeButton.addEventListener('click', unsubscribeFromStudy);
     checkNotificationSubscription();

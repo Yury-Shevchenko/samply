@@ -18,18 +18,18 @@ block content
       if !user
         .loginForm
           form(action="/auth/code" method="POST")
-            h5 Use participant code
+            //- h5 Use participant code
             if (code)
               .div(style="background-color: #ffffffe0; border-top-left-radius: 6px; border-top-right-radius: 6px;")
                 input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-                p= code
+                p= `${layout.your_code} ${code}`
             else 
               input(type="text" name="code" placeholder="Participant code" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
              
             if (joined_project)
               .div(style="background-color: #ffffffe0; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
                 input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
-                p= joined_project.name
+                p= `${layout.your_study} ${joined_project.name}` 
                 if(joined_project.description)
                   h6 #{layout.description}
                   p= joined_project.description
@@ -45,12 +45,12 @@ block content
             p
           
           if (!joined_project)
-            h5 or login with your email 
+            h5 #{layout.login_with_your_email} 
             a(style={color:'black'} href=`/participant/login`) 
-              div.button(style="width:100%") Login to your account
+              div.button(style="width:100%") #{layout.login_to_your_account}
               
             a(style={color:'black'} href=`/participant/register`)     
-              div.button(style="width:100%") Create new account
+              div.button(style="width:100%") #{layout.create_new_account}
             
         
     script(nonce=`${noncevalue}`).

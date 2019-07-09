@@ -2091,7 +2091,8 @@ i.yes:after {
     bottom: 0;
     position: absolute;
     text-align: center;
-    width: 100%; }
+    width: 100%;
+    text-align: -webkit-center; }
   @media all and (max-width: 850px) {
     .project {
       width: 100%; } }

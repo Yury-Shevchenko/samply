@@ -8,7 +8,7 @@ mixin registerResearcher()
     //- label(for="password-confirm") #{layout.password_confirm}
     input(type="password" name="password-confirm" value=password-confirm placeholder="Confirm password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
     p
-    input.button(type="submit" value="Continue")
+    input.button(type="submit" value=layout.continue)
 
     script(nonce=`${noncevalue}`).
       document.body.style['backgroundImage'] = "url('/images/photos/lake-researcher-create-account-2.jpg')";

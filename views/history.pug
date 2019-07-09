@@ -4,18 +4,18 @@ block content
   .inner
     .userTable
     
-      h2= `History of notifications ${typeof(participant) === 'number' ? 'for participant' + participant : ''}`
+      h2= `${layout.history_notifications} ${typeof(participant) === 'number' ? layout.history_for_participant + participant : ''}`
       table.table
         thead
           td N.
-          td Event
-          td ID
-          td Time (user)
-          td Time (server)
-          td Title
-          td Message
-          td url
-          td Delete
+          td #{layout.history_notifications_Event} 
+          td #{layout.history_notifications_ID} 
+          td #{layout.history_notifications_Time_user} 
+          td #{layout.history_notifications_Time_server} 
+          td #{layout.history_notifications_Title} 
+          td #{layout.history_notifications_Message} 
+          td #{layout.history_notifications_url} 
+          td #{layout.history_notifications_Delete} 
         each notification, i in history
           tr
             td #{i + 1 + skip}

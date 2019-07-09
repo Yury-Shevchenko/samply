@@ -47,6 +47,7 @@
     position: absolute;
     text-align: center;
     width: 100%;
+    text-align: -webkit-center;
   }
   @media all and (max-width: 850px) {
     width: 100%;

@@ -58,8 +58,8 @@ exports.activateParticipantProject = async (req, res) => {
     new: true,
     upsert: true
   }).exec();
-  req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
-  res.redirect('back');
+  // req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
+  res.redirect('/testing');
 };
 
 exports.createProject = async (req, res) => {

@@ -5,26 +5,19 @@ include mixins/_publicProjectCard
 block content
   .inner
     
-    if !user
-      h2 #{layout.studies}
+    h2 #{layout.studies}
     
-    if user 
-      if user.participantInProject
-        h2 Studies
-        //- .card
-          //- form.form(action="/account" method="POST")
-          //-   label(for="participantInProject") #{layout.project}
-          //-   .custom-select-header
-          //-     select(name="participantInProject")
-          //-       option(value='' style="" selected=(typeof(user.participantInProject) === "undefined")) – #{layout.choose_project} –
-          //-       each project in projects
-          //-         option(value=project._id, selected=((project.name === study) || (!study && user.participantInProject.toString() === project._id.toString())))= project.name
-          //-   p 
-          //-   input.button(type="submit" value= layout.change_project_confirm)  
-          
-      else 
-        h2 #{layout.choose_project}
-      
+    if(!user)
+      p #{layout.already_have_code} 
+        a(href='/code') #{layout.here} 
+      //- .links(style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); row-gap:5px; column-gap:2px; justify-items:center;")
+      //-   a(href='/code')
+      //-     .button(style="width: fit-content; text-align: center; font-size: 2rem; margin:0") Login with the code
+      //-   a(href='/participant/login')
+      //-     .button(style="width: fit-content; text-align: center; font-size: 2rem; margin:0") Login with email
+      //-   a(href='/participant/register')
+      //-     .button(style="width: fit-content; text-align: center; font-size: 2rem; margin:0") Create an account
+    
     .projects
       each project in projects
         +publicProjectCard(project)
@@ -42,7 +35,7 @@ block content
     script(nonce=`${noncevalue}`).
       document.body.style['backgroundSize'] = 'cover';
       document.body.style['backgroundRepeat'] = 'no-repeat';
-      document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";
-            
+      document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";     
+    
     //- pre= h.dump(projects)
     //- pre= h.dump(user)

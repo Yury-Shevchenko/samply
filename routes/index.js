@@ -13,7 +13,8 @@ const passport = require('passport');
 var cors = require('cors');
 
 //home page
-router.get('/', testController.homePage);
+// router.get('/', testController.homePage);
+router.get('/', catchErrors(projectController.listPublicProjects));
 router.get('/about', testController.aboutPage);
 router.get('/researcher', testController.researcherPage);
 router.get('/researcher/:action', testController.researcherPage);
@@ -302,8 +303,12 @@ router.get('/removerecord/:id', authController.isAdminLoggedIn, catchErrors(resu
 // router.post('/createnotification', authController.isAdminLoggedIn, catchErrors(notificationController.createNotification));
 
 //user-side notifications
-router.post('/registernotification', authController.isLoggedIn, catchErrors(jobController.registerPushNotification));
-router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unsubscribePushNotification));
+router.post('/registernotification',
+  authController.isLoggedIn,
+  catchErrors(jobController.registerPushNotification),
+  catchErrors(jobController.subscribeforstudy)
+);
+router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unregisterPushNotification));
 
 router.get('/debugprojects',
   authController.isSuperAdminLoggedIn,

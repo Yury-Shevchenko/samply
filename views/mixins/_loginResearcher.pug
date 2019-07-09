@@ -11,7 +11,7 @@ mixin loginResearcher()
       a(style={color:'black'} href=`/researcher/forgot`) #{layout.message_forgot_password}
     
     a(style={color:'black'} href=`/researcher/register`) 
-      div.button(style="width: 100%") Create a researcher account
+      div.button(style="width: 100%") #{layout.create_researcher_account} 
       
       
     script(nonce=`${noncevalue}`).

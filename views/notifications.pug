@@ -2,18 +2,7 @@ extends layout
 
 block content
   .inner(style="max-width: 2000px; padding: 4rem;")
-    //- p
-    //- header.top
-    //-   nav.nav
-    //-     .nav__section.nav__section--pages
-    //-       li.nav__item: a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__link--active' : '')) #{layout.projects}
-    //-       //- li.nav__item: a.nav__link(href="/constructor", class=(currentPath.startsWith('/constructor') ? 'nav__link--active' : '')) #{layout.chooseTasks}
-    //-       //- li.nav__item: a.nav__link(href="/tasks", class=(currentPath.startsWith('/tasks') ? 'nav__link--active' : '')) #{layout.customizeParameters}
-    //-       li.nav__item: a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__link--active' : '')) #{layout.invitations}
-    //-       li.nav__item: a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__link--active' : '')) #{layout.notifications}
-    //-       //- li.nav__item: a.nav__link(href="/testing", class=(currentPath.startsWith('/testing') ? 'nav__link--active' : '')) #{layout.tryDemo}
-    //-       //- li.nav__item: a.nav__link(href="/results", class=(currentPath.startsWith('/results') ? 'nav__link--active' : '')) #{layout.demoResults}
-    //- p
+
     if participant && participant.openLabId
       h2= `${layout.notifications} for participant ${participant.openLabId}`
     else
@@ -34,28 +23,28 @@ block content
         
         .notificationsPanel
           p #{l.testing_message}
-          h6 Choose participants 
+          h6 #{layout.choose_participants}
           .custom-select-header(style="max-width:300px")
             select(name="activeTarget" id="activeTarget")
-              option(value='all' selected=(participant && participant.openLabId)) All participants
+              option(value='all' selected=(participant && participant.openLabId)) #{layout.not_all_participants} 
               each part in ids
                 option(value=part selected=(participant && participant.openLabId === part) )= part
           p
-          h6 Fill in the information for your notification
+          h6 #{layout.fill_in_information} 
           p
           h6 #{l.title} 
           input#titleContent(type='text', value = '')
           h6 #{l.message} 
           input#messageContent(type='text', value = '')
-          h6 Web link to your survey
+          h6 #{layout.web_link} 
           input#urlContent(type='text', value = '')
           if participant && participant.openLabId
-            h6 Participant ID
+            h6 #{layout.not_participant_id}  
             input#participantId(type='text', value = participant.openLabId readonly, style ="background-color:lightgrey")
-          p If you need to refer to the participant ID in the URL, use %PARTICIPANT_CODE%, for example https://survey.com/?id=%PARTICIPANT_CODE%
-            
+          p #{layout.example_web_link}
+          
           p#notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
-          p Choose the type of notification
+          p #{layout.choose_the_type} 
           #controlButtons(style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 15px; grid-row-gap: 15px;")
             button(class="buttonContainer" id="scheduleNotification") One-time  
             button(class="buttonContainer" id="randomNotification") One-time (random)

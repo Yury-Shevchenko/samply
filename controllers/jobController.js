@@ -528,7 +528,7 @@ exports.unsubscribefromstudy = async(req, res) => {
   }
 };
 
-exports.registerPushNotification = async (req, res) => {
+exports.registerPushNotification = async (req, res, next) => {
   const sub = req.body;
   await User.findById(req.user._id, (err, user) => {
     user.notifications.push(sub);
@@ -536,13 +536,14 @@ exports.registerPushNotification = async (req, res) => {
       if (saveErr) {
         res.status(400).json({message: 'There was an error during the user update'});
       } else {
-        res.status(201).json({message: 'Data received'});
+        next();
+        // res.status(201).json({message: 'Data received'});
       }
     });
   });
 };
 
-exports.unsubscribePushNotification = async (req, res) => {
+exports.unregisterPushNotification = async (req, res) => {
   // console.log("The data received on the server to unsubscribe");
   await User.findById(req.user._id, (err, user) => {
     agenda.cancel({
