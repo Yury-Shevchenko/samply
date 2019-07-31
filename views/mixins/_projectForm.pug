@@ -10,17 +10,6 @@ mixin projectForm(project = {})
     label(for='welcomeMessage') #{l.welcomeMessage}
     textarea(type='text' name='welcomeMessage')= project.welcomeMessage
     p
-      
-    //- div.inputCheckBox
-    //-   input(type= 'checkbox' id= 'showCompletionCode' name= 'showCompletionCode' checked = project.showCompletionCode)
-    //-   label(for='showCompletionCode')
-    //-     span.
-    //-       #{l.showCompletionCode}
-    //- div.inputCheckBox
-    //-   input(type= 'checkbox' id= 'useNotifications' name= 'useNotifications' checked = project.useNotifications )
-    //-   label(for='useNotifications')
-    //-     span.
-    //-       #{l.askNotifications}
 
     .div(id="membersList")
       label(for="members") #{l.invite_members}
@@ -48,6 +37,4 @@ mixin projectForm(project = {})
     button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
     p
 
-
     input(type='submit' value=l.submit class="button")
-    //- pre= h.dump(project)

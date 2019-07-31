@@ -56,7 +56,7 @@ exports.activateParticipantProject = async (req, res) => {
   res.redirect('/testing');
 };
 
-//show projects
+// show user projects
 exports.getUserProjects = async (req, res) => {
   const projects = await Project.find({creator: req.user._id}, {
     name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
@@ -64,7 +64,7 @@ exports.getUserProjects = async (req, res) => {
   const invitedprojects = await Project.find({members: req.user._id}, {
     name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
   });
-  res.render('projects', { title: 'Your projects', projects, invitedprojects });
+  res.render('projects', { projects, invitedprojects });
 };
 
 exports.activateProject = async (req, res) => {
@@ -161,7 +161,7 @@ exports.editProject = async (req, res) => {
     });
   };
   confirmOwner(project, req.user);
-  res.render('editProject', {title: `Edit ${project.name}`, project, membersEmails});
+  res.render('editProject', { project, membersEmails });
 };
 
 const confirmOwner = (project, user) => {
@@ -177,8 +177,8 @@ exports.trydeleteProject = async (req, res) => {
     res.redirect('back');
   } else {
     const resultsCount = await Result.where({ project: req.params.id }).countDocuments();
-    const participantsCount = await User.where({ participantInProject: req.params.id }).countDocuments();
-    res.render('deleteProjectForm', {project, resultsCount, participantsCount});
+    const participantsCount = await User.where({ participant_projects: req.params.id }).countDocuments();
+    res.render('deleteProjectForm', { project, resultsCount, participantsCount });
   }
 };
 

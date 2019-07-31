@@ -1,12 +1,4 @@
 const mongoose = require('mongoose');
-const multer = require('multer');
-const jimp = require('jimp');
-const uuid = require('uuid');//make unique identifier
-const uniqid = require('uniqid');
-const fs = require('fs');
-const path = require('path');
-const moment = require('moment');
-const slug = require('slugs');
 const Project = mongoose.model('Project');
 
 exports.researcherPage = async (req, res) => {

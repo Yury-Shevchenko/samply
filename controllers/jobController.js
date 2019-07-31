@@ -8,18 +8,16 @@ const uniqid = require('uniqid');
 
 const agenda = new Agenda({
   name: 'samply-notifications',
-  db: {address: process.env.DATABASE, collection: 'Job'},
+  db: { address: process.env.DATABASE, collection: 'Job' },
 });
 
 agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
-    // console.log('one_time_notification for the project', job.attrs.data.projectid);
     sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
   });
 
   agenda.define('regular_notification', (job, done) => {
-    // console.log('I am sending regular notifcations for the project', job.attrs.data.projectid);
     if(job.attrs.data.participantId && job.attrs.data.participantId > 0){
       sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     } else {
@@ -28,7 +26,6 @@ agenda.on('ready', function() {
   });
 
   agenda.define('start_manager', (job, done) => {
-    // console.log('Starting interval notifications');
     const newjob = agenda.create('regular_notification', {
       projectid: job.attrs.data.projectid,
       id: job.attrs.data.id,
@@ -45,7 +42,6 @@ agenda.on('ready', function() {
   });
 
   agenda.define('end_manager', (job, done) => {
-    // console.log('Ending interval notifications');
     agenda.cancel({
       'data.projectid': job.attrs.data.projectid,
       'data.id': job.attrs.data.id
@@ -54,13 +50,11 @@ agenda.on('ready', function() {
   });
 
   agenda.define('personal_notification', (job, done) => {
-    // console.log('I am sending right now personal notification for the user', job.attrs.data.userid);
     sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     done();
   });
 
   agenda.define('start_personal_manager', (job, done) => {
-    // console.log('Starting relative interval notifications for user', job.attrs.data.userid, 'at',  job.attrs.data.interval);
     const newjob = agenda.create('personal_notification', {
       userid: job.attrs.data.userid,
       projectid: job.attrs.data.projectid,
@@ -77,7 +71,6 @@ agenda.on('ready', function() {
   });
 
   agenda.define('end_personal_manager', (job, done) => {
-    // console.log('Stopping relative interval notifications for user', job.attrs.data.userid);
     agenda.cancel({
       'data.projectid': job.attrs.data.projectid,
       'data.id': job.attrs.data.id
@@ -86,7 +79,6 @@ agenda.on('ready', function() {
   });
 
   agenda.start();
-  // console.log("Ok, Lets get start");
 
   async function graceful() {
     await agenda.stop();
@@ -131,7 +123,6 @@ exports.subscribeforstudy = async(req, res) => {
       }
     })
   }
-  // add id of the study into the user.participant_projects
   const newUser = await User.findOneAndUpdate({_id: req.user._id},
       { ['$addToSet'] : {
         participant_projects: req.user.participantInProject

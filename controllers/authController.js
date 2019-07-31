@@ -1,6 +1,5 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
-const promisify = require('es6-promisify');
 const User = mongoose.model('User');
 const mail = require('../handlers/mail');
 
