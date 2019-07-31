@@ -3,35 +3,13 @@ extends layout
 block content
   .inner
 
-    //- p
-    //- header.top
-    //-   nav.nav
-    //-     .nav__section.nav__section--pages
-    //-       li.nav__item: a.nav__link(href="/account", class=(currentPath.startsWith('/account') ? 'nav__link--active' : '')) #{layout.account}
-    //-       //- if user.level > 10
-    //-       //-   li.nav__item: a.nav__link(href="/subscribe", class=(currentPath.startsWith('/subscribe') ? 'nav__link--active' : '')) #{layout.subscription}
-    //- p
-
     h2 #{l.title}
     
     .card
       form.form(action="/account" method="POST")
-
+        
         label(for="time") #{l.registered}
         h2= h.moment(user.created).locale(language).format("MMM Do YY")
-        
-        //- if user.level > 10
-        //-   label(for="subscription_plan") #{l.subscriptionPlan}
-        //-   if user.subscription
-        //-     if user.subscription_plan == 'professional'
-        //-       h2= `${l.professionalPlan} ${h.moment((user.subscription_expires - 86400) * 1000).format('MM-DD-YYYY')}`
-        //-     else if user.subscription_plan == 'laboratory'
-        //-       h2= `${l.laboratoryPlan} ${h.moment((user.subscription_expires - 86400) * 1000).format('MM-DD-YYYY')}`
-        //-     else
-        //-       h2= `${l.somePlan} ${h.moment((user.subscription_expires - 86400) * 1000).format('MM-DD-YYYY')}`
-        //-   else
-        //-     h2 #{l.freeSandbox}
-        //-   p
 
         label(for="name") #{l.name}
         input(type="text" name="name" value=user.name||user.facebook.name||user.github.name||user.google.name)
@@ -45,9 +23,9 @@ block content
           input(type="text" name="institute" value=user.institute)
 
         else
-          if user.openLabId
-            label(for="email") ID
-            h2= user.code.id || user.openLabId
+          if user.samplyId
+            label(for="id") ID
+            h2= user.code.id || user.samplyId
 
           if user.participantInProject
             label(for="participantInProject") #{layout.project}
@@ -64,7 +42,6 @@ block content
                 each project in projects
                   option(value=project._id)= project.name
 
-        //-general for all users information
         label(for="language") #{l.language}
         .custom-select
           select(name="language")
@@ -74,7 +51,3 @@ block content
 
         p(style='white-space:pre;')
         input.button( type="submit" value= l.submit )
-
-      //- pre=h.dump(user)
-      //- pre=h.dump(projects)
-      //- pre=h.dump(l)

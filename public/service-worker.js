@@ -4,16 +4,10 @@ importScripts('/javascripts/indexeddb/utility.js');
 
 const workboxSW = new self.WorkboxSW();
 
-//installing and activating
-self.addEventListener('install', function(event){
-  // console.log('[Service Worker] Installing Service Worker ...', event);
-});
-
+// activating
 self.addEventListener('activate', function(event){
-  // console.log('[Service Worker] Activating Service Worker');
   return self.clients.claim();
 });
-
 
 workboxSW.precache([]);
 
@@ -37,8 +31,6 @@ function isClientFocused() {
 }
 
 function saveResults(data, name){
-  // console.log('Data to save', data);
-
   fetch('/save', {
     method:'POST',
     headers: {
@@ -62,7 +54,6 @@ function saveResults(data, name){
 
 
 self.addEventListener('push', event => {
-  // console.log('Push notification received', event);
   var data = {
     title: 'Samply study',
     content: 'Please check the new test',
@@ -80,7 +71,6 @@ self.addEventListener('push', event => {
       console.log(error)
     }
   }
-  // console.log('data', data);
 
   saveResults(data, 'received');
 
@@ -114,11 +104,7 @@ self.addEventListener('push', event => {
 
 
 self.addEventListener('notificationclick', function(event) {
-  // console.log('event', event);
-  // console.log('event.notification', event.notification);
-
   var notification = event.notification;
-
   if (event.action === 'no') {
     if(notification && notification.data) saveResults(notification.data, 'not now');
     notification.close();
@@ -126,21 +112,16 @@ self.addEventListener('notificationclick', function(event) {
     if(notification && notification.data){
       saveResults(notification.data, 'go to test');
       const urlToOpen = notification.data.openUrl;
-      // const urlToOpen = new URL(notification.data.openUrl, self.location.origin).href;
       event.waitUntil(
         clients.matchAll({
           type: 'window',
           includeUncontrolled: true
         })
           .then(function(clis) {
-            // var client = clis.find(function(c) {
-            //   return c.visibilityState === 'visible';
-            // });
             let client = null;
             let matchingClient = null;
             for (let i = 0; i < clis.length; i++) {
               client = clis[i];
-              // console.log("client", client);
               if (client.url === urlToOpen) {
                 matchingClient = client;
                 break;
@@ -166,9 +147,6 @@ self.addEventListener('notificationclose', (event) => {
   if(event.notification && event.notification.data) saveResults(event.notification.data, 'closed');
 })
 
-//background synchronization
-self.onsync = function(event) {
-  if(event.tag == 'sync-task-parameters') {
-    // console.log('[Service Worker] Syncing new Posts');
-  }
-}
+self.addEventListener('message', function(event){
+  console.log("SW Received Message: " + event.data);
+});

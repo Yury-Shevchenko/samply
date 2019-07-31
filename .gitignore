@@ -2,4 +2,3 @@ node_modules/
 .DS_Store
 *.log
 variables.env
-variables.env.now

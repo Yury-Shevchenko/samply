@@ -1,8 +1,0 @@
-extends layout
-
-include mixins/_labjsuploadForm
-
-block content
-  .inner
-    h2= `${l.edit_title} ${test.name}`
-    +labjsuploadForm(test)

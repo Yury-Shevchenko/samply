@@ -4,49 +4,29 @@ include mixins/_userCard
 
 block content
   .inner
-    //- p
-    //- header.top
-    //-   nav.nav
-    //-     .nav__section.nav__section--pages
-    //-       li.nav__item: a.nav__link(href="/users", class=(currentPath.startsWith('/users') ? 'nav__link--active' : '')) #{layout.participants}
-    //-       //- li.nav__item: a.nav__link(href="/data", class=(currentPath.startsWith('/data') ? 'nav__link--active' : '')) #{layout.results}
-    //- 
-    //- p
+
     .userTable
       h2 #{l.title}
 
       if(project && user.project && user.project.name)
-        //- p
-        //-   a(style={color:'black'} href=`/downloadprojectdata/`) #{l.download_all_data}
-        //- p
-        //-   a(style={color:'black'} href=`/downloadprojectmetadata/`) #{l.download_all_meta_data}
-        //- p
-        //-   a(style={color:'black'} href=`/downloadsummarydata/`) Download summary data
 
         .card
           .users
             table.table
               thead
-                //- td #{l.table_number}
                 td №
-                td #{l.table_openlabid}
+                td #{l.table_samplyId}
                 td #{l.table_code}
                 if (project && project.showCompletionCode)
                   td #{l.table_confirmation_code}
                 td Created
                 td #{l.table_role}
-                //- td #{l.table_tests}
-                //- td #{l.table_data}
-                //- td #{l.table_delete_requests}
                 td #{l.table_name}
                 td <i class="fas fa-language"></i>
-                //- td #{l.table_details}
-                //- td #{l.table_metadata}
                 td Approval
                 if user.level > 10
                   td Notifications
                   td <i class="fas fa-ban"></i>
-                  //- td #{l.table_delete_user}
               each person, i in users
                 +userCard(person, i)
 
@@ -62,7 +42,3 @@ block content
 
       else
         p !{l.message_create_project}
-
-
-      //- pre=h.dump(project)
-      //- pre=h.dump(users)

@@ -15,7 +15,6 @@ block content
       nav.nav
         .nav__section.nav__section--pages
           li.nav__item: a.nav__link(href=`/docs/intro`, class=(currentPath.startsWith(`/docs/intro`) ? 'nav__link--active' : '')) #{l.intro_title}
-          //- li.nav__item: a.nav__link(href=`/docs/upload`, class=(currentPath.startsWith(`/docs/upload`) ? 'nav__link--active' : '')) #{l.upload_title}
           li.nav__item: a.nav__link(href=`/docs/project`, class=(currentPath.startsWith(`/docs/project`) ? 'nav__link--active' : '')) Manage notifications
           li.nav__item: a.nav__link(href=`/docs/data`, class=(currentPath.startsWith(`/docs/data`) ? 'nav__link--active' : '')) Review data
           li.nav__item: a.nav__link(href=`/docs/help`, class=(currentPath.startsWith(`/docs/help`) ? 'nav__link--active' : '')) #{l.help_title}

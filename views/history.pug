@@ -20,7 +20,6 @@ block content
           tr
             td #{i + 1 + skip}
             td= notification.name
-            //- td= notification.samplyid
             td
               a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${notification.samplyid}`) #{notification.samplyid}
             td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss') 
@@ -43,4 +42,3 @@ block content
           if page < pages
             a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_next}
                       
-      //- pre=h.dump(history)

@@ -19,10 +19,6 @@ const projectSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  showCompletionCode: {
-    type: Boolean,
-    default: false
-  },
   welcomeMessage: {
     type: String,
     default: ''
@@ -32,7 +28,6 @@ const projectSchema = new mongoose.Schema({
     default: true
   },
   currentlyActive  : Boolean,
-  tests            : [{ type : mongoose.Schema.ObjectId, ref: 'Test' }],
   invitations      : [{ email: String, token: String }],
   notifications    : [
     {
@@ -85,7 +80,6 @@ projectSchema.statics.findAllPublic = function() {
 
 projectSchema.statics.debugProjects = function() {
   return this.aggregate([
-    // { $match: { currentlyActive: true } },
     { $lookup: {
         from: 'users', localField: '_id', foreignField: 'participantInProject', as: 'participant'}
     },

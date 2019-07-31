@@ -5,6 +5,11 @@ const createScheduleNotificationsBtn = document.querySelector('#create_schedule_
 // randomize: false
 
 function createScheduleNotification(){
+
+  // TEST message to service worker
+  console.log("test")
+  navigator.serviceWorker.controller.postMessage("Client 1 says '"+ 'yury' +"'");
+
   let participantId, participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
     participantId = parseInt(document.getElementById('participantId').value);

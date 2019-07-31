@@ -2,7 +2,6 @@ extends layout
 
 include mixins/_registerResearcher
 include mixins/_loginResearcher
-include mixins/_pricingResearcher
 include mixins/_howitworksResearcher
 include mixins/_forgot
 
@@ -12,27 +11,21 @@ block content
     header.top
       nav.nav
         .nav__section.nav__section--pages
-          //- li.nav__item: a.nav__link(href="/researcher/register", class=(currentPath.startsWith('/researcher/register') ? 'nav__link--active' : '')) #{layout.signup} 
-          //- li.nav__item: a.nav__link(href="/researcher/login", class=(currentPath.startsWith('/researcher/login') ? 'nav__link--active' : '')) #{layout.login}
-          //- li.nav__item: a.nav__link(href="/researcher/howitworks", class=(currentPath.startsWith('/researcher/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks} 
-          //- li.nav__item: a.nav__link(href="/researcher/pricing", class=(currentPath.startsWith('/researcher/pricing') ? 'nav__link--active' : '')) #{layout.pricing} 
-    
+
     .loginCard
-      if !action || action == "register"
-        +registerResearcher()
+      if user
+        p You are already logged in. Please log out first if you want to change the account.
         
-      if action == "login"
-        +loginResearcher()
-      
-      if action == "forgot"
-        +loginResearcher()
-        +forgotForm()    
-      
-      //- if action == "pricing"
-      //-   +pricingResearcher()
+      else   
+        if !action || action == "register"
+          +registerResearcher()
+          
+        if action == "login"
+          +loginResearcher()
         
-      if action == "howitworks"
-        +howitworksResearcher()
-      
-      
-      //- pre= h.dump(action)
+        if action == "forgot"
+          +loginResearcher()
+          +forgotForm()    
+        
+        if action == "howitworks"
+          +howitworksResearcher()

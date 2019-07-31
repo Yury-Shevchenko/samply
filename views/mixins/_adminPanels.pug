@@ -1,7 +1,0 @@
-mixin adminPanels()
-  block header
-      header.top
-        nav.nav
-          .nav__section.nav__section--user
-              li.nav__item: a.nav__link(href="/register", class=(currentPath.startsWith('/register') ? 'nav__link--active' : '')) Register
-              li.nav__item: a.nav__link(href="/login", class=(currentPath.startsWith('/login') ? 'nav__link--active' : '')) Log In

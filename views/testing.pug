@@ -28,31 +28,14 @@ block content
             h6(style="color: #3b4051") !{project.welcomeMessage}
             p= `${layout.to_participate} ${project.name}${layout.do_the_following}` 
             
-            
-            
+        
             p #{layout.install_instruction}
-            //- button.button(class="installApp" style="display:none") Install
             #installation_status #{layout.check_green_button}
             p #{layout.subscribe_notifications} 
             .notificationsPanel
               button(id="enable_notifications" class="button" style="max-width:150px") #{layout.subscribe_to}
-              //- button(id="subscribeForStudy" class="button" style="max-width:150px") Subscribe for this study
               button(id="disable_notifications" class="button" style="max-width:150px") Cancel notifications
               #notification_status
           
-            
-          //- p= `3. Subscribe to notifications from the study ${project.name}`
-          //- .notificationsPanel
-          //-   if(user.participant_projects.map(id => id.toString()).includes(user.participantInProject.toString()))
-          //-     button(id="unsubscribeFromStudy" class="button" style="max-width:150px") Unsubscribe
-          //-     #subscription_status You are subscribed
-          //-   else
-          //-     button(id="subscribeForStudy" class="button" style="max-width:150px") Subscribe
-               
-            
                 
       script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
-
-      //- pre= h.dump(user)
-        //- pre= h.dump(project)
-        //- pre= h.dump(projects)

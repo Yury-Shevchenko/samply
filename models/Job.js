@@ -27,12 +27,11 @@ const jobSchema = new mongoose.Schema({
   },
   lastModifiedBy: {
     type: String,
-    default: 'open-lab'
+    default: 'samply'
   },
   lockedAt: {
     type: Date,
     index: true,
-    // default: Date.now
   },
   lastFinishedAt: Date
 });

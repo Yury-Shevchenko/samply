@@ -2,6 +2,9 @@ extends layout
 
 include mixins/_publicProjectCard
 
+block headers
+  meta(name="Description" content="Samply, notifications, experience-based sampling")
+
 block content
   .inner
     
@@ -10,13 +13,6 @@ block content
     if(!user)
       p #{layout.already_have_code} 
         a(href='/code') #{layout.here} 
-      //- .links(style="display:grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); row-gap:5px; column-gap:2px; justify-items:center;")
-      //-   a(href='/code')
-      //-     .button(style="width: fit-content; text-align: center; font-size: 2rem; margin:0") Login with the code
-      //-   a(href='/participant/login')
-      //-     .button(style="width: fit-content; text-align: center; font-size: 2rem; margin:0") Login with email
-      //-   a(href='/participant/register')
-      //-     .button(style="width: fit-content; text-align: center; font-size: 2rem; margin:0") Create an account
     
     .projects
       each project in projects
@@ -37,5 +33,3 @@ block content
       document.body.style['backgroundRepeat'] = 'no-repeat';
       document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";     
     
-    //- pre= h.dump(projects)
-    //- pre= h.dump(user)

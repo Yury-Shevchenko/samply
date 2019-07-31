@@ -3,8 +3,8 @@ extends layout
 block content
   .inner(style="max-width: 2000px; padding: 4rem;")
 
-    if participant && participant.openLabId
-      h2= `${layout.notifications} for participant ${participant.openLabId}`
+    if participant && participant.samplyId
+      h2= `${layout.notifications} for participant ${participant.samplyId}`
     else
       h2= `${layout.notifications}`
     .card
@@ -26,9 +26,9 @@ block content
           h6 #{layout.choose_participants}
           .custom-select-header(style="max-width:300px")
             select(name="activeTarget" id="activeTarget")
-              option(value='all' selected=(participant && participant.openLabId)) #{layout.not_all_participants} 
+              option(value='all' selected=(participant && participant.samplyId)) #{layout.not_all_participants} 
               each part in ids
-                option(value=part selected=(participant && participant.openLabId === part) )= part
+                option(value=part selected=(participant && participant.samplyId === part) )= part
           p
           h6 #{layout.fill_in_information} 
           p
@@ -38,9 +38,9 @@ block content
           input#messageContent(type='text', value = '')
           h6 #{layout.web_link} 
           input#urlContent(type='text', value = '')
-          if participant && participant.openLabId
+          if participant && participant.samplyId
             h6 #{layout.not_participant_id}  
-            input#participantId(type='text', value = participant.openLabId readonly, style ="background-color:lightgrey")
+            input#participantId(type='text', value = participant.samplyId readonly, style ="background-color:lightgrey")
           p #{layout.example_web_link}
           
           p#notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
@@ -55,8 +55,8 @@ block content
           p
           .notificationContainer(id="scheduleNotificationContainer" style="display:none") 
            
-            if participant && participant.openLabId
-              p= `One-time notifications are sent only to the participant with id ${participant.openLabId}.`
+            if participant && participant.samplyId
+              p= `One-time notifications are sent only to the participant with id ${participant.samplyId}.`
             else 
               p= `One-time notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
             
@@ -70,8 +70,8 @@ block content
   
           .notificationContainer(id="intervalNotificationContainer" style="display:none")
           
-            if participant && participant.openLabId
-              p= `Regular notifications are sent only to the participant with id ${participant.openLabId}.`
+            if participant && participant.samplyId
+              p= `Regular notifications are sent only to the participant with id ${participant.samplyId}.`
             else 
               p= `Regular notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
           
@@ -116,8 +116,8 @@ block content
             button(id="create_individual_notification" class="button") #{l.add}
             
           .notificationContainer(id="randomNotificationContainer" style="display:none") 
-            if participant && participant.openLabId
-              p= `One-time notifications are sent only to the participant with id ${participant.openLabId}.`
+            if participant && participant.samplyId
+              p= `One-time notifications are sent only to the participant with id ${participant.samplyId}.`
             else 
               p= `One-time notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
           
@@ -194,7 +194,7 @@ block content
           p  
           button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
         
-        if participant && participant.openLabId
+        if participant && participant.samplyId
           script(nonce=`${noncevalue}`).
             document.getElementById('individualNotification').disabled = true;
             document.getElementById('individualNotification').style['color'] = 'lightgrey';
@@ -290,8 +290,3 @@ block content
         
       else
         p !{l.message_create_project}
-
-    //- pre= h.dump(ids)
-    //- pre= h.dump(participant)
-    //- pre= h.dump(project)
-    //- 

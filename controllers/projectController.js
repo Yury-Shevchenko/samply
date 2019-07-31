@@ -1,30 +1,66 @@
 const mongoose = require('mongoose');
-const Test = mongoose.model('Test');
-const Param = mongoose.model('Param');
 const User = mongoose.model('User');
 const Result = mongoose.model('Result');
 const Project = mongoose.model('Project');
+const uniqid = require('uniqid');
+const mail = require('../handlers/mail');
 
-//show the user's projects
+exports.listPublicProjects = async(req, res) => {
+  const study = req.query.study;
+  const page = req.params.page || 1;
+  const limit = 20;
+  const skip = (page * limit) - limit;
+  const projectsPromise = Project
+    .findAllPublic()
+    .skip(skip)
+    .limit(limit);
+  const countPromise = Project.where({currentlyActive: true, creator: { $exists: true }}).countDocuments();
+  const [projects, count] = await Promise.all([ projectsPromise, countPromise ]);
+  const pages = Math.ceil(count / limit);
+  if(!projects.length && skip){
+    req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
+    res.redirect(`/studies/page/${pages}`);
+    return;
+  }
+  res.render('studies', {projects, page, pages, count, study});
+};
+
+exports.showProjectDescription = async(req, res) => {
+  const project = await Project
+    .findOne({
+      name: req.params.study,
+      currentlyActive: true,
+    },{
+      name: 1, description: 1, currentlyActive: 1, tests: 1, creator: 1, created: 1,
+    }
+  );
+  let author;
+  if(project){
+    author = await User.findOne({_id: project.creator},{
+      name: 1, institute: 1
+    });
+    res.render('study', {project, author});
+  } else {
+    res.redirect('back');
+  }
+};
+
+exports.activateParticipantProject = async (req, res) => {
+  const activeProject = await Project.findOne({_id: req.params.id});
+  const updatedUser = await User.findOneAndUpdate({
+    _id: req.user._id
+  }, { participantInProject: activeProject._id }, {
+    new: true,
+    upsert: true
+  }).exec();
+  res.redirect('/testing');
+};
+
+//show projects
 exports.getUserProjects = async (req, res) => {
   const projects = await Project.find({creator: req.user._id}, {
     name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
   });
-  // const limitSandbox = process.env.FREE_PLAN_PARTICIPANTS_LIMIT;
-  // const limitProf = process.env.PROF_PLAN_PARTICIPANTS_LIMIT;
-  // if (projects){
-  //   if (!req.user.subscription || Date.now() > req.user.subscription_expires * 1000 || (req.user.subscription && req.user.subscription_plan == 'professional')){
-  //     await Promise.all(projects.map(async (item) => {
-  //       const project = await Project.findOne({ _id: item._id });
-  //       const participantsNumber = project.participants.length;
-  //       if (project.currentlyActive  && ((participantsNumber > limitSandbox && (!req.user.subscription || Date.now() > req.user.subscription_expires * 1000)) || (participantsNumber > limitProf && req.user.subscription && req.user.subscription_plan == 'professional') )) {
-  //         project.currentlyActive = false;
-  //         await project.save();
-  //         req.flash('error', `${res.locals.layout.flash_limit_of_participants_reached_1} ${project.name} ${res.locals.layout.flash_limit_of_participants_reached_2}`);
-  //       }
-  //     }));
-  //   }
-  // }
   const invitedprojects = await Project.find({members: req.user._id}, {
     name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
   });
@@ -32,7 +68,6 @@ exports.getUserProjects = async (req, res) => {
 };
 
 exports.activateProject = async (req, res) => {
-  // check whether is is user's project or the user has a superadmin permission
   if (req.user.level > 100 || req.user.projects.filter(project => project._id.toString() === req.params.id).length > 0){
     const activeProject = await Project.findOne({_id: req.params.id});
     const updatedUser = await User.findOneAndUpdate({
@@ -47,19 +82,6 @@ exports.activateProject = async (req, res) => {
     req.flash('error', `You do not have rights to access this project.`);
     res.redirect('back');
   }
-
-};
-
-exports.activateParticipantProject = async (req, res) => {
-  const activeProject = await Project.findOne({_id: req.params.id});
-  const updatedUser = await User.findOneAndUpdate({
-    _id: req.user._id
-  }, { participantInProject: activeProject._id }, {
-    new: true,
-    upsert: true
-  }).exec();
-  // req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
-  res.redirect('/testing');
 };
 
 exports.createProject = async (req, res) => {
@@ -80,8 +102,6 @@ exports.createProject = async (req, res) => {
           creator: req.user._id,
           members: membersData,
           currentlyActive: req.body.currentlyActive,
-          showCompletionCode: req.body.showCompletionCode == 'on',
-          // useNotifications: req.body.useNotifications == 'on',
         }
       )).save();
       if (typeof(req.user.project._id) == "undefined"){
@@ -120,8 +140,6 @@ exports.updateProject = async (req, res) => {
     project.name = req.body.name;
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
-    project.showCompletionCode = req.body.showCompletionCode == 'on';
-    // project.useNotifications = req.body.useNotifications == 'on';
     project.members = membersData;
     await project.save();
     req.flash('success', `${res.locals.layout.flash_project_updated}`);
@@ -188,10 +206,8 @@ exports.removeProject = async (req, res) => {
 
 exports.changeStatusProject = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
-  const limitSandbox = process.env.FREE_PLAN_PARTICIPANTS_LIMIT;
-  const limitProf = process.env.PROF_PLAN_PARTICIPANTS_LIMIT;
   const participantsNumber = project.participants.length;
-  if ( project.currentlyActive || participantsNumber < limitSandbox || (participantsNumber < limitProf && req.user.subscription && Date.now() < req.user.subscription_expires * 1000) || (req.user.subscription && Date.now() < req.user.subscription_expires * 1000 && req.user.subscription_plan == 'laboratory')){
+  if (project){
     project.currentlyActive = !project.currentlyActive;
     await project.save();
     req.flash('success', `${req.params.action == 'on'? res.locals.layout.flash_program_open : res.locals.layout.flash_program_closed}`);
@@ -202,54 +218,6 @@ exports.changeStatusProject = async (req, res) => {
   }
 };
 
-exports.listPublicProjects = async(req, res) => {
-  const study = req.query.study;
-  const page = req.params.page || 1;
-  const limit = 20;
-  const skip = (page * limit) - limit;
-  const projectsPromise = Project
-    .findAllPublic()
-    .skip(skip)
-    .limit(limit);
-  const countPromise = Project.where({currentlyActive: true, creator: { $exists: true }}).countDocuments();
-  const [projects, count] = await Promise.all([ projectsPromise, countPromise ]);
-  const pages = Math.ceil(count / limit);
-  if(!projects.length && skip){
-    req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
-    res.redirect(`/studies/page/${pages}`);
-    return;
-  }
-  res.render('studies', {projects, page, pages, count, study});
-};
-
-exports.showProjectDescription = async(req, res) => {
-  const project = await Project
-    .findOne({
-      name: req.params.study,
-      currentlyActive: true,
-    },{
-      name: 1, description: 1, currentlyActive: 1, tests: 1, creator: 1, created: 1,
-    }
-  );
-  let author;
-  if(project){
-    author = await User.findOne({_id: project.creator},{
-      name: 1, institute: 1
-    });
-  }
-  let tests;
-  if(project){
-    tests = await Test
-      .find({
-        _id: { $in: project.tests},
-        author: { $exists: true },
-        open: true
-      })
-      .select({author: 1, slug: 1, name: 1, description: 1, photo: 1})
-  }
-  res.render('study', {project, tests, author});
-};
-
 exports.manageNotifications = async(req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1,
@@ -257,45 +225,74 @@ exports.manageNotifications = async(req, res) => {
   const participants = await User.getUsersOfProject(req.user.project._id);
   let ids;
   if(participants){
-    //ids = participants;
     ids = participants.map(user => user.participant_id);
   }
   const participant = await User.findOne({
-    openLabId: req.params.id,
+    samplyId: req.params.id,
   });
   res.render('notifications', {project, participant, ids});
+};
+
+exports.inviteParticipants = async (req, res) => {
+  let emails = [];
+  if(req.body.invitationsList){
+    const emailsRaw = req.body.invitationsList.replace(/ /g, '').split(/\r\n|,|;/);
+    if(emailsRaw){
+      emails = emails.concat(emailsRaw.filter(e => e && e != null && e != ''));
+    }
+  };
+  const project = await Project.findOne( { name: req.params.project });
+  let sentEmails = [];
+  if (project && project.invitations && project.invitations.length > 0){
+    sentEmails = project.invitations.filter(e => typeof(e) != 'undefined' && e != null &&  e.email != null).map(e => e.email);
+  }
+  const newInvitationEmails = emails.filter(e => e !=null && e != '' && sentEmails.indexOf(e) == -1);
+  if ( sentEmails.length > 100 ){
+    req.flash('error', `${res.locals.layout.flash_invitation_overlimit}`);
+    res.redirect('back');
+    return;
+  }
+  let sentInvitations;
+  const subject = res.locals.layout.flash_invitation;
+  try {
+    sentInvitations = await Promise.all(newInvitationEmails.map(async (email) => {
+      if(email && email != null){
+        const token = uniqid();
+        const participant = {
+          email: email,
+          project: project.name
+        };
+        const singupURL = `https://${req.headers.host}/code/${req.params.project}/${token}`;
+        await mail.send({
+          participant,
+          subject,
+          singupURL,
+          filename: 'invitation-' + req.user.language
+        });
+        return ({email: email, token: token})
+      }
+    }));
+  } catch(err) {
+    req.flash('error', err.message);
+    res.redirect('back');
+    return;
+  };
+  if(sentInvitations && sentInvitations != null){
+    project.invitations = project.invitations.concat(sentInvitations);
+  }
+  await project.save();
+  req.flash('success', `${res.locals.layout.flash_invited}`);
+  res.redirect(`back`);
+};
+
+exports.invitations = async (req, res) => {
+  const project = await Project.findOne({_id: req.user.project._id},{
+    name: 1, invitations: 1,
+  });
+  res.render('invitations', {project});
 };
 
 exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});
 };
-//
-// exports.subscribeforstudy = async(req, res) => {
-//   // add id of the study into the user.participant_projects
-//   const newUser = await User.findOneAndUpdate({_id: req.user._id},
-//       { ['$addToSet'] : {
-//         participant_projects: req.user.participantInProject
-//       } },
-//       { new : true });
-//   if(newUser){
-//     res.status(201).json({message: 'You are successfully subscribed.'});
-//   } else {
-//     res.status(400).json({message: 'There was an error during the user update'});
-//   }
-//
-// };
-//
-// exports.unsubscribefromstudy = async(req, res) => {
-//   // remove id of the study from the user.participant_projects
-//   const newUser = await User.findOneAndUpdate({_id: req.user._id},
-//       { ['$pull'] : {
-//         participant_projects: req.user.participantInProject
-//       } },
-//       { new : true });
-//   if(newUser){
-//     res.status(201).json({message: 'You are successfully unsubscribed.'});
-//   } else {
-//     res.status(400).json({message: 'There was an error during the user update'});
-//   }
-// };

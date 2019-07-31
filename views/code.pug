@@ -2,15 +2,7 @@ extends layout
 
 block content
   .inner
-    //- p
-    //- header.top
-    //-   nav.nav
-    //-     .nav__section.nav__section--pages
-    //-       li.nav__item: a.nav__link(href="/participant/register", class=(currentPath.startsWith('/participant/register') ? 'nav__link--active' : '')) #{layout.signup}
-    //-       li.nav__item: a.nav__link(href="/participant/login", class=(currentPath.startsWith('/participant/login') ? 'nav__link--active' : '')) #{layout.login}
-    //-       li.nav__item: a.nav__link(href="/code", class=(currentPath.startsWith('/code') ? 'nav__link--active' : '')) #{layout.enterCode}
-    //-       li.nav__item: a.nav__link(href="/participant/howitworks", class=(currentPath.startsWith('/participant/howitworks') ? 'nav__link--active' : '')) #{layout.howitworks}
-
+  
     .loginCard
       if user
         h5 #{layout.message_logged_in}
@@ -57,7 +49,3 @@ block content
       document.body.style['backgroundSize'] = 'cover';
       document.body.style['backgroundRepeat'] = 'no-repeat';
       document.body.style['backgroundImage'] = "url('/images/photos/participant-login.jpg')";
-
-        //- pre=h.dump(projects)
-        //- pre=h.dump(joined_project)
-        //- pre=h.dump(code)

@@ -3,7 +3,6 @@ mixin userCard(person = {}, i)
   .user
     tr
       td #{i + 1 + skip}
-      //- td= person.participant_id
       td
         a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.participant_id}`) #{person.participant_id}
       if (project.invitations.map(e => e.token).indexOf(person.participant_code) > - 1)
@@ -20,15 +19,6 @@ mixin userCard(person = {}, i)
         td Researcher
       else
         td Participant
-      //- td= person.numberTests
-      //- td
-      //-   if(person.numberTests > 0)
-      //-       a(style="border-bottom: 2px solid #FFC40E;" href=`/alldata/${person._id}/${person.participant_id}`) #{l.table_download}
-      //- 
-      //- if(person.numberTests > 0)
-      //-   td= person.numberDataRequests + person.numberDeleteRequests
-      //- else
-      //-   td
 
       td= person.name
       if(person.language)
@@ -36,14 +26,6 @@ mixin userCard(person = {}, i)
       else 
         td
 
-      //- td
-      //-   if(person.numberTests > 0)
-      //-       a(style="border-bottom: 2px solid #FFC40E;" href=`/users/${person._id}/${person.participant_id}`) #{l.table_open}
-
-      //- td
-      //-   if(person.numberTests > 0)
-      //-       a(style="border-bottom: 2px solid #FFC40E;" href=`/allmetadata/${person._id}/${person.participant_id}`) #{l.table_download}
-      
       if(person.notifications && person.notifications.length > 0)
         td= person.notifications.length
       else 
@@ -59,6 +41,6 @@ mixin userCard(person = {}, i)
         td
           a(href=`/removeuser/${person._id}/${person.participant_id}`) 
             <i class="far fa-trash-alt"></i>
-              //- != h.icon('remove')
+
       else 
         td
