@@ -12,7 +12,7 @@ Samply makes sending notifications easy and provides a secure foundation for con
 
 ## Use in any web browser
 
-As a researcher, you can create a new study at https://samply.tk. After creating the study, you send an invitation link to participants. Participants can open the link on their Android phones, install the application and sign up for your study. Now, they can receive notifications from you. The notifications look like native mobile notifications.
+As a researcher, you can create and manage your study in a web browser. After creating the study, you send an invitation link to participants. Participants can open the link on their Android phones, install the application and sign up for your study. Now, they can receive notifications from you. These notifications look and feel like native mobile notifications.
 
 ## Contribute to the software
 
