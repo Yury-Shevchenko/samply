@@ -27,7 +27,7 @@ exports.send = async (options) => {
   const text = htmlToText.fromString(html);
   // postmark sending
   client.sendEmail({
-    // "From": "no-reply@samply.tk",
+    // "From": "no-reply@samply.ml",
     "To": options.participant.email,
     "From": "yshevche@mail.uni-mannheim.de",
     // "To": "yshevche@mail.uni-mannheim.de",
@@ -42,7 +42,7 @@ exports.invite = async (options) => {
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
   const mailOptions = {
-    from: `Samply <no-reply@samply.tk>`,
+    from: `Samply <no-reply@samply.ml>`,
     to: options.participant.email,
     subject: options.subject,
     html,
@@ -58,7 +58,7 @@ exports.request = async (options) => {
   const text = htmlToText.fromString(html);
   //postmark sending
   client.sendEmail({
-    "From": "no-reply@samply.tk",
+    "From": "no-reply@samply.ml",
     "To": email_address,
     "Subject": 'New task request',
     "TextBody": text,
@@ -72,7 +72,7 @@ exports.sendQuestion = async (options) => {
   const text = htmlToText.fromString(html);
   //mailtrap sending
   const mailOptions = {
-    from: `no-reply@samply.tk`,
+    from: `no-reply@samply.ml`,
     to: email_address,
     subject: 'New question',
     html,

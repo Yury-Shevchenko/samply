@@ -57,7 +57,7 @@ self.addEventListener('push', event => {
   var data = {
     title: 'Samply study',
     content: 'Please check the new test',
-    openUrl: 'https://samply.tk',
+    openUrl: 'https://samply.ml',
     author: '5d108c051e7ed9050a283989',
     project: '5d1091b3ea5dc1052dd171b3',
     samplyid: '1234567890',
