@@ -1,6 +1,6 @@
 ## Samply
 
-Samply makes sending notifications easy and provides a secure foundation for connection with your participants. The application has an open source code on GitHub and runs online at <a href="https://samply.ml" target="_blank">https://samply.ml</a>. With Samply you can schedule notifications for experience-based sampling studies. In the current moment, only Android mobile devices are supported.
+Samply makes sending notifications easy and provides a secure foundation for connection with your participants. The application has an open source code on GitHub. With Samply you can schedule notifications for experience-based sampling studies. In the current moment, only Android mobile devices are supported.
 
 ## Features
 
