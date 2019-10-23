@@ -78,7 +78,7 @@ exports.getData = async (req, res) => {
 
 exports.getMessages = async (req, res) => {
   const page = req.params.page || 1;
-  const limit = 3;
+  const limit = 50;
   const skip = (page * limit) - limit;
   const historyPromise = Result
     .find({ project: req.user.participantInProject, name: 'received' })
