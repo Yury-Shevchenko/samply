@@ -5,22 +5,22 @@ block content
     .userTable
     
       h2 Your messages
-      table.table
-        thead
-          td N.
-          td #{layout.history_notifications_Title} 
-          td #{layout.history_notifications_Message} 
-          td #{layout.history_notifications_url} 
-          td Time
+      .div
+        //- .div
+        //-   h4 N.
+        //-   h4 #{layout.history_notifications_Title} 
+        //-   h4 #{layout.history_notifications_Message} 
+        //-   h4 #{layout.history_notifications_url} 
+        //-   h4 Time
           
         each notification, i in history
-          tr
-            td #{i + 1 + skip}
-            td= notification.data.title 
-            td= notification.data.content
-            td
-              a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.openUrl) #{notification.data.openUrl}
-            td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss')             
+          .div(style='display: grid; grid-template-columns: 1fr 5fr 5fr 2fr 5fr; grid-gap: 5px; background: white; border-bottom: 1px solid grey;')
+            p #{count - i + skip}
+            p= notification.data.title 
+            p= notification.data.content
+            p
+                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.openUrl) Open 
+            p= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss')             
                 
       .pagination
         .pagination__prev
