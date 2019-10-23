@@ -4,34 +4,23 @@ block content
   .inner
     .userTable
     
-      h2= `${layout.history_notifications} ${typeof(participant) === 'number' ? layout.history_for_participant + participant : ''}`
+      h2 Your messages
       table.table
         thead
           td N.
-          td #{layout.history_notifications_Event} 
-          td #{layout.history_notifications_ID} 
-          td #{layout.history_notifications_Time_user} 
-          td #{layout.history_notifications_Time_server} 
           td #{layout.history_notifications_Title} 
           td #{layout.history_notifications_Message} 
           td #{layout.history_notifications_url} 
-          td #{layout.history_notifications_Delete} 
+          td Time
+          
         each notification, i in history
           tr
             td #{i + 1 + skip}
-            td= notification.name
-            td
-              a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${notification.samplyid}`) #{notification.samplyid}
-            td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss') 
-            td= h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')
             td= notification.data.title 
             td= notification.data.content
             td
               a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.openUrl) #{notification.data.openUrl}
-            td
-              a(href=`/removerecord/${notification._id}`)
-                != h.icon('remove')
-                
+            td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss')             
                 
       .pagination
         .pagination__prev

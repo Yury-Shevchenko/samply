@@ -75,3 +75,23 @@ exports.getData = async (req, res) => {
   }
   res.render('data', {users, page, pages, count, skip, project});
 };
+
+exports.getMessages = async (req, res) => {
+  const page = req.params.page || 1;
+  const limit = 50;
+  const skip = (page * limit) - limit;
+  const historyPromise = Result
+    .find({ project: req.user.participantInProject, name: 'received' })
+    .skip(skip)
+    .limit(limit)
+    .sort({'_id': -1})
+  const countPromise = Result.where({ project: req.user.participantInProject, name: 'received' }).countDocuments();
+  const [history, count] = await Promise.all([ historyPromise, countPromise ]);
+  const pages = Math.ceil(count / limit);
+  if(!history.length && skip){
+    req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
+    res.redirect(`/history/page/${pages}${typeof(participant) === 'number' ? '?id=' + participant : ''}`);
+    return;
+  }
+  res.render('messages', {history, page, pages, count, skip});
+};

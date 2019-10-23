@@ -35,6 +35,9 @@ html
                   a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
                     h6 #{layout.help}
                 li.nav__item
+                  a.nav__main_link(href='/messages', class=(currentPath.startsWith('/messages') ? 'nav__main_link--active' : ''))
+                    h6 Messages 
+                li.nav__item
                   a.nav__main_link
                     button.button(id="installApp" style="display:none") #{layout.install_app}
                   
