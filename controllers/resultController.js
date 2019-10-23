@@ -78,7 +78,7 @@ exports.getData = async (req, res) => {
 
 exports.getMessages = async (req, res) => {
   const page = req.params.page || 1;
-  const limit = 50;
+  const limit = 3;
   const skip = (page * limit) - limit;
   const historyPromise = Result
     .find({ project: req.user.participantInProject, name: 'received' })
@@ -93,5 +93,5 @@ exports.getMessages = async (req, res) => {
     res.redirect(`/history/page/${pages}${typeof(participant) === 'number' ? '?id=' + participant : ''}`);
     return;
   }
-  res.render('messages', {history, page, pages, count, skip});
+  res.render('messages', {history, page, pages, count, skip, limit});
 };

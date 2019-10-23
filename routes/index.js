@@ -78,6 +78,7 @@ router.get('/languages/:language', userController.changeLanguage);
 router.post('/faq', authController.isLoggedIn, catchErrors(userController.sendQuestion));
 router.get('/help', authController.isLoggedIn, catchErrors(userController.help));
 router.get('/messages', authController.isLoggedIn, catchErrors(resultController.getMessages));
+router.get('/messages/page/:page', authController.isLoggedIn, catchErrors(resultController.getMessages));
 
 // project controller
 router.get('/', catchErrors(projectController.listPublicProjects));

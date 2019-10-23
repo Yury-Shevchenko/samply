@@ -15,7 +15,7 @@ block content
           
         each notification, i in history
           .div(style='display: grid; grid-template-columns: 1fr 5fr 5fr 2fr 5fr; grid-gap: 5px; background: white; border-bottom: 1px solid grey;')
-            p #{count - i + skip}
+            p #{count - i - (page-1)*limit}
             p= notification.data.title 
             p= notification.data.content
             p
@@ -25,10 +25,10 @@ block content
       .pagination
         .pagination__prev
           if page > 1
-            a(href=`/history/page/${page - 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
+            a(href=`/messages/page/${page - 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
         .pagination__text
           p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
         .pagination__next
           if page < pages
-            a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_next}
+            a(href=`/messages/page/${parseFloat(page) + 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_next}
                       
