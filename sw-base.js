@@ -81,6 +81,7 @@ self.addEventListener('push', event => {
     icon: '/images/icons/lamp.png',
     badge: '/images/icons/lamp.png',
     vibrate: [300,110,300],
+    tag: data.title,
     actions: [
       {
         action: 'go',
