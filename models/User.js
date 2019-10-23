@@ -54,6 +54,7 @@ const userSchema = new Schema({
           date            : { type: Date, default: Date.now },
         }
     ],
+    useragent             : String,
 }, { toJSON: { virtuals: true } });
 
 //methods
@@ -120,6 +121,7 @@ userSchema.statics.getUsersOfProject = function(project) {
         numberDeleteRequests: { $sum: '$results.deleteRequests' },
         numberDataRequests: { $sum: '$results.dataRequests' },
         notifications: '$$ROOT.notifications',
+        useragent: '$$ROOT.useragent',
       }
     },
     { $sort : {identity: 1}}, //from highest to lowest

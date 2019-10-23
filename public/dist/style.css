@@ -809,7 +809,6 @@ input[type=range]:focus::-ms-fill-upper {
   position: relative;
   width: 100%;
   height: -webkit-min-content;
-  height: -moz-min-content;
   height: min-content;
   display: -ms-flexbox;
   display: flex;
@@ -1217,7 +1216,6 @@ and also iPads specifically.
   display: block;
   margin-right: 1rem;
   width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content; }
   .tag__choice {
     display: -ms-flexbox;

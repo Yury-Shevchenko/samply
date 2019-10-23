@@ -4,20 +4,24 @@ mixin intro()
     .headerLink !{l.introduction_title}
   p.card-message 
     | #{l.introduction_1}
-    | #{l.introduction_2}
+    | !{l.introduction_2}
     | #{l.introduction_3}
+  
+  h5 
+    .headerLink !{l.howitworks_title}
+  p.card-message
+    | #{l.introduction_4}
   
   h5
     .headerLink !{l.navigation_title}
   p.card-message
     | #{l.navigation_1}
   ol.card-message
-    //- p !{l.navigation_1_1}
+    p !{l.navigation_1_1}
     p !{l.navigation_1_2}
     p !{l.navigation_1_3}
+    p !{l.navigation_1_4}
 
-  //- p.card-message
-  //-   | #{l.navigation_2}
 
   p.card-message
     | #{l.navigation_3}

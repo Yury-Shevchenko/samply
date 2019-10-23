@@ -16,6 +16,8 @@ exports.saveIncrementalResults = async (req, res) => {
     name: req.body.name,
     data: req.body.data,
     usertimestamp: req.body.timestamp,
+    useragent: req.headers['user-agent'],
+    appVersion: req.body.appVersion,
   });
   await result.save();
   res.send('Saved');

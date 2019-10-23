@@ -60,6 +60,7 @@ passport.use('local-signup-participant', new LocalStrategy({
           newUser.level    = 1;
           newUser.email    = email;
           newUser.language = user_lang;
+          newUser.useragent = req.headers['user-agent'] || 'no headers found';
           if(req.body.code) newUser.code.id = req.body.code;
           if(req.body.project) newUser.participantInProject = req.body.project;
           newUser.local.password = newUser.generateHash(password);
@@ -95,6 +96,7 @@ passport.use('local-signup-researcher', new LocalStrategy({
           newUser.email    = email;
           newUser.language = user_lang;
           newUser.local.password = newUser.generateHash(password);
+          newUser.useragent = req.headers['user-agent'] || 'no headers found';
           newUser.save(function(err) {
             if (err) throw err;
             return done(null, newUser);
@@ -134,6 +136,7 @@ passport.use('local-labjs-researcher', new LocalStrategy({
             newUser.email    = email;
             newUser.local.password = newUser.generateHash(password);
             newUser.language = user_lang;
+            newUser.useragent = req.headers['user-agent'] || 'no headers found';
             newUser.save(function(err) {
               if (err) throw err;
               return done(null, newUser, req.flash('signupMessage', `${language[user_lang]['passport'].registered_user}` ));
@@ -172,6 +175,7 @@ passport.use('local-code', new LocalStrategy({
           newUser.language = user_lang;
           newUser.code.id = code;
           newUser.code.password = newUser.generateHash(code);
+          newUser.useragent = req.headers['user-agent'] || 'no headers found';
           //add a unique code for the user
           if(req.body.participantInProject){
             newUser.participantInProject = req.body.participantInProject;

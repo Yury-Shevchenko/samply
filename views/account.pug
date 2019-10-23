@@ -11,11 +11,13 @@ block content
         label(for="time") #{l.registered}
         h2= h.moment(user.created).locale(language).format("MMM Do YY")
 
-        label(for="name") #{l.name}
-        input(type="text" name="name" value=user.name||user.facebook.name||user.github.name||user.google.name)
-
-        label(for="email") #{l.email}
-        input(type="email" name="email" value=user.email||user.facebook.email||user.github.email||user.google.email)
+        if(user.name)
+          label(for="name") #{l.name}
+          input(type="text" name="name" value=user.name||user.facebook.name||user.github.name||user.google.name)
+        
+        if(user.email)
+          label(for="email") #{l.email}
+          input(type="email" name="email" value=user.email||user.facebook.email||user.github.email||user.google.email)
 
         if user.level > 10
 

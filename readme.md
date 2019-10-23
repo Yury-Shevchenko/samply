@@ -1,25 +1,42 @@
 ## Samply
 
-Samply makes sending notifications easy and provides a secure foundation for connection with your participants. The application has an open source code on GitHub and runs online at https://samply.ml. With Samply you can schedule notifications for experience-based sampling studies. In the current moment, only Android mobile devices are supported.
+Samply makes sending notifications easy and provides a secure foundation for connection with your participants. The application has an open source code on GitHub and runs online at https://samply.tk. With Samply you can schedule notifications for experience sampling studies. In the current moment, only Android mobile devices are supported.
 
 ## Features
 
-* Only Android mobile devices
+* Only Android mobile devices for participants
 * Different types of notifications schedule (one-time, repeat, event-based)
-* Customization of messages (content, url)
-* User authorization - you can identify the unique id number of each participant.
-* Security: participants do not need to provide any personal information such as email or phone number. All notifications are send through the application. 
+* Write messages to your participants with URL links of your study
+* Identify participants in your study with unique IDs in the URL query
+* Preserve anonymity: participants do not need to provide any personal information such as emails or phone numbers. All notifications are send through the application.
 
 ## Screenshots
 
 
-## Use as an app
+## Use in any web browser
 
-As a researcher, you can create a new study in the web appication and invite participants. After participants install the application, they can receive notifications on their mobile phones (Anroid at the moment). The notifications look like native mobile notifications.
-
+As a researcher, you can create and manage your study in a web browser. After creating the study, you send an invitation link to participants. Participants can open the link on their Android phones, install the application and sign up for your study. Now, they can receive notifications from you. These notifications look and feel like native mobile notifications.
 
 ## Installing from Source (for developers)
 
+Clone the repository to your local folder and run `npm install`
+
+The application depends on the environment variables, which you can specify in the file variables.env in the root folder. Create the file variables.env and define the following parameters:
+
+NODE_ENV
+DATABASE
+MAIL_USER
+MAIL_PASS
+MAIL_HOST
+MAIL_PORT
+PORT
+MAP_KEY
+SECRET
+KEY
+MAIL_POSTMARK_CLIENT
+MAIL_ADDRESS
+VAPID_PUBLIC_KEY
+VAPID_PRIVATE_KEY
 
 ## Deploying on the server
 

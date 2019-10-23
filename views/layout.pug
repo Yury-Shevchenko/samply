@@ -43,6 +43,7 @@ html
                   h6 Supervision
 
           .nav__section.nav__section--user
+            
             if user
             
               if user.level > 10 
@@ -70,16 +71,16 @@ html
         
                 li.nav__item
                   a.nav__main_link(href='/docs/intro', class=(currentPath.startsWith('/docs') ? 'nav__main_link--active' : ''))
-                    != h.icon('description')
+                    <i class="fas fa-book-open"></i>
                 li.nav__item
                   a.nav__main_link(href='/projects', class=(currentPath.startsWith('/projects')  ? 'nav__main_link--active' : ''))
                     h6 #{layout.projects}
                 li.nav__item
+                  a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__main_link--active' : '')) 
+                    h6 #{layout.notifications} 
+                li.nav__item
                   a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__main_link--active' : '')) 
                     h6 #{layout.invitations}
-                li.nav__item
-                  a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__main_link--active' : '')) 
-                    h6 #{layout.notifications}  
                 li.nav__item
                   a.nav__main_link(href='/users', class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : ''))
                     h6 #{layout.participants}

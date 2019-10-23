@@ -23,6 +23,8 @@ const resultSchema = new mongoose.Schema({
     openUrl: String,
   },
   usertimestamp: Number,
+  useragent: String,
+  appVersion: String,
 });
 
 

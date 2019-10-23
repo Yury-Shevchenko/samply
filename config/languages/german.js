@@ -21,7 +21,7 @@ module.exports = {
     'history_notifications_url': 'Weblink',
     'history_notifications_Delete': 'Löschen',
     'install_instruction': '1. Installieren Sie die App auf Ihrem Android-Telefon. Wir empfehlen, Google Chrome als Browser zu verwenden. Wenn Sie einen anderen Browser verwenden, wechseln Sie bitte zu Google Chrome, bevor Sie die App installieren.',
-    'check_green_button': 'Klicken Sie im obigen Menü auf die grüne Schaltfläche "App installieren". Wenn sie nicht vorhanden ist, versuchen Sie, die Seite neu zu laden. Andernfalls unterstützt Ihr Gerät oder Ihr Browser diese Anwendung möglicherweise nicht.',
+    'check_green_button': 'Klicken Sie im obigen Menü auf die grüne Schaltfläche "App installieren". Wenn sie nicht vorhanden ist, versuchen Sie, die Seite neu zu laden oder Google Chrome als Browser zu verwenden. Andernfalls unterstützt Ihr Gerät oder Ihr Browser diese Anwendung möglicherweise nicht.',
     'subscribe_notifications': '2. Benachrichtigungen abonnieren',
     'subscribe_to': 'Abonnieren',
     'to_participate': 'Um an der Studie',

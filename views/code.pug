@@ -10,7 +10,7 @@ block content
       if !user
         .loginForm
           form(action="/auth/code" method="POST")
-            //- h5 Use participant code
+            
             if (code)
               .div(style="background-color: #ffffffe0; border-top-left-radius: 6px; border-top-right-radius: 6px;")
                 input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")

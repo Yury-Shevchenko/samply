@@ -1,8 +1,9 @@
 extends layout
 
 include mixins_docs/_intro
-include mixins_docs/_upload
 include mixins_docs/_project
+include mixins_docs/_notifications
+include mixins_docs/_invitations
 include mixins_docs/_data
 include mixins_docs/_help
 include mixins_docs/_faq
@@ -15,8 +16,10 @@ block content
       nav.nav
         .nav__section.nav__section--pages
           li.nav__item: a.nav__link(href=`/docs/intro`, class=(currentPath.startsWith(`/docs/intro`) ? 'nav__link--active' : '')) #{l.intro_title}
-          li.nav__item: a.nav__link(href=`/docs/project`, class=(currentPath.startsWith(`/docs/project`) ? 'nav__link--active' : '')) Manage notifications
-          li.nav__item: a.nav__link(href=`/docs/data`, class=(currentPath.startsWith(`/docs/data`) ? 'nav__link--active' : '')) Review data
+          li.nav__item: a.nav__link(href=`/docs/project`, class=(currentPath.startsWith(`/docs/project`) ? 'nav__link--active' : '')) Studies
+          li.nav__item: a.nav__link(href=`/docs/notifications`, class=(currentPath.startsWith(`/docs/data`) ? 'nav__link--active' : '')) Notifications
+          li.nav__item: a.nav__link(href=`/docs/invitations`, class=(currentPath.startsWith(`/docs/data`) ? 'nav__link--active' : '')) Invitations
+          li.nav__item: a.nav__link(href=`/docs/data`, class=(currentPath.startsWith(`/docs/data`) ? 'nav__link--active' : '')) Results
           li.nav__item: a.nav__link(href=`/docs/help`, class=(currentPath.startsWith(`/docs/help`) ? 'nav__link--active' : '')) #{l.help_title}
           li.nav__item: a.nav__link(href=`/docs/faq`, class=(currentPath.startsWith(`/docs/faq`) ? 'nav__link--active' : '')) #{l.faq_title}
     
