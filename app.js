@@ -43,7 +43,7 @@ app.use(flash());
 
 app.use((req, res, next) => {
   const noncevalue = crypto.randomBytes(20).toString('hex');
-  res.setHeader('Content-Security-Policy', `worker-src http://localhost https://samply.tk https://www.samply.tk; script-src https://samply.tk https://www.samply.tk 'nonce-${noncevalue}' 'unsafe-eval' `);
+  res.setHeader('Content-Security-Policy', `worker-src http://localhost https://samply.uni-konstanz.de script-src https://samply.uni-konstanz.de 'nonce-${noncevalue}' 'unsafe-eval' `);
   res.locals.noncevalue = noncevalue;
   res.locals.h = helpers;
   res.locals.flashes = req.flash();
