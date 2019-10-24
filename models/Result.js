@@ -6,12 +6,12 @@ const resultSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  author:{
+  author: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: 'You must supply a user!'
   },
-  project:{
+  project: {
     type: mongoose.Schema.ObjectId,
     ref: 'Project'
   },

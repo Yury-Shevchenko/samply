@@ -81,11 +81,11 @@ exports.getMessages = async (req, res) => {
   const limit = 50;
   const skip = (page * limit) - limit;
   const historyPromise = Result
-    .find({ project: req.user.participantInProject, name: 'received' })
+    .find({ author: req.user._id, name: 'received' })
     .skip(skip)
     .limit(limit)
     .sort({'_id': -1})
-  const countPromise = Result.where({ project: req.user.participantInProject, name: 'received' }).countDocuments();
+  const countPromise = Result.where({ author: req.user._id, name: 'received' }).countDocuments();
   const [history, count] = await Promise.all([ historyPromise, countPromise ]);
   const pages = Math.ceil(count / limit);
   if(!history.length && skip){
