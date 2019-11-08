@@ -5,6 +5,10 @@ block content
     .userTable
     
       h2= `${layout.history_notifications} ${typeof(participant) === 'number' ? layout.history_for_participant + participant : ''}`
+  
+      p
+        a(style={color:'black'} href=`/downloadhistory/${user.project._id}`) Download
+        
       table.table
         thead
           td N.

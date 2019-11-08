@@ -111,6 +111,7 @@ router.get('/history/page/:page', authController.isLoggedIn, catchErrors(resultC
 router.get('/removerecord/:id', authController.isAdminLoggedIn, catchErrors(resultController.removeRecordById));
 router.get('/users', authController.isAdminLoggedIn, catchErrors(resultController.getData));
 router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(resultController.getData));
+router.get('/downloadhistory/:id', authController.isLoggedIn, catchErrors(resultController.downloadHistory));
 
 // job controller (notifications)
 router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(jobController.subscribeforstudy));

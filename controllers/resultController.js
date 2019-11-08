@@ -95,3 +95,58 @@ exports.getMessages = async (req, res) => {
   }
   res.render('messages', {history, page, pages, count, skip, limit});
 };
+
+// download history log for the project
+exports.downloadHistory = async (req, res) => {
+  const projectId = req.params.id;
+  const project = await Project.findOne({ _id: projectId });
+  confirmOwner(project, req.user);
+  let keys = [];
+  const name = req.user.project.name;
+  res.setHeader('Content-disposition', 'attachment; filename=' + name +'.csv');
+  const input = new stream.Readable({ objectMode: true });
+  input._read = () => {};
+  var cursor = await Result
+    .find({project: projectId},{})
+    .cursor()
+    .on('data', obj => {
+      if(obj && obj.data && obj.author){
+        const line =[{
+          samplyid: obj.samplyid,
+          name: obj.name,
+          title: obj.data.title,
+          content: obj.data.content,
+          openUrl: obj.data.openUrl,
+          userCreated: obj.author.created,
+          usertimestamp: obj.usertimestamp,
+          created: obj.created,
+          useragent: obj.useragent,
+          appVersion: obj.appVersion
+        }]
+        const preKeys = flatMap(line, function(e){
+          return(Object.keys(e));
+        });
+        const tempkeys = Array.from(new Set(preKeys));
+        const new_items = tempkeys.filter(x => !keys.includes(x));
+        let parsed;
+        if (new_items.length > 0){
+          keys = keys.concat(new_items);
+          parsed = papaparse.unparse({data: line, fields: keys}) + '\r\n';
+        } else {
+          const preparsed = papaparse.unparse({data: line, fields: keys}) + '\r\n';
+          parsed = preparsed.replace(/(.*\r\n)/,'');
+        };
+        input.push(parsed);
+      }
+    })
+    .on('end', function() { input.push(null) })
+    .on('error', function(err) { console.log(err) });
+  const processor = input.pipe(res);
+};
+
+const confirmOwner = (project, user) => {
+  const isCreator = project.creator.equals(user._id);
+  if(!isCreator){
+    throw Error('You must be a creator a project in order to do it!');
+  }
+};
