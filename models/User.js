@@ -79,6 +79,7 @@ userSchema.statics.getUsersOfProject = function(project) {
     { $match: {
       $or: [
         { 'participant_projects' : { $eq: project } }, // filter users in the past
+        { 'participantInProject' : { $eq: project } }, 
         ]
       }
     },

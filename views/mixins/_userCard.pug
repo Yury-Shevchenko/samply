@@ -36,7 +36,9 @@ mixin userCard(person = {}, i)
           a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.participant_id}`) Schedule
       else 
         td 
-        
+      
+      td= person.useragent
+      
       if user.level > 100 || (person.participant_code && person.level < 10)
         td
           a(href=`/removeuser/${person._id}/${person.participant_id}`) 

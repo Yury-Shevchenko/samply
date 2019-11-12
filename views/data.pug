@@ -26,7 +26,9 @@ block content
                 td Approval
                 if user.level > 10
                   td Notifications
+                  td User agent
                   td <i class="fas fa-ban"></i>
+                
               each person, i in users
                 +userCard(person, i)
 
@@ -42,3 +44,5 @@ block content
 
       else
         p !{l.message_create_project}
+        
+      pre=h.dump(users)
