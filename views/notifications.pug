@@ -50,8 +50,8 @@ block content
             button(class="buttonContainer" id="scheduleNotification") One-time  
             button(class="buttonContainer" id="randomNotification") One-time (random)
             button(class="buttonContainer" id="intervalNotification") Repeat     
-            button(class="buttonContainer" id="individualNotification") Event-dependent    
-            button(class="buttonContainer" id="randomIndividualNotification") Event-dependent (random) 
+            button(class="buttonContainer" id="individualNotification") User-dependent    
+            button(class="buttonContainer" id="randomIndividualNotification") User-dependent (random) 
           
           p
           .notificationContainer(id="scheduleNotificationContainer" style="display:none") 
@@ -98,7 +98,7 @@ block content
           
           .notificationContainer(id="individualNotificationContainer" style="display:none")
           
-            p Event-dependent notifications work the same way as repeat notifications, but their time period starts at the moment when a participant approves notifications.
+            p User-dependent notifications work the same way as repeat notifications, but their time period starts at the moment when a participant approves notifications.
             p #{l.individual_explanation_2}
             input(type="text" class="form-control" id="duration")
             p !{l.cron_explanation}  
@@ -171,7 +171,7 @@ block content
               td Start of repeat
               td End of repeat
               td Repeat interval
-              td Event-dependent time period
+              td User-dependent time period
               td Range of repeating interval
               td #{l.table_title}  
               td #{l.table_message} 
