@@ -9,6 +9,10 @@ self.addEventListener('activate', function(event){
   return self.clients.claim();
 });
 
+workboxSW.router.registerRoute(/testing/, workboxSW.strategies.staleWhileRevalidate({
+  cacheName: 'testingPage'
+}));
+
 workboxSW.precache([]);
 
 //handle notifications

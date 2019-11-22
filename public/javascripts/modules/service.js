@@ -1,5 +1,5 @@
 //register service worker
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && 'PushManager' in window) {
   navigator.serviceWorker
     .register('/service-worker.js')
     .then(function(registration){
@@ -10,6 +10,7 @@ if ('serviceWorker' in navigator) {
     })
 } else {
   console.log("SW is not supported");
+  document.querySelector('#pushInformation').innerText = "Sorry, notifications are not supported on your device";
 };
 
 
