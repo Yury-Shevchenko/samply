@@ -33,7 +33,8 @@ app.use(session({
   key: process.env.KEY,
   resave: false,
   saveUninitialized: false,
-  store: new MongoStore({ mongooseConnection: mongoose.connection })
+  store: new MongoStore({ mongooseConnection: mongoose.connection }),
+  cookie: { maxAge: 60000000000000 }
 }));
 
 app.use(passport.initialize());
