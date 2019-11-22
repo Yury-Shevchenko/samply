@@ -96,7 +96,7 @@ workboxSW.precache([
   },
   {
     "url": "javascripts/modules/service.js",
-    "revision": "bd7ed09c3457d3059a0ac4e20ff38bb7"
+    "revision": "82d6959c7a361ed527c6f312bbcefbf9"
   },
   {
     "url": "javascripts/modules/typeAhead.js",
@@ -116,7 +116,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "79f641ee37e1b6357649086b41e8258f"
+    "revision": "385d46ce821f864d7e118c9f67c515d7"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",

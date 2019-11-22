@@ -6,11 +6,15 @@ block content
     h2 #{l.title}
     
     .card
+        
       form.form(action="/account" method="POST")
         
         label(for="time") #{l.registered}
         h2= h.moment(user.created).locale(language).format("MMM Do YY")
-
+        
+        li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : '') style="width:100px")
+          h7 #{layout.logout}
+          
         if(user.name)
           label(for="name") #{l.name}
           input(type="text" name="name" value=user.name||user.facebook.name||user.github.name||user.google.name)
@@ -53,3 +57,5 @@ block content
 
         p(style='white-space:pre;')
         input.button( type="submit" value= l.submit )
+        
+        
