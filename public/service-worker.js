@@ -116,7 +116,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "54f99c10bbae48baf1f39547bffec569"
+    "revision": "bf24567a532a9a80afff08c0691155ca"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",
@@ -244,8 +244,32 @@ self.addEventListener('notificationclick', function(event) {
     if(notification && notification.data){
       saveResults(notification.data, 'go to test');
       const urlToOpen = notification.data.openUrl;
-      notification.close();
-      event.waitUntil(clients.openWindow(urlToOpen));
+      event.waitUntil(
+        clients.matchAll({
+          type: 'window',
+          includeUncontrolled: true
+        })
+          .then(function(clis) {
+            let client = null;
+            let matchingClient = null;
+            for (let i = 0; i < clis.length; i++) {
+              client = clis[i];
+              if (client.url === urlToOpen) {
+                matchingClient = client;
+                break;
+              }
+            }
+            if(matchingClient){
+              matchingClient.focus();
+            } else if (client) {
+              client.navigate(urlToOpen);
+              client.focus();
+            } else {
+              clients.openWindow(urlToOpen);
+            }
+            notification.close();
+          })
+      );
     }
   }
 });
