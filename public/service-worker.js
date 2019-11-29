@@ -116,7 +116,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "bf24567a532a9a80afff08c0691155ca"
+    "revision": "73ad67000903eca5b08098d9a63e5d46"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",
@@ -261,9 +261,6 @@ self.addEventListener('notificationclick', function(event) {
             }
             if(matchingClient){
               matchingClient.focus();
-            } else if (client) {
-              client.navigate(urlToOpen);
-              client.focus();
             } else {
               clients.openWindow(urlToOpen);
             }

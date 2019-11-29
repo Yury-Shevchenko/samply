@@ -136,9 +136,6 @@ self.addEventListener('notificationclick', function(event) {
             }
             if(matchingClient){
               matchingClient.focus();
-            } else if (client) {
-              client.navigate(urlToOpen);
-              client.focus();
             } else {
               clients.openWindow(urlToOpen);
             }
