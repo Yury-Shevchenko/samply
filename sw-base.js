@@ -119,10 +119,8 @@ self.addEventListener('notificationclick', function(event) {
     if(notification && notification.data){
       saveResults(notification.data, 'go to test');
       const urlToOpen = notification.data.openUrl;
-      event.waitUntil(
-        clients.openWindow(urlToOpen);
-        notification.close();
-      );
+      event.notification.close();
+      event.waitUntil(clients.openWindow(urlToOpen));
     }
   }
 });
