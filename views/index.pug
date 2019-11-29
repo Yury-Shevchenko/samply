@@ -5,34 +5,54 @@ block headers
 
 block content
   .inner
+    #notSupportedInfo(style='display:none')
+      .flash.flash--error #{layout.not_supported} 
+  
     p
     .card
       .card-message
-        h4 #{l.title}
-        p.card-message !{l.intro}
-
-        .plan-compare
-          a(type="link" href=`/researcher/register` style="display:grid")
-            .panel
-              <span class="plan-current">#{l.forResearchers}</span>
-              p.
-              p.plan_emails #{l.res_1}
-              p.plan_emails-label #{l.res_1_text}
-              p.plan_emails #{l.res_2}
-              p.plan_emails-label #{l.res_2_text}
-              p.plan_emails #{l.res_3}
-              p.plan_emails-label #{l.res_3_text}
-
-          a(type="link" href=`/participant/register` style="display:grid")
-            .panel
-              <span class="plan-current">#{l.forParticipants}</span>
-              p.
-              p.plan_emails #{l.part_1}
-              p.plan_emails-label #{l.part_1_text}
-              p.plan_emails #{l.part_2}
-              p.plan_emails-label #{l.part_2_text}
-              p.plan_emails #{l.part_3}
-              p.plan_emails-label #{l.part_3_text}
+        h4 #{layout.title}
+        p.card-message !{layout.intro}
+        p.card-message !{layout.intro_2}
+        p.card-message !{layout.intro_3}
+        
+        h5 #{layout.instructions_title}
+        
+        ol
+          li 
+            p.card-message #{layout.instructions_1}
+          p #{layout.instructions_1_note}
+          li 
+            p.card-message #{layout.instructions_2}
+          p #{layout.instructions_2_note}
+          li 
+            p.card-message #{layout.instructions_3}
+          p
+          li 
+            p.card-message !{layout.instructions_4}
+        p.card-message #{layout.were_invited}
+        //- .plan-compare
+        //-   a(type="link" href=`/researcher/register` style="display:grid")
+        //-     .panel
+        //-       <span class="plan-current">#{layout.forResearchers}</span>
+        //-       p.
+        //-       p.plan_emails #{l.res_1}
+        //-       p.plan_emails-label #{l.res_1_text}
+        //-       p.plan_emails #{l.res_2}
+        //-       p.plan_emails-label #{l.res_2_text}
+        //-       p.plan_emails #{l.res_3}
+        //-       p.plan_emails-label #{l.res_3_text}
+        //- 
+        //-   a(type="link" href=`/participant/register` style="display:grid")
+        //-     .panel
+        //-       <span class="plan-current">#{l.forParticipants}</span>
+        //-       p.
+        //-       p.plan_emails #{l.part_1}
+        //-       p.plan_emails-label #{l.part_1_text}
+        //-       p.plan_emails #{l.part_2}
+        //-       p.plan_emails-label #{l.part_2_text}
+        //-       p.plan_emails #{l.part_3}
+        //-       p.plan_emails-label #{l.part_3_text}
               
     script(nonce=`${noncevalue}`).
       document.body.style['backgroundSize'] = 'cover';

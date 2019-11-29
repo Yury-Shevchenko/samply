@@ -24,7 +24,12 @@ html
                   p /  
                   a.nav__main_link(href='/languages/english', class=(locale_language == 'english' ? 'nav__main_link' : 'nav__main_link--passive'))
                     h6 EN
-
+                li.nav__item
+                  a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))
+                    h6 #{layout.studies}
+                li.nav__item
+                  a(style="display:flex;flex-direction: column; padding: 1rem 1.5rem 0.5rem 1.5rem;")
+                    button.button(id="installApp" style="display:block") #{layout.install_app}
             if user
               if user.level < 10
                 li.nav__item
@@ -33,9 +38,6 @@ html
                 li.nav__item
                   a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
                     h6 #{layout.help}
-                li.nav__item
-                  a.nav__main_link
-                    button.button(id="installApp" style="display:none") #{layout.install_app}
                   
               if user.level > 100
                 li.nav__item: a.nav__main_link(href="/debugprojects", class=(currentPath.startsWith('/debugprojects') ? 'nav__main_link--active' : ''))
@@ -97,7 +99,7 @@ html
             else
               li.nav__item: a.nav__main_link(href="/researcher/login", class=(currentPath.startsWith('/researcher') ? 'nav__main_link--active' : ''))
                 h6 #{layout && layout.forResearchers}
-              li.nav__item: a.nav__main_link(href="/", class=(currentPath.startsWith('/') ? 'nav__main_link--active' : ''))
+              li.nav__item: a.nav__main_link(href="/participants", class=(currentPath.startsWith('/participants') ? 'nav__main_link--active' : ''))
                 h6 #{layout && layout.forParticipants}
               
 
@@ -117,8 +119,10 @@ html
                       });
                     });
                   button.flash__remove(id="button_flash") &times;
+    
     .content
       block content
+        
 
     block scripts
       script(src="/dist/App.bundle.js" nonce=`${noncevalue}`)

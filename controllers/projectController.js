@@ -5,6 +5,11 @@ const Project = mongoose.model('Project');
 const uniqid = require('uniqid');
 const mail = require('../handlers/mail');
 
+exports.welcomePage = async(req, res) => {
+
+  res.render('index');
+}
+
 exports.listPublicProjects = async(req, res) => {
   const study = req.query.study;
   const page = req.params.page || 1;

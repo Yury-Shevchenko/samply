@@ -8,7 +8,7 @@
   //background: #041248;
   //background: deepskyblue;
   //background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed;
-  background: #ffffff87;
+  background: #fffffff5;
   // background: #fcfcff;
   &__top{
     //background: linear-gradient(10deg, lightskyblue 80%, deepskyblue 90%) fixed;
@@ -37,6 +37,7 @@
     align-items: center;
     justify-content: center;
     transition: transform 0.2s;
+    border-bottom: 3px solid transparent;
     svg {
       width: 30px;
       transition: all 0.2s;
@@ -45,13 +46,14 @@
     &:hover, &--active {
       background: #fcfcff9c;
       // background: #e7eaff;
-      // border-bottom: 1px solid deepskyblue;
+      border-bottom: 3px solid deepskyblue;
       border-radius: 3px;
+
       svg {
         // transform: scale(1.2)
       }
       h6 {
-        // transform: scale(1.1);
+        transform: scale(1.1);
         color: midnightblue;
       }
     }

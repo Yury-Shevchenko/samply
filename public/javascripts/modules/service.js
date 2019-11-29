@@ -10,6 +10,9 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     })
 } else {
   console.log("SW is not supported");
+  if(document.querySelector('#notSupportedInfo')){
+    document.querySelector('#notSupportedInfo').style.isplay = 'block';
+  };
 };
 
 

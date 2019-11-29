@@ -2,6 +2,24 @@ module.exports = {
 
 
   'layout' : {
+    'not_supported': `Sorry, Benachrichtigungen sind nicht möglich auf Ihrem Gerät.`,
+    'title': 'Willkommen bei Samply',
+    'intro': `Experience Sampling hilft Wissenschaftlern, den Alltag der Menschen zu studieren und zu verstehen.
+      Anstatt in ein Forschungslabor zu kommen, kann man mit dem Handy überall teilnehmen.
+       Wenn Sie an einer solchen Studie teilnehmen, erhalten Sie Benachrichtigungen auf Ihrem Handy.
+       Jedes Mal, wenn Sie benachrichtigt werden, wird erwartet, dass Sie dem Link in der Benachrichtigung folgen und Fragen zur Umfrage beantworten.`,
+    'intro_2': `Der Inhalt der Umfrage und der Zeitplan für die Benachrichtigung variieren von Studie zu Studie.
+      Lesen Sie die Studienbeschreibung für Details.`,
+    'intro_3': `Wenn Sie an der Durchführung einer Experience Sampling Studie interessiert sind, besuchen Sie bitte die <a href="/researcher/login")>Seite für Forscher</a>.`,
+    'instructions_title': `Anweisungen für die Teilnehmer`,
+    'instructions_1': `Benutzen Sie Ihr Handy, um zu dieser Website zu gelangen.`,
+    'instructions_1_note': `Wichtig! Apple unterstützt die Web-Push-Benachrichtigungen noch nicht.`,
+    'instructions_2': `Installieren Sie die Anwendung auf Ihrem Handy, indem Sie auf die Schaltfläche "App installieren" im Menü oben klicken.`,
+    'instructions_2_note': `Wenn die Schaltfläche nicht vorhanden ist, versuchen Sie, die Seite neu zu laden. Andernfalls gehen Sie in das Menü und wählen Sie die Option "Website zum Startbildschirm hinzufügen".
+      Die detailliertere Anleitung finden Sie hier.`,
+    'instructions_3': `Nach der Installation der Anwendung können Sie den Browser schließen und die Anwendung öffnen.`,
+    'instructions_4': `Gehen Sie innerhalb der Anwendung zur Seite <a href="/studies">Studien</a>, und folgen Sie den Anweisungen dort, um sich für eine bestimmte Studie anzumelden.`,
+    'were_invited': `Wenn Sie eingeladen wurden, an einer Studie mit einem Web-Link teilzunehmen, folgen Sie dem Link und lesen Sie die Anweisungen auf der Studienseite.`,
     'choose_participants': 'Teilnehmer auswählen',
     'fill_in_information': 'Füllen Sie die Informationen für Ihre Benachrichtigung aus',
     'not_all_participants': 'Alle Teilnehmer',
@@ -22,7 +40,7 @@ module.exports = {
     'history_notifications_Delete': 'Löschen',
     'install_instruction': '1. Installieren Sie die App auf Ihrem Android-Telefon. Wir empfehlen, Google Chrome als Browser zu verwenden. Wenn Sie einen anderen Browser verwenden, wechseln Sie bitte zu Google Chrome, bevor Sie die App installieren.',
     'check_green_button': 'Klicken Sie im obigen Menü auf die grüne Schaltfläche "App installieren". Wenn sie nicht vorhanden ist, versuchen Sie, die Seite neu zu laden oder Google Chrome als Browser zu verwenden. Andernfalls unterstützt Ihr Gerät oder Ihr Browser diese Anwendung möglicherweise nicht.',
-    'subscribe_notifications': '2. Benachrichtigungen abonnieren',
+    'subscribe_notifications': '2. Nachdem Sie die App installiert haben, gehen Sie auf Ihren Startbildschirm und öffnen Sie die Anwendung. Befolgen Sie die Anweisungen, um Benachrichtigungen zu abonnieren.',
     'subscribe_to': 'Abonnieren',
     'to_participate': 'Um an der Studie',
     'do_the_following': 'teilzunehmen, machen Sie bitte folgendes:',

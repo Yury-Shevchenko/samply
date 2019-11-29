@@ -2,6 +2,24 @@ module.exports =
 {
 
     'layout' : {
+      'not_supported': `Sorry, notifications are not supported on your device.`,
+      'title': 'Welcome to Samply',
+      'intro': `Experience sampling help scientists to study and understand people’s everyday life.
+        Instead of coming to a research laboratory, people can take part anywhere with their mobile phones.
+        If you take part in such a study, you will receive notifications on your mobile phone.
+        Each time you notified, you are expected to follow the link in the notification and answer survey questions.`,
+      'intro_2': `The content of the survey and the notification schedule vary from study to study.
+        Read the study description for details.`,
+      'intro_3': `If you are interested in conducting an experience sampling study, please visit the <a href="/researcher/login")>researchers page</a>.`,
+      'instructions_title': `Instructions for participants`,
+      'instructions_1': `Use your mobile phone to navigate to this website.`,
+      'instructions_1_note': `Important! Apple does not support the web push notifications yet.`,
+      'instructions_2': `Install the application on your phone by clicking on the button "Install App" in the menu above.`,
+      'instructions_2_note': `  If the button is not present, try reloading the page. Otherwise, go to the menu and choose the option "Add website to Home Screen".
+        The more detailed instructions you can find here.`,
+      'instructions_3': `After the installation of the application, you can close the browser and open the application.`,
+      'instructions_4': `Inside the application, proceed to the <a href="/studies">Studies page</a>, and follow the instructions there to subscribe for a particular study.`,
+      'were_invited': `If you were invited to participate in a study with a web-link, follow the link and read the instructions provided on the study page.	`,
       'choose_participants': 'Choose participants',
       'fill_in_information': 'Fill in the information for your notification',
       'not_all_participants': 'All participants',
@@ -20,9 +38,9 @@ module.exports =
       'history_notifications_Message': 'Message',
       'history_notifications_url': 'Web link',
       'history_notifications_Delete': 'Delete',
-      'install_instruction': '1. Install the application on your Android phone. We recommend using Google Chrome as your browser. If you use a different browser, please switch to Google Chrome before installing the app.',
-      'check_green_button': 'Click on the green "Install App" button in the menu above. If it is not present, try reloading the page or switch to Google Chrome browser. Otherwise, your device or browser may not support this application.',
-      'subscribe_notifications': '2. Subscribe to notifications ',
+      'install_instruction': '1. Install the application on your phone by clicking on the green "Install App" button in the menu above. We recommend using Google Chrome as your browser. If you use a different browser, please switch to Google Chrome before installing the app.',
+      'check_green_button': 'If it is not present, try reloading the page. Otherwise, go to the menu and choose the option "Add website to Home Screen".',
+      'subscribe_notifications': '2. After installing the app, go to your home screen and open the application. Follow the instructions to subscribe to notifications.',
       'subscribe_to': 'Subscribe',
       'to_participate': 'To participate in the study',
       'do_the_following': ', please do the following:',
@@ -240,8 +258,7 @@ module.exports =
     },
 
     'index' : {
-      'title': 'Welcome to Samply',
-      'intro': 'With Samply you can create and plan notifications for participants of your studies. ' +
+      'intro2': 'With Samply you can create and plan notifications for participants of your studies. ' +
       'You can edit content of notifications and send links to your survey or online tests. ' +
       'As a participant, you have to use an Android mobile phone to receive notifications. ',
       'forResearchers': 'For researchers',

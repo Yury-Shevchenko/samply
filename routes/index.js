@@ -81,7 +81,8 @@ router.get('/messages', authController.isLoggedIn, catchErrors(resultController.
 router.get('/messages/page/:page', authController.isLoggedIn, catchErrors(resultController.getMessages));
 
 // project controller
-router.get('/', catchErrors(projectController.listPublicProjects));
+router.get('/', catchErrors(projectController.welcomePage));
+router.get('/participants', catchErrors(projectController.welcomePage));
 router.get('/studies', catchErrors(projectController.listPublicProjects));
 router.get('/studies/page/:page', catchErrors(projectController.listPublicProjects));
 router.get('/studies/:study', catchErrors(projectController.showProjectDescription));

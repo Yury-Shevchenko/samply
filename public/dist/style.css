@@ -895,7 +895,7 @@ input[type=range]:focus::-ms-fill-upper {
   padding: 0;
   -ms-flex-pack: justify;
       justify-content: space-between;
-  background: #ffffff87; }
+  background: #fffffff5; }
   .nav__section {
     display: -ms-flexbox;
     display: flex;
@@ -924,15 +924,19 @@ input[type=range]:focus::-ms-fill-upper {
         align-items: center;
     -ms-flex-pack: center;
         justify-content: center;
-    transition: transform 0.2s; }
+    transition: transform 0.2s;
+    border-bottom: 3px solid transparent; }
     .nav__main_link svg {
       width: 30px;
       transition: all 0.2s;
       fill: white; }
     .nav__main_link:hover, .nav__main_link--active {
       background: #fcfcff9c;
+      border-bottom: 3px solid deepskyblue;
       border-radius: 3px; }
       .nav__main_link:hover h6, .nav__main_link--active h6 {
+        -ms-transform: scale(1.1);
+            transform: scale(1.1);
         color: midnightblue; }
     .nav__main_link--passive h6 {
       color: #a6a6a6a6; }
