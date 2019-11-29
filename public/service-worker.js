@@ -116,7 +116,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "6be208093111022e70bb7ac8f5e63773"
+    "revision": "b8344ec0cb6d91d507f4de45fc86a6b0"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",
@@ -260,29 +260,3 @@ self.addEventListener('notificationclose', (event) => {
 self.addEventListener('message', function(event){
   console.log("SW Received Message: " + event.data);
 });
-
-
-// clients.matchAll({
-//   type: 'window',
-//   includeUncontrolled: true
-// })
-//   .then(function(clis) {
-//     let client = null;
-//     let matchingClient = null;
-//     for (let i = 0; i < clis.length; i++) {
-//       client = clis[i];
-//       if (client.url === urlToOpen) {
-//         matchingClient = client;
-//         break;
-//       }
-//     }
-//     if(matchingClient){
-//       matchingClient.focus();
-//     } else if (client) {
-//       client.navigate(urlToOpen);
-//       client.focus();
-//     } else {
-//       clients.openWindow(urlToOpen);
-//     }
-//     notification.close();
-//   })
