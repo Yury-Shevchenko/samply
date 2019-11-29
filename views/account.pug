@@ -2,18 +2,18 @@ extends layout
 
 block content
   .inner
-
+  
     h2 #{l.title}
     
+    li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : '') style="width:100px; background-color: #c9f4db; border-radius: 5px;")
+      h6 #{layout.logout}
+    p    
     .card
         
       form.form(action="/account" method="POST")
         
         label(for="time") #{l.registered}
         h2= h.moment(user.created).locale(language).format("MMM Do YY")
-        
-        li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : '') style="width:100px")
-          h7 #{layout.logout}
           
         if(user.name)
           label(for="name") #{l.name}

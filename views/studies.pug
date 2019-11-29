@@ -6,8 +6,11 @@ block headers
   meta(name="Description" content="Samply, notifications, experience-based sampling")
 
 block content
+  
   .inner
-    
+    #notSupportedInfo(style='display:none')
+      .flash.flash--error Sorry, notifications are not supported on your device.
+
     h2 #{layout.studies}
     
     if(!user)
@@ -32,4 +35,9 @@ block content
       document.body.style['backgroundSize'] = 'cover';
       document.body.style['backgroundRepeat'] = 'no-repeat';
       document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";     
+      
+      //register service worker
+      if (!'serviceWorker' in navigator || !'PushManager' in window) {
+        document.querySelector('#notSupportedInfo').style.display = "block";
+      };
     

@@ -10,7 +10,6 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
     })
 } else {
   console.log("SW is not supported");
-  document.querySelector('#pushInformation').innerText = "Sorry, notifications are not supported on your device";
 };
 
 

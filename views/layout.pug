@@ -36,7 +36,6 @@ html
                 li.nav__item
                   a.nav__main_link
                     button.button(id="installApp" style="display:none") #{layout.install_app}
-                    #pushInformation 
                   
               if user.level > 100
                 li.nav__item: a.nav__main_link(href="/debugprojects", class=(currentPath.startsWith('/debugprojects') ? 'nav__main_link--active' : ''))
