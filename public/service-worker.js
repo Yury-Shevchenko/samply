@@ -116,7 +116,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "334fc184ce097ac34d14567bc6f5083e"
+    "revision": "6be208093111022e70bb7ac8f5e63773"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",
@@ -245,7 +245,8 @@ self.addEventListener('notificationclick', function(event) {
       saveResults(notification.data, 'go to test');
       const urlToOpen = notification.data.openUrl;
       event.waitUntil(
-        clients.openWindow(urlToOpen)
+        clients.openWindow(urlToOpen);
+        notification.close();
       );
     }
   }
