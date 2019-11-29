@@ -90,7 +90,7 @@ html
               li.nav__item: a.nav__main_link(href="/account", class= currentPath.startsWith('/account') ? 'nav__main_link--active' : '')
                 h6 #{layout.profile}
               if user.level > 10 
-                li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : ''))
+                //- li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : ''))
                   h6 #{layout.logout}
               if user.level < 10
                 li.nav__item

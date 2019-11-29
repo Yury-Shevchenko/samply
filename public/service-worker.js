@@ -20,7 +20,7 @@ workboxSW.precache([
   },
   {
     "url": "dist/style.css",
-    "revision": "6e094decbad7801b2accd55f2c16ab61"
+    "revision": "5dbb5264dc56d026de1aeb1d061a8e36"
   },
   {
     "url": "javascripts/datepicker/bootstrap-duration-picker.css",
@@ -96,7 +96,7 @@ workboxSW.precache([
   },
   {
     "url": "javascripts/modules/service.js",
-    "revision": "82d6959c7a361ed527c6f312bbcefbf9"
+    "revision": "7eaa7d1de204c6430f6e0044865c553d"
   },
   {
     "url": "javascripts/modules/typeAhead.js",
@@ -116,7 +116,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "385d46ce821f864d7e118c9f67c515d7"
+    "revision": "3da4348dfe06ee2b532138e2356363cf"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",
@@ -245,30 +245,31 @@ self.addEventListener('notificationclick', function(event) {
       saveResults(notification.data, 'go to test');
       const urlToOpen = notification.data.openUrl;
       event.waitUntil(
-        clients.matchAll({
-          type: 'window',
-          includeUncontrolled: true
-        })
-          .then(function(clis) {
-            let client = null;
-            let matchingClient = null;
-            for (let i = 0; i < clis.length; i++) {
-              client = clis[i];
-              if (client.url === urlToOpen) {
-                matchingClient = client;
-                break;
-              }
-            }
-            if(matchingClient){
-              matchingClient.focus();
-            } else if (client) {
-              client.navigate(urlToOpen);
-              client.focus();
-            } else {
-              clients.openWindow(urlToOpen);
-            }
-            notification.close();
-          })
+        clients.openWindow(urlToOpen);
+        // clients.matchAll({
+        //   type: 'window',
+        //   includeUncontrolled: true
+        // })
+        //   .then(function(clis) {
+        //     let client = null;
+        //     let matchingClient = null;
+        //     for (let i = 0; i < clis.length; i++) {
+        //       client = clis[i];
+        //       if (client.url === urlToOpen) {
+        //         matchingClient = client;
+        //         break;
+        //       }
+        //     }
+        //     if(matchingClient){
+        //       matchingClient.focus();
+        //     } else if (client) {
+        //       client.navigate(urlToOpen);
+        //       client.focus();
+        //     } else {
+        //       clients.openWindow(urlToOpen);
+        //     }
+        //     notification.close();
+        //   })
       );
     }
   }
