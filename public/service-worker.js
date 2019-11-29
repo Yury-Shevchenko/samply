@@ -9,10 +9,6 @@ self.addEventListener('activate', function(event){
   return self.clients.claim();
 });
 
-workboxSW.router.registerRoute(/testing/, workboxSW.strategies.staleWhileRevalidate({
-  cacheName: 'testingPage'
-}));
-
 workboxSW.precache([
   {
     "url": "dist/App.bundle.js",
@@ -116,7 +112,7 @@ workboxSW.precache([
   },
   {
     "url": "service-worker.js",
-    "revision": "73ad67000903eca5b08098d9a63e5d46"
+    "revision": "ede6fcac3bd7e56645470d2408399e76"
   },
   {
     "url": "workbox-sw.prod.v2.1.3.js",
