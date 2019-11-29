@@ -26,11 +26,12 @@ block content
           else 
             
             h6(style="color: #3b4051") !{project.welcomeMessage}
-            p= `${layout.to_participate} ${project.name}${layout.do_the_following}` 
-            
+            //- p= `${layout.to_participate} ${project.name}${layout.do_the_following}` 
         
-            p #{layout.install_instruction}
-            #installation_status #{layout.check_green_button}
+            //- p #{layout.install_instruction}
+            //- #{layout.check_green_button}
+            //- #installation_status 
+            
             p #{layout.subscribe_notifications} 
             .notificationsPanel
               button(id="enable_notifications" class="button" style="max-width:150px") #{layout.subscribe_to}
@@ -38,3 +39,6 @@ block content
               #notification_status
                       
       script(src="/javascripts/services/notifications.js" nonce=`${noncevalue}`)
+      
+      
+      //- pre= h.dump(user)

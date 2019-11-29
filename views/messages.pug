@@ -4,14 +4,8 @@ block content
   .inner
     .userTable
     
-      h2 Your messages
+      h2 #{layout.messages_title} 
       .div
-        //- .div
-        //-   h4 N.
-        //-   h4 #{layout.history_notifications_Title} 
-        //-   h4 #{layout.history_notifications_Message} 
-        //-   h4 #{layout.history_notifications_url} 
-        //-   h4 Time
           
         each notification, i in history
           .div(style='display: grid; grid-template-columns: 1fr 5fr 5fr 2fr 5fr; grid-gap: 5px; background: white; border-bottom: 1px solid grey;')

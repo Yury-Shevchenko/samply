@@ -29,7 +29,7 @@ html
                     h6 #{layout.studies}
                 li.nav__item
                   a(style="display:flex;flex-direction: column; padding: 1rem 1.5rem 0.5rem 1.5rem;")
-                    button.button(id="installApp" style="display:block") #{layout.install_app}
+                    button.button(id="installApp" style="display:none") #{layout.install_app}
             if user
               if user.level < 10
                 li.nav__item
@@ -95,7 +95,7 @@ html
               if user.level < 10
                 li.nav__item
                   a.nav__main_link(href='/messages', class=(currentPath.startsWith('/messages') ? 'nav__main_link--active' : ''))
-                    h6 Messages 
+                    h6 #{layout.messages} 
             else
               li.nav__item: a.nav__main_link(href="/researcher/login", class=(currentPath.startsWith('/researcher') ? 'nav__main_link--active' : ''))
                 h6 #{layout && layout.forResearchers}

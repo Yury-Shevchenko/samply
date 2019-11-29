@@ -1,5 +1,9 @@
 //register service worker
 if ('serviceWorker' in navigator && 'PushManager' in window) {
+  // console.log('window', window);
+  // if (window.matchMedia('(display-mode: standalone)').matches) {
+  //   console.log("This is running as standalone.");
+  // }
   navigator.serviceWorker
     .register('/service-worker.js')
     .then(function(registration){
@@ -11,7 +15,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
 } else {
   console.log("SW is not supported");
   if(document.querySelector('#notSupportedInfo')){
-    document.querySelector('#notSupportedInfo').style.isplay = 'block';
+    document.querySelector('#notSupportedInfo').style.display = 'block';
   };
 };
 

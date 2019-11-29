@@ -8,44 +8,81 @@ block content
         h5 #{layout.message_logged_in}
 
       if !user
-        .loginForm
-          form(action="/auth/code" method="POST")
+        .inner
+          #notSupportedInfo(style='display:none')
+            .flash.flash--error #{layout.not_supported} 
             
-            if (code)
-              .div(style="background-color: #ffffffe0; border-top-left-radius: 6px; border-top-right-radius: 6px;")
-                input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-                p= `${layout.your_code} ${code}`
-            else 
-              input(type="text" name="code" placeholder="Participant code" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-             
-            if (joined_project)
-              .div(style="background-color: #ffffffe0; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
-                input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
-                p= `${layout.your_study} ${joined_project.name}` 
-                if(joined_project.description)
-                  h6 #{layout.description}
-                  p= joined_project.description
+          .card
+            #install_information(style="display:none") 
+              h6 #{layout.install_title}
+              p
+              ol
+                li 
+                  p.card-message #{layout.instructions_1}
+                p #{layout.instructions_1_note}
+                li 
+                  p.card-message #{layout.instructions_2}
+                p #{layout.instructions_2_note}
+                li 
+                  p.card-message #{layout.install_instructions_2} 
+                h4
+            
+            h6 #{layout.study_info_title} 
+            .div(style="padding: 2rem;")
+              form(action="/auth/code" method="POST")
+                   
+                if (joined_project)
+                  .div(style="background-color: #ffffffe0; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
+                    p= `${layout.your_study} ${joined_project.name}` 
+                    if(joined_project.description)
+                      //- h6 #{layout.description}
+                      p= joined_project.description
+                    input(type="text" name="participantInProject" value=joined_project._id readonly=joined_project hidden=true)
+                  
+                if (projects)    
+                  .custom-select-header 
+                    select(name="participantInProject" id="choose_project" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
+                      option(value='' style="" selected=!joined_project) #{layout.choose_project}
+                      each project in projects
+                        option(value=project._id, selected=(project.name==joined_project))= project.name
+                
+                if (code)
+                  .div(style="background-color: #ffffffe0; border-top-left-radius: 6px; border-top-right-radius: 6px;")
+                    input(type="text" name="code" value=code readonly=code hidden=true style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+                    p= `${layout.your_code} ${code}`
+                else 
+                  input(type="text" name="code" placeholder="Participant code" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+                
+                p
+                input.button(type="submit" value=layout.enter)
+                p
               
-            if (projects)    
-              .custom-select-header 
-                select(name="participantInProject" id="choose_project" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
-                  option(value='' style="" selected=!joined_project) #{layout.choose_project}
-                  each project in projects
-                    option(value=project._id, selected=(project.name==joined_project))= project.name
-            p
-            input.button(type="submit" value=layout.enter)
-            p
-          
-          if (!joined_project)
-            h5 #{layout.login_with_your_email} 
-            a(style={color:'black'} href=`/participant/login`) 
-              div.button(style="width:100%") #{layout.login_to_your_account}
-              
-            a(style={color:'black'} href=`/participant/register`)     
-              div.button(style="width:100%") #{layout.create_new_account}
+              if (!joined_project)
+                h5 #{layout.login_with_your_email} 
+                a(style={color:'black'} href=`/participant/login`) 
+                  div.button(style="width:100%") #{layout.login_to_your_account}
+                  
+                a(style={color:'black'} href=`/participant/register`)     
+                  div.button(style="width:100%") #{layout.create_new_account}
             
         
     script(nonce=`${noncevalue}`).
+      function isPwa() {
+        var displayModes = ["fullscreen", "standalone", "minimal-ui"];
+        displayModes.forEach(function(displayMode) {
+          if (window.matchMedia('(display-mode: ' + displayMode + ')').matches) {
+            return true;
+          }
+        });
+        return false;
+      };
+      const isInStandaloneMode = () =>
+        ( (isPwa()) || (window.navigator.standalone) || document.referrer.includes('android-app://') );
+      if (!isInStandaloneMode()) {
+        if(document.querySelector('#install_information')){
+          document.querySelector('#install_information').style.display = 'block';
+        };
+      }
       document.body.style['backgroundSize'] = 'cover';
       document.body.style['backgroundRepeat'] = 'no-repeat';
       document.body.style['backgroundImage'] = "url('/images/photos/participant-login.jpg')";
