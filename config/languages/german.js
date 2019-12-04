@@ -5,7 +5,7 @@ module.exports = {
     'not_supported': `Sorry, Benachrichtigungen sind nicht möglich auf Ihrem Gerät.`,
     'title': 'Willkommen bei Samply',
     'intro': `Experience Sampling hilft Wissenschaftlern, den Alltag der Menschen zu studieren und zu verstehen.
-      Anstatt in ein Forschungslabor zu kommen, kann man mit dem Handy überall teilnehmen.
+      Anstatt in ein Forschungslabor zu kommen, kann man mit dem Handy überall an der Studie teilnehmen.
        Wenn Sie an einer solchen Studie teilnehmen, erhalten Sie Benachrichtigungen auf Ihrem Handy.
        Jedes Mal, wenn Sie benachrichtigt werden, wird erwartet, dass Sie dem Link in der Benachrichtigung folgen und Fragen zur Umfrage beantworten.`,
     'intro_2': `Der Inhalt der Umfrage und der Zeitplan für die Benachrichtigung variieren von Studie zu Studie.

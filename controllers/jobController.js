@@ -301,12 +301,14 @@ exports.createIntervalNotification = async (req, res) => {
 
 
 exports.createIndividualNotification = async (req, res) => {
+  // console.log('server: duration ', req.body.duration, 'interval:', req.body.interval, 'interval-2', req.body.interval_2);
   if(req.body.interval === '' || req.body.duration === ''){
     res.status(400).send();
     return;
   }
   const int1 = req.body.interval;
   const interval1_cron = String(`${int1.sec} ${int1.min} ${int1.hour} ${int1.day} ${int1.month} ${int1.week}`);
+  // console.log('interval1_cron', interval1_cron);
   let int2, interval2_cron;
   if(req.body.interval_2){
     int2 = req.body.interval_2;
@@ -357,8 +359,8 @@ exports.createIndividualNotification = async (req, res) => {
             week: gR(int1.week, int2.week)
           };
           interval = String(`${rI.sec} ${rI.min} ${rI.hour} ${rI.day} ${rI.month} ${rI.week}`)
-          console.log('randomInterval', rI)
-          console.log('interval in cron', interval)
+          // console.log('randomInterval', rI)
+          // console.log('interval in cron', interval)
         } else {
           interval = interval1_cron;
         }
@@ -509,7 +511,7 @@ async function sendNotification(done, project_id, title, message, url) {
       })
       Promise.all(promises)
         .then(function(results) {
-          console.log("Notifications were sent");
+          // console.log("Notifications were sent");
           done()
         })
         .catch(err => {

@@ -8,15 +8,6 @@ function createIndividualNotification(){
   createIndividualNotificationBtn.disabled = true;
   document.getElementById('notification_status_schedule').style.visibility = 'visible';
   const duration = $('#duration')[0].value; //in seconds
-  // const sec = Math.floor((Math.random() * 60));//get the random value for the seconds
-  // const min = document.getElementById('int_min_individual').value;
-  // const hour = document.getElementById('int_hour_individual').value;
-  // const day = document.getElementById('int_day_individual').value;
-  // const month = document.getElementById('int_month_individual').value;
-  // const week = document.getElementById('int_week_individual').value;
-  // const interval = `${sec} ${min} ${hour} ${day} ${month} ${week}`;
-  // console.log('interval ', interval);
-
   const interval = {
     sec: Math.floor((Math.random() * 60)),
     min: document.getElementById('int_min_individual').value,
@@ -25,8 +16,7 @@ function createIndividualNotification(){
     month: document.getElementById('int_month_individual').value,
     week: document.getElementById('int_week_individual').value,
   }
-  // console.log('individual times:', int_start, int_end);
-
+  // console.log('duration:', duration, 'interval:', interval);
   fetch('/createindividualnotification', {
     method:'POST',
     headers: {
@@ -46,7 +36,6 @@ function createIndividualNotification(){
     })
   })
     .then(res => {
-      // console.log('Response', res);
       if(res.url && res.ok){
         window.location = res.url;
       }
