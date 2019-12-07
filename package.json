@@ -68,7 +68,7 @@
     "postmark": "^1.6.1",
     "pug": "2.0.0-beta6",
     "read-multiple-files": "^2.0.0-4",
-    "serialize-javascript": "^1.5.0",
+    "serialize-javascript": "^2.1.1",
     "slugs": "0.1.3",
     "stream": "0.0.2",
     "stripe": "^6.1.1",
