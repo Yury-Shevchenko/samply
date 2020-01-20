@@ -15,8 +15,7 @@ module.exports = {
     'instructions_1': `Benutzen Sie Ihr Handy, um zu dieser Website zu gelangen.`,
     'instructions_1_note': `Wichtig! Apple unterstützt die Web-Push-Benachrichtigungen noch nicht.`,
     'instructions_2': `Installieren Sie die Anwendung auf Ihrem Handy, indem Sie auf die Schaltfläche "App installieren" im Menü oben klicken.`,
-    'instructions_2_note': `Wenn die Schaltfläche nicht vorhanden ist, versuchen Sie, die Seite neu zu laden. Andernfalls gehen Sie in das Menü und wählen Sie die Option "Website zum Startbildschirm hinzufügen".
-      Die detailliertere Anleitung finden Sie hier.`,
+    'instructions_2_note': `Wenn die Schaltfläche nicht vorhanden ist, versuchen Sie, die Seite neu zu laden. Andernfalls gehen Sie in das Menü und wählen Sie die Option "Website zum Startbildschirm hinzufügen".`,
     'instructions_3': `Nach der Installation der Anwendung können Sie den Browser schließen und die Anwendung öffnen.`,
     'instructions_4': `Gehen Sie innerhalb der Anwendung zur Seite <a href="/studies">Studien</a>, und folgen Sie den Anweisungen dort, um sich für eine bestimmte Studie anzumelden.`,
     'were_invited': `Wenn Sie eingeladen wurden, an einer Studie mit einem Web-Link teilzunehmen, folgen Sie dem Link und lesen Sie die Anweisungen auf der Studienseite.`,

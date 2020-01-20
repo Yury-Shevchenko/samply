@@ -15,8 +15,7 @@ module.exports =
       'instructions_1': `Use your mobile phone to navigate to this website.`,
       'instructions_1_note': `Important! Apple does not support the web push notifications yet.`,
       'instructions_2': `Install the application on your phone by clicking on the button "Install App" in the menu above.`,
-      'instructions_2_note': `  If the button is not present, try reloading the page. Otherwise, go to the menu and choose the option "Add website to Home Screen".
-        The more detailed instructions you can find here.`,
+      'instructions_2_note': `  If the button is not present, try reloading the page. Otherwise, go to the menu and choose the option "Add website to Home Screen".`,
       'instructions_3': `After the installation of the application, you can close the browser and open the application.`,
       'instructions_4': `Inside the application, proceed to the <a href="/studies">Studies page</a>, and follow the instructions there to subscribe for a particular study.`,
       'were_invited': `If you were invited to participate in a study with a web-link, follow the link and read the instructions provided on the study page.	`,
