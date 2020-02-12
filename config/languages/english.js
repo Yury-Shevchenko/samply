@@ -2,15 +2,15 @@ module.exports =
 {
 
     'layout' : {
-      'not_supported': `Sorry, notifications are not supported on your device.`,
+      'not_supported': `Sorry, notifications on your device are not possible if you want to participate in a study. This may be because you are using an Apple device. In this case please use Android or another device.`,
       'title': 'Welcome to Samply',
-      'intro': `Experience sampling help scientists to study and understand people’s everyday life.
-        Instead of coming to a research laboratory, people can take part anywhere with their mobile phones.
-        If you take part in such a study, you will receive notifications on your mobile phone.
-        Each time you notified, you are expected to follow the link in the notification and answer survey questions.`,
+      'intro': `Scientists discover the nature of the human being  - You can help with this task!
+      Instead of coming to a research laboratory, you can take part anywhere with your mobile phone.
+      This is made possible by the „Experience sampling method“.
+      You will receive notifications throughout the day with questions to answer. `,
       'intro_2': `The content of the survey and the notification schedule vary from study to study.
         Read the study description for details.`,
-      'intro_3': `If you are interested in conducting an experience sampling study, please visit the <a href="/researcher/login")>researchers page</a>.`,
+      'intro_3': `You are a researcher and you want to create a study? Please visit the <a href="/researcher/login")>page for researchers</a>.`,
       'instructions_title': `Instructions for participants`,
       'instructions_1': `Use your mobile phone to navigate to this website.`,
       'instructions_1_note': `Important! Apple does not support the web push notifications yet.`,

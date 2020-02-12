@@ -3,8 +3,13 @@ extends layout
 block headers
   meta(name="Description" content="Samply, notifications, experience-based sampling")
 
+block background-image  
+  .bg-image-participants
+  
 block content
+  
   .inner
+    
     #notSupportedInfo(style='display:none')
       .flash.flash--error #{layout.not_supported} 
   
@@ -14,7 +19,7 @@ block content
         h4 #{layout.title}
         p.card-message !{layout.intro}
         p.card-message !{layout.intro_2}
-        p.card-message !{layout.intro_3}
+        
         
         h5 #{layout.instructions_title}
         
@@ -31,6 +36,9 @@ block content
           li 
             p.card-message !{layout.instructions_4}
         p.card-message #{layout.were_invited}
+        
+        br
+        p.card-message !{layout.intro_3}
         //- .plan-compare
         //-   a(type="link" href=`/researcher/register` style="display:grid")
         //-     .panel
@@ -54,8 +62,9 @@ block content
         //-       p.plan_emails #{l.part_3}
         //-       p.plan_emails-label #{l.part_3_text}
               
-    script(nonce=`${noncevalue}`).
-      document.body.style['backgroundSize'] = 'cover';
-      document.body.style['backgroundRepeat'] = 'no-repeat';
-      document.body.style['backgroundImage'] = "url('/images/photos/lake.jpg')";
+    //- script(nonce=`${noncevalue}`).
+    //-   document.body.style['backgroundSize'] = 'cover';
+    //-   document.body.style['backgroundRepeat'] = 'no-repeat';
+    //-   document.body.style['backgroundImage'] = "url('/images/photos/mobile_phone.jpg')";
+    //- 
               

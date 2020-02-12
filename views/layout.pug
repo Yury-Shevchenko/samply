@@ -102,7 +102,9 @@ html
               li.nav__item: a.nav__main_link(href="/participants", class=(currentPath.startsWith('/participants') ? 'nav__main_link--active' : ''))
                 h6 #{layout && layout.forParticipants}
               
-
+                
+    block background-image 
+    
     block messages
       if locals.flashes
         .inner

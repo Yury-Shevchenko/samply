@@ -82,3 +82,71 @@ body {
 #disable_notifications{
   display: none;
 }
+
+.bg-image-participants {
+  /* The image used */
+  background-image: url('/images/photos/mobile_phone.jpg');
+  /* Add the blur effect */
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  // /* Full height */
+  z-index: -1000;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  // /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-image-researchers {
+  /* The image used */
+  background-image: url('/images/photos/graph.jpg');
+  /* Add the blur effect */
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  // /* Full height */
+  z-index: -1000;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  // /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-image-enter {
+  /* The image used */
+  background-image: url('/images/photos/participant-login.jpg');
+  /* Add the blur effect */
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  // /* Full height */
+  z-index: -1000;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  // /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.bg-image-studies {
+  /* The image used */
+  background-image: url('/images/photos/balloons.jpg');
+  /* Add the blur effect */
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  // /* Full height */
+  z-index: -1000;
+  position:absolute;
+  height: 100%;
+  width: 100%;
+  // /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

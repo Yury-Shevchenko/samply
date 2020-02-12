@@ -5,6 +5,9 @@ include mixins/_publicProjectCard
 block headers
   meta(name="Description" content="Samply, notifications, experience-based sampling")
 
+block background-image 
+  .bg-image-studies
+    
 block content
   
   .inner
@@ -33,10 +36,10 @@ block content
           a(href=`/studies/page/${parseFloat(page) + 1}`) #{layout.pagination_next}
 
     script(nonce=`${noncevalue}`).
-      document.body.style['backgroundSize'] = 'cover';
-      document.body.style['backgroundRepeat'] = 'no-repeat';
-      document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";     
-      
+      //- document.body.style['backgroundSize'] = 'cover';
+      //- document.body.style['backgroundRepeat'] = 'no-repeat';
+      //- document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";     
+      //- 
       //register service worker
       if (!'serviceWorker' in navigator || !'PushManager' in window) {
         document.querySelector('#notSupportedInfo').style.display = "block";

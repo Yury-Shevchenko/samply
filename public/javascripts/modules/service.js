@@ -19,7 +19,6 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   };
 };
 
-
 window.onbeforeinstallprompt = function(beforeInstallPromptEvent) {
   beforeInstallPromptEvent.preventDefault();
   const installButton = document.querySelector('#installApp');

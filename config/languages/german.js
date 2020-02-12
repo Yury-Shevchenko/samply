@@ -2,15 +2,15 @@ module.exports = {
 
 
   'layout' : {
-    'not_supported': `Sorry, Benachrichtigungen sind nicht möglich auf Ihrem Gerät.`,
+    'not_supported': `Sorry, Benachrichtigungen sind auf Ihrem Gerät nicht möglich, wenn Sie an einer Studie teilnehmen möchten. Das kann daran liegen, dass Sie ein Apple-Gerät benutzen. In diesem Fall benutzen Sie bitte Android oder ein anderes Gerät.`,
     'title': 'Willkommen bei Samply',
-    'intro': `Experience Sampling hilft Wissenschaftlern, den Alltag der Menschen zu studieren und zu verstehen.
-      Anstatt in ein Forschungslabor zu kommen, kann man mit dem Handy überall an der Studie teilnehmen.
-       Wenn Sie an einer solchen Studie teilnehmen, erhalten Sie Benachrichtigungen auf Ihrem Handy.
-       Jedes Mal, wenn Sie benachrichtigt werden, wird erwartet, dass Sie dem Link in der Benachrichtigung folgen und Fragen zur Umfrage beantworten.`,
+    'intro': `Wissenschaftler entschlüsseln das Wesen des Menschen – Sie helfen dabei mit!
+    Anstatt in ein Forschungslabor zu kommen, können Sie über Ihr Handy überall an der Studie teilnehmen.
+    Dies macht die „Experience sampling method“ möglich.
+    Sie werden somit über den Tag verteilt Benachrichtigungen mit Fragen zum Beantworten bekommen.`,
     'intro_2': `Der Inhalt der Umfrage und der Zeitplan für die Benachrichtigung variieren von Studie zu Studie.
       Lesen Sie die Studienbeschreibung für Details.`,
-    'intro_3': `Wenn Sie an der Durchführung einer Experience Sampling Studie interessiert sind, besuchen Sie bitte die <a href="/researcher/login")>Seite für Forscher</a>.`,
+    'intro_3': `Sie sind Forscher und wollen eine Studie entwickeln? Bitte besuchen Sie die <a href="/researcher/login")>Seite für Forscher</a>.`,
     'instructions_title': `Anweisungen für die Teilnehmer`,
     'instructions_1': `Benutzen Sie Ihr Handy, um zu dieser Website zu gelangen.`,
     'instructions_1_note': `Wichtig! Apple unterstützt die Web-Push-Benachrichtigungen noch nicht.`,
@@ -18,7 +18,7 @@ module.exports = {
     'instructions_2_note': `Wenn die Schaltfläche nicht vorhanden ist, versuchen Sie, die Seite neu zu laden. Andernfalls gehen Sie in das Menü und wählen Sie die Option "Website zum Startbildschirm hinzufügen".`,
     'instructions_3': `Nach der Installation der Anwendung können Sie den Browser schließen und die Anwendung öffnen.`,
     'instructions_4': `Gehen Sie innerhalb der Anwendung zur Seite <a href="/studies">Studien</a>, und folgen Sie den Anweisungen dort, um sich für eine bestimmte Studie anzumelden.`,
-    'were_invited': `Wenn Sie eingeladen wurden, an einer Studie mit einem Web-Link teilzunehmen, folgen Sie dem Link und lesen Sie die Anweisungen auf der Studienseite.`,
+    'were_invited': `Wenn Sie an eine Studie mit Web-Link teilnehmen, folgen Sie diesem. Sie gelangen dann zu den Anweisungen.`,
     'subscribe_notifications': 'Um Benachrichtigungen dieser Studie zu abonnieren, klicken Sie bitte auf den Button "Abonnieren"',
     'subscribe_to': 'Abonnieren',
     'install_title': `Bevor Sie die Studie betreten, installieren Sie bitte die Anwendung auf Ihrem Handy.`,
