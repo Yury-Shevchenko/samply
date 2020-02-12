@@ -1,7 +1,6 @@
 module.exports = {
   "globDirectory": "public/",
   "globPatterns": [
-    "**/*.{html,ico,json,css,js}",
     "images/photos/*.{jpg,png}"
   ],
   "swSrc": "sw-base.js",
