@@ -61,6 +61,62 @@ body {
 #disable_notifications {
   display: none; }
 
+.bg-image-participants {
+  /* The image used */
+  background-image: url("/images/photos/mobile_phone.jpg");
+  /* Add the blur effect */
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  z-index: -1000;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; }
+
+.bg-image-researchers {
+  /* The image used */
+  background-image: url("/images/photos/graph.jpg");
+  /* Add the blur effect */
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
+  z-index: -1000;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; }
+
+.bg-image-enter {
+  /* The image used */
+  background-image: url("/images/photos/participant-login.jpg");
+  /* Add the blur effect */
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  z-index: -1000;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; }
+
+.bg-image-studies {
+  /* The image used */
+  background-image: url("/images/photos/balloons.jpg");
+  /* Add the blur effect */
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  z-index: -1000;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover; }
+
 html {
   box-sizing: border-box; }
 
@@ -1583,7 +1639,12 @@ and also iPads specifically.
   display: grid;
   -ms-grid-column-align: center;
       justify-items: center;
+  background: #fdfeff;
+  margin: 0 auto;
   padding: 3rem;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15);
+  width: -webkit-fit-content;
+  width: fit-content;
   height: inherit; }
   @media all and (max-width: 600px) {
     .loginCard {
