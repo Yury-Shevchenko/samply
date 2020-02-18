@@ -73,19 +73,24 @@ exports.getUserProjects = async (req, res) => {
 };
 
 exports.activateProject = async (req, res) => {
-  if (req.user.level > 100 || req.user.projects.filter(project => project._id.toString() === req.params.id).length > 0){
-    const activeProject = await Project.findOne({_id: req.params.id});
-    const updatedUser = await User.findOneAndUpdate({
-      _id: req.user._id
-    }, { project: activeProject }, {
-      new: true,
-      upsert: true
-    }).exec();
-    req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
-    res.redirect('back');
-  } else {
-    req.flash('error', `You do not have rights to access this project.`);
-    res.redirect('back');
+  const activeProject = await Project.findOne({_id: req.params.id});
+  confirmOwnerOrMember(activeProject, req.user);
+  const updatedUser = await User.findOneAndUpdate({
+    _id: req.user._id
+  }, { project: activeProject }, {
+    new: true,
+    upsert: true
+  }).exec();
+  req.flash('success', `${activeProject.name} ${res.locals.layout.flash_activate_project}`);
+  res.redirect('back');
+};
+
+const confirmOwnerOrMember = (project, user) => {
+  const isCreator = project.creator.equals(user._id);
+  const isMember = project.members.map(id => id.toString()).includes(user._id.toString());
+  const isParticipant = user.level <= 10;
+  if(!(isCreator || isMember) || isParticipant){
+    throw Error('You must be a creator or a member of a project in order to do it!');
   }
 };
 
