@@ -33,7 +33,7 @@ block content
           h6 #{layout.fill_in_information} 
           p
           h6 #{l.title} 
-          p Notifications with the same title will replace each other to avoid the users' screen being filled with a huge number of similar notifications. 
+          p #{layout.title_information}  
           input#titleContent(type='text', value = '')
           h6 #{l.message} 
           input#messageContent(type='text', value = '')
@@ -57,9 +57,9 @@ block content
           .notificationContainer(id="scheduleNotificationContainer" style="display:none") 
            
             if participant && participant.samplyId
-              p= `One-time notifications are sent only to the participant with id ${participant.samplyId}.`
+              p= `${l.one_time_notifications_to_participant_1} ${participant.samplyId}${l.one_time_notifications_to_participant_2}.`
             else 
-              p= `One-time notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
+              p= `${l.one_time_notifications_to_all_1} (${project.name}) ${l.one_time_notifications_to_all_2}`
             
             p #{l.schedule_explanation_2}
             #dateTimePicker  
@@ -70,15 +70,15 @@ block content
             button(id="create_schedule_notification" class="button") #{l.add}
   
           .notificationContainer(id="intervalNotificationContainer" style="display:none")
-          
+        
             if participant && participant.samplyId
-              p= `Regular notifications are sent only to the participant with id ${participant.samplyId}.`
+              p= `${l.regular_notifications_to_participant_1} ${participant.samplyId}${l.regular_notifications_to_participant_2}.`
             else 
-              p= `Regular notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
-          
+              p= `${l.regular_notifications_to_all_1} (${project.name}) ${l.regular_notifications_to_all_2}`
+                
             p #{l.interval_explanation_2}
             
-            p The time period for notifications 
+            p #{l.interval_explanation_3} 
             input(type="text", name="datetimes_regular")
             p !{l.cron_explanation}  
             #cronintervalPicker_regular(class="cronintervalPicker")
@@ -87,18 +87,18 @@ block content
               h7(style="text-align: center;") #{l.day_month} 
               h7(style="text-align: center;") #{l.month} 
               h7(style="text-align: center;") #{l.day_week} 
-              input(type='text' id='int_min_regular')
-              input(type='text' id='int_hour_regular')
-              input(type='text' id='int_day_regular')
-              input(type='text' id='int_month_regular')  
-              input(type='text' id='int_week_regular')  
+              input(type='text' id='int_min_regular' value="*")
+              input(type='text' id='int_hour_regular' value="*")
+              input(type='text' id='int_day_regular' value="*")
+              input(type='text' id='int_month_regular' value="*")  
+              input(type='text' id='int_week_regular' value="*")  
             p  
             button(id="create_interval_notification" class="button") #{l.add}
               
           
           .notificationContainer(id="individualNotificationContainer" style="display:none")
           
-            p User-dependent notifications work the same way as repeat notifications, but their time period starts at the moment when a participant approves notifications.
+            p #{l.individual_explanation_1} 
             p #{l.individual_explanation_2}
             input(type="text" class="form-control" id="duration")
             p !{l.cron_explanation}  
@@ -108,56 +108,58 @@ block content
               h7(style="text-align: center;") #{l.day_month} 
               h7(style="text-align: center;") #{l.month} 
               h7(style="text-align: center;") #{l.day_week} 
-              input(type='text' id='int_min_individual')
-              input(type='text' id='int_hour_individual')
-              input(type='text' id='int_day_individual')
-              input(type='text' id='int_month_individual')  
-              input(type='text' id='int_week_individual')  
+              input(type='text' id='int_min_individual' value="*")
+              input(type='text' id='int_hour_individual' value="*")
+              input(type='text' id='int_day_individual' value="*")
+              input(type='text' id='int_month_individual' value="*")  
+              input(type='text' id='int_week_individual' value="*")  
             p  
             button(id="create_individual_notification" class="button") #{l.add}
             
           .notificationContainer(id="randomNotificationContainer" style="display:none") 
-            if participant && participant.samplyId
-              p= `One-time notifications are sent only to the participant with id ${participant.samplyId}.`
-            else 
-              p= `One-time notifications are sent to all participants of your study (${project.name}) who have registered and allowed notifications.`
           
-            p Choose the period of time when to send a notification. The exact time of the notification will be chosen randomly. 
+            if participant && participant.samplyId
+              p= `${l.one_time_notifications_to_participant_1} ${participant.samplyId}${l.one_time_notifications_to_participant_1}.`
+            else 
+              p= `${l.one_time_notifications_to_all_1} (${project.name}) ${l.one_time_notifications_to_all_2}`
+            
+            p #{l.random_onetime_notifications_info}  
             #randomTimePicker  
               .container_picker
                 input(type="text", name="random_datetimes_regular")
               button(id="create_random_notification" class="button") #{l.add}
           
           .notificationContainer(id="randomIndividualNotificationContainer" style="display:none") 
-            p Choose the periods of time in which to send a notification. The exact time for each participant will be chosen randomly. 
+            
+            p #{l.individual_random_info_1}
             input(type="text" class="form-control" id="durationRandomIndividual")
             p !{l.cron_explanation}
-            p Choose the start and the end of the interval. The specific interval for each participants will be chosen randomly.
-            h7 Start of the interval  
+            p #{l.individual_random_info_2}
+            h7 #{l.individual_interval_start}   
             #cronintervalPicker_individual(class="cronintervalPicker")
               h7(style="text-align: center;") #{l.minute} 
               h7(style="text-align: center;") #{l.hour} 
               h7(style="text-align: center;") #{l.day_month} 
               h7(style="text-align: center;") #{l.month} 
               h7(style="text-align: center;") #{l.day_week} 
-              input(type='text' id='int_min_individual_1')
-              input(type='text' id='int_hour_individual_1')
-              input(type='text' id='int_day_individual_1')
-              input(type='text' id='int_month_individual_1')  
-              input(type='text' id='int_week_individual_1')  
+              input(type='text' id='int_min_individual_1' value="*")
+              input(type='text' id='int_hour_individual_1' value="*")
+              input(type='text' id='int_day_individual_1' value="*")
+              input(type='text' id='int_month_individual_1' value="*")  
+              input(type='text' id='int_week_individual_1' value="*")  
             p 
-            h7 End of the interval 
+            h7 #{l.individual_interval_end}   
             #cronintervalPicker_individual_2(class="cronintervalPicker")
               h7(style="text-align: center;") #{l.minute} 
               h7(style="text-align: center;") #{l.hour} 
               h7(style="text-align: center;") #{l.day_month} 
               h7(style="text-align: center;") #{l.month} 
               h7(style="text-align: center;") #{l.day_week} 
-              input(type='text' id='int_min_individual_2')
-              input(type='text' id='int_hour_individual_2')
-              input(type='text' id='int_day_individual_2')
-              input(type='text' id='int_month_individual_2')  
-              input(type='text' id='int_week_individual_2')  
+              input(type='text' id='int_min_individual_2' value="*")
+              input(type='text' id='int_hour_individual_2' value="*")
+              input(type='text' id='int_day_individual_2' value="*")
+              input(type='text' id='int_month_individual_2' value="*")  
+              input(type='text' id='int_week_individual_2' value="*")  
             p 
              
             button(id="create_random_individual_notification" class="button") #{l.add}
@@ -167,12 +169,12 @@ block content
           table.table
             thead
               td #{l.table_type} 
-              td Sending time 
-              td Start of repeat
-              td End of repeat
-              td Repeat interval
-              td User-dependent time period
-              td Range of repeating interval
+              td #{l.table_sending_time} 
+              td #{l.table_start_repeat} 
+              td #{l.table_start_end} 
+              td #{l.table_repeat_interval} 
+              td #{l.table_user_time_period} 
+              td #{l.table_user_range} 
               td #{l.table_title}  
               td #{l.table_message} 
               td url

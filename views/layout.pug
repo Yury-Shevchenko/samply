@@ -83,12 +83,14 @@ html
                   a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__main_link--active' : '')) 
                     h6 #{layout.invitations}
                 li.nav__item
-                  a.nav__main_link(href='/users', class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : ''))
+                  a.nav__link(href='/users', class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : ''))
                     h6 #{layout.participants}
-                li.nav__item: a.nav__main_link(href="/history", class= currentPath.startsWith('/history') ? 'nav__main_link--active' : '')
-                  h6 #{layout.notigications_log} 
-              li.nav__item: a.nav__main_link(href="/account", class= currentPath.startsWith('/account') ? 'nav__main_link--active' : '')
-                h6 #{layout.profile}
+                li.nav__item
+                  a.nav__link(href="/history", class= currentPath.startsWith('/history') ? 'nav__main_link--active' : '')
+                    h6 #{layout.notigications_log} 
+              li.nav__item
+                a.nav__link(href="/account", class= currentPath.startsWith('/account') ? 'nav__main_link--active' : '')
+                  h6 #{layout.profile}
               if user.level > 10 
                 //- li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : ''))
                   h6 #{layout.logout}
