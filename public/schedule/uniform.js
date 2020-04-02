@@ -1,3 +1,4 @@
+
 const createScheduleNotificationsBtn = document.querySelector('#create_schedule_notification');
 
 // target: 'all-users' or 'one-user'
@@ -5,10 +6,6 @@ const createScheduleNotificationsBtn = document.querySelector('#create_schedule_
 // randomize: false
 
 function createScheduleNotification(){
-
-  // TEST message to service worker
-  console.log("test")
-  navigator.serviceWorker.controller.postMessage("Client 1 says '"+ 'yury' +"'");
 
   let participantId, participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
@@ -22,7 +19,7 @@ function createScheduleNotification(){
   document.getElementById('notification_status_schedule').style.visibility = 'visible';
   const scheduleArray = Array.from(document.querySelectorAll('.scheduleInput'));
   const schedule = scheduleArray
-    .map(e => e.value)
+    .map(e => e.value.replace(/-/g, "/"))
     .filter(v => v !== '')
     .map(d => new Date(d).toISOString())
 
