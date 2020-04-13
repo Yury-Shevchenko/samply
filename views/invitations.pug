@@ -30,6 +30,8 @@ block content
               button(class="copyButton" id="emailButton") #{l.copy_link}
               p #{l.email_strategy}
         
+        +invitationForm(project)
+        
         script(nonce=`${noncevalue}`).
           document.addEventListener('DOMContentLoaded', function (){
             const btns = document.getElementsByClassName('copyButton');
@@ -47,4 +49,4 @@ block content
       else
         p !{l.message_create_project}
 
-    +invitationForm(project)
+    

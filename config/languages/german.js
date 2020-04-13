@@ -237,6 +237,7 @@ module.exports = {
     'change_project_confirm': 'Bestätigen',
     'notifications': 'Mitteilungen',
     'install_app': 'App installieren',
+    'message_history_create_project': 'Erstellen oder aktivieren Sie eine <a href="/projects">Studie</a>, um die Geschichte der Benachrichtigungen einzusehen.',
   },
 
   'passport': {
@@ -569,7 +570,11 @@ module.exports = {
         'regular_notifications_to_all_1': 'Regelmäßige Benachrichtigungen sind für alle Teilnehmer Ihrer Studie ',
         'regular_notifications_to_all_2': 'vorgesehen, die sich registriert und Benachrichtigungen zugelassen haben.',
         'individual_random_info_1': 'Wählen Sie die Zeiträume, in denen eine Benachrichtigung gesendet werden soll. Die genaue Zeit für jeden Teilnehmer wird nach dem Zufallsprinzip ausgewählt.',
-        'individual_random_info_2': 'Wählen Sie den Beginn und das Ende des Intervalls. Das spezifische Intervall für jeden Teilnehmer wird nach dem Zufallsprinzip ausgewählt.',
+        'individual_random_info_2': `
+          Wählen Sie den Beginn und das Ende des Intervalls unabhängig für jede der Kategorien (Minute, Stunde, Tag des Monats, Monat, Wochentag).
+          Das spezifische Intervall für jeden Teilnehmer wird nach dem Zufallsprinzip ausgewählt und umfasst die Start- und Endwerte.
+          Wenn Sie z.B. die Benachrichtigung zwischen 8:00 und 11:00 Uhr versenden möchten, beträgt das Intervall 0 bis 59 für die Kategorie "Minute" und 8 bis 10 für die Kategorie "Stunde".
+        `,
         'individual_interval_start': 'Beginn des Intervalls',
         'individual_interval_end': 'Ende des Intervalls',
 

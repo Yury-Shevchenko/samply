@@ -6,7 +6,6 @@ const uniqid = require('uniqid');
 const mail = require('../handlers/mail');
 
 exports.welcomePage = async(req, res) => {
-
   res.render('index');
 }
 

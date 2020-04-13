@@ -19,9 +19,9 @@ function createScheduleNotification(){
   document.getElementById('notification_status_schedule').style.visibility = 'visible';
   const scheduleArray = Array.from(document.querySelectorAll('.scheduleInput'));
   const schedule = scheduleArray
-    .map(e => e.value.replace(/-/g, "/"))
+    .map(e => e.value)
     .filter(v => v !== '')
-    .map(d => new Date(d).toISOString())
+    .map(d => moment(d).toISOString())
 
   fetch('/createschedulenotification', {
     method:'POST',

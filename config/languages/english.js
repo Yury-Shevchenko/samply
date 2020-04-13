@@ -237,6 +237,7 @@ module.exports =
       'change_project_confirm': 'Confirm',
       'notifications': 'Notifications',
       'install_app': 'Install App',
+      'message_history_create_project': 'Create or activate a <a href="/projects">study</a> to see the history of notifications.',
     },
 
     'passport': {
@@ -561,7 +562,11 @@ module.exports =
           'regular_notifications_to_all_1': 'Regular notifications are scheduled for all participants of your study',
           'regular_notifications_to_all_2': 'who have registered and allowed notifications.',
           'individual_random_info_1': 'Choose the periods of time in which to send a notification. The exact time for each participant will be chosen randomly.',
-          'individual_random_info_2': 'Choose the start and the end of the interval. The specific interval for each participants will be chosen randomly.',
+          'individual_random_info_2': `
+            Select the start and end of the interval independently for each of the categories (minute, hour, day of the month, month, weekday).
+            The specific interval for each participant is chosen randomly and includes the start and end values.
+            For example, if you want to send the notification between 8:00 and 11:00, the interval is 0 to 59 for the "minute" category and 8 to 10 for the "hour" category.
+            `,
           'individual_interval_start': 'Start of the interval',
           'individual_interval_end': 'End of the interval',
 

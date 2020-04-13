@@ -1,5 +1,7 @@
 extends layout
 
+include mixins/_scheduledNotification
+
 block content
   .inner(style="max-width: 2000px; padding: 4rem;")
 
@@ -7,6 +9,7 @@ block content
       h2= `${layout.notifications} for participant ${participant.samplyId}`
     else
       h2= `${layout.notifications}`
+    
     .card
       if project && project.name
         
@@ -21,6 +24,8 @@ block content
         script(type='text/javascript', src='/javascripts/datepicker/bootstrap-duration-picker.js' nonce=`${noncevalue}`)  
         link(href='/javascripts/datepicker/bootstrap-duration-picker.css', rel='stylesheet', type='text/css' nonce=`${noncevalue}`)
         
+        script(src='/javascripts/modules/moment.js' nonce=`${noncevalue}`)
+          
         .notificationsPanel
           p #{l.testing_message}
           h6 #{layout.choose_participants}
@@ -46,7 +51,7 @@ block content
           
           p#notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
           p #{layout.choose_the_type} 
-          #controlButtons(style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; grid-column-gap: 15px; grid-row-gap: 15px;")
+          #controlButtons(style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));; grid-column-gap: 15px; grid-row-gap: 15px;")
             button(class="buttonContainer" id="scheduleNotification") One-time  
             button(class="buttonContainer" id="randomNotification") One-time (random)
             button(class="buttonContainer" id="intervalNotification") Repeat     
@@ -164,38 +169,20 @@ block content
              
             button(id="create_random_individual_notification" class="button") #{l.add}
           
-        if (project && project.notifications && project.notifications.length > 0)
-          h2 #{l.scheduled_notifications} 
-          table.table
-            thead
-              td #{l.table_type} 
-              td #{l.table_sending_time} 
-              td #{l.table_start_repeat} 
-              td #{l.table_start_end} 
-              td #{l.table_repeat_interval} 
-              td #{l.table_user_time_period} 
-              td #{l.table_user_range} 
-              td #{l.table_title}  
-              td #{l.table_message} 
-              td url
-              td #{l.table_delete} 
-            each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
-              tr
-                td= notification.name
-                td= (notification.name === 'One-time' || notification.name === 'One-time (random)') ? h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
-                td= notification.name === 'Repeat' ? h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
-                td= notification.name === 'Repeat' ? h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm') : ''
-                td= (notification.name === 'Repeat' || notification.name === 'Event-dependent') ? notification.interval.slice(2) : ''
-                td= (notification.name === 'Event-dependent' || notification.name === 'Event-dependent (random)') ? `${h.moment.duration(notification.duration).toISOString()} - ${h.moment.duration(notification.duration).humanize()}` : ''
-                td= notification.name === 'Event-dependent (random)' ? `${notification.interval.slice(2)} - ${notification.interval_max.slice(2)}` : ''
-                td= notification.title 
-                td= notification.message
-                td= notification.url
-                td
-                  a(href=`/removenotification/${notification.id}`)
-                    != h.icon('remove')
-          p  
-          button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
+      else
+        p !{l.message_create_project}
+        
+    .card
+      if (project && project.notifications && project.notifications.length > 0)
+        h2 #{l.scheduled_notifications} 
+        
+        .reviews
+          each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
+            .review
+              +scheduledNotification(notification, i)        
+
+        p  
+        button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
         
         if participant && participant.samplyId
           script(nonce=`${noncevalue}`).
@@ -203,93 +190,91 @@ block content
             document.getElementById('individualNotification').style['color'] = 'lightgrey';
             document.getElementById('randomIndividualNotification').disabled = true;
             document.getElementById('randomIndividualNotification').style['color'] = 'lightgrey';
-            
-                             
-        script(defer type='text/javascript' nonce=`${noncevalue}`).
-          $(document).ready( function () {
-              // activate function to select participants
-              document.getElementById('activeTarget').addEventListener('change', function doThings() {
-                const participant = document.getElementById("activeTarget").value;
-                if(participant > 0){
-                  window.location.href = `/notifications/${participant}`;
-                } else {
-                  window.location.href = `/notifications`;
-                }
-              });
-              // populate timers
-              $('#picker').dateTimePicker({
-                selectData: "now",
-              });
-              $('#interval_picker_starting_date').dateTimePicker();
-              $('#interval_picker_ending_date').dateTimePicker();
-              $('input[name="datetimes_regular"]').daterangepicker({
-                timePicker: true,
-                startDate: moment().startOf('hour'),
-                endDate: moment().startOf('hour').add(32, 'hour'),
-                locale: {
-                  format: 'M/DD hh:mm A'
-                }
-              });
-              $('input[name="random_datetimes_regular"]').daterangepicker({
-                timePicker: true,
-                startDate: moment().startOf('hour'),
-                endDate: moment().startOf('hour').add(32, 'hour'),
-                locale: {
-                  format: 'M/DD hh:mm A'
-                }
-              });
-              $('#duration').durationPicker({
-                showSeconds: true
-              });
-              $('#durationRandomIndividual').durationPicker({
-                showSeconds: true
-              });
-          }) 
-          var pickerNum = 1;
-          document.addEventListener('DOMContentLoaded', function (){
-            document.querySelectorAll('.buttonContainer').addEventListener('click', function changeContainer(){
-              document.querySelector(`#scheduleNotificationContainer`).style.display = "none";
-              document.querySelector(`#intervalNotificationContainer`).style.display = "none";
-              document.querySelector(`#individualNotificationContainer`).style.display = "none";
-              document.querySelector(`#randomNotificationContainer`).style.display = "none";
-              document.querySelector(`#randomIndividualNotificationContainer`).style.display = "none";
-              document.querySelector(`#${this.id}Container`).style.display = "inline-block";
-              document.querySelectorAll('.buttonContainer').forEach( b => {b.style.background = "rgba(238, 242, 244, 0.6)"});
-              this.style.background = "#11fa71";
+                                   
+      script(defer type='text/javascript' nonce=`${noncevalue}`).
+        $(document).ready( function () {
+            // activate function to select participants
+            document.getElementById('activeTarget').addEventListener('change', function doThings() {
+              const participant = document.getElementById("activeTarget").value;
+              if(participant > 0){
+                window.location.href = `/notifications/${participant}`;
+              } else {
+                window.location.href = `/notifications`;
+              }
             });
-            document.getElementById('addDateTimePicker').addEventListener('click', function addPicker() { 
-              pickerNum = pickerNum + 1;
-              var container = document.getElementById("dateTimePicker");  
-              var newPicker = document.createElement('div');
-              newPicker.id = `container-picker-${pickerNum}`;
-              newPicker.classList.add('container_picker');
-              newPicker.style = 'width: 250px; margin: 20px auto;';
-              var picker = document.createElement('div');
-              picker.id = `picker-${pickerNum}`;
-              newPicker.appendChild(picker);
-              var input = document.createElement('input');
-              input.classList.add('scheduleInput');
-              input.type = 'hidden';
-              input.value = ''
-              input.id = `dateresult-${pickerNum}`
-              newPicker.appendChild(input);
-              var removePickerBtn = document.createElement('button');
-              removePickerBtn.innerText = 'x';
-              removePickerBtn.classList.add('removePickerButton');
-              removePickerBtn.id = `-${pickerNum}`;
-              removePickerBtn.addEventListener('click', removeScheduleDateTimePicker);
-              newPicker.appendChild(removePickerBtn);
-              container.appendChild(newPicker);
-              $(`#picker-${pickerNum}`).dateTimePicker();
+            // populate timers
+            $('#picker').dateTimePicker({
+              selectData: "now",
             });
-          }); 
+            $('#interval_picker_starting_date').dateTimePicker();
+            $('#interval_picker_ending_date').dateTimePicker();
+            $('input[name="datetimes_regular"]').daterangepicker({
+              timePicker: true,
+              startDate: moment().startOf('hour'),
+              endDate: moment().startOf('hour').add(32, 'hour'),
+              locale: {
+                format: 'M/DD hh:mm A'
+              }
+            });
+            $('input[name="random_datetimes_regular"]').daterangepicker({
+              timePicker: true,
+              startDate: moment().startOf('hour'),
+              endDate: moment().startOf('hour').add(32, 'hour'),
+              locale: {
+                format: 'M/DD hh:mm A'
+              }
+            });
+            $('#duration').durationPicker({
+              showSeconds: true
+            });
+            $('#durationRandomIndividual').durationPicker({
+              showSeconds: true
+            });
+        }) 
+        var pickerNum = 1;
+        document.addEventListener('DOMContentLoaded', function (){
+          document.querySelectorAll('.buttonContainer').addEventListener('click', function changeContainer(){
+            document.querySelector(`#scheduleNotificationContainer`).style.display = "none";
+            document.querySelector(`#intervalNotificationContainer`).style.display = "none";
+            document.querySelector(`#individualNotificationContainer`).style.display = "none";
+            document.querySelector(`#randomNotificationContainer`).style.display = "none";
+            document.querySelector(`#randomIndividualNotificationContainer`).style.display = "none";
+            document.querySelector(`#${this.id}Container`).style.display = "inline-block";
+            document.querySelectorAll('.buttonContainer').forEach( b => {b.style.background = "rgba(238, 242, 244, 0.6)"});
+            this.style.background = "#11fa71";
+          });
+          document.getElementById('addDateTimePicker').addEventListener('click', function addPicker() { 
+            pickerNum = pickerNum + 1;
+            var container = document.getElementById("dateTimePicker");  
+            var newPicker = document.createElement('div');
+            newPicker.id = `container-picker-${pickerNum}`;
+            newPicker.classList.add('container_picker');
+            newPicker.style = 'width: 250px; margin: 20px auto;';
+            var picker = document.createElement('div');
+            picker.id = `picker-${pickerNum}`;
+            newPicker.appendChild(picker);
+            var input = document.createElement('input');
+            input.classList.add('scheduleInput');
+            input.type = 'hidden';
+            input.value = ''
+            input.id = `dateresult-${pickerNum}`
+            newPicker.appendChild(input);
+            var removePickerBtn = document.createElement('button');
+            removePickerBtn.innerText = 'x';
+            removePickerBtn.classList.add('removePickerButton');
+            removePickerBtn.id = `-${pickerNum}`;
+            removePickerBtn.addEventListener('click', removeScheduleDateTimePicker);
+            newPicker.appendChild(removePickerBtn);
+            container.appendChild(newPicker);
+            $(`#picker-${pickerNum}`).dateTimePicker();
+          });
+        }); 
         
-        script(type='text/javascript', src='/schedule/prepare.js' nonce=`${noncevalue}`)
-        script(type='text/javascript', src='/schedule/uniform.js' nonce=`${noncevalue}`)
-        script(type='text/javascript', src='/schedule/interval.js' nonce=`${noncevalue}`)
-        script(type='text/javascript', src='/schedule/individual.js' nonce=`${noncevalue}`)
-        script(type='text/javascript', src='/schedule/randomUniform.js' nonce=`${noncevalue}`)
-        script(type='text/javascript', src='/schedule/user-specific-interval-random.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/schedule/prepare.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/schedule/uniform.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/schedule/interval.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/schedule/individual.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/schedule/randomUniform.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/schedule/user-specific-interval-random.js' nonce=`${noncevalue}`)
         
-      else
-        p !{l.message_create_project}
+    

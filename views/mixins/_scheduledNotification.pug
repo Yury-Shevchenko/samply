@@ -1,0 +1,27 @@
+mixin scheduledNotification(notification, i)
+  .review__header
+    .review__author
+      p= `${notification.name}`
+    .review__author
+      p= `${notification.title}`
+    .review__author
+      p= `${notification.message}`
+    .review__author
+      p= `${notification.url}`
+    .review__author
+      a(href=`/removenotification/${notification.id}`)
+        != h.icon('remove')
+  
+  .review__body
+    if(notification.name === 'One-time' || notification.name === 'One-time (random)')
+      span= h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm') 
+    if(notification.name === 'Repeat')
+      span=  h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm') 
+    if(notification.name === 'Repeat')
+      span=  h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')
+    if(notification.name === 'Repeat' || notification.name === 'Event-dependent')
+      span= notification.interval.slice(2) 
+    if(notification.name === 'Event-dependent' || notification.name === 'Event-dependent (random)')
+      span= `${h.moment.duration(notification.duration).toISOString()} - ${h.moment.duration(notification.duration).humanize()}` 
+    if(notification.name === 'Event-dependent (random)')
+      span= `${notification.interval.slice(2)} - ${notification.interval_max.slice(2)}` 

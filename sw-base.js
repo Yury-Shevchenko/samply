@@ -147,6 +147,6 @@ self.addEventListener('notificationclose', (event) => {
   if(event.notification && event.notification.data) saveResults(event.notification.data, 'closed');
 })
 
-self.addEventListener('message', function(event){
-  console.log("SW Received Message: " + event.data);
-});
+// self.addEventListener('message', function(event){
+//   console.log("SW Received Message: " + event.data);
+// });

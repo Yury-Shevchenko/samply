@@ -7,8 +7,6 @@
   border: 0;
   border-radius: 5px;
   background: #c9f5db;
-  //background: rgba(135, 206, 250, 0.6);
-  // background: rgba(44, 247, 139, 0.9);
   color: $black;
   font-family: 'Bebas';
   font-size: 2.5rem;
@@ -19,22 +17,18 @@
 }
 
 .button:hover {
-  //background: #d8ddfc;
   background: rgba(29, 191, 105, 0.9);
   cursor: pointer;
 }
 
 .buttonContainer {
-  // border: 0.5;
   border-radius: 5px;
-  //background: #e7eaff;
   background: rgba(238, 242, 244, 0.6);
   color: $black;
   font-family: 'Bebas';
   font-size: 2.5rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  // margin-bottom: 10px;
   padding: 10px;
 }
 
@@ -43,36 +37,21 @@
   cursor: pointer;
 }
 
-// .installAppButton {
-//   // border: 0.5; #fa9acf
-//   // border-radius: 5px;
-//   background: transparent;
-//   color: #303030;
-//   font-family: 'Bebas';
-//   font-size: 2.5rem;
-//   font-weight: 600;
-//   letter-spacing: 0.5px;
-//   padding: 10px;
-// }
-//
 #installApp:hover {
-  // background: #219e54;
   cursor: pointer;
 }
 
 .avatar {
- min-width: 50px;
- height: 50px;
- border-radius: 50%;
- align-self: center;
+   min-width: 50px;
+   height: 50px;
+   border-radius: 50%;
+   align-self: center;
 }
 
 .card {
   display: grid;
-  // justify-items: center;
   background: white;
   padding: 3rem;
-  // box-shadow: 0 1px 10px rgba(0,0,0,0.15);
   box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
   height: inherit;
   @media all and (max-width: 600px) {
