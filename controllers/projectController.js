@@ -308,5 +308,5 @@ exports.debugprojects = async(req, res) => {
 
 exports.getPublicStudiesAPI = async(req, res) => {
   const studies = await Project.findAllPublic();
-  res.json(studies);
+  res.send(studies);
 }
