@@ -305,3 +305,8 @@ exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});
 };
+
+exports.getPublicStudiesAPI = async(req, res) => {
+  const studies = await Project.findAllPublic();
+  res.json(studies);
+}

@@ -130,5 +130,7 @@ router.post('/createindividualnotification', authController.isAdminLoggedIn, cat
 router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
 
+// api routes
+router.get('/api/studies', projectController.getPublicStudiesAPI);
 
 module.exports = router;
