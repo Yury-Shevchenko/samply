@@ -132,5 +132,7 @@ router.get('/removenotification/:id', authController.isAdminLoggedIn, catchError
 
 // api routes
 router.get('/api/studies', projectController.getPublicStudiesAPI);
+router.post('/api/join/:id', projectController.joinStudy);
+
 
 module.exports = router;
