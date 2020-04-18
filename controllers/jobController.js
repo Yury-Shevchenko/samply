@@ -6,6 +6,10 @@ const webpush = require('web-push');
 const Agenda = require('agenda');
 const uniqid = require('uniqid');
 
+const { Expo } = require('expo-server-sdk');
+// Create a new Expo SDK client
+let expo = new Expo();
+
 const agenda = new Agenda({
   name: 'samply-notifications',
   db: { address: process.env.DATABASE, collection: 'Job' },
@@ -14,7 +18,8 @@ const agenda = new Agenda({
 agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
-    sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    sendMobileNotification(done, job.attrs.data.projectid);
+    // sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
   });
 
   agenda.define('regular_notification', (job, done) => {
@@ -522,4 +527,63 @@ async function sendNotification(done, project_id, title, message, url) {
       console.log("No user in the project found");
       done();
     }
+};
+
+
+// send mobile notification to all mobile users of the project
+async function sendMobileNotification(done, project_id) {
+
+  // find the project
+  const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
+
+  console.log('project', project);
+  const pushTokens = project.mobileUsers.map(user => user.token);
+  // const somePushTokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
+  // Create the messages that you want to send to clents
+  let messages = [];
+  for (let pushToken of pushTokens) {
+    // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
+
+    // Check that all your push tokens appear to be valid Expo push tokens
+    if (!Expo.isExpoPushToken(pushToken)) {
+      console.error(`Push token ${pushToken} is not a valid Expo push token`);
+      continue;
+    }
+
+    // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
+    messages.push({
+      to: pushToken,
+      sound: 'default',
+      body: 'This is a test notification',
+      data: { withSome: 'data' },
+    })
+  }
+
+  // The Expo push notification service accepts batches of notifications so
+  // that you don't need to send 1000 requests to send 1000 notifications. We
+  // recommend you batch your notifications to reduce the number of requests
+  // and to compress them (notifications with similar content will get
+  // compressed).
+  let chunks = expo.chunkPushNotifications(messages);
+  let tickets = [];
+  (async () => {
+    // Send the chunks to the Expo push notification service. There are
+    // different strategies you could use. A simple one is to send one chunk at a
+    // time, which nicely spreads the load out over time:
+    for (let chunk of chunks) {
+      try {
+        let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        console.log(ticketChunk);
+        tickets.push(...ticketChunk);
+        // NOTE: If a ticket contains an error code in ticket.details.error, you
+        // must handle it appropriately. The error codes are listed in the Expo
+        // documentation:
+        // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    done();
+  })();
+
 };
