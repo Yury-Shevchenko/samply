@@ -314,11 +314,15 @@ exports.getPublicStudiesAPI = async(req, res) => {
 exports.joinStudy = async(req, res) => {
   const id = req.params.id;
   console.log('req.params.id', id);
-
   const project = await Project.findOne({_id: id},{
     name: 1,
   });
-  // add the notification link to the project
   console.log('req.body', req.body);
-  res.status(200).json({ message: 'Successfully subscribed.', projectName: project.name });
+  const mobileUser = {
+    id: req.body.id,
+    token: req.body.token,
+  };
+  project.mobileUsers.push(mobileUser);
+  await project.save();
+  res.status(200).json({ message: 'Successfully subscribed.', project: project });
 }

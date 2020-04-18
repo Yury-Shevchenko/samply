@@ -47,7 +47,17 @@ const projectSchema = new mongoose.Schema({
       participantId: { type: Number },
       name         : String,
     }
-  ]
+  ],
+  mobileUsers: [
+    {
+      id           : String,
+      token        : String,
+      created      : {
+                      type: Date,
+                      default: Date.now
+                     },
+    }
+  ],
 });
 
 projectSchema.statics.getCurrentProjects = function() {
