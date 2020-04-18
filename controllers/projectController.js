@@ -322,6 +322,9 @@ exports.joinStudy = async(req, res) => {
     id: req.body.id,
     token: req.body.token,
   };
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
   project.mobileUsers.push(mobileUser);
   await project.save();
   res.status(200).json({ message: 'Successfully subscribed.', project: project });
