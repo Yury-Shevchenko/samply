@@ -148,7 +148,7 @@ exports.joinStudy = async(req, res) => {
 
   const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
       { ['$addToSet'] : {
-        participant_projects: req.user.participantInProject
+        participant_projects: project._id
       } },
       { new : true });
   if(newUser){
