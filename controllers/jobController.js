@@ -99,6 +99,29 @@ agenda.on('ready', function() {
 
 exports.joinStudy = async(req, res) => {
   const id = req.params.id;
+  const project = await Project.findOne({_id: id},{
+    notifications: 1, mobileUsers: 1,
+  });
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
+  const newUser = {
+    id: req.body.id,
+    token: req.body.token,
+  };
+  let isNew = true;
+  project.mobileUsers.map(user => {
+    if(user.id === newUser.id){
+      user.token = newUser.token;
+      isNew = false;
+    }
+    return user
+  })
+  if(isNew){
+    project.mobileUsers.push(newUser);
+  }
+  await project.save();
+  console.log('new project', project);
   // console.log('req.params.id', id);
   // const project = await Project.findOne({_id: id},{
   //   name: 1, notifications: 1,
@@ -115,11 +138,11 @@ exports.joinStudy = async(req, res) => {
   // await project.save();
   // console.log('new project', project);
 
-  const project = await Project.findOneAndUpdate({ _id: id },
-      { ['$addToSet'] : {
-        mobileUsers: req.body
-      } },
-      { new : true });
+  // const project = await Project.findOneAndUpdate({ _id: id },
+  //     { ['$addToSet'] : {
+  //       mobileUsers: req.body
+  //     } },
+  //     { new : true });
   console.log('project', project);
 
   if(project && project.notifications && project.notifications.length > 0){
@@ -170,19 +193,22 @@ exports.joinStudy = async(req, res) => {
 
 
 exports.leaveStudy = async(req, res) => {
-  // 1. // TODO:  find the project and remove the user from the project
+  
   const id = req.params.id;
-  // 2. cancel all jobs related to the user and the project
   agenda.cancel({
     'data.projectid': id, //TODO
     'data.userid': req.body.id,
   }, (err, numRemoved) => {});
 
-  const project = await Project.findOneAndUpdate({ _id: id },
-      { ['$pull'] : {
-        mobileUsers: req.body
-      } },
-      { new : true });
+  const project = await Project.findOne({_id: id},{
+    mobileUsers: 1,
+  });
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
+  const removeUserId = req.body.id;
+  project.mobileUsers.filter(user => user.id !== removeUserId)
+  await project.save();
 
   console.log('project', project);
   res.status(200).json({message: 'OK'});
