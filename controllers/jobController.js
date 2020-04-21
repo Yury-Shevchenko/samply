@@ -115,12 +115,12 @@ exports.joinStudy = async(req, res) => {
   // await project.save();
   // console.log('new project', project);
 
-  const newProject= await Project.findOneAndUpdate({ _id: id },
+  const project = await Project.findOneAndUpdate({ _id: id },
       { ['$addToSet'] : {
         mobileUsers: req.body
       } },
       { new : true });
-  console.log('newProject', newProject);
+  console.log('project', project);
 
   if(project && project.notifications && project.notifications.length > 0){
 
@@ -178,13 +178,13 @@ exports.leaveStudy = async(req, res) => {
     'data.userid': req.body.id,
   }, (err, numRemoved) => {});
 
-  const newProject= await Project.findOneAndUpdate({ _id: id },
+  const project = await Project.findOneAndUpdate({ _id: id },
       { ['$pull'] : {
         mobileUsers: req.body
       } },
       { new : true });
 
-  console.log('newProject', newProject);
+  console.log('project', project);
   res.status(200).json({message: 'OK'});
 
   // const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
