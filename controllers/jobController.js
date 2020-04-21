@@ -113,6 +113,7 @@ exports.joinStudy = async(req, res) => {
   }
   project.mobileUsers.push(mobileUser);
   await project.save();
+  console.log('new project', project);
 
   if(project && project.notifications && project.notifications.length > 0){
 
@@ -146,16 +147,17 @@ exports.joinStudy = async(req, res) => {
     })
   }
 
-  const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
-      { ['$addToSet'] : {
-        participant_projects: project._id
-      } },
-      { new : true });
-  if(newUser){
-    res.status(200).json({message: 'You are successfully subscribed.'});
-  } else {
-    res.status(400).json({message: 'There was an error during the user update'});
-  }
+  res.status(200).json({message: 'OK'});
+  // const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
+  //     { ['$addToSet'] : {
+  //       participant_projects: project._id
+  //     } },
+  //     { new : true });
+  // if(newUser){
+  //   res.status(200).json({message: 'You are successfully subscribed.'});
+  // } else {
+  //   res.status(400).json({message: 'There was an error during the user update'});
+  // }
 
 }
 
