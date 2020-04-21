@@ -16,31 +16,30 @@ block content
               thead
                 td №
                 td #{l.table_samplyId}
-                td #{l.table_code}
-                if (project && project.showCompletionCode)
-                  td #{l.table_confirmation_code}
+                //- td #{l.table_code}
+                //- if (project && project.showCompletionCode)
+                //-   td #{l.table_confirmation_code}
                 td Created
-                td #{l.table_role}
-                td #{l.table_name}
-                td <i class="fas fa-language"></i>
-                td Approval
+                //- td #{l.table_role}
+                //- td #{l.table_name}
+                //- td <i class="fas fa-language"></i>
+                //- td Approval
                 if user.level > 10
-                  td Notifications
-                  td User agent
                   td <i class="fas fa-ban"></i>
-                
-              each person, i in users
-                +userCard(person, i)
+              
+              if(users)  
+                each person, i in users
+                  +userCard(person, i)
 
-          .pagination
-            .pagination__prev
-              if page > 1
-                a(href=`/users/page/${page - 1}`) #{l.pagination_prev}
-            .pagination__text
-              p= `${l.pagination_page_1} ${page} ${l.pagination_page_2} ${pages} - ${count} ${l.pagination_page_3}`
-            .pagination__next
-              if page < pages
-                a(href=`/users/page/${parseFloat(page) + 1}`) #{l.pagination_next}
+          //- .pagination
+          //-   .pagination__prev
+          //-     if page > 1
+          //-       a(href=`/users/page/${page - 1}`) #{l.pagination_prev}
+          //-   .pagination__text
+          //-     p= `${l.pagination_page_1} ${page} ${l.pagination_page_2} ${pages} - ${count} ${l.pagination_page_3}`
+          //-   .pagination__next
+          //-     if page < pages
+          //-       a(href=`/users/page/${parseFloat(page) + 1}`) #{l.pagination_next}
 
       else
         p !{l.message_create_project}

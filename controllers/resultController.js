@@ -57,6 +57,29 @@ exports.removeRecordById = async(req, res) => {
   });
 }
 
+exports.getData_old = async (req, res) => {
+  const activeProjectPromise = Project.findOne({_id: req.user.project._id},{
+    invitations: 1, showCompletionCode: 1,
+  });
+  const page = parseInt(req.params.page) || 1;
+  const limit = 50;
+  const skip = (page * limit) - limit;
+  const usersPromise = User
+    .getUsersOfProject(req.user.project._id)
+    .sort( {created: 'asc'} )
+    .skip(skip)
+    .limit(limit);
+  const countPromise = User.countDocuments({$or: [{participantInProject: req.user.project._id}, {participant_projects: req.user.project._id}]});
+  const [users, count, project] = await Promise.all([ usersPromise, countPromise, activeProjectPromise ]);
+  const pages = Math.ceil(count / limit);
+  if(!users.length && skip){
+    req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
+    res.redirect(`/users/page/${pages}`);
+    return;
+  }
+  res.render('data', {users, page, pages, count, skip, project});
+};
+
 exports.getData = async (req, res) => {
   const activeProjectPromise = Project.findOne({_id: req.user.project._id},{
     invitations: 1, showCompletionCode: 1,

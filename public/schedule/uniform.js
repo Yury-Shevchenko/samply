@@ -33,7 +33,7 @@ function createScheduleNotification(){
       target: participantTarget,
       schedule: 'one-time',
       randomize: false,
-      participantId: participantId,
+      participantId: [participantId],
       date: schedule,
       message: messageContent.value,
       title: titleContent.value,

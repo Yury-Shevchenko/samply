@@ -105,24 +105,26 @@ router.get('/debugprojects',
   authController.isSuperAdminLoggedIn,
   catchErrors(projectController.debugprojects));
 
+router.get('/users', authController.isAdminLoggedIn, catchErrors(projectController.getMobileUsers));
+
 // results controller
 router.post('/save', catchErrors(resultController.saveIncrementalResults));
 router.get('/history', authController.isLoggedIn, catchErrors(resultController.showHistory));
 router.get('/history/page/:page', authController.isLoggedIn, catchErrors(resultController.showHistory));
 router.get('/removerecord/:id', authController.isAdminLoggedIn, catchErrors(resultController.removeRecordById));
-router.get('/users', authController.isAdminLoggedIn, catchErrors(resultController.getData));
+// router.get('/users', authController.isAdminLoggedIn, catchErrors(resultController.getData));
 router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(resultController.getData));
 router.get('/downloadhistory/:id', authController.isLoggedIn, catchErrors(resultController.downloadHistory));
 
 // job controller (notifications)
-router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(jobController.subscribeforstudy));
-router.post('/unsubscribefromstudy', authController.isLoggedIn, catchErrors(jobController.unsubscribefromstudy));
-router.post('/registernotification',
-  authController.isLoggedIn,
-  catchErrors(jobController.registerPushNotification),
-  catchErrors(jobController.subscribeforstudy)
-);
-router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unregisterPushNotification));
+// router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(jobController.subscribeforstudy));
+// router.post('/unsubscribefromstudy', authController.isLoggedIn, catchErrors(jobController.unsubscribefromstudy));
+// router.post('/registernotification',
+//   authController.isLoggedIn,
+//   catchErrors(jobController.registerPushNotification),
+//   catchErrors(jobController.subscribeforstudy)
+// );
+// router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unregisterPushNotification));
 
 router.post('/createschedulenotification', authController.isAdminLoggedIn, catchErrors(jobController.createScheduleNotification));
 router.post('/createintervalnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIntervalNotification));
@@ -132,7 +134,7 @@ router.get('/removenotification/:id', authController.isAdminLoggedIn, catchError
 
 // api routes
 router.get('/api/studies', projectController.getPublicStudiesAPI);
-router.post('/api/join/:id', projectController.joinStudy);
-
+router.post('/api/join/:id', jobController.joinStudy);
+router.post('/api/leave/:id', jobController.leaveStudy);
 
 module.exports = router;

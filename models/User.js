@@ -13,7 +13,7 @@ const userSchema = new Schema({
     },
     name             : String,
     email            : String,
-    samplyId        : String,
+    samplyId        : String, // id for mobile participants / goes inside mobileUsers: id in Projects
     created          : {
         type         : Date,
         default      : Date.now
@@ -79,7 +79,7 @@ userSchema.statics.getUsersOfProject = function(project) {
     { $match: {
       $or: [
         { 'participant_projects' : { $eq: project } }, // filter users in the past
-        { 'participantInProject' : { $eq: project } }, 
+        { 'participantInProject' : { $eq: project } },
         ]
       }
     },

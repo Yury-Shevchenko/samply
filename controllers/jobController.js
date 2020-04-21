@@ -18,15 +18,17 @@ const agenda = new Agenda({
 agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
-    sendMobileNotification(done, job.attrs.data.projectid);
+    sendToAllProjectUsers(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     // sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
   });
 
   agenda.define('regular_notification', (job, done) => {
     if(job.attrs.data.participantId && job.attrs.data.participantId > 0){
-      sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+      sendToSomeProjectUsers(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+      // sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     } else {
-      sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+      sendToAllProjectUsers(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+      // sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     }
   });
 
@@ -55,7 +57,8 @@ agenda.on('ready', function() {
   });
 
   agenda.define('personal_notification', (job, done) => {
-    sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    sendToSomeProjectUsers(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    // sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     done();
   });
 
@@ -94,10 +97,23 @@ agenda.on('ready', function() {
 });
 
 
-exports.subscribeforstudy = async(req, res) => {
-  const project = await Project.findOne({_id: req.user.participantInProject},{
+exports.joinStudy = async(req, res) => {
+  const id = req.params.id;
+  console.log('req.params.id', id);
+  const project = await Project.findOne({_id: id},{
     name: 1, notifications: 1,
   });
+  console.log('req.body', req.body);
+  const mobileUser = {
+    id: req.body.id,
+    token: req.body.token,
+  };
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
+  project.mobileUsers.push(mobileUser);
+  await project.save();
+
   if(project && project.notifications && project.notifications.length > 0){
 
     project.notifications.map(sub => {
@@ -107,7 +123,7 @@ exports.subscribeforstudy = async(req, res) => {
         const user_int_end = new Date(Date.now() + sub.duration);
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: req.user.samplyId,
+          userid: req.body.id,
           projectid: project._id,
           id: sub.id,
           interval: sub.interval,
@@ -117,77 +133,52 @@ exports.subscribeforstudy = async(req, res) => {
         });
 
         agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: req.user.samplyId,
+          userid: req.body.id,
           projectid: project._id,
           id: sub.id,
           interval: sub.interval,
           title: sub.title,
           message: sub.message,
+          url: sub.url,
         });
 
       }
     })
   }
-  const newUser = await User.findOneAndUpdate({_id: req.user._id},
+
+  const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
       { ['$addToSet'] : {
         participant_projects: req.user.participantInProject
       } },
       { new : true });
   if(newUser){
-    res.status(201).json({message: 'You are successfully subscribed.'});
+    res.status(200).json({message: 'You are successfully subscribed.'});
   } else {
     res.status(400).json({message: 'There was an error during the user update'});
   }
-};
 
-exports.unsubscribefromstudy = async(req, res) => {
+}
+
+
+exports.leaveStudy = async(req, res) => {
+  // 1. // TODO:  find the project and remove the user from the project
+
+  // 2. cancel all jobs related to the user and the project
   agenda.cancel({
-    'data.projectid': req.user.participantInProject,
-    'data.userid': req.user.samplyId,
+    'data.projectid': req.body.projectId, //TODO
+    'data.userid': req.body.id,
   }, (err, numRemoved) => {});
-  const newUser = await User.findOneAndUpdate({_id: req.user._id},
+  const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
       { ['$pull'] : {
         participant_projects: req.user.participantInProject
       } },
       { new : true });
   if(newUser){
-    res.status(201).json({message: 'You are successfully unsubscribed.'});
+    res.status(200).json({message: 'You are successfully unsubscribed.'});
   } else {
     res.status(400).json({message: 'There was an error during the user update'});
   }
 };
-
-
-exports.registerPushNotification = async (req, res, next) => {
-  const sub = req.body;
-  await User.findById(req.user._id, (err, user) => {
-    user.notifications.push(sub);
-    user.save((saveErr, updatedUser) => {
-      if (saveErr) {
-        res.status(400).json({message: 'There was an error during the user update'});
-      } else {
-        next();
-      }
-    });
-  });
-};
-
-exports.unregisterPushNotification = async (req, res) => {
-  await User.findById(req.user._id, (err, user) => {
-    agenda.cancel({
-      'data.userid': req.user.samplyId,
-    }, (err, numRemoved) => {});
-    user.notifications = [];
-    user.save((saveErr, updatedUser) => {
-      if (saveErr) {
-        res.status(400).json({message: 'There was an error during the user update'});
-      } else {
-        res.status(201).json({message: 'Successfully unsubscribed'});
-      }
-    });
-  });
-};
-
 
 exports.createScheduleNotification = async(req, res) => {
   // check whether the request body contains required information
@@ -226,6 +217,7 @@ exports.createScheduleNotification = async(req, res) => {
           url: req.body.url,
         });
       } else {
+        // schedule one time notification which will go to all users of project
         agenda.schedule(date, 'one_time_notification', {
           projectid: req.user.project._id,
           id: id,
@@ -320,7 +312,7 @@ exports.createIndividualNotification = async (req, res) => {
     interval2_cron = String(`${int2.sec} ${int2.min} ${int2.hour} ${int2.day} ${int2.month} ${int2.week}`);
   }
   let project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, notifications: 1,
+    name: 1, notifications: 1, mobileUsers: 1,
   });
   const id = uniqid();
   const duration = req.body.duration * 1000;
@@ -336,12 +328,22 @@ exports.createIndividualNotification = async (req, res) => {
     message: req.body.message,
     url: req.body.url,
     name: req.body.name,
+    participantId: req.body.participantId,
   });
 
-  const users = await User.getUsersOfProject(req.user.project._id);
+  // get all or some users depending on the request
+  // req.body.participantId should be an array
+  let users;
+  if(req.body.participantId) {
+    users = project.mobileUsers.filter(user => req.body.participantId.includes(user.id));
+  } else {
+    users = project.mobileUsers;
+  }
+
+  // const users = await User.getUsersOfProject(req.user.project._id);
   if (users){
     users.map(user => {
-      if (user.notifications && user.notifications.length > 0){
+
         const timeBuffer = 60000;
         const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
         const user_int_end = new Date(Date.parse(user.created) + duration);
@@ -371,7 +373,7 @@ exports.createIndividualNotification = async (req, res) => {
         }
 
         agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: user.participant_id,
+          userid: user.id,
           projectid: req.user.project._id,
           id: id,
           interval: interval,
@@ -380,7 +382,7 @@ exports.createIndividualNotification = async (req, res) => {
           url: req.body.url,
         });
         agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: user.samplyId,
+          userid: user.id,
           projectid: req.user.project._id,
           id: id,
           interval: req.body.interval,
@@ -389,7 +391,7 @@ exports.createIndividualNotification = async (req, res) => {
           url: req.body.url,
         });
 
-      }
+
     })
   }
   //save the project
@@ -403,6 +405,8 @@ exports.createIndividualNotification = async (req, res) => {
   });
 };
 
+
+// method for researchers to remove all project notifications
 exports.deleteProjectNotifications = async(req, res) => {
   const projectID = req.user.project._id;
   let project = await Project.findOne({_id: req.user.project._id},{
@@ -424,6 +428,7 @@ exports.deleteProjectNotifications = async(req, res) => {
   });
 }
 
+// method for researchers to remove specific notification
 exports.removeNotificationByID = async(req, res) => {
   const projectID = req.user.project._id;
   const notificationID = req.params.id;
@@ -450,98 +455,47 @@ exports.removeNotificationByID = async(req, res) => {
   });
 }
 
-async function sendPersonalNotification(done, project_id, user_id, title, message, url) {
-  const user = await User.findOne({samplyId: user_id});
-  await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
 
-  if (user && user.notifications && user.notifications.length > 0){
-    const subs = user.notifications;
-    subs.forEach(function(sub){
-      const pushConfig = {
-        endpoint: sub.endpoint,
-        keys: {
-          auth: sub.keys.auth,
-          p256dh: sub.keys.p256dh
-        }
-      };
-      webpush.sendNotification(pushConfig, JSON.stringify({
-        'title': title,
-        'content': message,
-        'openUrl': url.replace('%PARTICIPANT_CODE%', user.samplyId),
-        'author': user._id,
-        'project': project_id,
-        'samplyid': user.samplyId,
-      })) //payload is limited to 4kb
-        .then(res => {
-          done();
-        })
-        .catch(err => {
-          done(err);
-        })
-      })
-    }
-};
-
-async function sendNotification(done, project_id, title, message, url) {
-  const users = await User.getUsersOfProject(project_id);
-  await webpush.setVapidDetails('mailto:shevchenko_yury@mail.ru', process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
-  if (users){
-      var promises = users.map(user => {
-        if (user.notifications && user.notifications.length > 0){
-          const subs = user.notifications;
-          subs.forEach(function(sub){
-            const pushConfig = {
-              endpoint: sub.endpoint,
-              keys: {
-                auth: sub.keys.auth,
-                p256dh: sub.keys.p256dh
-              }
-            };
-            webpush.sendNotification(pushConfig, JSON.stringify({
-                'title': title,
-                'content': message,
-                'openUrl': url.replace('%PARTICIPANT_CODE%', user.participant_id),
-                'author': user._id,
-                'project': project_id,
-                'samplyid': user.participant_id,
-              })) //payload is limited to 4kb
-              .then(res => {
-                return(res.statusCode);
-              })
-              .catch(err => {
-                return(err.statusCode);
-              })
-          })
-        }
-      })
-      Promise.all(promises)
-        .then(function(results) {
-          // console.log("Notifications were sent");
-          done()
-        })
-        .catch(err => {
-          console.log("Error occured during the notification sending", err);
-          done(err)
-        })
-    } else {
-      console.log("No user in the project found");
-      done();
-    }
-};
-
-
-// send mobile notification to all mobile users of the project
-async function sendMobileNotification(done, project_id) {
-
+async function sendToSomeProjectUsers(done, project_id, user_id, title, message, url){
+  const content = {
+    title,
+    message,
+    url
+  };
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
+  // filter only the users whom we want to send notifications
+  // const tokens = project.mobileUsers.filter(user => user_id.includes(user.id)).map(user => user.token);
+  // for testing
+  const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]'];
 
-  console.log('project', project);
-  const pushTokens = project.mobileUsers.map(user => user.token);
-  // const somePushTokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
+  await sendMobileNotification(done, content, tokens);
+}
+
+
+// send the notificaiton to all users who are members of the project (mobileUsers)
+async function sendToAllProjectUsers(done, project_id, title, message, url){
+  const content = {
+    title,
+    message,
+    url
+  }
+  // find the project
+  const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
+  // const tokens = project.mobileUsers.map(user => user.token);
+  const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
+  await sendMobileNotification(done, content, tokens)
+}
+
+
+// the most simple function to send mobile notification with content to the list of tokens
+async function sendMobileNotification(done, content, tokens) {
+  const {title, message, url} = content;
+  // const pushTokens = project.mobileUsers.map(user => user.token);
+  // const pushTokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
   // Create the messages that you want to send to clents
   let messages = [];
-  for (let pushToken of pushTokens) {
+  for (let pushToken of tokens) {
     // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
 
     // Check that all your push tokens appear to be valid Expo push tokens
@@ -554,8 +508,9 @@ async function sendMobileNotification(done, project_id) {
     messages.push({
       to: pushToken,
       sound: 'default',
-      body: 'This is a test notification',
-      data: { withSome: 'data' },
+      title: title,
+      body: message,
+      data: { title, message, url },
     })
   }
 

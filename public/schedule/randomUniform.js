@@ -37,7 +37,7 @@ function createRandomNotification(){
       target: participantTarget,
       schedule: 'one-time',
       randomize: true,
-      participantId: participantId,
+      participantId: [participantId],
       date: timeRandomEvent,
       message: messageContent.value,
       title: titleContent.value,

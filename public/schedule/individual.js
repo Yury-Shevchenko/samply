@@ -5,6 +5,15 @@ const createIndividualNotificationBtn = document.querySelector('#create_individu
 // randomize: false
 
 function createIndividualNotification(){
+
+  let participantId, participantTarget;
+  if(document.getElementById('participantId') && document.getElementById('participantId').value){
+    participantId = parseInt(document.getElementById('participantId').value);
+    participantTarget = 'one-user';
+  } else {
+    participantTarget = 'all-users';
+  }
+
   createIndividualNotificationBtn.disabled = true;
   document.getElementById('notification_status_schedule').style.visibility = 'visible';
   const duration = $('#duration')[0].value; //in seconds
@@ -33,6 +42,7 @@ function createIndividualNotification(){
       url: urlContent.value,
       duration: duration,
       name: 'Event-dependent',
+      participantId: [participantId],
     })
   })
     .then(res => {

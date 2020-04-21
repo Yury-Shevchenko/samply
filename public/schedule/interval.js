@@ -36,7 +36,7 @@ function createIntervalNotification(){
       target: participantTarget,
       schedule: 'repeat',
       randomize: true,
-      participantId: participantId,
+      participantId: [participantId],
       interval: interval,
       int_start: int_start,
       int_end: int_end,

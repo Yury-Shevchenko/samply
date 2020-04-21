@@ -311,21 +311,27 @@ exports.getPublicStudiesAPI = async(req, res) => {
   res.send(studies);
 }
 
-exports.joinStudy = async(req, res) => {
-  const id = req.params.id;
-  console.log('req.params.id', id);
-  const project = await Project.findOne({_id: id},{
-    name: 1,
+exports.getMobileUsers = async (req, res) => {
+  const project = Project.findOne({_id: req.user.project._id},{
+    mobileUsers: 1,
   });
-  console.log('req.body', req.body);
-  const mobileUser = {
-    id: req.body.id,
-    token: req.body.token,
-  };
-  if(!project.mobileUsers){
-    project.mobileUsers = [];
-  }
-  project.mobileUsers.push(mobileUser);
-  await project.save();
-  res.status(200).json({ message: 'Successfully subscribed.', project: project });
-}
+  const users = project.mobileUsers;
+  console.log(users);
+  // const page = parseInt(req.params.page) || 1;
+  // const limit = 50;
+  // const skip = (page * limit) - limit;
+  // const usersPromise = User
+  //   .getUsersOfProject(req.user.project._id)
+  //   .sort( {created: 'asc'} )
+  //   .skip(skip)
+  //   .limit(limit);
+  // const countPromise = User.countDocuments({$or: [{participantInProject: req.user.project._id}, {participant_projects: req.user.project._id}]});
+  // const [users, count, project] = await Promise.all([ usersPromise, countPromise, activeProjectPromise ]);
+  // const pages = Math.ceil(count / limit);
+  // if(!users.length && skip){
+  //   req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
+  //   res.redirect(`/users/page/${pages}`);
+  //   return;
+  // }
+  res.render('data', { users, project });
+};
