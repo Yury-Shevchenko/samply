@@ -99,21 +99,28 @@ agenda.on('ready', function() {
 
 exports.joinStudy = async(req, res) => {
   const id = req.params.id;
-  console.log('req.params.id', id);
-  const project = await Project.findOne({_id: id},{
-    name: 1, notifications: 1,
-  });
-  console.log('req.body', req.body);
-  const mobileUser = {
-    id: req.body.id,
-    token: req.body.token,
-  };
-  if(!project.mobileUsers){
-    project.mobileUsers = [];
-  }
-  project.mobileUsers.push(mobileUser);
-  await project.save();
-  console.log('new project', project);
+  // console.log('req.params.id', id);
+  // const project = await Project.findOne({_id: id},{
+  //   name: 1, notifications: 1,
+  // });
+  // console.log('req.body', req.body);
+  // const mobileUser = {
+  //   id: req.body.id,
+  //   token: req.body.token,
+  // };
+  // if(!project.mobileUsers){
+  //   project.mobileUsers = [];
+  // }
+  // project.mobileUsers.push(mobileUser);
+  // await project.save();
+  // console.log('new project', project);
+
+  const newProject= await Project.findOneAndUpdate({ _id: id },
+      { ['$addToSet'] : {
+        mobileUsers: req.body
+      } },
+      { new : true });
+  console.log('newProject', newProject);
 
   if(project && project.notifications && project.notifications.length > 0){
 
@@ -164,22 +171,32 @@ exports.joinStudy = async(req, res) => {
 
 exports.leaveStudy = async(req, res) => {
   // 1. // TODO:  find the project and remove the user from the project
-
+  const id = req.params.id;
   // 2. cancel all jobs related to the user and the project
   agenda.cancel({
-    'data.projectid': req.body.projectId, //TODO
+    'data.projectid': id, //TODO
     'data.userid': req.body.id,
   }, (err, numRemoved) => {});
-  const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
+
+  const newProject= await Project.findOneAndUpdate({ _id: id },
       { ['$pull'] : {
-        participant_projects: req.user.participantInProject
+        mobileUsers: req.body
       } },
       { new : true });
-  if(newUser){
-    res.status(200).json({message: 'You are successfully unsubscribed.'});
-  } else {
-    res.status(400).json({message: 'There was an error during the user update'});
-  }
+
+  console.log('newProject', newProject);
+  res.status(200).json({message: 'OK'});
+
+  // const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
+  //     { ['$pull'] : {
+  //       participant_projects: req.user.participantInProject
+  //     } },
+  //     { new : true });
+  // if(newUser){
+  //   res.status(200).json({message: 'You are successfully unsubscribed.'});
+  // } else {
+  //   res.status(400).json({message: 'There was an error during the user update'});
+  // }
 };
 
 exports.createScheduleNotification = async(req, res) => {

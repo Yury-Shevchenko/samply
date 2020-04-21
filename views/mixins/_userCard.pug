@@ -2,7 +2,7 @@ mixin userCard(person = {}, i)
 
   .user
     tr
-      td #{i + 1 + skip}
+      td #{i + 1}
       td= person.id
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       if user.level > 10
