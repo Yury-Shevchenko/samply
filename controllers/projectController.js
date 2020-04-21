@@ -312,11 +312,10 @@ exports.getPublicStudiesAPI = async(req, res) => {
 }
 
 exports.getMobileUsers = async (req, res) => {
-  const project = Project.findOne({_id: req.user.project._id},{
+  const project = await Project.findOne({_id: req.user.project._id},{
     mobileUsers: 1,
   });
   const users = project.mobileUsers;
-  console.log(users);
   // const page = parseInt(req.params.page) || 1;
   // const limit = 50;
   // const skip = (page * limit) - limit;
