@@ -136,5 +136,6 @@ router.get('/removenotification/:id', authController.isAdminLoggedIn, catchError
 router.get('/api/studies', projectController.getPublicStudiesAPI);
 router.post('/api/join/:id', jobController.joinStudy);
 router.post('/api/leave/:id', jobController.leaveStudy);
+router.post('/api/createaccount', userController.createMobileAccount);
 
 module.exports = router;

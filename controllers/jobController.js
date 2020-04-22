@@ -19,16 +19,13 @@ agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
     sendToAllProjectUsers(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
-    // sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
   });
 
   agenda.define('regular_notification', (job, done) => {
     if(job.attrs.data.participantId && job.attrs.data.participantId > 0){
       sendToSomeProjectUsers(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
-      // sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     } else {
       sendToAllProjectUsers(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
-      // sendNotification(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     }
   });
 
@@ -58,7 +55,6 @@ agenda.on('ready', function() {
 
   agenda.define('personal_notification', (job, done) => {
     sendToSomeProjectUsers(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
-    // sendPersonalNotification(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
     done();
   });
 
@@ -96,134 +92,6 @@ agenda.on('ready', function() {
   process.on('SIGINT' , graceful);
 });
 
-
-exports.joinStudy = async(req, res) => {
-  const id = req.params.id;
-  const project = await Project.findOne({_id: id},{
-    notifications: 1, mobileUsers: 1,
-  });
-  if(!project.mobileUsers){
-    project.mobileUsers = [];
-  }
-  const newUser = {
-    id: req.body.id,
-    token: req.body.token,
-  };
-  let isNew = true;
-  project.mobileUsers.map(user => {
-    if(user.id === newUser.id){
-      user.token = newUser.token;
-      isNew = false;
-    }
-    return user
-  })
-  if(isNew){
-    project.mobileUsers.push(newUser);
-  }
-  await project.save();
-  console.log('new project', project);
-  // console.log('req.params.id', id);
-  // const project = await Project.findOne({_id: id},{
-  //   name: 1, notifications: 1,
-  // });
-  // console.log('req.body', req.body);
-  // const mobileUser = {
-  //   id: req.body.id,
-  //   token: req.body.token,
-  // };
-  // if(!project.mobileUsers){
-  //   project.mobileUsers = [];
-  // }
-  // project.mobileUsers.push(mobileUser);
-  // await project.save();
-  // console.log('new project', project);
-
-  // const project = await Project.findOneAndUpdate({ _id: id },
-  //     { ['$addToSet'] : {
-  //       mobileUsers: req.body
-  //     } },
-  //     { new : true });
-  console.log('project', project);
-
-  if(project && project.notifications && project.notifications.length > 0){
-
-    project.notifications.map(sub => {
-      if(sub.target && sub.target === 'user-specific'){
-        const timeBuffer = 5000;
-        const user_int_start = new Date(Date.now() + timeBuffer);
-        const user_int_end = new Date(Date.now() + sub.duration);
-
-        agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: req.body.id,
-          projectid: project._id,
-          id: sub.id,
-          interval: sub.interval,
-          title: sub.title,
-          message: sub.message,
-          url: sub.url,
-        });
-
-        agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: req.body.id,
-          projectid: project._id,
-          id: sub.id,
-          interval: sub.interval,
-          title: sub.title,
-          message: sub.message,
-          url: sub.url,
-        });
-
-      }
-    })
-  }
-
-  res.status(200).json({message: 'OK'});
-  // const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
-  //     { ['$addToSet'] : {
-  //       participant_projects: project._id
-  //     } },
-  //     { new : true });
-  // if(newUser){
-  //   res.status(200).json({message: 'You are successfully subscribed.'});
-  // } else {
-  //   res.status(400).json({message: 'There was an error during the user update'});
-  // }
-
-}
-
-
-exports.leaveStudy = async(req, res) => {
-  
-  const id = req.params.id;
-  agenda.cancel({
-    'data.projectid': id, //TODO
-    'data.userid': req.body.id,
-  }, (err, numRemoved) => {});
-
-  const project = await Project.findOne({_id: id},{
-    mobileUsers: 1,
-  });
-  if(!project.mobileUsers){
-    project.mobileUsers = [];
-  }
-  const removeUserId = req.body.id;
-  project.mobileUsers.filter(user => user.id !== removeUserId)
-  await project.save();
-
-  console.log('project', project);
-  res.status(200).json({message: 'OK'});
-
-  // const newUser = await User.findOneAndUpdate({ samplyId: req.body.id },
-  //     { ['$pull'] : {
-  //       participant_projects: req.user.participantInProject
-  //     } },
-  //     { new : true });
-  // if(newUser){
-  //   res.status(200).json({message: 'You are successfully unsubscribed.'});
-  // } else {
-  //   res.status(400).json({message: 'There was an error during the user update'});
-  // }
-};
 
 exports.createScheduleNotification = async(req, res) => {
   // check whether the request body contains required information
@@ -388,7 +256,6 @@ exports.createIndividualNotification = async (req, res) => {
   // const users = await User.getUsersOfProject(req.user.project._id);
   if (users){
     users.map(user => {
-
         const timeBuffer = 60000;
         const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
         const user_int_end = new Date(Date.parse(user.created) + duration);
@@ -435,8 +302,6 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
         });
-
-
     })
   }
   //save the project
@@ -510,13 +375,11 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
   // filter only the users whom we want to send notifications
-  // const tokens = project.mobileUsers.filter(user => user_id.includes(user.id)).map(user => user.token);
+  const tokens = project.mobileUsers.filter(user => user_id.includes(user.id)).map(user => user.token);
   // for testing
-  const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]'];
-
+  // const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]'];
   await sendMobileNotification(done, content, tokens);
 }
-
 
 // send the notificaiton to all users who are members of the project (mobileUsers)
 async function sendToAllProjectUsers(done, project_id, title, message, url){
@@ -527,28 +390,23 @@ async function sendToAllProjectUsers(done, project_id, title, message, url){
   }
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
-  // const tokens = project.mobileUsers.map(user => user.token);
-  const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
+  const tokens = project.mobileUsers.map(user => user.token);
+  // const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
   await sendMobileNotification(done, content, tokens)
 }
-
 
 // the most simple function to send mobile notification with content to the list of tokens
 async function sendMobileNotification(done, content, tokens) {
   const {title, message, url} = content;
-  // const pushTokens = project.mobileUsers.map(user => user.token);
-  // const pushTokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
   // Create the messages that you want to send to clents
   let messages = [];
   for (let pushToken of tokens) {
     // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
-
     // Check that all your push tokens appear to be valid Expo push tokens
     if (!Expo.isExpoPushToken(pushToken)) {
       console.error(`Push token ${pushToken} is not a valid Expo push token`);
       continue;
     }
-
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     messages.push({
       to: pushToken,
@@ -558,7 +416,6 @@ async function sendMobileNotification(done, content, tokens) {
       data: { title, message, url },
     })
   }
-
   // The Expo push notification service accepts batches of notifications so
   // that you don't need to send 1000 requests to send 1000 notifications. We
   // recommend you batch your notifications to reduce the number of requests
@@ -586,4 +443,97 @@ async function sendMobileNotification(done, content, tokens) {
     done();
   })();
 
+};
+
+// participants join a study on mobile phone, a user id is created if there was no one before
+exports.joinStudy = async(req, res) => {
+  const id = req.params.id;
+  const project = await Project.findOne({_id: id},{
+    notifications: 1, mobileUsers: 1,
+  });
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
+  const newUser = {
+    id: req.body.id,
+    token: req.body.token,
+  };
+  let isNew = true;
+  project.mobileUsers.map(user => {
+    if(user.id === newUser.id){
+      user.token = newUser.token;
+      isNew = false;
+    }
+    return user
+  })
+  if(isNew){
+    project.mobileUsers.push(newUser);
+  }
+  await project.save();
+  if(project && project.notifications && project.notifications.length > 0){
+    project.notifications.map(sub => {
+      if(sub.target && sub.target === 'user-specific'){
+        const timeBuffer = 5000;
+        const user_int_start = new Date(Date.now() + timeBuffer);
+        const user_int_end = new Date(Date.now() + sub.duration);
+        agenda.schedule(user_int_start, 'start_personal_manager', {
+          userid: req.body.id,
+          projectid: project._id,
+          id: sub.id,
+          interval: sub.interval,
+          title: sub.title,
+          message: sub.message,
+          url: sub.url,
+        });
+        agenda.schedule(user_int_end, 'end_personal_manager', {
+          userid: req.body.id,
+          projectid: project._id,
+          id: sub.id,
+          interval: sub.interval,
+          title: sub.title,
+          message: sub.message,
+          url: sub.url,
+        });
+
+      }
+    })
+  }
+  const updatedUser = await User.findOneAndUpdate({ samplyId: req.body.id },
+      { ['$addToSet'] : {
+        participant_projects: project._id
+      } },
+      { upsert: true, new : true });
+  if(updatedUser){
+    res.status(200).json({message: 'OK'});
+  } else {
+    res.status(400).json({message: 'There was an error during the user update'});
+  }
+}
+
+// participant leaves the study, the jobs with participant's id are deleted
+exports.leaveStudy = async(req, res) => {
+  const id = req.params.id;
+  agenda.cancel({
+    'data.projectid': id,
+    'data.userid': req.body.id,
+  }, (err, numRemoved) => {});
+  const project = await Project.findOne({_id: id},{
+    mobileUsers: 1,
+  });
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
+  const removeUserId = req.body.id;
+  project.mobileUsers = project.mobileUsers.filter(user => user.id !== removeUserId)
+  await project.save();
+  const updatedUser = await User.findOneAndUpdate({ samplyId: req.body.id },
+      { ['$pull'] : {
+        participant_projects: project._id
+      } },
+      { upsert: true, new : true });
+  if(updatedUser){
+    res.status(200).json({message: 'OK'});
+  } else {
+    res.status(400).json({message: 'There was an error during the user update'});
+  }
 };

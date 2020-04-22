@@ -13,7 +13,7 @@ const userSchema = new Schema({
     },
     name             : String,
     email            : String,
-    samplyId        : String, // id for mobile participants / goes inside mobileUsers: id in Projects
+    samplyId         : String, // id for mobile participants / goes inside mobileUsers: id in Projects
     created          : {
         type         : Date,
         default      : Date.now

@@ -157,3 +157,25 @@ exports.sendQuestion= async (req, res) => {
 exports.help = async(req, res) => {
   res.render('help');
 }
+
+exports.createMobileAccount = async(req, res) => {
+  const userData = req.body;
+  console.log('userData', userData);
+  // res.status(200).json({message: 'OK'});
+  User.findOne({ 'samplyId' :  userData.id }, function(err, user) {
+    if (err) return done(err);
+    if (user) {
+
+    } else {
+      var newUser = new User();
+      newUser.samplyId = userData.id
+      newUser.level = 1;
+      newUser.email = userData.email;
+      newUser.local.password = newUser.generateHash(userData.password);
+      newUser.save(function(err) {
+        if (err) throw err;
+        res.status(200).json({message: 'OK'});
+      });
+    }
+  });
+}

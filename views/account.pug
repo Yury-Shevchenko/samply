@@ -15,9 +15,8 @@ block content
         label(for="time") #{l.registered}
         h2= h.moment(user.created).locale(language).format("MMM Do YY")
           
-        if(user.name)
-          label(for="name") #{l.name}
-          input(type="text" name="name" value=user.name||user.facebook.name||user.github.name||user.google.name)
+        label(for="name") #{l.name}
+        input(type="text" name="name" value= user.name || (user.facebook && user.facebook.name) || (user.github && user.github.name) || (user.google && user.google.name) ||'')
         
         if(user.email)
           label(for="email") #{l.email}
