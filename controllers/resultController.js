@@ -16,7 +16,6 @@ exports.saveIncrementalResults = async (req, res) => {
     name: req.body.name,
     data: req.body.data,
     usertimestamp: req.body.timestamp,
-    useragent: req.headers['user-agent'],
     appVersion: req.body.appVersion,
   });
   await result.save();
@@ -147,7 +146,6 @@ exports.downloadHistory = async (req, res) => {
           userCreated: obj.author.created,
           usertimestamp: obj.usertimestamp,
           created: obj.created,
-          useragent: obj.useragent,
           appVersion: obj.appVersion
         }]
         const preKeys = flatMap(line, function(e){

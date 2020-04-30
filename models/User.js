@@ -30,20 +30,16 @@ const userSchema = new Schema({
         ref          : 'Project'
     },
     participant_projects: [
-      {type : mongoose.Schema.ObjectId, ref : 'Project'}
+      {
+        _id : {type : mongoose.Schema.ObjectId, ref : 'Project'},
+        name : String
+      }
     ],
     project: {
       _id : {type : mongoose.Schema.ObjectId, ref : 'Project'},
       name : String
     },
     institute             : String,
-    participantHistory    : [
-        {
-          project_id      : {type : mongoose.Schema.ObjectId, ref : 'Project'},
-          project_name    : String,
-          individual_code : String,
-        }
-    ],
     notifications         : [
         {
           endpoint        : String,
@@ -55,6 +51,7 @@ const userSchema = new Schema({
         }
     ],
     useragent             : String,
+    information           : JSON,
 }, { toJSON: { virtuals: true } });
 
 //methods
@@ -122,7 +119,6 @@ userSchema.statics.getUsersOfProject = function(project) {
         numberDeleteRequests: { $sum: '$results.deleteRequests' },
         numberDataRequests: { $sum: '$results.dataRequests' },
         notifications: '$$ROOT.notifications',
-        useragent: '$$ROOT.useragent',
       }
     },
     { $sort : {identity: 1}}, //from highest to lowest

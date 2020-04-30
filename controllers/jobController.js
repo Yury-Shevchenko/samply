@@ -120,7 +120,7 @@ exports.createScheduleNotification = async(req, res) => {
         name: req.body.name,
       });
       // if there is a participant id, create a personalized notification job
-      if (req.body.participantId) {
+      if (req.body.participantId && req.body.participantId.length) {
         agenda.schedule(date, 'personal_notification', {
           userid: req.body.participantId,
           projectid: req.user.project._id,
@@ -211,14 +211,12 @@ exports.createIntervalNotification = async (req, res) => {
 
 
 exports.createIndividualNotification = async (req, res) => {
-  // console.log('server: duration ', req.body.duration, 'interval:', req.body.interval, 'interval-2', req.body.interval_2);
   if(req.body.interval === '' || req.body.duration === ''){
     res.status(400).send();
     return;
   }
   const int1 = req.body.interval;
   const interval1_cron = String(`${int1.sec} ${int1.min} ${int1.hour} ${int1.day} ${int1.month} ${int1.week}`);
-  // console.log('interval1_cron', interval1_cron);
   let int2, interval2_cron;
   if(req.body.interval_2){
     int2 = req.body.interval_2;
@@ -247,7 +245,7 @@ exports.createIndividualNotification = async (req, res) => {
   // get all or some users depending on the request
   // req.body.participantId should be an array
   let users;
-  if(req.body.participantId) {
+  if(req.body.participantId && req.body.participantId.length) {
     users = project.mobileUsers.filter(user => req.body.participantId.includes(user.id));
   } else {
     users = project.mobileUsers;
@@ -256,6 +254,8 @@ exports.createIndividualNotification = async (req, res) => {
   // const users = await User.getUsersOfProject(req.user.project._id);
   if (users){
     users.map(user => {
+        // this time buffer can also be supplied by the researcher
+        // as a field "when the notifications schedule should start"
         const timeBuffer = 60000;
         const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
         const user_int_end = new Date(Date.parse(user.created) + duration);
@@ -278,8 +278,6 @@ exports.createIndividualNotification = async (req, res) => {
             week: gR(int1.week, int2.week)
           };
           interval = String(`${rI.sec} ${rI.min} ${rI.hour} ${rI.day} ${rI.month} ${rI.week}`)
-          // console.log('randomInterval', rI)
-          // console.log('interval in cron', interval)
         } else {
           interval = interval1_cron;
         }
@@ -352,7 +350,6 @@ exports.removeNotificationByID = async(req, res) => {
     'data.projectid': projectID,
     'data.id': notificationID
   }, (err, numRemoved) => {
-    // console.log('Number of removed notifications', numRemoved);
   });
   await project.save((saveErr, updatedproject) => {
     if (saveErr) {
@@ -375,9 +372,13 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
   // filter only the users whom we want to send notifications
-  const tokens = project.mobileUsers.filter(user => user_id.includes(user.id)).map(user => user.token);
+  const tokens = project.mobileUsers
+    .filter(user => user_id.includes(user.id))
+    .map(user => ({
+      id: user.id,
+      token: user.token,
+    }));
   // for testing
-  // const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]'];
   await sendMobileNotification(done, content, tokens);
 }
 
@@ -390,8 +391,11 @@ async function sendToAllProjectUsers(done, project_id, title, message, url){
   }
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
-  const tokens = project.mobileUsers.map(user => user.token);
-  // const tokens = ['ExponentPushToken[-E4V69F4OrQ2Btgk4rIcVN]']
+  const tokens = project.mobileUsers
+    .map(user => ({
+      id: user.id,
+      token: user.token,
+    }));
   await sendMobileNotification(done, content, tokens)
 }
 
@@ -403,17 +407,18 @@ async function sendMobileNotification(done, content, tokens) {
   for (let pushToken of tokens) {
     // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
     // Check that all your push tokens appear to be valid Expo push tokens
-    if (!Expo.isExpoPushToken(pushToken)) {
-      console.error(`Push token ${pushToken} is not a valid Expo push token`);
+    if (!Expo.isExpoPushToken(pushToken.token)) {
+      console.error(`Push token ${pushToken.token} is not a valid Expo push token`);
       continue;
     }
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
+    const customizedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.id);
     messages.push({
-      to: pushToken,
+      to: pushToken.token,
       sound: 'default',
       title: title,
       body: message,
-      data: { title, message, url },
+      data: { title, message, url: customizedUrl },
     })
   }
   // The Expo push notification service accepts batches of notifications so
@@ -430,7 +435,7 @@ async function sendMobileNotification(done, content, tokens) {
     for (let chunk of chunks) {
       try {
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-        console.log(ticketChunk);
+        // console.log(ticketChunk);
         tickets.push(...ticketChunk);
         // NOTE: If a ticket contains an error code in ticket.details.error, you
         // must handle it appropriately. The error codes are listed in the Expo
@@ -449,7 +454,7 @@ async function sendMobileNotification(done, content, tokens) {
 exports.joinStudy = async(req, res) => {
   const id = req.params.id;
   const project = await Project.findOne({_id: id},{
-    notifications: 1, mobileUsers: 1,
+    notifications: 1, mobileUsers: 1, name: 1,
   });
   if(!project.mobileUsers){
     project.mobileUsers = [];
@@ -500,7 +505,10 @@ exports.joinStudy = async(req, res) => {
   }
   const updatedUser = await User.findOneAndUpdate({ samplyId: req.body.id },
       { ['$addToSet'] : {
-        participant_projects: project._id
+        participant_projects:  {
+          _id: project._id,
+          name: project.name,
+        }
       } },
       { upsert: true, new : true });
   if(updatedUser){
@@ -528,12 +536,46 @@ exports.leaveStudy = async(req, res) => {
   await project.save();
   const updatedUser = await User.findOneAndUpdate({ samplyId: req.body.id },
       { ['$pull'] : {
-        participant_projects: project._id
+        participant_projects: { _id: project._id }
       } },
       { upsert: true, new : true });
   if(updatedUser){
     res.status(200).json({message: 'OK'});
   } else {
     res.status(400).json({message: 'There was an error during the user update'});
+  }
+};
+
+exports.removeUser = async (req, res) => {
+  const project = await Project.findOne({_id: req.user.project._id},{
+    mobileUsers: 1, creator: 1,
+  });
+  if(!project.creator.equals(req.user._id)){
+    throw Error('You must be a creator of a project in order to do it!');
+  }
+  const userId = req.params.id;
+  // remove all scheduled notifications
+  agenda.cancel({
+    'data.projectid': project._id,
+    'data.userid': userId,
+  }, (err, numRemoved) => {});
+
+  // update the project
+  if(!project.mobileUsers){
+    project.mobileUsers = [];
+  }
+  project.mobileUsers = project.mobileUsers.filter(user => user.id !== userId);
+  await project.save();
+
+  // update the user
+  const updatedUser = await User.findOneAndUpdate({ samplyId: userId },
+      { ['$pull'] : {
+        participant_projects: { _id: project._id }
+      } },
+      { upsert: true, new : true });
+  if(updatedUser){
+    res.redirect('back');
+  } else {
+    res.redirect('back'); // can also return an error
   }
 };

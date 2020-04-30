@@ -60,7 +60,6 @@ passport.use('local-signup-participant', new LocalStrategy({
           newUser.level    = 1;
           newUser.email    = email;
           newUser.language = user_lang;
-          newUser.useragent = req.headers['user-agent'] || 'no headers found';
           if(req.body.code) newUser.code.id = req.body.code;
           if(req.body.project) newUser.participantInProject = req.body.project;
           newUser.local.password = newUser.generateHash(password);

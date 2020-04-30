@@ -99,17 +99,6 @@ exports.updateAccount = async (req, res) => {
     });
 };
 
-exports.removeUser = async (req, res) => {
-  const results = await Result.find({ author: req.params.id })
-  if (results.length === 0){
-    const user = await User.findOneAndRemove({ _id: req.params.id});
-    req.flash('success', `${res.locals.layout.flash_user_deleted}`);
-  } else {
-    req.flash('error', `${res.locals.layout.flash_user_cannot_be_deleted}`);
-  }
-  res.redirect('back');
-};
-
 exports.changeLanguage = (req, res) => {
   const lang = req.params.language;
   if(req.user){
@@ -158,24 +147,81 @@ exports.help = async(req, res) => {
   res.render('help');
 }
 
+const makeRandomCode = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
 exports.createMobileAccount = async(req, res) => {
   const userData = req.body;
-  console.log('userData', userData);
-  // res.status(200).json({message: 'OK'});
-  User.findOne({ 'samplyId' :  userData.id }, function(err, user) {
+  console.log('signUp userData', userData);
+  User.findOne({ 'email' :  userData.email }, function(err, user) {
     if (err) return done(err);
     if (user) {
 
     } else {
       var newUser = new User();
-      newUser.samplyId = userData.id
       newUser.level = 1;
       newUser.email = userData.email;
       newUser.local.password = newUser.generateHash(userData.password);
+      const userToken = makeRandomCode();
+      newUser.samplyId = userToken;
       newUser.save(function(err) {
         if (err) throw err;
-        res.status(200).json({message: 'OK'});
+        res.status(200).json({message: 'OK', userToken: userToken});
       });
     }
   });
+}
+
+exports.loginMobileAccount = async(req, res) => {
+  const userData = req.body;
+  console.log('login userData', userData);
+  User.findOne({ 'email' :  userData.email }, function(err, user) {
+    if (err) return done(err);
+    if (user) {
+      if(user.validPassword(userData.password)){
+        res.status(200).json({message: 'OK', userToken: user.samplyId});
+      } else {
+        res.status(400).json({message: 'Password is invalid!'});
+      }
+    } else {
+      res.status(400).json({message: 'There is no user with this email.'});
+      // var newUser = new User();
+      // newUser.level = 1;
+      // newUser.email = userData.email;
+      // newUser.local.password = newUser.generateHash(userData.password);
+      // const userToken = makeRandomCode();
+      // newUser.samplyId = userToken;
+      // newUser.save(function(err) {
+      //   if (err) throw err;
+      //   res.status(200).json({message: 'OK', userToken: userToken});
+      // });
+    }
+  });
+}
+
+exports.getMyStudies = async(req, res) => {
+  const userData = req.body;
+  console.log('get my studies userData', userData);
+  const user = await User.findOne({ samplyId: userData.token },{
+    participant_projects: 1,
+  });
+  const studies = user.participant_projects;
+  console.log('user', user);
+  res.status(200).json({message: 'OK', studies: studies});
+}
+
+exports.updateAccount = async(req, res) => {
+  const userData = req.body;
+  console.log('update account with the info', userData);
+  const user = await User.findOne({ samplyId: userData.token },{
+    information: 1,
+  });
+  const data = userData.data;
+  user.information = { ...user.information, ...data };
+  await user.save();
+  res.status(200).json({message: 'OK', information: user.information});
 }

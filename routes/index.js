@@ -73,7 +73,7 @@ router.post('/auth/researcher/email/login',
 // user controller
 router.get('/account', authController.isLoggedIn, catchErrors(userController.account));
 router.post('/account', catchErrors(userController.updateAccount));
-router.get('/removeuser/:id/:identity', authController.isAdminLoggedIn, catchErrors(userController.removeUser));
+router.get('/removeuser/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeUser));
 router.get('/languages/:language', userController.changeLanguage);
 router.post('/faq', authController.isLoggedIn, catchErrors(userController.sendQuestion));
 router.get('/help', authController.isLoggedIn, catchErrors(userController.help));
@@ -137,5 +137,8 @@ router.get('/api/studies', projectController.getPublicStudiesAPI);
 router.post('/api/join/:id', jobController.joinStudy);
 router.post('/api/leave/:id', jobController.leaveStudy);
 router.post('/api/createaccount', userController.createMobileAccount);
+router.post('/api/login', userController.loginMobileAccount);
+router.post('/api/mystudies', userController.getMyStudies);
+router.post('/api/updateaccount', userController.updateAccount);
 
 module.exports = router;

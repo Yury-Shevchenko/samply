@@ -7,9 +7,9 @@ const createScheduleNotificationsBtn = document.querySelector('#create_schedule_
 
 function createScheduleNotification(){
 
-  let participantId, participantTarget;
+  let participantId = [], participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
-    participantId = parseInt(document.getElementById('participantId').value);
+    participantId = [parseInt(document.getElementById('participantId').value)];
     participantTarget = 'one-user';
   } else {
     participantTarget = 'all-users';
@@ -33,7 +33,7 @@ function createScheduleNotification(){
       target: participantTarget,
       schedule: 'one-time',
       randomize: false,
-      participantId: [participantId],
+      participantId: participantId,
       date: schedule,
       message: messageContent.value,
       title: titleContent.value,
