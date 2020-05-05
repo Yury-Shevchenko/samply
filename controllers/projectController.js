@@ -106,6 +106,7 @@ exports.createProject = async (req, res) => {
       const project = await (new Project(
         {
           name: req.body.name,
+          image: req.body.image,
           description: req.body.description,
           welcomeMessage: req.body.welcomeMessage,
           creator: req.user._id,
@@ -147,6 +148,7 @@ exports.updateProject = async (req, res) => {
     };
     const project = await Project.findOne({ _id: req.params.id });
     project.name = req.body.name;
+    project.image = req.body.image;
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
     project.members = membersData;
@@ -308,7 +310,15 @@ exports.debugprojects = async(req, res) => {
 
 exports.getPublicStudiesAPI = async(req, res) => {
   const studies = await Project.findAllPublic();
+  // console.log('studies', studies);
   res.send(studies);
+}
+
+exports.getPublicStudy = async(req, res) => {
+  console.log('req.param.name', req.params.name);
+  const study = await Project.findOne({ name: req.params.name }, { name: 1, description: 1, welcomeMessage: 1 });
+  console.log('study', study);
+  res.send(study);
 }
 
 exports.getMobileUsers = async (req, res) => {

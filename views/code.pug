@@ -10,8 +10,8 @@ block content
         h5 #{layout.message_logged_in}
 
       if !user
-        #notSupportedInfo(style='display:none')
-          .flash.flash--error #{layout.not_supported} 
+        //- #notSupportedInfo(style='display:none')
+        //-   .flash.flash--error #{layout.not_supported} 
           
         #install_information(style="display:none") 
           h6 #{layout.install_title}
@@ -82,6 +82,4 @@ block content
           document.querySelector('#install_information').style.display = 'block';
         };
       }
-      //- document.body.style['backgroundSize'] = 'cover';
-      //- document.body.style['backgroundRepeat'] = 'no-repeat';
-      //- document.body.style['backgroundImage'] = "url('/images/photos/participant-login.jpg')";
+      

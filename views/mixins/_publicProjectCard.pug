@@ -1,6 +1,4 @@
 mixin publicProjectCard(project = {})
-  //- a(href= ( (user && user.participantInProject) ? (user.participantInProject.toString() !== project._id.toString() ? `/participantprojects/${project._id}` : `/testing` )  : `/studies/${project.name}`) ) 
-  //- .project(class=`${(user && user.participantInProject && project._id && user.participantInProject.toString() === project._id.toString() ) ? 'chosenStudy': ''}`)
   .project
     .project__hero
       h2.project__title #{project.name}
@@ -16,7 +14,7 @@ mixin publicProjectCard(project = {})
         else 
           a(href=`/participantprojects/${project._id}`)
             .button(style="width: fit-content;") #{layout.subscribe_to} 
-      if(!user)
-        a(href=`/code/${project.name}/?generate=true`)
-          .button(style="width: fit-content;")=`${layout.participate}`
-      
+      //- if(!user)
+      //-   a(href=`/code/${project.name}/?generate=true`)
+      //-     .button(style="width: fit-content;")=`${layout.participate}`
+      //- 

@@ -156,11 +156,10 @@ const makeRandomCode = () => {
 
 exports.createMobileAccount = async(req, res) => {
   const userData = req.body;
-  console.log('signUp userData', userData);
   User.findOne({ 'email' :  userData.email }, function(err, user) {
     if (err) return done(err);
     if (user) {
-
+      res.status(400).json({message: 'Account exists'});
     } else {
       var newUser = new User();
       newUser.level = 1;
@@ -178,27 +177,17 @@ exports.createMobileAccount = async(req, res) => {
 
 exports.loginMobileAccount = async(req, res) => {
   const userData = req.body;
-  console.log('login userData', userData);
   User.findOne({ 'email' :  userData.email }, function(err, user) {
     if (err) return done(err);
+    console.log('user', user);
     if (user) {
       if(user.validPassword(userData.password)){
         res.status(200).json({message: 'OK', userToken: user.samplyId});
       } else {
-        res.status(400).json({message: 'Password is invalid!'});
+        res.status(400).json({message: 'Invalid password'});
       }
     } else {
-      res.status(400).json({message: 'There is no user with this email.'});
-      // var newUser = new User();
-      // newUser.level = 1;
-      // newUser.email = userData.email;
-      // newUser.local.password = newUser.generateHash(userData.password);
-      // const userToken = makeRandomCode();
-      // newUser.samplyId = userToken;
-      // newUser.save(function(err) {
-      //   if (err) throw err;
-      //   res.status(200).json({message: 'OK', userToken: userToken});
-      // });
+      res.status(400).json({message: 'No user'});
     }
   });
 }
@@ -224,4 +213,24 @@ exports.updateAccount = async(req, res) => {
   user.information = { ...user.information, ...data };
   await user.save();
   res.status(200).json({message: 'OK', information: user.information});
+}
+
+exports.resetPassword = async(req, res) => {
+  const user = await User.findOne({email: req.body.email});
+  if(!user){
+    res.status(400).json({message: 'No user'});
+    return;
+  }
+  user.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+  user.resetPasswordExpires = Date.now() + 3600000; //1 hour to reset the password
+  await user.save();
+  const resetURL = `https://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
+  const subject = res.locals.layout.flash_password_reset;
+  await mail.send({
+    participant: user,
+    subject,
+    resetURL,
+    filename: 'password-reset-' + res.locals.locale_language
+  });
+  res.status(200).json({message: 'OK'});
 }

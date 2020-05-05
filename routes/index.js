@@ -134,11 +134,16 @@ router.get('/removenotification/:id', authController.isAdminLoggedIn, catchError
 
 // api routes
 router.get('/api/studies', projectController.getPublicStudiesAPI);
+router.get('/api/study/:name', projectController.getPublicStudy);
 router.post('/api/join/:id', jobController.joinStudy);
 router.post('/api/leave/:id', jobController.leaveStudy);
 router.post('/api/createaccount', userController.createMobileAccount);
 router.post('/api/login', userController.loginMobileAccount);
 router.post('/api/mystudies', userController.getMyStudies);
 router.post('/api/updateaccount', userController.updateAccount);
+router.post('/api/updatestatus', resultController.updateStatus);
+router.post('/api/history', resultController.getHistory);
+router.post('/api/reset', userController.resetPassword);
+
 
 module.exports = router;

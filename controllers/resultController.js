@@ -7,19 +7,18 @@ const Result = mongoose.model('Result');
 const User = mongoose.model('User');
 const Project = mongoose.model('Project');
 
-//save results during the task
-exports.saveIncrementalResults = async (req, res) => {
-  const result = new Result({
-    author: req.body.author,
-    project: req.body.project,
-    samplyid: req.body.samplyid,
-    name: req.body.name,
-    data: req.body.data,
-    usertimestamp: req.body.timestamp,
-    appVersion: req.body.appVersion,
-  });
-  await result.save();
-  res.send('Saved');
+// update status
+exports.updateStatus = async (req, res) => {
+  console.log('req.body', req.body);
+  const { messageId, status } = req.body;
+  const updatedResult = await Result.findOneAndUpdate({ messageId: messageId },
+      { ['$addToSet'] : {
+        events: { status: req.body.status, created: Date.now() }
+      } },
+      { upsert: true, new : true });
+  if(updatedResult){
+    res.status(200).json({message: 'OK'});
+  }
 };
 
 //show the history of sent notifications
@@ -46,6 +45,31 @@ exports.showHistory = async (req, res) => {
     res.render('history', { study: false });
   }
 };
+
+exports.getHistory = async (req, res) => {
+  console.log('req.body', req.body);
+  const { samplyid } = req.body
+  const notifications = await Result.find({ samplyid });
+  // console.log('notifications', notifications);
+  res.send(notifications);
+}
+
+//save results during the task
+exports.saveIncrementalResults = async (req, res) => {
+  const result = new Result({
+    author: req.body.author,
+    project: req.body.project,
+    samplyid: req.body.samplyid,
+    name: req.body.name,
+    data: req.body.data,
+    usertimestamp: req.body.timestamp,
+    appVersion: req.body.appVersion,
+  });
+  await result.save();
+  res.send('Saved');
+};
+
+
 
 // delete a record of notification
 exports.removeRecordById = async(req, res) => {

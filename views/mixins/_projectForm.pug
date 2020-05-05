@@ -9,8 +9,11 @@ mixin projectForm(project = {})
 
     label(for='welcomeMessage') #{l.welcomeMessage}
     textarea(type='text' name='welcomeMessage')= project.welcomeMessage
+    
+    label(for='image') Image
+    input(type='text' name='image' value=project.image)
     p
-
+    
     .div(id="membersList")
       label(for="members") #{l.invite_members}
       if membersEmails && membersEmails.length > 0

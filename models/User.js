@@ -32,9 +32,11 @@ const userSchema = new Schema({
     participant_projects: [
       {
         _id : {type : mongoose.Schema.ObjectId, ref : 'Project'},
-        name : String
+        name : String,
+        description: String,
+        image: String,
       }
-    ],
+    ], 
     project: {
       _id : {type : mongoose.Schema.ObjectId, ref : 'Project'},
       name : String

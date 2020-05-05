@@ -27,9 +27,11 @@ html
                 li.nav__item
                   a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))
                     h6 #{layout.studies}
-                li.nav__item
-                  a(style="display:flex;flex-direction: column; padding: 1rem 1.5rem 0.5rem 1.5rem;")
-                    button.button(id="installApp" style="display:none") #{layout.install_app}
+                li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
+                  h6 Docs
+                //- li.nav__item
+                //-   a(style="display:flex;flex-direction: column; padding: 1rem 1.5rem 0.5rem 1.5rem;")
+                //-     button.button(id="installApp" style="display:none") #{layout.install_app}
             if user
               if user.level < 10
                 li.nav__item
@@ -99,10 +101,12 @@ html
                   a.nav__main_link(href='/messages', class=(currentPath.startsWith('/messages') ? 'nav__main_link--active' : ''))
                     h6 #{layout.messages} 
             else
-              li.nav__item: a.nav__main_link(href="/researcher/login", class=(currentPath.startsWith('/researcher') ? 'nav__main_link--active' : ''))
-                h6 #{layout && layout.forResearchers}
-              li.nav__item: a.nav__main_link(href="/participants", class=(currentPath.startsWith('/participants') ? 'nav__main_link--active' : ''))
-                h6 #{layout && layout.forParticipants}
+              li.nav__item: a.nav__main_link(href="/researcher/login", class=(currentPath.startsWith('/researcher/login') ? 'nav__main_link--active' : ''))
+                h6 #{layout && layout.login}
+              li.nav__item: a.nav__main_link(href="/researcher/register", class=(currentPath.startsWith('/researcher/register') ? 'nav__main_link--active' : ''))
+                h6 #{layout && layout.signup}
+              //- li.nav__item: a.nav__main_link(href="/participants", class=(currentPath.startsWith('/participants') ? 'nav__main_link--active' : ''))
+              //-   h6 #{layout && layout.forParticipants}
               
                 
     block background-image 

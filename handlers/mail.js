@@ -28,7 +28,7 @@ exports.send = async (options) => {
   // postmark sending
   client.sendEmail({
     "To": options.participant.email,
-    "From": `Samply <no-reply@samply.uni-konstanz.de>`,
+    "From": `Samply <yury.shevchenko@uni.kn>`,
     "Subject": options.subject,
     "TextBody": text,
     "HtmlBody": html,

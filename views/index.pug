@@ -9,62 +9,50 @@ block background-image
 block content
   
   .inner
-    
-    #notSupportedInfo(style='display:none')
-      .flash.flash--error #{layout.not_supported} 
-  
     p
     .card
       .card-message
         h4 #{layout.title}
-        p.card-message !{layout.intro}
-        p.card-message !{layout.intro_2}
+        p.card-message Samply supports experience sampling, ambulatory assessment and diary studies. 
+          | We want to make sending notifications to participants an easy and comfortable task for researchers.
+          | The main idea is that you as a researcher is free to use any tool to create an online survey or an experiment. 
+          | Samply sends mobile notifications through the Samply mobile application, so when participants of your study click 
+          | on the notification, they open your online study in a mobile web-browser.
+        
+        p.card-message Want a test drive? Here is a quick tutorial to demonstrate how Samply works.
+        
+        h5 Main features
+        
+        ul
+          li 
+            p.card-message Samply is free, there is no hidden costs (thanks to the generous support of the iScience group)
+          li 
+            p.card-message Native mobile application for participants available in Apple Store and Google Store.
+          li 
+            p.card-message Different types of notifications schedule (one-time, repeat, user-dependent, randomized).
+          li 
+            p.card-message Customization of messages and URL links that you send to participants.
+          li 
+            p.card-message Recording participants' responses to your notifications.
         
         
-        h5 #{layout.instructions_title}
+        h5 About us
         
-        ol
-          li 
-            p.card-message #{layout.instructions_1}
-          p #{layout.instructions_1_note}
-          li 
-            p.card-message #{layout.instructions_2}
-          p #{layout.instructions_2_note}
-          li 
-            p.card-message #{layout.instructions_3}
-          p
-          li 
-            p.card-message !{layout.instructions_4}
-        p.card-message #{layout.were_invited}
+        p.card-message Samply is developed by Yury Shevchenko with the help of many great collaborators. 
+          | Yury is a postdoc in the iScience group at the University of Konstanz in Germany.
         
+        h5 Contact / find support / contribute
+        
+        ul
+          li 
+            p.card-message Contact us by email
+          
+          li 
+            p.card-message Join our Slack group
+          
+          li 
+            p.card-message Wish to contribute? Welcome to Github.
+            
         br
-        p.card-message !{layout.intro_3}
-        //- .plan-compare
-        //-   a(type="link" href=`/researcher/register` style="display:grid")
-        //-     .panel
-        //-       <span class="plan-current">#{layout.forResearchers}</span>
-        //-       p.
-        //-       p.plan_emails #{l.res_1}
-        //-       p.plan_emails-label #{l.res_1_text}
-        //-       p.plan_emails #{l.res_2}
-        //-       p.plan_emails-label #{l.res_2_text}
-        //-       p.plan_emails #{l.res_3}
-        //-       p.plan_emails-label #{l.res_3_text}
-        //- 
-        //-   a(type="link" href=`/participant/register` style="display:grid")
-        //-     .panel
-        //-       <span class="plan-current">#{l.forParticipants}</span>
-        //-       p.
-        //-       p.plan_emails #{l.part_1}
-        //-       p.plan_emails-label #{l.part_1_text}
-        //-       p.plan_emails #{l.part_2}
-        //-       p.plan_emails-label #{l.part_2_text}
-        //-       p.plan_emails #{l.part_3}
-        //-       p.plan_emails-label #{l.part_3_text}
-              
-    //- script(nonce=`${noncevalue}`).
-    //-   document.body.style['backgroundSize'] = 'cover';
-    //-   document.body.style['backgroundRepeat'] = 'no-repeat';
-    //-   document.body.style['backgroundImage'] = "url('/images/photos/mobile_phone.jpg')";
-    //- 
+        p.card-message If you are a participant, you are probably looking for a mobile application Samply. You can find in Apple or Google Store.
               

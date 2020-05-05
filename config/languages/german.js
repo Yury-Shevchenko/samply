@@ -38,7 +38,7 @@ module.exports = {
     'history_notifications': 'Verlauf der Benachrichtigungen',
     'history_for_participant': 'für Teilnehmer',
     'history_notifications_Event': 'Aktion',
-    'history_notifications_ID': 'ID',
+    'history_notifications_ID': 'Teilnehmer ID',
     'history_notifications_Time_user': 'Zeit (User)',
     'history_notifications_Time_server': 'Zeit (Server)',
     'history_notifications_Title': 'Titel',
@@ -67,7 +67,7 @@ module.exports = {
     'forParticipants': 'Für TeilnehmerInnen',
     'signup': 'Registrieren',
     'signup_button': 'Neuen Account erstellen',
-    'login': 'Anmelden',
+    'login': 'Einloggen',
     'enterCode': 'Code eintragen',
     'howitworks': 'Wie es funktioniert',
     'pricing': 'Preise',
@@ -238,6 +238,7 @@ module.exports = {
     'notifications': 'Mitteilungen',
     'install_app': 'App installieren',
     'message_history_create_project': 'Erstellen oder aktivieren Sie eine <a href="/projects">Studie</a>, um die Geschichte der Benachrichtigungen einzusehen.',
+    'signup': 'Anmelden',
   },
 
   'passport': {

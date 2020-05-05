@@ -12,14 +12,14 @@ block content
   
   .inner
     
-    #notSupportedInfo(style='display:none')
-      .flash.flash--error #{layout.not_supported} 
+    //- #notSupportedInfo(style='display:none')
+    //-   .flash.flash--error #{layout.not_supported} 
 
     h2 #{layout.studies}
     
-    if(!user)
-      p #{layout.already_have_code} 
-        a(href='/code') #{layout.here} 
+    //- if(!user)
+    //-   p #{layout.already_have_code} 
+    //-     a(href='/code') #{layout.here} 
     
     .projects
       each project in projects
@@ -36,11 +36,6 @@ block content
           a(href=`/studies/page/${parseFloat(page) + 1}`) #{layout.pagination_next}
 
     script(nonce=`${noncevalue}`).
-      //- document.body.style['backgroundSize'] = 'cover';
-      //- document.body.style['backgroundRepeat'] = 'no-repeat';
-      //- document.body.style['backgroundImage'] = "url('/images/photos/balloons.jpg')";     
-      //- 
-      //register service worker
       if (!'serviceWorker' in navigator || !'PushManager' in window) {
         document.querySelector('#notSupportedInfo').style.display = "block";
       };

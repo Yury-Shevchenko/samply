@@ -38,7 +38,7 @@ module.exports =
       'history_notifications': 'History of notifications',
       'history_for_participant': 'for participant',
       'history_notifications_Event': 'Event',
-      'history_notifications_ID': 'ID',
+      'history_notifications_ID': 'Participant ID',
       'history_notifications_Time_user': 'Time (user)',
       'history_notifications_Time_server': 'Time (server)',
       'history_notifications_Title': 'Title',
@@ -238,6 +238,7 @@ module.exports =
       'notifications': 'Notifications',
       'install_app': 'Install App',
       'message_history_create_project': 'Create or activate a <a href="/projects">study</a> to see the history of notifications.',
+      'signup': 'Sign up',
     },
 
     'passport': {

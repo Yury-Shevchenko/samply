@@ -13,10 +13,10 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
       console.error(error);
     })
 } else {
-  console.log("SW is not supported");
-  if(document.querySelector('#notSupportedInfo')){
-    document.querySelector('#notSupportedInfo').style.display = 'block';
-  };
+  // console.log("SW is not supported");
+  // if(document.querySelector('#notSupportedInfo')){
+  //   document.querySelector('#notSupportedInfo').style.display = 'block';
+  // };
 };
 
 window.onbeforeinstallprompt = function(beforeInstallPromptEvent) {

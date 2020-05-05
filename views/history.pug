@@ -15,26 +15,36 @@ block content
         table.table
           thead
             td N.
-            td #{layout.history_notifications_Event} 
+            //- td #{layout.history_notifications_Event} 
             td #{layout.history_notifications_ID} 
-            td #{layout.history_notifications_Time_user} 
-            td #{layout.history_notifications_Time_server} 
             td #{layout.history_notifications_Title} 
             td #{layout.history_notifications_Message} 
             td #{layout.history_notifications_url} 
+            
+            //- td #{layout.history_notifications_Time_user} 
+            //- td #{layout.history_notifications_Time_server} 
+            td Sent 
+            td Tapped
+            
             td #{layout.history_notifications_Delete} 
           each notification, i in history
             tr
               td #{i + 1 + skip}
-              td= notification.name
               td
                 a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${notification.samplyid}`) #{notification.samplyid}
-              td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss') 
-              td= h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')
+              
+              //- td= notification.name
               td= notification.data.title 
-              td= notification.data.content
+              td= notification.data.message
               td
-                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.openUrl) #{notification.data.openUrl}
+                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url) #{notification.data.url}
+              //- td= h.moment.utc(notification.usertimestamp).local().locale(language).format('MMMM Do YYYY, H:mm:ss') 
+              //- td= h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')
+              td= notification.events.filter(e => e.status === 'sent').map(e => h.moment.utc(e.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')) 
+              
+              td= notification.events.filter(e => e.status === 'tapped').map(e => h.moment.utc(e.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')) 
+                
+              
               td
                 a(href=`/removerecord/${notification._id}`)
                   != h.icon('remove')
@@ -51,4 +61,6 @@ block content
 
     else 
       h2= `${layout.history_notifications}`
-      p !{layout.message_history_create_project}                 
+      p !{layout.message_history_create_project}      
+      
+    pre= h.dump(history)           

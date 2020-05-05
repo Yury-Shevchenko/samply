@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Job = mongoose.model('Job');
 const User = mongoose.model('User');
+const Result = mongoose.model('Result');
 const Project = mongoose.model('Project');
 const webpush = require('web-push');
 const Agenda = require('agenda');
@@ -370,7 +371,7 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
     url
   };
   // find the project
-  const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
+  const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1, name: 1 });
   // filter only the users whom we want to send notifications
   const tokens = project.mobileUsers
     .filter(user => user_id.includes(user.id))
@@ -379,7 +380,7 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
       token: user.token,
     }));
   // for testing
-  await sendMobileNotification(done, content, tokens);
+  await sendMobileNotification(done, content, tokens, project_id, project.name);
 }
 
 // send the notificaiton to all users who are members of the project (mobileUsers)
@@ -390,17 +391,17 @@ async function sendToAllProjectUsers(done, project_id, title, message, url){
     url
   }
   // find the project
-  const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1 });
+  const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1, name: 1 });
   const tokens = project.mobileUsers
     .map(user => ({
       id: user.id,
       token: user.token,
     }));
-  await sendMobileNotification(done, content, tokens)
+  await sendMobileNotification(done, content, tokens, project_id, project.name)
 }
 
 // the most simple function to send mobile notification with content to the list of tokens
-async function sendMobileNotification(done, content, tokens) {
+async function sendMobileNotification(done, content, tokens, project_id, project_name) {
   const {title, message, url} = content;
   // Create the messages that you want to send to clents
   let messages = [];
@@ -413,12 +414,14 @@ async function sendMobileNotification(done, content, tokens) {
     }
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     const customizedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.id);
+    const messageId = makeRandomCode();
     messages.push({
       to: pushToken.token,
       sound: 'default',
       title: title,
       body: message,
-      data: { title, message, url: customizedUrl },
+      data: { title, message, url: customizedUrl, messageId},
+      id: pushToken.id,
     })
   }
   // The Expo push notification service accepts batches of notifications so
@@ -432,10 +435,26 @@ async function sendMobileNotification(done, content, tokens) {
     // Send the chunks to the Expo push notification service. There are
     // different strategies you could use. A simple one is to send one chunk at a
     // time, which nicely spreads the load out over time:
+
+
     for (let chunk of chunks) {
       try {
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-        // console.log(ticketChunk);
+        console.log('chunk', chunk);
+        console.log('ticketChunk', ticketChunk);
+        console.log('content', content);
+        // save new result
+        const result = new Result({
+          project: project_id,
+          project_name: project_name,
+          samplyid: chunk[0].id,
+          data: content,
+          ticket: ticketChunk[0],
+          messageId: chunk[0].data.messageId,
+          events: [{status: 'sent', created: Date.now()}],
+        });
+        await result.save();
+
         tickets.push(...ticketChunk);
         // NOTE: If a ticket contains an error code in ticket.details.error, you
         // must handle it appropriately. The error codes are listed in the Expo
@@ -454,7 +473,7 @@ async function sendMobileNotification(done, content, tokens) {
 exports.joinStudy = async(req, res) => {
   const id = req.params.id;
   const project = await Project.findOne({_id: id},{
-    notifications: 1, mobileUsers: 1, name: 1,
+    notifications: 1, mobileUsers: 1, name: 1, description: 1, image: 1,
   });
   if(!project.mobileUsers){
     project.mobileUsers = [];
@@ -508,6 +527,8 @@ exports.joinStudy = async(req, res) => {
         participant_projects:  {
           _id: project._id,
           name: project.name,
+          description: project.description,
+          image: project.image,
         }
       } },
       { upsert: true, new : true });
@@ -579,3 +600,10 @@ exports.removeUser = async (req, res) => {
     res.redirect('back'); // can also return an error
   }
 };
+
+const makeRandomCode = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
