@@ -1,18 +1,24 @@
-## Samply
+## Samply for participants
 
-Samply makes sending notifications easy and provides a secure foundation for connection with your participants. The application has an open source code on GitHub and runs online at <a href="https://samply.uni-konstanz.de" target="_blank">https://samply.uni-konstanz.de</a>. With Samply you can schedule notifications for experience sampling studies. In the current moment, only Android mobile devices are supported.
+Help scientists and communities to study and understand the current situation. You will receive notifications throughout the day with questions to answer. The content of surveys and the notification schedule vary from study to study.
+You can download the mobile application Samply Research from Google or <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">Apple</a> Store.
+
+## Samply for researchers
+
+Samply makes sending notifications easy and provides a secure foundation for connection with your participants. The application for researchers has an open source code on GitHub and runs online at <a href="https://samply.uni-konstanz.de" target="_blank">https://samply.uni-konstanz.de</a>. With Samply you can schedule notifications for experience sampling studies. We support both Android and iOS mobile operation systems with a mobile application *Samply Research* for participants available at Google and Apple Store.
 
 ## Features
 
-* Only Android mobile devices for participants
-* Different types of notifications schedule (one-time, repeat, event-based)
-* Write messages to your participants with URL links of your study
-* Identify participants in your study with unique IDs in the URL query
-* Preserve anonymity: participants do not need to provide any personal information such as emails or phone numbers. All notifications are send through the application.
+* Samply is free both for participants and researchers, there is no hidden costs (thanks to the generous support of the  <a href="https://iscience.uni-konstanz.de/" target="_blank">iScience group</a>.)
+* Native mobile application for participants available in Apple and Google Store.
+* Different types of notifications schedule (one-time, repeat, user-dependent, randomized).
+* Customization of messages and URL links: you can send links to any online survey of experiment (e.g., Google Forms, SurveyMonkey, Qualtrics, lab.js). You just have to make sure that your online study looks right on mobile devices.
+* Recording participants' responses to your notifications.
+* Preserving anonymity: participants do not need to provide any personal information such as emails or phone numbers to you to participate in your study. All notifications are sent through the application.
 
-## Use in any web browser
+## Researcher website at your convenience
 
-As a researcher, you can create and manage your study in a web browser. After creating the study, you send an invitation link to participants. Participants can open the link on their Android phones, install the application and sign up for your study. Now, they can receive notifications from you. These notifications look and feel like native mobile notifications.
+As a researcher, you can create and manage your study in a web browser. After creating the study, you send an invitation link to participants. Participants download the mobile application *Samply Research* from Google or Apple Store, install the application and join your study. Now, they can receive notifications from you.
 
 ## Contribute to the software
 
@@ -20,7 +26,11 @@ Thank you for considering to contribute to the development of Samply! You can su
 
 ## Support
 
-If you have problems with the application and seek support, please feel free to join our [Samply Slack chat](https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA).
+If you have problems with the application and seek support, please feel free to join our [Samply Slack chat](https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w).
+
+## About us
+
+Samply is developed by Yury Shevchenko with the help of many great collaborators. Yury is a postdoc in the iScience group at the University of Konstanz in Germany.
 
 ## License
 
