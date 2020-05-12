@@ -30,7 +30,10 @@ module.exports = {
     'fill_in_information': 'Füllen Sie die Informationen für Ihre Benachrichtigung aus',
     'title_information': `Benachrichtigungen mit dem gleichen Titel werden sich gegenseitig ersetzen, um zu vermeiden, dass der Bildschirm der Benutzer mit einer großen Anzahl ähnlicher Benachrichtigungen gefüllt wird.`,
     'not_all_participants': 'Alle Teilnehmer',
-    'example_web_link': 'Wenn Sie in der URL auf die Teilnehmer-ID verweisen müssen, verwenden Sie %PARTICIPANT_CODE%, z.B. https://survey.com/?id=%PARTICIPANT_CODE%',
+    'example_web_link': `Wenn Sie in der URL auf die Samply-ID der Teilnehmer verweisen müssen, verwenden Sie %PARTICIPANT_CODE% in Ihrer Query, z.B. https://survey.com/?id=%PARTICIPANT_CODE%
+      Dann können Sie innerhalb Ihrer Online-Studie die Teilnehmer-ID aus der URL-Adresse entnehmen.
+      Lesen Sie mehr über Query Strings <a href="https://en.wikipedia.org/wiki/Query_string")>hier</a>.
+    `,
     'choose_the_type': 'Wählen Sie die Art der Benachrichtigung',
     'not_participant_id': 'Teilnehmer-ID',
     'web_link': 'Weblink zu Ihrer Umfrage',
@@ -264,6 +267,33 @@ module.exports = {
   },
 
   'index' : {
+    'welcome_text': `
+      Samply unterstützt Erfahrungsstichproben, ambulante Bewertungen und Tagebuchstudien.
+      Wir wollen das Versenden von Benachrichtigungen an Teilnehmer zu einer einfachen und bequemen Aufgabe für Forscher machen.
+      Die Hauptidee ist, dass es Ihnen als Forscher frei steht, jedes beliebige Werkzeug zu benutzen, um eine Online-Umfrage oder ein Experiment zu erstellen.
+      Samply sendet mobile Benachrichtigungen über die mobile Anwendung von Samply, so dass, wenn die Teilnehmer Ihrer Studie auf
+      auf die Benachrichtigung hin öffnen sie Ihre Online-Studie in einem mobilen Web-Browser.
+    `,
+    'test_drive': `
+      Wünschen Sie eine Probefahrt? Hier ist ein kurzes Tutorial, um zu demonstrieren, wie Samply funktioniert.
+    `,
+    'features_header': `Hauptmerkmale`,
+    'feature_1':`Samply ist kostenlos, es gibt keine versteckten Kosten (dank der großzügigen Unterstützung der iScience-Gruppe).`,
+    'feature_2':`Native mobile Anwendung für Teilnehmer, verfügbar im Apple Store und Google Store.`,
+    'feature_3':`Verschiedene Arten von Benachrichtigungen (einmalig, wiederholt, nutzerabhängig, randomisiert).`,
+    'feature_4':`Anpassung von Nachrichten und URL-Links, die Sie an Teilnehmer senden.`,
+    'feature_5':`Aufzeichnen der Reaktionen der Teilnehmer auf Ihre Benachrichtigungen.`,
+    'about_header': 'Über uns',
+    'about_text': `
+      Samply wird von Yury Shevchenko mit der Hilfe vieler großartiger Mitarbeiter entwickelt.
+      Yury ist Postdoc in der iScience-Gruppe an der Universität Konstanz in Deutschland.
+    `,
+    'contact_header': `Kontakt / Unterstützung finden / beitragen`,
+    'contact_email': `Kontaktieren Sie uns über <a href="mailto:yury.shevchenko@uni.kn">Email</a>`,
+    'contact_slack': `Nehmen Sie an unserer <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack chat</a> teil`,
+    'contact_github': `Wollen Sie etwas beitragen? Willkommen zu unserem <a target='_blank' href="https://github.com/Yury-Shevchenko/samply">Github</a>.`,
+    'for_participants': `Wenn Sie ein Teilnehmer sind, suchen Sie wahrscheinlich nach einer mobilen Anwendung Samply.
+    Diese finden Sie unter <a target='_blank' href="https://apps.apple.com/app/samply-research/id1511062019">Apple</a> oder Google Store.`,
     'title': `Willkommen bei Samply`,
     'intro': 'Mit Samply können Sie Benachrichtigungen für Studienteilnehmer erstellen und planen. ' +
      ' Sie können den Inhalt von Benachrichtigungen bearbeiten und Links zu Ihrer Umfrage oder zu Online-Tests senden. ' +
@@ -313,9 +343,9 @@ module.exports = {
       'confirmMessage_3': 'Alle Ergebnisse dieser Studie werden gelöscht.',
       'confirmMessage_4': ' Diese Aktion ist nicht umkehrbar.',
       'delete': 'Löschen',
-      'description': 'Beschreibung',
+      'description': 'Beschreibung (bitte teilen Sie mit, worum es in Ihrer Studie geht, wie lange und wie oft Sie planen, Benachrichtigungen zu versenden)',
       'showCompletionCode': 'Den individuellen Erledigungscode am Ende aller Aufgaben anzeigen',
-      'welcomeMessage': 'Begrüßungstext, der den Teilnehmern nach der Registrierung in Ihrer Studie angezeigt wird.',
+      'welcomeMessage': 'Begrüßungstext für die Teilnehmer, der zusammen mit der Beschreibung auf der Seite Ihrer Studie innerhalb der mobilen Anwendung angezeigt wird.',
       'askNotifications': 'Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).',
     },
 
@@ -423,6 +453,30 @@ module.exports = {
       },
 
       'invitations': {
+        'mobile_invite': `Laden Sie die Teilnehmer ein, die mobile App <em>Samply Research</em> herunterzuladen.
+          Sie können ihnen direkte Links geben oder sie bitten, nach der App mit dem Namen "Samply Research" zu suchen.`,
+        'android_users': `Für Android-Nutzer wird die Anwendung demnächst im Google Store verfügbar sein.`,
+        'apple_users': `Für Apple-Nutzer befindet sich die Anwendung in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">Apple</a> Store.`,
+        'mobile_user_account': `Wenn Nutzer die App starten, müssen sie Benachrichtigungen von der App zulassen.
+            Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
+            Die Teilnehmer müssen auch ein neues Konto erstellen.
+            Die Anmeldedaten werden sicher auf dem Server Samply (dem Server der Universität Konstanz in Deutschland) gespeichert und nur zur Authentifizierung der Benutzer verwendet.
+          `,
+        'finding_study': `Nach dem Einloggen müssen die Teilnehmer zum Tab "Studies" innerhalb der Anwendung wechseln.
+            Dort können sie das Suchfeld benutzen, um Ihre Studie zu finden.
+            In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
+            Bitte geben Sie Ihren Teilnehmern den genauen Namen Ihrer Studie an, damit sie diese in der App finden können.
+            Wenn die Teilnehmer in der Liste der Studien auf Ihre Studie tippen, gelangen sie auf die Studienseite.
+            Auf der Studienseite werden die Beschreibung und der Begrüßungstext angezeigt.
+            Wenn die Teilnehmer auf die Schaltfläche "Join the study" klicken, erlauben sie, Benachrichtigungen von Ihnen zu erhalten.
+            Nun können die Teilnehmer die App schließen.
+          `,
+        'user_info': `Sie als Forscher haben keinen Zugriff auf die E-Mail-Adressen der Teilnehmer.
+            Wenn Sie die E-Mail-Adressen der Teilnehmerinnen und Teilnehmer haben möchten, können Sie diese zusammen mit anderen Informationen über Ihre Online-Studien sammeln.
+            Stattdessen wird Samply Ihnen eine individuelle ID jedes Teilnehmers mitteilen (in der Form xxxx-xxxx-xxxx-xxxx),
+            die Sie als Abfrageparameter in den Link Ihrer Studie aufnehmen können.
+            Weitere Informationen dazu finden Sie unter "Benachrichtigungen".
+        `,
         'invite': 'Mehr Teilnehmer mit den folgenden Links einladen:',
         'signing_code': 'Anmeldung mit einem Teilnehmercode ',
         'signing_temp_code': 'Anmeldung mit einem einzigartigen, zufällig generierten Code',
@@ -467,8 +521,14 @@ module.exports = {
         'project_title': 'Management der Studie',
         'project_projects_title': `<a target='blank' href='../projects'>Studien</a> `,
         'project_projects_1': 'Das Samply ist nach Studien organisiert. Eine Studie enthält eine Reihe von Aufgaben und aggregiert die Daten der Teilnehmer. Nach der Registrierung als Forscher schlägt die erste Seite, die Sie sehen, vor, eine neue Studie zu erstellen. Geben Sie diesen einfach einen Namen und klicken Sie auf "Enter". Wenn Sie einen anderen Forscher im Samply bereits kennen, mit dem Sie die Studie teilen möchten, können Sie dessen E-Mail-Adresse eingeben (oder leer lassen und es später bearbeiten).',
-        'project_projects_2': 'Nachdem Sie eine Studie hinzugefügt haben, sehen Sie die Karte der neuen Studie, die den Namen und den Status der Studie zusammen mit zwei Schaltflächen (zum Bearbeiten und Löschen der Studie) anzeigt. Der Kippschalter auf der Unterseite der Karte ist grau - das bedeutet, dass Ihre Studie derzeit nicht öffentlich zugänglich ist, d.h. vor Samply-Teilnehmern versteckt ist. Sie können jedoch Teilnehmer mit einem speziellen Link einladen, der Ihnen zur Verfügung steht. Wenn Sie mit Aufgaben fertig sind und Ihre Studie veröffentlichen möchten, können Sie die Schaltfläche umschalten, um sie zu aktivieren.',
-        'project_projects_3': 'Wenn Ihre Studie Forschungsmitglieder oder Teilnehmer hat, wird sie auf der Studienkarte angezeigt.',
+        'project_projects_2': `
+          Nachdem Sie eine Studie hinzugefügt haben, sehen Sie die Karte der neuen Studie,
+            die den Namen und den Status der Studie zusammen mit zwei Schaltflächen (zum Bearbeiten und Löschen der Studie) anzeigt.
+            Der Kippschalter unten auf der Karte ist grau - das bedeutet, dass Ihre Studie derzeit nicht
+            öffentlich verfügbar in der mobilen Anwendung <em>Samply Research</em>.
+            Wenn Sie bereit sind, Ihre Studie zu starten, klicken Sie auf die Schaltfläche, um sie zu aktivieren.
+        `,
+        'project_projects_3': 'Wenn Sie Ihre Kollegen eingeladen haben, den Zugang zur Studie zu teilen, wird die Anzahl Ihrer Kollegen auf der Studienkarte angegeben.',
         'project_tasks_title': `<a target='blank' href='../constructor'>Aufgaben auswählen</a> `,
         'project_tasks_1': `Der nächste Schritt nach der Erstellung einer neuen Studie besteht darin, Aufgaben hinzuzufügen. Sie können Aufgaben aus der Liste der verfügbaren Aufgaben auswählen und sie der Liste auf der rechten Seite hinzufügen, indem Sie auf die grüne Plus-Taste klicken. Die Reihenfolge auf der Liste entspricht der Reihenfolge, in der Ihre Teilnehmer die Aufgaben sehen werden. Dies ermöglicht es, dass eine Studie mehr als eine Aufgabe umfasst.`,
         'project_parameters_title': `<a target='blank' href='../tasks'>Parameter anpassen</a>  `,
@@ -484,9 +544,26 @@ module.exports = {
         'data_participants_title': `<a target='blank' href='../users'>Teilnehmer</a> `,
         'data_participants_1': `Die Ergebnisse werden in der Teilnehmerliste dargestellt. Die Teilnehmer werden in der Reihenfolge ihrer Anmeldezeit vorgestellt. Neben der individuellen ID-Nummer, Code, Name und Zeitpunkt der Registrierung gibt die Tabelle Auskunft über den Anwenderstatus (Teilnehmer oder Forscher), die Benutzersprache und die Anzahl der durchgeführten Tests. Sie können die Daten für jeden Teilnehmer herunterladen. Metadaten enthalten Informationen über die technischen Eigenschaften des Browsers des Benutzers. Sie können eine detailliertere Tabelle mit den Ergebnissen der einzelnen Tests für einen bestimmten Benutzer öffnen.`,
         'data_invitations_title': `<a target='blank' href='../invitations'>Einladungen</a> `,
-        'data_invitations_1': `Auf der Seite "Einladungen" finden Sie Links, mit denen Sie mehr Teilnehmer zu Ihrem Experiment einladen können. Sie können diese Links testen, indem Sie sie im neuen Fenster im Inkognito-Modus (oder nach dem Abmelden) öffnen. Während der Anmeldung mit einem Teilnehmercode wird ein Benutzer aufgefordert, einen Code einzugeben. Dieser Code kann auch an den Teilnehmer gesendet oder bereits bekannt sein, z.B. Studentenausweis oder andere persönliche Daten.`,
-        'data_invitations_2': `Die Registrierung mit einer E-Mail-Adresse fordert einen Teilnehmer auf, ein Profil mit einer E-Mail-Adresse und einem Passwort zu erstellen. Später werden die E-Mail und das Passwort für die Autorisierung verwendet. Dies bietet höhere Sicherheit als ein Teilnehmercode.`,
-        'data_invitations_3': `Wenn Ihre Studie öffentlich zugänglich ist, kann es auch von den Teilnehmern nach der Registrierung mit allen verfügbaren Methoden (Code, E-Mail oder sozialen Netzwerken wie Facebook, Google oder Github) entdeckt werden. Ihre Studie erscheint in der Liste der Studien, an denen der Benutzer teilnehmen kann.`,
+        'invitations_1': `
+          Wenn Nutzer die App starten, müssen sie Benachrichtigungen von der App zulassen.
+          Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
+          Die Teilnehmer müssen auch ein neues Konto erstellen.
+          Die Anmeldedaten werden sicher auf dem Server Samply (dem Server der Universität Konstanz in Deutschland) gespeichert und nur zur Authentifizierung der Benutzer verwendet.`,
+        'invitations_2': `
+          Nach dem Einloggen müssen die Teilnehmer zum Tab "Studies" innerhalb der Anwendung wechseln.
+          Dort können sie das Suchfeld benutzen, um Ihre Studie zu finden.
+          In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
+          Bitte geben Sie Ihren Teilnehmern den genauen Namen Ihrer Studie an, damit sie diese in der App finden können.
+          Wenn die Teilnehmer in der Liste der Studien auf Ihre Studie tippen, gelangen sie auf die Studienseite.
+          Auf der Studienseite werden die Beschreibung und der Begrüßungstext angezeigt.
+          Wenn die Teilnehmer auf die Schaltfläche "Join the study" klicken, erlauben sie, Benachrichtigungen von Ihnen zu erhalten.
+          Nun können die Teilnehmer die App schließen.`,
+        'invitations_3': `Sie als Forscher haben keinen Zugriff auf die E-Mail-Adressen der Teilnehmer.
+          Wenn Sie die E-Mail-Adressen der Teilnehmerinnen und Teilnehmer haben möchten, können Sie diese zusammen mit anderen Informationen über Ihre Online-Studien sammeln.
+          Stattdessen wird Samply Ihnen eine individuelle ID jedes Teilnehmers mitteilen (in der Form xxxx-xxxx-xxxx-xxxx),
+          die Sie als Abfrageparameter in den Link Ihrer Studie aufnehmen können.
+          Weitere Informationen dazu finden Sie unter "Benachrichtigungen".
+        `,
         'help_title' : 'Hilfe',
         'help_1': `Bitte nehmen Sie am <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> teil, um Fragen zu stellen und Hilfe zu erhalten.`,
         'forum': 'Forum',
@@ -520,7 +597,7 @@ module.exports = {
 
       'notifications': {
         'message_create_project': `Um Benachrichtigungen einzurichten, aktivieren oder erstellen Sie eine Studie <a href="/projects">hier</a>.`,
-        'testing_message': 'Die Teilnehmer sollten ein Android-Telefon oder Google Chrome auf Desktops verwenden, um Benachrichtigungen zu aktivieren und zu erhalten.',
+        'testing_message': 'Senden Sie Benachrichtigungen an alle Teilnehmer oder wählen Sie einen bestimmten Teilnehmer',
         'title': 'Titel',
         'title_placeholder': 'Samply',
         'message': 'Nachricht',

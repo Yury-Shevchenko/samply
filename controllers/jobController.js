@@ -8,7 +8,6 @@ const Agenda = require('agenda');
 const uniqid = require('uniqid');
 
 const { Expo } = require('expo-server-sdk');
-// Create a new Expo SDK client
 let expo = new Expo();
 
 const agenda = new Agenda({
@@ -252,7 +251,6 @@ exports.createIndividualNotification = async (req, res) => {
     users = project.mobileUsers;
   }
 
-  // const users = await User.getUsersOfProject(req.user.project._id);
   if (users){
     users.map(user => {
         // this time buffer can also be supplied by the researcher
@@ -414,7 +412,7 @@ async function sendMobileNotification(done, content, tokens, project_id, project
     }
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     const customizedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.id);
-    const messageId = makeRandomCode();
+    const messageId = makeRandomCodeForMessageID();
     messages.push({
       to: pushToken.token,
       sound: 'default',
@@ -440,15 +438,15 @@ async function sendMobileNotification(done, content, tokens, project_id, project
     for (let chunk of chunks) {
       try {
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-        console.log('chunk', chunk);
-        console.log('ticketChunk', ticketChunk);
-        console.log('content', content);
+        // console.log('chunk', chunk);
+        // console.log('ticketChunk', ticketChunk);
+        // console.log('content', content);
         // save new result
         const result = new Result({
           project: project_id,
           project_name: project_name,
           samplyid: chunk[0].id,
-          data: content,
+          data: { title, message, url: content.url.replace('%PARTICIPANT_CODE%', chunk[0].id)},
           ticket: ticketChunk[0],
           messageId: chunk[0].data.messageId,
           events: [{status: 'sent', created: Date.now()}],
@@ -601,8 +599,8 @@ exports.removeUser = async (req, res) => {
   }
 };
 
-const makeRandomCode = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+const makeRandomCodeForMessageID = () => {
+    return 'mes-xxx-xxx-xxx-xxx'.replace(/[xy]/g, function(c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });

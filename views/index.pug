@@ -13,46 +13,40 @@ block content
     .card
       .card-message
         h4 #{layout.title}
-        p.card-message Samply supports experience sampling, ambulatory assessment and diary studies. 
-          | We want to make sending notifications to participants an easy and comfortable task for researchers.
-          | The main idea is that you as a researcher is free to use any tool to create an online survey or an experiment. 
-          | Samply sends mobile notifications through the Samply mobile application, so when participants of your study click 
-          | on the notification, they open your online study in a mobile web-browser.
+        p.card-message !{l.welcome_text}
         
-        p.card-message Want a test drive? Here is a quick tutorial to demonstrate how Samply works.
+        p.card-message !{l.test_drive}
         
-        h5 Main features
+        h5 #{l.features_header} 
         
         ul
           li 
-            p.card-message Samply is free, there is no hidden costs (thanks to the generous support of the iScience group)
+            p.card-message !{l.feature_1} 
           li 
-            p.card-message Native mobile application for participants available in Apple Store and Google Store.
+            p.card-message !{l.feature_2} 
           li 
-            p.card-message Different types of notifications schedule (one-time, repeat, user-dependent, randomized).
+            p.card-message !{l.feature_3} 
           li 
-            p.card-message Customization of messages and URL links that you send to participants.
+            p.card-message !{l.feature_4} 
           li 
-            p.card-message Recording participants' responses to your notifications.
+            p.card-message !{l.feature_5} 
         
         
-        h5 About us
+        h5 #{l.about_header} 
+                
+        p.card-message !{l.about_text} 
         
-        p.card-message Samply is developed by Yury Shevchenko with the help of many great collaborators. 
-          | Yury is a postdoc in the iScience group at the University of Konstanz in Germany.
-        
-        h5 Contact / find support / contribute
+        h5 #{l.contact_header}
         
         ul
           li 
-            p.card-message Contact us by email
+            p.card-message !{l.contact_email}
           
           li 
-            p.card-message Join our Slack group
+            p.card-message !{l.contact_slack}
           
           li 
-            p.card-message Wish to contribute? Welcome to Github.
+            p.card-message !{l.contact_github}
             
         br
-        p.card-message If you are a participant, you are probably looking for a mobile application Samply. You can find in Apple or Google Store.
-              
+        p.card-message !{l.for_participants}

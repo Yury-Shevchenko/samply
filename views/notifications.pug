@@ -4,7 +4,6 @@ include mixins/_scheduledNotification
 
 block content
   .inner(style="max-width: 2000px; padding: 4rem;")
-
     if participant && participant.samplyId
       h2= `${layout.notifications} for participant ${participant.samplyId}`
     else
@@ -32,13 +31,13 @@ block content
           .custom-select-header(style="max-width:300px")
             select(name="activeTarget" id="activeTarget")
               option(value='all' selected=(participant && participant.samplyId)) #{layout.not_all_participants} 
-              each part in ids
-                option(value=part selected=(participant && participant.samplyId === part) )= part
+              each part in project.mobileUsers
+                option(value=part.id selected=(participant && participant.samplyId === part.id) )= part.id
           p
           h6 #{layout.fill_in_information} 
           p
           h6 #{l.title} 
-          p #{layout.title_information}  
+          //- p #{layout.title_information}  
           input#titleContent(type='text', value = '')
           h6 #{l.message} 
           input#messageContent(type='text', value = '')
@@ -47,7 +46,7 @@ block content
           if participant && participant.samplyId
             h6 #{layout.not_participant_id}  
             input#participantId(type='text', value = participant.samplyId readonly, style ="background-color:lightgrey")
-          p #{layout.example_web_link}
+          p !{layout.example_web_link}
           
           p#notification_status_schedule(style='visibility:hidden') #{l.registering_busy_message} 
           p #{layout.choose_the_type} 
@@ -196,7 +195,7 @@ block content
             // activate function to select participants
             document.getElementById('activeTarget').addEventListener('change', function doThings() {
               const participant = document.getElementById("activeTarget").value;
-              if(participant > 0){
+              if(participant){
                 window.location.href = `/notifications/${participant}`;
               } else {
                 window.location.href = `/notifications`;

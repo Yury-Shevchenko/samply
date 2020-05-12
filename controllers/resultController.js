@@ -69,8 +69,6 @@ exports.saveIncrementalResults = async (req, res) => {
   res.send('Saved');
 };
 
-
-
 // delete a record of notification
 exports.removeRecordById = async(req, res) => {
   const record = await Result.findOne({_id: req.params.id});
@@ -160,17 +158,18 @@ exports.downloadHistory = async (req, res) => {
     .find({project: projectId},{})
     .cursor()
     .on('data', obj => {
-      if(obj && obj.data && obj.author){
+      console.log('obj', obj);
+      if(obj && obj.data){
         const line =[{
           samplyid: obj.samplyid,
-          name: obj.name,
           title: obj.data.title,
-          content: obj.data.content,
-          openUrl: obj.data.openUrl,
-          userCreated: obj.author.created,
-          usertimestamp: obj.usertimestamp,
-          created: obj.created,
-          appVersion: obj.appVersion
+          message: obj.data.message,
+          url: obj.data.url,
+          sent: obj.events.filter(e => e.status === 'sent').map(e => e.created.getTime()),
+          tapped: obj.events.filter(e => e.status === 'tapped').map(e => e.created.getTime()),
+          opened_in_spp: obj.events.filter(e => e.status === 'opened-in-app').map(e => e.created.getTime()),
+          archived_by_user: obj.events.filter(e => e.status === 'archived').map(e => e.created.getTime()),
+          messageId: obj.messageId,
         }]
         const preKeys = flatMap(line, function(e){
           return(Object.keys(e));

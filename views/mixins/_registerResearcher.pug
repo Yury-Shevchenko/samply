@@ -1,6 +1,8 @@
 mixin registerResearcher()
   form.loginForm(action="/auth/researcher/email/register" method="POST")
     h5 #{layout.signup}
+    p Please provide your university email address.
+    input(type="text" name="name" placeholder="Full name" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
     input(type="email" name="email" placeholder="Email" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
     input(type="password" name="password" placeholder="Password")
     input(type="password" name="password-confirm" placeholder="Confirm password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")

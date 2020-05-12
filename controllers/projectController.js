@@ -231,17 +231,17 @@ exports.changeStatusProject = async (req, res) => {
 
 exports.manageNotifications = async(req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, notifications: 1,
+    name: 1, notifications: 1, mobileUsers: 1,
   });
-  const participants = await User.getUsersOfProject(req.user.project._id);
-  let ids;
-  if(participants){
-    ids = participants.map(user => user.participant_id);
-  }
+  // const participants = await User.getUsersOfProject(req.user.project._id);
+  // let ids;
+  // if(participants){
+  //   ids = participants.map(user => user.participant_id);
+  // }
   const participant = await User.findOne({
     samplyId: req.params.id,
   });
-  res.render('notifications', {project, participant, ids});
+  res.render('notifications', { project, participant });
 };
 
 exports.inviteParticipants = async (req, res) => {

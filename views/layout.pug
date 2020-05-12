@@ -29,6 +29,8 @@ html
                     h6 #{layout.studies}
                 li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
                   h6 Docs
+                li.nav__item: a.nav__main_link(href="/", class=(currentPath === '/' ? 'nav__main_link--active' : ''))
+                  h6 Samply
                 //- li.nav__item
                 //-   a(style="display:flex;flex-direction: column; padding: 1rem 1.5rem 0.5rem 1.5rem;")
                 //-     button.button(id="installApp" style="display:none") #{layout.install_app}

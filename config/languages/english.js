@@ -2,6 +2,9 @@ module.exports =
 {
 
     'layout' : {
+
+
+
       'not_supported': `Sorry, notifications on your device are not possible if you want to participate in a study. This may be because you are using an Apple device. In this case please use Android or another device.`,
       'title': 'Welcome to Samply',
       'intro': `Scientists discover the nature of the human being  - You can help with this task!
@@ -30,7 +33,9 @@ module.exports =
       'fill_in_information': 'Fill in the information for your notification',
       'title_information': `Notifications with the same title will replace each other to avoid the users' screen being filled with a huge number of similar notifications.`,
       'not_all_participants': 'All participants',
-      'example_web_link': 'If you need to refer to the participant ID in the URL, use %PARTICIPANT_CODE%, for example https://survey.com/?id=%PARTICIPANT_CODE%',
+      'example_web_link': `If you need to refer to the participants' Samply ID in the URL, use %PARTICIPANT_CODE% in your query, for example https://survey.com/?id=%PARTICIPANT_CODE%.
+        Then, inside of your online study you can extract the participant id from the url address. Read more about query strings <a href="https://en.wikipedia.org/wiki/Query_string")>here</a>.
+      `,
       'choose_the_type': 'Choose the type of notification',
       'not_participant_id': 'Participant ID',
       'web_link': 'Web link to your survey',
@@ -265,6 +270,33 @@ module.exports =
     },
 
     'index' : {
+      'welcome_text': `
+        Samply supports experience sampling, ambulatory assessment and diary studies.
+        We want to make sending notifications to participants an easy and comfortable task for researchers.
+        The main idea is that you as a researcher is free to use any tool to create an online survey or an experiment.
+        Samply sends mobile notifications through the Samply mobile application, so when participants of your study click
+        on the notification, they open your online study in a mobile web-browser.
+      `,
+      'test_drive': `
+        Want a test drive? Here is a quick tutorial to demonstrate how Samply works.
+      `,
+      'features_header': `Main features`,
+      'feature_1':`Samply is free, there is no hidden costs (thanks to the generous support of the iScience group)`,
+      'feature_2':`Native mobile application for participants available in Apple Store and Google Store.`,
+      'feature_3':`Different types of notifications schedule (one-time, repeat, user-dependent, randomized).`,
+      'feature_4':`Customization of messages and URL links that you send to participants.`,
+      'feature_5':`Recording participants' responses to your notifications.`,
+      'about_header': 'About us',
+      'about_text': `
+        Samply is developed by Yury Shevchenko with the help of many great collaborators.
+        Yury is a postdoc in the iScience group at the University of Konstanz in Germany.
+      `,
+      'contact_header': `Contact / find support / contribute`,
+      'contact_email': `Contact us by <a href="mailto:yury.shevchenko@uni.kn">email</a>`,
+      'contact_slack': `Join our <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack group</a>`,
+      'contact_github': `Wish to contribute? Welcome to our <a target='_blank' href="https://github.com/Yury-Shevchenko/samply">Github</a>.`,
+      'for_participants': `If you are a participant, you are probably looking for a mobile application Samply.
+      You can find in <a target='_blank' href="https://apps.apple.com/app/samply-research/id1511062019">Apple</a> or Google Store.`,
       'intro2': 'With Samply you can create and plan notifications for participants of your studies. ' +
       'You can edit content of notifications and send links to your survey or online tests. ' +
       'As a participant, you have to use an Android mobile phone to receive notifications. ',
@@ -313,9 +345,9 @@ module.exports =
         'confirmMessage_3': 'All results of this study will be deleted.',
         'confirmMessage_4': ' This action is not reversable.',
         'delete': 'Delete',
-        'description': 'Description',
+        'description': 'Description (please tell what is your study is about, how long and how often you plan to send notifications)',
         'showCompletionCode': 'Display the unique completion code at the end of all tasks',
-        'welcomeMessage': 'Welcoming text that is shown to participants after they register in your study.',
+        'welcomeMessage': 'Welcome text for the participants, which is displayed together with the description on the page of your study within the mobile application.',
         'askNotifications': 'Ask users to allow notifications (we are currently testing notifications, participants should use Chrome on a desktop computer).',
       },
 
@@ -422,6 +454,27 @@ module.exports =
         },
 
         'invitations': {
+          'mobile_invite': `Invite participants to download the mobile app <em>Samply Research</em>. You can give them direct links or ask them to search for the app with the name "Samply Research".`,
+          'android_users': `For Android users, the application will be available soon in Google Store.`,
+          'apple_users': `For Apple users, the application is in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">Apple</a> Store.`,
+          'mobile_user_account': `When users start an app, they will have to allow notifications from the app.
+            The question about notifications should pop up automatically on the screen.
+            Participants will also need to create a new account.
+            The login information will be stored securely on the Samply server (which is the server of the University of Konstanz in Germany) and used only for authentication of users.
+            `,
+          'finding_study': `After logging in, participant have to proceed to the tab "Studies" inside the application.
+            There, they can use the search field to find your study. The name, author and the date of study creation are displayed in the list of studies.
+            Please provide your participants with the exact name of your study, so they can find it in the app.
+            If participants tap on your study in the list of studies, they will proceed to the study page.
+            On the study page, the description and welcoming text will be shown.
+            By clicking on the button "Join the study", participants will allow receving notifications from you.
+            Now, the participants can close the application.
+            `,
+          'user_info': `You as a researcher will not have access to email addresses of participants.
+            If you wish to have participants' email addresses, you are free to collect them together with other information via your online studies.
+            Instead, Samply will share with you a unique id of each participant (in the form xxxx-xxxx-xxxx-xxxx),
+            which you can include as a query parameter in the link of your study. More information about that is in "Notifications".
+          `,
           'invite': 'Invite more participants with the following links:',
           'signing_code': 'Signing up with a participant code ',
           'signing_temp_code': 'Signing up with a unique randomly generated code',
@@ -446,23 +499,27 @@ module.exports =
           'introduction_title': 'Introduction',
           'introduction_1': 'Welcome to Samply, a platform for scheduling and sending notifications! ',
           'introduction_2': `We are glad to have you here. This documentation is written for researchers, so please first <a target='blank' href="/researcher/register">register</a> or <a target='blank' href="/researcher/login">login</a> as a researcher. `,
-          'introduction_3': 'The registration is simple and requires only an email and a password. ',
+          'introduction_3': 'The registration is simple and requires a university email address and a password. ',
           'howitworks_title': 'How does it work?',
-          'introduction_4': 'Samply is a web-based application that can be installed on Android mobile phones. After you create a notification schedule for your study in the browser, you can send a unique link to your participants. They follow the link in their mobile browsers and allow notifications from your study.',
+          'introduction_4': 'Samply is a web-site for researchers and a mobile application Samply Research for participants. After you create a notification schedule for your study on this website, the mobile application will notify your participants. The participants will follow the link on their mobile phones and participate in your online study.',
           'navigation_title': 'Navigation',
           'navigation_1': 'The documentation contains the information about the following main steps.',
           'navigation_1_1': `<a href='../docs/project'>Studies</a> Create and manage your studies`,
           'navigation_1_2': `<a href='../docs/notifications'>Notifications</a> Create a notification schedule`,
-          'navigation_1_3': `<a href='../docs/invitations'>Invitations</a> Send invitation links to participants`,
-          'navigation_1_4': `<a href='../docs/data'>Data</a> Review results (participants and notifications)`,
+          'navigation_1_3': `<a href='../docs/invitations'>Invitations</a> Invite participants`,
+          'navigation_1_4': `<a href='../docs/data'>Data</a> Review the history of sent notifications`,
           'navigation_2': 'In the Search tasks field, you can enter the name of the task you want to search for.',
-          'navigation_3': 'If you have more than one study, you can switch between them by using the “Choose a study” drop-down menu above.',
-          'navigation_4': 'Under “Profile”, you can edit your name, email address and language. English and German are supported at the moment.',
+          'navigation_3': 'If you have more than one study, you can switch between them by using the “Choose a study” drop-down menu in the top navigation bar.',
+          'navigation_4': 'Under “Profile”, you can edit your name, research institute and language. English and German are supported at the moment.',
           'project_title': 'Manage your study',
           'project_projects_title': `<a target='blank' href='../projects'>Studies</a> `,
           'project_projects_1': 'The Samply is organized by studies. After registering as a researcher, the first page you see suggests creating a new study. Just give it a name and click “Enter”. If you already know someone in the Samply with whom you want to share the study, you can enter their email address (or leave it blank and do it later).',
-          'project_projects_2': 'After adding a study, you will see the card of the new study, which shows the name and status of the study along with two buttons (to edit and delete the study). The toggle switch at the bottom of the card is grey – this means that your study is currently not publicly available, i.e., hidden from Samply participants. However, you can invite participants with a special link that provided to you. When you are ready with tasks and want to open your study to the public, you can toggle the button to activate it.',
-          'project_projects_3': 'If your study has research members or participants, it will be displayed on the study card.',
+          'project_projects_2': `After adding a study, you will see the card of the new study,
+            which shows the name and status of the study along with two buttons (to edit and delete the study).
+            The toggle switch at the bottom of the card is grey – this means that your study is currently not
+            publicly available in the mobile application <em>Samply Research</em>.
+            When you are ready to launch your study, toggle the button to activate it.`,
+          'project_projects_3': 'If you have invited your colleagues to share access to the study, the number of your colleagues will be indicated on the study map.',
           'project_tasks_title': `<a target='blank' href='../constructor'>Choose tasks</a> `,
           'project_tasks_1': `The next step after creating a new study is to add tasks. You can select tasks from the list of available tasks and add them to the list on the right by clicking on the green plus button. The order on the list corresponds to the order in which your participants will see the tasks. This allows a study to include more than one task.`,
           'project_parameters_title': `<a target='blank' href='../tasks'>Customize parameters</a>  `,
@@ -478,9 +535,22 @@ module.exports =
           'data_participants_title': `<a target='blank' href='../users'>Participants</a> `,
           'data_participants_1': `The results are presented in the table of participants. The participants are displayed in the order of their registration time. Together with a unique ID number, code, name and registration time, the table provides information about the user status (participant or researcher) and user language. You can schedule notifications for each participant.`,
           'data_invitations_title': `<a target='blank' href='../invitations'>Invitations</a> `,
-          'data_invitations_1': `The “Invitations” page contains links that allow you to invite more participants to your experiment. You can test this links by opening them in the new window in incognito mode (or after logging out). During a login with a participant code, a user will be prompted to enter a code. This code can also be sent to a participant or already known, e.g. student ID or other personal number.`,
-          'data_invitations_2': `Registration with an email address requests a participant to create an account with an email address and password. Later, the email and password will be used for authorization. This provides a higher level of security than a participant code.`,
-          'data_invitations_3': `If your study is publicly accessible, it can also be discovered by participants after registration by all available methods (code, email or social networks such as Facebook, Google or Github). Your study will appear in the list of studies in which a user can participate.`,
+          'invitations_1': `
+            When users start an app, they will have to allow notifications from the app.
+            The question about notifications should pop up automatically on the screen.
+            Participants will also need to create a new account.
+            The login information will be stored securely on the Samply server (which is the server of the University of Konstanz in Germany) and used only for authentication of users.`,
+          'invitations_2': `
+            After logging in, participant have to proceed to the tab "Studies" inside the application.
+            There, they can use the search field to find your study.
+            The name, author and the date of study creation are displayed in the list of studies.
+            Please provide your participants with the exact name of your study, so they can find it in the app.
+            If participants tap on your study in the list of studies, they will proceed to the study page. On the study page, the description and welcoming text will be shown. By clicking on the button "Join the study", participants will allow receving notifications from you. Now, the participants can close the application.`,
+          'invitations_3': `You as a researcher will not have access to email addresses of participants.
+            If you wish to have participants' email addresses, you are free to collect them together with other information via your online studies.
+            Instead, Samply will share with you a unique id of each participant (in the form xxxx-xxxx-xxxx-xxxx), which you can include as a query parameter in the link of your study.
+            More information about that is in "Notifications".
+          `,
           'help_title' : 'Help',
           'help_1': `Please, join the <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help. `,
           'forum': 'Forum',
@@ -490,6 +560,9 @@ module.exports =
           'ask_question_header': 'Do you have a question?',
           'type_in_your_question': 'Ask it here',
           'send_question_btn': 'Send',
+          'notifications_title': 'Notifications',
+
+
         },
 
         'listing': {
@@ -513,7 +586,7 @@ module.exports =
 
         'notifications': {
           'message_create_project': `To set up notifications, activate or create a study <a href="/projects">here</a>.`,
-          'testing_message': 'Participants should use an Android phone or Google Chrome on desktops to enable and receive notifications.',
+          'testing_message': 'Send notifications to all participants or choose specific participant',
           'title': 'Title',
           'title_placeholder': 'Samply',
           'message': 'Message',
@@ -551,7 +624,6 @@ module.exports =
           'table_repeat_interval': 'Repeat interval',
           'table_user_time_period': 'User-dependent time period',
           'table_user_range' : 'Range of repeating interval',
-
           'delete_notifications': 'Delete all notifications',
           'registering_busy_message': 'Registering notification ...',
           'one_time_notifications_to_participant_1': 'One-time notifications are scheduled only for the participant with id',

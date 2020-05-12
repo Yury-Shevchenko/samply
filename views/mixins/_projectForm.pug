@@ -10,7 +10,7 @@ mixin projectForm(project = {})
     label(for='welcomeMessage') #{l.welcomeMessage}
     textarea(type='text' name='welcomeMessage')= project.welcomeMessage
     
-    label(for='image') Image
+    label(for='image') Image (paste the image URL here - the image will be displayed next to your study in the mobile application)
     input(type='text' name='image' value=project.image)
     p
     

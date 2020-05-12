@@ -11,10 +11,12 @@ const jobController  = require('../controllers/jobController');
 const passport = require('passport');
 
 // app controller
-router.get('/researcher', appController.researcherPage);
-router.get('/researcher/:action', appController.researcherPage);
+// TODO finish registration for participants at the website (but should be discouraged)
 router.get('/participant', appController.participantPage);
 router.get('/participant/:action', appController.participantPage);
+
+router.get('/researcher', appController.researcherPage);
+router.get('/researcher/:action', appController.researcherPage);
 router.get('/docs', appController.docs);
 router.get('/docs/:page', appController.docs);
 router.get('/forgot', appController.forgot)
@@ -30,41 +32,41 @@ router.post('/account/reset/:token',
 router.get('/logout', authController.logout);
 
 // authentification
-router.get('/code', userController.code);
-router.get('/code/:project', userController.code);
-router.get('/code/:project/:code', userController.code);
-router.get('/sign/:project', userController.sign);
-router.get('/sign/:project/:code', userController.sign);
+// router.get('/code', userController.code);
+// router.get('/code/:project', userController.code);
+// router.get('/code/:project/:code', userController.code);
+// router.get('/sign/:project', userController.sign);
+// router.get('/sign/:project/:code', userController.sign);
 
-router.post('/auth/code', passport.authenticate('local-code', {
-  successRedirect : '/testing',
-  failureRedirect: '/code',
-  failureFlash : true
-}))
+// router.post('/auth/code', passport.authenticate('local-code', {
+//   successRedirect : '/testing',
+//   failureRedirect: '/code',
+//   failureFlash : true
+// }))
 
 router.post('/auth/participant/email/sign',
-  passport.authenticate('local-signup-participant', {
+  passport.authenticate('website-signup-participant', {
     successRedirect : '/testing',
     failureRedirect: '/participant/register',
     failureFlash : true
   }));
 
 router.post('/auth/researcher/email/register',
-  passport.authenticate('local-signup-researcher', {
+  passport.authenticate('website-signup-researcher', {
     successRedirect : '/projects',
     failureRedirect: '/researcher/register',
     failureFlash : true
   }));
 
 router.post('/auth/participant/email/login',
-  passport.authenticate('local-login', {
+  passport.authenticate('website-login', {
     successRedirect : '/testing',
     failureRedirect: '/participant/login',
     failureFlash : true
   }));
 
 router.post('/auth/researcher/email/login',
-  passport.authenticate('local-login', {
+  passport.authenticate('website-login', {
     successRedirect : '/projects',
     failureRedirect: '/researcher/login',
     failureFlash : true
@@ -72,7 +74,7 @@ router.post('/auth/researcher/email/login',
 
 // user controller
 router.get('/account', authController.isLoggedIn, catchErrors(userController.account));
-router.post('/account', catchErrors(userController.updateAccount));
+router.post('/account', catchErrors(userController.updateWebsiteAccount));
 router.get('/removeuser/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeUser));
 router.get('/languages/:language', userController.changeLanguage);
 router.post('/faq', authController.isLoggedIn, catchErrors(userController.sendQuestion));
@@ -117,15 +119,6 @@ router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(resu
 router.get('/downloadhistory/:id', authController.isLoggedIn, catchErrors(resultController.downloadHistory));
 
 // job controller (notifications)
-// router.post('/subscribeforstudy', authController.isLoggedIn, catchErrors(jobController.subscribeforstudy));
-// router.post('/unsubscribefromstudy', authController.isLoggedIn, catchErrors(jobController.unsubscribefromstudy));
-// router.post('/registernotification',
-//   authController.isLoggedIn,
-//   catchErrors(jobController.registerPushNotification),
-//   catchErrors(jobController.subscribeforstudy)
-// );
-// router.post('/unregisternotification', authController.isLoggedIn, catchErrors(jobController.unregisterPushNotification));
-
 router.post('/createschedulenotification', authController.isAdminLoggedIn, catchErrors(jobController.createScheduleNotification));
 router.post('/createintervalnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIntervalNotification));
 router.post('/createindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIndividualNotification));

@@ -7,7 +7,7 @@ if ('serviceWorker' in navigator && 'PushManager' in window) {
   navigator.serviceWorker
     .register('/service-worker.js')
     .then(function(registration){
-      console.log("SW registered in the scope", registration.scope)
+      // console.log("SW registered in the scope", registration.scope)
     })
     .catch(function(error){
       console.error(error);

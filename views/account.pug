@@ -15,13 +15,13 @@ block content
         label(for="time") #{l.registered}
         h2= h.moment(user.created).locale(language).format("MMM Do YY")
           
-        label(for="name") #{l.name}
-        input(type="text" name="name" value= user.name || (user.facebook && user.facebook.name) || (user.github && user.github.name) || (user.google && user.google.name) ||'')
-        
         if(user.email)
           label(for="email") #{l.email}
-          input(type="email" name="email" value=user.email||user.facebook.email||user.github.email||user.google.email)
+          h2= `${user.email}`
 
+        label(for="name") #{l.name}
+        input(type="text" name="name" value= user.name ||'')
+        
         if user.level > 10
 
           label(for="institute") #{l.institute}

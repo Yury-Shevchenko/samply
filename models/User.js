@@ -7,10 +7,10 @@ const userSchema = new Schema({
     local            : {
         password     : String
     },
-    code             : {
-        id           : String,
-        password     : String
-    },
+    // code             : {
+    //     id           : String,
+    //     password     : String
+    // },
     name             : String,
     email            : String,
     samplyId         : String, // id for mobile participants / goes inside mobileUsers: id in Projects
@@ -36,7 +36,7 @@ const userSchema = new Schema({
         description: String,
         image: String,
       }
-    ], 
+    ],
     project: {
       _id : {type : mongoose.Schema.ObjectId, ref : 'Project'},
       name : String
@@ -123,7 +123,7 @@ userSchema.statics.getUsersOfProject = function(project) {
         notifications: '$$ROOT.notifications',
       }
     },
-    { $sort : {identity: 1}}, //from highest to lowest
+    { $sort : { identity: 1 }}, //from highest to lowest
   ]);
 };
 
