@@ -3,10 +3,26 @@ mixin notifications()
   h5 
     .headerLink !{l.notifications_title}
   p.card-message 
-    | #{l.notifications_1}
-    
+    | To set up notifications, first, you can define the title, message and the web link to your online survey. 
+    | When the user taps the notification, the mobile browser will be opened automatically with the URL that you provide here.
+    | You can include the participants' Samply ID in the query string of the URL using %PARTICIPANT_CODE%, for example https://survey.com/?id=%PARTICIPANT_CODE%. 
+    | Then, inside of your online study you can extract the participant id from the url address. 
+    | You can set up notifications for all participants or for specific participant by choosing the participant id in the dropdown menu.
+      
   p.card-message 
-    | #{l.notifications_2}
+    | In the current moment, Samply supports 5 types of notification schedule.
+  ol
+    li 
+      p.card-message One-time 
+    li 
+      p.card-message  One-time (random)
+    li 
+      p.card-message Repeat
+    li 
+      p.card-message User-dependent 
+    li 
+      p.card-message User-dependent (random)
+
   
   p.card-message 
     | #{l.notifications_3}

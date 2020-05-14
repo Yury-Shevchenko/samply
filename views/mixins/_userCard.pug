@@ -5,6 +5,10 @@ mixin userCard(person = {}, i)
       td #{i + 1}
       td= person.id
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
+      td
+        a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) History
+      td
+        a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.id}`) Schedule
       if user.level > 10
         td
           a(href=`/removeuser/${person.id}`) 

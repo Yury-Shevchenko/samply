@@ -42,7 +42,9 @@ html
                 li.nav__item
                   a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
                     h6 #{layout.help}
-                  
+              if user.level > 10
+                li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
+                  h6 Docs  
               if user.level > 100
                 li.nav__item: a.nav__main_link(href="/debugprojects", class=(currentPath.startsWith('/debugprojects') ? 'nav__main_link--active' : ''))
                   h6 Supervision
@@ -74,9 +76,9 @@ html
                           else
                             option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
         
-                li.nav__item
-                  a.nav__main_link(href='/docs/intro', class=(currentPath.startsWith('/docs') ? 'nav__main_link--active' : ''))
-                    <i class="fas fa-book-open"></i>
+                //- li.nav__item
+                //-   a.nav__main_link(href='/docs/intro', class=(currentPath.startsWith('/docs') ? 'nav__main_link--active' : ''))
+                //-     <i class="fas fa-book-open"></i>
                 li.nav__item
                   a.nav__main_link(href='/projects', class=(currentPath.startsWith('/projects')  ? 'nav__main_link--active' : ''))
                     h6 #{layout.projects}

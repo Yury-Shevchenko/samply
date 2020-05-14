@@ -275,11 +275,11 @@ module.exports = {
       auf die Benachrichtigung hin öffnen sie Ihre Online-Studie in einem mobilen Web-Browser.
     `,
     'test_drive': `
-      Wünschen Sie eine Probefahrt? Hier ist ein kurzes Tutorial, um zu demonstrieren, wie Samply funktioniert.
+      Wünschen Sie eine Probefahrt? Hier ist ein <a href="/docs/intro">Überblick</a>, um zu demonstrieren, wie Samply funktioniert.
     `,
     'features_header': `Hauptmerkmale`,
     'feature_1':`Samply ist kostenlos, es gibt keine versteckten Kosten (dank der großzügigen Unterstützung der iScience-Gruppe).`,
-    'feature_2':`Native mobile Anwendung für Teilnehmer, verfügbar im Apple Store und Google Store.`,
+    'feature_2':`Native mobile Anwendung für Teilnehmer, verfügbar im <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> oder <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.`,
     'feature_3':`Verschiedene Arten von Benachrichtigungen (einmalig, wiederholt, nutzerabhängig, randomisiert).`,
     'feature_4':`Anpassung von Nachrichten und URL-Links, die Sie an Teilnehmer senden.`,
     'feature_5':`Aufzeichnen der Reaktionen der Teilnehmer auf Ihre Benachrichtigungen.`,
@@ -293,7 +293,7 @@ module.exports = {
     'contact_slack': `Nehmen Sie an unserer <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack chat</a> teil`,
     'contact_github': `Wollen Sie etwas beitragen? Willkommen zu unserem <a target='_blank' href="https://github.com/Yury-Shevchenko/samply">Github</a>.`,
     'for_participants': `Wenn Sie ein Teilnehmer sind, suchen Sie wahrscheinlich nach einer mobilen Anwendung Samply.
-    Diese finden Sie unter <a target='_blank' href="https://apps.apple.com/app/samply-research/id1511062019">Apple</a> oder Google Store.`,
+    Diese finden Sie unter <a target='_blank' href="https://apps.apple.com/app/samply-research/id1511062019">App Store</a> oder <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.`,
     'title': `Willkommen bei Samply`,
     'intro': 'Mit Samply können Sie Benachrichtigungen für Studienteilnehmer erstellen und planen. ' +
      ' Sie können den Inhalt von Benachrichtigungen bearbeiten und Links zu Ihrer Umfrage oder zu Online-Tests senden. ' +
@@ -455,8 +455,8 @@ module.exports = {
       'invitations': {
         'mobile_invite': `Laden Sie die Teilnehmer ein, die mobile App <em>Samply Research</em> herunterzuladen.
           Sie können ihnen direkte Links geben oder sie bitten, nach der App mit dem Namen "Samply Research" zu suchen.`,
-        'android_users': `Für Android-Nutzer wird die Anwendung demnächst im Google Store verfügbar sein.`,
-        'apple_users': `Für Apple-Nutzer befindet sich die Anwendung in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">Apple</a> Store.`,
+        'android_users': `Für Android-Nutzer wird die Anwendung demnächst im <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> verfügbar sein.`,
+        'apple_users': `Für Apple-Nutzer befindet sich die Anwendung in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.`,
         'mobile_user_account': `Wenn Nutzer die App starten, müssen sie Benachrichtigungen von der App zulassen.
             Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
             Die Teilnehmer müssen auch ein neues Konto erstellen.
@@ -520,7 +520,16 @@ module.exports = {
         'upload_newTask_1': 'Das Hinzufügen einer neuen Aufgabe ist einfach. Geben Sie den Namen und die Beschreibung der Aufgabe ein, wählen Sie die Json-Datei aus und fügen Sie, wenn Sie möchten, ein Titelbild hinzu. Tags sind nicht notwendig, können aber anderen Forschern helfen, Ihre Aufgabe zu finden. Wählen Sie am Ende aus, wie die Aufgabe angezeigt werden soll. Öffentliche Aufgaben stehen anderen Forschern zur Verfügung, so dass sie diese sehen, ausführen und die json-Datei herunterladen können. Wenn Sie Ihre Aufgabe noch nicht teilen möchten, stellen Sie sie privat, so dass nur Sie und Ihre Teilnehmer diese sehen können. Nach dem Speichern erscheint Ihre Aufgabe auf der Seite "Meine Aufgaben".',
         'project_title': 'Management der Studie',
         'project_projects_title': `<a target='blank' href='../projects'>Studien</a> `,
-        'project_projects_1': 'Das Samply ist nach Studien organisiert. Eine Studie enthält eine Reihe von Aufgaben und aggregiert die Daten der Teilnehmer. Nach der Registrierung als Forscher schlägt die erste Seite, die Sie sehen, vor, eine neue Studie zu erstellen. Geben Sie diesen einfach einen Namen und klicken Sie auf "Enter". Wenn Sie einen anderen Forscher im Samply bereits kennen, mit dem Sie die Studie teilen möchten, können Sie dessen E-Mail-Adresse eingeben (oder leer lassen und es später bearbeiten).',
+        'project_projects_1': `Der Samply ist nach Studien organisiert.
+            Nach der Registrierung als Forscher wird auf der ersten Seite, die Sie sehen, die Erstellung einer neuen Studie vorgeschlagen.
+            Sie können ihr einen Namen geben, die Beschreibung liefern und einen Begrüßungstext für die Teilnehmer verfassen.
+            Diese Informationen werden den Teilnehmern in der mobilen Anwendung <em>Samply Forschung</em> angezeigt.
+            Sie können die URL der Bilddatei angeben - dieses Bild wird auch in der mobilen Anwendung neben Ihrer Studie angezeigt.
+            Wenn Sie bereits jemanden in Samply kennen, mit dem Sie die Studie teilen möchten, können Sie dessen E-Mail-Adresse eingeben
+            (oder lassen Sie das Feld leer und machen Sie es später).
+            Die gemeinsame Nutzung einer Studie ermöglicht die Zusammenarbeit am Projekt,
+            den gemeinsamen Zugriff auf den Zeitplan der Benachrichtigungen und die Historie der gesendeten Benachrichtigungen.
+            `,
         'project_projects_2': `
           Nachdem Sie eine Studie hinzugefügt haben, sehen Sie die Karte der neuen Studie,
             die den Namen und den Status der Studie zusammen mit zwei Schaltflächen (zum Bearbeiten und Löschen der Studie) anzeigt.
@@ -542,7 +551,11 @@ module.exports = {
         'data_results_title': `<a target='blank' href='../data'>Ergebnisse</a> `,
         'data_results_1': 'Durch Anklicken der Aufgaben auf der linken Seite können Sie zwischen den Ergebnissen für verschiedene Aufgaben wechseln. Die Tabelle enthält Informationen über einen Teilnehmer und die Art der Daten. Die Samply ID ist eine eindeutige Nummer, die jedem Benutzer unabhängig von Teilnehmercode und Name zugewiesen wird. Sie können entweder Daten für einen bestimmten Teilnehmer herunterladen oder alle Ergebnisse für diese Aufgabe herunterladen.',
         'data_participants_title': `<a target='blank' href='../users'>Teilnehmer</a> `,
-        'data_participants_1': `Die Ergebnisse werden in der Teilnehmerliste dargestellt. Die Teilnehmer werden in der Reihenfolge ihrer Anmeldezeit vorgestellt. Neben der individuellen ID-Nummer, Code, Name und Zeitpunkt der Registrierung gibt die Tabelle Auskunft über den Anwenderstatus (Teilnehmer oder Forscher), die Benutzersprache und die Anzahl der durchgeführten Tests. Sie können die Daten für jeden Teilnehmer herunterladen. Metadaten enthalten Informationen über die technischen Eigenschaften des Browsers des Benutzers. Sie können eine detailliertere Tabelle mit den Ergebnissen der einzelnen Tests für einen bestimmten Benutzer öffnen.`,
+        'data_participants_1': `
+          Die Teilnehmer Ihrer Studie sind in der Tabelle in der Reihenfolge ihrer Anmeldezeit aufgeführt.
+          Sie können Ihre Teilnehmer aus der Liste löschen. Diese Aktion kann nicht rückgängig gemacht werden und führt dazu, dass keine Benachrichtigungen mehr an gelöschte Teilnehmer gesendet werden.
+          Sie können die Historie der gesendeten Benachrichtigungen anzeigen oder neue Benachrichtigungen für jeden Teilnehmer planen, wenn Sie auf die entsprechenden Links neben den einzelnen Teilnehmern klicken.
+        `,
         'data_invitations_title': `<a target='blank' href='../invitations'>Einladungen</a> `,
         'invitations_1': `
           Wenn Nutzer die App starten, müssen sie Benachrichtigungen von der App zulassen.
