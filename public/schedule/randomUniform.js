@@ -6,9 +6,9 @@ const createRandomNotificationBtn = document.querySelector('#create_random_notif
 // randomize: true
 
 function createRandomNotification(){
-  let participantId, participantTarget;
+  let participantId = [], participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
-    participantId = parseInt(document.getElementById('participantId').value);
+    participantId = [document.getElementById('participantId').value];
     participantTarget = 'one-user';
   } else {
     participantTarget = 'all-users';
@@ -23,7 +23,7 @@ function createRandomNotification(){
   const getRandomArbitrary = (min, max) => {
     return Math.round(Math.random() * (max - min) + min);
   }
-
+  console.log('int_start', int_start);
   const randomEvent = getRandomArbitrary(Date.parse(int_start), Date.parse(int_end));
   const timeRandomEvent = [new Date(randomEvent).toISOString()];
 
@@ -37,7 +37,7 @@ function createRandomNotification(){
       target: participantTarget,
       schedule: 'one-time',
       randomize: true,
-      participantId: [participantId],
+      participantId: participantId,
       date: timeRandomEvent,
       message: messageContent.value,
       title: titleContent.value,

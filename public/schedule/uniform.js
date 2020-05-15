@@ -9,7 +9,7 @@ function createScheduleNotification(){
 
   let participantId = [], participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
-    participantId = [parseInt(document.getElementById('participantId').value)];
+    participantId = [document.getElementById('participantId').value];
     participantTarget = 'one-user';
   } else {
     participantTarget = 'all-users';

@@ -6,9 +6,9 @@ const createRandomIndividualNotificationBtn = document.querySelector('#create_ra
 
 function createRandomIndividualNotification(){
 
-  let participantId, participantTarget;
+  let participantId = [], participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
-    participantId = parseInt(document.getElementById('participantId').value);
+    participantId = [document.getElementById('participantId').value];
     participantTarget = 'one-user';
   } else {
     participantTarget = 'all-users';
@@ -65,7 +65,7 @@ function createRandomIndividualNotification(){
       url: urlContent.value,
       duration: duration,
       name: 'Event-dependent (random)',
-      participantId: [participantId],
+      participantId: participantId,
     })
   })
     .then(res => {

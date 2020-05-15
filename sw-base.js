@@ -78,8 +78,8 @@ self.addEventListener('push', event => {
 
   var options = {
     body: data.content,
-    icon: '/images/icons/lamp.png',
-    badge: '/images/icons/lamp.png',
+    icon: '/images/icons/samply.png',
+    badge: '/images/icons/samply.png',
     vibrate: [300,110,300],
     tag: data.title,
     actions: [

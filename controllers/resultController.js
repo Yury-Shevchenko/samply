@@ -24,7 +24,7 @@ exports.updateStatus = async (req, res) => {
 //show the history of sent notifications
 exports.showHistory = async (req, res) => {
   if(req.user && req.user.project && req.user.project.name){
-    const participant = parseInt(req.query.id) || {$exists: true};
+    const participant = req.query.id || {$exists: true};
     const page = req.params.page || 1;
     const limit = 20;
     const skip = (page * limit) - limit;

@@ -6,9 +6,9 @@ const createIndividualNotificationBtn = document.querySelector('#create_individu
 
 function createIndividualNotification(){
 
-  let participantId, participantTarget;
+  let participantId = [], participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
-    participantId = parseInt(document.getElementById('participantId').value);
+    participantId = [document.getElementById('participantId').value];
     participantTarget = 'one-user';
   } else {
     participantTarget = 'all-users';
@@ -42,7 +42,7 @@ function createIndividualNotification(){
       url: urlContent.value,
       duration: duration,
       name: 'Event-dependent',
-      participantId: [participantId],
+      participantId: participantId,
     })
   })
     .then(res => {

@@ -7,6 +7,8 @@ const webpush = require('web-push');
 const Agenda = require('agenda');
 const uniqid = require('uniqid');
 
+const Cron = require('cron-converter');
+
 const { Expo } = require('expo-server-sdk');
 let expo = new Expo();
 
@@ -18,14 +20,32 @@ const agenda = new Agenda({
 agenda.on('ready', function() {
 
   agenda.define('one_time_notification', (job, done) => {
-    sendToAllProjectUsers(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    sendToAllProjectUsers(done,
+      job.attrs.data.projectid,
+      job.attrs.data.title,
+      job.attrs.data.message,
+      job.attrs.data.url,
+      job.attrs.data.id,
+      job.attrs.data.deleteself,
+    );
   });
 
   agenda.define('regular_notification', (job, done) => {
     if(job.attrs.data.participantId && job.attrs.data.participantId > 0){
-      sendToSomeProjectUsers(done, job.attrs.data.projectid, job.attrs.data.participantId, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+      sendToSomeProjectUsers(done,
+        job.attrs.data.projectid,
+        job.attrs.data.participantId,
+        job.attrs.data.title,
+        job.attrs.data.message,
+        job.attrs.data.url
+      );
     } else {
-      sendToAllProjectUsers(done, job.attrs.data.projectid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+      sendToAllProjectUsers(done,
+        job.attrs.data.projectid,
+        job.attrs.data.title,
+        job.attrs.data.message,
+        job.attrs.data.url
+      );
     }
   });
 
@@ -54,7 +74,15 @@ agenda.on('ready', function() {
   });
 
   agenda.define('personal_notification', (job, done) => {
-    sendToSomeProjectUsers(done, job.attrs.data.projectid, job.attrs.data.userid, job.attrs.data.title, job.attrs.data.message, job.attrs.data.url);
+    sendToSomeProjectUsers(done,
+      job.attrs.data.projectid,
+      job.attrs.data.userid,
+      job.attrs.data.title,
+      job.attrs.data.message,
+      job.attrs.data.url,
+      job.attrs.data.id,
+      job.attrs.data.deleteself
+    );
     done();
   });
 
@@ -66,6 +94,7 @@ agenda.on('ready', function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      deleteself: false,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true
@@ -77,7 +106,53 @@ agenda.on('ready', function() {
   agenda.define('end_personal_manager', (job, done) => {
     agenda.cancel({
       'data.projectid': job.attrs.data.projectid,
-      'data.id': job.attrs.data.id
+      'data.id': job.attrs.data.id,
+      'data.userid': job.attrs.data.userid,
+    }, (err, numRemoved) => {});
+    done();
+  });
+
+  // random personal notification
+  agenda.define('random_personal_notification', (job, done) => {
+    pickUpRandomTimeFromInterval(done,
+      job.attrs.data.projectid,
+      job.attrs.data.userid,
+      job.attrs.data.title,
+      job.attrs.data.message,
+      job.attrs.data.url,
+      job.attrs.data.id,
+      job.attrs.data.deleteself,
+      job.attrs.data.interval,
+      job.attrs.data.interval_max,
+    );
+    done();
+  });
+
+  // randomization manager
+  agenda.define('start_random_personal_manager', (job, done) => {
+    const newjob = agenda.create('random_personal_notification', {
+      userid: job.attrs.data.userid,
+      projectid: job.attrs.data.projectid,
+      id: job.attrs.data.id,
+      title: job.attrs.data.title,
+      message: job.attrs.data.message,
+      url: job.attrs.data.url,
+      deleteself: false,
+      interval: job.attrs.data.interval,
+      interval_max: job.attrs.data.interval_max,
+    });
+    newjob.repeatEvery(job.attrs.data.interval, {
+      skipImmediate: true
+    });
+    newjob.save();
+    done();
+  });
+
+  agenda.define('end_random_personal_manager', (job, done) => {
+    agenda.cancel({
+      'data.projectid': job.attrs.data.projectid,
+      'data.id': job.attrs.data.id,
+      'data.userid': job.attrs.data.userid,
     }, (err, numRemoved) => {});
     done();
   });
@@ -128,6 +203,7 @@ exports.createScheduleNotification = async(req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          deleteself: true,
         });
       } else {
         // schedule one time notification which will go to all users of project
@@ -137,6 +213,7 @@ exports.createScheduleNotification = async(req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          deleteself: true,
         });
       }
     });
@@ -253,52 +330,85 @@ exports.createIndividualNotification = async (req, res) => {
 
   if (users){
     users.map(user => {
+
+
         // this time buffer can also be supplied by the researcher
         // as a field "when the notifications schedule should start"
-        const timeBuffer = 60000;
+        const timeBuffer = 30000; // in milliseconds
         const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
+
+        // TODO: for registered participants start at the current moment
         const user_int_end = new Date(Date.parse(user.created) + duration);
-        let interval;
-        if(req.body.randomize && req.body.interval_2){
-          // get a random value between int1 and int2
-          const gR = (min, max) => {
-            if(min === '*' || max === '*'){
-              return '*'
-            } else {
-              return Math.round(Math.random() * (parseFloat(max) - parseFloat(min)) + parseFloat(min));
-            }
-          };
-          const rI = {
-            sec: gR(int1.sec, int2.sec),
-            min: gR(int1.min, int2.min),
-            hour: gR(int1.hour, int2.hour),
-            day: gR(int1.day, int2.day),
-            month: gR(int1.month, int2.month),
-            week: gR(int1.week, int2.week)
-          };
-          interval = String(`${rI.sec} ${rI.min} ${rI.hour} ${rI.day} ${rI.month} ${rI.week}`)
+
+        // let interval;
+        // if(req.body.randomize && req.body.interval_2){
+        //   // get a random value between int1 and int2
+        //   const gR = (min, max) => {
+        //     if(min === '*' || max === '*'){
+        //       return '*'
+        //     } else {
+        //       return Math.round(Math.random() * (parseFloat(max) - parseFloat(min)) + parseFloat(min));
+        //     }
+        //   };
+        //   const rI = {
+        //     sec: gR(int1.sec, int2.sec),
+        //     min: gR(int1.min, int2.min),
+        //     hour: gR(int1.hour, int2.hour),
+        //     day: gR(int1.day, int2.day),
+        //     month: gR(int1.month, int2.month),
+        //     week: gR(int1.week, int2.week)
+        //   };
+        //   interval = String(`${rI.sec} ${rI.min} ${rI.hour} ${rI.day} ${rI.month} ${rI.week}`)
+        // } else {
+        //   interval = interval1_cron;
+        // }
+
+        if(req.body.randomize){
+
+          agenda.schedule(user_int_start, 'start_random_personal_manager', {
+            userid: user.id,
+            projectid: req.user.project._id,
+            id: id,
+            interval: interval1_cron,
+            interval_max: interval2_cron,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+          });
+          agenda.schedule(user_int_end, 'end_random_personal_manager', {
+            userid: user.id,
+            projectid: req.user.project._id,
+            id: id,
+            interval: interval1_cron,
+            interval_max: interval2_cron,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+          });
+
         } else {
-          interval = interval1_cron;
+
+          agenda.schedule(user_int_start, 'start_personal_manager', {
+            userid: user.id,
+            projectid: req.user.project._id,
+            id: id,
+            interval: interval1_cron,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+          });
+          agenda.schedule(user_int_end, 'end_personal_manager', {
+            userid: user.id,
+            projectid: req.user.project._id,
+            id: id,
+            interval: interval1_cron,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+          });
+
         }
 
-        agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: user.id,
-          projectid: req.user.project._id,
-          id: id,
-          interval: interval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-        });
-        agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: user.id,
-          projectid: req.user.project._id,
-          id: id,
-          interval: req.body.interval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-        });
     })
   }
   //save the project
@@ -361,8 +471,59 @@ exports.removeNotificationByID = async(req, res) => {
   });
 }
 
+async function pickUpRandomTimeFromInterval(done, project_id, user_id, title,
+  message, url, notification_id, deleteself, interval, interval_max) {
+    console.log('I am inside of pickUpRandomTimeFromInterval function');
 
-async function sendToSomeProjectUsers(done, project_id, user_id, title, message, url){
+    // get the next execution time
+    const cronInstance = new Cron();
+    const arr = interval_max.split(' ');
+    arr.shift();
+    const interval_max_striped = arr.join(' ');
+    console.log('interval_max', interval_max_striped);
+
+    cronInstance.fromString(interval_max_striped);
+    console.log('cronInstance', cronInstance);
+    const schedule = cronInstance.schedule();
+    const nextRunning = schedule.next().format()
+    console.log('Next running is at: ', nextRunning);
+
+    const timeBuffer = 30000; // since the internet connection might be slow
+    const int_start = Date.now() + timeBuffer;
+    const int_end = Date.parse(nextRunning);
+
+    if(int_start > int_end){
+      console.log('The ending time is earlier than the beginning time');
+      return;
+    }
+
+    const getRandomArbitrary = (min, max) => {
+      return Math.round(Math.random() * (max - min) + min);
+    }
+
+    const randomEvent = getRandomArbitrary(int_start, int_end);
+    console.log('randomEvent', randomEvent);
+    const timeRandomEvent = new Date(randomEvent).toISOString();
+    console.log('timeRandomEvent', timeRandomEvent);
+
+    // choose the time from interval
+    const date = timeRandomEvent;
+
+    // schedule personal_notification
+    agenda.schedule(date, 'personal_notification', {
+      userid: user_id,
+      projectid: project_id,
+      id: notification_id,
+      title: title,
+      message: message,
+      url: url,
+      deleteself: deleteself,
+    });
+
+    done();
+  }
+
+async function sendToSomeProjectUsers(done, project_id, user_id, title, message, url, notification_id, deleteself){
   const content = {
     title,
     message,
@@ -377,12 +538,22 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
       id: user.id,
       token: user.token,
     }));
-  // for testing
+
+  // remove job
+  if(notification_id && deleteself){
+    // console.log('will remove notification with id ', notification_id);
+    agenda.cancel({
+      'data.projectid': project_id,
+      'data.id': notification_id
+    }, (err, numRemoved) => {
+    });
+  }
+
   await sendMobileNotification(done, content, tokens, project_id, project.name);
 }
 
 // send the notificaiton to all users who are members of the project (mobileUsers)
-async function sendToAllProjectUsers(done, project_id, title, message, url){
+async function sendToAllProjectUsers(done, project_id, title, message, url, notification_id, deleteself){
   const content = {
     title,
     message,
@@ -395,6 +566,17 @@ async function sendToAllProjectUsers(done, project_id, title, message, url){
       id: user.id,
       token: user.token,
     }));
+
+  // remove job
+  if(notification_id && deleteself){
+    // console.log('will remove notification with id ', notification_id);
+    agenda.cancel({
+      'data.projectid': project_id,
+      'data.id': notification_id
+    }, (err, numRemoved) => {
+    });
+  }
+
   await sendMobileNotification(done, content, tokens, project_id, project.name)
 }
 
@@ -498,24 +680,50 @@ exports.joinStudy = async(req, res) => {
         const timeBuffer = 5000;
         const user_int_start = new Date(Date.now() + timeBuffer);
         const user_int_end = new Date(Date.now() + sub.duration);
-        agenda.schedule(user_int_start, 'start_personal_manager', {
-          userid: req.body.id,
-          projectid: project._id,
-          id: sub.id,
-          interval: sub.interval,
-          title: sub.title,
-          message: sub.message,
-          url: sub.url,
-        });
-        agenda.schedule(user_int_end, 'end_personal_manager', {
-          userid: req.body.id,
-          projectid: project._id,
-          id: sub.id,
-          interval: sub.interval,
-          title: sub.title,
-          message: sub.message,
-          url: sub.url,
-        });
+
+        // if we need randomization, start random_person_manager
+        if(sub.randomize){
+          agenda.schedule(user_int_start, 'start_random_personal_manager', {
+            userid: req.body.id,
+            projectid: project._id,
+            id: sub.id,
+            interval: sub.interval,
+            interval_max: sub.interval_max,
+            title: sub.title,
+            message: sub.message,
+            url: sub.url,
+          });
+          agenda.schedule(user_int_end, 'end_random_personal_manager', {
+            userid: req.body.id,
+            projectid: project._id,
+            id: sub.id,
+            interval: sub.interval,
+            interval_max: sub.interval_max,
+            title: sub.title,
+            message: sub.message,
+            url: sub.url,
+          });
+
+        } else {
+          agenda.schedule(user_int_start, 'start_personal_manager', {
+            userid: req.body.id,
+            projectid: project._id,
+            id: sub.id,
+            interval: sub.interval,
+            title: sub.title,
+            message: sub.message,
+            url: sub.url,
+          });
+          agenda.schedule(user_int_end, 'end_personal_manager', {
+            userid: req.body.id,
+            projectid: project._id,
+            id: sub.id,
+            interval: sub.interval,
+            title: sub.title,
+            message: sub.message,
+            url: sub.url,
+          });
+        }
 
       }
     })

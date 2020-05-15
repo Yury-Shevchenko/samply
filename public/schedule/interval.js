@@ -5,9 +5,9 @@ const createIntervalNotificationBtn = document.querySelector('#create_interval_n
 // randomize: false
 
 function createIntervalNotification(){
-  let participantId, participantTarget;
+  let participantId = [], participantTarget;
   if(document.getElementById('participantId') && document.getElementById('participantId').value){
-    participantId = parseInt(document.getElementById('participantId').value);
+    participantId = [document.getElementById('participantId').value];
     participantTarget = 'one-user';
   } else {
     participantTarget = 'all-users';
@@ -36,7 +36,7 @@ function createIntervalNotification(){
       target: participantTarget,
       schedule: 'repeat',
       randomize: true,
-      participantId: [participantId],
+      participantId: participantId,
       interval: interval,
       int_start: int_start,
       int_end: int_end,

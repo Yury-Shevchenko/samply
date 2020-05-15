@@ -25,3 +25,5 @@ mixin scheduledNotification(notification, i)
       span= `${h.moment.duration(notification.duration).toISOString()} - ${h.moment.duration(notification.duration).humanize()}` 
     if(notification.name === 'Event-dependent (random)')
       span= `${notification.interval.slice(2)} - ${notification.interval_max.slice(2)}` 
+    if(notification.participantId && notification.participantId.length > 0)
+      span= `${notification.participantId}` 
