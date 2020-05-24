@@ -389,7 +389,6 @@ block content
         .reviews
           each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
             .review
-              pre= h.dump(notification)
               +scheduledNotification(notification, i)     
 
         p  
