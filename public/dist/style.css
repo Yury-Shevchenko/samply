@@ -2247,4 +2247,149 @@ i.yes:after {
 .project_not_chosen {
   opacity: 0.5; }
 
+.notifications_scheduler button {
+  background: #fcf4b6;
+  box-shadow: 0 8px 6px -6px #d9cfcf;
+  cursor: pointer; }
+
+.notifications_scheduler button.removePickerButton {
+  background: #ed6700;
+  color: white; }
+
+.options {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 15fr;
+      grid-template-columns: 1fr 15fr;
+  -ms-flex-align: center;
+      align-items: center; }
+  .options input {
+    display: inline-block; }
+  .options label {
+    cursor: pointer;
+    display: block;
+    position: relative;
+    margin: 0.67rem;
+    padding: 0.67rem;
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px; }
+  .options label.chosen {
+    border: 1px #5ca438 solid;
+    background: #fcfaf3;
+    color: black;
+    font-weight: bold; }
+  .options label.unchosen {
+    color: #e7dfdf; }
+
+.containerTimePicker {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: auto auto 2fr;
+      grid-template-columns: auto auto 2fr;
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  -ms-grid-column-align: start;
+      justify-items: start;
+  -ms-flex-pack: start;
+      justify-content: start; }
+  .containerTimePicker .timePickerHour {
+    width: 100px;
+    border-radius: 10px; }
+  .containerTimePicker .timePickerMinute {
+    width: 100px;
+    border-radius: 10px; }
+  .containerTimePicker .removePickerButton {
+    width: 45px;
+    border-radius: 25px;
+    text-align: center; }
+
+.containerTimeWindow {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: auto auto 30px auto auto 30px auto auto;
+      grid-template-columns: auto auto 30px auto auto 30px auto auto;
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  -ms-grid-column-align: start;
+      justify-items: start;
+  -ms-flex-pack: start;
+      justify-content: start; }
+  .containerTimeWindow .timeWindowInput {
+    width: 100px;
+    border-radius: 10px; }
+  .containerTimeWindow .removePickerButton {
+    width: 45px;
+    border-radius: 25px;
+    text-align: center; }
+  .containerTimeWindow .timeWindowNumberOfPointsInput {
+    width: 80px; }
+  .containerTimeWindow .fromContainer {
+    -ms-grid-column-span: 2;
+    -ms-grid-column: 1;
+        grid-column: 1 / span 2;
+    justify-self: center;
+    font-size: 1.5em; }
+  .containerTimeWindow .toContainer {
+    -ms-grid-column-span: 2;
+    -ms-grid-column: 4;
+        grid-column: 4 / span 2;
+    justify-self: center;
+    font-size: 1.5em; }
+
+.containerDatePicker {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: auto auto auto 2fr;
+      grid-template-columns: auto auto auto 2fr;
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  -ms-grid-column-align: start;
+      justify-items: start;
+  -ms-flex-pack: start;
+      justify-content: start; }
+  .containerDatePicker .datePickerInput {
+    width: 100px;
+    border-radius: 10px; }
+  .containerDatePicker .removePickerButton {
+    width: 45px;
+    border-radius: 25px;
+    text-align: center; }
+
+.weekTags {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(120px, auto))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(120px, auto));
+  grid-column-gap: 10px;
+  padding: 10px;
+  -ms-grid-column-align: start;
+      justify-items: start;
+  -ms-flex-pack: start;
+      justify-content: start; }
+
+.dayTags {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(60px, 1fr))[auto-fill];
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-column-gap: 10px;
+  padding: 10px;
+  -ms-grid-column-align: start;
+      justify-items: start;
+  -ms-flex-pack: start;
+      justify-content: start; }
+
+.timeTable {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (minmax(150px, auto))[5];
+      grid-template-columns: repeat(5, minmax(150px, auto));
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  -ms-grid-column-align: start;
+      justify-items: start;
+  -ms-flex-pack: start;
+      justify-content: start; }
+
 /*# sourceMappingURL=style.css.map*/

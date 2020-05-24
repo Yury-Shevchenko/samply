@@ -124,6 +124,8 @@ router.post('/createintervalnotification', authController.isAdminLoggedIn, catch
 router.post('/createindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createIndividualNotification));
 router.post('/deleteprojectnotifications', authController.isAdminLoggedIn, catchErrors(jobController.deleteProjectNotifications));
 router.get('/removenotification/:id', authController.isAdminLoggedIn, catchErrors(jobController.removeNotificationByID));
+router.post('/createfixedindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createFixedIndividualNotification));
+
 
 // api routes
 router.get('/api/studies', projectController.getPublicStudiesAPI);

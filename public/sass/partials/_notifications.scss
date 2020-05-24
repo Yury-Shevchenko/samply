@@ -1,0 +1,143 @@
+.notifications_scheduler {
+
+  button {
+    background: #fcf4b6;
+    -webkit-box-shadow: 0 8px 6px -6px #d9cfcf;
+  	-moz-box-shadow: 0 8px 6px -6px #d9cfcf;
+  	box-shadow: 0 8px 6px -6px #d9cfcf;
+    cursor: pointer;
+  }
+  button.removePickerButton{
+    background: #ed6700;
+    color: white;
+  }
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 15fr;
+  // grid-template-rows: 1fr 1fr;
+  align-items: center;
+  input { display:inline-block; }
+  label {
+    cursor: pointer;
+    display: block;
+    position:relative;
+    margin: 0.67rem;
+    padding: 0.67rem;
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+    border-radius: 10px;
+  }
+
+  label.chosen {
+    border: 1px #5ca438 solid;
+    background: #fcfaf3;
+    color: black;
+    font-weight: bold;
+  }
+
+  label.unchosen {
+    color: #e7dfdf;
+  }
+
+}
+
+.containerTimePicker{
+  display: grid;
+  grid-template-columns: auto auto 2fr;
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  justify-items: start;
+  justify-content: start;
+  .timePickerHour{
+    width: 100px;
+    border-radius: 10px;
+  }
+  .timePickerMinute{
+    width: 100px;
+    border-radius: 10px;
+  }
+  .removePickerButton{
+    width: 45px;
+    border-radius: 25px;
+    text-align: center;
+  }
+
+}
+
+.containerTimeWindow {
+  display: grid;
+  grid-template-columns: auto auto 30px auto auto 30px auto auto;
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  justify-items: start;
+  justify-content: start;
+  .timeWindowInput{
+    width: 100px;
+    border-radius: 10px;
+  }
+  .removePickerButton{
+    width: 45px;
+    border-radius: 25px;
+    text-align: center;
+  }
+  .timeWindowNumberOfPointsInput{
+    width: 80px;
+  }
+  .fromContainer {
+    grid-column: 1 / span 2;
+    justify-self: center;
+    font-size: 1.5em;
+  }
+  .toContainer {
+    grid-column: 4 / span 2;
+    justify-self: center;
+    font-size: 1.5em;
+  }
+}
+
+.containerDatePicker{
+  display: grid;
+  grid-template-columns: auto auto auto 2fr;
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  justify-items: start;
+  justify-content: start;
+  .datePickerInput{
+    width: 100px;
+    border-radius: 10px;
+  }
+  .removePickerButton{
+    width: 45px;
+    border-radius: 25px;
+    text-align: center;
+  }
+}
+
+.weekTags {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, auto));
+  grid-column-gap: 10px;
+  padding: 10px;
+  justify-items: start;
+  justify-content: start;
+}
+
+.dayTags {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-column-gap: 10px;
+  padding: 10px;
+  justify-items: start;
+  justify-content: start;
+}
+
+.timeTable {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(150px, auto));
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  justify-items: start;
+  justify-content: start;
+}

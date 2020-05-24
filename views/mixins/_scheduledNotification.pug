@@ -1,6 +1,8 @@
 mixin scheduledNotification(notification, i)
   .review__header
     .review__author
+      p= `Created at ${h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+    .review__author
       p= `${notification.name}`
     .review__author
       p= `${notification.title}`
@@ -13,17 +15,37 @@ mixin scheduledNotification(notification, i)
         != h.icon('remove')
   
   .review__body
-    if(notification.name === 'One-time' || notification.name === 'One-time (random)')
-      span= h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm') 
+    if(notification.name === 'One-time')
+      if(notification.date)
+        span= `Scheduled at ${h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
+      if(notification.window_from)
+        span= `From ${h.moment.utc(notification.window_from).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+      if(notification.window_to)
+        span= `To ${h.moment.utc(notification.window_to).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+      if(notification.number)
+        span= `Number of time points: ${notification.number}`
+      
+    
     if(notification.name === 'Repeat')
-      span=  h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm') 
-    if(notification.name === 'Repeat')
-      span=  h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')
-    if(notification.name === 'Repeat' || notification.name === 'Event-dependent')
-      span= notification.interval.slice(2) 
-    if(notification.name === 'Event-dependent' || notification.name === 'Event-dependent (random)')
-      span= `${h.moment.duration(notification.duration).toISOString()} - ${h.moment.duration(notification.duration).humanize()}` 
-    if(notification.name === 'Event-dependent (random)')
-      span= `${notification.interval.slice(2)} - ${notification.interval_max.slice(2)}` 
+      if(notification.int_start)
+        span= `Start: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
+      if(notification.start_event && notification.start_event === 'registration')
+        span= `Start after ${notification.start_after.days} days, ${notification.start_after.hours} hours and ${notification.start_after.minutes} minutes from participant registration`
+      if(notification.int_end)
+        span=  `End: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+      if(notification.stop_event && notification.stop_event === 'registration')
+        span= `Stop after ${notification.stop_after.days} days, ${notification.stop_after.hours} hours and ${notification.stop_after.minutes} minutes from participant registration`
+      if(notification.windowInterval)
+        span= `Interval: from ${notification.windowInterval.from}, to ${notification.windowInterval.to}, number of notifications ${notification.windowInterval.number}`
+      if(notification.interval && notification.interval !== 'not_defined')
+        span= `Interval ${notification.interval.slice(2)}`
+      
+    if(notification.participantId && notification.participantId.length === 0)
+      span= `Applied to all participants at the moment of notification creation` 
     if(notification.participantId && notification.participantId.length > 0)
-      span= `${notification.participantId}` 
+      span= `For participants: ${notification.participantId}` 
+    if(notification.randomize)
+      span= `Randomized` 
+    if(notification.scheduleInFuture)
+      span= `Applied to future participants` 
+  

@@ -1,0 +1,397 @@
+extends layout
+
+include mixins/_scheduledNotification
+
+block content
+  script(src='/javascripts/datepicker/jquery-3.3.1.min.js' nonce=`${noncevalue}`)
+  
+  .inner
+  
+    p
+    h6 #{layout.fill_in_information} 
+    p
+    h6 #{l.title}  
+    input#titleContent(type='text', value = '')
+    h6 #{l.message} 
+    input#messageContent(type='text', value = '')
+    h6 #{layout.web_link} 
+    input#urlContent(type='text', value = 'https://')
+    p !{layout.example_web_link}
+  
+    .notifications_scheduler
+    
+      #choose-participants
+        h2 1. Choose participants
+        
+        .multipleOptions
+          .tag.tag__choice
+            input(type = 'checkbox' id='future' value='future' name='participants_future')
+            label(for='future' class="tagLabel") #{'All future participants'}
+          .tag.tag__choice
+            input(type = 'checkbox' id='current' value='current' name='participants_current')
+            label(for='current' class="tagLabel") #{'Current participants'}
+      
+        .specificParticipants(style="display: none")
+          label(for='tags') #{l.edit_tags}
+          ul.tags
+            //- - var testUsers = [{id: '123'},{id:'dfas'}]
+            //- each user in testUsers
+            .tag.tag__choice
+              input(type = 'checkbox' id='allCurrentParticipants' value='all' checked name='participants')
+              label(for='allCurrentParticipants' class="tagLabel") All
+            each user in project.mobileUsers
+              .tag.tag__choice
+                input(type = 'checkbox' id=user.id value=user.id name='participants_ids')
+                label(for=user.id class="tagLabel") #{user.id}
+      
+      #choose-time
+        h2 2. Choose time
+      
+        .options
+          input(type='radio', name='time', value='specific')#time-spec
+          label(for='time-spec')
+            span Specific time point(s)
+
+          input(type='radio', name='time', value='interval')#time-inter
+          label(for='time-inter')
+            span Time window (the exact time point(s) will be chosen randomly)  
+      
+      #timePicker(style="display:none")  
+        .containerTimePicker
+          label Hour (0 - 23)
+          label Minute (0 - 59)
+          button(type="button" value="Add new time" id="addTimePicker") Add one more time point
+          input(name="time-specific-hour" class='timePickerHour' type='number' min=0 max=23 value='12') 
+          input(name="time-specific-minute" class='timePickerMinute' type='number' min=0 max=59 value='00') 
+          
+      #timeWindow(style="display:none")
+        .containerTimeWindow 
+          label.fromContainer From 
+          
+          label 
+          label.toContainer To
+          
+          label
+          label
+          button(type="button" value="Add new window" id="addTimeWindow") Add one more time window
+          
+          label Hour (0 - 23) 
+          label Minute (0 - 59)
+          label 
+          label Hour (0 - 23)
+          label Minute (0 - 59)
+          label
+          label How many time points should be randomly selected from this time window?
+          label
+          
+          input(name="time-window-start-hour" class='timeWindowInput windowPickerHourStart' type='number' min=0 max=23 value='') 
+          input(name="time-window-start-minute" class='timeWindowInput windowPickerMinuteStart' type='number' min=0 max=59 value='') 
+          label 
+          input(name="time-window-end-hour" class='timeWindowInput windowPickerHourEnd' type='number' min=0 max=23 value='') 
+          input(name="time-window-end-minute" class='timeWindowInput windowPickerMinuteEnd' type='number' min=0 max=59 value='')   
+          label
+          input(name="time-window-number-points" class='timeWindowNumberOfPointsInput' type='number' min=1 value=1) 
+          
+          
+      #choose-date
+        h2 3. Choose date(s)
+      
+        .options
+          input(type='radio', name='date', value='specific')#date-spec
+          label(for='date-spec')
+            span Specific date(s)
+
+          input(type='radio', name='date', value='every')#date-every
+          label(for='date-every')
+            span Every day
+            
+          //- input(type='radio', name='date', value='start-week')#date-start-week
+          //- label(for='date-start-week')
+          //-   span Every 
+          //-   select(name="date-start-week-start-day")
+          //-     - var days = [1,2,3,4,5,6,7]
+          //-     each day in days
+          //-       option(value=day, selected=false)= day 
+          //-   span  day starting on 
+          //-   select(name="date-start-week-from-day")
+          //-     - var weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+          //-     each day in weekdays
+          //-       option(value=day, selected=false)= day 
+            
+          input(type='radio', name='date', value='start-month')#date-start-month
+          label(for='date-start-month')
+            span Every 
+            select(name="date-start-month-start-day")
+              - var monthdays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+              each day in monthdays
+                option(value=day, selected=false)= day 
+            span  day(s) starting on 
+            select(name="date-start-month-from-day")
+              - var startmonthdays = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th','21st','22nd','23rd','24th','25th','26th','27th','28th','29th','30th','31st']
+              each day in startmonthdays
+                option(value=day, selected=false)= day  
+            span  day of month
+            
+          input(type='radio', name='date', value='spec-week')#date-spec-week
+          label(for='date-spec-week')
+            span Specific day of week (choose one or many)
+            - var specific_weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            .weekTags
+              each day in specific_weekdays 
+                .tag.tag__choice
+                  input(type = 'checkbox' id=day value=day name='date-spec-week-day')
+                  label(for=day class="tagLabel") #{day}
+        
+          input(type='radio', name='date', value='spec-month')#date-spec-month
+          label(for='date-spec-month')
+            span Specific day of month (choose one or many)
+            - var specific_monthdays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+            .dayTags
+              each day in specific_monthdays
+                .tag.tag__choice
+                  input(type = 'checkbox' id=day value=day name='date-spec-week-month')
+                  label(for=day class="tagLabel") #{day}
+            
+          //- input(type='radio', name='date', value='week-month')#date-week-month
+          //- label(for='date-week-month')
+          //-   span On the 
+          //-   select(name="date-week-month-day")
+          //-     - var datemonthdays = ['1st','2nd','3rd','4th','5th']
+          //-     each day in datemonthdays
+          //-       option(value=day, selected=false)= day
+          //-   span   
+          //-   select(name="date-week-month-weekday")
+          //-     - var datemonthweekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+          //-     each day in datemonthweekdays
+          //-       option(value=day, selected=false)= day 
+          //-   span  of the month
+      
+      #datePicker(style="display:none")
+        .containerDatePicker
+          label Day (1 - 31)
+          label Month (1 - 12)
+          label Year 
+          button(type="button" value="Add new date" id="addDatePicker") Add one more date
+          input(name="date-specific-day" class='datePickerInput datePickerDay' type='number' min=1 max=31 value=`${(new Date).getDate()}`) 
+          input(name="date-specific-month" class='datePickerInput datePickerMonth' type='number' min=1 max=12 value=`${(new Date).getMonth() + 1}`) 
+          input(name="date-specific-year" class='datePickerInput datePickerYear' type='number' value=`${(new Date).getFullYear()}`) 
+      
+
+      #choose-month  
+        h2 4. Choose month(s)          
+          
+        .options
+          input(type='radio', name='month', value='every')#month-every
+          label(for='month-every')
+            span Any month
+          //- input(type='radio', name='month', value='start')#month-start
+          //- label(for='month-start')
+          //-   span Every 
+          //-   select(name="month-start-every-month")
+          //-     - var starting_month_number = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th']
+          //-     each month in starting_month_number
+          //-       option(value=month, selected=false)= month
+          //-   span  month 
+          //-   span  starting in 
+          //-   select(name="month-start-start-month")
+          //-     - var starting_month_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+          //-     each month in starting_month_months
+          //-       option(value=month, selected=false)= month 
+          input(type='radio', name='month', value='specific')#month-spec
+          label(for='month-spec')
+            span Specific month (choose one or many)
+            - var specific_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            .weekTags
+              each month in specific_months 
+                .tag.tag__choice
+                  input(type = 'checkbox' id=month value=month name='month-spec-month')
+                  label(for=month class="tagLabel") #{month}
+            
+      
+      #choose-start
+        h2 5. Choose when to start 
+        
+        .options
+          input(type='radio', name='start', value='specific')#start-specific
+          label(for='start-specific')
+            span Start at specific timepoint
+            .timeTable
+              span  hour (0-23)
+              span  minute (0-59)
+              span  day (1-31)
+              span  month (1-12)
+              span  year (2020, 2021)
+            
+              input(name="start-specific-hour" type='number' min=0 style="width: 100px;" value=`${(new Date).getHours()}`)
+              input(name="start-specific-minute" type='number' min=0 style="width: 100px;" value=`${(new Date).getMinutes()}`)
+              input(name="start-specific-day" class='datePickerInput' type='number' min=1 max=31 value=`${(new Date).getDate()}` style="width: 100px;") 
+              input(name="start-specific-month" class='datePickerInput' type='number' min=1 max=12 value=`${(new Date).getMonth() + 1}` style="width: 100px;") 
+              input(name="start-specific-year" class='datePickerInput' type='number' min=2020 value=`${(new Date).getFullYear()}` style="width: 100px;") 
+
+          input(type='radio', name='start', value='event')#start-event
+          label(for='start-event')
+            span Start sending notification for each participant after  
+            input(name="start-event-days" type='number' min=0 style="width: 60px;" value=0)
+            span  days 
+            input(name="start-event-hours" type='number' min=0 style="width: 60px;" value=0)
+            span  hours 
+            input(name="start-event-minutes" type='number' min=0 style="width: 60px;" value=0)
+            span  minutes from  
+            select(name="start-event-at")
+              - var start_events = [{value:'now', text: 'now'},{value: 'registration',  text:'the moment of the participant registration' }]
+              each event in start_events
+                option(value=event.value, selected=false)= event.text
+                
+      #choose-stop  
+        h2 6. Choose when to stop    
+        
+        .options
+          input(type='radio', name='stop', value='specific')#stop-specific
+          label(for='stop-specific')
+            span Stop at specific timepoint
+            
+            .timeTable
+              span  hour (0-23)
+              span  minute (0-59)
+              span  day (1-31)
+              span  month (1-12)
+              span  year (2020, 2021)
+            
+              input(name="stop-specific-hour" type='number' min=0 style="width: 100px;" value=`${(new Date).getHours()}`)
+              input(name="stop-specific-minute" type='number' min=0 style="width: 100px;" value=`${(new Date).getMinutes()}`)
+              input(name="stop-specific-day" class='datePickerInput' type='number' min=1 max=31 value=`${(new Date).getDate()}` style="width: 100px;") 
+              input(name="stop-specific-month" class='datePickerInput' type='number' min=1 max=12 value=`${(new Date).getMonth() + 1}` style="width: 100px;") 
+              input(name="stop-specific-year" class='datePickerInput' type='number' min=2020 value=`${(new Date).getFullYear()}` style="width: 100px;") 
+
+      
+          input(type='radio', name='stop', value='event')#stop-event
+          label(for='stop-event')
+            span Stop sending notification for each participant after  
+            input(name="stop-event-days" type='number' min=0 style="width: 60px;" value=0)
+            span  days 
+            input(name="stop-event-hours" type='number' min=0 style="width: 60px;" value=0)
+            span  hours 
+            input(name="stop-event-minutes" type='number' min=0 style="width: 60px;" value=0)
+            span  minutes from  
+            select(name="stop-event-at")
+              - var stop_events = [ {value:'now', text: 'now'}, {value: 'registration',  text:'the moment of the participant registration' } ]
+              each event in stop_events
+                option(value=event.value, selected=false)= event.text 
+                //- { value: 'open', text:'the moment of opening the first notification of this schedule'}   
+      
+      p
+      p          
+      #send-button 
+        button(id="createNotificationBtn" class="button") Schedule notification
+        
+      //- h2 Output 
+      div#output
+      
+      pre= h.dump(jobs)
+      
+      script(type='text/javascript', src='/notifications/create.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/notifications/timePicker.js' nonce=`${noncevalue}`)
+      script(type='text/javascript', src='/notifications/datePicker.js' nonce=`${noncevalue}`)
+      script(src='/javascripts/modules/moment.js' nonce=`${noncevalue}`)
+      
+      script(defer type='text/javascript' nonce=`${noncevalue}`).
+        $(document).ready( function () {
+          const output = document.querySelector('#output');
+          const input = document.querySelectorAll('input');
+          input.addEventListener('change', updateValue);
+          function updateValue({ target }) {
+            const { name,  value } = target;
+            console.log('name', name, value)
+             
+            // change css styles of chosen and not chosen options
+            document.querySelectorAll(`input[name=${target.name}]`).forEach(target => {
+              target.labels.forEach(label => {
+                if(!label.classList.contains('tagLabel')){
+                  label.classList.remove('chosen')
+                  label.classList.add('unchosen')
+                } 
+                })
+              })
+            target.labels.forEach(label => {
+              if(!label.classList.contains('tagLabel')){
+                label.classList.remove('unchosen')
+                label.classList.add('chosen')
+              }
+              });
+            
+            if(name === 'participants_current'){
+              if(target.checked){
+                document.querySelector('.specificParticipants').style.display = 'block';
+              } else {
+                document.querySelector('.specificParticipants').style.display = 'none';
+              }
+            }
+          
+            // show the participants if specific is chosen
+            if(name === 'participants'){
+              if(value === 'all'){
+                if(target.checked){
+                  document.querySelectorAll("input[name='participants_ids']").forEach(e => e.checked = false);
+                }
+              }
+            }
+            
+            // if the specific participants are chosen
+            if(name === 'participants_ids'){
+              document.querySelectorAll("input[id='allCurrentParticipants']").forEach(e => e.checked = false);
+            }
+            
+            // show the calendar or all other options 
+            if(name === 'time'){
+              if(value  === 'specific') {
+                // show time picker 
+                document.querySelector('#timePicker').style.display = 'block';
+                document.querySelector('#timeWindow').style.display = 'none';
+              } else {
+                // show time window picker 
+                document.querySelector('#timePicker').style.display = 'none';
+                document.querySelector('#timeWindow').style.display = 'block';
+              }
+            }
+            
+            // show the calendar or all other options 
+            if(name === 'date'){
+              if(value  === 'specific') {
+                document.querySelector('#datePicker').style.display = 'block';
+                document.querySelector('#choose-month').style.display = 'none';
+                document.querySelector('#choose-start').style.display = 'none';
+                document.querySelector('#choose-stop').style.display = 'none';
+              } else {
+                document.querySelector('#datePicker').style.display = 'none';
+                document.querySelector('#choose-month').style.display = 'block';
+                document.querySelector('#choose-start').style.display = 'block';
+                document.querySelector('#choose-stop').style.display = 'block';
+              }
+            }
+            
+            //- output.innerText = moment(
+            //-   { 
+            //-     year: 2020, 
+            //-     month: 5, 
+            //-     day: 22, 
+            //-     hour: 12, 
+            //-     minute: 12 
+            //-   });
+
+          }
+        })
+        
+  
+    if (project && project.notifications && project.notifications.length > 0)
+      .card
+        h2 #{l.scheduled_notifications} 
+        
+        .reviews
+          each notification, i in project.notifications.sort(function(a,b){return a.date - b.date})
+            .review
+              pre= h.dump(notification)
+              +scheduledNotification(notification, i)     
+
+        p  
+        button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
+        script(type='text/javascript', src='/notifications/scheduled.js' nonce=`${noncevalue}`)

@@ -6,7 +6,7 @@ const Project = mongoose.model('Project');
 const webpush = require('web-push');
 const Agenda = require('agenda');
 const uniqid = require('uniqid');
-
+const moment = require('moment');
 const Cron = require('cron-converter');
 
 const { Expo } = require('expo-server-sdk');
@@ -27,11 +27,12 @@ agenda.on('ready', function() {
       job.attrs.data.url,
       job.attrs.data.id,
       job.attrs.data.deleteself,
+      job.attrs.data.excludeUntil,
     );
   });
 
   agenda.define('regular_notification', (job, done) => {
-    if(job.attrs.data.participantId && job.attrs.data.participantId > 0){
+    if(job.attrs.data.participantId && job.attrs.data.participantId.length > 0){
       sendToSomeProjectUsers(done,
         job.attrs.data.projectid,
         job.attrs.data.participantId,
@@ -124,6 +125,7 @@ agenda.on('ready', function() {
       job.attrs.data.deleteself,
       job.attrs.data.interval,
       job.attrs.data.interval_max,
+      job.attrs.data.number,
     );
     done();
   });
@@ -140,6 +142,7 @@ agenda.on('ready', function() {
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
+      number: job.attrs.data.number,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true
@@ -176,7 +179,7 @@ exports.createScheduleNotification = async(req, res) => {
   }
   // update the information inside the project
   let project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, notifications: 1,
+    name: 1, notifications: 1, mobileUsers: 1,
   });
 
   if(req.body.date && req.body.date.length > 0){
@@ -193,29 +196,61 @@ exports.createScheduleNotification = async(req, res) => {
         url: req.body.url,
         participantId: req.body.participantId,
         name: req.body.name,
+        scheduleInFuture: req.body.scheduleInFuture,
       });
-      // if there is a participant id, create a personalized notification job
-      if (req.body.participantId && req.body.participantId.length) {
-        agenda.schedule(date, 'personal_notification', {
-          userid: req.body.participantId,
-          projectid: req.user.project._id,
-          id: id,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          deleteself: true,
-        });
+
+      // check whether there are current participants to schedule the notifications
+      if(req.body.participantId) {
+        if(req.body.participantId.length > 0) {
+          agenda.schedule(date, 'personal_notification', {
+            userid: req.body.participantId,
+            projectid: req.user.project._id,
+            id: id,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+            deleteself: true,
+          });
+        } else {
+          if(req.body.scheduleInFuture) {
+            // schedule one time notification which will go to all users of project
+            agenda.schedule(date, 'one_time_notification', {
+              projectid: req.user.project._id,
+              id: id,
+              title: req.body.title,
+              message: req.body.message,
+              url: req.body.url,
+              deleteself: true,
+            });
+          } else {
+            // schedule only for all current users of the project
+            const allUsers = project.mobileUsers.map(user => user.id);
+            agenda.schedule(date, 'personal_notification', {
+              userid: allUsers,
+              projectid: req.user.project._id,
+              id: id,
+              title: req.body.title,
+              message: req.body.message,
+              url: req.body.url,
+              deleteself: true,
+            });
+          }
+        }
       } else {
-        // schedule one time notification which will go to all users of project
-        agenda.schedule(date, 'one_time_notification', {
-          projectid: req.user.project._id,
-          id: id,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          deleteself: true,
-        });
+        if(req.body.scheduleInFuture) {
+          // schedule only for future users
+          agenda.schedule(date, 'one_time_notification', {
+            projectid: req.user.project._id,
+            id: id,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+            deleteself: true,
+            excludeUntil: Date.now(),
+          });
+        }
       }
+
     });
     await project.save((saveErr, updatedproject) => {
       if (saveErr) {
@@ -231,51 +266,145 @@ exports.createScheduleNotification = async(req, res) => {
 }
 
 exports.createIntervalNotification = async (req, res) => {
-  if(req.body.int_start === '' || req.body.int_end === '' || req.body.interval === ''){
+
+  console.log('createIntervalNotification - request body', req.body);
+
+  if(req.body.int_start === '' || req.body.int_end === ''){
     res.status(400).send();
     return;
   }
   let project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, notifications: 1,
+    name: 1, notifications: 1, mobileUsers: 1,
   });
   const id = uniqid();
-  const int_start = req.body.int_start;
-  const int_end = req.body.int_end;
-  project.notifications.push({
-    id: id,
-    target: req.body.target,
-    schedule: req.body.schedule,
-    randomize: req.body.randomize,
-    interval: req.body.interval,
-    int_start: int_start,
-    int_end: int_end,
-    title: req.body.title,
-    message: req.body.message,
-    url: req.body.url,
-    participantId: req.body.participantId,
-    name: req.body.name,
-  });
 
-  agenda.schedule(int_start, 'start_manager', {
-    projectid: req.user.project._id,
-    id: id,
-    interval: req.body.interval,
-    title: req.body.title,
-    message: req.body.message,
-    url: req.body.url,
-    participantId: req.body.participantId,
-  });
+  // dependent on the strategy
+  let int_start, int_end;
+  if(req.body.int_start.start === 'specific' || req.body.int_start.startEvent === 'now'){
+    int_start = req.body.int_start.startMoment;
+  }
+  if (req.body.int_end.stop === 'specific' || req.body.int_end.stopEvent === 'now'){
+    int_end = req.body.int_end.stopMoment;
+  }
 
-  agenda.schedule(int_end, 'end_manager', {
-    projectid: req.user.project._id,
-    id: id,
-    interval: req.body.interval,
-    title: req.body.title,
-    message: req.body.message,
-    url: req.body.url,
-    participantId: req.body.participantId,
-  });
+  // check whether there are current participants to schedule the notifications
+  let users;
+  if(req.body.participantId) {
+    if(req.body.participantId.length > 0) {
+      users = project.mobileUsers.filter(user => req.body.participantId.includes(user.id));
+    } else {
+      users = project.mobileUsers;
+    }
+  }
 
+  if(req.body.randomize) {
+
+    const intervalWindows = req.body.intervalWindows;
+    intervalWindows.map(window => {
+      project.notifications.push({
+        id: id,
+        target: req.body.target,
+        schedule: req.body.schedule,
+        randomize: req.body.randomize,
+        int_start: int_start,
+        int_end: int_end,
+        title: req.body.title,
+        message: req.body.message,
+        url: req.body.url,
+        participantId: req.body.participantId,
+        name: req.body.name,
+        windowInterval: window,
+        start_after: req.body.int_start.startAfter,
+        stop_after: req.body.int_end.stopAfter,
+        start_event: req.body.int_start.startEvent,
+        stop_event: req.body.int_end.stopEvent,
+        scheduleInFuture: req.body.scheduleInFuture,
+      });
+    })
+
+      if (users){
+        users.map(user => {
+            intervalWindows.map(window => {
+
+              console.log('window', window, int_start, int_end);
+
+              if(req.body.int_start.startEvent === 'registration'){
+                const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
+                int_start = new Date(Date.parse(user.created) + start_event_ms);
+              }
+              if (req.body.int_end.stopEvent === 'registration'){
+                const stop_event_ms = moment.duration({days: req.body.int_end.stopAfter.days, hours: req.body.int_end.stopAfter.hours, minutes: req.body.int_end.stopAfter.minutes}).asMilliseconds();
+                int_end = new Date(Date.parse(user.created) + stop_event_ms);
+              }
+
+              agenda.schedule(int_start, 'start_random_personal_manager', {
+                userid: user.id,
+                projectid: req.user.project._id,
+                id: id,
+                interval: window.from,
+                interval_max: window.to,
+                title: req.body.title,
+                message: req.body.message,
+                url: req.body.url,
+                number: window.number,
+              });
+              agenda.schedule(int_end, 'end_random_personal_manager', {
+                userid: user.id,
+                projectid: req.user.project._id,
+                id: id,
+                interval: window.from,
+                interval_max: window.to,
+                title: req.body.title,
+                message: req.body.message,
+                url: req.body.url,
+                number: window.number,
+              });
+            })
+        })
+      }
+  } else {
+
+    const intervals = req.body.interval;
+    intervals.map(interval => {
+      console.log('title', int_start, int_end, interval);
+      project.notifications.push({
+        id: id,
+        target: req.body.target,
+        schedule: req.body.schedule,
+        randomize: req.body.randomize,
+        interval: interval,
+        int_start: int_start,
+        int_end: int_end,
+        title: req.body.title,
+        message: req.body.message,
+        url: req.body.url,
+        participantId: req.body.participantId,
+        name: req.body.name,
+        scheduleInFuture: req.body.scheduleInFuture,
+      });
+
+      if (users){
+        agenda.schedule(int_start, 'start_manager', {
+          projectid: req.user.project._id,
+          id: id,
+          interval: interval,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+          participantId: req.body.participantId,
+        });
+        agenda.schedule(int_end, 'end_manager', {
+          projectid: req.user.project._id,
+          id: id,
+          interval: interval,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+          participantId: req.body.participantId,
+        });
+      }
+    })
+  }
   await project.save((saveErr, updatedproject) => {
     if (saveErr) {
       res.status(400);
@@ -288,127 +417,94 @@ exports.createIntervalNotification = async (req, res) => {
 
 
 exports.createIndividualNotification = async (req, res) => {
-  if(req.body.interval === '' || req.body.duration === ''){
+  console.log('req.body', req.body);
+
+  if(req.body.interval.length === 0){
     res.status(400).send();
     return;
   }
-  const int1 = req.body.interval;
-  const interval1_cron = String(`${int1.sec} ${int1.min} ${int1.hour} ${int1.day} ${int1.month} ${int1.week}`);
-  let int2, interval2_cron;
-  if(req.body.interval_2){
-    int2 = req.body.interval_2;
-    interval2_cron = String(`${int2.sec} ${int2.min} ${int2.hour} ${int2.day} ${int2.month} ${int2.week}`);
-  }
+
   let project = await Project.findOne({_id: req.user.project._id},{
     name: 1, notifications: 1, mobileUsers: 1,
   });
   const id = uniqid();
-  const duration = req.body.duration * 1000;
-  project.notifications.push({
-    id: id,
-    target: req.body.target,
-    schedule: req.body.schedule,
-    randomize: req.body.randomize,
-    interval: interval1_cron,
-    interval_max: interval2_cron,
-    duration: duration,
-    title: req.body.title,
-    message: req.body.message,
-    url: req.body.url,
-    name: req.body.name,
-    participantId: req.body.participantId,
-  });
 
-  // get all or some users depending on the request
-  // req.body.participantId should be an array
-  let users;
-  if(req.body.participantId && req.body.participantId.length) {
-    users = project.mobileUsers.filter(user => req.body.participantId.includes(user.id));
-  } else {
-    users = project.mobileUsers;
+  // dependent on the strategy
+  let int_start, int_end;
+  if(req.body.int_start.start === 'specific' || req.body.int_start.startEvent === 'now'){
+    int_start = req.body.int_start.startMoment;
+  }
+  if (req.body.int_end.stop === 'specific' || req.body.int_end.stopEvent === 'now'){
+    int_end = req.body.int_end.stopMoment;
   }
 
-  if (users){
+  const intervals = req.body.interval;
+  intervals.map(interval => {
+    project.notifications.push({
+      id: id,
+      target: req.body.target,
+      schedule: req.body.schedule,
+      randomize: req.body.randomize,
+      int_start: int_start,
+      int_end: int_end,
+      interval: interval,
+      title: req.body.title,
+      message: req.body.message,
+      url: req.body.url,
+      name: req.body.name,
+      participantId: req.body.participantId,
+      start_after: req.body.int_start.startAfter,
+      stop_after: req.body.int_end.stopAfter,
+      start_event: req.body.int_start.startEvent,
+      stop_event: req.body.int_end.stopEvent,
+      scheduleInFuture: req.body.scheduleInFuture,
+    });
+  })
+
+  // check whether there are current participants to schedule the notifications
+  let users;
+  if(req.body.participantId) {
+    if(req.body.participantId.length > 0) {
+      users = project.mobileUsers.filter(user => req.body.participantId.includes(user.id));
+    } else {
+      users = project.mobileUsers;
+    }
+  }
+
+  if (users) {
     users.map(user => {
+        intervals.map(interval => {
+          console.log('interval', interval, int_start, int_end);
 
+          if(req.body.int_start.startEvent === 'registration'){
+            const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
+            int_start = new Date(Date.parse(user.created) + start_event_ms);
+          }
 
-        // this time buffer can also be supplied by the researcher
-        // as a field "when the notifications schedule should start"
-        const timeBuffer = 30000; // in milliseconds
-        const user_int_start = new Date(Date.parse(user.created) + timeBuffer);
+          if(req.body.int_end.stopEvent === 'registration'){
+            const stop_event_ms = moment.duration({days: req.body.int_end.stopAfter.days, hours: req.body.int_end.stopAfter.hours, minutes: req.body.int_end.stopAfter.minutes}).asMilliseconds();
+            int_end = new Date(Date.parse(user.created) + stop_event_ms);
+          }
 
-        // TODO: for registered participants start at the current moment
-        const user_int_end = new Date(Date.parse(user.created) + duration);
-
-        // let interval;
-        // if(req.body.randomize && req.body.interval_2){
-        //   // get a random value between int1 and int2
-        //   const gR = (min, max) => {
-        //     if(min === '*' || max === '*'){
-        //       return '*'
-        //     } else {
-        //       return Math.round(Math.random() * (parseFloat(max) - parseFloat(min)) + parseFloat(min));
-        //     }
-        //   };
-        //   const rI = {
-        //     sec: gR(int1.sec, int2.sec),
-        //     min: gR(int1.min, int2.min),
-        //     hour: gR(int1.hour, int2.hour),
-        //     day: gR(int1.day, int2.day),
-        //     month: gR(int1.month, int2.month),
-        //     week: gR(int1.week, int2.week)
-        //   };
-        //   interval = String(`${rI.sec} ${rI.min} ${rI.hour} ${rI.day} ${rI.month} ${rI.week}`)
-        // } else {
-        //   interval = interval1_cron;
-        // }
-
-        if(req.body.randomize){
-
-          agenda.schedule(user_int_start, 'start_random_personal_manager', {
+          agenda.schedule(int_start, 'start_personal_manager', {
             userid: user.id,
             projectid: req.user.project._id,
             id: id,
-            interval: interval1_cron,
-            interval_max: interval2_cron,
+            interval: interval,
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
           });
-          agenda.schedule(user_int_end, 'end_random_personal_manager', {
+          agenda.schedule(int_end, 'end_personal_manager', {
             userid: user.id,
             projectid: req.user.project._id,
             id: id,
-            interval: interval1_cron,
-            interval_max: interval2_cron,
+            interval: interval,
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
           });
-
-        } else {
-
-          agenda.schedule(user_int_start, 'start_personal_manager', {
-            userid: user.id,
-            projectid: req.user.project._id,
-            id: id,
-            interval: interval1_cron,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-          });
-          agenda.schedule(user_int_end, 'end_personal_manager', {
-            userid: user.id,
-            projectid: req.user.project._id,
-            id: id,
-            interval: interval1_cron,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-          });
-
-        }
-
+        })
     })
   }
   //save the project
@@ -422,6 +518,98 @@ exports.createIndividualNotification = async (req, res) => {
   });
 };
 
+exports.createFixedIndividualNotification = async(req, res) => {
+
+  console.log('createFixedIndividualNotification - request body', req.body);
+
+  if(req.body.intervals.length === 0){
+    res.status(400).send();
+    return;
+  }
+
+  let project = await Project.findOne({_id: req.user.project._id},{
+    name: 1, notifications: 1, mobileUsers: 1,
+  });
+  const id = uniqid();
+
+  const intervals = req.body.intervals;
+  intervals.map(interval => {
+    console.log('interval', interval);
+    project.notifications.push({
+      id: id,
+      target: req.body.target,
+      schedule: req.body.schedule,
+      randomize: req.body.randomize,
+      title: req.body.title,
+      message: req.body.message,
+      url: req.body.url,
+      name: req.body.name,
+      participantId: req.body.participantId,
+      window_from: interval.from,
+      window_to: interval.to,
+      number: parseInt(interval.number),
+      scheduleInFuture: req.body.scheduleInFuture,
+    });
+  })
+
+  // check whether there are current participants to schedule the notifications
+  let users;
+  if(req.body.participantId) {
+    if(req.body.participantId.length > 0) {
+      users = project.mobileUsers.filter(user => req.body.participantId.includes(user.id));
+    } else {
+      users = project.mobileUsers;
+    }
+  }
+
+  if (users) {
+    users.map(user => {
+        intervals.map(interval => {
+
+          // pick up the random number between two dates
+          const { from, to, number } = interval;
+
+          for(let i = 0; i < number; i++){
+            console.log('i', i);
+            if(from > to){
+              console.log('The ending time is earlier than the beginning time');
+              return;
+            }
+            const getRandomArbitrary = (min, max) => {
+              return Math.round(Math.random() * (max - min) + min);
+            }
+            const randomEvent = getRandomArbitrary(Date.parse(from), Date.parse(to));
+
+            const date = new Date(randomEvent).toISOString();
+            console.log('timeRandomEvent', date);
+
+            // schedule the notification
+            agenda.schedule(date, 'personal_notification', {
+              userid: user.id,
+              projectid: req.user.project._id,
+              id: id,
+              title: req.body.title,
+              message: req.body.message,
+              url: req.body.url,
+              deleteself: true,
+            });
+          }
+
+        })
+    })
+  }
+
+  //save the project
+  await project.save((saveErr, updatedproject) => {
+    if (saveErr) {
+      res.status(400);
+    } else {
+      res.status(201);
+    }
+    res.redirect(`back`);
+  });
+
+}
 
 // method for researchers to remove all project notifications
 exports.deleteProjectNotifications = async(req, res) => {
@@ -472,7 +660,7 @@ exports.removeNotificationByID = async(req, res) => {
 }
 
 async function pickUpRandomTimeFromInterval(done, project_id, user_id, title,
-  message, url, notification_id, deleteself, interval, interval_max) {
+  message, url, notification_id, deleteself, interval, interval_max, number) {
     console.log('I am inside of pickUpRandomTimeFromInterval function');
 
     // get the next execution time
@@ -501,24 +689,21 @@ async function pickUpRandomTimeFromInterval(done, project_id, user_id, title,
       return Math.round(Math.random() * (max - min) + min);
     }
 
-    const randomEvent = getRandomArbitrary(int_start, int_end);
-    console.log('randomEvent', randomEvent);
-    const timeRandomEvent = new Date(randomEvent).toISOString();
-    console.log('timeRandomEvent', timeRandomEvent);
-
-    // choose the time from interval
-    const date = timeRandomEvent;
-
-    // schedule personal_notification
-    agenda.schedule(date, 'personal_notification', {
-      userid: user_id,
-      projectid: project_id,
-      id: notification_id,
-      title: title,
-      message: message,
-      url: url,
-      deleteself: deleteself,
-    });
+    for(let i = 0; i < number; i++){
+      const randomEvent = getRandomArbitrary(int_start, int_end);
+      const date = new Date(randomEvent).toISOString();
+      console.log('timeRandomEvent', date);
+      // schedule personal_notification
+      agenda.schedule(date, 'personal_notification', {
+        userid: user_id,
+        projectid: project_id,
+        id: notification_id,
+        title: title,
+        message: message,
+        url: url,
+        deleteself: deleteself,
+      });
+    }
 
     done();
   }
@@ -553,7 +738,7 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
 }
 
 // send the notificaiton to all users who are members of the project (mobileUsers)
-async function sendToAllProjectUsers(done, project_id, title, message, url, notification_id, deleteself){
+async function sendToAllProjectUsers(done, project_id, title, message, url, notification_id, deleteself, excludeUntil){
   const content = {
     title,
     message,
@@ -561,7 +746,14 @@ async function sendToAllProjectUsers(done, project_id, title, message, url, noti
   }
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1, name: 1 });
-  const tokens = project.mobileUsers
+  let users = project.mobileUsers;
+  console.log('users before filtering', users);
+  if(excludeUntil) {
+    users = users.filter(user.created > excludeUntil);
+  };
+  console.log('filter excludeUntil', excludeUntil);
+  console.log('users after filtering', users);
+  const tokens = users
     .map(user => ({
       id: user.id,
       token: user.token,
@@ -676,10 +868,19 @@ exports.joinStudy = async(req, res) => {
   await project.save();
   if(project && project.notifications && project.notifications.length > 0){
     project.notifications.map(sub => {
-      if(sub.target && sub.target === 'user-specific'){
-        const timeBuffer = 5000;
-        const user_int_start = new Date(Date.now() + timeBuffer);
-        const user_int_end = new Date(Date.now() + sub.duration);
+      if( sub.scheduleInFuture && sub.schedule === 'repeat' ){
+
+        let user_int_start = sub.int_start;
+        let user_int_end = sub.int_end;
+        if(sub.start_event === 'registration'){
+          const start_event_ms = moment.duration({days: sub.start_after.days, hours: sub.start_after.hours, minutes: sub.start_after.minutes}).asMilliseconds();
+          user_int_start = new Date(Date.now() + start_event_ms);
+        }
+        if(sub.stop_event === 'registration'){
+          const stop_event_ms = moment.duration({days: sub.stop_after.days, hours: sub.stop_after.hours, minutes: sub.stop_after.minutes}).asMilliseconds();
+          user_int_end = new Date(Date.now() + stop_event_ms);
+        }
+        console.log('user start end', sub.interval, user_int_start, user_int_end);
 
         // if we need randomization, start random_person_manager
         if(sub.randomize){
@@ -692,6 +893,7 @@ exports.joinStudy = async(req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            number: sub.windowInterval && sub.windowInterval.number,
           });
           agenda.schedule(user_int_end, 'end_random_personal_manager', {
             userid: req.body.id,
@@ -702,8 +904,8 @@ exports.joinStudy = async(req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            number: sub.windowInterval && sub.windowInterval.number,
           });
-
         } else {
           agenda.schedule(user_int_start, 'start_personal_manager', {
             userid: req.body.id,
@@ -724,7 +926,34 @@ exports.joinStudy = async(req, res) => {
             url: sub.url,
           });
         }
+      } else if( sub.scheduleInFuture && sub.schedule === 'one-time' ){
 
+          // pick up the random number between two dates
+          for(let i = 0; i < sub.number; i++){
+
+            if(sub.window_from > sub.window_to){
+              console.log('The ending time is earlier than the beginning time');
+              return;
+            }
+            const getRandomArbitrary = (min, max) => {
+              return Math.round(Math.random() * (max - min) + min);
+            }
+            const randomEvent = getRandomArbitrary(Date.parse(sub.window_from), Date.parse(sub.window_to));
+
+            const date = new Date(randomEvent).toISOString();
+            console.log('timeRandomEvent', date);
+
+            // schedule the notification
+            agenda.schedule(date, 'personal_notification', {
+              userid: req.body.id,
+              projectid: project._id,
+              id: sub.id,
+              title: sub.title,
+              message: sub.message,
+              url: sub.url,
+              deleteself: true,
+            });
+          }
       }
     })
   }
@@ -748,13 +977,13 @@ exports.joinStudy = async(req, res) => {
 // participant leaves the study, the jobs with participant's id are deleted
 exports.leaveStudy = async(req, res) => {
   const id = req.params.id;
-  agenda.cancel({
-    'data.projectid': id,
-    'data.userid': req.body.id,
-  }, (err, numRemoved) => {});
   const project = await Project.findOne({_id: id},{
     mobileUsers: 1,
   });
+  agenda.cancel({
+    'data.projectid': project._id,
+    'data.userid': req.body.id,
+  }, (err, numRemoved) => {});
   if(!project.mobileUsers){
     project.mobileUsers = [];
   }
@@ -781,12 +1010,10 @@ exports.removeUser = async (req, res) => {
     throw Error('You must be a creator of a project in order to do it!');
   }
   const userId = req.params.id;
-  // remove all scheduled notifications
   agenda.cancel({
     'data.projectid': project._id,
     'data.userid': userId,
   }, (err, numRemoved) => {});
-
   // update the project
   if(!project.mobileUsers){
     project.mobileUsers = [];
