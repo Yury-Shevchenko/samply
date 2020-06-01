@@ -6,7 +6,7 @@ const urlContent = document.querySelector('#urlContent');
 
 function createNotification(){
 
-  console.log('creating notifications');
+  // console.log('creating notifications');
 
   // 1. get all information from the input fiels
   const input = document.querySelectorAll('input');
@@ -17,7 +17,7 @@ function createNotification(){
       obj[item.name] = item.value
       return obj
     }, {});
-  console.log('selected', selected);
+  // console.log('selected', selected);
 
   // participants
   let participants, scheduleInFuture;
@@ -96,8 +96,18 @@ function createNotification(){
       }
     })
   } else if(date === 'every') {
-    dayMonthCron = '*';
     dayWeekCron = '*';
+    const everyday = document.querySelector("select[name='date-every-day']").value;
+
+    if(everyday == 1){
+      dayMonthCron = '*';
+    } else {
+      dayMonthCron = `*/${everyday}`; // by default * will be 1 (but has to be replaced later dependent on the starting point)
+    }
+
+    // console.log('everyday', everyday);
+    // console.log('dayMonthCron', dayMonthCron);
+
   } else if(date === 'start-month') {
     dayWeekCron = '*';
     const every = document.querySelector("select[name='date-start-month-start-day']").value;
@@ -163,6 +173,15 @@ function createNotification(){
     }
     const stCon = moment({ year: st.year, month: st.month, day: st.day, hour: st.hour, minute: st.minute });
     startMoment = stCon.toISOString();
+    // change the interval if was not specified
+    if(dayMonthCron && dayMonthCron.includes('*/')) {
+      dayMonthCron = dayMonthCron.replace('*', st.day);
+    }
+    // console.log('startMoment', dayMonthCron, st.day, startMoment);
+    if(!startMoment){
+      alert('The date to start notifications is misspecified.');
+      return;
+    }
   } else if(start === 'event') {
     startAfter = {
       days: selected['start-event-days'],
@@ -173,6 +192,10 @@ function createNotification(){
     if(startEvent === 'now'){
       const whenToStart = moment().add({days: startAfter.days, hours: startAfter.hours, minutes: startAfter.minutes})
       startMoment = whenToStart.toISOString();
+      if(dayMonthCron && dayMonthCron.includes('*/')) {
+        dayMonthCron = dayMonthCron.replace('*', whenToStart.date());
+      }
+      // console.log('startMoment', dayMonthCron, whenToStart.date());
     }
   } else {
     if(date !== 'specific'){
@@ -198,6 +221,11 @@ function createNotification(){
     }
     const stopCon = moment({ year: stopMom.year, month: stopMom.month, day: stopMom.day, hour: stopMom.hour, minute: stopMom.minute });
     stopMoment = stopCon.toISOString();
+    // console.log('stopMoment', stopMoment);
+    if(!stopMoment){
+      alert('The date to stop notifications is misspecified.');
+      return;
+    }
   } else if(stop === 'event') {
     stopAfter = {
       days: selected['stop-event-days'],
@@ -278,15 +306,15 @@ function createNotification(){
   if(time === 'specific') {
     // if specific date is chosen
     if (date === 'specific') {
-      console.log('specific fixed notifications', participants, constructedDates, scheduleInFuture);
+      // console.log('specific fixed notifications', participants, constructedDates, scheduleInFuture);
       createFixedScheduledNotification(participants, constructedDates, scheduleInFuture);
     } else {
       // create fixed interval schedule
       if (startingStrategy.startEvent === 'registration' || stopingStrategy.stopEvent === 'registration'){
-        console.log('participant-dependent specific interval notifications', participants, constructedCronSchedules, startingStrategy, stopingStrategy, scheduleInFuture);
+        // console.log('participant-dependent specific interval notifications', participants, constructedCronSchedules, startingStrategy, stopingStrategy, scheduleInFuture);
         createIndividualSpecificNotification(participants, constructedCronSchedules, startingStrategy, stopingStrategy, scheduleInFuture);
       } else {
-        console.log('specific interval notifications', participants, constructedCronSchedules, startingStrategy, stopingStrategy, scheduleInFuture);
+        // console.log('specific interval notifications', participants, constructedCronSchedules, startingStrategy, stopingStrategy, scheduleInFuture);
         createFixedIntervalNotification(participants, constructedCronSchedules, startingStrategy, stopingStrategy, scheduleInFuture);
       }
     }
@@ -295,11 +323,11 @@ function createNotification(){
   // if we need to randomize the time (interval is given)
   if(time === 'interval') {
     if(date === 'specific') {
-      console.log('randomized fixed notifications', participants, constructedIntervals, scheduleInFuture);
+      // console.log('randomized fixed notifications', participants, constructedIntervals, scheduleInFuture);
       createRandomFixedNotification(participants, constructedIntervals, scheduleInFuture);
     } else {
       // create randomized interval notifications
-      console.log('randomized interval notifications', participants, constructedCronIntervals, startingStrategy, stopingStrategy, scheduleInFuture);
+      // console.log('randomized interval notifications', participants, constructedCronIntervals, startingStrategy, stopingStrategy, scheduleInFuture);
       createRandomIntervalNotification(participants, constructedCronIntervals, startingStrategy, stopingStrategy, scheduleInFuture);
     }
   }

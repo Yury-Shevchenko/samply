@@ -25,7 +25,6 @@ mixin scheduledNotification(notification, i)
       if(notification.number)
         span= `Number of time points: ${notification.number}`
       
-    
     if(notification.name === 'Repeat')
       if(notification.int_start)
         span= `Start: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
@@ -35,17 +34,17 @@ mixin scheduledNotification(notification, i)
         span=  `End: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
       if(notification.stop_event && notification.stop_event === 'registration')
         span= `Stop after ${notification.stop_after.days} days, ${notification.stop_after.hours} hours and ${notification.stop_after.minutes} minutes from participant registration`
-      if(notification.windowInterval)
-        span= `Interval: from ${notification.windowInterval.from}, to ${notification.windowInterval.to}, number of notifications ${notification.windowInterval.number}`
-      if(notification.interval && notification.interval !== 'not_defined')
-        span= `Interval ${notification.interval.slice(2)}`
+      if(notification.readable && notification.readable.from && notification.readable.to)
+        span= `Repeat in the time window from ${notification.readable.from}, to ${notification.readable.to}, number of notifications ${notification.windowInterval.number}`
+      if(notification.readable && notification.readable.interval)
+        span= `Repeat ${notification.readable.interval}`
       
     if(notification.participantId && notification.participantId.length === 0)
-      span= `Applied to all participants at the moment of notification creation` 
+      span= `Applies to all participants at the moment of notification creation` 
     if(notification.participantId && notification.participantId.length > 0)
       span= `For participants: ${notification.participantId}` 
     if(notification.randomize)
       span= `Randomized` 
     if(notification.scheduleInFuture)
-      span= `Applied to future participants` 
+      span= `Applies to future participants` 
   

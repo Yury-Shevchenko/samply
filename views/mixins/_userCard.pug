@@ -6,9 +6,9 @@ mixin userCard(person = {}, i)
       td= person.id
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       td
-        a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) History
+        a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) #{l.table_open}
       td
-        a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.id}`) Schedule
+        a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.id}`) #{l.table_schedule}
       if user.level > 10
         td
           a(href=`/removeuser/${person.id}`) 

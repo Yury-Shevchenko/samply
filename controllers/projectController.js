@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Result = mongoose.model('Result');
 const Project = mongoose.model('Project');
-const Job = mongoose.model('Job');
 const uniqid = require('uniqid');
 const mail = require('../handlers/mail');
 
@@ -230,18 +229,6 @@ exports.changeStatusProject = async (req, res) => {
   }
 };
 
-exports.manageNotifications = async(req, res) => {
-
-  // const jobs = await Job.find({ name:'start_random_personal_manager' }, { name: 1 });
-  // console.log('jobs', jobs);
-
-  const project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, notifications: 1, mobileUsers: 1,
-  });
-
-  res.render('notify', { project });
-};
-
 exports.inviteParticipants = async (req, res) => {
   let emails = [];
   if(req.body.invitationsList){
@@ -323,22 +310,5 @@ exports.getMobileUsers = async (req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
     mobileUsers: 1,
   });
-  const users = project.mobileUsers;
-  // const page = parseInt(req.params.page) || 1;
-  // const limit = 50;
-  // const skip = (page * limit) - limit;
-  // const usersPromise = User
-  //   .getUsersOfProject(req.user.project._id)
-  //   .sort( {created: 'asc'} )
-  //   .skip(skip)
-  //   .limit(limit);
-  // const countPromise = User.countDocuments({$or: [{participantInProject: req.user.project._id}, {participant_projects: req.user.project._id}]});
-  // const [users, count, project] = await Promise.all([ usersPromise, countPromise, activeProjectPromise ]);
-  // const pages = Math.ceil(count / limit);
-  // if(!users.length && skip){
-  //   req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
-  //   res.redirect(`/users/page/${pages}`);
-  //   return;
-  // }
-  res.render('data', { users, project });
+  res.render('data', { project });
 };

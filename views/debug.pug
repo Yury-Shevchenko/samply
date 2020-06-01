@@ -1,0 +1,58 @@
+extends layout
+  
+block content
+
+  .inner
+    .card
+      pre= h.dump(adminJobs)
+      
+      #choose-time
+        h2 1. Choose CRON scheduler
+        #timePicker  
+            input(name="second" id='second' value='01') 
+            input(name="minute" id='minute' value='00') 
+            input(name="hour" id='hour' value='00') 
+            input(name="day" id='day' value=`1`) 
+            input(name="month" id='month' value=`*`) 
+            input(name="weekday" id='weekday' value=`*`) 
+        
+      p          
+      #send-button 
+        button(id="scheduleJob" class="button") Schedule job
+        
+        script(defer type='text/javascript' nonce=`${noncevalue}`).
+          const scheduleBtn = document.querySelector('#scheduleJob');
+          scheduleBtn.addEventListener('click', createAdminJob);
+          function createAdminJob(){
+            
+            const sec = document.querySelector("#second").value;
+            const minute = document.querySelector("#minute").value;
+            const hour = document.querySelector("#hour").value;
+            const day = document.querySelector("#day").value;
+            const month = document.querySelector("#month").value;
+            const weekday = document.querySelector("#weekday").value;
+            
+            const interval = `${sec} ${minute} ${hour} ${day} ${month} ${weekday}`;
+            console.log('interval', interval);
+            
+            fetch('/scheduleadminjob', {
+              method:'POST',
+              headers: {
+                'Content-Type':'application/json',
+                'Accept':'application/json',
+              },
+              body: JSON.stringify({
+                interval: interval,
+              })
+            })
+              .then(res => {
+                if(res.url && res.ok){
+                  window.location = res.url;
+                }
+                console.log('success');
+              })
+              .catch(err => {
+                console.log(err);
+              })
+            
+          }

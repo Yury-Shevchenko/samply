@@ -16,32 +16,15 @@ block content
               thead
                 td №
                 td #{l.table_samplyId}
-                //- td #{l.table_code}
-                //- if (project && project.showCompletionCode)
-                //-   td #{l.table_confirmation_code}
-                td Created
-                td History
-                td Schedule
-                //- td #{l.table_role}
-                //- td #{l.table_name}
-                //- td <i class="fas fa-language"></i>
-                //- td Approval
+                td #{l.table_date}
+                td #{l.table_history}
+                td #{l.table_new_notification}
                 if user.level > 10
                   td <i class="fas fa-ban"></i>
               
-              if(users)  
-                each person, i in users
+              if(project.mobileUsers)  
+                each person, i in project.mobileUsers
                   +userCard(person, i)
-
-          //- .pagination
-          //-   .pagination__prev
-          //-     if page > 1
-          //-       a(href=`/users/page/${page - 1}`) #{l.pagination_prev}
-          //-   .pagination__text
-          //-     p= `${l.pagination_page_1} ${page} ${l.pagination_page_2} ${pages} - ${count} ${l.pagination_page_3}`
-          //-   .pagination__next
-          //-     if page < pages
-          //-       a(href=`/users/page/${parseFloat(page) + 1}`) #{l.pagination_next}
 
       else
         p !{l.message_create_project}

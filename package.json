@@ -27,6 +27,7 @@
     "cookie-parser": "1.4.3",
     "cors": "^2.8.4",
     "cron-converter": "^1.0.0",
+    "cronstrue": "^1.94.0",
     "dat.gui": "^0.7.1",
     "dompurify": "0.8.5",
     "dotenv": "4.0.0",

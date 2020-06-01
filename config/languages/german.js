@@ -376,7 +376,7 @@ module.exports = {
       'table_samplyId': 'ID',
       'table_code': 'Code',
       'table_name': 'Name',
-      'table_date': 'Datum',
+      'table_date': 'Datum des Beginns der Studie',
       'table_language': 'Sprache',
       'table_tests': 'Aufgaben',
       'table_details': 'Details',
@@ -418,6 +418,10 @@ module.exports = {
       'table_delete_requests': 'Anfragen',
       'download_all_meta_data': 'Alle Metadaten herunterladen',
       'table_confirmation_code': 'Bestätigungscode',
+      'table_history': 'Übersicht',
+      'table_new_notification': 'Neue Benachrichtigung',
+      'table_open' : 'Öffnen',
+      'table_schedule' : 'Planen',
     },
 
     'researcher' : {

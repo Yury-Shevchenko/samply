@@ -2,9 +2,6 @@ module.exports =
 {
 
     'layout' : {
-
-
-
       'not_supported': `Sorry, notifications on your device are not possible if you want to participate in a study. This may be because you are using an Apple device. In this case please use Android or another device.`,
       'title': 'Welcome to Samply',
       'intro': `Scientists discover the nature of the human being  - You can help with this task!
@@ -378,7 +375,7 @@ module.exports =
         'table_samplyId': 'ID',
         'table_code': 'Code',
         'table_name': 'Name',
-        'table_date': 'Date',
+        'table_date': 'Date of entry into the study',
         'table_aggregated': 'Summary',
         'table_language': 'Language',
         'table_tests': 'Tasks',
@@ -420,6 +417,10 @@ module.exports =
         'table_delete_requests': 'Requests',
         'download_all_meta_data': 'Download all metadata',
         'table_confirmation_code': 'Confirmation code',
+        'table_history': 'Log',
+        'table_new_notification': 'New notification',
+        'table_open' : 'Open',
+        'table_schedule' : 'Schedule',
       },
 
       'researcher' : {

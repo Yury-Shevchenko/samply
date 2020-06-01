@@ -8,6 +8,7 @@ const Agenda = require('agenda');
 const uniqid = require('uniqid');
 const moment = require('moment');
 const Cron = require('cron-converter');
+const cronstrue = require('cronstrue');
 
 const { Expo } = require('expo-server-sdk');
 let expo = new Expo();
@@ -160,6 +161,12 @@ agenda.on('ready', function() {
     done();
   });
 
+  // define the admin job to update notifications in the beginning of each month
+  agenda.define('admin_job', (job, done) => {
+    rescheduleRepeatJobs(done);
+    done();
+  })
+
   agenda.start();
 
   async function graceful() {
@@ -267,7 +274,7 @@ exports.createScheduleNotification = async(req, res) => {
 
 exports.createIntervalNotification = async (req, res) => {
 
-  console.log('createIntervalNotification - request body', req.body);
+  // console.log('createIntervalNotification - request body', req.body);
 
   if(req.body.int_start === '' || req.body.int_end === ''){
     res.status(400).send();
@@ -319,14 +326,16 @@ exports.createIntervalNotification = async (req, res) => {
         start_event: req.body.int_start.startEvent,
         stop_event: req.body.int_end.stopEvent,
         scheduleInFuture: req.body.scheduleInFuture,
+        readable: {
+          from: window.from && cronstrue.toString(window.from),
+          to: window.to && cronstrue.toString(window.to),
+        }
       });
     })
 
       if (users){
         users.map(user => {
             intervalWindows.map(window => {
-
-              console.log('window', window, int_start, int_end);
 
               if(req.body.int_start.startEvent === 'registration'){
                 const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
@@ -337,12 +346,32 @@ exports.createIntervalNotification = async (req, res) => {
                 int_end = new Date(Date.parse(user.created) + stop_event_ms);
               }
 
+              let windowFrom = window.from;
+              let windowTo = window.to;
+
+              //update interval if there is missing information
+              if(windowFrom && windowFrom.includes('*/')) {
+                let parsedFrom = windowFrom.split(' ');
+                if(parsedFrom[3].includes('*/')){
+                  parsedFrom[3] = parsedFrom[3].replace('*', int_start.getDate());
+                  windowFrom = parsedFrom.join(' ');
+                }
+              }
+              if(windowTo && windowTo.includes('*/')) {
+                let parsedTo = windowTo.split(' ');
+                if(parsedTo[3].includes('*/')){
+                  parsedTo[3] = parsedTo[3].replace('*', int_start.getDate());
+                  windowTo = parsedTo.join(' ');
+                }
+              }
+              // console.log('from to', windowFrom, windowTo);
+
               agenda.schedule(int_start, 'start_random_personal_manager', {
                 userid: user.id,
                 projectid: req.user.project._id,
                 id: id,
-                interval: window.from,
-                interval_max: window.to,
+                interval: windowFrom,
+                interval_max: windowTo,
                 title: req.body.title,
                 message: req.body.message,
                 url: req.body.url,
@@ -352,8 +381,8 @@ exports.createIntervalNotification = async (req, res) => {
                 userid: user.id,
                 projectid: req.user.project._id,
                 id: id,
-                interval: window.from,
-                interval_max: window.to,
+                interval: windowFrom,
+                interval_max: windowTo,
                 title: req.body.title,
                 message: req.body.message,
                 url: req.body.url,
@@ -366,7 +395,7 @@ exports.createIntervalNotification = async (req, res) => {
 
     const intervals = req.body.interval;
     intervals.map(interval => {
-      console.log('title', int_start, int_end, interval);
+      // console.log('title', int_start, int_end, interval);
       project.notifications.push({
         id: id,
         target: req.body.target,
@@ -381,6 +410,9 @@ exports.createIntervalNotification = async (req, res) => {
         participantId: req.body.participantId,
         name: req.body.name,
         scheduleInFuture: req.body.scheduleInFuture,
+        readable: {
+          interval: cronstrue.toString(interval),
+        }
       });
 
       if (users){
@@ -417,7 +449,7 @@ exports.createIntervalNotification = async (req, res) => {
 
 
 exports.createIndividualNotification = async (req, res) => {
-  console.log('req.body', req.body);
+  // console.log('req.body createIndividualNotification', req.body);
 
   if(req.body.interval.length === 0){
     res.status(400).send();
@@ -458,6 +490,9 @@ exports.createIndividualNotification = async (req, res) => {
       start_event: req.body.int_start.startEvent,
       stop_event: req.body.int_end.stopEvent,
       scheduleInFuture: req.body.scheduleInFuture,
+      readable: {
+        interval: cronstrue.toString(interval),
+      }
     });
   })
 
@@ -474,7 +509,8 @@ exports.createIndividualNotification = async (req, res) => {
   if (users) {
     users.map(user => {
         intervals.map(interval => {
-          console.log('interval', interval, int_start, int_end);
+
+          let updatedInterval = interval;
 
           if(req.body.int_start.startEvent === 'registration'){
             const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
@@ -486,11 +522,21 @@ exports.createIndividualNotification = async (req, res) => {
             int_end = new Date(Date.parse(user.created) + stop_event_ms);
           }
 
+          //update interval if there is missing information
+          if(updatedInterval && updatedInterval.includes('*/')) {
+            let parsedInterval = updatedInterval.split(' ');
+            if(parsedInterval[3].includes('*/')){
+              parsedInterval[3] = parsedInterval[3].replace('*', int_start.getDate());
+              updatedInterval = parsedInterval.join(' ');
+            }
+          }
+          // console.log('interval', updatedInterval, int_start, int_end);
+
           agenda.schedule(int_start, 'start_personal_manager', {
             userid: user.id,
             projectid: req.user.project._id,
             id: id,
-            interval: interval,
+            interval: updatedInterval,
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
@@ -499,7 +545,7 @@ exports.createIndividualNotification = async (req, res) => {
             userid: user.id,
             projectid: req.user.project._id,
             id: id,
-            interval: interval,
+            interval: updatedInterval,
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
@@ -520,7 +566,7 @@ exports.createIndividualNotification = async (req, res) => {
 
 exports.createFixedIndividualNotification = async(req, res) => {
 
-  console.log('createFixedIndividualNotification - request body', req.body);
+  // console.log('createFixedIndividualNotification - request body', req.body);
 
   if(req.body.intervals.length === 0){
     res.status(400).send();
@@ -534,7 +580,7 @@ exports.createFixedIndividualNotification = async(req, res) => {
 
   const intervals = req.body.intervals;
   intervals.map(interval => {
-    console.log('interval', interval);
+    // console.log('interval', interval);
     project.notifications.push({
       id: id,
       target: req.body.target,
@@ -570,9 +616,9 @@ exports.createFixedIndividualNotification = async(req, res) => {
           const { from, to, number } = interval;
 
           for(let i = 0; i < number; i++){
-            console.log('i', i);
+            // console.log('i', i);
             if(from > to){
-              console.log('The ending time is earlier than the beginning time');
+              // console.log('The ending time is earlier than the beginning time');
               return;
             }
             const getRandomArbitrary = (min, max) => {
@@ -581,7 +627,7 @@ exports.createFixedIndividualNotification = async(req, res) => {
             const randomEvent = getRandomArbitrary(Date.parse(from), Date.parse(to));
 
             const date = new Date(randomEvent).toISOString();
-            console.log('timeRandomEvent', date);
+            // console.log('timeRandomEvent', date);
 
             // schedule the notification
             agenda.schedule(date, 'personal_notification', {
@@ -661,27 +707,27 @@ exports.removeNotificationByID = async(req, res) => {
 
 async function pickUpRandomTimeFromInterval(done, project_id, user_id, title,
   message, url, notification_id, deleteself, interval, interval_max, number) {
-    console.log('I am inside of pickUpRandomTimeFromInterval function');
+    // console.log('I am inside of pickUpRandomTimeFromInterval function');
 
     // get the next execution time
     const cronInstance = new Cron();
     const arr = interval_max.split(' ');
     arr.shift();
     const interval_max_striped = arr.join(' ');
-    console.log('interval_max', interval_max_striped);
+    // console.log('interval_max', interval_max_striped);
 
     cronInstance.fromString(interval_max_striped);
-    console.log('cronInstance', cronInstance);
+    // console.log('cronInstance', cronInstance);
     const schedule = cronInstance.schedule();
     const nextRunning = schedule.next().format()
-    console.log('Next running is at: ', nextRunning);
+    // console.log('Next running is at: ', nextRunning);
 
     const timeBuffer = 30000; // since the internet connection might be slow
     const int_start = Date.now() + timeBuffer;
     const int_end = Date.parse(nextRunning);
 
     if(int_start > int_end){
-      console.log('The ending time is earlier than the beginning time');
+      // console.log('The ending time is earlier than the beginning time');
       return;
     }
 
@@ -692,7 +738,7 @@ async function pickUpRandomTimeFromInterval(done, project_id, user_id, title,
     for(let i = 0; i < number; i++){
       const randomEvent = getRandomArbitrary(int_start, int_end);
       const date = new Date(randomEvent).toISOString();
-      console.log('timeRandomEvent', date);
+      // console.log('timeRandomEvent', date);
       // schedule personal_notification
       agenda.schedule(date, 'personal_notification', {
         userid: user_id,
@@ -747,12 +793,12 @@ async function sendToAllProjectUsers(done, project_id, title, message, url, noti
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1, name: 1 });
   let users = project.mobileUsers;
-  console.log('users before filtering', users);
+  // console.log('users before filtering', users);
   if(excludeUntil) {
     users = users.filter(user.created > excludeUntil);
   };
-  console.log('filter excludeUntil', excludeUntil);
-  console.log('users after filtering', users);
+  // console.log('filter excludeUntil', excludeUntil);
+  // console.log('users after filtering', users);
   const tokens = users
     .map(user => ({
       id: user.id,
@@ -880,16 +926,37 @@ exports.joinStudy = async(req, res) => {
           const stop_event_ms = moment.duration({days: sub.stop_after.days, hours: sub.stop_after.hours, minutes: sub.stop_after.minutes}).asMilliseconds();
           user_int_end = new Date(Date.now() + stop_event_ms);
         }
-        console.log('user start end', sub.interval, user_int_start, user_int_end);
+
 
         // if we need randomization, start random_person_manager
         if(sub.randomize){
+
+          let windowFrom = sub.windowInterval && sub.windowInterval.from;
+          let windowTo = sub.windowInterval && sub.windowInterval.to;
+
+          //update interval if there is missing information
+          if(windowFrom && windowFrom.includes('*/')) {
+            let parsedFrom = windowFrom.split(' ');
+            if(parsedFrom[3].includes('*/')){
+              parsedFrom[3] = parsedFrom[3].replace('*', user_int_start.getDate());
+              windowFrom = parsedFrom.join(' ');
+            }
+          }
+          if(windowTo && windowTo.includes('*/')) {
+            let parsedTo = windowTo.split(' ');
+            if(parsedTo[3].includes('*/')){
+              parsedTo[3] = parsedTo[3].replace('*', user_int_start.getDate());
+              windowTo = parsedTo.join(' ');
+            }
+          }
+          // console.log('from to', windowFrom, windowTo);
+
           agenda.schedule(user_int_start, 'start_random_personal_manager', {
             userid: req.body.id,
             projectid: project._id,
             id: sub.id,
-            interval: sub.windowInterval && sub.windowInterval.from,
-            interval_max: sub.windowInterval && sub.windowInterval.to,
+            interval: windowFrom,
+            interval_max: windowTo,
             title: sub.title,
             message: sub.message,
             url: sub.url,
@@ -899,19 +966,31 @@ exports.joinStudy = async(req, res) => {
             userid: req.body.id,
             projectid: project._id,
             id: sub.id,
-            interval: sub.interval,
-            interval_max: sub.interval_max,
+            interval: windowFrom,
+            interval_max: windowTo,
             title: sub.title,
             message: sub.message,
             url: sub.url,
             number: sub.windowInterval && sub.windowInterval.number,
           });
         } else {
+
+          let updatedInterval = sub.interval;
+          //update interval if there is missing information
+          if(updatedInterval && updatedInterval.includes('*/')) {
+            let parsedInterval = updatedInterval.split(' ');
+            if(parsedInterval[3].includes('*/')){
+              parsedInterval[3] = parsedInterval[3].replace('*', user_int_start.getDate());
+              updatedInterval = parsedInterval.join(' ');
+            }
+          }
+          // console.log('updatedInterval line 905', updatedInterval, user_int_start, user_int_end);
+
           agenda.schedule(user_int_start, 'start_personal_manager', {
             userid: req.body.id,
             projectid: project._id,
             id: sub.id,
-            interval: sub.interval,
+            interval: updatedInterval,
             title: sub.title,
             message: sub.message,
             url: sub.url,
@@ -920,7 +999,7 @@ exports.joinStudy = async(req, res) => {
             userid: req.body.id,
             projectid: project._id,
             id: sub.id,
-            interval: sub.interval,
+            interval: updatedInterval,
             title: sub.title,
             message: sub.message,
             url: sub.url,
@@ -932,7 +1011,7 @@ exports.joinStudy = async(req, res) => {
           for(let i = 0; i < sub.number; i++){
 
             if(sub.window_from > sub.window_to){
-              console.log('The ending time is earlier than the beginning time');
+              // console.log('The ending time is earlier than the beginning time');
               return;
             }
             const getRandomArbitrary = (min, max) => {
@@ -941,7 +1020,7 @@ exports.joinStudy = async(req, res) => {
             const randomEvent = getRandomArbitrary(Date.parse(sub.window_from), Date.parse(sub.window_to));
 
             const date = new Date(randomEvent).toISOString();
-            console.log('timeRandomEvent', date);
+            // console.log('timeRandomEvent', date);
 
             // schedule the notification
             agenda.schedule(date, 'personal_notification', {
@@ -1040,3 +1119,131 @@ const makeRandomCodeForMessageID = () => {
       return v.toString(16);
     });
   }
+
+const rescheduleRepeatJobs = async () => {
+  // look for all jobs with repeat interval
+  const rawJobs = await agenda.jobs({ repeatInterval: {'$exists': true} });
+  const jobs = rawJobs.map(job => job.attrs);
+
+  jobs.map(async job => {
+
+    let parsedInterval;
+    if(!job.repeatInterval.includes('/')){
+      return;
+    } else {
+      parsedInterval = job.repeatInterval.split(' ');
+      if(!parsedInterval[3].includes('/')){
+        return;
+      }
+    }
+
+    // console.log('job._id', job._id);
+    // console.log('job.lastRunAt', job.lastRunAt);
+    // console.log('parsedInterval', parsedInterval);
+
+    let lastRunAt;
+    if(job.lastRunAt){
+      lastRunAt = job.lastRunAt;
+    } else {
+      // use cron if there is no job.lastRunAt
+      const cronInstance = new Cron();
+      const arr = job.repeatInterval.split(' ');
+      arr.shift();
+      const interval = arr.join(' ');
+      cronInstance.fromString(interval);
+      const schedule = cronInstance.schedule();
+      lastRunAt = schedule.prev().toISOString();
+      // lastRunAt = moment.utc(schedule.prev().format()).toISOString();
+    }
+    // console.log('lastRunAt: ', lastRunAt);
+
+    if(lastRunAt){
+
+      const [oldstart, step] = parsedInterval[3].split('/');
+      const newstart = moment(lastRunAt).add({days: step});
+      // console.log('newstart', newstart.date());
+      parsedInterval[3] = `${newstart.date()}/${step}`;
+      updatedInterval = parsedInterval.join(' ');
+      // console.log('updatedInterval', updatedInterval);
+
+      // tackle random_personal_notification
+      if(job.name === 'random_personal_notification') {
+        let new_interval = updatedInterval;
+        let interval_max_splitted = job.data.interval_max.split(' ');
+        interval_max_splitted[3] = parsedInterval[3];
+        let new_interval_max = interval_max_splitted.join(' ');
+
+        // console.log('new_interval, new_interval_max', new_interval, new_interval_max);
+        // schedule new random_personal_notification
+        const newjob = agenda.create(job.name, {
+          ...job.data,
+          interval: new_interval,
+          interval_max: new_interval_max,
+        });
+        newjob.repeatEvery(updatedInterval, {
+          skipImmediate: true
+        });
+        newjob.save();
+
+      } else {
+        // for all other types of notificaitons just copy the original data and schedule new notification
+        // personal_notification
+        // regular_notification
+        const newjob = agenda.create(job.name, {
+          ...job.data,
+        });
+        newjob.repeatEvery(updatedInterval, {
+          skipImmediate: true
+        });
+        newjob.save();
+      }
+      // remove the old notification
+      const numRemoved = await agenda.cancel({ _id: job._id });
+      // console.log('numRemoved', numRemoved);
+    }
+  })
+  // done();
+}
+
+exports.manageNotifications = async(req, res) => {
+  // debug
+  // await rescheduleRepeatJobs();
+
+  const participant = req.params.id;
+  const project = await Project.findOne({_id: req.user.project._id},{
+    name: 1, notifications: 1, mobileUsers: 1,
+  });
+  // const notifications = project.notifications
+  //   .sort(function(a,b){return a.date - b.date})
+  //   .map(notification => {
+  //     return {
+  //       ...notification,
+  //       readable: {
+  //         from: notification.windowInterval && notification.windowInterval.from && cronstrue.toString(notification.windowInterval.from),
+  //         to: notification.windowInterval && notification.windowInterval.to && cronstrue.toString(notification.windowInterval.to),
+  //         interval: notification.windowInterval && notification.windowInterval.interval && cronstrue.toString(notification.windowInterval.interval),
+  //       }
+  //       }
+  //     })
+  res.render('notify', { project, participant });
+};
+
+exports.debug = async(req, res) => {
+  const rawAdminJobs = await agenda.jobs({name: 'admin_job'});
+  const adminJobs = rawAdminJobs.map(job => job.attrs);
+  res.render('debug', { adminJobs });
+}
+
+exports.scheduleAdminJob = async(req, res) => {
+  const { interval } = req.body;
+  // console.log('interval', interval);
+
+  const monthlyScheduler = agenda.create('admin_job', {});
+  monthlyScheduler.repeatEvery(interval, {
+    skipImmediate: true
+  });
+  monthlyScheduler.save();
+
+  res.redirect(`back`);
+
+}

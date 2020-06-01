@@ -38,7 +38,7 @@ const projectSchema = new mongoose.Schema({
       randomize    : Boolean,
       date         : { type: Date },
       interval     : { type: String, default: 'not_defined' },
-      interval_max : { type: String, default: 'not_defined' },
+      interval_max : { type: String },
       int_start    : { type: Date },
       int_end      : { type: Date },
       title        : { type: String, default: 'Samply' },
@@ -57,6 +57,7 @@ const projectSchema = new mongoose.Schema({
       windowInterval: JSON,
       scheduleInFuture: Boolean,
       created       : { type: Date, default: Date.now },
+      readable      : JSON,
     }
   ],
   mobileUsers: [
