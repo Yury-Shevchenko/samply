@@ -294,7 +294,7 @@ exports.inviteParticipants = async (req, res) => {
 
 exports.invitations = async (req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
-    name: 1, invitations: 1,
+    name: 1, invitations: 1, slug: 1,
   });
   res.render('invitations', {project});
 };

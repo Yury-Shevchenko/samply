@@ -9,48 +9,50 @@ block content
     h2 #{layout.invitations}
     .card
       if project && project.name  
-        p !{l.mobile_invite}
-        p !{l.android_users}
-        p !{l.apple_users}
-        p !{l.mobile_user_account}
+        p !{l.mobile_invite_1}
+        p !{l.mobile_invite_2}
+        
+        h5 
+          .headerLink !{l.way_1_header} 
+        
+        table.table
+          tr
+            td !{l.direct_link}
+            td
+              input(type="text" value=`samply://--/study?name=${project.slug}` id="direct" readonly)
+              button(class="copyButton" id="directButton") #{l.copy_link}
+              
+        
+        p !{l.direct_link_1}
+        p !{l.direct_link_2}
+        p !{l.direct_link_3}
+        
+        p !{l.custom_link_1}
+        table.table
+          tr
+            td !{l.custom_link}
+            td
+              input(type="text" value=`samply://--/study?name=${project.slug}&code=123` id="custom")
+              button(class="copyButton" id="customButton") #{l.copy_link}
+        
+        h5 
+          .headerLink !{l.way_2_header} 
+        
         p !{l.finding_study}
-        p !{l.user_info}
         
-        //- table.table
-        //-   tr
-        //-     td #{l.signing_temp_code}
-        //-     td
-        //-       input(type="text" value=`https://samply.uni-konstanz.de/code/${project.name.replace(/\s+/g, '%20')}/?generate=true` id="random" readonly)
-        //-       button(class="copyButton" id="randomButton") #{l.copy_link}
-        //-       p #{l.temp_code_strategy}
-        //-   tr
-        //-     td #{l.signing_code}
-        //-     td
-        //-       input(type="text" value=`https://samply.uni-konstanz.de/code/${project.name.replace(/\s+/g, '%20')}/` id="code" readonly)
-        //-       button(class="copyButton" id="codeButton") #{l.copy_link}
-        //-       p #{l.code_strategy}
-        //-   tr
-        //-     td #{l.signing_email}
-        //-     td
-        //-       input(type="text" value=`https://samply.uni-konstanz.de/sign/${project.name.replace(/\s+/g, '%20')}/` id="email" readonly)
-        //-       button(class="copyButton" id="emailButton") #{l.copy_link}
-        //-       p #{l.email_strategy}
-        
-        //- +invitationForm(project)
-        
-        //- script(nonce=`${noncevalue}`).
-        //-   document.addEventListener('DOMContentLoaded', function (){
-        //-     const btns = document.getElementsByClassName('copyButton');
-        //-     for(let i = 0; i < btns.length; i++) {
-        //-       btns[i].addEventListener("click", function(e) {
-        //-         const textId = e.currentTarget.id.split("Button")[0]
-        //-         const copyText = document.getElementById(textId);
-        //-         copyText.select();
-        //-         document.execCommand("copy");
-        //-         document.getElementById(e.currentTarget.id).style.background = "#f3e9e9";
-        //-       })
-        //-     }
-        //-   });
+        script(nonce=`${noncevalue}`).
+          document.addEventListener('DOMContentLoaded', function (){
+            const btns = document.getElementsByClassName('copyButton');
+            for(let i = 0; i < btns.length; i++) {
+              btns[i].addEventListener("click", function(e) {
+                const textId = e.currentTarget.id.split("Button")[0]
+                const copyText = document.getElementById(textId);
+                copyText.select();
+                document.execCommand("copy");
+                document.getElementById(e.currentTarget.id).style.background = "#f3e9e9";
+              })
+            }
+          });
               
       else
         p !{l.message_create_project}

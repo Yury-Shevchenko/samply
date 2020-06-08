@@ -346,6 +346,8 @@ module.exports =
         'showCompletionCode': 'Display the unique completion code at the end of all tasks',
         'welcomeMessage': 'The text for the consent form in the mobile application. This is displayed when the participants click on "Join the study". You can provide the consent form here. If you use the option below to ask participants to enter their username, you can provide additional instructions here. ',
         'askNotifications': 'Ask users to allow notifications (we are currently testing notifications, participants should use Chrome on a desktop computer).',
+        'askUsername': `Ask participants to enter a code in the mobile application when joining your study`,
+        'imageURL': `Image (paste the image URL here - the image will be displayed next to your study in the mobile application)`,
       },
 
       'testing': {
@@ -455,44 +457,58 @@ module.exports =
         },
 
         'invitations': {
-          'mobile_invite': `Invite participants to download the mobile app <em>Samply Research</em>. You can give them direct links or ask them to search for the app with the name "Samply Research".`,
-          'android_users': `For Android users, the application will be available soon in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.`,
-          'apple_users': `For Apple users, the application is in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.`,
-          'mobile_user_account': `When users start an app, they will have to allow notifications from the app.
-            The question about notifications should pop up automatically on the screen.
-            Participants will also need to create a new account.
-            The login information will be stored securely on the Samply server (which is the server of the University of Konstanz in Germany) and used only for authentication of users.
-            `,
-          'finding_study': `After logging in, participant have to proceed to the tab "Studies" inside the application.
-            There, they can use the search field to find your study. The name, author and the date of study creation are displayed in the list of studies.
-            Please provide your participants with the exact name of your study, so they can find it in the app.
-            If participants tap on your study in the list of studies, they will proceed to the study page.
-            On the study page, the description and welcoming text will be shown.
-            By clicking on the button "Join the study", participants will allow receving notifications from you.
-            Now, the participants can close the application.
-            `,
-          'user_info': `You as a researcher will not have access to email addresses of participants.
-            If you wish to have participants' email addresses, you are free to collect them together with other information via your online studies.
-            Instead, Samply will share with you a unique id of each participant (in the form xxxx-xxxx-xxxx-xxxx),
-            which you can include as a query parameter in the link of your study. More information about that is in "Notifications".
+          'way_1_header': `Way 1. The direct link to your study`,
+          'way_2_header': `Way 2. Ask participants to find your study`,
+          'mobile_invite_1': `
+            There are two ways to invite participants to your study.
+            In all cases, participants must first install the mobile application <em>Samply Research</em> on their mobile phone.
+            For Android users, the application is available in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.
+            For Apple users, the application is in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
+            You can provide participants with these links to the Google Play or App Store or ask them to search for the <em>Samply Research</em> app in the respective stores.
           `,
-          'invite': 'Invite more participants with the following links:',
-          'signing_code': 'Signing up with a participant code ',
-          'signing_temp_code': 'Signing up with a unique randomly generated code',
-          'signing_email': 'Signing up with an email ',
+          'mobile_invite_2': `
+            After the application is installed, either provide a participant with the direct link to your study or ask a participant to find your study (if they cannot use the link).
+          `,
+          'direct_link': `
+            Direct link to your study
+          `,
+          'direct_link_1': `
+            To use this link, participants should already have the “Samply Research” app installed on their mobile phone.
+            Furthermore, they should open this link in their mobile phone.
+            When participants open the app for the first time, they must allow notifications from the app.
+            The question about the notifications should appear automatically on the screen.
+            Participants will also need to create a new account.
+            The login information is stored securely on the Samply server (which is the server of the University of Konstanz in Germany)
+            and is only used to authenticate users.
+          `,
+          'direct_link_2': `
+            After creating an account, participants are automatically redirected to the page of your study within the application.
+            The study description is displayed on the study page.
+            When participants click on the "Join the study" button, they see the text that you entered for the consent form.
+            When participants tap the "Yes, I agree" button, they join your study and allow you to send them notifications.
+            Now, the application can be closed.
+          `,
+          'direct_link_3': `
+            Note that the direct link will work even if your study is not publicly available in the list of studies.
+          `,
+          'custom_link': `
+            Custom link to your study
+          `,
+          'custom_link_1': `
+            You can also pass additional variables via the link using the query.
+            For example, if you want to create individual links, you can modify the link in the following way.
+            The value of the variable <var>code</var>, which you provide inside the link (in this case, it is <kbd>123</kbd>), will be recorded and shown in your participants data.
+          `,
+          'finding_study': `If for some reason participants cannot use the direct link, they can find your study in the list of studies within the app.
+            This requires your study to be public.
+            After logging in, participants must switch to the "Studies" tab within the app.
+            There they can use the search field to find your study.
+            In the list of studies the name, the author and the creation date of the study are displayed.
+            Please give your participants the exact name of your study so that they can find it in the app.
+            When the participants tap on your study in the list of studies, they will be taken to the study page.
+            `,
           'message_create_project': `To invite new participants to your study, activate or create a study <a href="/projects">here</a>.`,
-          'message_invitation': `Invite new participants to take part in experiments of the current study.
-            Write each email address on a separate line.
-            The unique participation code will be generated and sent to each participant.`,
-          'message_invited_participants': 'Invited participants',
-          'button_invite': 'Invite',
-          'email' : 'Email',
-          'code' : 'Code',
-          'temp_code_strategy': 'A random participation code will be created for every user. Use this link if you publish the study online.',
-          'code_strategy': 'Users will be prompted to sign up with entering a participation code. Use this way of authentication if your participants already have their unique codes assigned by your study.',
-          'email_strategy': 'Users will be prompted to sign up with an email and a password. Use this authentication strategy if your participants already have an account on Samply or ready to create a new one.',
           'copy_link': 'Copy link',
-          'link_copied': 'Copied the link: ',
         },
 
         'docs': {

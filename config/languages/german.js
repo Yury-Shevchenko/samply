@@ -347,6 +347,8 @@ module.exports = {
       'showCompletionCode': 'Den individuellen Erledigungscode am Ende aller Aufgaben anzeigen',
       'welcomeMessage': 'Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf "An der Studie teilnehmen" klicken. Sie können die Einverständniserklärung hier bereitstellen. Wenn Sie die untenstehende Option verwenden, um die Teilnehmer aufzufordern, ihren Benutzernamen einzugeben, können Sie hier zusätzliche Anweisungen geben. ',
       'askNotifications': 'Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).',
+      'askUsername': `Bitten Sie die Teilnehmer, einen Code in die mobile Anwendung einzugeben, wenn sie an Ihrer Studie teilnehmen.`,
+      'imageURL': `Bild (fügen Sie die Bild-URL hier ein - das Bild wird neben Ihrer Studie in der mobilen Anwendung angezeigt)`,
     },
 
     'testing': {
@@ -457,47 +459,59 @@ module.exports = {
       },
 
       'invitations': {
-        'mobile_invite': `Laden Sie die Teilnehmer ein, die mobile App <em>Samply Research</em> herunterzuladen.
-          Sie können ihnen direkte Links geben oder sie bitten, nach der App mit dem Namen "Samply Research" zu suchen.`,
-        'android_users': `Für Android-Nutzer wird die Anwendung demnächst im <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> verfügbar sein.`,
-        'apple_users': `Für Apple-Nutzer befindet sich die Anwendung in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.`,
-        'mobile_user_account': `Wenn Nutzer die App starten, müssen sie Benachrichtigungen von der App zulassen.
-            Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
-            Die Teilnehmer müssen auch ein neues Konto erstellen.
-            Die Anmeldedaten werden sicher auf dem Server Samply (dem Server der Universität Konstanz in Deutschland) gespeichert und nur zur Authentifizierung der Benutzer verwendet.
-          `,
-        'finding_study': `Nach dem Einloggen müssen die Teilnehmer zum Tab "Studies" innerhalb der Anwendung wechseln.
-            Dort können sie das Suchfeld benutzen, um Ihre Studie zu finden.
-            In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
-            Bitte geben Sie Ihren Teilnehmern den genauen Namen Ihrer Studie an, damit sie diese in der App finden können.
-            Wenn die Teilnehmer in der Liste der Studien auf Ihre Studie tippen, gelangen sie auf die Studienseite.
-            Auf der Studienseite werden die Beschreibung und der Begrüßungstext angezeigt.
-            Wenn die Teilnehmer auf die Schaltfläche "Join the study" klicken, erlauben sie, Benachrichtigungen von Ihnen zu erhalten.
-            Nun können die Teilnehmer die App schließen.
-          `,
-        'user_info': `Sie als Forscher haben keinen Zugriff auf die E-Mail-Adressen der Teilnehmer.
-            Wenn Sie die E-Mail-Adressen der Teilnehmerinnen und Teilnehmer haben möchten, können Sie diese zusammen mit anderen Informationen über Ihre Online-Studien sammeln.
-            Stattdessen wird Samply Ihnen eine individuelle ID jedes Teilnehmers mitteilen (in der Form xxxx-xxxx-xxxx-xxxx),
-            die Sie als Abfrageparameter in den Link Ihrer Studie aufnehmen können.
-            Weitere Informationen dazu finden Sie unter "Benachrichtigungen".
+        'way_1_header': `Weg 1. Der direkte Link zu Ihrer Studie`,
+        'way_2_header': `Weg 2. Bitten Sie die Teilnehmer, Ihre Studie zu finden.`,
+        'mobile_invite_1': `
+          Es gibt zwei Möglichkeiten, Teilnehmer zu Ihrer Studie einzuladen.
+          In allen Fällen müssen die Teilnehmer zunächst die mobile Anwendung <em>Samply Research</em> auf ihrem Mobiltelefon installieren.
+          Für Android-Benutzer steht die Anwendung unter <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> zur Verfügung.
+          Für Apple-Benutzer ist die Anwendung unter <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a> verfügbar.
+          Sie können den Teilnehmern diese Links zum Google Play oder App Store zur Verfügung stellen oder sie bitten, in den jeweiligen Stores nach der App <em>Samply Research</em> zu suchen.
         `,
-        'invite': 'Mehr Teilnehmer mit den folgenden Links einladen:',
-        'signing_code': 'Anmeldung mit einem Teilnehmercode ',
-        'signing_temp_code': 'Anmeldung mit einem einzigartigen, zufällig generierten Code',
-        'signing_email': 'Anmeldung mit einer E-Mail ',
-        'message_create_project': 'Um neue Teilnehmer zu Ihrer Studie einzuladen, aktivieren oder erstellen Sie eine Studie <a href="/projects")>hier</a>.',
-        'message_invitation': `Laden Sie neue Teilnehmer zu Experimenten der aktuellen Studie ein.
-          Schreiben Sie jede E-Mail-Adresse in eine eigene Zeile.
-          Der einzigartige Teilnehmercode wird generiert und an jeden Teilnehmer gesendet.`,
-        'message_invited_participants': 'Eingeladene Teilnehmer',
-        'button_invite': 'Einladen',
-        'email' : 'Email',
-        'code' : 'Code',
-        'temp_code_strategy': 'Für jeden Benutzer wird ein Zufallscode erstellt. Benutzen Sie diesen Link, wenn Sie die Studie online veröffentlichen.',
-        'code_strategy': 'Die Benutzer werden aufgefordert, sich mit der Eingabe eines Teilnahmecodes anzumelden. Verwenden Sie diese Art der Authentifizierung, wenn Ihre Teilnehmer bereits über ihre individuellen Codes verfügen, die von Ihrer Studie vergeben wurden.',
-        'email_strategy': 'Die Benutzer werden aufgefordert, sich mit einer E-Mail und einem Passwort anzumelden. Verwenden Sie diese Authentifizierungsstrategie, wenn Ihre Teilnehmer bereits ein Profil bei Samply haben oder bereit sind, ein neues zu erstellen.',
+        'mobile_invite_2': `
+          Nachdem die Anwendung installiert ist, stellen Sie entweder den Teilnehmern einen direkten Link zu Ihrer Studie zur Verfügung oder bitten Sie die Teilnehmer, Ihre Studie zu finden (falls sie den Link nicht verwenden können).
+        `,
+        'direct_link': `
+          Direkter Link zu Ihrer Studie
+        `,
+        'direct_link_1': `
+          Um diesen Link nutzen zu können, sollten die Teilnehmer bereits die App "Samply Research" auf ihrem Mobiltelefon installiert haben.
+          Ausserdem sollten sie diesen Link in ihrem Mobiltelefon öffnen.
+          Wenn Teilnehmer die App zum ersten Mal öffnen, müssen sie Benachrichtigungen aus der App zulassen.
+          Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
+          Die Teilnehmer müssen auch ein neues Konto erstellen.
+          Die Anmeldedaten werden sicher auf dem Server Samply gespeichert (dies ist der Server der Universität Konstanz in Deutschland)
+          und wird nur zur Authentifizierung von Benutzern verwendet.
+        `,
+        'direct_link_2': `
+          Nach der Erstellung eines Kontos werden die Teilnehmer automatisch auf die Seite Ihrer Studie innerhalb der Anwendung weitergeleitet.
+          Die Studienbeschreibung wird auf der Studienseite angezeigt.
+          Wenn die Teilnehmer auf die Schaltfläche "An der Studie teilnehmen" klicken, sehen sie den Text, den Sie für die Einverständniserklärung eingegeben haben.
+          Wenn die Teilnehmer auf die Schaltfläche "Ja, ich stimme zu" tippen, treten sie Ihrer Studie bei und erlauben Ihnen, ihnen Benachrichtigungen zu senden.
+          Nun kann der Antrag geschlossen werden.
+        `,
+        'direct_link_3': `
+          Beachten Sie, dass der direkte Link auch dann funktioniert, wenn Ihre Studie in der Liste der Studien nicht öffentlich zugänglich ist.
+        `,
+        'custom_link': `
+          Individueller Link zu Ihrer Studie
+        `,
+        'custom_link_1': `
+          Sie können auch zusätzliche Variablen über die Verknüpfung mit der Abfrage übergeben.
+          Wenn Sie z.B. einzelne Links anlegen möchten, können Sie den Link wie folgt modifizieren.
+          Der Wert der Variablen <var>code</var>, die Sie innerhalb des Links angeben (in diesem Fall ist es <kbd>123</kbd>), wird erfasst und in Ihren Teilnehmerdaten angezeigt.
+        `,
+        'finding_study': `
+          Wenn Teilnehmerinnen und Teilnehmer aus irgendeinem Grund den direkten Link nicht benutzen können, finden sie Ihre Studie in der Liste der Studien innerhalb der App.
+          Voraussetzung dafür ist, dass Ihre Studie öffentlich ist.
+          Nach dem Einloggen müssen die Teilnehmer zum Reiter "Studien" innerhalb der App wechseln.
+          Dort können sie das Suchfeld benutzen, um Ihre Studie zu finden.
+          In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
+          Bitte geben Sie Ihren Teilnehmern den genauen Namen Ihrer Studie an, damit sie diese in der App finden können.
+          Wenn die Teilnehmer in der Liste der Studien auf Ihre Studie tippen, gelangen sie auf die Studienseite.
+          `,
+        'message_create_project': `Um neue Teilnehmer zu Ihrer Studie einzuladen, aktivieren oder erstellen Sie eine Studie <a href="/projects">hier</a>.`,
         'copy_link': 'Link kopieren',
-        'link_copied': 'Der Link wurde kopiert: ',
       },
 
       'docs': {

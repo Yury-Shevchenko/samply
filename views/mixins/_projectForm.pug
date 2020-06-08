@@ -14,9 +14,9 @@ mixin projectForm(project = {})
       input(type='checkbox' id= 'askParticipantCode' name= 'askParticipantCode' checked = project.settings && project.settings.askParticipantCode)
       label(for='askParticipantCode')
         span.
-          Ask participants to enter a code in the mobile application when joining your study
+          #{l.askUsername}
           
-    label(for='image') Image (paste the image URL here - the image will be displayed next to your study in the mobile application)
+    label(for='image') #{l.imageURL} 
     input(type='text' name='image' value=project.image)
     
     p
