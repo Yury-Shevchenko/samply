@@ -6,7 +6,10 @@ mixin userCard(person = {}, i)
       td= person.id
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       td= person.username
-      td= Object.keys(person.information).map(key => `${key}: ${person.information[key]}`)
+      if(person.information && Object.keys(person.information).length)
+        td= Object.keys(person.information).map(key => `${key}: ${person.information[key]}`)
+      else 
+        td
       td
         a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) #{l.table_open}
       td
