@@ -344,7 +344,7 @@ module.exports =
         'delete': 'Delete',
         'description': 'Description (please tell what is your study is about, how long and how often you plan to send notifications)',
         'showCompletionCode': 'Display the unique completion code at the end of all tasks',
-        'welcomeMessage': 'Welcome text for the participants, which is displayed together with the description on the page of your study within the mobile application.',
+        'welcomeMessage': 'The text for the consent form in the mobile application. This is displayed when the participants click on "Join the study". You can provide the consent form here. If you use the option below to ask participants to enter their username, you can provide additional instructions here. ',
         'askNotifications': 'Ask users to allow notifications (we are currently testing notifications, participants should use Chrome on a desktop computer).',
       },
 

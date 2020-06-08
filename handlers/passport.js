@@ -6,23 +6,27 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const language = require('../config/lang');
 
-// const makeSamplyId = () => {
-//   const time = Date.now() / 1000 | 0;
-//   return time;
-// };
+const getRandomInt = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
 const makeRandomCodeForParticipant = () => {
-    return 'xxxx-xxxx-xxxx-wxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
+  const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
+  return `${randomCode}-xxxx-xxxx-wxxx`.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 const makeRandomCodeForResearcher = () => {
-    return 'research-xxxx-xxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
+  const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
+  return `research-${randomCode}-xxxx`.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 const defineLanguage = (headers) => {
   if(headers['accept-language']){

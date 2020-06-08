@@ -345,7 +345,7 @@ module.exports = {
       'delete': 'Löschen',
       'description': 'Beschreibung (bitte teilen Sie mit, worum es in Ihrer Studie geht, wie lange und wie oft Sie planen, Benachrichtigungen zu versenden)',
       'showCompletionCode': 'Den individuellen Erledigungscode am Ende aller Aufgaben anzeigen',
-      'welcomeMessage': 'Begrüßungstext für die Teilnehmer, der zusammen mit der Beschreibung auf der Seite Ihrer Studie innerhalb der mobilen Anwendung angezeigt wird.',
+      'welcomeMessage': 'Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf "An der Studie teilnehmen" klicken. Sie können die Einverständniserklärung hier bereitstellen. Wenn Sie die untenstehende Option verwenden, um die Teilnehmer aufzufordern, ihren Benutzernamen einzugeben, können Sie hier zusätzliche Anweisungen geben. ',
       'askNotifications': 'Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).',
     },
 

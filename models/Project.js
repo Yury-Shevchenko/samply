@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
+const slug = require('slugs');
 
 const projectSchema = new mongoose.Schema({
   created: {
@@ -13,6 +14,9 @@ const projectSchema = new mongoose.Schema({
   },
   members: [ {type : mongoose.Schema.ObjectId, ref: 'User' } ],
   name: {
+    type: String
+  },
+  slug: {
     type: String
   },
   image: String,
@@ -68,8 +72,11 @@ const projectSchema = new mongoose.Schema({
                       type: Date,
                       default: Date.now
                      },
+      username     : String,
+      information  : JSON,
     }
   ],
+  settings         : JSON,
 });
 
 projectSchema.statics.getCurrentProjects = function() {
@@ -91,6 +98,7 @@ projectSchema.statics.findAllPublic = function() {
     },
     { $project: {
       name: '$$ROOT.name',
+      slug: '$$ROOT.slug',
       description: '$$ROOT.description',
       created: '$$ROOT.created',
       author_name: '$author.name',
@@ -118,21 +126,29 @@ projectSchema.statics.debugProjects = function() {
 };
 
 //pre-save validation to make sure that the project with the same name does not already exist
-projectSchema.pre('save', function(next){
-  if (!this.isModified('name') || this.name === ''){
+projectSchema.pre('save', async function(next){
+  if (!this.isModified('name')){
     next();//skip it
   };
-  var self = this;
-  mongoose.models["Project"].findOne({name: self.name}, function(err, project){
-    if(err){
-      next(err);
-    } else if(project){
-      self.invalidate("name", "This name already exists");
-      next(new Error('This name is already taken'));
-    } else {
-      next();
-    }
-  });
+
+  this.slug = slug(this.name);
+  const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');//regular expression
+  const projectsWithSlug = await this.constructor.find({ slug: slugRegEx });
+  if(projectsWithSlug.length){
+    this.slug = `${this.slug}-${projectsWithSlug.length + 1}`;
+  }
+  next();
+  // var self = this;
+  // mongoose.models["Project"].findOne({name: self.name}, function(err, project){
+  //   if(err){
+  //     next(err);
+  //   } else if(project){
+  //     self.invalidate("name", "This name already exists");
+  //     next(new Error('This name is already taken'));
+  //   } else {
+  //     next();
+  //   }
+  // });
 });
 
 //find projects which user has created

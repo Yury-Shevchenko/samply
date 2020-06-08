@@ -112,6 +112,9 @@ exports.createProject = async (req, res) => {
           creator: req.user._id,
           members: membersData,
           currentlyActive: req.body.currentlyActive,
+          settings: {
+            askParticipantCode: req.body.askParticipantCode && req.body.askParticipantCode === 'on'
+          }
         }
       )).save();
       if (typeof(req.user.project._id) == "undefined"){
@@ -152,6 +155,15 @@ exports.updateProject = async (req, res) => {
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
     project.members = membersData;
+    if(req.body.askParticipantCode && req.body.askParticipantCode === 'on'){
+      project.settings = {
+        askParticipantCode: true
+      }
+    } else {
+      project.settings = {
+        askParticipantCode: false
+      }
+    }
     await project.save();
     req.flash('success', `${res.locals.layout.flash_project_updated}`);
     res.redirect('back');
@@ -188,8 +200,7 @@ exports.trydeleteProject = async (req, res) => {
     res.redirect('back');
   } else {
     const resultsCount = await Result.where({ project: req.params.id }).countDocuments();
-    const participantsCount = await User.where({ participant_projects: req.params.id }).countDocuments();
-    res.render('deleteProjectForm', { project, resultsCount, participantsCount });
+    res.render('deleteProjectForm', { project, resultsCount });
   }
 };
 
@@ -295,14 +306,11 @@ exports.debugprojects = async(req, res) => {
 
 exports.getPublicStudiesAPI = async(req, res) => {
   const studies = await Project.findAllPublic();
-  // console.log('studies', studies);
   res.send(studies);
 }
 
 exports.getPublicStudy = async(req, res) => {
-  console.log('req.param.name', req.params.name);
-  const study = await Project.findOne({ name: req.params.name }, { name: 1, description: 1, welcomeMessage: 1 });
-  console.log('study', study);
+  const study = await Project.findOne({ slug: req.params.name }, { name: 1, description: 1, welcomeMessage: 1, settings: 1 });
   res.send(study);
 }
 

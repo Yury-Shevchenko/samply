@@ -181,7 +181,6 @@ agenda.on('ready', function() {
 exports.createScheduleNotification = async(req, res) => {
   // check whether the request body contains required information
   if(!req.body || !req.body.target || !req.body.schedule){
-    console.log("Some information in request is missing");
     return res.status(400).end();
   }
   // update the information inside the project
@@ -891,7 +890,7 @@ async function sendMobileNotification(done, content, tokens, project_id, project
 exports.joinStudy = async(req, res) => {
   const id = req.params.id;
   const project = await Project.findOne({_id: id},{
-    notifications: 1, mobileUsers: 1, name: 1, description: 1, image: 1,
+    notifications: 1, mobileUsers: 1, name: 1, description: 1, image: 1, slug: 1,
   });
   if(!project.mobileUsers){
     project.mobileUsers = [];
@@ -899,6 +898,8 @@ exports.joinStudy = async(req, res) => {
   const newUser = {
     id: req.body.id,
     token: req.body.token,
+    username: req.body.username,
+    information: req.body.information,
   };
   let isNew = true;
   project.mobileUsers.map(user => {
@@ -949,7 +950,6 @@ exports.joinStudy = async(req, res) => {
               windowTo = parsedTo.join(' ');
             }
           }
-          // console.log('from to', windowFrom, windowTo);
 
           agenda.schedule(user_int_start, 'start_random_personal_manager', {
             userid: req.body.id,
@@ -1043,6 +1043,7 @@ exports.joinStudy = async(req, res) => {
           name: project.name,
           description: project.description,
           image: project.image,
+          slug: project.slug,
         }
       } },
       { upsert: true, new : true });
@@ -1136,10 +1137,6 @@ const rescheduleRepeatJobs = async () => {
         return;
       }
     }
-
-    // console.log('job._id', job._id);
-    // console.log('job.lastRunAt', job.lastRunAt);
-    // console.log('parsedInterval', parsedInterval);
 
     let lastRunAt;
     if(job.lastRunAt){

@@ -5,6 +5,8 @@ mixin userCard(person = {}, i)
       td #{i + 1}
       td= person.id
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
+      td= person.username
+      td= Object.keys(person.information).map(key => `${key}: ${person.information[key]}`)
       td
         a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) #{l.table_open}
       td
@@ -14,46 +16,3 @@ mixin userCard(person = {}, i)
           a(href=`/removeuser/${person.id}`) 
             <i class="far fa-trash-alt"></i>
       
-      //- td
-      //-   a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.participant_id}`) #{person.participant_id}
-      //- if (project.invitations.map(e => e.token).indexOf(person.participant_code) > - 1)
-      //-   td= `${person.participant_code} ✅`
-      //- else
-      //-   td= person.participant_code
-      //- if (project.showCompletionCode)
-      //-   if (person.confirmationCodes && person.participantInProject && person.confirmationCodes.filter(e => e.project_id.toString() == person.participantInProject.toString()) && person.confirmationCodes.filter(e => e.project_id.toString() == person.participantInProject.toString()).length > 0)
-      //-     td= `${person.confirmationCodes.filter(e => e.project_id.toString() == person.participantInProject.toString())[0].individual_code}`
-      //-   else
-      //-     td= ``
-      //- td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
-      //- if (person.level > 10)
-      //-   td Researcher
-      //- else
-      //-   td Participant
-      //- 
-      //- td= person.name
-      //- if(person.language)
-      //-   td= `${person.language.charAt(0).toUpperCase()}${person.language.slice(1)}`
-      //- else 
-      //-   td
-      //- 
-      //- if(person.notifications && person.notifications.length > 0)
-      //-   td= person.notifications.length
-      //- else 
-      //-   td  
-      //- 
-      //- if(person.notifications && person.notifications.length > 0)
-      //-   td 
-      //-     a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.participant_id}`) Schedule
-      //- else 
-      //-   td 
-      //- 
-      //- td= person.useragent
-      //- 
-      //- if user.level > 100 || (person.participant_code && person.level < 10)
-      //-   td
-      //-     a(href=`/removeuser/${person._id}/${person.participant_id}`) 
-      //-       <i class="far fa-trash-alt"></i>
-      //- 
-      //- else 
-      //-   td

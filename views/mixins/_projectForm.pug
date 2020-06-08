@@ -10,10 +10,16 @@ mixin projectForm(project = {})
     label(for='welcomeMessage') #{l.welcomeMessage}
     textarea(type='text' name='welcomeMessage')= project.welcomeMessage
     
+    div.inputCheckBox
+      input(type='checkbox' id= 'askParticipantCode' name= 'askParticipantCode' checked = project.settings && project.settings.askParticipantCode)
+      label(for='askParticipantCode')
+        span.
+          Ask participants to enter a code in the mobile application when joining your study
+          
     label(for='image') Image (paste the image URL here - the image will be displayed next to your study in the mobile application)
     input(type='text' name='image' value=project.image)
-    p
     
+    p
     .div(id="membersList")
       label(for="members") #{l.invite_members}
       if membersEmails && membersEmails.length > 0

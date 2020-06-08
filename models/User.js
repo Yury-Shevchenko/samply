@@ -7,10 +7,6 @@ const userSchema = new Schema({
     local            : {
         password     : String
     },
-    // code             : {
-    //     id           : String,
-    //     password     : String
-    // },
     name             : String,
     email            : String,
     samplyId         : String, // id for mobile participants / goes inside mobileUsers: id in Projects
@@ -35,6 +31,7 @@ const userSchema = new Schema({
         name : String,
         description: String,
         image: String,
+        slug: String,
       }
     ],
     project: {

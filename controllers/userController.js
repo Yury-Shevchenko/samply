@@ -147,12 +147,19 @@ exports.help = async(req, res) => {
   res.render('help');
 }
 
+const getRandomInt = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
 const makeRandomCode = () => {
-    return 'xxxx-xxxx-xxxx-mxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
+  const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
+  return `${randomCode}-xxxx-xxxx-mxxx`.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 exports.createMobileAccount = async(req, res) => {
   const userData = req.body;
@@ -193,18 +200,15 @@ exports.loginMobileAccount = async(req, res) => {
 
 exports.getMyStudies = async(req, res) => {
   const userData = req.body;
-  console.log('get my studies userData', userData);
   const user = await User.findOne({ samplyId: userData.token },{
     participant_projects: 1,
   });
   const studies = user.participant_projects;
-  console.log('user', user);
   res.status(200).json({message: 'OK', studies: studies});
 }
 
 exports.updateAccount = async(req, res) => {
   const userData = req.body;
-  console.log('update account with the info', userData);
   const user = await User.findOne({ samplyId: userData.token },{
     information: 1,
   });
