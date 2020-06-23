@@ -108,7 +108,7 @@ router.get('/debugprojects',
   catchErrors(projectController.debugprojects));
 
 router.get('/users', authController.isAdminLoggedIn, catchErrors(projectController.getMobileUsers));
-
+    
 // results controller
 router.post('/save', catchErrors(resultController.saveIncrementalResults));
 router.get('/history', authController.isLoggedIn, catchErrors(resultController.showHistory));
