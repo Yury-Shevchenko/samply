@@ -25,67 +25,65 @@ block content
       .notifications_scheduler
       
         #choose-participants
-          h2 1. Choose participants
+          h2 #{l.step_1_header} 
           
           .multipleOptions
             .tag.tag__choice
               input(type = 'checkbox' id='future' value='future' name='participants_future')
-              label(for='future' class="tagLabel") #{'All future participants'}
+              label(for='future' class="tagLabel") #{l.step_1_future}
             .tag.tag__choice
               input(type = 'checkbox' id='current' value='current' name='participants_current' checked=participant)
-              label(for='current' class="tagLabel") #{'Current participants'}
+              label(for='current' class="tagLabel") #{l.step_1_current} 
         
           .specificParticipants(style=`display: ${participant ? 'block' : 'none'}`)
             label(for='tags') #{l.edit_tags}
             ul.tags
-              //- - var testUsers = [{id: '123'},{id:'dfas'}]
-              //- each user in testUsers
               .tag.tag__choice
                 input(type = 'checkbox' id='allCurrentParticipants' value='all' checked=!participant name='participants')
-                label(for='allCurrentParticipants' class="tagLabel") All
+                label(for='allCurrentParticipants' class="tagLabel") #{l.step_1_all}
               each user in project.mobileUsers
                 .tag.tag__choice
                   input(type = 'checkbox' id=user.id value=user.id name='participants_ids' checked=user.id === participant)
                   label(for=user.id class="tagLabel") #{user.id}
         
         #choose-time
-          h2 2. Choose time
+          h2 #{l.step_2_header} 
         
           .options
             input(type='radio', name='time', value='specific')#time-spec
             label(for='time-spec')
-              span Specific time point(s)
+              span #{l.step_2_timepoints}  
 
             input(type='radio', name='time', value='interval')#time-inter
             label(for='time-inter')
-              span Time window (the exact time point(s) will be chosen randomly)  
+              span #{l.step_2_windows} 
         
         #timePicker(style="display:none")  
           .containerTimePicker
-            label Hour (0 - 23)
-            label Minute (0 - 59)
-            button(type="button" value="Add new time" id="addTimePicker") Add one more time point
+            label #{l.step_2_hour} 
+            label #{l.step_2_minute}  
+            button(type="button" value="Add new time" id="addTimePicker") #{l.step_2_add_timepoint} 
             input(name="time-specific-hour" class='timePickerHour' type='number' min=0 max=23 value='12') 
             input(name="time-specific-minute" class='timePickerMinute' type='number' min=0 max=59 value='00') 
             
         #timeWindow(style="display:none")
           .containerTimeWindow 
-            label.fromContainer From 
+            label.fromContainer #{l.step_2_from}  
             
             label 
-            label.toContainer To
+            label.toContainer #{l.step_2_to}  
             
             label
             label
-            button(type="button" value="Add new window" id="addTimeWindow") Add one more time window
+            button(type="button" value="Add new window" id="addTimeWindow") #{l.step_2_add_window}   
             
-            label Hour (0 - 23) 
-            label Minute (0 - 59)
+            label #{l.step_2_hour}  
+            label #{l.step_2_minute}  
             label 
-            label Hour (0 - 23)
-            label Minute (0 - 59)
+            label #{l.step_2_hour} 
+            label #{l.step_2_minute}  
             label
-            label How many time points should be randomly selected from this time window?
+            label #{l.step_2_random}  
             label
             
             input(name="time-window-start-hour" class='timeWindowInput windowPickerHourStart' type='number' min=0 max=23 value='') 
@@ -98,40 +96,27 @@ block content
             
             
         #choose-date
-          h2 3. Choose date(s)
+          h2 #{l.step_3_header} 
         
           .options
             input(type='radio', name='date', value='specific')#date-spec
             label(for='date-spec')
-              span Specific date(s)
+              span #{l.step_3_dates} 
 
             input(type='radio', name='date', value='every')#date-every
             label(for='date-every')
-              span Every 
+              span #{l.step_3_every}  
               select(name="date-every-day")
                 - var everymonthdays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
                 each day in everymonthdays
                   option(value=day, selected=false)= day 
-              span  day(s)
-              
-            //- input(type='radio', name='date', value='start-month')#date-start-month
-            //- label(for='date-start-month')
-            //-   span Every 
-            //-   select(name="date-start-month-start-day")
-            //-     - var monthdays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-            //-     each day in monthdays
-            //-       option(value=day, selected=false)= day 
-            //-   span  day(s) starting on 
-            //-   select(name="date-start-month-from-day")
-            //-     - var startmonthdays = ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th','21st','22nd','23rd','24th','25th','26th','27th','28th','29th','30th','31st']
-            //-     each day in startmonthdays
-            //-       option(value=day, selected=false)= day  
-            //-   span  day of month
+              span #{l.step_3_days} 
+            
               
             input(type='radio', name='date', value='spec-week')#date-spec-week
             label(for='date-spec-week')
-              span Specific day of week (choose one or many)
-              - var specific_weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+              span #{l.step_3_weekday} 
+              - var specific_weekdays = [l.Monday, l.Tuesday, l.Wednesday, l.Thursday, l.Friday, l.Saturday, l.Sunday]
               .weekTags
                 each day in specific_weekdays 
                   .tag.tag__choice
@@ -140,7 +125,7 @@ block content
           
             input(type='radio', name='date', value='spec-month')#date-spec-month
             label(for='date-spec-month')
-              span Specific day of month (choose one or many)
+              span #{l.step_3_monthday} 
               - var specific_monthdays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
               .dayTags
                 each day in specific_monthdays
@@ -150,27 +135,27 @@ block content
         
         #datePicker(style="display:none")
           .containerDatePicker
-            label Day (1 - 31)
-            label Month (1 - 12)
-            label Year 
-            button(type="button" value="Add new date" id="addDatePicker") Add one more date
+            label #{l.step_3_day}  
+            label #{l.step_3_month} 
+            label #{l.step_3_yeary}  
+            button(type="button" value="Add new date" id="addDatePicker") #{l.step_3_add_date}  
             input(name="date-specific-day" class='datePickerInput datePickerDay' type='number' min=1 max=31 value=`${(new Date).getDate()}`) 
             input(name="date-specific-month" class='datePickerInput datePickerMonth' type='number' min=1 max=12 value=`${(new Date).getMonth() + 1}`) 
             input(name="date-specific-year" class='datePickerInput datePickerYear' type='number' value=`${(new Date).getFullYear()}`) 
         
 
         #choose-month  
-          h2 4. Choose month(s)          
+          h2 #{l.step_4_header} 
             
           .options
             input(type='radio', name='month', value='every')#month-every
             label(for='month-every')
-              span Any month
+              span #{l.step_4_any}  
 
             input(type='radio', name='month', value='specific')#month-spec
             label(for='month-spec')
-              span Specific month (choose one or many)
-              - var specific_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+              span #{l.step_4_specific} 
+              - var specific_months = [l.january, l.february, l.march, l.april, l.may, l.june, l.july, l.august, l.september, l.october, l.november, l.december]
               .weekTags
                 each month in specific_months 
                   .tag.tag__choice
@@ -179,18 +164,18 @@ block content
               
         
         #choose-start
-          h2 5. Choose when to start 
+          h2 #{l.step_5_header} 
           
           .options
             input(type='radio', name='start', value='specific')#start-specific
             label(for='start-specific')
-              span Start at specific timepoint
+              span #{l.step_5_timepoint} 
               .timeTable
-                span  hour (0-23)
-                span  minute (0-59)
-                span  day (1-31)
-                span  month (1-12)
-                span  year (2020, 2021)
+                span #{l.step_5_hour} 
+                span #{l.step_5_minute} 
+                span #{l.step_5_day} 
+                span #{l.step_5_month} 
+                span #{l.step_5_year} 
               
                 input(name="start-specific-hour" type='number' min=0 style="width: 100px;" value=`${(new Date).getHours()}`)
                 input(name="start-specific-minute" type='number' min=0 style="width: 100px;" value=`${(new Date).getMinutes()}`)
@@ -200,32 +185,32 @@ block content
 
             input(type='radio', name='start', value='event')#start-event
             label(for='start-event')
-              span Start sending notification for each participant after  
+              span #{l.step_5_participant}   
               input(name="start-event-days" type='number' min=0 style="width: 60px;" value=0)
-              span  days 
+              span #{l.step_5_days}  
               input(name="start-event-hours" type='number' min=0 style="width: 60px;" value=0)
-              span  hours 
+              span #{l.step_5_hours}  
               input(name="start-event-minutes" type='number' min=0 style="width: 60px;" value=0)
-              span  minutes from  
+              span #{l.step_5_minutes}   
               select(name="start-event-at")
-                - var start_events = [{value:'now', text: 'now'},{value: 'registration',  text:'the moment of the participant registration' }]
+                - var start_events = [{value:'now', text: l.step_5_now },{value: 'registration',  text: l.step_5_registration }]
                 each event in start_events
                   option(value=event.value, selected=false)= event.text
                   
         #choose-stop  
-          h2 6. Choose when to stop    
+          h2 #{l.step_6_header}     
           
           .options
             input(type='radio', name='stop', value='specific')#stop-specific
             label(for='stop-specific')
-              span Stop at specific timepoint
+              span #{l.step_6_timepoint} 
               
               .timeTable
-                span  hour (0-23)
-                span  minute (0-59)
-                span  day (1-31)
-                span  month (1-12)
-                span  year (2020, 2021)
+                span #{l.step_5_hour} 
+                span #{l.step_5_minute} 
+                span #{l.step_5_day} 
+                span #{l.step_5_month} 
+                span #{l.step_5_year} 
               
                 input(name="stop-specific-hour" type='number' min=0 style="width: 100px;" value=`${(new Date).getHours()}`)
                 input(name="stop-specific-minute" type='number' min=0 style="width: 100px;" value=`${(new Date).getMinutes()}`)
@@ -236,28 +221,27 @@ block content
         
             input(type='radio', name='stop', value='event')#stop-event
             label(for='stop-event')
-              span Stop sending notification for each participant after  
+              span #{l.step_6_participant}   
               input(name="stop-event-days" type='number' min=0 style="width: 60px;" value=0)
-              span  days 
+              span #{l.step_5_days}   
               input(name="stop-event-hours" type='number' min=0 style="width: 60px;" value=0)
-              span  hours 
+              span #{l.step_5_hours} 
               input(name="stop-event-minutes" type='number' min=0 style="width: 60px;" value=0)
-              span  minutes from  
+              span #{l.step_5_minutes}  
               select(name="stop-event-at")
-                - var stop_events = [ {value:'now', text: 'now'}, {value: 'registration',  text:'the moment of the participant registration' } ]
+                - var stop_events = [ {value:'now', text: l.step_5_now }, {value: 'registration',  text: l.step_5_registration } ]
                 each event in stop_events
                   option(value=event.value, selected=false)= event.text 
-                  //- { value: 'open', text:'the moment of opening the first notification of this schedule'}   
+
         
         p
         p          
         #send-button 
-          button(id="createNotificationBtn" class="button") Schedule notification
+          button(id="createNotificationBtn" class="button") #{l.schedule_notifications} 
           
-        //- h2 Output 
         div#output
         
-        pre= h.dump(jobs)
+        //- pre= h.dump(jobs)
         
         script(type='text/javascript', src='/notifications/create.js' nonce=`${noncevalue}`)
         script(type='text/javascript', src='/notifications/timePicker.js' nonce=`${noncevalue}`)

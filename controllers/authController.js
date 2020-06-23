@@ -5,7 +5,7 @@ const mail = require('../handlers/mail');
 
 exports.isLoggedIn = (req, res, next) => {
   if(req.isAuthenticated()){
-    next();
+    next();     
     return;
   }
   req.flash('error', `${res.locals.layout.flash_must_be_logged}`);

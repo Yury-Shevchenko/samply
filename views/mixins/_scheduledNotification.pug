@@ -1,7 +1,7 @@
 mixin scheduledNotification(notification, i)
   .review__header
     .review__author
-      p= `Created at ${h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+      p= `${l.table_created_at} ${h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm')}`
     .review__author
       p= `${notification.name}`
     .review__author
@@ -17,34 +17,34 @@ mixin scheduledNotification(notification, i)
   .review__body
     if(notification.name === 'One-time')
       if(notification.date)
-        span= `Scheduled at ${h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
+        span= `${l.table_scheduled_at} ${h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
       if(notification.window_from)
-        span= `From ${h.moment.utc(notification.window_from).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+        span= `${l.step_2_from} ${h.moment.utc(notification.window_from).local().locale(language).format('MMMM Do YYYY, H:mm')}`
       if(notification.window_to)
-        span= `To ${h.moment.utc(notification.window_to).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+        span= `${l.step_2_to} ${h.moment.utc(notification.window_to).local().locale(language).format('MMMM Do YYYY, H:mm')}`
       if(notification.number)
-        span= `Number of time points: ${notification.number}`
+        span= `${l.table_number_timepoints}: ${notification.number}`
       
     if(notification.name === 'Repeat')
       if(notification.int_start)
-        span= `Start: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
+        span= `${l.table_start}: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
       if(notification.start_event && notification.start_event === 'registration')
-        span= `Start after ${notification.start_after.days} days, ${notification.start_after.hours} hours and ${notification.start_after.minutes} minutes from participant registration`
+        span= `${l.table_start_after} ${notification.start_after.days} ${l.step_5_days}, ${notification.start_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.start_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
       if(notification.int_end)
-        span=  `End: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+        span=  `${l.table_end}: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
       if(notification.stop_event && notification.stop_event === 'registration')
-        span= `Stop after ${notification.stop_after.days} days, ${notification.stop_after.hours} hours and ${notification.stop_after.minutes} minutes from participant registration`
+        span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
       if(notification.readable && notification.readable.from && notification.readable.to)
-        span= `Repeat in the time window from ${notification.readable.from}, to ${notification.readable.to}, number of notifications ${notification.windowInterval.number}`
+        span= `${l.table_repeat_window} ${notification.readable.from}, to ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
       if(notification.readable && notification.readable.interval)
-        span= `Repeat ${notification.readable.interval}`
+        span= `${l.table_repeat} ${notification.readable.interval}`
       
     if(notification.participantId && notification.participantId.length === 0)
-      span= `Applies to all participants at the moment of notification creation` 
+      span= `${l.table_all_participants}` 
     if(notification.participantId && notification.participantId.length > 0)
-      span= `For participants: ${notification.participantId}` 
+      span= `${l.table_for_participants}: ${notification.participantId}` 
     if(notification.randomize)
-      span= `Randomized` 
-    if(notification.scheduleInFuture)
-      span= `Applies to future participants` 
+      span= `${l.table_randomized}` 
+    if(notification.scheduleInFuture)  
+      span= `${l.table_future_participants}` 
   
