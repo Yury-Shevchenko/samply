@@ -126,7 +126,7 @@ router.get('/removenotification/:id', authController.isAdminLoggedIn, catchError
 router.post('/createfixedindividualnotification', authController.isAdminLoggedIn, catchErrors(jobController.createFixedIndividualNotification));
 
 // admin routes
-router.get('/debug', authController.isAdminLoggedIn, catchErrors(jobController.debug));
+router.get('/debug', authController.isSuperAdminLoggedIn, catchErrors(jobController.debug));
 router.post('/scheduleadminjob', authController.isAdminLoggedIn, catchErrors(jobController.scheduleAdminJob));
 
 // api routes
