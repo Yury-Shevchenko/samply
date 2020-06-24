@@ -24,8 +24,8 @@ block content
                 if user.level > 10
                   td <i class="fas fa-ban"></i>
               
-              if(project.mobileUsers)  
-                each person, i in project.mobileUsers
+              if(users)  
+                each person, i in users
                   +userCard(person, i)
 
       else

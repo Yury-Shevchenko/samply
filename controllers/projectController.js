@@ -318,5 +318,14 @@ exports.getMobileUsers = async (req, res) => {
   const project = await Project.findOne({_id: req.user.project._id},{
     mobileUsers: 1,
   });
-  res.render('data', { project });
+  const users = await Promise.all(project.mobileUsers.map(async user => {
+    const participant = await User.findOne({ samplyId: user.id }, { information: 1 })
+    if(participant && participant.information && participant.information.timeWindow ) {
+      const startTime = `${new Date(participant.information.timeWindow.startTime).getHours()}:${new Date(participant.information.timeWindow.startTime).getMinutes()}`;
+      const endTime = `${new Date(participant.information.timeWindow.endTime).getHours()}:${new Date(participant.information.timeWindow.endTime).getMinutes()}`;
+      user.information = {...user.information, from: startTime, to: endTime};
+    }
+    return user;
+  }))
+  res.render('data', { project, users });
 };

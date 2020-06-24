@@ -108,13 +108,12 @@ router.get('/debugprojects',
   catchErrors(projectController.debugprojects));
 
 router.get('/users', authController.isAdminLoggedIn, catchErrors(projectController.getMobileUsers));
-    
+
 // results controller
 router.post('/save', catchErrors(resultController.saveIncrementalResults));
 router.get('/history', authController.isLoggedIn, catchErrors(resultController.showHistory));
 router.get('/history/page/:page', authController.isLoggedIn, catchErrors(resultController.showHistory));
 router.get('/removerecord/:id', authController.isAdminLoggedIn, catchErrors(resultController.removeRecordById));
-// router.get('/users', authController.isAdminLoggedIn, catchErrors(resultController.getData));
 router.get('/users/page/:page', authController.isAdminLoggedIn, catchErrors(resultController.getData));
 router.get('/downloadhistory/:id', authController.isLoggedIn, catchErrors(resultController.downloadHistory));
 

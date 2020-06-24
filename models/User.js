@@ -124,6 +124,11 @@ userSchema.statics.getUsersOfProject = function(project) {
   ]);
 };
 
+//define indexes for the faster search
+userSchema.index({
+  samplyId: 1,
+});
+
 //pre-save validation to make sure that the email does not already exist
 userSchema.pre('save', function(next){
   if (!this.isModified('email') || this.email === ''){
