@@ -298,7 +298,7 @@ exports.invitations = async (req, res) => {
   });
   res.render('invitations', {project});
 };
-
+  
 exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});

@@ -621,7 +621,7 @@ module.exports =
           'step_1_future' : 'All future participants',
           'step_1_current' : 'Current participants',
           'step_1_all': 'All',
-          'step_2_header' : '1. Choose time',
+          'step_2_header' : '2. Choose time',
           'step_2_timepoints': 'Specific time point(s)',
           'step_2_windows': 'Time window (the exact time point(s) will be chosen randomly)',
           'step_2_hour' : 'Hour (0 - 23)',
