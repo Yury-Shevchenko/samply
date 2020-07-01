@@ -820,7 +820,7 @@ async function sendToAllProjectUsers(done, project_id, title, message, url, noti
 // the most simple function to send mobile notification with content to the list of tokens
 async function sendMobileNotification(done, content, tokens, project_id, project_name) {
   const {title, message, url} = content;
-  // Create the messages that you want to send to clents
+
   let messages = [];
   for (let pushToken of tokens) {
     // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
@@ -849,43 +849,32 @@ async function sendMobileNotification(done, content, tokens, project_id, project
   // recommend you batch your notifications to reduce the number of requests
   // and to compress them (notifications with similar content will get
   // compressed).
+  // console.log('messages', messages);
+
   let chunks = expo.chunkPushNotifications(messages);
-  let tickets = [];
-  (async () => {
-    // Send the chunks to the Expo push notification service. There are
-    // different strategies you could use. A simple one is to send one chunk at a
-    // time, which nicely spreads the load out over time:
+  // let tickets = [];
 
-    for (let chunk of chunks) {
-      try {
-        let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-        // console.log('chunk', chunk);
-        // console.log('ticketChunk', ticketChunk);
-        // console.log('content', content);
-        // save new result
-        const result = new Result({
-          project: project_id,
-          project_name: project_name,
-          samplyid: chunk[0].id,
-          data: { title, message, url: content.url.replace('%PARTICIPANT_CODE%', chunk[0].id)},
-          ticket: ticketChunk[0],
-          messageId: chunk[0].data.messageId,
-          events: [{status: 'sent', created: Date.now()}],
-        });
-        await result.save();
-
-        tickets.push(...ticketChunk);
-        // NOTE: If a ticket contains an error code in ticket.details.error, you
-        // must handle it appropriately. The error codes are listed in the Expo
-        // documentation:
-        // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    done();
-  })();
-
+  await Promise.all(chunks.map(async chunk => {
+    let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+    ticketChunk.map(async (ticket, i) => {
+      const result = new Result({
+        project: project_id,
+        project_name: project_name,
+        samplyid: chunk[i].id,
+        data: chunk[i].data,
+        ticket: ticket,
+        messageId: chunk[i].data.messageId,
+        events: [{status: 'sent', created: Date.now()}],
+      });
+      await result.save();
+    })
+    // tickets.push(...ticketChunk);
+    // NOTE: If a ticket contains an error code in ticket.details.error, you
+    // must handle it appropriately. The error codes are listed in the Expo
+    // documentation:
+    // https://docs.expo.io/versions/latest/guides/push-notifications#response-format
+  }))
+  done();
 };
 
 // participants join a study on mobile phone, a user id is created if there was no one before
