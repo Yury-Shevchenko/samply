@@ -56,7 +56,7 @@ mixin projectForm(project = {})
           Enable Geofencing
     
     label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
-    input(type='text' name='geofencingURL' value=project.geofencingURL)
+    input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link)
   
     label(for='coordinates' id="coordinates") Enter GPS coordinates
     
