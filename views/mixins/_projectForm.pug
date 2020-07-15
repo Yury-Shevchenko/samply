@@ -15,7 +15,8 @@ mixin projectForm(project = {})
       label(for='askParticipantCode')
         span.
           #{l.askUsername}
-          
+
+    
     label(for='image') #{l.imageURL} 
     input(type='text' name='image' value=project.image)
     
@@ -31,7 +32,7 @@ mixin projectForm(project = {})
       p
       input(type='text' name='members')
     .div(id="newMember")
-      
+            
     script(nonce=`${noncevalue}`).
       document.addEventListener('DOMContentLoaded', function (){
         document.getElementById('addFieldButton').addEventListener('click', function addField() { 
@@ -42,8 +43,102 @@ mixin projectForm(project = {})
           container.appendChild(input);
         });
       });
-
+    
     button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
     p
+    
+    
+    h5 Geofencing (available only in beta version of the mobile app Samply Research)
+    div.inputCheckBox
+      input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
+      label(for='enableGeofencing')
+        span.
+          Enable Geofencing
+    
+    label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
+    input(type='text' name='geofencingURL' value=project.geofencingURL)
+  
+    label(for='coordinates' id="coordinates") Enter GPS coordinates
+    
+    if (project.settings && project.settings.geofencing && project.settings.geofencing.locations)
+      each location, i in project.settings.geofencing.locations
+        .div(id=`div-${location.slug}`)
+          h6= location.title
+          input(type='text' name=`slug-${location.slug}` value=location.slug hidden)
+          input(type='text' name=`title-${location.slug}` value=location.title)
+          input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
+          input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
+          input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius")
+          button(name="deleteBtn" id=`delete-${location.slug}`) Delete
+          p  
+          
+    p
+    input(type="text" name= "locationName" id="locationName" placeholder="Location name")
+    button.button(type="button" value="Add new location" id="addLocationButton") Add location   
+    
+    
+    script(nonce=`${noncevalue}`).
+      document.addEventListener('DOMContentLoaded', function (){
+        document.querySelectorAll('button[name="deleteBtn"]').forEach((button) => {
+          button.addEventListener('click', (e) => {
+            e.preventDefault();
+            button.parentElement.remove();
+         });
+        })
+        document.getElementById('addLocationButton').addEventListener('click', function addField() {
+          const locationName = document.getElementById("locationName").value;
+          const locationSlug = locationName.toLowerCase().replace(/\s+/g, "-").trim() 
+          if(!locationName) {
+            alert('Enter the location name') 
+            return;
+          } 
+          const coordinates = document.getElementById("coordinates");
+          const locationDiv = document.createElement("div");
+          locationDiv.id = `div-${locationSlug}`;
+        
+          var label = document.createElement('h6');
+          label.innerText = locationName;
+          var slug = document.createElement('input');
+          slug.name = `slug-${locationSlug}`;
+          slug.type = 'text';
+          slug.value = locationName;
+          slug.hidden = true;
+          var title = document.createElement('input');
+          title.name = `title-${locationSlug}`;
+          title.type = 'text';
+          title.value = locationName;
+          var lat_input = document.createElement("input");
+          lat_input.type = 'text';
+          lat_input.name = `latitude-${locationSlug}`;
+          lat_input.placeholder = 'Enter latitude';
+          var lon_input = document.createElement("input");
+          lon_input.type = 'text';
+          lon_input.name = `longitude-${locationSlug}`;
+          lon_input.placeholder = 'Enter longitude';
+          var rad_input = document.createElement("input");
+          rad_input.type = 'text';
+          rad_input.name = `radius-${locationSlug}`;
+          rad_input.placeholder = 'Enter radius';
+          const deleteBtn = document.createElement("button");
+          deleteBtn.innerText = "Delete";
+          deleteBtn.onclick = (e) => {
+            e.preventDefault();
+            deleteBtn.parentElement.remove();
+          };
+
+          locationDiv.appendChild(label)
+          locationDiv.appendChild(slug);
+          locationDiv.appendChild(title);
+          locationDiv.appendChild(lat_input);
+          locationDiv.appendChild(lon_input);
+          locationDiv.appendChild(rad_input);
+          locationDiv.appendChild(deleteBtn);
+          coordinates.appendChild(locationDiv);
+        });
+      });
+    p
+    
 
     input(type='submit' value=l.submit class="button")
+    
+    //- pre= h.dump(project)

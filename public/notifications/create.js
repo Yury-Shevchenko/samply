@@ -161,7 +161,7 @@ function createNotification(){
   // console.log('monthCron', monthCron);
 
   // start moment
-  let startMoment = '', startAfter = '', startEvent = '';
+  let startMoment = '', startAfter = '', startEvent = '', startNextDay = '';
   const start = selected.start;
   if(start === 'specific'){
     const st = {
@@ -197,6 +197,23 @@ function createNotification(){
       }
       // console.log('startMoment', dayMonthCron, whenToStart.date());
     }
+  } else if(start === 'next') {
+    // option to start on the next day
+    startNextDay = parseInt(document.querySelector("select[name='start-next-day']").value);
+    startEvent = document.querySelector("select[name='start-next-at']").value;
+    // if the starting event from now, calculate start moment
+    if(startEvent === 'now'){
+      let whenToStart;
+      if(startNextDay == 1){
+        whenToStart = moment().add({minutes: 1}); // add 1 minute (in case the connection takes st)
+      } else {
+        whenToStart = moment().add({days: startNextDay - 1}).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+      }
+      startMoment = whenToStart.toISOString();
+      if(dayMonthCron && dayMonthCron.includes('*/')) {
+        dayMonthCron = dayMonthCron.replace('*', whenToStart.date());
+      }
+    }
   } else {
     if(date !== 'specific'){
       alert('Choose when to start your schedule');
@@ -204,12 +221,12 @@ function createNotification(){
     }
   }
   const startingStrategy = {
-    start, startMoment, startAfter, startEvent
+    start, startMoment, startAfter, startEvent, startNextDay
   }
-  // console.log('startingStrategy', startingStrategy);
+  console.log('startingStrategy', startingStrategy);
 
   // stop moment
-  let stopMoment = '', stopAfter = '', stopEvent = '';
+  let stopMoment = '', stopAfter = '', stopEvent = '', stopNextDay = '';
   const stop = selected.stop;
   if(stop === 'specific'){
     const stopMom = {
@@ -237,7 +254,23 @@ function createNotification(){
       const whenToStop = moment().add({days: stopAfter.days, hours: stopAfter.hours, minutes: stopAfter.minutes})
       stopMoment = whenToStop.toISOString();
     }
-
+  } else if(stop === 'next') {
+    // option to stop on the next day
+    stopNextDay = parseInt(document.querySelector("select[name='stop-next-day']").value);
+    stopEvent = document.querySelector("select[name='stop-next-at']").value;
+    // if the starting event from now, calculate start moment
+    if(stopEvent === 'now'){
+      let whenToStop;
+      if(stopNextDay == 1){
+        whenToStop = moment().add({minutes: 1}); // add 1 minute (in case the connection takes st)
+      } else {
+        whenToStop = moment().add({days: stopNextDay - 1}).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+      }
+      stopMoment = whenToStop.toISOString();
+      if(dayMonthCron && dayMonthCron.includes('*/')) {
+        dayMonthCron = dayMonthCron.replace('*', whenToStart.date());
+      }
+    }
   } else {
     if(date !== 'specific'){
       alert('Choose when to stop your schedule');
@@ -245,9 +278,9 @@ function createNotification(){
     }
   }
   const stopingStrategy = {
-    stop, stopMoment, stopAfter, stopEvent
+    stop, stopMoment, stopAfter, stopEvent, stopNextDay
   }
-  // console.log('stopingStrategy', stopingStrategy);
+  console.log('stopingStrategy', stopingStrategy);
   // console.log('stopMoment', stopMoment, stopAfter, stopEvent);
 
   // 2. transform this information into the object with notification schedule

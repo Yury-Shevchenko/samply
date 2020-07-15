@@ -322,6 +322,8 @@ exports.createIntervalNotification = async (req, res) => {
         windowInterval: window,
         start_after: req.body.int_start.startAfter,
         stop_after: req.body.int_end.stopAfter,
+        start_next: parseInt(req.body.int_start.startNextDay),
+        stop_next: parseInt(req.body.int_end.stopNextDay),
         start_event: req.body.int_start.startEvent,
         stop_event: req.body.int_end.stopEvent,
         scheduleInFuture: req.body.scheduleInFuture,
@@ -337,13 +339,40 @@ exports.createIntervalNotification = async (req, res) => {
             intervalWindows.map(window => {
 
               if(req.body.int_start.startEvent === 'registration'){
-                const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
-                int_start = new Date(Date.parse(user.created) + start_event_ms);
+                if(req.body.int_start.startNextDay) {
+                  // console.log('req.body.int_start.startNextDay', req.body.int_start.startNextDay);
+                  const startNextDay = parseInt(req.body.int_start.startNextDay);
+                  let whenToStart;
+                  if(startNextDay == 1){
+                    whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+                  } else {
+                    whenToStart = moment(user.created).add({ days: startNextDay - 1 }).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+                  }
+                  int_start = whenToStart.toISOString();
+                } else {
+                  const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
+                  int_start = new Date(Date.parse(user.created) + start_event_ms);
+                }
               }
+              // console.log('int_start', int_start);
+
               if (req.body.int_end.stopEvent === 'registration'){
-                const stop_event_ms = moment.duration({days: req.body.int_end.stopAfter.days, hours: req.body.int_end.stopAfter.hours, minutes: req.body.int_end.stopAfter.minutes}).asMilliseconds();
-                int_end = new Date(Date.parse(user.created) + stop_event_ms);
+                if(req.body.int_end.stopNextDay) {
+                  // console.log('req.body.int_end.stopNextDay', req.body.int_end.stopNextDay);
+                  const endNextDay = parseInt(req.body.int_end.stopNextDay);
+                  let whenToEnd;
+                  if(endNextDay == 1){
+                    whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+                  } else {
+                    whenToEnd = moment(user.created).add({ days: endNextDay - 1 }).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+                  }
+                  int_end = whenToEnd.toISOString();
+                } else {
+                  const stop_event_ms = moment.duration({days: req.body.int_end.stopAfter.days, hours: req.body.int_end.stopAfter.hours, minutes: req.body.int_end.stopAfter.minutes}).asMilliseconds();
+                  int_end = new Date(Date.parse(user.created) + stop_event_ms);
+                }
               }
+              // console.log('int_end', int_end);
 
               let windowFrom = window.from;
               let windowTo = window.to;
@@ -486,6 +515,8 @@ exports.createIndividualNotification = async (req, res) => {
       participantId: req.body.participantId,
       start_after: req.body.int_start.startAfter,
       stop_after: req.body.int_end.stopAfter,
+      start_next: parseInt(req.body.int_start.startNextDay),
+      stop_next: parseInt(req.body.int_end.stopNextDay),
       start_event: req.body.int_start.startEvent,
       stop_event: req.body.int_end.stopEvent,
       scheduleInFuture: req.body.scheduleInFuture,
@@ -512,14 +543,40 @@ exports.createIndividualNotification = async (req, res) => {
           let updatedInterval = interval;
 
           if(req.body.int_start.startEvent === 'registration'){
-            const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
-            int_start = new Date(Date.parse(user.created) + start_event_ms);
+            if(req.body.int_start.startNextDay) {
+              // console.log('req.body.int_start.startNextDay', req.body.int_start.startNextDay);
+              const startNextDay = parseInt(req.body.int_start.startNextDay);
+              let whenToStart;
+              if(startNextDay == 1){
+                whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+              } else {
+                whenToStart = moment(user.created).add({ days: startNextDay - 1 }).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+              }
+              int_start = whenToStart.toISOString();
+            } else {
+              const start_event_ms = moment.duration({days: req.body.int_start.startAfter.days, hours: req.body.int_start.startAfter.hours, minutes: req.body.int_start.startAfter.minutes}).asMilliseconds();
+              int_start = new Date(Date.parse(user.created) + start_event_ms);
+            }
           }
+          // console.log('int_start', int_start);
 
           if(req.body.int_end.stopEvent === 'registration'){
-            const stop_event_ms = moment.duration({days: req.body.int_end.stopAfter.days, hours: req.body.int_end.stopAfter.hours, minutes: req.body.int_end.stopAfter.minutes}).asMilliseconds();
-            int_end = new Date(Date.parse(user.created) + stop_event_ms);
+            if(req.body.int_end.stopNextDay) {
+              // console.log('req.body.int_end.stopNextDay', req.body.int_end.stopNextDay);
+              const endNextDay = parseInt(req.body.int_end.stopNextDay);
+              let whenToEnd;
+              if(endNextDay == 1){
+                whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+              } else {
+                whenToEnd = moment(user.created).add({ days: endNextDay - 1 }).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+              }
+              int_end = whenToEnd.toISOString();
+            } else {
+              const stop_event_ms = moment.duration({days: req.body.int_end.stopAfter.days, hours: req.body.int_end.stopAfter.hours, minutes: req.body.int_end.stopAfter.minutes}).asMilliseconds();
+              int_end = new Date(Date.parse(user.created) + stop_event_ms);
+            }
           }
+          // console.log('int_end', int_end);
 
           //update interval if there is missing information
           if(updatedInterval && updatedInterval.includes('*/')) {
@@ -911,14 +968,39 @@ exports.joinStudy = async(req, res) => {
         let user_int_start = sub.int_start;
         let user_int_end = sub.int_end;
         if(sub.start_event === 'registration'){
-          const start_event_ms = moment.duration({days: sub.start_after.days, hours: sub.start_after.hours, minutes: sub.start_after.minutes}).asMilliseconds();
-          user_int_start = new Date(Date.now() + start_event_ms);
+          if(sub.start_next) {
+            const startNextDay = parseInt(sub.start_next);
+            let whenToStart;
+            if(startNextDay == 1){
+              whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+            } else {
+              whenToStart = moment().add({ days: startNextDay - 1 }).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+            }
+            user_int_start = whenToStart.toISOString();
+          } else {
+            const start_event_ms = moment.duration({days: sub.start_after.days, hours: sub.start_after.hours, minutes: sub.start_after.minutes}).asMilliseconds();
+            user_int_start = new Date(Date.now() + start_event_ms);
+          }
         }
-        if(sub.stop_event === 'registration'){
-          const stop_event_ms = moment.duration({days: sub.stop_after.days, hours: sub.stop_after.hours, minutes: sub.stop_after.minutes}).asMilliseconds();
-          user_int_end = new Date(Date.now() + stop_event_ms);
-        }
+        // console.log('user_int_start', user_int_start);
 
+        if(sub.stop_event === 'registration'){
+          if(sub.stop_next) {
+            // console.log('sub.stop_next', sub.stop_next);
+            const endNextDay = parseInt(sub.stop_next);
+            let whenToEnd;
+            if(endNextDay == 1){
+              whenToEnd = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+            } else {
+              whenToEnd = moment().add({ days: endNextDay - 1 }).startOf('day').add({minutes: Math.floor((Math.random() * 10)), seconds: Math.floor((Math.random() * 60))});
+            }
+            user_int_end = whenToEnd.toISOString();
+          } else {
+            const stop_event_ms = moment.duration({days: sub.stop_after.days, hours: sub.stop_after.hours, minutes: sub.stop_after.minutes}).asMilliseconds();
+            user_int_end = new Date(Date.now() + stop_event_ms);
+          }
+        }
+        // console.log('user_int_end', user_int_end);
 
         // if we need randomization, start random_person_manager
         if(sub.randomize){

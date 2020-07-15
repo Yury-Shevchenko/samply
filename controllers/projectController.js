@@ -103,6 +103,18 @@ exports.createProject = async (req, res) => {
           return e._id
         });
       };
+      const locationSlugs = Object.keys(req.body).filter(key => key.startsWith('slug')).map(key => key.substring(5));
+      const locations = locationSlugs.map(slug => {
+        return (
+          {
+            slug: slug,
+            title: req.body[`title-${slug}`],
+            latitude: parseFloat(req.body[`latitude-${slug}`]),
+            longitude: parseFloat(req.body[`longitude-${slug}`]),
+            radius: parseFloat(req.body[`radius-${slug}`])
+          }
+        )
+      })
       const project = await (new Project(
         {
           name: req.body.name,
@@ -113,7 +125,12 @@ exports.createProject = async (req, res) => {
           members: membersData,
           currentlyActive: req.body.currentlyActive,
           settings: {
-            askParticipantCode: req.body.askParticipantCode && req.body.askParticipantCode === 'on'
+            askParticipantCode: req.body.askParticipantCode && req.body.askParticipantCode === 'on',
+            enableGeofencing: req.body.enableGeofencing && req.body.enableGeofencing === 'on',
+            geofencing: {
+              locations: locations,
+              link: req.body.geofencingURL,
+            }
           }
         }
       )).save();
@@ -155,15 +172,30 @@ exports.updateProject = async (req, res) => {
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
     project.members = membersData;
-    if(req.body.askParticipantCode && req.body.askParticipantCode === 'on'){
-      project.settings = {
-        askParticipantCode: true
-      }
-    } else {
-      project.settings = {
-        askParticipantCode: false
+    if(!project.settings) project.settings = {};
+
+    const locationSlugs = Object.keys(req.body).filter(key => key.startsWith('slug')).map(key => key.substring(5));
+    const locations = locationSlugs.map(slug => {
+      return (
+        {
+          slug: slug,
+          title: req.body[`title-${slug}`],
+          latitude: parseFloat(req.body[`latitude-${slug}`]),
+          longitude: parseFloat(req.body[`longitude-${slug}`]),
+          radius: parseFloat(req.body[`radius-${slug}`])
+        }
+      )
+    })
+
+    project.settings = {
+      askParticipantCode: req.body.askParticipantCode && req.body.askParticipantCode === 'on' ? true : false,
+      enableGeofencing: req.body.enableGeofencing && req.body.enableGeofencing === 'on' ? true : false,
+      geofencing: {
+        locations: locations,
+        link: req.body.geofencingURL,
       }
     }
+
     await project.save();
     req.flash('success', `${res.locals.layout.flash_project_updated}`);
     res.redirect('back');
@@ -298,7 +330,7 @@ exports.invitations = async (req, res) => {
   });
   res.render('invitations', {project});
 };
-  
+
 exports.debugprojects = async(req, res) => {
   const projects = await Project.debugProjects();
   res.render('debugprojects', {projects: projects});

@@ -62,6 +62,8 @@ const projectSchema = new mongoose.Schema({
       scheduleInFuture: Boolean,
       created       : { type: Date, default: Date.now },
       readable      : JSON,
+      start_next    : Number,
+      stop_next     : Number,
     }
   ],
   mobileUsers: [

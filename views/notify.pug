@@ -193,7 +193,20 @@ block content
               input(name="start-event-minutes" type='number' min=0 style="width: 60px;" value=0)
               span #{l.step_5_minutes}   
               select(name="start-event-at")
-                - var start_events = [{value:'now', text: l.step_5_now },{value: 'registration',  text: l.step_5_registration }]
+                - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
+                each event in start_events
+                  option(value=event.value, selected=false)= event.text
+      
+            input(type='radio', name='start', value='next')#start-next
+            label(for='start-next')
+              span Start sending notification for each participant on the 
+              select(name="start-next-day")
+                - var nextstartdays = [ { value: 1,  text: '1st (same)' }, { value: 2,  text: '2nd (next)' }, { value: 3,  text: '3rd' }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21].map(d => {return( { value: d, text: `${d}th`} )}), { value: 22,  text: '22nd' }, { value: 23,  text: '23rd' }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}th`} )}) ]
+                each day in nextstartdays
+                  option(value=day.value, selected=false)= day.text  
+              span  day after
+              select(name="start-next-at")
+                - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events
                   option(value=event.value, selected=false)= event.text
                   
@@ -229,11 +242,22 @@ block content
               input(name="stop-event-minutes" type='number' min=0 style="width: 60px;" value=0)
               span #{l.step_5_minutes}  
               select(name="stop-event-at")
-                - var stop_events = [ {value:'now', text: l.step_5_now }, {value: 'registration',  text: l.step_5_registration } ]
+                - var stop_events = [ {value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now } ]
                 each event in stop_events
                   option(value=event.value, selected=false)= event.text 
 
-        
+            input(type='radio', name='stop', value='next')#stop-next
+            label(for='stop-next')
+              span Stop sending notification for each participant on the       
+              select(name="stop-next-day")
+                - var nextstopdays = [ { value: 1,  text: '1st (same)' }, { value: 2,  text: '2nd (next)' }, { value: 3,  text: '3rd' }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21].map(d => {return( { value: d, text: `${d}th`} )}), { value: 22,  text: '22nd' }, { value: 23,  text: '23rd' }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}th`} )}) ]
+                each day in nextstopdays
+                  option(value=day.value, selected=false)= day.text        
+              span day after    
+              select(name="stop-next-at")
+                - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
+                each event in start_events
+                  option(value=event.value, selected=false)= event.text        
         p
         p          
         #send-button 
