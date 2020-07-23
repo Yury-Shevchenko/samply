@@ -107,11 +107,9 @@ block content
             label(for='date-every')
               span #{l.step_3_every}  
               select(name="date-every-day")
-                - var everymonthdays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+                - var everymonthdays = [ { value: 1,  text: `${l.step_every_day}` }, ...[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21,22,23,24,25,26,27,28,29,30,31].map(d => {return( { value: d, text: `${d}${l.step_dot}`} )}) ]
                 each day in everymonthdays
-                  option(value=day, selected=false)= day 
-              span #{l.step_3_days} 
-            
+                  option(value=day.value, selected=false)= day.text 
               
             input(type='radio', name='date', value='spec-week')#date-spec-week
             label(for='date-spec-week')
@@ -199,12 +197,12 @@ block content
       
             input(type='radio', name='start', value='next')#start-next
             label(for='start-next')
-              span Start sending notification for each participant on the 
+              span #{l.step_5_next}   
               select(name="start-next-day")
-                - var nextstartdays = [ { value: 1,  text: '1st (same)' }, { value: 2,  text: '2nd (next)' }, { value: 3,  text: '3rd' }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21].map(d => {return( { value: d, text: `${d}th`} )}), { value: 22,  text: '22nd' }, { value: 23,  text: '23rd' }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}th`} )}) ]
+                - var nextstartdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
                 each day in nextstartdays
                   option(value=day.value, selected=false)= day.text  
-              span  day after
+              span #{l.step_day_after}  
               select(name="start-next-at")
                 - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events
@@ -248,12 +246,12 @@ block content
 
             input(type='radio', name='stop', value='next')#stop-next
             label(for='stop-next')
-              span Stop sending notification for each participant on the       
+              span #{l.step_6_next}    
               select(name="stop-next-day")
-                - var nextstopdays = [ { value: 1,  text: '1st (same)' }, { value: 2,  text: '2nd (next)' }, { value: 3,  text: '3rd' }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21].map(d => {return( { value: d, text: `${d}th`} )}), { value: 22,  text: '22nd' }, { value: 23,  text: '23rd' }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}th`} )}) ]
+                - var nextstopdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
                 each day in nextstopdays
                   option(value=day.value, selected=false)= day.text        
-              span day after    
+              span #{l.step_day_after}     
               select(name="stop-next-at")
                 - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events

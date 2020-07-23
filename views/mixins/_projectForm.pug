@@ -47,34 +47,34 @@ mixin projectForm(project = {})
     button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
     p
     
+    if(false)
+      h5 Geofencing (available only in beta version of the mobile app Samply Research)
+      div.inputCheckBox
+        input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
+        label(for='enableGeofencing')
+          span.
+            Enable Geofencing
+      
+      label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
+      input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link)
     
-    h5 Geofencing (available only in beta version of the mobile app Samply Research)
-    div.inputCheckBox
-      input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
-      label(for='enableGeofencing')
-        span.
-          Enable Geofencing
-    
-    label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
-    input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link)
-  
-    label(for='coordinates' id="coordinates") Enter GPS coordinates
-    
-    if (project.settings && project.settings.geofencing && project.settings.geofencing.locations)
-      each location, i in project.settings.geofencing.locations
-        .div(id=`div-${location.slug}`)
-          h6= location.title
-          input(type='text' name=`slug-${location.slug}` value=location.slug hidden)
-          input(type='text' name=`title-${location.slug}` value=location.title)
-          input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
-          input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
-          input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius")
-          button(name="deleteBtn" id=`delete-${location.slug}`) Delete
-          p  
-          
-    p
-    input(type="text" name= "locationName" id="locationName" placeholder="Location name")
-    button.button(type="button" value="Add new location" id="addLocationButton") Add location   
+      label(for='coordinates' id="coordinates") Enter GPS coordinates
+      
+      if (project.settings && project.settings.geofencing && project.settings.geofencing.locations)
+        each location, i in project.settings.geofencing.locations
+          .div(id=`div-${location.slug}`)
+            h6= location.title
+            input(type='text' name=`slug-${location.slug}` value=location.slug hidden)
+            input(type='text' name=`title-${location.slug}` value=location.title)
+            input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
+            input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
+            input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius")
+            button(name="deleteBtn" id=`delete-${location.slug}`) Delete
+            p  
+            
+      p
+      input(type="text" name= "locationName" id="locationName" placeholder="Location name")
+      button.button(type="button" value="Add new location" id="addLocationButton") Add location   
     
     
     script(nonce=`${noncevalue}`).
