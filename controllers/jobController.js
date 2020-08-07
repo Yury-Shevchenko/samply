@@ -851,7 +851,7 @@ async function sendToAllProjectUsers(done, project_id, title, message, url, noti
   let users = project.mobileUsers;
   // console.log('users before filtering', users);
   if(excludeUntil) {
-    users = users.filter(user.created > excludeUntil);
+    users = users.filter(user => user.created > excludeUntil);
   };
   // console.log('filter excludeUntil', excludeUntil);
   // console.log('users after filtering', users);
