@@ -55,8 +55,8 @@ router.post('/auth/participant/email/login',
 
 router.post('/auth/researcher/email/login',
   passport.authenticate('website-login', {
-    successRedirect : '/projects',
-    failureRedirect: '/researcher/login',
+    successRedirect : '/',
+    failureRedirect: '/',
     failureFlash : true
   }));
 
