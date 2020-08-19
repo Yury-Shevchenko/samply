@@ -20,7 +20,7 @@ module.exports = {
     'instructions_4': `Gehen Sie innerhalb der Anwendung zur Seite <a href="/studies">Studien</a>, und folgen Sie den Anweisungen dort, um sich für eine bestimmte Studie anzumelden.`,
     'were_invited': `Wenn Sie an eine Studie mit Web-Link teilnehmen, folgen Sie diesem. Sie gelangen dann zu den Anweisungen.`,
     'subscribe_notifications': 'Um Benachrichtigungen dieser Studie zu abonnieren, klicken Sie bitte auf den Button "Abonnieren"',
-    'subscribe_to': 'Abonnieren',
+    'subscribe_to': 'Beitreten',
     'install_title': `Bevor Sie die Studie betreten, installieren Sie bitte die Anwendung auf Ihrem Handy.`,
     'install_instructions_2': `Nach der Installation der Anwendung klicken Sie bitte auf den Button "Beitreten" unten, um an der Studie teilzunehmen.`,
     'study_info_title': `Die Studieninformation`,
@@ -264,6 +264,10 @@ module.exports = {
     'submit': 'Mein Profil aktualisieren',
     'institute': 'Institut',
     'choose_project': 'Wählen Sie eine Studie, an der Sie teilnehmen möchten',
+    'participate_in_studies': 'Sie nehmen an folgenden Studien teil',
+    'no_studies': `
+      Sie nehmen zur Zeit an keiner Studie teil. Wählen Sie die Studie aus der <a href="/studies">Liste</a> der Studien aus.
+    `
   },
 
   'index' : {
@@ -366,6 +370,55 @@ module.exports = {
       'table_done' : 'Erledigt',
       'table_not_done': 'Noch nicht fertig',
       'your_code': 'Dieser Code bestätigt die Erledigung Ihrer Aufgaben: ',
+      'way_1_header': `Weg 1. Der direkte Link zur Studie`,
+      'way_2_header': `Weg 2. Finden Sie die Studie in der App`,
+      'mobile_invite_1': `
+        Es gibt zwei Möglichkeiten, wie Sie an der Studie teilnehmen können.
+        In beiden Fällen müssen Sie zunächst die mobile Anwendung <em>Samply Research</em> auf Ihrem Mobiltelefon installieren.
+        Für Android-Benutzer steht die Applikation unter <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> zur Verfügung.
+        Für Apple-Benutzer ist die Applikation unter <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a> verfügbar.
+      `,
+      'mobile_invite_2': `
+         Nachdem die Applikation installiert ist, benutzen Sie entweder den direkten Link zu der Studie oder Sie finden die Studie in der Liste der Studien innerhalb der Applikation.
+      `,
+      'direct_link': `
+        Direkter Link zur Studie
+      `,
+      'direct_link_1': `
+        Um diesen Link zu benutzen, sollten Sie bereits die "Samply Research"-App auf Ihrem Mobiltelefon installiert haben.
+         Ausserdem sollten Sie diesen Link in Ihrem Mobiltelefon öffnen.
+         Wenn Sie die App zum ersten Mal öffnen, müssen Sie Benachrichtigungen aus der App zulassen.
+         Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
+         Danach müssen Sie ein neues Konto erstellen.
+         Die Anmeldedaten werden sicher auf dem Server Samply (dem Server der Universität Konstanz in Deutschland) gespeichert und wird nur zur Authentifizierung von Benutzern verwendet.
+      `,
+      'direct_link_2': `
+         Nachdem Sie ein Konto erstellt haben, sollten Sie automatisch auf die Seite der Studie innerhalb des Antrags weitergeleitet werden.
+         Die Studienbeschreibung wird auf der Studienseite angezeigt.
+         Wenn Sie auf die Schaltfläche "An der Studie teilnehmen" klicken, sehen Sie den Text der Einverständniserklärung.
+         Wenn Sie auf die Schaltfläche "Ja, ich stimme zu" tippen, treten Sie der Studie bei und erlauben der Studie, Ihnen Benachrichtigungen zu senden.
+         Nun kann der Antrag geschlossen werden.
+      `,
+      'direct_link_3': `
+         Beachten Sie, dass der direkte Link auch dann funktioniert, wenn die Studie in der Liste der Studien nicht öffentlich zugänglich ist.
+      `,
+      'finding_study': `
+          Wenn Sie aus irgendeinem Grund den direkten Link nicht benutzen können, finden Sie die Studie in der Liste der öffentlichen Studien innerhalb der App.
+          Nachdem Sie sich eingeloggt haben, müssen Sie innerhalb der App auf die Registerkarte "Studien" wechseln.
+          Dort können Sie das Suchfeld benutzen, um die Studie zu finden.
+          Sie können den genauen Namen der Studie verwenden, um danach zu suchen.
+          In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
+          Wenn Sie in der Liste der Studien auf die Studie tippen, gelangen Sie auf die Studienseite.
+        `,
+      'copy_link': 'Link kopieren',
+      'name': 'Name',
+      'description': 'Description',
+      'welcome' : 'Welcome message',
+      'instructions': 'Anweisungen für Teilnehmer',
+      'sign_out': `
+        Um sich von der Studie abzumelden, benutzen Sie bitte die mobile Applikation Samply Research.
+        Gehen Sie auf die Seite der Studie innerhalb der Applikation und klicken Sie auf den Button "Studie verlassen" ("Leave the study").
+      `,
     },
 
     'users': {

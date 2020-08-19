@@ -19,8 +19,9 @@ router.get('/researcher', appController.researcherPage);
 router.get('/researcher/:action', appController.researcherPage);
 router.get('/docs', appController.docs);
 router.get('/docs/:page', appController.docs);
-router.get('/forgot', appController.forgot)
+router.get('/forgot', appController.forgot);
 router.get('/testing', authController.isLoggedIn, catchErrors(appController.testing));
+router.get('/testing/:id', authController.isLoggedIn, catchErrors(appController.testing));
 
 // auth controller
 router.post('/account/forgot', catchErrors(authController.forgot));
@@ -30,19 +31,6 @@ router.post('/account/reset/:token',
   catchErrors(authController.update)
 );
 router.get('/logout', authController.logout);
-
-// authentification
-// router.get('/code', userController.code);
-// router.get('/code/:project', userController.code);
-// router.get('/code/:project/:code', userController.code);
-// router.get('/sign/:project', userController.sign);
-// router.get('/sign/:project/:code', userController.sign);
-
-// router.post('/auth/code', passport.authenticate('local-code', {
-//   successRedirect : '/testing',
-//   failureRedirect: '/code',
-//   failureFlash : true
-// }))
 
 router.post('/auth/participant/email/sign',
   passport.authenticate('website-signup-participant', {

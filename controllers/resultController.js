@@ -9,7 +9,6 @@ const Project = mongoose.model('Project');
 
 // update status
 exports.updateStatus = async (req, res) => {
-  console.log('req.body', req.body);
   const { messageId, status } = req.body;
   const updatedResult = await Result.findOneAndUpdate({ messageId: messageId },
       { ['$addToSet'] : {
@@ -125,22 +124,23 @@ exports.getData = async (req, res) => {
 };
 
 exports.getMessages = async (req, res) => {
+  console.log('req.user._id', req.user._id);
   const page = req.params.page || 1;
   const limit = 50;
   const skip = (page * limit) - limit;
   const historyPromise = Result
-    .find({ author: req.user._id, name: 'received' })
+    .find({ samplyid: req.user.samplyId })
     .skip(skip)
     .limit(limit)
-    .sort({'_id': -1})
-  const countPromise = Result.where({ author: req.user._id, name: 'received' }).countDocuments();
+  const countPromise = Result.where({ samplyid: req.user.samplyId }).countDocuments();
   const [history, count] = await Promise.all([ historyPromise, countPromise ]);
   const pages = Math.ceil(count / limit);
   if(!history.length && skip){
     req.flash('info', `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`);
-    res.redirect(`/history/page/${pages}${typeof(participant) === 'number' ? '?id=' + participant : ''}`);
+    res.redirect(`/messages/page/${pages}${typeof(participant) === 'number' ? '?id=' + participant : ''}`);
     return;
   }
+  console.log('history', history);
   res.render('messages', {history, page, pages, count, skip, limit});
 };
 

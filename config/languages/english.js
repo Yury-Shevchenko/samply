@@ -20,7 +20,7 @@ module.exports =
       'instructions_4': `Inside the application, proceed to the <a href="/studies">Studies page</a>, and follow the instructions there to subscribe for a particular study.`,
       'were_invited': `If you were invited to participate in a study with a web-link, follow the link and read the instructions provided on the study page.	`,
       'subscribe_notifications': 'Please press the button "Subsribe" to subscribe to notifications from this study.',
-      'subscribe_to': 'Subscribe',
+      'subscribe_to': 'Join',
       'install_title': `Before you enter the study, pless install the application on your mobile phone.`,
       'install_instructions_2': `After the installation of the application, please click the button "Enter" below to join the study.`,
       'study_info_title': `The study information`,
@@ -264,6 +264,10 @@ module.exports =
       'submit': 'Update my account',
       'institute': 'Institute',
       'choose_project': 'Choose a study to participate',
+      'participate_in_studies': 'You participate in the following studies',
+      'no_studies': `
+        You are not currently participating in any study. Select the study from the <a href="/studies">list</a> of studies.
+      `
     },
 
     'index' : {
@@ -365,6 +369,55 @@ module.exports =
         'table_done' : 'Completed',
         'table_not_done': 'Not done yet',
         'your_code': 'This code confirms the completion of your tasks: ',
+        'way_1_header': `Way 1. The direct link to the study`,
+        'way_2_header': `Way 2. Find the study in the app`,
+        'mobile_invite_1': `
+          There are two ways for you join the study.
+          In both cases, you must first install the mobile application <em>Samply Research</em> on your mobile phone.
+          For Android users, the application is available in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.
+          For Apple users, the application is in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
+        `,
+        'mobile_invite_2': `
+          After the application is installed, either use the direct link to the study or find the study in the list of studies inside the application.
+        `,
+        'direct_link': `
+          Direct link to the study
+        `,
+        'direct_link_1': `
+          To use this link, you should already have the “Samply Research” app installed on your mobile phone.
+          Furthermore, you should open this link in your mobile phone.
+          When you open the app for the first time, you must allow notifications from the app.
+          The question about the notifications should appear automatically on the screen.
+          Then, you will need to create a new account.
+          The login information is stored securely on the Samply server (which is the server of the University of Konstanz in Germany)
+          and is only used to authenticate users.
+        `,
+        'direct_link_2': `
+          After creating an account, you should be automatically redirected to the page of the study within the application.
+          The study description is displayed on the study page.
+          When you click on the "Join the study" button, you will see the text of the consent form.
+          When you tap the "Yes, I agree" button, you will join the study and allow the study to send you notifications.
+          Now, the application can be closed.
+        `,
+        'direct_link_3': `
+          Note that the direct link will work even if the study is not publicly available in the list of studies.
+        `,
+        'finding_study': `If for some reason you cannot use the direct link, you can find the study in the list of public studies within the app.
+          After logging in, you must switch to the "Studies" tab within the app.
+          There you can use the search field to find the study.
+          You can use the exact name of the study to search for it.
+          In the list of studies, the name, the author and the creation date of the study are displayed.
+          When you tap on the study in the list of studies, you will be taken to the study page.
+          `,
+        'copy_link': 'Copy link',
+        'name': 'Name',
+        'description': 'Description',
+        'welcome': 'Welcome message',
+        'instructions': 'Instructions for participants',
+        'sign_out': `
+          To unsubscribe from the study, please use the mobile application Samply Research.
+          Go to the study page within the application and click on the button "Leave the study".
+        `,
       },
 
       'users': {

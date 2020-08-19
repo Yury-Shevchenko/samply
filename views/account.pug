@@ -30,22 +30,15 @@ block content
         else
           if user.samplyId
             label(for="id") ID
-            h2= user.code.id || user.samplyId
+            h2= (user.code && user.code.id) || user.samplyId
 
-          if user.participantInProject
-            label(for="participantInProject") #{layout.project}
-            .custom-select-header
-              select(name="participantInProject")
-                option(value='' style="" selected=(typeof(user.participantInProject) === "undefined")) – #{layout.choose_project} –
-                each project in projects
-                  option(value=project._id, selected=(user.participantInProject.toString() === project._id.toString()))= project.name
+          if user.participant_projects
+            label(for="participantInProject") #{l.participate_in_studies}
+            each project in user.participant_projects
+              p 
+                a(href=`/testing/${project._id}`)= project.name
           else
-            label(for="participantInProject") #{l.choose_project}
-            .custom-select-header
-              select(name="participantInProject")
-                option(value='' style="" selected=(typeof(user.participantInProject) === "undefined")) – #{layout.choose_project} –
-                each project in projects
-                  option(value=project._id)= project.name
+            p !{l.no_studies}
 
         label(for="language") #{l.language}
         .custom-select
@@ -56,5 +49,7 @@ block content
 
         p(style='white-space:pre;')
         input.button( type="submit" value= l.submit )
+        
+        //- pre=h.dump(user)
         
         

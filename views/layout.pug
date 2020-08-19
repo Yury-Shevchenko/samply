@@ -31,6 +31,8 @@ html
                 li.nav__item: a.nav__main_link(href="/", class=(currentPath === '/' ? 'nav__main_link--active' : ''))
                   h6 Samply
             if user
+              li.nav__item: a.nav__main_link(href="/", class=(currentPath === '/' ? 'nav__main_link--active' : ''))
+                h6 Samply
               if user.level < 10
                 li.nav__item
                   a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))

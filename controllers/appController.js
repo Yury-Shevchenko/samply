@@ -18,10 +18,12 @@ exports.forgot = async (req, res) => {
 };
 
 exports.testing = async (req, res) => {
-  const study = req.query.study;
-  const project = await Project.findOne({ _id: req.user.participantInProject || req.user.project._id },{
-    name: 1, showCompletionCode: 1, welcomeMessage: 1, useNotifications: 1, tests: 1,
+  const study = req.params.id;
+  console.log('study', study);
+  const project = await Project.findOne({ _id: study },{
+    name: 1, slug: 1, description: 1, welcomeMessage: 1, 
   });
+  console.log('project', project);
   const projects = await Project.getCurrentProjects();
-  res.render('testing', {project, projects, study});
+  res.render('testing', { project, projects, study });
 };
