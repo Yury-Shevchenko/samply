@@ -194,7 +194,8 @@ exports.downloadHistory = async (req, res) => {
 
 const confirmOwner = (project, user) => {
   const isCreator = project.creator.equals(user._id);
-  if(!isCreator){
+  const isAdministrator = user.level > 100;
+  if(!isCreator && !isAdministrator){
     throw Error('You must be a creator a project in order to do it!');
   }
 };
