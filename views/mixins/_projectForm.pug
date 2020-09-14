@@ -47,7 +47,7 @@ mixin projectForm(project = {})
     button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
     p
     
-    if(false)
+    if(true)
       h5 Geofencing (available only in beta version of the mobile app Samply Research)
       div.inputCheckBox
         input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
