@@ -22,7 +22,7 @@ As a researcher, you can create and manage your study in a web browser. After cr
 
 ## More information
 
-* [Presentation at the virtual GOR conference] (https://www.youtube.com/watch?v=ZrtOAs7O-kw&t=716s) (General Online Research (GOR 20)
+* [Presentation at the virtual GOR conference](https://www.youtube.com/watch?v=ZrtOAs7O-kw&t=716s) (General Online Research (GOR 20)
 10 to 11 September 2020)
 
 ## Contribute to the software
