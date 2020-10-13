@@ -16,10 +16,6 @@ Samply makes sending notifications easy and provides a secure foundation for con
 * Recording participants' responses to your notifications.
 * Preserving anonymity: participants do not need to provide any personal information such as emails or phone numbers to you to participate in your study. All notifications are sent through the application.
 
-## Researcher website at your convenience
-
-As a researcher, you can create and manage your study in a web browser. After creating the study, you send an invitation link to participants. Participants download the mobile application *Samply Research* from Google Play or Apple Store, install the application and join your study. Now, they can receive notifications from you.
-
 ## More information
 
 * [Presentation at the virtual GOR conference](https://www.youtube.com/watch?v=ZrtOAs7O-kw&t=716s) (General Online Research (GOR 20)
