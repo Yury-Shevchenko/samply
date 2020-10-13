@@ -20,6 +20,11 @@ Samply makes sending notifications easy and provides a secure foundation for con
 
 As a researcher, you can create and manage your study in a web browser. After creating the study, you send an invitation link to participants. Participants download the mobile application *Samply Research* from Google Play or Apple Store, install the application and join your study. Now, they can receive notifications from you.
 
+## More information
+
+* [Presentation at the virtual GOR conference] (https://www.youtube.com/watch?v=ZrtOAs7O-kw&t=716s) (General Online Research (GOR 20)
+10 to 11 September 2020)
+
 ## Contribute to the software
 
 Thank you for considering to contribute to the development of Samply! You can submit an issue or a bug report via [GitHub](https://github.com/Yury-Shevchenko/samply/issues/new). If you want to contribute to the code development, submit a pull request or get in touch with us via [Samply Slack chat](https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA).
