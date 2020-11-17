@@ -1,0 +1,20 @@
+.footerLinks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 10px;
+
+  .leftFooter {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-self: start;
+    grid-column-gap: 15px;
+  }
+
+  .rightFooter {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-self: end;
+    grid-column-gap: 15px;
+  }
+
+}

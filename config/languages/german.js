@@ -242,6 +242,11 @@ module.exports = {
     'install_app': 'App installieren',
     'message_history_create_project': 'Erstellen oder aktivieren Sie eine <a href="/projects">Studie</a>, um die Geschichte der Benachrichtigungen einzusehen.',
     'signup': 'Anmelden',
+    'footer_docs': `<a href="/docs/intro">Dokumentation</a>`,
+    'footer_contacts': `<a href="/docs/help">Kontakte</a>`,
+    'footer_terms': `<a href="/docs/dienstbedingungen">Dienstbedingungen</a>`,
+    'footer_policy': `<a href="/docs/datenschutz">Datenschutzerklärung</a>`,
+    'footer_notice': `<a href="/docs/impressum">Impressum</a>`,
   },
 
   'passport': {
