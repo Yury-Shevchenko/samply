@@ -594,7 +594,7 @@ module.exports = {
         'upload_myTasks_1': 'Hierbei handelt es sich um ein separates Dashboard für die von Ihnen hinzugefügten Aufgaben. Dieses ist zu Anfang leer, wird aber mit Ihren Aufgaben gefüllt. Nachdem Sie Ihre erste Aufgabe hinzugefügt haben, können Sie die Aufgabe ausführen, bearbeiten, die Json-Datei herunterladen oder die Aufgabe löschen.',
         'upload_newTask_title': `<a target='blank' href='../tests/add'>Neue Aufgabe</a>`,
         'upload_newTask_1': 'Das Hinzufügen einer neuen Aufgabe ist einfach. Geben Sie den Namen und die Beschreibung der Aufgabe ein, wählen Sie die Json-Datei aus und fügen Sie, wenn Sie möchten, ein Titelbild hinzu. Tags sind nicht notwendig, können aber anderen Forschern helfen, Ihre Aufgabe zu finden. Wählen Sie am Ende aus, wie die Aufgabe angezeigt werden soll. Öffentliche Aufgaben stehen anderen Forschern zur Verfügung, so dass sie diese sehen, ausführen und die json-Datei herunterladen können. Wenn Sie Ihre Aufgabe noch nicht teilen möchten, stellen Sie sie privat, so dass nur Sie und Ihre Teilnehmer diese sehen können. Nach dem Speichern erscheint Ihre Aufgabe auf der Seite "Meine Aufgaben".',
-        'project_title': 'Management der Studie',
+        'project_title': 'Studien',
         'project_projects_title': `<a target='blank' href='../projects'>Studien</a> `,
         'project_projects_1': `Der Samply ist nach Studien organisiert.
             Nach der Registrierung als Forscher wird auf der ersten Seite, die Sie sehen, die Erstellung einer neuen Studie vorgeschlagen.
@@ -623,16 +623,8 @@ module.exports = {
         'project_demo_1': `Sie können jede Aufgabe schon individuell starten, aber diese Demo-Seite zeigt Ihnen, wie das gesamte Experiment für die Teilnehmer aussehen wird. Ein Teilnehmer sieht den Namen des Tests, seine Beschreibung und den Status (erledigt oder noch nicht erledigt). Die Aufgaben auf der Liste erscheinen in der Reihenfolge, die Sie imn der Studie angegeben haben. Sobald eine Aufgabe erledigt ist, kann ein Teilnehmer sie nicht mehr wiederholen.`,
         'project_demoResults_title': `<a target='blank' href='../results'>Demo-Ergebnisse</a>  `,
         'project_demoResults_1': `Um Ihnen einen Eindruck davon zu vermitteln, wie die Rohdaten aussehen, können Sie hier Ihre eigenen Demo-Ergebnisse ansehen und herunterladen. Die Daten werden als CSV-Datei mit kommagetrennten Werten gespeichert. Die Daten während des Experiments werden in zwei Formaten gespeichert: "inkrementell" - ein neuer Teil der Daten wird jedes Mal protokolliert, wenn während des Experiments ein ausreichendes Zeitfenster vorhanden ist (z.B. wenn ein Teilnehmer die Anweisung eines neuen Versuchsblocks liest), und " komplett " - die Daten werden am Ende des Experiments übertragen. Wenn also ein Teilnehmer die Aufgabe unterbricht, werden nur die inkrementellen Daten bis zum letzten Snapshot gespeichert. Die Ergebnisse der Demo zeigen Ihnen auch, wie viele Datensätze (Zeilen) in der Datendatei gespeichert sind.`,
-        'data_title': 'Datenerhebung',
-        'data_results_title': `<a target='blank' href='../data'>Ergebnisse</a> `,
-        'data_results_1': 'Durch Anklicken der Aufgaben auf der linken Seite können Sie zwischen den Ergebnissen für verschiedene Aufgaben wechseln. Die Tabelle enthält Informationen über einen Teilnehmer und die Art der Daten. Die Samply ID ist eine eindeutige Nummer, die jedem Benutzer unabhängig von Teilnehmercode und Name zugewiesen wird. Sie können entweder Daten für einen bestimmten Teilnehmer herunterladen oder alle Ergebnisse für diese Aufgabe herunterladen.',
-        'data_participants_title': `<a target='blank' href='../users'>Teilnehmer</a> `,
-        'data_participants_1': `
-          Die Teilnehmer Ihrer Studie sind in der Tabelle in der Reihenfolge ihrer Anmeldezeit aufgeführt.
-          Sie können Ihre Teilnehmer aus der Liste löschen. Diese Aktion kann nicht rückgängig gemacht werden und führt dazu, dass keine Benachrichtigungen mehr an gelöschte Teilnehmer gesendet werden.
-          Sie können die Historie der gesendeten Benachrichtigungen anzeigen oder neue Benachrichtigungen für jeden Teilnehmer planen, wenn Sie auf die entsprechenden Links neben den einzelnen Teilnehmern klicken.
-        `,
         'data_invitations_title': `<a target='blank' href='../invitations'>Einladungen</a> `,
+        'invitation_title': `Einladungen`,
         'invitations_1': `
           Wenn Nutzer die App starten, müssen sie Benachrichtigungen von der App zulassen.
           Die Frage nach den Benachrichtigungen sollte automatisch auf dem Bildschirm erscheinen.
@@ -662,6 +654,91 @@ module.exports = {
         'ask_question_header': 'Haben Sie eine Frage?',
         'type_in_your_question': 'Fragen Sie hier',
         'send_question_btn': 'Senden',
+
+        'notifications_title': 'Benachrichtigungen',
+        'notifications_1': `
+          Die Einrichtung des Benachrichtigungsplans erfordert die Festlegung des Benachrichtigungsinhalts (Titel, Nachricht und Studien-URL) und die Entscheidung über den Zeitplan.
+          Es wird empfohlen, den Titel und die Nachricht jeweils kürzer als 30 Zeichen (einschließlich Leerzeichen) zu halten, um sie mit allen potenziellen Geräten und Bildschirmgrößen kompatibel zu machen.
+          Der Titel kann den Namen der Studie (z.B. "Studie zur Lebensqualität") oder den Namen ihrer aktuellen Phase ("Studie zur Lebensqualität - Tag 1") enthalten.
+          Die Nachricht kann eine Anweisung oder das, was vom Teilnehmer erwartet wird, enthalten, z.B. "Bitte füllen Sie eine 1-minütige Umfrage aus".
+          Eine andere Strategie ist die Platzierung einer Umfragefrage im Titel der Meldung oder der Nachricht.
+        `,
+        'notifications_2': `
+          Der URL-Link kann die ID des Teilnehmers enthalten: der Platzhalter "%PARTICIPANT_CODE%" innerhalb des Weblinks wird durch die Samply-ID jedes Benutzers ersetzt (z.B. https://examplesurvey.com/?id=%PARTICIPANT_CODE%).
+          Dies kann zur Verfolgung der Umfrageteilnahme verwendet werden, wenn die URL-Abfrageparameter in der Umfrage erfasst und gespeichert werden.
+        `,
+        'notifications_3': `
+          Wenn man der Benutzeroberfläche Schritt für Schritt folgt, müssen einige Auswahlmöglichkeiten getroffen werden, um den Zeitplan für die Benachrichtigungen zu definieren.
+        `,
+        'notifications_4_1': `
+          Teilnehmer auswählen
+        `,
+        'notifications_4_2': `
+          Benachrichtigungen können entweder an alle gegenwärtigen und zukünftigen Teilnehmer oder an einen bestimmten Teilnehmer, der aus dem Menü unter "Aktuelle Teilnehmer" ausgewählt wird, gesendet werden.
+        `,
+        'notifications_5_1': `
+          Zeit auswählen
+        `,
+        'notifications_5_2': `
+          Ein bestimmter Zeitpunkt oder bestimmte Zeitpunkte können ausgewählt werden, indem Stunde und Minute in das Eingabefeld eingegeben werden.
+          Alternativ kann ein Zeitfenster definiert werden (z.B. von 9.00 bis 18.00 Uhr), in dem ein oder mehrere Zeitpunkte nach dem Zufallsprinzip gezeichnet werden können.
+          Wenn zahlreiche Teilnehmer ausgewählt werden, werden die Benachrichtigungszeiten für jeden einzelnen zufällig bestimmt.
+        `,
+        'notifications_6_1': `
+          Datum / Daten auswählen
+        `,
+        'notifications_6_2': `
+          Ein bestimmtes Datum kann im Format Tag, Monat und Jahr gewählt werden. Wenn eine Benachrichtigung wiederholt werden muss, können alternativ andere Optionen gewählt werden.  Benachrichtigungen können jeden Tag oder in verschiedenen Intervallen (jeden 2., 3., 4. usw. Tag) versandt werden. Alternativ können der/die Wochentag(e) oder der/die Tag(e) des Monats gewählt werden.
+        `,
+        'notifications_7_1': `
+          Monat(e) auswählen
+        `,
+        'notifications_7_2': `
+          Für die Benachrichtigungen kann jeder beliebige Monat bzw. können beliebige Monate gewählt werden.
+        `,
+        'notifications_8_1': `
+          Startzeitpunkt wählen
+        `,
+        'notifications_8_2': `
+          Benachrichtigungen können zu bestimmten Zeitpunkten, die durch Uhrzeit und Datum definiert sind, versandt werden. Alternativ kann ein Zeitpunkt relativ zum aktuellen Zeitpunkt oder zum Zeitpunkt der Teilnehmerregistrierung gewählt werden. Im letzteren Fall ist der Startpunkt für jeden Teilnehmer unterschiedlich und wird durch den Zeitpunkt bestimmt, zu dem ein Teilnehmer der Studie über die mobile App beitritt.
+        `,
+        'notifications_9_1': `
+          Endzeitpunkt wählen
+        `,
+        'notifications_9_2': `
+          Die Optionen hier sind ähnlich wie die Wahl des Zeitpunkts, zu dem Benachrichtigungen gestartet werden sollen. Es können verschiedene Kombinationen von Start- und Haltepunkten erstellt werden, z.B. können Benachrichtigungen von dem Moment an beginnen, an dem sich jeder Teilnehmer registriert, aber zu einem bestimmten Zeitpunkt enden, der für alle gleich ist.
+        `,
+        'notifications_10': `
+          Wenn eine Benachrichtigung hinzugefügt wurde, erscheint sie in der Liste der geplanten Benachrichtigungen, die jederzeit durch Klicken auf das Löschen-Symbol in der Tabelle oder die Schaltfläche "Alle Benachrichtigungen löschen" kontrolliert und gelöscht werden kann.
+        `,
+
+        'data_title': 'Teilnehmer & Verlauf',
+        'data_results_title': `<a target='blank' href='../data'>Ergebnisse</a> `,
+        'data_results_1': 'Durch Anklicken der Aufgaben auf der linken Seite können Sie zwischen den Ergebnissen für verschiedene Aufgaben wechseln. Die Tabelle enthält Informationen über einen Teilnehmer und die Art der Daten. Die Samply ID ist eine eindeutige Nummer, die jedem Benutzer unabhängig von Teilnehmercode und Name zugewiesen wird. Sie können entweder Daten für einen bestimmten Teilnehmer herunterladen oder alle Ergebnisse für diese Aufgabe herunterladen.',
+        'data_participants_title': `<a target='blank' href='../users'>Teilnehmer</a> `,
+        'data_participants_1': `
+          Die Teilnehmer Ihrer Studie sind in der Tabelle in der Reihenfolge ihrer Anmeldezeit aufgeführt.
+          Sie können Ihre Teilnehmer aus der Liste löschen. Diese Aktion kann nicht rückgängig gemacht werden und führt dazu, dass keine Benachrichtigungen mehr an gelöschte Teilnehmer gesendet werden.
+          Sie können die Historie der gesendeten Benachrichtigungen anzeigen oder neue Benachrichtigungen für jeden Teilnehmer planen, wenn Sie auf die entsprechenden Links neben den einzelnen Teilnehmern klicken.
+        `,
+        'data_1': `
+          Es gibt zwei Möglichkeiten, die Teilnahme zu überwachen: über die Teilnehmerliste (Menü "Teilnehmer") und über die Geschichte der gesendeten Benachrichtigungen (Menü "Geschichte").
+        `,
+        'data_history_title': `Verlauf`,
+        'data_history_1': `
+          Das Menü "Verlauf" zeigt die Zeitpunkte für die folgenden Ereignisse jeder Benachrichtigung an:
+        `,
+        'data_history_2_1': `Als die Benachrichtigung vom Server gesendet wurde.`,
+        'data_history_2_2': `Als der Teilnehmer die Online-Studie durch Tippen auf die Benachrichtigung geöffnet hat.`,
+        'data_history_2_3': `Als der Teilnehmer die Benachrichtigung innerhalb der mobilen Applikation geöffnet hat.`,
+        'data_history_2_4': `Als der Teilnehmer die Benachrichtigung innerhalb der mobilen Applikation archiviert hat.`,
+        "data_history_3": `
+          Der Titel, die Nachricht und die URL der Studie für jede Benachrichtigung werden angezeigt.
+          Wenn der Benutzer eine Benachrichtigung ablehnt, wird kein Ereignis ausgelöst oder aufgezeichnet.
+          Wenn Sie auf die Benutzer-ID klicken, werden die für diesen Benutzer gefilterten Benachrichtigungsereignisse angezeigt.
+          Um ihre Interaktionen mit Benachrichtigungen weiter zu untersuchen und zu analysieren, kann die Historie aller Ereignisse des Teilnehmers im CSV-Format heruntergeladen werden.
+        `,
+
       },
 
       'listing': {

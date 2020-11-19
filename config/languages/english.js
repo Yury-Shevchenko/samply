@@ -612,16 +612,8 @@ module.exports =
           'project_demo_1': `You can already start each task individually, but this demo page will show you what the whole experiment will look like for participants. A participant will see the name of the test, its description and the status (completed or not yet completed). The tasks on the list appear in the order you specified in the study. Once a task is completed, a participant cannot repeat it.`,
           'project_demoResults_title': `<a target='blank' href='../results'>Demo results</a>  `,
           'project_demoResults_1': `To give you an idea what the raw data looks like, you can view and download your own demo results here. The data is stored as a CSV-file with comma-separated values. The data during the experiment is saved in two formats: “incremental” – a new part of the data is logged each time there is a sufficient time window during the experiment (e.g., when a participant reads the instruction of a new experimental block), and “full” – the data is transferred at the end of the experiment. So if a participant interrupts the task, only the incremental data up to the last snapshot will be saved. The results of the demo also show you how many records (rows) are stored in the data file.`,
-          'data_title': 'Collect data',
-          'data_results_title': `<a target='blank' href='../data'>Results</a> `,
-          'data_results_1': 'By clicking on the tasks on the left, you can switch between results for different tasks. The table contains information about a participant and the type of data. The Samply ID is a unique number assigned to each user regardless of the participant code and name. You can either download data for a specific participant or download all results for that task.',
-          'data_participants_title': `<a target='blank' href='../users'>Participants</a> `,
-          'data_participants_1': `
-            The participants of your study are listed in the table in the order of their registration time.
-            You can delete your participants from the list. This action cannot be undone and will result in no more notifications being sent to deleted participants.
-            You can view the history of sent notifications or schedule new notifications for each participant by clicking the respective links next to each participant.
-          `,
           'data_invitations_title': `<a target='blank' href='../invitations'>Invitations</a> `,
+          'invitation_title': `Invitations`,
           'invitations_1': `
             When users start an app, they will have to allow notifications from the app.
             The question about notifications should pop up automatically on the screen.
@@ -648,7 +640,89 @@ module.exports =
           'type_in_your_question': 'Ask it here',
           'send_question_btn': 'Send',
           'notifications_title': 'Notifications',
+          'notifications_1': `
+            Setting up the notifications plan requires defining the notification content (a title, message, and study URL) and deciding on the schedule.
+            It is recommended to keep the title and message shorter than 30 characters each (including spaces) to make them compatible with all potential devices and screen sizes.
+            The title can contain the study’s name (e.g., “Study of life quality”) or the name of its current phase (“Life quality study – Day 1”).
+            The message can include an instruction or what is expected from the participant, e.g., “Please complete a 1-minute survey”.
+            Another strategy is placing a survey question in the notification title or message.
+          `,
+          'notifications_2': `
+            The URL link may contain the participant’s ID: the placeholder “%PARTICIPANT_CODE%” inside the weblink will be replaced with each user’s Samply ID (e.g., https://examplesurvey.com/?id=%PARTICIPANT_CODE%).
+            This can be used to track survey participation if the URL query parameters are captured and saved in the survey.
+          `,
+          'notifications_3': `
+            If the user interface is followed step-by-step, a few choices have to be made in order to define the notifications schedule.
+          `,
+          'notifications_4_1': `
+            Choose participants
+          `,
+          'notifications_4_2': `
+            Notifications can be sent either to all current and future participants or to a particular participant chosen from the menu under “Current participants”.
+          `,
+          'notifications_5_1': `
+            Choose time(s)
+          `,
+          'notifications_5_2': `
+            A specific time point or time points can be selected by entering the hour and minute in the input field.
+            Alternatively, a time window can be defined (e.g., from 9 a.m. to 6 p.m.), during which a time point or time points can be randomly drawn.
+            If numerous participants are selected, notification times will be randomized for each one.
+          `,
+          'notifications_6_1': `
+            Choose date(s)
+          `,
+          'notifications_6_2': `
+            A specific date can be selected in the format of day, month, and year. Alternatively, if a notification need to be repeated, other options can be chosen.  Notifications can be sent every day or at a range of intervals (every 2nd, 3rd, 4th, etc. day). Alternatively, the day(s) of the week or day(s) of the month can be selected.
+          `,
+          'notifications_7_1': `
+            Choose month(s)
+          `,
+          'notifications_7_2': `
+            Any specific month(s) can be chosen for notifications.
+          `,
+          'notifications_8_1': `
+            Choose when to start
+          `,
+          'notifications_8_2': `
+            Notifications can begin to be sent at specific time points defined by the time and date. Alternatively, a time point can be picked relative to the current moment or the moment of participant registration. In the latter case, the starting point will be different for each participant and will be determined by the time when a participant joins the study via the mobile app.
+          `,
+          'notifications_9_1': `
+            Choose when to stop
+          `,
+          'notifications_9_2': `
+            The options here are similar to choosing when to start notifications. Different combinations of starting and stopping points can be created, e.g., notifications can start from the moment each participant registers but stop at one specific time point, which will be the same for everybody.
+          `,
+          'notifications_10': `
+            When a notification has been added, it appears in the list of scheduled notifications, which can be controlled and cancelled at any time by clicking either the delete icon in the table or the “Delete all notifications” button.
+          `,
 
+          'data_title': 'Participants & History',
+          'data_results_title': `<a target='blank' href='../data'>Results</a> `,
+          'data_results_1': 'By clicking on the tasks on the left, you can switch between results for different tasks. The table contains information about a participant and the type of data. The Samply ID is a unique number assigned to each user regardless of the participant code and name. You can either download data for a specific participant or download all results for that task.',
+          'data_participants_title': `Participants`,
+          'data_participants_1': `
+            The list of participants displays them in order of registration to the study.
+            Together with their unique ID, the time at which they joined the study, and their username, the table provides information from the direct link query (e.g., code).
+            The “Log” column displays the links to the logs of the notifications sent to a particular participant.
+            Next to this, the “New notification” column has links to the Notifications menu where the participant’s notifications can be scheduled.
+            A participant can also be deleted by clicking the basket icon on the right-hand side of the table.
+          `,
+          'data_1': `
+            There are two ways to monitor participation: via the list of participants (“Participants” menu) and the history of notifications sent (“History” menu). 
+          `,
+          'data_history_title': `History`,
+          'data_history_1': `
+            The “History” menu displays the time points for the following events of each notification:
+          `,
+          'data_history_2_1': `When the notification was sent from the server.`,
+          'data_history_2_2': `When the user opened the online study by tapping on the notification.`,
+          'data_history_2_3': `When the user opened the notification within the mobile application.`,
+          'data_history_2_4': `When the user archived the notification message within the mobile application.`,
+          'data_history_3': `
+            The title, message, and study URL for each notification are shown.
+            If the user dismisses a notification, no event is triggered or recorded. Clicking on the user ID reveals the notification events filtered for that user.
+            To further inspect and analyze their interactions with notifications, the history of all the participant’s events can be downloaded in the CSV format.
+          `,
 
         },
 

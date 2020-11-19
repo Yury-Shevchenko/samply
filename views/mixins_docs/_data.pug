@@ -1,27 +1,30 @@
 mixin data()
-
+  
+  
+  p.card-message 
+    | !{l.data_1} 
+  
   h5 
     .headerLink !{l.data_participants_title}
   p.card-message 
     | #{l.data_participants_1}
     
   h5 
-    .headerLink History
+    .headerLink #{l.data_history_title}
+    
   p.card-message 
-    | The table with the history of sent notifications shows recorded events for each sent notification. Four different events and their time stamps are recorded: 
-
+    | #{l.data_history_1}
+    
   ol
     li 
-      p.card-message When the notification is sent from the server. It usually corresponds to the time you have set.
+      p.card-message #{l.data_history_2_1}
     li 
-      p.card-message When the user opens your online study by tapping on the notification. We record the time when the user taps the notification. If the URL of your online study is set up correctly, this should be the time when the user opens the study.
+      p.card-message #{l.data_history_2_2}
     li 
-      p.card-message When the user opens the notification within the mobile application. If the notification has been ignored or rejected by the user (e.g. by swipe), it will be removed from the phone screen. However, it is still accessible within the mobile application. You can instruct your participants to continue participating in the online study by opening the application, going to the History tab and tapping the message. When they do so, the time is recorded. 
+      p.card-message #{l.data_history_2_3}
     li 
-      p.card-message When the user has put the message in the archive. Within the mobile application, there is a second way for the user to interact with the notification on the History tab. Archiving the notification does not open the notification, but removes it from the list of new messages within the application (but it is still accessible if the user toggles the Show message history option). You can instruct your participants to archive the notification in certain cases, e.g. if for some reason they cannot answer the questions of your study.
+      p.card-message #{l.data_history_2_4}
   
   p.card-message 
-    | Each row in the table also contains information about the content of the notification: title, message and web link. If you have customized your web link with the participant ID in the query string, you will see the URL that a particular participant received (which should be different for each participant). You can delete a line in the history if you want. You can also download the entire table as a CSV file. When you download the history of notifications, the time of the events is saved as a timestamp.  In JavaScript, a timestamp is the number of milliseconds that have passed since January 1, 1970. This is done for the convenience of data analysis, so you do not need to convert dates to absolute time to calculate time differences. If you need dates, you can always use available statistics libraries to convert milliseconds back to dates.
-  
-
+    | #{l.data_history_3}
     

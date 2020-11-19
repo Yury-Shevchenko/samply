@@ -75,7 +75,7 @@ html
                             option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
         
                 li.nav__item
-                  a.nav__main_link(href='/projects', class=(currentPath.startsWith('/projects')  ? 'nav__main_link--active' : ''))
+                  a.nav__link(href='/projects', class=(currentPath.startsWith('/projects')  ? 'nav__main_link--active' : ''))
                     h6 #{layout.projects}
                 li.nav__item
                   a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__main_link--active' : '')) 
