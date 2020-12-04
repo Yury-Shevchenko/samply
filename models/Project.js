@@ -102,6 +102,7 @@ projectSchema.statics.findAllPublic = function() {
       name: '$$ROOT.name',
       slug: '$$ROOT.slug',
       description: '$$ROOT.description',
+      welcomeMessage: '$$ROOT.welcomeMessage',
       created: '$$ROOT.created',
       author_name: '$author.name',
       author_institute: '$author.institute',

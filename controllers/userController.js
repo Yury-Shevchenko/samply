@@ -228,12 +228,13 @@ exports.resetPassword = async(req, res) => {
   user.resetPasswordExpires = Date.now() + 3600000; //1 hour to reset the password
   await user.save();
   const resetURL = `https://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
-  const subject = res.locals.layout.flash_password_reset;
+  const subject = res.locals.layout && res.locals.layout.flash_password_reset || 'Password Reset';
+  const language = res.locals.layout && res.locals.locale_language || 'english';
   await mail.send({
     participant: user,
     subject,
     resetURL,
-    filename: 'password-reset-' + res.locals.locale_language
+    filename: 'password-reset-' + language
   });
   res.status(200).json({message: 'OK'});
 }
