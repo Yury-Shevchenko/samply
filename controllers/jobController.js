@@ -381,14 +381,14 @@ exports.createIntervalNotification = async (req, res) => {
               if(windowFrom && windowFrom.includes('*/')) {
                 let parsedFrom = windowFrom.split(' ');
                 if(parsedFrom[3].includes('*/')){
-                  parsedFrom[3] = parsedFrom[3].replace('*', int_start.getDate());
+                  parsedFrom[3] = parsedFrom[3].replace('*', new Date(int_start.getDate()));
                   windowFrom = parsedFrom.join(' ');
                 }
               }
               if(windowTo && windowTo.includes('*/')) {
                 let parsedTo = windowTo.split(' ');
                 if(parsedTo[3].includes('*/')){
-                  parsedTo[3] = parsedTo[3].replace('*', int_start.getDate());
+                  parsedTo[3] = parsedTo[3].replace('*', new Date(int_start.getDate()));
                   windowTo = parsedTo.join(' ');
                 }
               }
@@ -582,7 +582,7 @@ exports.createIndividualNotification = async (req, res) => {
           if(updatedInterval && updatedInterval.includes('*/')) {
             let parsedInterval = updatedInterval.split(' ');
             if(parsedInterval[3].includes('*/')){
-              parsedInterval[3] = parsedInterval[3].replace('*', int_start.getDate());
+              parsedInterval[3] = parsedInterval[3].replace('*', new Date (int_start.getDate()));
               updatedInterval = parsedInterval.join(' ');
             }
           }
@@ -1012,14 +1012,14 @@ exports.joinStudy = async(req, res) => {
           if(windowFrom && windowFrom.includes('*/')) {
             let parsedFrom = windowFrom.split(' ');
             if(parsedFrom[3].includes('*/')){
-              parsedFrom[3] = parsedFrom[3].replace('*', user_int_start.getDate());
+              parsedFrom[3] = parsedFrom[3].replace('*', new Date(user_int_start).getDate());
               windowFrom = parsedFrom.join(' ');
             }
           }
           if(windowTo && windowTo.includes('*/')) {
             let parsedTo = windowTo.split(' ');
             if(parsedTo[3].includes('*/')){
-              parsedTo[3] = parsedTo[3].replace('*', user_int_start.getDate());
+              parsedTo[3] = parsedTo[3].replace('*', new Date(user_int_start).getDate());
               windowTo = parsedTo.join(' ');
             }
           }
