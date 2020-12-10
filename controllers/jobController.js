@@ -1050,13 +1050,13 @@ exports.joinStudy = async(req, res) => {
 
           let updatedInterval = sub.interval;
 
-          console.log('line 1054', updatedInterval, user_int_start, user_int_end);
+          console.log('line 1054', updatedInterval, user_int_start, user_int_end, typeof(user_int_start), new Date(user_int_start).getDate());
 
           //update interval if there is missing information
           if(updatedInterval && updatedInterval.includes('*/')) {
             let parsedInterval = updatedInterval.split(' ');
             if(parsedInterval[3].includes('*/')){
-              parsedInterval[3] = parsedInterval[3].replace('*', user_int_start.getDate());
+              parsedInterval[3] = parsedInterval[3].replace('*', new Date(user_int_start).getDate());
               updatedInterval = parsedInterval.join(' ');
             }
           }
