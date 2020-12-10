@@ -1049,6 +1049,9 @@ exports.joinStudy = async(req, res) => {
         } else {
 
           let updatedInterval = sub.interval;
+
+          console.log('line 1054', updatedInterval, user_int_start, user_int_end);
+
           //update interval if there is missing information
           if(updatedInterval && updatedInterval.includes('*/')) {
             let parsedInterval = updatedInterval.split(' ');
