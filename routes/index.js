@@ -129,6 +129,7 @@ router.post('/api/updateaccount', userController.updateAccount);
 router.post('/api/updatestatus', resultController.updateStatus);
 router.post('/api/history', resultController.getHistory);
 router.post('/api/reset', userController.resetPassword);
-
+router.post('/api/update', jobController.updateTokenInStudy);
+router.post('/api/updatelocation', resultController.updateGeolocation);
 
 module.exports = router;

@@ -22,6 +22,7 @@ const resultSchema = new mongoose.Schema({
     {
       status: String,
       created: Date,
+      data: JSON,
     }
   ], // sent, tapped
   project_name: String,

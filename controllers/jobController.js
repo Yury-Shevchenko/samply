@@ -636,7 +636,6 @@ exports.createFixedIndividualNotification = async(req, res) => {
 
   const intervals = req.body.intervals;
   intervals.map(interval => {
-    // console.log('interval', interval);
     project.notifications.push({
       id: id,
       target: req.body.target,
@@ -672,18 +671,14 @@ exports.createFixedIndividualNotification = async(req, res) => {
           const { from, to, number } = interval;
 
           for(let i = 0; i < number; i++){
-            // console.log('i', i);
             if(from > to){
-              // console.log('The ending time is earlier than the beginning time');
               return;
             }
             const getRandomArbitrary = (min, max) => {
               return Math.round(Math.random() * (max - min) + min);
             }
             const randomEvent = getRandomArbitrary(Date.parse(from), Date.parse(to));
-
             const date = new Date(randomEvent).toISOString();
-            // console.log('timeRandomEvent', date);
 
             // schedule the notification
             agenda.schedule(date, 'personal_notification', {
@@ -763,27 +758,22 @@ exports.removeNotificationByID = async(req, res) => {
 
 async function pickUpRandomTimeFromInterval(done, project_id, user_id, title,
   message, url, notification_id, deleteself, interval, interval_max, number) {
-    // console.log('I am inside of pickUpRandomTimeFromInterval function');
 
     // get the next execution time
     const cronInstance = new Cron();
     const arr = interval_max.split(' ');
     arr.shift();
     const interval_max_striped = arr.join(' ');
-    // console.log('interval_max', interval_max_striped);
 
     cronInstance.fromString(interval_max_striped);
-    // console.log('cronInstance', cronInstance);
     const schedule = cronInstance.schedule();
-    const nextRunning = schedule.next().format()
-    // console.log('Next running is at: ', nextRunning);
+    const nextRunning = schedule.next().format();
 
     const timeBuffer = 30000; // since the internet connection might be slow
     const int_start = Date.now() + timeBuffer;
     const int_end = Date.parse(nextRunning);
 
     if(int_start > int_end){
-      // console.log('The ending time is earlier than the beginning time');
       return;
     }
 
@@ -828,7 +818,6 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
 
   // remove job
   if(notification_id && deleteself){
-    // console.log('will remove notification with id ', notification_id);
     agenda.cancel({
       'data.projectid': project_id,
       'data.id': notification_id
@@ -849,12 +838,9 @@ async function sendToAllProjectUsers(done, project_id, title, message, url, noti
   // find the project
   const project = await Project.findOne({ _id: project_id },{ mobileUsers: 1, name: 1 });
   let users = project.mobileUsers;
-  // console.log('users before filtering', users);
   if(excludeUntil) {
     users = users.filter(user => user.created > excludeUntil);
   };
-  // console.log('filter excludeUntil', excludeUntil);
-  // console.log('users after filtering', users);
   const tokens = users
     .map(user => ({
       id: user.id,
@@ -982,7 +968,6 @@ exports.joinStudy = async(req, res) => {
             user_int_start = new Date(Date.now() + start_event_ms);
           }
         }
-        // console.log('user_int_start', user_int_start);
 
         if(sub.stop_event === 'registration'){
           if(sub.stop_next) {
@@ -1000,7 +985,6 @@ exports.joinStudy = async(req, res) => {
             user_int_end = new Date(Date.now() + stop_event_ms);
           }
         }
-        // console.log('user_int_end', user_int_end);
 
         // if we need randomization, start random_person_manager
         if(sub.randomize){
@@ -1050,8 +1034,6 @@ exports.joinStudy = async(req, res) => {
 
           let updatedInterval = sub.interval;
 
-          console.log('line 1054', updatedInterval, user_int_start, user_int_end, typeof(user_int_start), new Date(user_int_start).getDate());
-
           //update interval if there is missing information
           if(updatedInterval && updatedInterval.includes('*/')) {
             let parsedInterval = updatedInterval.split(' ');
@@ -1060,7 +1042,6 @@ exports.joinStudy = async(req, res) => {
               updatedInterval = parsedInterval.join(' ');
             }
           }
-          // console.log('updatedInterval line 905', updatedInterval, user_int_start, user_int_end);
 
           agenda.schedule(user_int_start, 'start_personal_manager', {
             userid: req.body.id,

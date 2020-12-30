@@ -20,6 +20,23 @@ exports.updateStatus = async (req, res) => {
   }
 };
 
+// update status
+exports.updateGeolocation = async (req, res) => {
+  const result = new Result({
+    project: req.body.studyId,
+    samplyid: req.body.userToken,
+    messageId: req.body.messageId,
+    data: {
+      title: req.body.title,
+      message: req.body.message,
+      url: req.body.link,
+    },
+    events: [{ status: 'arrived', created: Date.now(), data: req.body.curLocation }],
+  });
+  await result.save();
+  res.status(200).json({message: 'OK'});
+};
+
 //show the history of sent notifications
 exports.showHistory = async (req, res) => {
   if(req.user && req.user.project && req.user.project.name){
@@ -124,7 +141,6 @@ exports.getData = async (req, res) => {
 };
 
 exports.getMessages = async (req, res) => {
-  console.log('req.user._id', req.user._id);
   const page = req.params.page || 1;
   const limit = 50;
   const skip = (page * limit) - limit;
@@ -140,7 +156,6 @@ exports.getMessages = async (req, res) => {
     res.redirect(`/messages/page/${pages}${typeof(participant) === 'number' ? '?id=' + participant : ''}`);
     return;
   }
-  console.log('history', history);
   res.render('messages', {history, page, pages, count, skip, limit});
 };
 
