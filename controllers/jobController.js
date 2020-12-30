@@ -885,6 +885,7 @@ async function sendMobileNotification(done, content, tokens, project_id, project
       priority: 'high',
       channelId: 'default',
       _displayInForeground: true,
+      _category: 'daily_question',
     })
   }
   // The Expo push notification service accepts batches of notifications so
@@ -1290,14 +1291,15 @@ exports.debug = async(req, res) => {
 
 exports.scheduleAdminJob = async(req, res) => {
   const { interval } = req.body;
-  // console.log('interval', interval);
-
   const monthlyScheduler = agenda.create('admin_job', {});
   monthlyScheduler.repeatEvery(interval, {
     skipImmediate: true
   });
   monthlyScheduler.save();
-
   res.redirect(`back`);
+}
 
+exports.updateTokenInStudy = async(req, res) => {
+  // console.log('req.body', req.body);
+  res.status(200).json({ message: 'OK' });
 }
