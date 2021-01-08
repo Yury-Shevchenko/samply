@@ -57,6 +57,9 @@ mixin projectForm(project = {})
       
       label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
       input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link)
+      
+      label(for='geofencingURL') If you ask participants to provide their own locations, specify the radius (in meters) for a location
+      input(type='text' name=`userLocationRadius` value=project.settings && project.settings.geofencing && project.settings.geofencing.radius placeholder="radius (in meters)")
     
       label(for='coordinates' id="coordinates") Enter GPS coordinates
       
@@ -68,7 +71,7 @@ mixin projectForm(project = {})
             input(type='text' name=`title-${location.slug}` value=location.title)
             input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
             input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
-            input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius")
+            input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius (in meters)")
             button(name="deleteBtn" id=`delete-${location.slug}`) Delete
             p  
             

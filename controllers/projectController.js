@@ -130,6 +130,7 @@ exports.createProject = async (req, res) => {
             geofencing: {
               locations: locations,
               link: req.body.geofencingURL,
+              radius: req.body.userLocationRadius,
             }
           }
         }
@@ -193,6 +194,7 @@ exports.updateProject = async (req, res) => {
       geofencing: {
         locations: locations,
         link: req.body.geofencingURL,
+        radius: req.body.userLocationRadius,
       }
     }
 
