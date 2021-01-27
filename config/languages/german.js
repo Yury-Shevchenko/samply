@@ -294,8 +294,11 @@ module.exports = {
     'feature_5':`Aufzeichnen der Reaktionen der Teilnehmer auf Ihre Benachrichtigungen.`,
     'about_header': 'Über uns',
     'about_text': `
-      Samply wird von Yury Shevchenko mit der Hilfe vieler großartiger Mitarbeiter entwickelt.
-      Yury ist Postdoc in der iScience-Gruppe an der Universität Konstanz in Deutschland.
+      Samply wird von Yury Shevchenko entwickelt und von ihm und Ulf-Dietrich Reips
+      konzeptualisiert, mit der Hilfe von vielen großartigen Kollegen. 
+      Yury ist ein Postdoc in der
+      <a target='_blank' href="https://iscience.uni-konstanz.de/de/">iScience-Gruppe </a>
+      an der Universität Konstanz in Deutschland.
     `,
     'contact_header': `Kontakt / Unterstützung finden / beitragen`,
     'contact_email': `Kontaktieren Sie uns über <a href="mailto:yury.shevchenko@uni.kn">Email</a>`,
@@ -354,10 +357,11 @@ module.exports = {
       'delete': 'Löschen',
       'description': 'Beschreibung (bitte teilen Sie mit, worum es in Ihrer Studie geht, wie lange und wie oft Sie planen, Benachrichtigungen zu versenden)',
       'showCompletionCode': 'Den individuellen Erledigungscode am Ende aller Aufgaben anzeigen',
-      'welcomeMessage': 'Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf "An der Studie teilnehmen" klicken. Sie können die Einverständniserklärung hier bereitstellen. Wenn Sie die untenstehende Option verwenden, um die Teilnehmer aufzufordern, ihren Benutzernamen einzugeben, können Sie hier zusätzliche Anweisungen geben. ',
+      'welcomeMessage': 'Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf "An der Studie teilnehmen" klicken. Sie können die Einverständniserklärung hier bereitstellen. ',
       'askNotifications': 'Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).',
       'askUsername': `Bitten Sie die Teilnehmer, einen Code in die mobile Anwendung einzugeben, wenn sie an Ihrer Studie teilnehmen.`,
       'imageURL': `Bild (fügen Sie die Bild-URL hier ein - das Bild wird neben Ihrer Studie in der mobilen Anwendung angezeigt)`,
+      'codeMessage': 'Sie haben die Möglichkeit, einen Teilnehmer aufzufordern, bei der Teilnahme an Ihrer Studie einen Teilnehmercode einzugeben. Wenn Sie dies tun möchten, kreuzen Sie bitte das untenstehende Kästchen an und geben Sie dem Teilnehmer Anweisungen, was er in das Eingabefeld eingeben soll.',
     },
 
     'testing': {

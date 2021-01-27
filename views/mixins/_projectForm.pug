@@ -10,12 +10,13 @@ mixin projectForm(project = {})
     label(for='welcomeMessage') #{l.welcomeMessage}
     textarea(type='text' name='welcomeMessage')= project.welcomeMessage
     
+    label(for='codeMessage') #{l.codeMessage}
     div.inputCheckBox
       input(type='checkbox' id= 'askParticipantCode' name= 'askParticipantCode' checked = project.settings && project.settings.askParticipantCode)
       label(for='askParticipantCode')
         span.
           #{l.askUsername}
-
+    textarea(type='text' name='codeMessage')= project.codeMessage
     
     label(for='image') #{l.imageURL} 
     input(type='text' name='image' value=project.image)
@@ -48,7 +49,7 @@ mixin projectForm(project = {})
     p
     
     if(true)
-      h5 Geofencing (available only in beta version of the mobile app Samply Research)
+      h5 Geofencing (available only in the beta version of the Samply Research mobile app)
       div.inputCheckBox
         input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
         label(for='enableGeofencing')

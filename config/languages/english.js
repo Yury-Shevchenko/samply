@@ -294,8 +294,10 @@ module.exports =
       'feature_5':`Recording participants' responses to your notifications.`,
       'about_header': 'About us',
       'about_text': `
-        Samply is developed by Yury Shevchenko with the help of many great collaborators.
-        Yury is a postdoc in the iScience group at the University of Konstanz in Germany.
+        Samply is developed by Yury Shevchenko and conceptualized by him and Ulf-Dietrich Reips,
+        with the help of many great collaborators. Yury is a postdoc in the
+        <a target='_blank' href="https://iscience.uni-konstanz.de/">iScience group </a>
+        at the University of Konstanz in Germany.
       `,
       'contact_header': `Contact / find support / contribute`,
       'contact_email': `Contact us by <a href="mailto:yury.shevchenko@uni.kn">email</a>`,
@@ -353,10 +355,11 @@ module.exports =
         'delete': 'Delete',
         'description': 'Description (please tell what is your study is about, how long and how often you plan to send notifications)',
         'showCompletionCode': 'Display the unique completion code at the end of all tasks',
-        'welcomeMessage': 'The text for the consent form in the mobile application. This is displayed when the participants click on "Join the study". You can provide the consent form here. If you use the option below to ask participants to enter their username, you can provide additional instructions here. ',
+        'welcomeMessage': 'The text for the consent form in the mobile application. This is displayed when the participants click on "Join the study". You can provide the consent form here. ',
         'askNotifications': 'Ask users to allow notifications (we are currently testing notifications, participants should use Chrome on a desktop computer).',
         'askUsername': `Ask participants to enter a code in the mobile application when joining your study`,
         'imageURL': `Image (paste the image URL here - the image will be displayed next to your study in the mobile application)`,
+        'codeMessage': 'You have the option to ask a participant to enter a participant code when joining your study. If you would like to do this, please tick the box below and provide instructions for the participant on what to enter in the input box.',
       },
 
       'testing': {
@@ -708,7 +711,7 @@ module.exports =
             A participant can also be deleted by clicking the basket icon on the right-hand side of the table.
           `,
           'data_1': `
-            There are two ways to monitor participation: via the list of participants (“Participants” menu) and the history of notifications sent (“History” menu). 
+            There are two ways to monitor participation: via the list of participants (“Participants” menu) and the history of notifications sent (“History” menu).
           `,
           'data_history_title': `History`,
           'data_history_1': `

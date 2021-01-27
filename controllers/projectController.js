@@ -121,6 +121,7 @@ exports.createProject = async (req, res) => {
           image: req.body.image,
           description: req.body.description,
           welcomeMessage: req.body.welcomeMessage,
+          codeMessage: req.body.codeMessage,
           creator: req.user._id,
           members: membersData,
           currentlyActive: req.body.currentlyActive,
@@ -172,6 +173,7 @@ exports.updateProject = async (req, res) => {
     project.image = req.body.image;
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
+    project.codeMessage = req.body.codeMessage;
     project.members = membersData;
     if(!project.settings) project.settings = {};
 
@@ -344,7 +346,7 @@ exports.getPublicStudiesAPI = async(req, res) => {
 }
 
 exports.getPublicStudy = async(req, res) => {
-  const study = await Project.findOne({ slug: req.params.name }, { name: 1, description: 1, welcomeMessage: 1, settings: 1 });
+  const study = await Project.findOne({ slug: req.params.name }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, settings: 1 });
   res.send(study);
 }
 

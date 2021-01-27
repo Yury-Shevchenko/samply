@@ -28,6 +28,9 @@ const projectSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  codeMessage: {
+    type: String
+  },
   useNotifications: {
     type: Boolean,
     default: true
