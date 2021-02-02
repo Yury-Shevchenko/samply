@@ -63,11 +63,10 @@ exports.showHistory = async (req, res) => {
 };
 
 exports.getHistory = async (req, res) => {
-  console.log('req.body', req.body);
   const { samplyid } = req.body
   const notifications = await Result.find({ samplyid });
-  // console.log('notifications', notifications);
-  res.send(notifications);
+  const filtered = notifications.filter(e => !e.events.map(e => e.status).includes("archived"));
+  res.send(filtered);
 }
 
 //save results during the task
@@ -173,8 +172,16 @@ exports.downloadHistory = async (req, res) => {
     .find({project: projectId},{})
     .cursor()
     .on('data', obj => {
-      console.log('obj', obj);
       if(obj && obj.data){
+        let data = {};
+        const coordinates = obj.events.filter(e => e.status === 'arrived').map(e => {
+          if(e.data && e.data.coords){
+            return(e.data.coords)
+          }
+        });
+        if (coordinates && coordinates[0]){
+          data = coordinates[0]
+        }
         const line =[{
           samplyid: obj.samplyid,
           title: obj.data.title,
@@ -184,7 +191,9 @@ exports.downloadHistory = async (req, res) => {
           tapped: obj.events.filter(e => e.status === 'tapped').map(e => e.created.getTime()),
           opened_in_spp: obj.events.filter(e => e.status === 'opened-in-app').map(e => e.created.getTime()),
           archived_by_user: obj.events.filter(e => e.status === 'archived').map(e => e.created.getTime()),
+          arrived: obj.events.filter(e => e.status === 'arrived').map(e => e.created.getTime()),
           messageId: obj.messageId,
+          ...data
         }]
         const preKeys = flatMap(line, function(e){
           return(Object.keys(e));
