@@ -31,6 +31,9 @@ const projectSchema = new mongoose.Schema({
   codeMessage: {
     type: String
   },
+  geofencingInstruction: {
+    type: String
+  },
   useNotifications: {
     type: Boolean,
     default: true
@@ -110,7 +113,7 @@ projectSchema.statics.findAllPublic = function() {
       author_name: '$author.name',
       author_institute: '$author.institute',
     }},
-    { $sort: { created: 1 } }
+    { $sort: { name: 1 } }
   ]);
 };
 

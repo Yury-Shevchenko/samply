@@ -49,12 +49,16 @@ mixin projectForm(project = {})
     p
     
     if(true)
+    
       h5 Geofencing (available only in the beta version of the Samply Research mobile app)
       div.inputCheckBox
         input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
         label(for='enableGeofencing')
           span.
             Enable Geofencing
+      
+      label(for='geofencingInstruction') Please provide the information about the geofencing to the participant. This instruction will be shown when the participant has joined your study.
+      textarea(type='text' name='geofencingInstruction')= project.geofencingInstruction
       
       label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
       input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link)
