@@ -4,6 +4,7 @@ mixin userCard(person = {}, i)
     tr
       td #{i + 1}
       td= person.id
+      td= person.token.startsWith('ExponentPushToken') ? 'Ok' : 'Error'
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       td= person.username
       if(person.information && Object.keys(person.information).length)
