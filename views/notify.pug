@@ -57,6 +57,14 @@ block content
             input(type='radio', name='time', value='interval')#time-inter
             label(for='time-inter')
               span #{l.step_2_windows} 
+              
+            input(type='radio', name='time', value='repeat')#time-repeat
+            label(for='time-repeat')
+              span Repeat 
+              select(name="time-every-minute")
+                - var everymonthdays = [ { value: 1,  text: `every minute` }, { value: 2,  text: `at every 2nd minute past each hour (e.g., at 12:00, 12:02, 12:04, ...)` }, { value: 5,  text: `at every 5th minute past each hour (e.g., at 12:00, 12:05, 12:10, ...)` }, { value: 10,  text: `at every 10th minute past each hour (e.g., at 12:00, 12:10, 12:20, ...)` }, { value: 15,  text: `at every 15th minute past each hour (e.g., at 12:00, 12:15, 12:30, ...)` }, { value: 30,  text: `at every 30th minute past each hour (e.g., at 12:00, 12:30, 13:00, ...)` }]
+                each time in everymonthdays
+                  option(value=time.value, selected=false)= time.text    
         
         #timePicker(style="display:none")  
           .containerTimePicker
@@ -93,7 +101,9 @@ block content
             input(name="time-window-end-minute" class='timeWindowInput windowPickerMinuteEnd' type='number' min=0 max=59 value='')   
             label
             input(name="time-window-number-points" class='timeWindowNumberOfPointsInput' type='number' min=1 value=1) 
-            
+    
+        #timeRepeat(style="display:none")  
+              
             
         #choose-date
           h2 #{l.step_3_header} 
@@ -328,10 +338,14 @@ block content
                   // show time picker 
                   document.querySelector('#timePicker').style.display = 'block';
                   document.querySelector('#timeWindow').style.display = 'none';
-                } else {
+                } else if(value === 'interval') {
                   // show time window picker 
                   document.querySelector('#timePicker').style.display = 'none';
                   document.querySelector('#timeWindow').style.display = 'block';
+                } else {
+                  // show time interval picker 
+                  document.querySelector('#timePicker').style.display = 'none';
+                  document.querySelector('#timeWindow').style.display = 'none';
                 }
               }
               

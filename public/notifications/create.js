@@ -44,6 +44,7 @@ function createNotification(){
 
   // time
   let timepoints = [], timeintervals = [];
+  let minuteCron;
   const time = selected.time;
   if (time === 'specific') {
     timepoints = Array.from(document.querySelectorAll(".containerTimePicker")).map(container => {
@@ -72,12 +73,14 @@ function createNotification(){
         number: container.querySelector(".timeWindowNumberOfPointsInput").value,
       }
     })
+  } else if (time === 'repeat') {
+    const repeatMinute = document.querySelector("select[name='time-every-minute']").value;
+    minuteCron = `*/${repeatMinute}`;
+    // console.log('DEBUG line 82, minuteCron', minuteCron);
   } else {
     alert('Choose time');
     return;
   }
-  // console.log('timeintervals', timeintervals);
-
 
   // dates: specific dates (dates), cron format of day of the month (dayMonthCron), or cron format for days of the week (dayWeekCron)
   let dates = [], dayMonthCron = '', dayWeekCron = '';
@@ -319,6 +322,13 @@ function createNotification(){
   })
   // console.log('constructedCronSchedules', constructedCronSchedules);
 
+  let constructedCronSchedulesForTime = [];
+  if(minuteCron){
+    const sec = Math.floor((Math.random() * 60)); // get the random value for the seconds
+    const hour = '*';
+    constructedCronSchedulesForTime.push(`${sec} ${minuteCron} ${hour} ${dayMonthCron} ${monthCron} ${dayWeekCron}`);
+  }
+
   // constructed cron intervals
   let constructedCronIntervals = [];
   timeintervals.map(interval => {
@@ -336,6 +346,33 @@ function createNotification(){
   })
 
   // 3. send this object to the server API
+
+  if(time === 'repeat') {
+    if (date === 'specific') {
+      alert("This time combination is still in development. Please choose another option (e.g. repeat every day and month) if you want to send notifications every minute(s)")
+
+      // TO DO! not done yet
+      // let constructedCronSchedulesForTimeForDay = [];
+      // const sec = Math.floor((Math.random() * 60)); // get the random value for the seconds
+      // const hour = '*';
+      // console.log('dates', dates);
+      // constructedCronSchedulesForTimeForDay.push(`${sec} ${minuteCron} ${hour} ${dates.day} ${dates.month} ${'*'}`)
+      // console.log('constructedCronSchedulesForTimeForDay', constructedCronSchedulesForTimeForDay);
+      // createFixedIntervalNotification(participants, constructedCronSchedulesForTimeForDay, startingDayStrategy, stopingDayStrategy, scheduleInFuture);
+
+    } else {
+      // if date is interval
+      if (startingStrategy.startEvent === 'registration' || stopingStrategy.stopEvent === 'registration'){
+        // console.log('participant-dependent specific interval notifications', participants, constructedCronSchedulesForTime, startingStrategy, stopingStrategy, scheduleInFuture);
+        createIndividualSpecificNotification(participants, constructedCronSchedulesForTime, startingStrategy, stopingStrategy, scheduleInFuture);
+      } else {
+        // console.log('specific interval notifications', participants, constructedCronSchedulesForTime, startingStrategy, stopingStrategy, scheduleInFuture);
+        createFixedIntervalNotification(participants, constructedCronSchedulesForTime, startingStrategy, stopingStrategy, scheduleInFuture);
+      }
+    }
+  }
+
+
   if(time === 'specific') {
     // if specific date is chosen
     if (date === 'specific') {
