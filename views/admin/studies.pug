@@ -18,9 +18,9 @@ block content
           td Created
           td Author
           td Institute
-          td Members
-          td Participants 
-          td Geofencing 
+          td Mem-s
+          td Part-s 
+          td Geo 
           td Active
           td Public 
         
@@ -39,8 +39,8 @@ block content
             td= h.moment(project.created).locale(language).format("MMM Do YY HH:mm") 
             td= project.author_name[0]
             td= project.author_institute[0]
-            td= `${project.members.length} members`
-            td= `${project.participants.length} participants`
+            td= project.members.length
+            td= project.participants.length
             td= project.settings && project.settings.enableGeofencing
             td= project.currentlyActive
             td

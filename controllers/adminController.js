@@ -16,11 +16,11 @@ exports.removeStudy = async (req, res) => {
     const projectRemovePromise = project.remove();
     await Promise.all([deletedResultsPromise, projectRemovePromise])
     req.flash('success', `${res.locals.layout.flash_project_deleted}`);
-    res.redirect('/admin/debugprojects');
+    res.redirect('/admin/studies');
   } else {
     project.remove((projectErr, removedProject) => {
       req.flash('success', `${res.locals.layout.flash_project_deleted}`);
-      res.redirect('/admin/debugprojects');
+      res.redirect('/admin/studies');
     });
   }
 };
