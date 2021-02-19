@@ -32,8 +32,8 @@ block content
                 <i class="far fa-trash-alt"></i>
             td= project.name
             td= project.description.split(' ').slice(0,20).join(' ') 
-            td= project.codeMessage.split(' ').slice(0,20).join(' ') 
-            td= project.geofencingInstruction.split(' ').slice(0,20).join(' ') 
+            td= project.codeMessage && project.codeMessage.split(' ').slice(0,20).join(' ') 
+            td= project.geofencingInstruction && project.geofencingInstruction.split(' ').slice(0,20).join(' ') 
             td 
               a(href=`${project.image}`) Link
             td= h.moment(project.created).locale(language).format("MMM Do YY HH:mm") 
