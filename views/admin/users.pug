@@ -12,6 +12,7 @@ block content
         thead
           td X
           td Role
+          td Created
           td Samply ID
           td Name
           td Email
@@ -27,6 +28,7 @@ block content
               a(href=`/admin/removeuser/${user._id}`) 
                 <i class="far fa-trash-alt"></i>
             td= user.level
+            td= h.moment(user.created).locale(language).format("MMM Do YY HH:mm") 
             td= user.samplyId
             td= user.name
             td= user.email 
