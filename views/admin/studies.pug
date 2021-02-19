@@ -10,6 +10,7 @@ block content
         
         thead
           td X
+          td N.
           td Name
           td Description
           td Code message
@@ -24,16 +25,17 @@ block content
           td Active
           td Public 
         
-        each project in projects
+        each project, i in projects
           
           tr 
             td
               a(href=`/admin/removestudy/${project._id}`) 
                 <i class="far fa-trash-alt"></i>
+            td #{i + 1}
             td= project.name
-            td= project.description.split(' ').slice(0,20).join(' ') 
-            td= project.codeMessage && project.codeMessage.split(' ').slice(0,20).join(' ') 
-            td= project.geofencingInstruction && project.geofencingInstruction.split(' ').slice(0,20).join(' ') 
+            td= project.description.split(' ').slice(0, 10).join(' ') 
+            td= project.codeMessage && project.codeMessage.split(' ').slice(0, 10).join(' ') 
+            td= project.geofencingInstruction && project.geofencingInstruction.split(' ').slice(0, 10).join(' ') 
             td 
               a(href=`${project.image}`) Link
             td= h.moment(project.created).locale(language).format("MMM Do YY HH:mm") 

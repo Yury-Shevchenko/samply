@@ -11,6 +11,7 @@ block content
       
         thead
           td X
+          td N.
           td Role
           td Created
           td Samply ID
@@ -21,12 +22,13 @@ block content
           td Projects (researcher)
 
         
-        each user in users
+        each user, i in users
         
           tr 
             td
               a(href=`/admin/removeuser/${user._id}`) 
                 <i class="far fa-trash-alt"></i>
+            td #{i + 1}
             td= user.level
             td= h.moment(user.created).locale(language).format("MMM Do YY HH:mm") 
             td= user.samplyId
