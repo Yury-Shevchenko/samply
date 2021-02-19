@@ -8,6 +8,7 @@ const authController  = require('../controllers/authController');
 const resultController  = require('../controllers/resultController');
 const projectController  = require('../controllers/projectController');
 const jobController  = require('../controllers/jobController');
+const adminController  = require('../controllers/adminController');
 const passport = require('passport');
 
 // app controller
@@ -91,9 +92,13 @@ router.get('/notifications', authController.isAdminLoggedIn, catchErrors(jobCont
 router.get('/notifications/:id', authController.isAdminLoggedIn, catchErrors(jobController.manageNotifications));
 router.post('/users/:project', authController.isAdminLoggedIn, catchErrors(projectController.inviteParticipants));
 router.get('/invitations', authController.isAdminLoggedIn, catchErrors(projectController.invitations));
-router.get('/debugprojects',
-  authController.isSuperAdminLoggedIn,
-  catchErrors(projectController.debugprojects));
+
+// administrator functions
+router.get('/admin/studies', authController.isSuperAdminLoggedIn, catchErrors(adminController.getAllStudies));
+router.get('/admin/removestudy/:id', authController.isSuperAdminLoggedIn, catchErrors(adminController.removeStudy));
+router.get('/admin/togglestudystatus/:id', authController.isSuperAdminLoggedIn, catchErrors(adminController.toggleStudyStatus));
+router.get('/admin/users', authController.isSuperAdminLoggedIn, catchErrors(adminController.getAllUsers));
+router.get('/admin/removeuser/:id', authController.isSuperAdminLoggedIn, catchErrors(adminController.removeUser));
 
 router.get('/users', authController.isAdminLoggedIn, catchErrors(projectController.getMobileUsers));
 

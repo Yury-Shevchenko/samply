@@ -1,0 +1,54 @@
+extends ../layout
+
+block content
+  .inner
+    p
+    .card
+      h4 Samply studies
+      
+      table.table 
+        
+        thead
+          td X
+          td Name
+          td Description
+          td Code message
+          td Geofencing instruction
+          td Image 
+          td Created
+          td Author
+          td Institute
+          td Members
+          td Participants 
+          td Geofencing 
+          td Active
+          td Public 
+        
+        each project in projects
+          
+          tr 
+            td
+              a(href=`/admin/removestudy/${project._id}`) 
+                <i class="far fa-trash-alt"></i>
+            td= project.name
+            td= project.description 
+            td= project.codeMessage
+            td= project.geofencingInstruction 
+            td 
+              a(href=`${project.image}`) Link
+            td= h.moment(project.created).locale(language).format("MMM Do YY HH:mm") 
+            td= project.author_name[0]
+            td= project.author_institute[0]
+            td= `${project.members.length} members`
+            td= `${project.participants.length} participants`
+            td= project.settings && project.settings.enableGeofencing
+            td= project.currentlyActive
+            td
+              if project.public 
+                a(href=`/admin/togglestudystatus/${project._id}`) 
+                  <i class='fas fa-lock-open'></i>
+              else 
+                a(href=`/admin/togglestudystatus/${project._id}`) 
+                  <i class="fas fa-lock"></i>
+      
+    pre= h.dump(projects)

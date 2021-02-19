@@ -1,0 +1,39 @@
+extends ../layout
+
+
+block content
+  .inner
+    p
+    .card
+      h4 Samply users
+      
+      table.table 
+      
+        thead
+          td X
+          td Role
+          td Samply ID
+          td Name
+          td Email
+          td Institute
+          td Projects (participant)
+          td Projects (researcher)
+
+        
+        each user in users
+        
+          tr 
+            td
+              a(href=`/admin/removeuser/${user._id}`) 
+                <i class="far fa-trash-alt"></i>
+            td= user.level
+            td= user.samplyId
+            td= user.name
+            td= user.email 
+            td= user.institute
+            td= user.participant_projects.length
+            td= user.projects.length
+            
+
+      
+    pre= h.dump(users)

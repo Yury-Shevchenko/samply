@@ -39,6 +39,10 @@ const projectSchema = new mongoose.Schema({
     default: true
   },
   currentlyActive  : Boolean,
+  public : {
+    type: Boolean,
+    default: false
+  },
   invitations      : [{ email: String, token: String }],
   notifications    : [
     {
@@ -120,15 +124,25 @@ projectSchema.statics.findAllPublic = function() {
 projectSchema.statics.debugProjects = function() {
   return this.aggregate([
     { $lookup: {
-        from: 'users', localField: '_id', foreignField: 'participantInProject', as: 'participant'}
+        from: 'users', localField: 'creator', foreignField: '_id', as: 'author'}
+    },
+    { $lookup: {
+        from: 'users', localField: 'members', foreignField: '_id', as: 'members'}
     },
     { $project: {
       name: '$$ROOT.name',
       description: '$$ROOT.description',
+      codeMessage: '$$ROOT.codeMessage',
+      geofencingInstruction: '$$ROOT.geofencingInstruction',
+      image: '$$ROOT.image',
       created: '$$ROOT.created',
       author_name: '$author.name',
       author_institute: '$author.institute',
-      participants: '$participant',
+      members: '$members',
+      participants: '$$ROOT.mobileUsers',
+      currentlyActive: '$$ROOT.currentlyActive',
+      public: '$$ROOT.public',
+      settings: '$$ROOT.settings',
     }},
     { $sort: { created: 1 } }
   ]);
