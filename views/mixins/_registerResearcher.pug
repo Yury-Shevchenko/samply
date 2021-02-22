@@ -1,12 +1,16 @@
 mixin registerResearcher()
   form.loginForm(action="/auth/researcher/email/register" method="POST")
-    h5 #{layout.signup}
-    p Please provide your university email address.
-    input(type="text" name="name" placeholder="Full name" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-    input(type="email" name="email" placeholder="Email" style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
-    input(type="password" name="password" placeholder="Password")
-    input(type="password" name="password-confirm" placeholder="Confirm password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
+    h5 #{layout.signup_as_researcher}
+    p #{layout.use_uni_email} 
+    input(type="text" name="name" placeholder="Full name" required style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+    input(type="email" name="email" placeholder="Email" required style="border-top-left-radius: 6px; border-top-right-radius: 6px;")
+    input(type="password" name="password" placeholder="Password" required)
+    input(type="password" name="password-confirm" placeholder="Confirm password" required style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;")
     p
+    p(style="display:grid; align-items: center; grid-template-columns: 30px auto; text-align: left; grid-gap: 20px;")
+      input(type="checkbox" id="agree" required style="zoom: 1.8;") 
+      label(for="agree") !{layout.agree_to_conditions}
+      
     input.button(type="submit" value=layout.continue)
 
     script(nonce=`${noncevalue}`).

@@ -68,7 +68,6 @@ module.exports = {
     'about' : 'Über uns',
     'forResearchers': 'Für ForscherInnen',
     'forParticipants': 'Für TeilnehmerInnen',
-    'signup': 'Registrieren',
     'signup_button': 'Neuen Account erstellen',
     'login': 'Einloggen',
     'enterCode': 'Code eintragen',
@@ -242,11 +241,15 @@ module.exports = {
     'install_app': 'App installieren',
     'message_history_create_project': 'Erstellen oder aktivieren Sie eine <a href="/projects">Studie</a>, um die Geschichte der Benachrichtigungen einzusehen.',
     'signup': 'Anmelden',
+    'signup_as_researcher': 'Anmelden als Forscher',
     'footer_docs': `<a href="/docs/intro">Dokumentation</a>`,
     'footer_contacts': `<a href="/docs/help">Kontakte</a>`,
     'footer_terms': `<a href="/docs/dienstbedingungen">Dienstbedingungen</a>`,
     'footer_policy': `<a href="/docs/datenschutz">Datenschutzerklärung</a>`,
     'footer_notice': `<a href="/docs/impressum">Impressum</a>`,
+    'use_uni_email' : 'Bitte geben Sie Ihre Universitäts-E-Mail-Adresse an.',
+    'agree_to_conditions' : `Ich habe die <a target="_blank" href="/docs/dienstbedingungen">Servicebedinungen</a> und <a target="_blank" href="/docs/datenschutz">Datenschutzrichtlinie</a> von Samply gelesen und stimme ihnen zu.`,
+
   },
 
   'passport': {
@@ -295,7 +298,7 @@ module.exports = {
     'about_header': 'Über uns',
     'about_text': `
       Samply wird von Yury Shevchenko entwickelt und von ihm und Ulf-Dietrich Reips
-      konzeptualisiert, mit der Hilfe von vielen großartigen Kollegen. 
+      konzeptualisiert, mit der Hilfe von vielen großartigen Kollegen.
       Yury ist ein Postdoc in der
       <a target='_blank' href="https://iscience.uni-konstanz.de/de/">iScience-Gruppe </a>
       an der Universität Konstanz in Deutschland.

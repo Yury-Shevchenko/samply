@@ -67,7 +67,6 @@ module.exports =
       'about' : 'About',
       'forResearchers': 'Researchers',
       'forParticipants': 'Participants',
-      'signup': 'Sign Up',
       'signup_button': 'Create new account',
       'login': 'Login',
       'enterCode': 'Enter with code',
@@ -241,11 +240,15 @@ module.exports =
       'install_app': 'Install App',
       'message_history_create_project': 'Create or activate a <a href="/projects">study</a> to see the history of notifications.',
       'signup': 'Sign up',
+      'signup_as_researcher': 'Sign up as a researcher',
       'footer_docs': `<a href="/docs/intro">Documentation</a>`,
       'footer_contacts': `<a href="/docs/help">Contacts</a>`,
       'footer_terms': `<a href="/docs/terms">Terms of Service</a>`,
       'footer_policy': `<a href="/docs/policy">Privacy Policy</a>`,
       'footer_notice': `<a href="/docs/legalnotice">Legal notice</a>`,
+      'use_uni_email' : 'Please use your university email address.',
+      'agree_to_conditions': `I agree to the Samply <a target="_blank" href="/docs/terms">Terms of Service</a> and <a target="_blank" href="/docs/policy">Privacy Policy</a>`,
+
     },
 
     'passport': {
