@@ -542,6 +542,10 @@ module.exports = {
           Nachdem die Anwendung installiert wurde, geben Sie einem Teilnehmer entweder 1) einen Link zur Webseite, 2) einen direkten Link zu Ihrer Studie in der mobilen App oder 3) eine Anleitung, wie er Ihre Studie in der Liste der Studien in der mobilen App finden kann (wenn Ihre Studie öffentlich ist).
         `,
         'web_link': 'Die Web-Seite Ihrer Studie',
+        'activate_study_1': `
+          Bitte aktivieren Sie zuerst Ihre Studie
+        `,
+        'activate_study_2': `, indem Sie den Kippschalter auf der Studienkarte <a target='blank' href='../projects'>hier</a> einschalten.`,
         'web_link_1': `
           Die Webseite Ihrer Studie enthält die Beschreibung Ihrer Studie, die Informationen über die Autoren und die Anweisungen, wie Teilnehmer an der Studie teilnehmen können.
           Ein individueller QR-Code wird verwendet, um eine Studie in der mobilen App zu finden.

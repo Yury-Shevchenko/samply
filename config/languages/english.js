@@ -528,7 +528,6 @@ module.exports =
           'way_0_header': `Way 1. The web page of your study`,
           'way_1_header': `Way 2. The direct link to your study in the mobile app`,
           'way_2_header': `Way 3. Ask participants to find your study in the mobile app`,
-
           'mobile_invite_1': `
             There are three ways to invite participants to your study.
             In all cases, participants must first install the mobile application <em>Samply Research</em> on their smartphone.
@@ -540,6 +539,12 @@ module.exports =
             After the application is installed, either provide a participant with 1) a web page link, 2) a direct link to your study in the mobile app or 3) instructions how to find your study in the list of studies in the mobile app (if your study is public).
           `,
           'web_link': 'The web page of your study',
+          'activate_study_1': `
+            Please first activate your study
+          `,
+          'activate_study_2': `
+             by turning on the toggle switch on the study card <a target='blank' href='../projects'>here</a>.
+          `,
           'web_link_1': `
             The web page of your study contains the description of your study, the information about the authors and the instructions how participants can take part in the study.
             A unique QR code is used to find a study in the mobile app.

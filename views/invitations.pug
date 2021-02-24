@@ -18,9 +18,13 @@ block content
         table.table
           tr
             td !{l.web_link}
-            td
-              input(type="text" value=`https://samply.uni-konstanz.de/studies/${project.slug}` id="weblink" readonly)
-              button(class="copyButton" id="weblink") #{l.copy_link}
+            if project.currentlyActive
+              td
+                input(type="text" value=`https://samply.uni-konstanz.de/studies/${project.slug}` id="weblink" readonly)
+                button(class="copyButton" id="weblink") #{l.copy_link}
+            else 
+              td 
+                p !{l.activate_study_1} <strong>#{project.name}</strong>!{l.activate_study_2}
         
         p !{l.web_link_1}  
             
