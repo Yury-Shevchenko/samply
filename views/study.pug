@@ -35,7 +35,8 @@ block content
           p= l.firstTimeStep_3 
         
         h6= l.scanQRcode  
-        canvas#canvas
+        a(href=`samply://--/study?name=${slug}`)
+          canvas#canvas
         script(src='../javascripts/qrcode.min.js' nonce=`${noncevalue}`)
         script(nonce=`${noncevalue}`).
           const slug = !{ JSON.stringify(project.slug) || ''};
