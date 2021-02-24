@@ -287,7 +287,7 @@ module.exports =
         on the notification, they open your online study in a mobile web-browser.
       `,
       'test_drive': `
-        Want a test drive? Here is an <a href="/docs/intro">overview</a> to demonstrate how Samply works.
+        Are you a researcher and want to use Samply in your studies? Here is an <a href="/docs/intro">overview</a> of how Samply works and <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">our publication in Behavior Research Methods</a>.
       `,
       'features_header': `Main features`,
       'feature_1':`Samply is free, there is no hidden costs (thanks to the generous support of the iScience group)`,
@@ -306,7 +306,7 @@ module.exports =
       'contact_email': `Contact us by <a href="mailto:yury.shevchenko@uni.kn">email</a>`,
       'contact_slack': `Join our <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack group</a>`,
       'contact_github': `Wish to contribute? Welcome to our <a target='_blank' href="https://github.com/Yury-Shevchenko/samply">Github</a>.`,
-      'for_participants': `If you are a participant, you are probably looking for a mobile application Samply.
+      'for_participants': `If you are a participant, you are probably looking for a mobile application Samply Research.
       You can find in <a target='_blank' href="https://apps.apple.com/app/samply-research/id1511062019">App Store</a> or <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.`,
       'intro2': 'With Samply you can create and plan notifications for participants of your studies. ' +
       'You can edit content of notifications and send links to your survey or online tests. ' +
@@ -324,7 +324,11 @@ module.exports =
       'part_2': 'Easy and convenient authorization',
       'part_2_text': 'Sign up with a participant code, email or social network account',
       'part_3': 'Notifications',
-      'part_3_text': 'Receive notifications using your mobile phone'
+      'part_3_text': 'Receive notifications using your mobile phone',
+      'cite_us_header': 'Citation',
+      'citation': `Shevchenko, Y., Kuhlmann, T., & Reips, U. D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. Behavior Research Methods, 1-21.`,
+      'citation_read': `<a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">Read online 👀</a>`
+
     },
 
       'projects': {
@@ -743,6 +747,21 @@ module.exports =
         'studies': {
           'no_tests_in_study': 'There are no publicly available tasks in this study.',
           'created': 'Created',
+          'info': 'Information about the study',
+          'authors': 'Authors',
+          'how_to_participate': 'How to participate in the study',
+          'arleadyParticipant': 'You are already registered in this study. Check your mobile app Samply Research for more information.',
+          'alreadyAppHeader': 'Already have installed the mobile application Samply Research?',
+          'already_instruction': 'Use the app to scan the QR code below to join the study.',
+          'firstTimeHeader': 'First time here?',
+          'firstTimeStep_1':`
+            1. You should first install the mobile application <em>Samply Research</em> on your smartphone.
+            For Android users, the application is available in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.
+            For Apple users, the application is in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
+          `,
+          'firstTimeStep_2': '2. When you open the app for the first time, you will need to create a participant account. The login information is stored securely on the Samply server (which is the server of the University of Konstanz in Germany) and is only used to authenticate users. The login information (your email and password) is not available to researchers.',
+          'firstTimeStep_3': '3. Inside the app, click the button "Find a study", then "Scan QR code" and scan the following QR code. After that, follow the instructions of the study.',
+          'scanQRcode': 'QR code to join the study in the mobile app',
         },
 
         'help': {

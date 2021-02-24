@@ -32,10 +32,10 @@ exports.listPublicProjects = async(req, res) => {
 exports.showProjectDescription = async(req, res) => {
   const project = await Project
     .findOne({
-      name: req.params.study,
+      slug: req.params.study,
       currentlyActive: true,
     },{
-      name: 1, description: 1, currentlyActive: 1, tests: 1, creator: 1, created: 1,
+      name: 1, description: 1, currentlyActive: 1, tests: 1, creator: 1, created: 1, slug: 1,
     }
   );
   let author;
@@ -43,7 +43,7 @@ exports.showProjectDescription = async(req, res) => {
     author = await User.findOne({_id: project.creator},{
       name: 1, institute: 1
     });
-    res.render('study', {project, author});
+    res.render('study', { project, author });
   } else {
     res.redirect('back');
   }

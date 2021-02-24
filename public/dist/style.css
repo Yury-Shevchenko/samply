@@ -2156,9 +2156,13 @@ i.yes:after {
       grid-template-columns: repeat(auto-fill, 250px); }
 
 .project {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-rows: 80px 150px 30px;
+      grid-template-rows: 80px 150px 30px;
   border-radius: 6px;
   position: relative;
-  min-height: 250px;
+  min-height: 300px;
   background: white;
   margin: 10px 0;
   width: auto;
@@ -2166,6 +2170,10 @@ i.yes:after {
   .project--wide {
     width: 100%; }
   .project__title {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-row-align: center;
+        align-self: center;
     border-radius: 3px;
     border-bottom: 0;
     word-wrap: break-word;
@@ -2179,10 +2187,10 @@ i.yes:after {
     text-decoration: none;
     color: #303030; }
   .project__details {
-    padding: 1rem;
+    padding: 1.3rem;
     display: -ms-grid;
     display: grid;
-    text-align: center; }
+    text-align: justify; }
     .project__details p {
       line-height: 1.2;
       margin-bottom: 0; }
@@ -2237,6 +2245,8 @@ i.yes:after {
   fill: white; }
 
 .project__hero {
+  display: -ms-grid;
+  display: grid;
   position: relative;
   padding: 20px 5px 20px 5px;
   text-align: center; }

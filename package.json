@@ -69,6 +69,7 @@
     "passport-local-mongoose": "4.0.0",
     "postmark": "^1.6.1",
     "pug": "2.0.0-beta6",
+    "qrcode": "^1.4.4",
     "read-multiple-files": "^2.0.0-4",
     "serialize-javascript": "^1.5.0",
     "slugs": "0.1.3",

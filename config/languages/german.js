@@ -287,7 +287,7 @@ module.exports = {
       auf die Benachrichtigung hin öffnen sie Ihre Online-Studie in einem mobilen Web-Browser.
     `,
     'test_drive': `
-      Wünschen Sie eine Probefahrt? Hier ist ein <a href="/docs/intro">Überblick</a>, um zu demonstrieren, wie Samply funktioniert.
+      Sie sind Forscher und wollen Samply in Ihren Studien einsetzen? Hier finden Sie einen <a href="/docs/intro">Überblick</a> über die Funktionsweise von Samply und <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">unsere Publikation in Behavior Research Methods</a>.
     `,
     'features_header': `Hauptmerkmale`,
     'feature_1':`Samply ist kostenlos, es gibt keine versteckten Kosten (dank der großzügigen Unterstützung der iScience-Gruppe).`,
@@ -327,6 +327,10 @@ module.exports = {
     'part_2_text': 'Einmal registriert, müssen sie für weitere Studien keinen neuen Account anlegen.',
     'part_3': 'Benachrichtigungen',
     'part_3_text': 'Benachrichtigungen über Ihr Mobiltelefon erhalten',
+    'cite_us_header': 'Zitieren',
+    'citation': `Shevchenko, Y., Kuhlmann, T., & Reips, U. D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. Behavior Research Methods, 1-21.`,
+    'citation_read': `<a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">Online lesen 👀</a>`
+
     },
 
     'projects': {
@@ -760,6 +764,22 @@ module.exports = {
       'studies': {
         'no_tests_in_study': 'Es gibt keine öffentlich verfügbaren Tests in dieser Studie.',
         'created': 'Erstellt',
+        'info': 'Information über die Studie',
+        'authors': 'Autoren',
+        'how_to_participate': 'Teilnahme an der Studie',
+        'arleadyParticipant': 'Sie sind bereits in dieser Studie registriert. Öffnen Sie Ihre mobile App Samply Research für weitere Informationen.',
+        'alreadyAppHeader': 'Sie haben bereits die mobile Applikation Samply Research installiert?',
+        'already_instruction': 'Scannen Sie mit der App den unten stehenden QR-Code, um an der Studie teilzunehmen.',
+        'firstTimeHeader': 'Zum ersten Mal hier?',
+        'firstTimeStep_1':`
+          1. Sie sollten zunächst die mobile Anwendung <em>Samply Research</em> auf Ihrem Smartphone installieren.
+          Für Android-Nutzer ist die Anwendung in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> verfügbar.
+           Für Apple-Benutzer befindet sich die Anwendung im <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
+        `,
+        'firstTimeStep_2': '2. Wenn Sie die App zum ersten Mal öffnen, müssen Sie ein Teilnehmerkonto erstellen. Die Anmeldeinformationen werden sicher auf dem Samply-Server (dem Server der Universität Konstanz in Deutschland) gespeichert und nur zur Authentifizierung der Benutzer verwendet. Die Anmeldeinformationen (Ihre E-Mail und Ihr Passwort) sind für Forscher nicht zugänglich.',
+        'firstTimeStep_3': '3. Klicken Sie innerhalb der App auf die Schaltfläche "Find a study", dann auf "Scan QR code" und scannen Sie den folgenden QR-Code. Folgen Sie danach den Anweisungen der Studie.',
+        'scanQRcode': 'QR-Code zum Beitritt zur Studie in der mobilen App',
+
       },
 
       'help': {

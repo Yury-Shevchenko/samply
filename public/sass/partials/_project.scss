@@ -6,9 +6,11 @@
 }
 
 .project {
+  display: grid;
+  grid-template-rows: 80px 150px 30px;
   border-radius: 6px;
   position: relative;
-  min-height: 250px;
+  min-height: 300px;
   background:white;
   margin: 10px 0;
   width: auto;
@@ -16,10 +18,11 @@
   &--wide {
     width: 100%;
   }
-  &__title{
+  &__title {
+    display: grid;
+    align-self: center;
     border-radius: 3px;
     border-bottom: 0;
-    //background-image: linear-gradient(to right, rgba(255, 255, 255, 0.8) 100%, rgba(255, 255, 255, 0.8) 50%);
     word-wrap: break-word;
     position: relative;
     z-index: 2;
@@ -27,16 +30,14 @@
     font-size: 25px;
     z-index: 2;
     line-height: 1.1;
-    //-ms-transform: skew(0, -3deg);
-    //transform: skew(0, -3deg);
     line-height: 1.1;
     text-decoration: none;
     color: #303030;
   }
   &__details {
-    padding: 1rem;
+    padding: 1.3rem;
     display: grid;
-    text-align: center;
+    text-align: justify;
     p {
       line-height: 1.2;
       margin-bottom: 0;
@@ -44,7 +45,6 @@
   }
   &__bottom {
     bottom: 0;
-    // position: absolute;
     text-align: center;
     width: 100%;
     text-align: -webkit-center;
@@ -66,7 +66,6 @@
   z-index: 2;
   border-bottom: 1px solid rgba(0,0,0,0.2);
   box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 1px 0 rgba(255,255,255,0.2);
-  //margin-bottom: 20px;
   padding-top: 10px;
   padding-bottom: 20px;
   display: flex;
@@ -102,6 +101,7 @@
 }
 
 .project__hero {
+  display: grid;
   position: relative;
   padding: 20px 5px 20px 5px;
   text-align: center;
@@ -115,14 +115,7 @@
     right: 0;
     background: #f1f3ff;
     border-radius: 6px;
-    // background:
-    //   linear-gradient(45deg, hsla(190, 95%, 43%, 1) 0%, hsla(190, 95%, 43%, 0) 70%),
-    //   linear-gradient(135deg, hsla(219, 93%, 48%, 1) 10%, hsla(219, 93%, 48%, 0) 80%),
-    //   linear-gradient(225deg, hsla(293, 93%, 48%, 1) 10%, hsla(293, 93%, 48%, 0) 80%),
-    //   linear-gradient(315deg, hsla(130, 96%, 45%, 1) 100%, hsla(130, 96%, 45%, 0) 70%);
-    // opacity: 0.6;
     z-index: 1;
-    // clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
   }
   img {
     height: 100%;

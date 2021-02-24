@@ -3,16 +3,43 @@ extends layout
 block content
   .inner
 
-    h2= project.name
-    p
+    h2= l.info 
     .card 
-      if(author && (author.name || author.institute))   
-        .reviews
-          .review
-            .review__header
-              .review__author
-                p= author.name
-              p= author.institute
-              p= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
-            .review__header
-              p= project.description
+      h6= project.name
+      p(style="color: #3b4051") !{project.description}
+
+      
+      if(author && (author.name || author.institute))  
+        h6= l.authors 
+        
+        ol.card-message
+          p= author.name
+          p= author.institute
+        
+        p= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
+    
+    h2= `${l.how_to_participate}`
+    .card
+      if(user && user.participant_projects.map(project => project._id.toString()).includes(study))
+        p= l.arleadyParticipant 
+        
+      else
+        h6= l.alreadyAppHeader  
+        p= l.already_instruction 
+      
+        h6= l.firstTimeHeader   
+        
+        ol.card-message
+          p !{l.firstTimeStep_1}
+          p= l.firstTimeStep_2 
+          p= l.firstTimeStep_3 
+        
+        h6= l.scanQRcode  
+        canvas#canvas
+        script(src='../javascripts/qrcode.min.js' nonce=`${noncevalue}`)
+        script(nonce=`${noncevalue}`).
+          const slug = !{ JSON.stringify(project.slug) || ''};
+          QRCode.toCanvas(document.getElementById('canvas'), `samply://--/study?name=${slug}`, function (error) {  
+            if (error) console.error(error)
+          })
+              
