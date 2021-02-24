@@ -543,7 +543,7 @@ module.exports =
             Please first activate your study
           `,
           'activate_study_2': `
-             by turning on the toggle switch on the study card <a target='blank' href='../projects'>here</a>.
+             by turning on the toggle switch on the study card <a href='../projects'>here</a>.
           `,
           'web_link_1': `
             The web page of your study contains the description of your study, the information about the authors and the instructions how participants can take part in the study.

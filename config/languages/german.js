@@ -545,7 +545,7 @@ module.exports = {
         'activate_study_1': `
           Bitte aktivieren Sie zuerst Ihre Studie
         `,
-        'activate_study_2': `, indem Sie den Kippschalter auf der Studienkarte <a target='blank' href='../projects'>hier</a> einschalten.`,
+        'activate_study_2': `, indem Sie den Kippschalter auf der Studienkarte <a href='../projects'>hier</a> einschalten.`,
         'web_link_1': `
           Die Webseite Ihrer Studie enthält die Beschreibung Ihrer Studie, die Informationen über die Autoren und die Anweisungen, wie Teilnehmer an der Studie teilnehmen können.
           Ein individueller QR-Code wird verwendet, um eine Studie in der mobilen App zu finden.
