@@ -35,7 +35,7 @@ block content
           p= l.firstTimeStep_3 
         
         h6= l.scanQRcode  
-        a(target='blank' href=`samply://--/study?name=${slug}`)
+        a(href=`samply://--/study?name=${project.slug}`)
           canvas#canvas
         script(src='../javascripts/qrcode.min.js' nonce=`${noncevalue}`)
         script(nonce=`${noncevalue}`).
