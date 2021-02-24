@@ -4,8 +4,8 @@ mixin publicProjectCard(project = {})
       .project__hero
         h2.project__title #{project.name}
       .project__details
-        if(project.description.split(' ').length > 30)
-          p(style="font-size:1.5rem")= `${project.description.split(' ').slice(0, 30).join(' ')}...`
+        if(project.description.split(' ').length > 20)
+          p(style="font-size:1.5rem")= `${project.description.split(' ').slice(0, 20).join(' ')}...`
         else 
           p(style="font-size:1.5rem")= project.description
       .project__bottom
