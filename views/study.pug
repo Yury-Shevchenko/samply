@@ -38,7 +38,7 @@ block content
         a(href=`samply://--/study?name=${project.slug}`)
           canvas#canvas
         script(src='../javascripts/qrcode.min.js' nonce=`${noncevalue}`)
-        script(nonce=`${noncevalue}`).
+        script(defer nonce=`${noncevalue}`).
           const slug = !{ JSON.stringify(project.slug) || ''};
           QRCode.toCanvas(document.getElementById('canvas'), `samply://--/study?name=${slug}`, function (error) {  
             if (error) console.error(error)
