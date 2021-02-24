@@ -11,14 +11,3 @@ mixin publicProjectCard(project = {})
       .project__bottom
         p(style="font-size:1rem; font-style: italic;")= project.author_name
         p(style="font-size:1rem")= project.author_institute
-
-      //- if(user && user.level < 10)
-      //-   if(user.participant_projects && user.participant_projects.map(e => e._id.toString()).includes(project._id.toString()))
-      //-     a(href=`/testing/${project._id}`)
-      //-       .button(style="background-color:#ed1a1a; width: fit-content; color:white;") #{layout.unsubscribe} 
-      //-   else 
-      //-     a(href=`/testing/${project._id}`)
-      //-       .button(style="width: fit-content;") #{layout.subscribe_to} 
-      
-    
-    

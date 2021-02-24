@@ -13,6 +13,18 @@ block content
         p !{l.mobile_invite_2}
         
         h5 
+          .headerLink !{l.way_0_header} 
+          
+        table.table
+          tr
+            td !{l.web_link}
+            td
+              input(type="text" value=`https://samply.uni-konstanz.de/studies/${project.slug}` id="weblink" readonly)
+              button(class="copyButton" id="weblink") #{l.copy_link}
+        
+        p !{l.web_link_1}  
+            
+        h5 
           .headerLink !{l.way_1_header} 
         
         table.table

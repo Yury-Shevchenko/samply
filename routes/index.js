@@ -21,8 +21,6 @@ router.get('/researcher/:action', appController.researcherPage);
 router.get('/docs', appController.docs);
 router.get('/docs/:page', appController.docs);
 router.get('/forgot', appController.forgot);
-router.get('/testing', authController.isLoggedIn, catchErrors(appController.testing));
-router.get('/testing/:id', authController.isLoggedIn, catchErrors(appController.testing));
 
 // auth controller
 router.post('/account/forgot', catchErrors(authController.forgot));
@@ -35,7 +33,7 @@ router.get('/logout', authController.logout);
 
 router.post('/auth/participant/email/sign',
   passport.authenticate('website-signup-participant', {
-    successRedirect : '/testing',
+    successRedirect : '/studies',
     failureRedirect: '/participant/register',
     failureFlash : true
   }));
@@ -49,7 +47,7 @@ router.post('/auth/researcher/email/register',
 
 router.post('/auth/participant/email/login',
   passport.authenticate('website-login', {
-    successRedirect : '/testing',
+    successRedirect : '/studies',
     failureRedirect: '/participant/login',
     failureFlash : true
   }));

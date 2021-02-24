@@ -63,10 +63,10 @@ exports.activateParticipantProject = async (req, res) => {
 // show user projects
 exports.getUserProjects = async (req, res) => {
   const projects = await Project.find({creator: req.user._id}, {
-    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
+    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1, slug: 1,
   });
   const invitedprojects = await Project.find({members: req.user._id}, {
-    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1
+    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1, slug: 1,
   });
   res.render('projects', { projects, invitedprojects });
 };

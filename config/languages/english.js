@@ -525,20 +525,28 @@ module.exports =
         },
 
         'invitations': {
-          'way_1_header': `Way 1. The direct link to your study`,
-          'way_2_header': `Way 2. Ask participants to find your study`,
+          'way_0_header': `Way 1. The web page of your study`,
+          'way_1_header': `Way 2. The direct link to your study in the mobile app`,
+          'way_2_header': `Way 3. Ask participants to find your study in the mobile app`,
+
           'mobile_invite_1': `
-            There are two ways to invite participants to your study.
-            In all cases, participants must first install the mobile application <em>Samply Research</em> on their mobile phone.
+            There are three ways to invite participants to your study.
+            In all cases, participants must first install the mobile application <em>Samply Research</em> on their smartphone.
             For Android users, the application is available in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a>.
             For Apple users, the application is in <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
             You can provide participants with these links to the Google Play or App Store or ask them to search for the <em>Samply Research</em> app in the respective stores.
           `,
           'mobile_invite_2': `
-            After the application is installed, either provide a participant with the direct link to your study or ask a participant to find your study (if they cannot use the link).
+            After the application is installed, either provide a participant with 1) a web page link, 2) a direct link to your study in the mobile app or 3) instructions how to find your study in the list of studies in the mobile app (if your study is public).
+          `,
+          'web_link': 'The web page of your study',
+          'web_link_1': `
+            The web page of your study contains the description of your study, the information about the authors and the instructions how participants can take part in the study.
+            A unique QR code is used to find a study in the mobile app.
+            Your study does not have to be public for the QR code to work.
           `,
           'direct_link': `
-            Direct link to your study
+            Direct link to your study in the mobile app
           `,
           'direct_link_1': `
             To use this link, participants should already have the “Samply Research” app installed on their mobile phone.
@@ -560,21 +568,22 @@ module.exports =
             Note that the direct link will work even if your study is not publicly available in the list of studies.
           `,
           'custom_link': `
-            Custom link to your study
+            Custom link to your study in the mobile app
           `,
           'custom_link_1': `
             You can also pass additional variables via the link using the query.
             For example, if you want to create individual links, you can modify the link in the following way.
             The value of the variable <var>code</var>, which you provide inside the link (in this case, it is <kbd>123</kbd>), will be recorded and shown in your participants data.
           `,
-          'finding_study': `If for some reason participants cannot use the direct link, they can find your study in the list of studies within the app.
-            This requires your study to be public.
+          'finding_study': `
+            If your study is public, participants can find it in the list of public studies within the app.
+            To apply for approval of your study for the public list, please submit a request <a target='blank' href='../docs/faq'>here</a>.
             After logging in, participants must switch to the "Studies" tab within the app.
             There they can use the search field to find your study.
             In the list of studies the name, the author and the creation date of the study are displayed.
             Please give your participants the exact name of your study so that they can find it in the app.
             When the participants tap on your study in the list of studies, they will be taken to the study page.
-            `,
+          `,
           'message_create_project': `To invite new participants to your study, activate or create a study <a href="/projects">here</a>.`,
           'copy_link': 'Copy link',
         },

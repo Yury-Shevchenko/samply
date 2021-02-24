@@ -528,20 +528,27 @@ module.exports = {
       },
 
       'invitations': {
-        'way_1_header': `Weg 1. Der direkte Link zu Ihrer Studie`,
-        'way_2_header': `Weg 2. Bitten Sie die Teilnehmer, Ihre Studie zu finden.`,
+        'way_0_header': `Weg 1. Die Web-Seite Ihrer Studie`,
+        'way_1_header': `Weg 2. Der direkte Link zu Ihrer Studie in der mobilen App`,
+        'way_2_header': `Weg 3. Bitten Sie die Teilnehmer, Ihre Studie in der mobilen App zu finden.`,
         'mobile_invite_1': `
-          Es gibt zwei Möglichkeiten, Teilnehmer zu Ihrer Studie einzuladen.
+          Es gibt drei Möglichkeiten, Teilnehmer zu Ihrer Studie einzuladen.
           In allen Fällen müssen die Teilnehmer zunächst die mobile Anwendung <em>Samply Research</em> auf ihrem Mobiltelefon installieren.
           Für Android-Benutzer steht die Anwendung unter <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> zur Verfügung.
           Für Apple-Benutzer ist die Anwendung unter <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a> verfügbar.
           Sie können den Teilnehmern diese Links zum Google Play oder App Store zur Verfügung stellen oder sie bitten, in den jeweiligen Stores nach der App <em>Samply Research</em> zu suchen.
         `,
         'mobile_invite_2': `
-          Nachdem die Anwendung installiert ist, stellen Sie entweder den Teilnehmern einen direkten Link zu Ihrer Studie zur Verfügung oder bitten Sie die Teilnehmer, Ihre Studie zu finden (falls sie den Link nicht verwenden können).
+          Nachdem die Anwendung installiert wurde, geben Sie einem Teilnehmer entweder 1) einen Link zur Webseite, 2) einen direkten Link zu Ihrer Studie in der mobilen App oder 3) eine Anleitung, wie er Ihre Studie in der Liste der Studien in der mobilen App finden kann (wenn Ihre Studie öffentlich ist).
+        `,
+        'web_link': 'Die Web-Seite Ihrer Studie',
+        'web_link_1': `
+          Die Webseite Ihrer Studie enthält die Beschreibung Ihrer Studie, die Informationen über die Autoren und die Anweisungen, wie Teilnehmer an der Studie teilnehmen können.
+          Ein individueller QR-Code wird verwendet, um eine Studie in der mobilen App zu finden.
+          Ihre Studie muss nicht öffentlich sein, damit der QR-Code funktioniert.
         `,
         'direct_link': `
-          Direkter Link zu Ihrer Studie
+          Direkter Link zu Ihrer Studie in der mobilen App
         `,
         'direct_link_1': `
           Um diesen Link nutzen zu können, sollten die Teilnehmer bereits die App "Samply Research" auf ihrem Mobiltelefon installiert haben.
@@ -563,7 +570,7 @@ module.exports = {
           Beachten Sie, dass der direkte Link auch dann funktioniert, wenn Ihre Studie in der Liste der Studien nicht öffentlich zugänglich ist.
         `,
         'custom_link': `
-          Individueller Link zu Ihrer Studie
+          Individueller Link zu Ihrer Studie in der mobilen App
         `,
         'custom_link_1': `
           Sie können auch zusätzliche Variablen über die Verknüpfung mit der Abfrage übergeben.
@@ -571,8 +578,8 @@ module.exports = {
           Der Wert der Variablen <var>code</var>, die Sie innerhalb des Links angeben (in diesem Fall ist es <kbd>123</kbd>), wird erfasst und in Ihren Teilnehmerdaten angezeigt.
         `,
         'finding_study': `
-          Wenn Teilnehmerinnen und Teilnehmer aus irgendeinem Grund den direkten Link nicht benutzen können, finden sie Ihre Studie in der Liste der Studien innerhalb der App.
-          Voraussetzung dafür ist, dass Ihre Studie öffentlich ist.
+        Wenn Ihre Studie öffentlich ist, können Teilnehmer sie in der Liste der öffentlichen Studien innerhalb der App finden.
+          Um die Freigabe Ihrer Studie für die öffentliche Liste zu beantragen, stellen Sie bitte einen Antrag <a target='blank' href='../docs/faq'>hier</a>.
           Nach dem Einloggen müssen die Teilnehmer zum Reiter "Studien" innerhalb der App wechseln.
           Dort können sie das Suchfeld benutzen, um Ihre Studie zu finden.
           In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
