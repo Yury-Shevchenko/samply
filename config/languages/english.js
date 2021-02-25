@@ -60,6 +60,10 @@ module.exports =
       'here': 'here.',
       'do_not_have_an_account': `Don't have an account yet?`,
       'create_researcher_account': 'Create a researcher account',
+      'create_participant_account': `
+        To create a <strong>participant</strong> account, please use the mobile app Samply Research
+        in <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> or <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
+      `,
       'continue': 'Continue',
       'participate': 'Participate',
       'your_code': 'Participant code:',
@@ -248,7 +252,11 @@ module.exports =
       'footer_notice': `<a href="/docs/legalnotice">Legal notice</a>`,
       'use_uni_email' : 'Please use your university email address.',
       'agree_to_conditions': `I agree to the Samply <a target="_blank" href="/docs/terms">Terms of Service</a> and <a target="_blank" href="/docs/policy">Privacy Policy</a>`,
-
+      'flash_sent_confirm_email_ink': `
+        We have sent an email with a confirmation link to your email address.
+      `,
+      'flash_confirm_email_invalid': 'Email confirmation link is invalid or has expired',
+      'flash_email_confrimed': 'Your email address has been confirmed!',
     },
 
     'passport': {
@@ -259,7 +267,9 @@ module.exports =
       'registered_user'    : 'You are registered as a new user!',
       'logged_in'          : 'You are logged in!',
       'wrong_credentials'  : 'Oops! Wrong credentials.',
-      'welcome_back'       : 'Welcome back!'
+      'welcome_back'       : 'Welcome back!',
+      'flash_confirm_email': 'We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.',
+
 
     },
 
@@ -275,7 +285,11 @@ module.exports =
       'participate_in_studies': 'You participate in the following studies',
       'no_studies': `
         You are not currently participating in any study. Select the study from the <a href="/studies">list</a> of studies.
-      `
+      `,
+      'emailIsConfirmed': 'Email is confirmed',
+      'emailIsNotConfirmed': 'Email is not confirmed',
+      'sendLink': 'Send confirmation link',
+
     },
 
     'index' : {
@@ -881,5 +895,10 @@ module.exports =
           'table_randomized' : 'Randomized',
           'table_future_participants' : 'Applies to future participants',
         },
+
+        'messages': {
+            'open': 'Open the link',
+        },
+
 
 }

@@ -8,15 +8,15 @@ block content
       .div
           
         each notification, i in history
-          .div(style='display: grid; grid-template-columns: 1fr 4fr 4fr 2fr 4fr 1fr; grid-gap: 5px; background: white; border-bottom: 1px solid grey;')
+          .div(style='display: grid; grid-template-columns: 1fr 2fr 3fr 3fr 2fr 1fr; grid-gap: 5px; background: white; border-bottom: 1px solid grey; padding: 10px;')
             p #{count - i - (page-1)*limit}
+            p= notification.project_name
             p= notification.data.title 
             p= notification.data.message
+            p= h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')
             p
-                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url target="_blank") Open 
-            p= h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm:ss')  
-            p= notification.events.map(e => e.status)
-                
+                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url target="_blank") #{l.open}  
+                  
       .pagination
         .pagination__prev
           if page > 1
@@ -27,5 +27,4 @@ block content
           if page < pages
             a(href=`/messages/page/${parseFloat(page) + 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_next}
                       
-      
-      //- pre=h.dump(history)
+  

@@ -61,6 +61,10 @@ module.exports = {
     'here': 'hier an.',
     'do_not_have_an_account': `Sie haben noch kein Konto?`,
     'create_researcher_account': 'Ein Forscherkonto erstellen',
+    'create_participant_account': `
+      Um ein <strong>Teilnehmerkonto</strong> zu erstellen, verwenden Sie bitte die mobile App Samply Research in
+      <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank">Google Play</a> oder <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank">App Store</a>.
+    `,
     'continue': 'Weiter',
     'participate': 'Teilnehmen',
     'your_code': 'Teilnehmer-Code:',
@@ -249,7 +253,11 @@ module.exports = {
     'footer_notice': `<a href="/docs/impressum">Impressum</a>`,
     'use_uni_email' : 'Bitte geben Sie Ihre Universitäts-E-Mail-Adresse an.',
     'agree_to_conditions' : `Ich habe die <a target="_blank" href="/docs/dienstbedingungen">Servicebedinungen</a> und <a target="_blank" href="/docs/datenschutz">Datenschutzrichtlinie</a> von Samply gelesen und stimme ihnen zu.`,
-
+    'flash_sent_confirm_email_ink': `
+       Wir haben eine E-Mail mit einem Bestätigungslink an Ihre E-Mail-Adresse gesendet.
+    `,
+    'flash_confirm_email_invalid': 'Der E-Mail-Bestätigungslink ist ungültig oder ist abgelaufen',
+    'flash_email_confrimed': 'Ihre E-Mail Adresse wurde bestätigt!',
   },
 
   'passport': {
@@ -260,7 +268,8 @@ module.exports = {
     'registered_user'    : 'Sie sind als neuer Benutzer registriert!',
     'logged_in'          : 'Sie sind eingeloggt!',
     'wrong_credentials'  : 'Ups! Falsche Zugangsdaten.',
-    'welcome_back'       : 'Willkommen zurück!'
+    'welcome_back'       : 'Willkommen zurück!',
+    'flash_confirm_email': 'Wir haben eine E-Mail mit einem Bestätigungslink an Ihre E-Mail-Adresse gesendet. Um den Anmeldevorgang abzuschließen, klicken Sie bitte auf den Bestätigungslink.',
   },
 
   'account' : {
@@ -275,7 +284,10 @@ module.exports = {
     'participate_in_studies': 'Sie nehmen an folgenden Studien teil',
     'no_studies': `
       Sie nehmen zur Zeit an keiner Studie teil. Wählen Sie die Studie aus der <a href="/studies">Liste</a> der Studien aus.
-    `
+    `,
+    'emailIsConfirmed': 'Email ist bestätigt',
+    'emailIsNotConfirmed': 'EMail ist nicht bestätigt',
+    'sendLink': 'Bestätigungslink senden',
   },
 
   'index' : {
@@ -897,6 +909,8 @@ module.exports = {
         'table_future_participants' : 'Gilt für zukünftige Teilnehmer',
       },
 
-
+      'messages': {
+          'open': 'Link öffnen',
+      },
 
 }

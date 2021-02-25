@@ -17,6 +17,7 @@ block content
           td Samply ID
           td Name
           td Email
+          td Confirmed
           td Institute
           td Projects (participant)
           td Projects (researcher)
@@ -34,6 +35,7 @@ block content
             td= user.samplyId
             td= user.name
             td= user.email 
+            td= user.emailIsConfirmed
             td= user.institute
             td= user.participant_projects.length
             td= user.projects.length

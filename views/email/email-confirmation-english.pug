@@ -1,0 +1,9 @@
+extends email-layout
+
+block content
+  h2 Email confirmation
+  p Hello #{participant.name}. You have created an account in Samply. Please click the following button to confirm your email address. 
+  +button(resetURL, 'Confirm my email →')
+  p If you can't click the above button please visit #{resetURL}
+  br
+  p If you didn't request this email, please ignore it.

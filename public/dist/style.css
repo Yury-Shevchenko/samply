@@ -1959,6 +1959,19 @@ i.yes:after {
   -ms-grid-columns: 1fr;
       grid-template-columns: 1fr; }
 
+.emailBox {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr auto;
+      grid-template-columns: 1fr auto;
+  grid-gap: 20px;
+  -ms-flex-align: baseline;
+      align-items: baseline;
+  -ms-flex-pack: left;
+      justify-content: left; }
+  .emailBox .button {
+    text-align: center; }
+
 /**
 * The CSS shown here will not be introduced in the Quickstart guide, but
 * shows how you can use CSS to style your Element's container.

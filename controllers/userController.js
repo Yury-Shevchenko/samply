@@ -16,72 +16,8 @@ const formidable = require('formidable');
 const fs = require('fs');
 const schedule = require('node-schedule');
 
-// exports.code = async (req, res) => {
-//   let joined_project, projects, temporary_code;
-//   if(req.params.project){
-//     // the specific project was requested
-//     joined_project = await Project.findOne({ name: req.params.project });
-//     // user is logged in
-//     if(req.user && req.user.level & req.user.level < 10){
-//       // the project exists
-//       if (joined_project && joined_project._id){
-//         User.findById(req.user._id, (err, user) => {
-//           user.participantInProject = joined_project._id;
-//           user.save((saveErr, updatedUser) => {
-//             if(saveErr) {
-//               console.log("Authorisation error", saveErr);
-//             }
-//             res.redirect('/testing');
-//           });
-//         });
-//       } else {
-//         // no project found
-//         req.flash('error', `There is no project with the name ${req.params.project} found. Please choose the project from the list.`);
-//         res.redirect('/studies');
-//       }
-//     } else {
-//       // user is not logged in
-//       if (joined_project && joined_project._id){
-//         // project exists
-//         if(req.query.generate == 'true'){
-//           if (req.params.code){
-//             temporary_code = uniqid() + '-' + req.params.code;
-//           } else {
-//             temporary_code = uniqid();
-//           }
-//         };
-//         res.render('code', {title: 'Enter with code', message: req.flash('codeMessage'), projects, joined_project, code: temporary_code || req.params.code});
-//       } else {
-//         // no project found
-//         req.flash('error', `There is no project with the name ${req.params.project} found. Please choose the project from the list.`);
-//         res.redirect('/code');
-//       }
-//     }
-//   } else {
-//     // the project was not specified
-//     if(req.user){
-//       // user is logged in
-//       res.redirect('/studies');
-//     } else {
-//       // user is not logged in
-//       projects = await Project.getCurrentProjects();
-//       res.render('code', {title: 'Enter with code', message: req.flash('codeMessage'), projects, joined_project, code: temporary_code || req.params.code});
-//     }
-//   };
-// };
-//
-// exports.sign = async (req, res) => {
-//   let projectId;
-//   if(req.params.project){
-//     const project = await Project.findOne({ name: req.params.project });
-//     if (project) projectId = project._id
-//   }
-//   res.render('sign', {title: 'Sign in', message: req.flash('signupMessage'), project: projectId, code: req.params.code})
-// };
-
 exports.account = async (req, res) => {
-  const projects = await Project.getCurrentProjects();
-  res.render('account', {title: 'Edit Your Account', projects: projects});
+  res.render('account', {title: 'Edit Your Account' });
 };
 
 exports.updateWebsiteAccount = async (req, res) => {

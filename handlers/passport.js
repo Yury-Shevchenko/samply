@@ -3,8 +3,10 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const Project = mongoose.model('Project');
 const LocalStrategy = require('passport-local').Strategy;
-
 const language = require('../config/lang');
+
+const crypto = require('crypto');
+const mail = require('../handlers/mail');
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -113,9 +115,21 @@ passport.use('website-signup-researcher', new LocalStrategy({
           newUser.language = user_lang;
           newUser.local.password = newUser.generateHash(password);
           newUser.useragent = req.headers['user-agent'] || 'no headers found';
+
+          // send a confirmation email
+          newUser.confirmEmailToken = crypto.randomBytes(20).toString('hex');
+          newUser.confirmEmailExpires = Date.now() + 3600000;
+          mail.send({
+            participant: newUser,
+            subject: 'Email confirmation',
+            resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+            filename: 'email-confirmation-' + newUser.language
+          });
+
+          // save the user
           newUser.save(function(err) {
             if (err) throw err;
-            return done(null, newUser);
+            return done(null, newUser, req.flash('success', `${language[user_lang]['passport'].flash_confirm_email}`));
           });
         }
   })})}

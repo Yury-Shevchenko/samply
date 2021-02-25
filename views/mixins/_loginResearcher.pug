@@ -10,6 +10,9 @@ mixin loginResearcher()
       | #{layout.do_not_have_an_account}
       br
       a(style={color:'black'} href=`/researcher/register`) #{layout.create_researcher_account}
+    
+    p
+      | !{layout.create_participant_account}
       
     p
       a(style={color:'black'} href=`/researcher/forgot`) #{layout.message_forgot_password}

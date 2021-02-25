@@ -20,7 +20,7 @@ block content
     
     h2= `${l.how_to_participate}`
     .card
-      if(user && user.participant_projects.map(project => project._id.toString()).includes(study))
+      if(user && user.participant_projects.map(project => project._id.toString()).includes(project._id.toString()))
         p= l.arleadyParticipant 
         
       else
@@ -43,4 +43,3 @@ block content
           QRCode.toCanvas(document.getElementById('canvas'), `samply://--/study?name=${slug}`, function (error) {  
             if (error) console.error(error)
           })
-              

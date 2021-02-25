@@ -13,8 +13,8 @@ const passport = require('passport');
 
 // app controller
 // TODO finish registration for participants at the website (but should be discouraged)
-router.get('/participant', appController.participantPage);
-router.get('/participant/:action', appController.participantPage);
+// router.get('/participant', appController.participantPage);
+// router.get('/participant/:action', appController.participantPage);
 
 router.get('/researcher', appController.researcherPage);
 router.get('/researcher/:action', appController.researcherPage);
@@ -31,24 +31,24 @@ router.post('/account/reset/:token',
 );
 router.get('/logout', authController.logout);
 
-router.post('/auth/participant/email/sign',
-  passport.authenticate('website-signup-participant', {
-    successRedirect : '/studies',
-    failureRedirect: '/participant/register',
-    failureFlash : true
-  }));
+// router.post('/auth/participant/email/sign',
+//   passport.authenticate('website-signup-participant', {
+//     successRedirect : '/studies',
+//     failureRedirect: '/researcher/login',
+//     failureFlash : true
+//   }));
+//
+// router.post('/auth/participant/email/login',
+//   passport.authenticate('website-login', {
+//     successRedirect : '/studies',
+//     failureRedirect: '/researcher/login',
+//     failureFlash : true
+//   }));
 
 router.post('/auth/researcher/email/register',
   passport.authenticate('website-signup-researcher', {
     successRedirect : '/projects',
     failureRedirect: '/researcher/register',
-    failureFlash : true
-  }));
-
-router.post('/auth/participant/email/login',
-  passport.authenticate('website-login', {
-    successRedirect : '/studies',
-    failureRedirect: '/participant/login',
     failureFlash : true
   }));
 
@@ -58,6 +58,10 @@ router.post('/auth/researcher/email/login',
     failureRedirect: '/',
     failureFlash : true
   }));
+
+// email confirmation
+router.post('/account/confirm', catchErrors(authController.sendEmailConfirmationLink));
+router.get('/account/confirm/:token', catchErrors(authController.confirmEmail));
 
 // user controller
 router.get('/account', authController.isLoggedIn, catchErrors(userController.account));

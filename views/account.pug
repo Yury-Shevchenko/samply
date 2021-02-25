@@ -9,16 +9,25 @@ block content
       h6 #{layout.logout}
     p    
     .card
-        
-      form.form(action="/account" method="POST")
-        
-        label(for="time") #{l.registered}
-        h2= h.moment(user.created).locale(language).format("MMM Do YY")
-          
+    
+      form(action="/account/confirm" method="POST" id="email")
         if(user.email)
           label(for="email") #{l.email}
-          h2= `${user.email}`
-
+          .emailBox
+            h6= `${user.email}`
+            if(user.emailIsConfirmed)
+              p ✅ #{l.emailIsConfirmed}
+            else 
+              div
+                p ⚠️ #{l.emailIsNotConfirmed}
+                input(type="text" name="email" value= user.email hidden)
+                input.button(value=l.sendLink type="submit" form="email")
+        
+      form(action="/account" method="POST" id="account")
+        
+        label(for="time") #{l.registered}
+        h6= h.moment(user.created).locale(language).format("MMM Do YY")
+                
         label(for="name") #{l.name}
         input(type="text" name="name" value= user.name ||'')
         
@@ -30,13 +39,14 @@ block content
         else
           if user.samplyId
             label(for="id") ID
-            h2= (user.code && user.code.id) || user.samplyId
+            h6= (user.code && user.code.id) || user.samplyId
 
-          if user.participant_projects
+          if user.participant_projects && user.participant_projects.length
+            br
             label(for="participantInProject") #{l.participate_in_studies}
             each project in user.participant_projects
               p 
-                a(href=`/testing/${project._id}`)= project.name
+                a(href=`/studies/${project.slug}`)= project.name
           else
             p !{l.no_studies}
 
@@ -48,8 +58,6 @@ block content
               option(value=option.value, selected=(user.language === option.value))= option.label
 
         p(style='white-space:pre;')
-        input.button( type="submit" value= l.submit )
-        
-        //- pre=h.dump(user)
-        
+        input.button( type="submit" value= l.submit form="account")
+
         

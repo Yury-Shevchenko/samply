@@ -17,8 +17,6 @@
 .program {
   display: grid;
   grid-gap: 5px;
-  // grid-template-columns: repeat(auto-fit, minmax(250px, auto));
-  // grid-auto-rows: 100px auto;
 }
 
 .results{
@@ -38,6 +36,17 @@
   grid-template-columns: 1fr;
 }
 
-.user{
+.user {
 
+}
+
+.emailBox {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: 20px;
+  align-items: baseline;
+  justify-content: left;
+  .button {
+    text-align: center;
+  }
 }
