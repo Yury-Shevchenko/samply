@@ -76,7 +76,7 @@ exports.sendEmailConfirmationLink = async (req, res) => {
     participant: user,
     subject: 'Email confirmation',
     resetURL: `https://${req.headers.host}/account/confirm/${user.confirmEmailToken}`,
-    filename: 'email-confirmation-' + res.locals.locale_language
+    filename: 'email-confirmation-' + user.language
   });
   req.flash('success', `${res.locals.layout.flash_sent_confirm_email_ink}`);
   res.redirect('/account');
