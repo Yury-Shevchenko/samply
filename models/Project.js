@@ -32,7 +32,8 @@ const projectSchema = new mongoose.Schema({
     type: String
   },
   messageAfterJoin: {
-    type: String
+    type: String,
+    default: ''
   },
   geofencingInstruction: {
     type: String
@@ -116,6 +117,7 @@ projectSchema.statics.findAllPublic = function() {
       slug: '$$ROOT.slug',
       description: '$$ROOT.description',
       welcomeMessage: '$$ROOT.welcomeMessage',
+      messageAfterJoin: '$$ROOT.messageAfterJoin',
       created: '$$ROOT.created',
       author_name: '$author.name',
       author_institute: '$author.institute',
