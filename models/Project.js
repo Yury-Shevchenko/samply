@@ -31,6 +31,9 @@ const projectSchema = new mongoose.Schema({
   codeMessage: {
     type: String
   },
+  messageAfterJoin: {
+    type: String
+  },
   geofencingInstruction: {
     type: String
   },

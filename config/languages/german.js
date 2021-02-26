@@ -381,6 +381,7 @@ module.exports = {
       'askUsername': `Bitten Sie die Teilnehmer, einen Code in die mobile Anwendung einzugeben, wenn sie an Ihrer Studie teilnehmen.`,
       'imageURL': `Bild (fügen Sie die Bild-URL hier ein - das Bild wird neben Ihrer Studie in der mobilen Anwendung angezeigt)`,
       'codeMessage': 'Sie haben die Möglichkeit, einen Teilnehmer aufzufordern, bei der Teilnahme an Ihrer Studie einen Teilnehmercode einzugeben. Wenn Sie dies tun möchten, kreuzen Sie bitte das untenstehende Kästchen an und geben Sie dem Teilnehmer Anweisungen, was er in das Eingabefeld eingeben soll.',
+      'messageAfterJoin': 'Der Text, der den Teilnehmern angezeigt wird, nachdem sie an der Studie angemeldet haben.',
     },
 
     'testing': {

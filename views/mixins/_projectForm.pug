@@ -18,6 +18,9 @@ mixin projectForm(project = {})
           #{l.askUsername}
     textarea(type='text' name='codeMessage')= project.codeMessage
     
+    label(for='messageAfterJoin') #{l.messageAfterJoin}
+    textarea(type='text' name='messageAfterJoin')= project.messageAfterJoin
+    
     label(for='image') #{l.imageURL} 
     input(type='text' name='image' value=project.image)
     

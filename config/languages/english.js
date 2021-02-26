@@ -381,6 +381,7 @@ module.exports =
         'askUsername': `Ask participants to enter a code in the mobile application when joining your study`,
         'imageURL': `Image (paste the image URL here - the image will be displayed next to your study in the mobile application)`,
         'codeMessage': 'You have the option to ask a participant to enter a participant code when joining your study. If you would like to do this, please tick the box below and provide instructions for the participant on what to enter in the input box.',
+        'messageAfterJoin': 'The text that will be displayed to participants after they have joined the study.',
       },
 
       'testing': {

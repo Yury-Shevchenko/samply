@@ -122,6 +122,7 @@ exports.createProject = async (req, res) => {
           description: req.body.description,
           welcomeMessage: req.body.welcomeMessage,
           codeMessage: req.body.codeMessage,
+          messageAfterJoin: req.body.messageAfterJoin,
           geofencingInstruction: req.body.geofencingInstruction,
           creator: req.user._id,
           members: membersData,
@@ -175,6 +176,7 @@ exports.updateProject = async (req, res) => {
     project.description = req.body.description;
     project.welcomeMessage = req.body.welcomeMessage;
     project.codeMessage = req.body.codeMessage;
+    project.messageAfterJoin = req.body.messageAfterJoin;
     project.geofencingInstruction = req.body.geofencingInstruction;
     project.members = membersData;
     if(!project.settings) project.settings = {};
@@ -343,7 +345,7 @@ exports.getPublicStudiesAPI = async(req, res) => {
 }
 
 exports.getPublicStudy = async(req, res) => {
-  const study = await Project.findOne({ slug: req.params.name }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, geofencingInstruction: 1, settings: 1 });
+  const study = await Project.findOne({ slug: req.params.name }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1 });
   res.send(study);
 }
 
