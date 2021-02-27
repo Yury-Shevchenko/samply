@@ -344,8 +344,27 @@ exports.getPublicStudiesAPI = async(req, res) => {
   res.send(studies);
 }
 
+function checkObjectIdValid(id){
+  const ObjectID = mongoose.Types.ObjectId;
+  if(ObjectID.isValid(id)){
+    if (String(new ObjectID(id)) === id) {
+      return true
+    } else {
+      return false
+    }
+  } else {
+    return false
+  }
+}
+
 exports.getPublicStudy = async(req, res) => {
-  const study = await Project.findOne({ slug: req.params.name }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1 });
+  const { id } = req.params;
+  let study;
+  if (checkObjectIdValid(id)){
+    study = await Project.findOne({ _id: id }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1 });
+  } else {
+    study = await Project.findOne({ slug: id }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1 });
+  }
   res.send(study);
 }
 

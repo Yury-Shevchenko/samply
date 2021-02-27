@@ -126,7 +126,8 @@ router.post('/scheduleadminjob', authController.isAdminLoggedIn, catchErrors(job
 
 // api routes
 router.get('/api/studies', projectController.getPublicStudiesAPI);
-router.get('/api/study/:name', projectController.getPublicStudy);
+// router.get('/api/study/:name', projectController.getPublicStudy);
+router.get('/api/study/:id', projectController.getPublicStudy);
 router.post('/api/join/:id', jobController.joinStudy);
 router.post('/api/leave/:id', jobController.leaveStudy);
 router.post('/api/createaccount', userController.createMobileAccount);
