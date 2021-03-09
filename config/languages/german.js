@@ -514,7 +514,7 @@ module.exports = {
       'step_1': `Verwenden Sie vorhandene Vorlagen oder erstellen Sie Ihre eigene Studie mit <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
       'step_2': `Importieren Sie die Experimentdatei in Samply`,
       'step_3': `Senden Sie den Einladungslink an Ihre Teilnehmer und überwachen Sie deren Fortschritt in Echtzeit`,
-      'step_4': `Für weitere Information lesen Sie bitte die <a href='../docs/intro'>Dokumentation</a> oder besuchen Sie unseren <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> für Fragen und Hilfe.`,
+      'step_4': `Für weitere Information lesen Sie bitte die <a href='../docs/intro'>Dokumentation</a> oder besuchen Sie unseren <a target='blank' href='https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w'>Slack chat</a> für Fragen und Hilfe.`,
       'header_features': `Besonderheiten`,
       'feature_1': `Sie müssen zur Erhebung einer Studie keinen eigenen Server einrichten.`,
       'feature_2': `Samply kann jede Art von Skript hosten, die in <a target='_blank' href='https://labjs.felixhenninger.com/'>lab.js</a>. erstellt wurden.`,

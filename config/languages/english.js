@@ -513,7 +513,7 @@ module.exports =
         'step_1': `Use existing templates or create your own study with <a target="blank" href="https://labjs.felixhenninger.com/">lab.js experiment builder</a>`,
         'step_2': `Import the experiment file into Samply`,
         'step_3': `Send the invitation link to participants and monitor their progress in real time`,
-        'step_4': `Please check the <a href='../docs/intro'>documentation</a> for more information or join our <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help.`,
+        'step_4': `Please check the <a href='../docs/intro'>documentation</a> for more information or join our <a target='blank' href='https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w'>Slack chat</a> to ask questions and get help.`,
         'header_features': `Special features`,
         'feature_1': `You do not need to set up your own server to run a study.`,
         'feature_2': `Samply can host any type of scripts created in <a target="_blank" href="https://labjs.felixhenninger.com/">lab.js</a>.`,
