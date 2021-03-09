@@ -681,7 +681,7 @@ module.exports = {
           Weitere Informationen dazu finden Sie unter "Benachrichtigungen".
         `,
         'help_title' : 'Hilfe',
-        'help_1': `Bitte nehmen Sie am <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> teil, um Fragen zu stellen und Hilfe zu erhalten.`,
+        'help_1': `Bitte nehmen Sie am <a target='blank' href='https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w'>Slack chat</a> teil, um Fragen zu stellen und Hilfe zu erhalten.`,
         'forum': 'Forum',
         'faq_title': 'FAQ',
         'question_1': '2+2?',

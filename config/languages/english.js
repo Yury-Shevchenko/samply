@@ -670,7 +670,7 @@ module.exports =
             More information about that is in "Notifications".
           `,
           'help_title' : 'Help',
-          'help_1': `Please, join the <a target='blank' href='https://join.slack.com/t/open-lab-online/shared_invite/enQtNDU3MzgzMzY4NDcxLTBjZTg1NmViYTEwYWI0NmE3MDZmM2QwMzNhZmRmNmZkMDRhMzhlNTZlZWU2OWU0MmU5YTBhMjU4MWFlYjcwYjA'>Slack chat</a> to ask questions and get help. `,
+          'help_1': `Please, join the <a target='blank' href='https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w'>Slack chat</a> to ask questions and get help. `,
           'forum': 'Forum',
           'faq_title': 'FAQ',
           'question_1': '2+2?',
