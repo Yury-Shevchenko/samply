@@ -50,15 +50,15 @@ block content
         .pagination
           .pagination__prev
             if page > 1
-              a(href=`/history/page/${page - 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
+              a(href=`/history/page/${page - 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
           .pagination__text
             p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
           .pagination__next
             if page < pages
-              a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'number' ? '?id=' + participant : ''}`) #{layout.pagination_next}
+              a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_next}
 
     else 
       h2= `${layout.history_notifications}`
       p !{layout.message_history_create_project}      
       
-    //- pre= h.dump(history)           
+    //- pre= h.dump(history)        

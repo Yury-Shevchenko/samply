@@ -162,7 +162,7 @@ exports.getMessages = async (req, res) => {
 exports.downloadHistory = async (req, res) => {
   const projectId = req.params.id;
   const project = await Project.findOne({ _id: projectId });
-  confirmOwner(project, req.user);
+  confirmOwnerOrMember(project, req.user);
   let keys = [];
   const name = req.user.project.name;
   res.setHeader('Content-disposition', 'attachment; filename=' + name +'.csv');
@@ -221,5 +221,14 @@ const confirmOwner = (project, user) => {
   const isAdministrator = user.level > 100;
   if(!isCreator && !isAdministrator){
     throw Error('You must be a creator a project in order to do it!');
+  }
+};
+
+const confirmOwnerOrMember = (project, user) => {
+  const isCreator = project.creator.equals(user._id);
+  const isMember = project.members.map(id => id.toString()).includes(user._id.toString());
+  const isParticipant = user.level <= 10;
+  if(!(isCreator || isMember) || isParticipant){
+    throw Error('You must be a creator or a member of a project in order to do it!');
   }
 };
