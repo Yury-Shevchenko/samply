@@ -35,11 +35,11 @@ block content
           p= l.firstTimeStep_3 
         
         h6= l.scanQRcode  
-        a(href=`samply://--/study?name=${project.slug}`)
+        a(href=`samply://--/study?id=${project._id}`)
           canvas#canvas
         script(src='../javascripts/qrcode.min.js' nonce=`${noncevalue}`)
         script(defer nonce=`${noncevalue}`).
-          const slug = !{ JSON.stringify(project.slug) || ''};
-          QRCode.toCanvas(document.getElementById('canvas'), `samply://--/study?name=${slug}`, function (error) {  
+          const id = !{ JSON.stringify(project._id) || ''};
+          QRCode.toCanvas(document.getElementById('canvas'), `samply://--/study?id=${id}`, function (error) {  
             if (error) console.error(error)
           })

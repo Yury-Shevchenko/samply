@@ -80,6 +80,15 @@ mixin projectForm(project = {})
             input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
             input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
             input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius (in meters)")
+            
+            div.inputCheckBox
+              input(type='checkbox' id=`event-enter-${location.slug}` name=`event-enter-${location.slug}` checked = location.events && location.events.includes('enter'))
+              label(for=`event-enter-${location.slug}`) Notify on enter
+            
+            div.inputCheckBox
+              input(type='checkbox' id=`event-exit-${location.slug}` name=`event-exit-${location.slug}` checked = location.events && location.events.includes('exit'))
+              label(for=`event-exit-${location.slug}`) Notify on exit
+                  
             button(name="deleteBtn" id=`delete-${location.slug}`) Delete
             p  
             
@@ -130,6 +139,32 @@ mixin projectForm(project = {})
           rad_input.type = 'text';
           rad_input.name = `radius-${locationSlug}`;
           rad_input.placeholder = 'Enter radius';
+          
+          // add events 
+          var event_enter_input_div = document.createElement("div");
+          event_enter_input_div.classList.add('inputCheckBox');
+          var event_enter_input = document.createElement("input");
+          event_enter_input.type = 'checkbox';
+          event_enter_input.name = `event-enter-${locationSlug}`;
+          event_enter_input.id = `event-enter-${locationSlug}`;
+          var event_enter_input_label = document.createElement("label");
+          event_enter_input_label.innerText = 'Notify on enter';
+          event_enter_input_label.setAttribute('for', `event-enter-${locationSlug}`);
+          event_enter_input_div.appendChild(event_enter_input);
+          event_enter_input_div.appendChild(event_enter_input_label);
+        
+          var event_exit_input_div = document.createElement("div");
+          event_exit_input_div.classList.add('inputCheckBox');
+          var event_exit_input = document.createElement("input");
+          event_exit_input.type = 'checkbox';
+          event_exit_input.name = `event-exit-${locationSlug}`;
+          event_exit_input.id = `event-exit-${locationSlug}`;
+          var event_exit_input_label = document.createElement("label");
+          event_exit_input_label.innerText = 'Notify on exit';
+          event_exit_input_label.setAttribute('for', `event-exit-${locationSlug}`);
+          event_exit_input_div.appendChild(event_exit_input);
+          event_exit_input_div.appendChild(event_exit_input_label);
+            
           const deleteBtn = document.createElement("button");
           deleteBtn.innerText = "Delete";
           deleteBtn.onclick = (e) => {
@@ -143,6 +178,8 @@ mixin projectForm(project = {})
           locationDiv.appendChild(lat_input);
           locationDiv.appendChild(lon_input);
           locationDiv.appendChild(rad_input);
+          locationDiv.appendChild(event_enter_input_div);
+          locationDiv.appendChild(event_exit_input_div);
           locationDiv.appendChild(deleteBtn);
           coordinates.appendChild(locationDiv);
         });
@@ -152,4 +189,4 @@ mixin projectForm(project = {})
 
     input(type='submit' value=l.submit class="button")
     
-    //- pre= h.dump(project)
+    pre= h.dump(project)

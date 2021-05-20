@@ -111,7 +111,8 @@ exports.createProject = async (req, res) => {
             title: req.body[`title-${slug}`],
             latitude: parseFloat(req.body[`latitude-${slug}`]),
             longitude: parseFloat(req.body[`longitude-${slug}`]),
-            radius: parseFloat(req.body[`radius-${slug}`])
+            radius: parseFloat(req.body[`radius-${slug}`]),
+            events: [req.body[`event-enter-${slug}`] === 'on' ? 'enter' : undefined, req.body[`event-exit-${slug}`] === 'on' ? 'exit' : undefined].filter(e => !!e),
           }
         )
       })
@@ -189,7 +190,8 @@ exports.updateProject = async (req, res) => {
           title: req.body[`title-${slug}`],
           latitude: parseFloat(req.body[`latitude-${slug}`]),
           longitude: parseFloat(req.body[`longitude-${slug}`]),
-          radius: parseFloat(req.body[`radius-${slug}`])
+          radius: parseFloat(req.body[`radius-${slug}`]),
+          events: [req.body[`event-enter-${slug}`] === 'on' ? 'enter' : undefined, req.body[`event-exit-${slug}`] === 'on' ? 'exit' : undefined].filter(e => !!e),
         }
       )
     })
