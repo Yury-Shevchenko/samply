@@ -42,8 +42,12 @@ const projectSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
-  currentlyActive  : Boolean,
-  public : {
+  currentlyActive: Boolean,
+  public: {
+    type: Boolean,
+    default: false
+  },
+  requestedForApproval: {
     type: Boolean,
     default: false
   },
@@ -146,6 +150,7 @@ projectSchema.statics.debugProjects = function() {
       members: '$members',
       participants: '$$ROOT.mobileUsers',
       currentlyActive: '$$ROOT.currentlyActive',
+      requestedForApproval: '$$ROOT.requestedForApproval',
       public: '$$ROOT.public',
       settings: '$$ROOT.settings',
     }},

@@ -880,12 +880,11 @@ async function sendMobileNotification(done, content, tokens, project_id, project
       sound: 'default',
       title: title,
       body: message,
-      data: { title, message, url: customizedUrl, messageId},
+      data: { title, message, url: customizedUrl, messageId },
       id: pushToken.id,
       priority: 'high',
       channelId: 'default',
       _displayInForeground: true,
-      _category: 'daily_question',
     })
   }
   // The Expo push notification service accepts batches of notifications so

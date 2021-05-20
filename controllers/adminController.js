@@ -5,12 +5,14 @@ const User = mongoose.model('User');
 
 exports.getAllStudies = async(req, res) => {
   const projects = await Project.debugProjects();
-  res.render('admin/studies', {projects: projects});
+  res.render('admin/studies', { projects: projects });
 };
 
 exports.removeStudy = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
   const resultsCount = await Result.where({ project: req.params.id }).countDocuments();
+  // delete all jobs scheduled by this project
+
   if (resultsCount > 0) {
     const deletedResultsPromise = Result.deleteMany({ project: req.params.id });
     const projectRemovePromise = project.remove();
@@ -28,6 +30,7 @@ exports.removeStudy = async (req, res) => {
 exports.toggleStudyStatus = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id }, { public: 1 });
   project.public = !project.public;
+  project.requestedForApproval = false;
   await project.save();
   req.flash('success', `Status updated`);
   res.redirect('back');

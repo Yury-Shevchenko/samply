@@ -63,10 +63,10 @@ exports.activateParticipantProject = async (req, res) => {
 // show user projects
 exports.getUserProjects = async (req, res) => {
   const projects = await Project.find({creator: req.user._id}, {
-    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1, slug: 1,
+    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1, slug: 1, public: 1,
   });
   const invitedprojects = await Project.find({members: req.user._id}, {
-    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1, slug: 1,
+    name: 1, description: 1, members: 1, tests: 1, currentlyActive: 1, creator: 1, slug: 1, public: 1,
   });
   res.render('projects', { projects, invitedprojects });
 };
@@ -384,4 +384,39 @@ exports.getMobileUsers = async (req, res) => {
     return user;
   }))
   res.render('data', { project, users });
+};
+
+exports.approveProject = async (req, res) => {
+  const project = await Project.findOne({ _id: req.params.id });
+  if(!project.creator.equals(req.user._id) || req.user.level <= 10){
+    req.flash('error', `${res.locals.layout.flash_project_no_rights}`);
+    res.redirect('back');
+  } else {
+    res.render('approveProjectForm', { project });
+  }
+};
+
+exports.sendApprovalRequest = async (req, res) => {
+  const project = await Project.findOne({ _id: req.params.id });
+  if (project){
+    project.requestedForApproval = !project.requestedForApproval;
+    await project.save();
+    req.flash('success', `Your request was sent`);
+    res.redirect('/projects');
+  } else {
+    res.redirect('back');
+  }
+};
+
+exports.removeFromPublic = async (req, res) => {
+  const project = await Project.findOne({ _id: req.params.id });
+  if (project){
+    project.public = false;
+    project.requestedForApproval = false;
+    await project.save();
+    req.flash('success', `The project was removed from the public list`);
+    res.redirect('/projects');
+  } else {
+    res.redirect('back');
+  }
 };

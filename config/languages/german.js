@@ -382,6 +382,39 @@ module.exports = {
       'imageURL': `Bild (fügen Sie die Bild-URL hier ein - das Bild wird neben Ihrer Studie in der mobilen Anwendung angezeigt)`,
       'codeMessage': 'Sie haben die Möglichkeit, einen Teilnehmer aufzufordern, bei der Teilnahme an Ihrer Studie einen Teilnehmercode einzugeben. Wenn Sie dies tun möchten, kreuzen Sie bitte das untenstehende Kästchen an und geben Sie dem Teilnehmer Anweisungen, was er in das Eingabefeld eingeben soll.',
       'messageAfterJoin': 'Der Text, der den Teilnehmern angezeigt wird, nachdem sie an der Studie angemeldet haben.',
+      'approval_technical_note': `
+        Die Implementierung dieser neuen Funktion wird schrittweise im Laufe des nächsten Monats (Juni 2021) erfolgen.
+        Um sicherzustellen, dass die derzeit aktiven Studien nicht beeinträchtigt werden, wird eine E-Mail mit Updates an Forscher gesendet.
+        `,
+      'approvalFormTitle': 'Genehmigungsantrag',
+      'sendRequestBtn': 'Genehmigungsantrag einreichen',
+      'approvalInfo_1': `
+        Öffentliche Studien werden in der Liste der Studien in der mobilen Anwendung <strong>Samply Research</strong> für Teilnehmer angezeigt.
+        Ihre Studie muss nicht öffentlich sein, um eine Studie durchzuführen.
+        Sie können QR-Codes verwenden (siehe <a target="_blank" href="/Einladungen">Weg 1</a>), um Teilnehmer zu Ihrer Studie einzuladen.
+        Auf diese Weise behalten Sie die Kontrolle darüber, wer an Ihrer Studie teilnimmt.
+        `,
+      'approvalInfo_2': `
+        Wenn Sie Ihre Studie öffentlich und für jeden Nutzer der mobilen App sichtbar machen möchten, stellen Sie bitte eine Genehmigungsanfrage an uns.
+        Beachten Sie, dass nur Studien mit vollständigen Anweisungen, Einverständniserklärungen, Informationen über Forscher und einer bestätigten E-Mail-Adresse des Forschers zugelassen werden.
+        Wenn Sie Ihre Studie testen möchten, nutzen Sie bitte stattdessen die Option mit der direkten Einladung per QR-Code (<a target="_blank" href="/einladungen">Weg 1</a>).
+        `,
+      'requestedInfo_1': `
+        Ihr Antrag auf Genehmigung wurde eingereicht. Wenn Sie eine Weile nichts von uns hören, zögern Sie nicht, uns zu kontaktieren
+        über das <a target="_blank" href="/docs/help">Slack-Forum</a>,
+        ein <a target="_blank" href="/docs/faq">Kontaktformular</a>, oder
+        eine <a href="mailto:yury.shevchenko@uni.kn?subject=Samply Genehmigungsanfrage">E-Mail</a>.
+        `,
+      'approvedInfo_1': `
+        Ihre Studie ist jetzt öffentlich, d.h. sie ist in der öffentlichen Liste der Studien in der <strong>Samply Research</strong> Mobilanwendung angezeigt.
+      `,
+      'approvedInfo_2': `
+        Wenn Sie die Studie aus der öffentlichen Liste entfernen möchten, drücken Sie die Schaltfläche unten.
+        Beachten Sie, dass diese Aktion nicht rückgängig gemacht werden kann. Wenn Sie Ihre Studie später wieder öffentlich machen möchten, müssen Sie erneut eine Genehmigung beantragen.
+      `,
+      'removeFromPublicBtn': 'Entfernen Sie die Studie aus der öffentlichen Liste in der mobilen Anwendung',
+      'projectActive': 'Im Einsatz',
+      'projectPublic': 'Öffentlich',
     },
 
     'testing': {

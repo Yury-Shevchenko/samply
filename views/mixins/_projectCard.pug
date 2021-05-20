@@ -41,9 +41,19 @@ mixin projectCard(project = {})
 
           .project_icons
             .project_icon
+              p #{l.projectActive}
               if(project.currentlyActive)
                 a(href=`/changestatusofproject/${project._id}/off`)
                   != h.icon('switchOn')
               else
                 a(href=`/changestatusofproject/${project._id}/on`)
+                  != h.icon('switchOff')
+
+            .project_icon
+              p #{l.projectPublic}
+              if(project.public)
+                a(href=`/projects/approveproject/${project._id}`)
+                  != h.icon('switchOn')
+              else
+                a(href=`/projects/approveproject/${project._id}`)
                   != h.icon('switchOff')

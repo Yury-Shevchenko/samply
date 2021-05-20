@@ -269,8 +269,6 @@ module.exports =
       'wrong_credentials'  : 'Oops! Wrong credentials.',
       'welcome_back'       : 'Welcome back!',
       'flash_confirm_email': 'We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.',
-
-
     },
 
     'account' : {
@@ -382,6 +380,39 @@ module.exports =
         'imageURL': `Image (paste the image URL here - the image will be displayed next to your study in the mobile application)`,
         'codeMessage': 'You have the option to ask a participant to enter a participant code when joining your study. If you would like to do this, please tick the box below and provide instructions for the participant on what to enter in the input box.',
         'messageAfterJoin': 'The text that will be displayed to participants after they have joined the study.',
+        'approval_technical_note': `
+          The implementation of this new feature will be applied gradually over the next month (June 2021).
+          To ensure that the currently active studies are not get affected, an email with updates will be sent to researchers.
+          `,
+        'approvalFormTitle': 'Approval form',
+        'sendRequestBtn': 'Submit approval request',
+        'approvalInfo_1': `
+          Public studies are displayed in the list of studies in the mobile application <strong>Samply Research</strong> for participants.
+          Your study does not have to be public to run a study.
+          You can use QR codes (see <a target="_blank" href="/invitations">way 1</a>) to invite participants to your study.
+          This way, you stay in control of who participates in your study.
+          `,
+        'approvalInfo_2': `
+          If you want to make your study public and visible to every user of the mobile app, please apply send us an approval request by pressing the button below.
+          Note that only studies with complete instructions, consent forms, information about researchers, and a confirmed researcher email address are permitted.
+          If you want to test your study, please use the option with the direct invitation via QR code (<a target="_blank" href="/invitations">way 1</a>) instead.
+          `,
+        'requestedInfo_1': `
+          Your request for approval has been submitted. If you don't hear from us for a while, don't hesitate to contact us
+          using <a target="_blank" href="/docs/help">Slack forum</a>,
+          a <a target="_blank" href="/docs/faq">contact form</a>, or
+          an <a href="mailto:yury.shevchenko@uni.kn?subject=Samply approval request">email</a>.
+          `,
+        'approvedInfo_1': `
+          Your study is now public, which means that it is displayed in the public list of studies in the <strong>Samply Research</strong> mobile application.
+        `,
+        'approvedInfo_2': `
+          If you want to remove the study from the public list, press the button below.
+          Note that this action cannot be undone. If you want to to make your study public again later, you would need to reapply for approval.
+        `,
+        'removeFromPublicBtn': 'Remove the study from the public list in the mobile application',
+        'projectActive': 'Active',
+        'projectPublic': 'Public',
       },
 
       'testing': {

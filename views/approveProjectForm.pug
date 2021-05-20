@@ -1,0 +1,41 @@
+extends layout
+
+block content
+  .inner    
+    if project
+      
+      h2= l.approvalFormTitle
+      h5 !{project.name}
+      
+      h6
+        | !{l.approval_technical_note}
+      
+      if(project.public)
+        p
+          | !{l.approvedInfo_1}
+        p
+          | !{l.approvedInfo_2}
+          
+        form(action=`/projects/removefrompublic/${project._id}` method = 'POST')
+        
+          input(type='submit' id="btnAddTest" value=l.removeFromPublicBtn class="button")
+      
+      else 
+        if(project.requestedForApproval)
+          p
+            | !{l.requestedInfo_1}
+          
+        else  
+          form(action=`/projects/approveproject/${project._id}` method = 'POST')
+
+            p
+              | !{l.approvalInfo_1}
+              
+            p
+              | !{l.approvalInfo_2} 
+
+            input(type='submit' id="btnAddTest" value=l.sendRequestBtn class="button")
+            
+  
+  
+    //- pre=h.dump(project)

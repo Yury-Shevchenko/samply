@@ -90,6 +90,10 @@ router.get('/projects/deleteproject/:id', authController.isAdminLoggedIn, catchE
 router.post('/projects/removeproject/:id', authController.isAdminLoggedIn, catchErrors(projectController.removeProject));
 router.get('/changestatusofproject/:id/:action', authController.isAdminLoggedIn, catchErrors(projectController.changeStatusProject));
 
+router.get('/projects/approveproject/:id', authController.isAdminLoggedIn, catchErrors(projectController.approveProject));
+router.post('/projects/approveproject/:id', authController.isAdminLoggedIn, catchErrors(projectController.sendApprovalRequest));
+router.post('/projects/removefrompublic/:id', authController.isAdminLoggedIn, catchErrors(projectController.removeFromPublic));
+
 router.get('/notifications', authController.isAdminLoggedIn, catchErrors(jobController.manageNotifications));
 router.get('/notifications/:id', authController.isAdminLoggedIn, catchErrors(jobController.manageNotifications));
 router.post('/users/:project', authController.isAdminLoggedIn, catchErrors(projectController.inviteParticipants));
