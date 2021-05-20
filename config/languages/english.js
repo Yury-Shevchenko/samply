@@ -628,7 +628,7 @@ module.exports =
           `,
           'finding_study': `
             If your study is public, participants can find it in the list of public studies within the app.
-            To apply for approval of your study for the public list, please submit a request <a target='blank' href='../docs/faq'>here</a>.
+            To apply for approval of your study for the public list, please submit a request <a target='blank' href='../projects'>here</a>.
             After logging in, participants must switch to the "Studies" tab within the app.
             There they can use the search field to find your study.
             In the list of studies the name, the author and the creation date of the study are displayed.

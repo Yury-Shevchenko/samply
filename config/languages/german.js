@@ -629,7 +629,7 @@ module.exports = {
         `,
         'finding_study': `
         Wenn Ihre Studie öffentlich ist, können Teilnehmer sie in der Liste der öffentlichen Studien innerhalb der App finden.
-          Um die Freigabe Ihrer Studie für die öffentliche Liste zu beantragen, stellen Sie bitte einen Antrag <a target='blank' href='../docs/faq'>hier</a>.
+          Um die Freigabe Ihrer Studie für die öffentliche Liste zu beantragen, stellen Sie bitte einen Antrag <a target='blank' href='../projects'>hier</a>.
           Nach dem Einloggen müssen die Teilnehmer zum Reiter "Studien" innerhalb der App wechseln.
           Dort können sie das Suchfeld benutzen, um Ihre Studie zu finden.
           In der Liste der Studien werden der Name, der Autor und das Erstellungsdatum der Studie angezeigt.
