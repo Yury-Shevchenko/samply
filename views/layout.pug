@@ -28,6 +28,8 @@ html
                     h6 #{layout && layout.studies}
                 li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
                   h6 Docs
+                li.nav__item: a.nav__main_link(href="/news/intro", class=(currentPath.startsWith('/news/intro') ? 'nav__main_link--active' : ''))
+                  h6 News
                 li.nav__item: a.nav__main_link(href="/", class=(currentPath === '/' ? 'nav__main_link--active' : ''))
                   h6 Samply
             if user
@@ -43,6 +45,8 @@ html
               if user.level > 10
                 li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
                   h6 Docs  
+                li.nav__item: a.nav__main_link(href="/news/intro", class=(currentPath.startsWith('/news/intro') ? 'nav__main_link--active' : ''))
+                  h6 News
               if user.level > 100
                 li.nav__item: a.nav__main_link(href="/admin/studies", class=(currentPath.startsWith('/admin/studies') ? 'nav__main_link--active' : ''))
                   h6 All studies

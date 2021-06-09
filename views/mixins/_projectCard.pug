@@ -15,11 +15,11 @@ mixin projectCard(project = {})
       .store__details
         .project__actions
           if user.project && user.project._id
+            if project.currentlyActive
+              .store__action
+                a(target='blank' href=`/studies/${project.slug}`)
+                  != h.icon('website')
             if (user._id.toString() == project.creator.toString())
-              if project.currentlyActive
-                .store__action
-                  a(target='blank' href=`/studies/${project.slug}`)
-                    != h.icon('website')
               .store__action
                 a(href=`/projects/${project._id}/edit`)
                   != h.icon('edit')

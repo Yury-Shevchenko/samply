@@ -193,6 +193,7 @@ exports.downloadHistory = async (req, res) => {
           opened_in_spp: obj.events.filter(e => e.status === 'opened-in-app').map(e => e.created.getTime()),
           archived_by_user: obj.events.filter(e => e.status === 'archived').map(e => e.created.getTime()),
           arrived: obj.events.filter(e => e.status === 'arrived').map(e => e.created.getTime()),
+          geofencing_event: obj.events.filter(e => e.status === 'geofencing-event').map(e => e.created.getTime()),
           messageId: obj.messageId,
           ...data
         }]

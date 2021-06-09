@@ -21,9 +21,13 @@ exports.testing = async (req, res) => {
   const study = req.params.id;
   console.log('study', study);
   const project = await Project.findOne({ _id: study },{
-    name: 1, slug: 1, description: 1, welcomeMessage: 1, 
+    name: 1, slug: 1, description: 1, welcomeMessage: 1,
   });
   console.log('project', project);
   const projects = await Project.getCurrentProjects();
   res.render('testing', { project, projects, study });
+};
+
+exports.news = (req, res) => {
+  res.render('news', { page: req.params.page || 'intro' });
 };

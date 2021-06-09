@@ -1,0 +1,16 @@
+extends layout
+
+include news/_intro
+
+block content
+  
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href=`/news/intro`, class=(currentPath.startsWith(`/news/intro`) ? 'nav__link--active' : '')) News & Updates
+    
+    .card 
+      .card-message
+        +#{page}()
