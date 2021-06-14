@@ -2288,6 +2288,20 @@ i.yes:after {
 .project_not_chosen {
   opacity: 0.5; }
 
+.locationContainer {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+  -ms-flex-line-pack: baseline;
+      align-content: baseline;
+  -ms-grid-column-align: baseline;
+      justify-items: baseline;
+  margin: 1rem 0rem 1rem 0rem;
+  padding: 1rem 0rem 1rem 0rem;
+  border-bottom: 1px solid lightgrey; }
+
 .notifications_scheduler button {
   background: #fcf4b6;
   box-shadow: 0 8px 6px -6px #d9cfcf;

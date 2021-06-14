@@ -814,6 +814,7 @@ async function sendToSomeProjectUsers(done, project_id, user_id, title, message,
     .map(user => ({
       id: user.id,
       token: user.token,
+      username: user.username || user.id, // transmit the username
     }));
 
   // remove job
@@ -845,6 +846,7 @@ async function sendToAllProjectUsers(done, project_id, title, message, url, noti
     .map(user => ({
       id: user.id,
       token: user.token,
+      username: user.username || user.id, // transmit the username
     }));
 
   // remove job
@@ -873,7 +875,8 @@ async function sendMobileNotification(done, content, tokens, project_id, project
       continue;
     }
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
-    const customizedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.id);
+    let customizedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.username);
+    customizedUrl = url.replace('%SAMPLY_ID%', pushToken.id);
     const messageId = makeRandomCodeForMessageID();
     messages.push({
       to: pushToken.token,

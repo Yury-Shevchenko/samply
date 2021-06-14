@@ -8,7 +8,7 @@ mixin userCard(person = {}, i)
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       td= person.username
       if(person.information && Object.keys(person.information).length)
-        td= Object.keys(person.information).map(key => `${key}: ${person.information[key]}`)
+        td= Object.keys(person.information).filter(k => k !== 'id').map(key => `${key}: ${person.information[key]}`)
       else 
         td
       td

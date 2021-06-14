@@ -113,6 +113,8 @@ exports.createProject = async (req, res) => {
             longitude: parseFloat(req.body[`longitude-${slug}`]),
             radius: parseFloat(req.body[`radius-${slug}`]),
             events: [req.body[`event-enter-${slug}`] === 'on' ? 'enter' : undefined, req.body[`event-exit-${slug}`] === 'on' ? 'exit' : undefined].filter(e => !!e),
+            link: req.body[`link-${slug}`],
+            invisible: req.body[`invisible-${slug}`] === 'on' ? 1 : 0,
           }
         )
       })
@@ -135,6 +137,8 @@ exports.createProject = async (req, res) => {
               locations: locations,
               link: req.body.geofencingURL,
               radius: req.body.userLocationRadius,
+              events: [req.body[`event-enter`] === 'on' ? 'enter' : undefined, req.body[`event-exit`] === 'on' ? 'exit' : undefined].filter(e => !!e),
+              invisible: req.body[`invisible`] === 'on' ? 1 : 0,
             }
           }
         }
@@ -192,6 +196,8 @@ exports.updateProject = async (req, res) => {
           longitude: parseFloat(req.body[`longitude-${slug}`]),
           radius: parseFloat(req.body[`radius-${slug}`]),
           events: [req.body[`event-enter-${slug}`] === 'on' ? 'enter' : undefined, req.body[`event-exit-${slug}`] === 'on' ? 'exit' : undefined].filter(e => !!e),
+          link: req.body[`link-${slug}`],
+          invisible: req.body[`invisible-${slug}`] === 'on' ? 1 : 0,
         }
       )
     })
@@ -203,6 +209,8 @@ exports.updateProject = async (req, res) => {
         locations: locations,
         link: req.body.geofencingURL,
         radius: req.body.userLocationRadius,
+        events: [req.body[`event-enter`] === 'on' ? 'enter' : undefined, req.body[`event-exit`] === 'on' ? 'exit' : undefined].filter(e => !!e),
+        invisible: req.body[`invisible`] === 'on' ? 1 : 0,
       }
     }
 

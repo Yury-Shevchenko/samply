@@ -51,50 +51,76 @@ mixin projectForm(project = {})
     button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
     p
     
+    div.inputCheckBox
+      input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
+      label(for='enableGeofencing')
+        span.
+          Enable Geofencing (geofencing allows you to notify and send surveys to your participants when they enter or leave specific areas, e.g. home, supermarket, workplace)
+    
     if(true)
     
-      h5 Geofencing (available only in the beta version of the Samply Research mobile app)
-      div.inputCheckBox
-        input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
-        label(for='enableGeofencing')
-          span.
-            Enable Geofencing
+      h2 Geofencing 
       
-      label(for='geofencingInstruction') Please provide the information about the geofencing to the participant. This instruction will be shown when the participant has joined your study.
+      label(for='geofencingInstruction') Geofencing requires a constant tracking of geolocation. This tracking happens on the participant device, so neither Samply nor you will have the information about the absolute geolocation of participants. However, it is important that participants understand how you will use the information, such as when they enter or leave geofenced areas. Please provide the information about the geofencing to the participant. This instruction will be shown when the participant has joined your study.
       textarea(type='text' name='geofencingInstruction')= project.geofencingInstruction
       
-      label(for='geofencingURL') Enter the link to your online survey (the link will be sent with the notification)
-      input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link)
+      h5 User-defined locations
+      label(for='geofencingURL') If you ask participants to provide their own locations, specify the URL link of the survey/task and the radius (in meters) for a location. Leave the URL field blank if you do not use an external online task/survey. In this case, participants will be only notified when they enter or exit the geofenced area.
       
-      label(for='geofencingURL') If you ask participants to provide their own locations, specify the radius (in meters) for a location
-      input(type='text' name=`userLocationRadius` value=project.settings && project.settings.geofencing && project.settings.geofencing.radius placeholder="radius (in meters)")
-    
-      label(for='coordinates' id="coordinates") Enter GPS coordinates
+      .div(class="locationContainer") 
+        .div  
+          input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link placeholder="Enter the link to your online survey (the link will be sent with the notification)")
+          input(type='text' name=`userLocationRadius` value=project.settings && project.settings.geofencing && project.settings.geofencing.radius placeholder="Enter the radius (in meters)")
+        .div
+          div.inputCheckBox
+            input(type='checkbox' id=`event-enter` name=`event-enter` checked = project.settings && project.settings.geofencing && project.settings.geofencing.events && project.settings && project.settings.geofencing && project.settings.geofencing.events.includes('enter'))
+            label(for=`event-enter`) Trigger on enter
+          
+          div.inputCheckBox
+            input(type='checkbox' id=`event-exit` name=`event-exit` checked = project.settings && project.settings.geofencing && project.settings.geofencing.events && project.settings && project.settings.geofencing && project.settings.geofencing.events.includes('exit'))
+            label(for=`event-exit`) Trigger on exit
+        
+          div.inputCheckBox
+            input(type='checkbox' id=`invisible` name=`invisible` checked = project.settings && project.settings.geofencing && project.settings.geofencing.invisible === 1 )
+            label(for=`invisible`) Hide notifications but record the events
+          
+      
+      h5 Researcher-defined locations
+      label(for='coordinates' id="coordinates") Enter the information about locations which will be applied to all participants.
       
       if (project.settings && project.settings.geofencing && project.settings.geofencing.locations)
         each location, i in project.settings.geofencing.locations
-          .div(id=`div-${location.slug}`)
+          .div(id=`div-${location.slug}` class="locationContainer")    
             h6= location.title
-            input(type='text' name=`slug-${location.slug}` value=location.slug hidden)
-            input(type='text' name=`title-${location.slug}` value=location.title)
-            input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
-            input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
-            input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius (in meters)")
+            .div
+            .div
+              input(type='text' name=`slug-${location.slug}` value=location.slug hidden)
+              input(type='text' name=`title-${location.slug}` value=location.title placeholder="title")
+              input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder="latitude")
+              input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder="longitude")
+              input(type='text' name=`radius-${location.slug}` value=location.radius placeholder="radius (in meters)")
+              input(type='text' name=`link-${location.slug}` value=location.link placeholder="url link")
             
-            div.inputCheckBox
-              input(type='checkbox' id=`event-enter-${location.slug}` name=`event-enter-${location.slug}` checked = location.events && location.events.includes('enter'))
-              label(for=`event-enter-${location.slug}`) Notify on enter
+            .div
+              div.inputCheckBox
+                input(type='checkbox' id=`event-enter-${location.slug}` name=`event-enter-${location.slug}` checked = location.events && location.events.includes('enter'))
+                label(for=`event-enter-${location.slug}`) Trigger on enter
+              
+              div.inputCheckBox
+                input(type='checkbox' id=`event-exit-${location.slug}` name=`event-exit-${location.slug}` checked = location.events && location.events.includes('exit'))
+                label(for=`event-exit-${location.slug}`) Trigger on exit
             
-            div.inputCheckBox
-              input(type='checkbox' id=`event-exit-${location.slug}` name=`event-exit-${location.slug}` checked = location.events && location.events.includes('exit'))
-              label(for=`event-exit-${location.slug}`) Notify on exit
+              div.inputCheckBox
+                input(type='checkbox' id=`invisible-${location.slug}` name=`invisible-${location.slug}` checked = location.invisible === 1 )
+                label(for=`invisible-${location.slug}`) Hide notifications but record the events
                   
             button(name="deleteBtn" id=`delete-${location.slug}`) Delete
             p  
-            
+              
       p
       input(type="text" name= "locationName" id="locationName" placeholder="Location name")
       button.button(type="button" value="Add new location" id="addLocationButton") Add location   
+    
     
     
     script(nonce=`${noncevalue}`).
@@ -115,6 +141,7 @@ mixin projectForm(project = {})
           const coordinates = document.getElementById("coordinates");
           const locationDiv = document.createElement("div");
           locationDiv.id = `div-${locationSlug}`;
+          locationDiv.classList.add('locationContainer');
         
           var label = document.createElement('h6');
           label.innerText = locationName;
@@ -139,6 +166,10 @@ mixin projectForm(project = {})
           rad_input.type = 'text';
           rad_input.name = `radius-${locationSlug}`;
           rad_input.placeholder = 'Enter radius';
+          var link = document.createElement('input');
+          link.name = `link-${locationSlug}`;
+          link.type = 'text';
+          link.placeholder = 'Enter the URL link to your online task or survey';
           
           // add events 
           var event_enter_input_div = document.createElement("div");
@@ -164,6 +195,18 @@ mixin projectForm(project = {})
           event_exit_input_label.setAttribute('for', `event-exit-${locationSlug}`);
           event_exit_input_div.appendChild(event_exit_input);
           event_exit_input_div.appendChild(event_exit_input_label);
+          
+          var invisible_mode_div = document.createElement("div");
+          invisible_mode_div.classList.add('inputCheckBox');
+          var invisible_mode = document.createElement("input");
+          invisible_mode.type = 'checkbox';
+          invisible_mode.name = `invisible-mode-${locationSlug}`;
+          invisible_mode.id = `invisible-mode-${locationSlug}`;
+          var invisible_mode_label = document.createElement("label");
+          invisible_mode_label.innerText = 'Invisible mode (do not show notifications but record the events)';
+          invisible_mode_label.setAttribute('for', `invisible-mode-${locationSlug}`);
+          invisible_mode_div.appendChild(invisible_mode);
+          invisible_mode_div.appendChild(invisible_mode_label);
             
           const deleteBtn = document.createElement("button");
           deleteBtn.innerText = "Delete";
@@ -171,16 +214,25 @@ mixin projectForm(project = {})
             e.preventDefault();
             deleteBtn.parentElement.remove();
           };
-
-          locationDiv.appendChild(label)
-          locationDiv.appendChild(slug);
-          locationDiv.appendChild(title);
-          locationDiv.appendChild(lat_input);
-          locationDiv.appendChild(lon_input);
-          locationDiv.appendChild(rad_input);
-          locationDiv.appendChild(event_enter_input_div);
-          locationDiv.appendChild(event_exit_input_div);
-          locationDiv.appendChild(deleteBtn);
+          const firstColumnDiv = document.createElement("div");
+          const secondColumnDiv = document.createElement("div");
+          const emptyDiv = document.createElement("div");
+          firstColumnDiv.appendChild(slug);
+          firstColumnDiv.appendChild(title);
+          firstColumnDiv.appendChild(lat_input);
+          firstColumnDiv.appendChild(lon_input);
+          firstColumnDiv.appendChild(rad_input);
+          firstColumnDiv.appendChild(link);
+          secondColumnDiv.appendChild(event_enter_input_div);
+          secondColumnDiv.appendChild(event_exit_input_div);
+          secondColumnDiv.appendChild(invisible_mode_div);
+          
+          locationDiv.appendChild(label);
+          locationDiv.appendChild(emptyDiv);
+          locationDiv.appendChild(firstColumnDiv);
+          locationDiv.appendChild(secondColumnDiv);
+          locationDiv.appendChild(deleteBtn);  
+          
           coordinates.appendChild(locationDiv);
         });
       });

@@ -10,16 +10,16 @@ block content
 
       if(project && user.project && user.project.name)
 
-        .card
+        .card 
           .users
             table.table
               thead
                 td №
                 td #{l.table_samplyId}
-                td Notification Token
+                td #{l.table_token}
                 td #{l.table_date}
-                td Username
-                td Information
+                td #{l.table_code} 
+                td #{l.table_details} 
                 td #{l.table_history}
                 td #{l.table_new_notification}
                 if user.level > 10

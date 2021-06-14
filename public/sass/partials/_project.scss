@@ -137,3 +137,14 @@
 .project_chosen{
 
 }
+
+.locationContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 2rem;
+  align-content: baseline;
+  justify-items: baseline;
+  margin: 1rem 0rem 1rem 0rem;
+  padding: 1rem 0rem 1rem 0rem;
+  border-bottom: 1px solid lightgrey;
+}

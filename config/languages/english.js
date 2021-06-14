@@ -30,8 +30,10 @@ module.exports =
       'fill_in_information': 'Fill in the information for your notification',
       'title_information': `Notifications with the same title will replace each other to avoid the users' screen being filled with a huge number of similar notifications.`,
       'not_all_participants': 'All participants',
-      'example_web_link': `If you need to refer to the participants' Samply ID in the URL, use %PARTICIPANT_CODE% in your query, for example https://survey.com/?id=%PARTICIPANT_CODE%.
-        Then, inside of your online study you can extract the participant id from the url address. Read more about query strings <a href="https://en.wikipedia.org/wiki/Query_string")>here</a>.
+      'example_web_link': `If you need to record the participant Samply ID in your task or survey, use the placeholder %SAMPLY_ID% inside the URL, for example https://survey.com/?id=%SAMPLY_ID%.
+        If you want to capture the participant code entered when joining your study, use the placeholder %PARTICIPANT_CODE%, for example https://survey.com/?code=%PARTICIPANT_CODE%.
+        Note that if a participant did not enter a code, %PARTICIPANT_CODE% will be replaced by the Samply ID.
+        Then, inside of your online study you can extract the participant code or the Samply ID from the url address. Read more about query strings <a href="https://en.wikipedia.org/wiki/Query_string")>here</a>.
       `,
       'choose_the_type': 'Choose the type of notification',
       'not_participant_id': 'Participant ID',
@@ -488,14 +490,16 @@ module.exports =
         'signing_email': 'Signing up with an email ',
         'message_create_project': 'To see the list of participants, activate or create a study <a href="/projects")>here</a>.',
         'table_number': '',
-        'table_samplyId': 'ID',
+        'table_samplyId': 'Samply ID',
         'table_code': 'Code',
         'table_name': 'Name',
-        'table_date': 'Date of entry into the study',
+        'table_date': 'Entry Date',
+        'table_token': 'Notification token',
+        'table_code': 'Participant Code',
+        'table_details': 'Participant preferences',
         'table_aggregated': 'Summary',
         'table_language': 'Language',
         'table_tests': 'Tasks',
-        'table_details': 'Details',
         'table_data': 'Data',
         'table_metadata': 'Meta',
         'table_delete_user': 'Delete user',

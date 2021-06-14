@@ -30,8 +30,11 @@ module.exports = {
     'fill_in_information': 'Grundeinstellungen Ihrer Benachrichtigung',
     'title_information': `Benachrichtigungen mit dem gleichen Titel werden sich gegenseitig ersetzen, um zu vermeiden, dass der Bildschirm der Benutzer mit einer großen Anzahl ähnlicher Benachrichtigungen gefüllt wird.`,
     'not_all_participants': 'Alle Teilnehmer',
-    'example_web_link': `Wenn Sie in der URL auf die Samply-ID der Teilnehmer verweisen müssen, verwenden Sie %PARTICIPANT_CODE% in Ihrer Query, z.B. https://survey.com/?id=%PARTICIPANT_CODE%
-      Dann können Sie innerhalb Ihrer Online-Studie die Teilnehmer-ID aus der URL-Adresse entnehmen.
+    'example_web_link': `
+      Wenn Sie die Teilnehmer-Samply-ID in Ihrer Aufgabe oder Umfrage aufzeichnen möchten, verwenden Sie den Platzhalter %SAMPLY_ID% innerhalb der URL, z. B. https://survey.com/?id=%SAMPLY_ID%.
+      Wenn Sie den Teilnehmercode erfassen möchten, der beim Beitritt zu Ihrer Studie eingegeben wurde, verwenden Sie den Platzhalter %PARTICIPANT_CODE%, z. B. https://survey.com/?code=%PARTICIPANT_CODE%.
+      Beachten Sie, dass, wenn ein Teilnehmer keinen Code eingegeben hat, %PARTICIPANT_CODE% durch die Samply-ID ersetzt wird.
+      Dann können Sie innerhalb Ihrer Online-Studie den Teilnehmercode oder die Samply-ID aus der URL-Adresse entnehmen.
       Lesen Sie mehr über Query Strings <a href="https://en.wikipedia.org/wiki/Query_string")>hier</a>.
     `,
     'choose_the_type': 'Wählen Sie die Art der Benachrichtigung',
@@ -494,9 +497,11 @@ module.exports = {
       'table_code': 'Code',
       'table_name': 'Name',
       'table_date': 'Datum des Beginns der Studie',
+      'table_token': 'Benachrichtigungs-Token',
+      'table_code': 'Teilnehmer Code',
+      'table_details': 'Teilnehmer-Voreinstellungen',
       'table_language': 'Sprache',
       'table_tests': 'Aufgaben',
-      'table_details': 'Details',
       'table_data': 'Daten',
       'table_aggregated': 'Kurzfassung',
       'table_metadata': 'Meta',
