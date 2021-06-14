@@ -33,7 +33,6 @@ exports.updateGeolocation = async (req, res) => {
     },
     events: [{ status: 'geofencing-event', created: Date.now(), data: req.body.curLocation }],
   });
-  console.log('result', result);
   await result.save();
   res.status(200).json({message: 'OK'});
 };
