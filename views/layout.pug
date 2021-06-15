@@ -140,5 +140,6 @@ html
         
 
     block scripts
+      script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&libraries=places` nonce=`${noncevalue}`)
       script(src="/dist/App.bundle.js" nonce=`${noncevalue}`)
       //- script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)

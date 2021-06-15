@@ -86,9 +86,13 @@ mixin projectForm(project = {})
           
       
       h5 Researcher-defined locations
-      label(for='coordinates' id="coordinates") Enter the information about locations which will be applied to all participants.
       
       if (project.settings && project.settings.geofencing && project.settings.geofencing.locations)
+      
+        h2 Map of geofenced locations
+        .map
+          #geofenced_map
+        
         each location, i in project.settings.geofencing.locations
           .div(id=`div-${location.slug}` class="locationContainer")    
             h6= location.title
@@ -116,7 +120,12 @@ mixin projectForm(project = {})
                   
             button(name="deleteBtn" id=`delete-${location.slug}`) Delete
             p  
-              
+      
+    
+      label(for='coordinates' id="coordinates") Enter the information about locations that should apply to all participants.
+         | Start adding new locations, and they will be shown on the map after you click "Save". 
+         | Then you can edit the locations by dragging markers on the map.        
+       
       p
       input(type="text" name= "locationName" id="locationName" placeholder="Location name")
       button.button(type="button" value="Add new location" id="addLocationButton") Add location   
@@ -238,7 +247,99 @@ mixin projectForm(project = {})
       });
     p
     
-
-    input(type='submit' value=l.submit class="button")
+    input(type='submit' value=l.submit class="button")    
     
-    //- pre= h.dump(project)
+    script(nonce=`${noncevalue}`).
+      const project = !{ JSON.stringify(project) }
+      const locations = project?.settings?.geofencing?.locations || [];
+
+      window.onload = () => {
+        if(locations.length) {
+
+          const mapDiv = document.getElementById("geofenced_map");
+          
+          const lat = locations[0].latitude;
+          const lng = locations[0].longitude;
+          const position = { lat, lng };
+          
+          const mapOptions = {
+            center: position,
+            zoom: 15
+          }
+          
+          function onDragEnd(e, location) {
+            const lat = e.latLng.lat();
+            const lng = e.latLng.lng();
+            const newCenterPosition = new google.maps.LatLng(
+        			parseFloat(lat),
+        			parseFloat(lng)
+        		  );
+
+            document.querySelector(`[name='latitude-${location.slug}']`).value = lat;
+            document.querySelector(`[name='longitude-${location.slug}']`).value = lng;
+            
+            const oldCircle = circles[location.slug];
+            oldCircle.setMap(null);
+            
+            var circle = new google.maps.Circle({
+        			radius: location.radius, 
+        			center: newCenterPosition,
+        			map: map,
+        			fillColor: '#FF0000',
+        			fillOpacity: 0.2,
+        			strokeColor: '#FF0000',
+        			strokeOpacity: 0.6
+        		}); 
+            
+            circles[location.slug] = circle;
+          }
+          
+          // make a map
+          const map = new google.maps.Map(mapDiv, mapOptions)
+          
+          // Create LatLngBounds object.
+          var latlngbounds = new google.maps.LatLngBounds();
+          
+          // add markers and circles 
+          let circles = {};
+          locations.map(location => {
+
+            const centerPosition = new google.maps.LatLng(
+        			parseFloat(location.latitude),
+        			parseFloat(location.longitude)
+        		  );
+          
+            const marker = new google.maps.Marker({
+              map: map,
+              position: centerPosition,
+              draggable: true,
+            })
+            
+            marker.addListener('dragend', (e) => onDragEnd (e, location));
+            latlngbounds.extend(marker.position);
+            
+            var circle = new google.maps.Circle({
+        			radius: location.radius, 
+        			center: centerPosition,
+        			map: map,
+        			fillColor: '#FF0000',
+        			fillOpacity: 0.2,
+        			strokeColor: '#FF0000',
+        			strokeOpacity: 0.6,
+              id:`my-circle-${location.slug}`
+        		}); 
+            circles[location.slug] = circle;
+          })
+        
+          // Get the boundaries of the Map.
+          var bounds = new google.maps.LatLngBounds();
+          // Center map and adjust Zoom based on the position of all markers.
+          map.setCenter(latlngbounds.getCenter());
+          map.fitBounds(latlngbounds, 100);
+        
+          mapDiv.style.height = '600px';
+          
+        }
+      }
+
+      
