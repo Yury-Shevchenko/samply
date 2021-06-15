@@ -57,7 +57,7 @@ mixin projectForm(project = {})
         span.
           Enable Geofencing (geofencing allows you to notify and send surveys to your participants when they enter or leave specific areas, e.g. home, supermarket, workplace)
     
-    if(true)
+    #geofencing_editor
     
       h2 Geofencing 
       
@@ -134,6 +134,7 @@ mixin projectForm(project = {})
     
     script(nonce=`${noncevalue}`).
       document.addEventListener('DOMContentLoaded', function (){
+        
         document.querySelectorAll('button[name="deleteBtn"]').forEach((button) => {
           button.addEventListener('click', (e) => {
             e.preventDefault();
@@ -252,7 +253,20 @@ mixin projectForm(project = {})
     script(nonce=`${noncevalue}`).
       const project = !{ JSON.stringify(project) }
       const locations = project?.settings?.geofencing?.locations || [];
-
+      
+      if(project?.settings?.enableGeofencing) {
+        document.getElementById('geofencing_editor').style.display = "block";
+      } else {
+        document.getElementById('geofencing_editor').style.display = "none";
+        document.getElementById('enableGeofencing').addEventListener('change', function shownGeofencingEditor(){
+          if (this.checked) {
+            document.getElementById('geofencing_editor').style.display = "block";
+          } else {
+            document.getElementById('geofencing_editor').style.display = "none";
+          }
+        })
+      }
+      
       window.onload = () => {
         if(locations.length) {
 
