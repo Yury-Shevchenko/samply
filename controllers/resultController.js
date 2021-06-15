@@ -42,7 +42,7 @@ exports.showHistory = async (req, res) => {
   if(req.user && req.user.project && req.user.project.name){
     const participant = req.query.id || {$exists: true};
     const page = req.params.page || 1;
-    const limit = 20;
+    const limit = 100;
     const skip = (page * limit) - limit;
     const historyPromise = Result
       .find({ project: req.user.project, samplyid: participant })
