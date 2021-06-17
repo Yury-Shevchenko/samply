@@ -4,6 +4,7 @@ const Result = mongoose.model('Result');
 const Project = mongoose.model('Project');
 const uniqid = require('uniqid');
 const mail = require('../handlers/mail');
+const { nanoid } = require('nanoid');
 
 exports.welcomePage = async(req, res) => {
   res.render('index');
@@ -140,7 +141,8 @@ exports.createProject = async (req, res) => {
               events: [req.body[`event-enter`] === 'on' ? 'enter' : undefined, req.body[`event-exit`] === 'on' ? 'exit' : undefined].filter(e => !!e),
               invisible: req.body[`invisible`] === 'on' ? 1 : 0,
             }
-          }
+          },
+          samplycode: nanoid(6),
         }
       )).save();
       if (typeof(req.user.project._id) == "undefined"){
@@ -185,6 +187,9 @@ exports.updateProject = async (req, res) => {
     project.geofencingInstruction = req.body.geofencingInstruction;
     project.members = membersData;
     if(!project.settings) project.settings = {};
+    if(!project.samplycode) {
+      project.samplycode = nanoid(6);
+    }
 
     const locationSlugs = Object.keys(req.body).filter(key => key.startsWith('slug')).map(key => key.substring(5));
     const locations = locationSlugs.map(slug => {
