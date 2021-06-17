@@ -179,7 +179,7 @@ exports.downloadHistory = async (req, res) => {
     .on('data', obj => {
       if(obj && obj.data){
         let data = {};
-        const coordinates = obj.events.filter(e => e.status === 'arrived').map(e => {
+        const coordinates = obj.events.filter(e => e.status === 'geofencing-event').map(e => {
           if(e.data && e.data.coords){
             return(e.data.coords)
           }
