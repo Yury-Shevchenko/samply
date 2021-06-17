@@ -21,9 +21,7 @@ const projectSchema = new mongoose.Schema({
     type: String
   },
   samplycode: {
-    type: String,
-    default: nanoid(6),
-    unique: true,
+    type: String
   },
   image: String,
   description: {
