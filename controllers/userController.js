@@ -15,6 +15,7 @@ const webpush = require('web-push');
 const formidable = require('formidable');
 const fs = require('fs');
 const schedule = require('node-schedule');
+const { nanoid } = require('nanoid');
 
 exports.account = async (req, res) => {
   res.render('account', {title: 'Edit Your Account' });
@@ -90,11 +91,12 @@ const getRandomInt = (min, max) => {
 }
 
 const makeRandomCode = () => {
-  const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
-  return `${randomCode}-xxxx-xxxx-mxxx`.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  // const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
+  // return `${randomCode}-xxxx-xxxx-mxxx`.replace(/[xy]/g, function(c) {
+  //   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  //   return v.toString(16);
+  // });
+  return nanoid(6);
 }
 
 exports.createMobileAccount = async(req, res) => {

@@ -22,8 +22,13 @@ exports.updateStatus = async (req, res) => {
 
 // update status
 exports.updateGeolocation = async (req, res) => {
+  let projectId = req.body.studyId;
+  if(req.body.studySamplyCode) {
+    const project = await Project.findOne({ samplycode: req.body.studySamplyCode }, { _id: 1 });
+    projectId = project._id;
+  }
   const result = new Result({
-    project: req.body.studyId,
+    project: projectId,
     samplyid: req.body.userToken,
     messageId: req.body.messageId,
     data: {
@@ -34,7 +39,7 @@ exports.updateGeolocation = async (req, res) => {
     events: [{ status: 'geofencing-event', created: Date.now(), data: req.body.curLocation }],
   });
   await result.save();
-  res.status(200).json({message: 'OK'});
+  res.status(200).json({ message: 'OK' });
 };
 
 //show the history of sent notifications

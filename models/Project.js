@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const slug = require('slugs');
+const { nanoid } = require('nanoid');
 
 const projectSchema = new mongoose.Schema({
   created: {
@@ -18,6 +19,11 @@ const projectSchema = new mongoose.Schema({
   },
   slug: {
     type: String
+  },
+  samplycode: {
+    type: String,
+    default: nanoid(6),
+    unique: true,
   },
   image: String,
   description: {

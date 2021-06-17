@@ -7,6 +7,7 @@ const language = require('../config/lang');
 
 const crypto = require('crypto');
 const mail = require('../handlers/mail');
+const { nanoid } = require('nanoid');
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -15,19 +16,21 @@ const getRandomInt = (min, max) => {
 }
 
 const makeRandomCodeForParticipant = () => {
-  const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
-  return `${randomCode}-xxxx-xxxx-wxxx`.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  return nanoid(6);
+  // const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
+  // return `${randomCode}-xxxx-xxxx-wxxx`.replace(/[xy]/g, function(c) {
+  //   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  //   return v.toString(16);
+  // });
 }
 
 const makeRandomCodeForResearcher = () => {
-  const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
-  return `research-${randomCode}-xxxx`.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  // const randomCode = ('000' + getRandomInt(0, 10000)).slice(-4);
+  // return `research-${randomCode}-xxxx`.replace(/[xy]/g, function(c) {
+  //   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+  //   return v.toString(16);
+  // });
+  return `RES_${nanoid(4)}`;
 }
 
 const defineLanguage = (headers) => {

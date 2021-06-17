@@ -371,9 +371,9 @@ exports.getPublicStudy = async(req, res) => {
   const { id } = req.params;
   let study;
   if (checkObjectIdValid(id)){
-    study = await Project.findOne({ _id: id }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1 });
+    study = await Project.findOne({ _id: id }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1, samplycode: 1 });
   } else {
-    study = await Project.findOne({ slug: id }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1 });
+    study = await Project.findOne({ slug: id }, { name: 1, description: 1, welcomeMessage: 1, codeMessage: 1, messageAfterJoin: 1, geofencingInstruction: 1, settings: 1, samplycode: 1 });
   }
   res.send(study);
 }
