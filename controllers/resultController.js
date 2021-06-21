@@ -23,7 +23,7 @@ exports.updateStatus = async (req, res) => {
 // update status
 exports.updateGeolocation = async (req, res) => {
   let projectId = req.body.studyId;
-  if(req.body.studySamplyCode) {
+  if(!projectId && req.body.studySamplyCode) {
     const project = await Project.findOne({ samplycode: req.body.studySamplyCode }, { _id: 1 });
     projectId = project._id;
   }

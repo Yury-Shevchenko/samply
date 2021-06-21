@@ -9,6 +9,7 @@ const uniqid = require('uniqid');
 const moment = require('moment');
 const Cron = require('cron-converter');
 const cronstrue = require('cronstrue');
+const { nanoid } = require('nanoid');
 
 const { Expo } = require('expo-server-sdk');
 let expo = new Expo();
@@ -875,14 +876,17 @@ async function sendMobileNotification(done, content, tokens, project_id, project
       continue;
     }
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
+    const messageId = makeRandomCodeForMessageID();
+
     let updatedUrl;
     if(pushToken.username){
       updatedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.username);
     } else {
       updatedUrl = url;
     }
+    updatedUrl = updatedUrl.replace('%MESSAGE_ID%', messageId);
     const customizedUrl = updatedUrl.replace('%SAMPLY_ID%', pushToken.id);
-    const messageId = makeRandomCodeForMessageID();
+
     messages.push({
       to: pushToken.token,
       sound: 'default',
@@ -1180,11 +1184,12 @@ exports.removeUser = async (req, res) => {
 };
 
 const makeRandomCodeForMessageID = () => {
-    return 'mes-xxx-xxx-xxx-xxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  }
+  return nanoid(10);
+    // return 'mes-xxx-xxx-xxx-xxx'.replace(/[xy]/g, function(c) {
+    //   var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    //   return v.toString(16);
+    // });
+}
 
 const rescheduleRepeatJobs = async () => {
   // look for all jobs with repeat interval

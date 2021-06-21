@@ -35,6 +35,8 @@ module.exports = {
       Wenn Sie den Teilnehmercode erfassen möchten, der beim Beitritt zu Ihrer Studie eingegeben wurde, verwenden Sie den Platzhalter %PARTICIPANT_CODE%, z. B. https://survey.com/?code=%PARTICIPANT_CODE%.
       Beachten Sie, dass, wenn ein Teilnehmer keinen Code eingegeben hat, %PARTICIPANT_CODE% durch die Samply-ID ersetzt wird.
       Dann können Sie innerhalb Ihrer Online-Studie den Teilnehmercode oder die Samply-ID aus der URL-Adresse entnehmen.
+      Genauso können Sie die Benachrichtigungs-ID in die Abfrage aufnehmen, z. B. https://survey.com/?messageid=%MESSAGE_ID%.
+      Die Kombination der Abfrageparameter würde wie folgt aussehen, z. B. https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%.
       Lesen Sie mehr über Query Strings <a href="https://en.wikipedia.org/wiki/Query_string")>hier</a>.
     `,
     'choose_the_type': 'Wählen Sie die Art der Benachrichtigung',

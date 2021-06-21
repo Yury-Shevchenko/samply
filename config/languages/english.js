@@ -33,7 +33,10 @@ module.exports =
       'example_web_link': `If you need to record the participant Samply ID in your task or survey, use the placeholder %SAMPLY_ID% inside the URL, for example https://survey.com/?id=%SAMPLY_ID%.
         If you want to capture the participant code entered when joining your study, use the placeholder %PARTICIPANT_CODE%, for example https://survey.com/?code=%PARTICIPANT_CODE%.
         Note that if a participant did not enter a code, %PARTICIPANT_CODE% will be replaced by the Samply ID.
-        Then, inside of your online study you can extract the participant code or the Samply ID from the url address. Read more about query strings <a href="https://en.wikipedia.org/wiki/Query_string")>here</a>.
+        Then, inside of your online study you can extract the participant code or the Samply ID from the url address.
+        In the same way, you can include the notification ID in the query, e.g. https://survey.com/?messageid=%MESSAGE_ID%.
+        The combination of query parameters would look like this, e.g. https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%.
+        Read more about query strings <a href="https://en.wikipedia.org/wiki/Query_string")>here</a>.
       `,
       'choose_the_type': 'Choose the type of notification',
       'not_participant_id': 'Participant ID',
