@@ -875,8 +875,13 @@ async function sendMobileNotification(done, content, tokens, project_id, project
       continue;
     }
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
-    let customizedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.username);
-    customizedUrl = url.replace('%SAMPLY_ID%', pushToken.id);
+    let updatedUrl;
+    if(pushToken.username){
+      updatedUrl = url.replace('%PARTICIPANT_CODE%', pushToken.username);
+    } else {
+      updatedUrl = url;
+    }
+    const customizedUrl = updatedUrl.replace('%SAMPLY_ID%', pushToken.id);
     const messageId = makeRandomCodeForMessageID();
     messages.push({
       to: pushToken.token,
