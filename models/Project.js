@@ -116,7 +116,7 @@ projectSchema.statics.getCurrentProjects = function() {
 
 projectSchema.statics.findAllPublic = function() {
   return this.aggregate([
-    { $match: { currentlyActive: true } },
+    { $match: { currentlyActive: true, public: true } },
     { $lookup: {
         from: 'users', localField: 'creator', foreignField: '_id', as: 'author'}
     },
