@@ -45,7 +45,7 @@ exports.updateGeolocation = async (req, res) => {
 //show the history of sent notifications
 exports.showHistory = async (req, res) => {
   if(req.user && req.user.project && req.user.project.name){
-    const participant = req.query.id || {$exists: true};
+    const participant = req.query.id || { $exists: true };
     const page = req.params.page || 1;
     const limit = 100;
     const skip = (page * limit) - limit;
@@ -167,6 +167,7 @@ exports.getMessages = async (req, res) => {
 exports.downloadHistory = async (req, res) => {
   const projectId = req.params.id;
   const project = await Project.findOne({ _id: projectId });
+  const participants = project.mobileUsers;
   confirmOwnerOrMember(project, req.user);
   let keys = [];
   const name = req.user.project.name;
@@ -187,20 +188,21 @@ exports.downloadHistory = async (req, res) => {
         if (coordinates && coordinates[0]){
           data = coordinates[0]
         }
-        const line =[{
-          samplyid: obj.samplyid,
+        const line =[ {
+          samply_id: obj.samplyid,
           title: obj.data.title,
           message: obj.data.message,
           url: obj.data.url,
           sent: obj.events.filter(e => e.status === 'sent').map(e => e.created.getTime()),
           tapped: obj.events.filter(e => e.status === 'tapped').map(e => e.created.getTime()),
-          opened_in_spp: obj.events.filter(e => e.status === 'opened-in-app').map(e => e.created.getTime()),
+          opened_in_app: obj.events.filter(e => e.status === 'opened-in-app').map(e => e.created.getTime()),
           archived_by_user: obj.events.filter(e => e.status === 'archived').map(e => e.created.getTime()),
           arrived: obj.events.filter(e => e.status === 'arrived').map(e => e.created.getTime()),
           geofencing_event: obj.events.filter(e => e.status === 'geofencing-event').map(e => e.created.getTime()),
-          messageId: obj.messageId,
+          message_id: obj.messageId,
+          participant_code: participants.filter(participant => participant.id === obj.samplyid).map(participant => participant.username)[0],
           ...data
-        }]
+        } ]
         const preKeys = flatMap(line, function(e){
           return(Object.keys(e));
         });

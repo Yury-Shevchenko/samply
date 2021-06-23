@@ -33,20 +33,6 @@ router.post('/account/reset/:token',
 );
 router.get('/logout', authController.logout);
 
-// router.post('/auth/participant/email/sign',
-//   passport.authenticate('website-signup-participant', {
-//     successRedirect : '/studies',
-//     failureRedirect: '/researcher/login',
-//     failureFlash : true
-//   }));
-//
-// router.post('/auth/participant/email/login',
-//   passport.authenticate('website-login', {
-//     successRedirect : '/studies',
-//     failureRedirect: '/researcher/login',
-//     failureFlash : true
-//   }));
-
 router.post('/auth/researcher/email/register',
   passport.authenticate('website-signup-researcher', {
     successRedirect : '/projects',
