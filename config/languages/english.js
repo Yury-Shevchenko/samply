@@ -319,6 +319,8 @@ module.exports =
         <a target='_blank' href="https://iscience.uni-konstanz.de/">iScience group </a>
         at the University of Konstanz in Germany.
       `,
+      'contributors_header': 'Contributors',
+      'contributors_usability': 'User experience /  Usability testing',
       'contact_header': `Contact / find support / contribute`,
       'contact_email': `Contact us by <a href="mailto:yury.shevchenko@uni.kn">email</a>`,
       'contact_slack': `Join our <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack group</a>`,

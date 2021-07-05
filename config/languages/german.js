@@ -320,6 +320,8 @@ module.exports = {
       <a target='_blank' href="https://iscience.uni-konstanz.de/de/">iScience-Gruppe </a>
       an der Universität Konstanz in Deutschland.
     `,
+    'contributors_header': 'Mitarbeiter',
+    'contributors_usability': 'Benutzerfreundlichkeit / Usability',
     'contact_header': `Kontakt / Unterstützung finden / beitragen`,
     'contact_email': `Kontaktieren Sie uns über <a href="mailto:yury.shevchenko@uni.kn">Email</a>`,
     'contact_slack': `Nehmen Sie an unserer <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack chat</a> teil`,
