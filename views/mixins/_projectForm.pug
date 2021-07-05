@@ -311,7 +311,7 @@ mixin projectForm(project = {})
           // make a map
           const map = new google.maps.Map(mapDiv, mapOptions)
           
-          // Create LatLngBounds object.
+          // create latlngbounds object
           var latlngbounds = new google.maps.LatLngBounds();
           
           // add markers and circles 
@@ -327,6 +327,7 @@ mixin projectForm(project = {})
               map: map,
               position: centerPosition,
               draggable: true,
+              label: location.title,
             })
             
             marker.addListener('dragend', (e) => onDragEnd (e, location));
@@ -355,5 +356,7 @@ mixin projectForm(project = {})
           
         }
       }
+      
+    //- pre=h.dump(project)
 
       
