@@ -22,13 +22,16 @@ exports.updateStatus = async (req, res) => {
 
 // update status
 exports.updateGeolocation = async (req, res) => {
+  let project_name;
   let projectId = req.body.studyId;
   if(!projectId && req.body.studySamplyCode) {
-    const project = await Project.findOne({ samplycode: req.body.studySamplyCode }, { _id: 1 });
+    const project = await Project.findOne({ samplycode: req.body.studySamplyCode }, { _id: 1, name: 1 });
     projectId = project._id;
+    project_name = project.name;
   }
   const result = new Result({
     project: projectId,
+    project_name: project_name,
     samplyid: req.body.userToken,
     messageId: req.body.messageId,
     data: {
