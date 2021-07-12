@@ -20,10 +20,10 @@ block content
             td #{layout.history_notifications_Message} 
             td #{layout.history_notifications_url} 
             td Sent from the server
-            td Arrived
+            td Received when the app was open
             td Tapped (the notification bar)
             td Opened in the app (messages)
-            td Archived by user
+            td Deleted by user
             td Geofencing event triggered
             td Message ID
             
@@ -38,7 +38,7 @@ block content
               td
                 a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url) #{notification.data.url}
               td= notification.events.filter(e => e.status === 'sent').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
-              td= notification.events.filter(e => e.status === 'arrived').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss'))               
+              td= notification.events.filter(e => e.status === 'received-in-app').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss'))               
               td= notification.events.filter(e => e.status === 'tapped').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'opened-in-app').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'archived').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
@@ -63,4 +63,4 @@ block content
       h2= `${layout.history_notifications}`
       p !{layout.message_history_create_project}      
       
-    //- pre= h.dump(history)        
+    pre= h.dump(history)        
