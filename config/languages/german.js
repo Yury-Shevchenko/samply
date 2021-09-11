@@ -389,10 +389,7 @@ module.exports = {
       'imageURL': `Bild (fügen Sie die Bild-URL hier ein - das Bild wird neben Ihrer Studie in der mobilen Anwendung angezeigt)`,
       'codeMessage': 'Sie haben die Möglichkeit, einen Teilnehmer aufzufordern, bei der Teilnahme an Ihrer Studie einen Teilnehmercode einzugeben. Wenn Sie dies tun möchten, kreuzen Sie bitte das untenstehende Kästchen an und geben Sie dem Teilnehmer Anweisungen, was er in das Eingabefeld eingeben soll.',
       'messageAfterJoin': 'Der Text, der den Teilnehmern angezeigt wird, nachdem sie an der Studie angemeldet haben.',
-      'approval_technical_note': `
-        Die Implementierung dieser neuen Funktion wird schrittweise im Laufe des nächsten Monats (Juni 2021) erfolgen.
-        Um sicherzustellen, dass die derzeit aktiven Studien nicht beeinträchtigt werden, wird eine E-Mail mit Updates an Forscher gesendet.
-        `,
+      'approval_technical_note': ``,
       'approvalFormTitle': 'Genehmigungsantrag',
       'sendRequestBtn': 'Genehmigungsantrag einreichen',
       'approvalInfo_1': `

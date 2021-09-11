@@ -387,10 +387,7 @@ module.exports =
         'imageURL': `Image (paste the image URL here - the image will be displayed next to your study in the mobile application)`,
         'codeMessage': 'You have the option to ask a participant to enter a participant code when joining your study. If you would like to do this, please tick the box below and provide instructions for the participant on what to enter in the input box.',
         'messageAfterJoin': 'The text that will be displayed to participants after they have joined the study.',
-        'approval_technical_note': `
-          The implementation of this new feature will be applied gradually over the next month (June 2021).
-          To ensure that the currently active studies are not get affected, an email with updates will be sent to researchers.
-          `,
+        'approval_technical_note': ``,
         'approvalFormTitle': 'Approval form',
         'sendRequestBtn': 'Submit approval request',
         'approvalInfo_1': `
