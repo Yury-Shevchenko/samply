@@ -2336,6 +2336,10 @@ i.yes:after {
     font-weight: bold; }
   .options label.unchosen {
     color: #e7dfdf; }
+    .options label.unchosen select {
+      color: white; }
+    .options label.unchosen input {
+      color: white; }
 
 .containerTimePicker {
   display: -ms-grid;
