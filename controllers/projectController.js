@@ -498,7 +498,7 @@ function checkObjectIdValid(id) {
 }
 
 exports.getPublicStudy = async (req, res) => {
-  const { id } = req.params;
+  const { id, token } = req.params;
   let study;
   if (checkObjectIdValid(id)) {
     study = await Project.findOne(
@@ -512,7 +512,8 @@ exports.getPublicStudy = async (req, res) => {
         messageAfterJoin: 1,
         geofencingInstruction: 1,
         settings: 1,
-        samplycode: 1
+        samplycode: 1,
+        mobileUsers: 1
       }
     );
   } else {
@@ -526,11 +527,21 @@ exports.getPublicStudy = async (req, res) => {
         messageAfterJoin: 1,
         geofencingInstruction: 1,
         settings: 1,
-        samplycode: 1
+        samplycode: 1,
+        mobileUsers: 1
       }
     );
   }
-  res.send(study);
+  let participant = {};
+  if (study.mobileUsers.filter(user => user.id === token).length) {
+    participant = study.mobileUsers.filter(user => user.id === token)[0];
+  }
+  const studyUser = {
+    ...study._doc,
+    participant
+  };
+  delete studyUser.mobileUsers;
+  res.send(studyUser);
 };
 
 exports.getMobileUsers = async (req, res) => {

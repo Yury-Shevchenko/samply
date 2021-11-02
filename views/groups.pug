@@ -36,7 +36,8 @@ block content
               .tag.tag__choice
                 input(type = 'checkbox' id=user.id value=user.id name='participants' checked=false)
                 label(for=user.id class="tagLabel") 
-                  strong #{user.username} 
+                  if (user.username)
+                    strong #{user.username} 
                   | #{user.id} 
           if(users.filter(user => !user.group).length === 0)
             p No participants left without group

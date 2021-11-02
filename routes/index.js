@@ -300,6 +300,7 @@ router.post(
 // api routes
 router.get("/api/studies", projectController.getPublicStudiesAPI);
 router.get("/api/study/:id", projectController.getPublicStudy);
+router.get("/api/study/:id/:token", projectController.getPublicStudy);
 router.post("/api/join/:id", jobController.joinStudy);
 router.post("/api/leave/:id", jobController.leaveStudy);
 router.post("/api/createaccount", userController.createMobileAccount);

@@ -9,7 +9,8 @@ mixin groupCard(users, group = {}, i)
         each user, i in users
           if(user && user.group && user.group.id === group.id)
             div
-              strong= `${user.username} `
+              if (user.username)
+                strong= `${user.username} `
               | #{user.id}
       td
         form(action="/api/deletegroup" method="POST" id="delete")
