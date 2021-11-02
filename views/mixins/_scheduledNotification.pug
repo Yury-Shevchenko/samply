@@ -45,10 +45,14 @@ mixin scheduledNotification(notification, i)
       if(notification.readable && notification.readable.interval)
         span= `${l.table_repeat} ${notification.readable.interval}`
       
-    if(notification.participantId && notification.participantId.length === 0)
+    if(notification.allCurrentParticipants)
       span= `${l.table_all_participants}` 
+    if(notification.allCurrentGroups)
+      span= `Applies to all groups at the moment of notification creation` 
     if(notification.participantId && notification.participantId.length > 0)
       span= `${l.table_for_participants}: ${notification.participantId}` 
+    if(notification.groups && notification.groups.length > 0)
+      span= `${l.table_for_groups}: ${notification.groups}` 
     if(notification.randomize)
       span= `${l.table_randomized}` 
     if(notification.scheduleInFuture)  

@@ -34,7 +34,8 @@ footer {
   }
 }
 
-.cameraPanel video, .cameraPanel canvas {
+.cameraPanel video,
+.cameraPanel canvas {
   width: 512px;
   max-width: 100%;
   display: none;
@@ -57,7 +58,7 @@ footer {
   display: none;
 }
 
-.container_picker{
+.container_picker {
   width: 250px;
   margin: 20px auto;
   display: grid;
@@ -70,7 +71,7 @@ footer {
   // grid-column-gap: 20px;
 }
 
-.notificationContainer{
+.notificationContainer {
   display: grid;
   // grid-template-columns: repeat(auto-fit, minmax(40px, 120px));
   // grid-column-gap: 20px;
@@ -78,30 +79,30 @@ footer {
   // font-size: larger;
 }
 
-.cronintervalPicker{
+.cronintervalPicker {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-column-gap: 10px;
   max-width: 500px;
 }
 
-#enable_notifications{
+#enable_notifications {
   display: none;
 }
 
-#disable_notifications{
+#disable_notifications {
   display: none;
 }
 
 .bg-image-participants {
   /* The image used */
-  background-image: url('/images/photos/mobile_phone.jpg');
+  background-image: url("/images/photos/mobile_phone.jpg");
   /* Add the blur effect */
   filter: blur(3px);
   -webkit-filter: blur(3px);
   // /* Full height */
   z-index: -1000;
-  position:absolute;
+  position: absolute;
   height: 100%;
   width: 100%;
   // /* Center and scale the image nicely */
@@ -112,13 +113,13 @@ footer {
 
 .bg-image-researchers {
   /* The image used */
-  background-image: url('/images/photos/graph.jpg');
+  background-image: url("/images/photos/graph.jpg");
   /* Add the blur effect */
   filter: blur(3px);
   -webkit-filter: blur(3px);
   // /* Full height */
   z-index: -1000;
-  position:absolute;
+  position: absolute;
   height: 100%;
   width: 100%;
   // /* Center and scale the image nicely */
@@ -129,13 +130,13 @@ footer {
 
 .bg-image-enter {
   /* The image used */
-  background-image: url('/images/photos/participant-login.jpg');
+  background-image: url("/images/photos/participant-login.jpg");
   /* Add the blur effect */
   filter: blur(0px);
   -webkit-filter: blur(0px);
   // /* Full height */
   z-index: -1000;
-  position:absolute;
+  position: absolute;
   height: 100%;
   width: 100%;
   // /* Center and scale the image nicely */
@@ -146,17 +147,36 @@ footer {
 
 .bg-image-studies {
   /* The image used */
-  background-image: url('/images/photos/balloons.jpg');
+  background-image: url("/images/photos/balloons.jpg");
   /* Add the blur effect */
   filter: blur(0px);
   -webkit-filter: blur(0px);
   // /* Full height */
   z-index: -1000;
-  position:absolute;
+  position: absolute;
   height: 100%;
   width: 100%;
   // /* Center and scale the image nicely */
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.code {
+  padding: 2rem;
+  border: 1px solid grey;
+  border-radius: 1rem;
+  background: white;
+  .comment {
+    color: grey;
+  }
+  .one {
+    padding-left: 2rem;
+  }
+  .two {
+    padding-left: 4rem;
+  }
+  .three {
+    padding-left: 6rem;
+  }
 }

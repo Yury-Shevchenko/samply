@@ -379,6 +379,36 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+// based on https://gist.github.com/paulirish/12fb951a8b893a454b32
+
+var $ = document.querySelector.bind(document);
+var $$ = document.querySelectorAll.bind(document);
+
+Node.prototype.on = window.on = function (name, fn) {
+  this.addEventListener(name, fn);
+};
+
+NodeList.prototype.__proto__ = Array.prototype; // eslint-disable-line
+
+NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn) {
+  this.forEach(function (elem) {
+    elem.on(name, fn);
+  });
+};
+
+exports.$ = $;
+exports.$$ = $$;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function(process) {
 
 var utils = __webpack_require__(0);
@@ -470,36 +500,6 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-// based on https://gist.github.com/paulirish/12fb951a8b893a454b32
-
-var $ = document.querySelector.bind(document);
-var $$ = document.querySelectorAll.bind(document);
-
-Node.prototype.on = window.on = function (name, fn) {
-  this.addEventListener(name, fn);
-};
-
-NodeList.prototype.__proto__ = Array.prototype; // eslint-disable-line
-
-NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn) {
-  this.forEach(function (elem) {
-    elem.on(name, fn);
-  });
-};
-
-exports.$ = $;
-exports.$$ = $$;
 
 /***/ }),
 /* 3 */
@@ -768,7 +768,7 @@ var _axios = __webpack_require__(3);
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _bling = __webpack_require__(2);
+var _bling = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -809,6 +809,9 @@ exports.default = ajaxTest;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _bling = __webpack_require__(1);
+
 function autocomplete(input, latinput, lnginput) {
   //console.log(input, latinput, lnginput);
   if (!input) return;
@@ -818,11 +821,50 @@ function autocomplete(input, latinput, lnginput) {
     //console.log(place);
     latinput.value = place.geometry.location.lat();
     lnginput.value = place.geometry.location.lng();
+    // show the location on the map below
+    displayLocation((0, _bling.$)('#single_map'), place, latinput, lnginput);
   });
   //do not submit the form on hitting the enter
   input.on('keydown', function (e) {
     if (e.keyCode === 13) e.preventDefault();
   });
+}
+
+function displayLocation(mapDiv, place, latinput, lnginput) {
+  if (!mapDiv) return;
+
+  var lat = place.geometry.location.lat();
+  var lng = place.geometry.location.lng();
+  var position = { lat: lat, lng: lng };
+
+  // get the centre and zoom (higher number -> bigger zoom)
+  var mapOptions = {
+    center: position,
+    zoom: 15
+
+    // make a map
+  };var map = new google.maps.Map(mapDiv, mapOptions);
+
+  //make a marker
+  var marker = new google.maps.Marker({
+    map: map,
+    position: position,
+    draggable: true
+  });
+  function onDragEnd(e, message) {
+    console.log('message', message);
+    var lat = e.latLng.lat();
+    var lng = e.latLng.lng();
+    console.log('Latitude ', lat);
+    console.log('Longitude ', lng);
+    latinput.value = lat;
+    lnginput.value = lng;
+  }
+  marker.addListener('dragend', function (e) {
+    return onDragEnd(e, 'test');
+  });
+
+  mapDiv.style.height = '600px';
 }
 
 exports.default = autocomplete;
@@ -928,7 +970,7 @@ exports.default = typeAhead;
 var utils = __webpack_require__(0);
 var bind = __webpack_require__(8);
 var Axios = __webpack_require__(15);
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 
 /**
  * Create an instance of Axios
@@ -1046,7 +1088,7 @@ module.exports = CancelToken;
 "use strict";
 
 
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 var utils = __webpack_require__(0);
 var InterceptorManager = __webpack_require__(16);
 var dispatchRequest = __webpack_require__(17);
@@ -1192,7 +1234,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(20);
 var isCancel = __webpack_require__(6);
-var defaults = __webpack_require__(1);
+var defaults = __webpack_require__(2);
 var isAbsoluteURL = __webpack_require__(24);
 var combineURLs = __webpack_require__(22);
 
@@ -2710,7 +2752,7 @@ process.umask = function () {
 
 __webpack_require__(12);
 
-var _bling = __webpack_require__(2);
+var _bling = __webpack_require__(1);
 
 var _autocomplete = __webpack_require__(10);
 
@@ -2726,7 +2768,11 @@ var _addTest2 = _interopRequireDefault(_addTest);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import makeMap from './modules/map'
+
+// autocomplete( $('#address'), $('#lat'), $('#lng') );
 (0, _typeAhead2.default)((0, _bling.$)('.search'));
+// makeMap( $('#map'))
 
 var testForms = (0, _bling.$$)('form.heart'); //listen to all forms
 testForms.on('submit', _addTest2.default);

@@ -1,0 +1,19 @@
+mixin groupCard(users, group = {}, i)
+
+  .user
+    tr
+      td #{i + 1}
+      td= group.name
+      td= group.id
+      td
+        each user, i in users
+          if(user && user.group && user.group.id === group.id)
+            div
+              strong= `${user.username} `
+              | #{user.id}
+      td
+        form(action="/api/deletegroup" method="POST" id="delete")
+          input(type='text' name="groupId" value=group.id hidden)
+          input.button(type="submit" value="Delete" form="delete")
+        
+      

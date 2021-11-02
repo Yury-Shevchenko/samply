@@ -10,14 +10,24 @@ mixin projectForm(project = {})
     label(for='welcomeMessage') #{l.welcomeMessage}
     textarea(type='text' name='welcomeMessage')= project.welcomeMessage
     
-    label(for='codeMessage') #{l.codeMessage}
     div.inputCheckBox
       input(type='checkbox' id= 'askParticipantCode' name= 'askParticipantCode' checked = project.settings && project.settings.askParticipantCode)
       label(for='askParticipantCode')
         span.
-          #{l.askUsername}
-    textarea(type='text' name='codeMessage')= project.codeMessage
+          !{l.askUsername}
+    #askParticipantCodeInputField
+      label(for='codeMessage') #{l.codeMessage}
+      textarea(type='text' name='codeMessage')= project.codeMessage
     
+    div.inputCheckBox
+      input(type='checkbox' id= 'askParticipantGroup' name= 'askParticipantGroup' checked = project.settings && project.settings.askParticipantGroup)
+      label(for='askParticipantGroup')
+        span.
+          !{l.askGroup}
+    #askParticipantGroupInputField
+      label(for='groupMessage') #{l.groupMessage}
+      textarea(type='text' name='groupMessage')= project.groupMessage
+        
     label(for='messageAfterJoin') #{l.messageAfterJoin}
     textarea(type='text' name='messageAfterJoin')= project.messageAfterJoin
     
@@ -254,6 +264,32 @@ mixin projectForm(project = {})
       const project = !{ JSON.stringify(project) }
       const locations = project?.settings?.geofencing?.locations || [];
       
+      if(project?.settings?.askParticipantCode) {
+        document.getElementById('askParticipantCodeInputField').style.display = "block";
+      } else {
+        document.getElementById('askParticipantCodeInputField').style.display = "none";
+        document.getElementById('askParticipantCode').addEventListener('change', function shownParticipantCodeInput(){
+          if (this.checked) {
+            document.getElementById('askParticipantCodeInputField').style.display = "block";
+          } else {
+            document.getElementById('askParticipantCodeInputField').style.display = "none";
+          }
+        })
+      }
+      
+      if(project?.settings?.askParticipantGroup) {
+        document.getElementById('askParticipantGroupInputField').style.display = "block";
+      } else {
+        document.getElementById('askParticipantGroupInputField').style.display = "none";
+        document.getElementById('askParticipantGroup').addEventListener('change', function shownParticipantGroupInput(){
+          if (this.checked) {
+            document.getElementById('askParticipantGroupInputField').style.display = "block";
+          } else {
+            document.getElementById('askParticipantGroupInputField').style.display = "none";
+          }
+        })
+      }
+      
       if(project?.settings?.enableGeofencing) {
         document.getElementById('geofencing_editor').style.display = "block";
       } else {
@@ -294,7 +330,7 @@ mixin projectForm(project = {})
             
             const oldCircle = circles[location.slug];
             oldCircle.setMap(null);
-            
+                
             var circle = new google.maps.Circle({
         			radius: location.radius, 
         			center: newCenterPosition,

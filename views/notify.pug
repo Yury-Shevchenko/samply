@@ -34,17 +34,33 @@ block content
             .tag.tag__choice
               input(type = 'checkbox' id='current' value='current' name='participants_current' checked=participant)
               label(for='current' class="tagLabel") #{l.step_1_current} 
-        
-          .specificParticipants(style=`display: ${participant ? 'block' : 'none'}`)
-            label(for='tags') #{l.edit_tags}
-            ul.tags
-              .tag.tag__choice
-                input(type = 'checkbox' id='allCurrentParticipants' value='all' checked=!participant name='participants')
-                label(for='allCurrentParticipants' class="tagLabel") #{l.step_1_all}
-              each user in project.mobileUsers
+              
+            .specificParticipants(style=`display: ${participant ? 'block' : 'none'}`)
+              label(for='tags') #{l.edit_tags}
+              ul.tags
                 .tag.tag__choice
-                  input(type = 'checkbox' id=user.id value=user.id name='participants_ids' checked=user.id === participant)
-                  label(for=user.id class="tagLabel") #{user.id}
+                  input(type = 'checkbox' id='allCurrentParticipants' value='all' checked=!participant name='participants')
+                  label(for='allCurrentParticipants' class="tagLabel") #{l.step_1_all}
+                each user in project.mobileUsers
+                  .tag.tag__choice
+                    input(type = 'checkbox' id=user.id value=user.id name='participants_ids' checked=user.id === participant)
+                    label(for=user.id class="tagLabel") #{user.id}
+                  
+            .tag.tag__choice
+              input(type = 'checkbox' id='groups' value='groups' name='participants_groups')
+              label(for='groups' class="tagLabel") Groups 
+        
+            .specificGroups(style=`display: ${groups ? 'block' : 'none'}`)
+              label(for='tags') #{l.edit_tags}
+              ul.tags
+                .tag.tag__choice
+                  input(type = 'checkbox' id='allCurrentGroups' value='all' checked=!group name='groups')
+                  label(for='allCurrentGroups' class="tagLabel") #{l.step_1_all}
+                each group in project.groups
+                  .tag.tag__choice
+                    input(type = 'checkbox' id=group.id value=group.id name='groups_ids')
+                    label(for=group.id class="tagLabel") #{group.name}
+          
         
         #choose-time
           h2 #{l.step_2_header} 
@@ -317,6 +333,14 @@ block content
                   document.querySelector('.specificParticipants').style.display = 'none';
                 }
               }
+              
+              if(name === 'participants_groups'){
+                if(target.checked){
+                  document.querySelector('.specificGroups').style.display = 'block';
+                } else {
+                  document.querySelector('.specificGroups').style.display = 'none';
+                }
+              }
             
               // show the participants if specific is chosen
               if(name === 'participants'){
@@ -330,6 +354,20 @@ block content
               // if the specific participants are chosen
               if(name === 'participants_ids'){
                 document.querySelectorAll("input[id='allCurrentParticipants']").forEach(e => e.checked = false);
+              }
+              
+              // show the groups if specific is chosen
+              if(name === 'groups'){
+                if(value === 'all'){
+                  if(target.checked){
+                    document.querySelectorAll("input[name='groups_ids']").forEach(e => e.checked = false);
+                  }
+                }
+              }
+              
+              // if the specific groups are chosen
+              if(name === 'groups_ids'){
+                document.querySelectorAll("input[id='allCurrentGroups']").forEach(e => e.checked = false);
               }
               
               // show the calendar or all other options 
@@ -380,3 +418,6 @@ block content
         p  
         button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
         script(type='text/javascript', src='/notifications/scheduled.js' nonce=`${noncevalue}`)
+
+
+    //- pre=h.dump(project)

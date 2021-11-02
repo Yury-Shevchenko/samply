@@ -21,7 +21,7 @@ exports.updateStatus = async (req, res) => {
 };
 
 // update status
-exports.updateGeolocation = async (req, res) => {
+exports.updatelocation = async (req, res) => {
   let project_name;
   let projectId = req.body.studyId;
   if(!projectId && req.body.studySamplyCode) {

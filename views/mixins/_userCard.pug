@@ -7,10 +7,18 @@ mixin userCard(person = {}, i)
       td= person.token.startsWith('ExponentPushToken') ? 'Ok' : 'Error'
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       td= person.username
+      td= person.group && person.group.name
       if(person.information && Object.keys(person.information).length)
         td= Object.keys(person.information).filter(k => k !== 'id').map(key => `${key}: ${person.information[key]}`)
       else 
         td
+        
+      //- if(person.stripe && person.stripe.account && person.stripe.information && person.stripe.information.payouts_enabled)
+      //-   td   
+      //-     a(style="border-bottom: 2px solid #FFC40E;" href=`/payout/?id=${person.id}`) Pay
+      //- else 
+      //-   td
+          
       td
         a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) #{l.table_open}
       td

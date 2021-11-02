@@ -59,5 +59,20 @@ block content
 
         p(style='white-space:pre;')
         input.button( type="submit" value= l.submit form="account")
+      
+      if false
+        h2 Your payable account 
+        
+        p charges_enabled #{user.stripeInformation && user.stripeInformation.charges_enabled}
+        p details_submitted: #{user.stripeInformation && user.stripeInformation.details_submitted}
+        p payouts_enabled: #{user.stripeInformation && user.stripeInformation.payouts_enabled}
+        
+        form(action="/create-account-link" method="POST" id="stripe")
+          input(type='hidden' name='userId' value=user._id)
+          input(type='hidden' name='stripeAccountId' value=user.stripeAccountId)
+          input(type="hidden" name="email" value= user.email)
+          input.button(type="submit" value="Create payable account" form="stripe")
+          
+        pre=h.dump(user)
 
         

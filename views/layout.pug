@@ -94,6 +94,9 @@ html
                   a.nav__link(href='/users', class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : ''))
                     h6 #{layout.participants}
                 li.nav__item
+                  a.nav__link(href='/groups', class=(currentPath.startsWith('/groups') ? 'nav__main_link--active' : ''))
+                    h6 #{layout.groups}
+                li.nav__item
                   a.nav__link(href="/history", class= currentPath.startsWith('/history') ? 'nav__main_link--active' : '')
                     h6 #{layout.notigications_log} 
               li.nav__item

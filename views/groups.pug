@@ -1,0 +1,99 @@
+extends layout
+
+include mixins/_groupCard
+
+block content
+  .inner
+    .userTable
+      h2 Groups (beta)
+      
+
+      if(project && user.project && user.project.name)
+
+        .card 
+          .users
+            table.table
+              thead
+                td №
+                td Group Name 
+                td Group ID 
+                td Members
+              
+              if(users)  
+                each group, i in groups
+                  +groupCard(users, group, i)
+        
+        h2 Add a new group
+        
+        form(action="/api/creategroup" method="POST" id="group")
+        
+          h6 Group name  
+          input(type='text' name="groupName" value = '' required)
+          p
+          h6 Select participants          
+          each user in users
+            if(!user.group)
+              .tag.tag__choice
+                input(type = 'checkbox' id=user.id value=user.id name='participants' checked=false)
+                label(for=user.id class="tagLabel") 
+                  strong #{user.username} 
+                  | #{user.id} 
+          if(users.filter(user => !user.group).length === 0)
+            p No participants left without group
+
+          p
+          input.button(type="submit" value="Create group" form="group")
+        
+        
+        h2 Notify API
+
+        h6 Notification token 
+        p= project.notifyToken 
+        h6 Token is valid until
+        p= h.moment(project.notifyExpires).locale(language).format("MMMM Do, YYYY")
+          
+        h4 Reset notification token
+
+        form(action="/api/resetnotifytoken" method="POST" id="token")
+          h6 New token should expire on
+          input(type='date' name="notifyExpires" required)
+          input.button(type="submit" value="Reset token" form="token")
+        
+        p
+        p
+        p
+        
+        h6 JavaScript code to use Samply API to send a notification
+        p The notification will be sent to all members of the group (with the specified ID <code>groupID</code>) except the participant (with the specified ID <code>participantID</code>).
+        p Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.
+                
+        .code
+          .comment // defining data
+          .div const url = "https://samply.uni-konstanz.de/api/notify";
+          .div const data = {
+          .one   projectID: "#{project.id}",
+          .one   groupID: "${placeholder-for-groupID}",
+          .one   participantID: "${placeholder-for-participantID}",
+          .one   token: "#{project.notifyToken}",  
+          .one   title: "your-title",
+          .one   message: "your-message",
+          .one   url: "https://your-survey-link/?samplyid=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_CODE%&message=%MESSAGE_ID%"
+          .div   }
+          p
+          .comment // function to send the POST request to activate the notification 
+          .div async function postData(url, data) {
+          .one   const response = await fetch(url, {
+          .two     method: 'POST', 
+          .two     headers: {
+          .three       'Content-Type': 'application/json'
+          .two     },
+          .two     body: JSON.stringify(data) 
+          .one   });
+          .one   return response;
+          .div }
+                        
+      else
+        p Create a new study first
+
+    //- pre=h.dump(groups)
+    //- pre=h.dump(project)

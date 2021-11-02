@@ -19,7 +19,9 @@ block content
                 td #{l.table_token}
                 td #{l.table_date}
                 td #{l.table_code} 
+                td #{l.table_group}  
                 td #{l.table_details} 
+                //- td Pay
                 td #{l.table_history}
                 td #{l.table_new_notification}
                 if user.level > 10
@@ -31,3 +33,6 @@ block content
 
       else
         p !{l.message_create_project}
+
+
+  //- pre=h.dump(users)

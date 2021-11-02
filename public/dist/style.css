@@ -31,7 +31,8 @@ footer {
     .inner {
       padding: 2rem; } }
 
-.cameraPanel video, .cameraPanel canvas {
+.cameraPanel video,
+.cameraPanel canvas {
   width: 512px;
   max-width: 100%;
   display: none;
@@ -134,6 +135,20 @@ footer {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover; }
+
+.code {
+  padding: 2rem;
+  border: 1px solid grey;
+  border-radius: 1rem;
+  background: white; }
+  .code .comment {
+    color: grey; }
+  .code .one {
+    padding-left: 2rem; }
+  .code .two {
+    padding-left: 4rem; }
+  .code .three {
+    padding-left: 6rem; }
 
 html {
   box-sizing: border-box; }
