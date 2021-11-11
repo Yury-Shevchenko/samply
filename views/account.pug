@@ -86,7 +86,7 @@ block content
             else 
               .cell #{l.payableDisabled}   
         
-          if(!user.emailIsConfirmed)    
+          if(user.emailIsConfirmed)    
             form(action="/create-account-link" method="POST" id="stripe")
               input(type='hidden' name='userId' value=user._id)
               input(type='hidden' name='stripeAccountId' value=user.stripeAccountId)
