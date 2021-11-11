@@ -13,11 +13,11 @@ mixin userCard(person = {}, i)
       else 
         td
         
-      //- if(person.stripe && person.stripe.account && person.stripe.information && person.stripe.information.payouts_enabled)
-      //-   td   
-      //-     a(style="border-bottom: 2px solid #FFC40E;" href=`/payout/?id=${person.id}`) Pay
-      //- else 
-      //-   td
+      if(person.stripe && person.stripe.account && person.stripe.information && person.stripe.information.payouts_enabled)
+        td   
+          a(style="border-bottom: 2px solid #FFC40E;" href=`/payout/${person.id}`) #{l.table_open}
+      else 
+        td
           
       td
         a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${person.id}`) #{l.table_open}

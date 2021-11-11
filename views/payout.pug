@@ -3,7 +3,50 @@ extends layout
 block content
   .inner
   
-    h2 Payout to participant
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href=`/payout/${samplyid}`, class=(currentPath.startsWith('/payout') ? 'nav__link--active' : '')) Payouts
+          li.nav__item: a.nav__link(href=`/receipts/${samplyid}`, class=(currentPath.startsWith('/receipts') ? 'nav__link--active' : '')) Receipts
+        
+    h2 #{l.info}
+    .participantInformation
+      .cell #{l.infoSamplyID} 
+      .cell= `${samplyid}`
+      .cell #{l.infoName} 
+      .cell= `${participant.name}`
+      .cell #{l.infoEmail} 
+      .cell= `${participant.email}`
+      .cell #{l.infoPayments}  
+      if(participant.stripeInformation && participant.stripeInformation.payouts_enabled)
+        .cell #{l.infoEnabled} 
+      else 
+        .cell #{l.infoDisabled} 
     
-  
-  pre=h.dump(user)
+    h2 #{l.paymentTitle} 
+    
+    form(action='/create-checkout-session' method='POST')
+      
+      label(for="currency") #{l.paymentCurrency} 
+      .custom-select
+        select(name="currency")
+          - var options = [{value: 'eur', label: 'Euro', language: "german"}, {value: 'usd', label: 'USD', language: "english"}]
+          each option in options
+            option(value=option.value, selected=(user.language === option.language))= option.label
+
+      p
+      label(for="email")  #{l.paymentAmount}  
+      input(name='amount')
+      
+      p #{l.paymentInfo} 
+      p
+      input(type='hidden' name='email' value=`${participant.email}`)
+      input(type='hidden' name='name' value=`${participant.name}`)
+      input(type='hidden' name='samplyid' value=`${samplyid}`)
+      input(type='hidden' name='stripeAccountId' value=`${participant.stripeAccountId}`)
+      input.button(type="submit" value=l.paymentCheckout)
+    
+  //- pre=h.dump(samplyid)
+  //- pre=h.dump(participant)
+  //- pre=h.dump(user)

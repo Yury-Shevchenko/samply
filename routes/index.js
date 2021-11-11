@@ -252,6 +252,11 @@ router.get(
   authController.isLoggedIn,
   catchErrors(resultController.downloadHistory)
 );
+router.get(
+  "/downloadreceipts/:id",
+  authController.isLoggedIn,
+  catchErrors(paymentController.downloadReceipts)
+);
 
 // job controller (notifications)
 router.post(
@@ -320,11 +325,21 @@ router.post("/api/resetnotifytoken", hookController.resetNotifyToken);
 
 // stripe API
 router.post("/create-account-link", paymentController.createAccountLink);
+router.post(
+  "/create-checkout-session",
+  catchErrors(paymentController.createcheckoutsession)
+);
 // payout page
 router.get(
-  "/payout/",
+  "/payout/:id",
   authController.isAdminLoggedIn,
   paymentController.payoutToParticipant
+);
+// receipts page
+router.get(
+  "/receipts/:id",
+  authController.isAdminLoggedIn,
+  paymentController.receiptsToParticipant
 );
 
 module.exports = router;

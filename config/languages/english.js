@@ -314,7 +314,23 @@ module.exports = {
       `,
     emailIsConfirmed: "Email is confirmed",
     emailIsNotConfirmed: "Email is not confirmed",
-    sendLink: "Send confirmation link"
+    sendLink: "Send confirmation link",
+    payableAccountTitle: "Payable account",
+    payableAccountCharges: "Account",
+    payableEnabled: "Enabled",
+    payableDisabled: "Disabled",
+    payableAccountDetails: "Details",
+    payableSubmitted: "Submitted",
+    payableNotSubmitted: "Not submitted",
+    payableAccountPayouts: "Payouts",
+    payableCreateAccount: `
+      You can create a payable account in order to receive payments for participating in studies.
+      Payments and invoicing are managed by our partner Stripe.
+    `,
+    payableConfirmEmail:
+      "First confirm your email address to register a payable account",
+    payableEdit: "Edit payable account",
+    payableCreate: "Create payable account"
   },
 
   index: {
@@ -536,6 +552,7 @@ module.exports = {
     table_code: "Participant Code",
     table_group: "Group",
     table_details: "Participant preferences",
+    table_payout: "Payout",
     table_aggregated: "Summary",
     table_language: "Language",
     table_tests: "Tasks",
@@ -992,5 +1009,42 @@ module.exports = {
 
   messages: {
     open: "Open the link"
+  },
+
+  payout: {
+    info: "Participant information",
+    infoSamplyID: "Samply ID",
+    infoName: "Name",
+    infoEmail: "Email",
+    infoPayments: "Payments",
+    infoEnabled: "Enabled",
+    infoDisabled: "Disabled",
+    paymentTitle: "Payment to participant",
+    paymentCurrency: "Currency",
+    paymentAmount: "Amount",
+    paymentCheckout: "Checkout",
+    paymentInfo: `
+      Payments and invoicing are managed by our partner Stripe. A 5% processing fee is deducted from the payment.
+    `
+  },
+
+  receipts: {
+    info: "Participant information",
+    infoSamplyID: "Samply ID",
+    infoName: "Name",
+    infoEmail: "Email",
+    infoPayments: "Payments",
+    infoEnabled: "Enabled",
+    infoDisabled: "Disabled",
+    receiptsTitle: "Receipts",
+    receiptsDownload: "Download",
+    receiptsDate: "Date",
+    receiptsReceiptID: "Receipt ID",
+    receiptsStatus: "Status",
+    receiptsCurrency: "Currency",
+    receiptsAmount: "Amount",
+    receiptsFee: "Fee",
+    receiptsURL: "Receipt URL",
+    receiptsLink: "Link"
   }
 };

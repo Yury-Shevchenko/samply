@@ -235,7 +235,6 @@ agenda.on("ready", function() {
 });
 
 exports.createScheduleNotification = async (req, res) => {
-  console.log("req.body", req.body);
   // check whether the request body contains required information
   if (!req.body || !req.body.target || !req.body.schedule) {
     return res.status(400).end();
@@ -367,8 +366,6 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
-  // console.log("createIntervalNotification - request body", req.body);
-
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -424,9 +421,6 @@ exports.createIntervalNotification = async (req, res) => {
     }
   }
 
-  // console.log("385: groups", groups);
-  // console.log("users", users);
-
   if (req.body.randomize) {
     const intervalWindows = req.body.intervalWindows;
     intervalWindows.map(window => {
@@ -475,7 +469,6 @@ exports.createIntervalNotification = async (req, res) => {
           intervalWindows.map(window => {
             if (req.body.int_start.startEvent === "registration") {
               if (req.body.int_start.startNextDay) {
-                // console.log('req.body.int_start.startNextDay', req.body.int_start.startNextDay);
                 const startNextDay = parseInt(req.body.int_start.startNextDay);
                 let whenToStart;
                 if (startNextDay == 1) {
@@ -506,7 +499,6 @@ exports.createIntervalNotification = async (req, res) => {
 
             if (req.body.int_end.stopEvent === "registration") {
               if (req.body.int_end.stopNextDay) {
-                // console.log('req.body.int_end.stopNextDay', req.body.int_end.stopNextDay);
                 const endNextDay = parseInt(req.body.int_end.stopNextDay);
                 let whenToEnd;
                 if (endNextDay == 1) {
@@ -755,8 +747,6 @@ exports.createIntervalNotification = async (req, res) => {
 };
 
 exports.createIndividualNotification = async (req, res) => {
-  // console.log("req.body createIndividualNotification", req.body);
-
   if (req.body.interval.length === 0) {
     res.status(400).send();
     return;
@@ -955,7 +945,6 @@ exports.createIndividualNotification = async (req, res) => {
 
         if (req.body.int_start.startEvent === "registration") {
           if (req.body.int_start.startNextDay) {
-            // console.log('req.body.int_start.startNextDay', req.body.int_start.startNextDay);
             const startNextDay = parseInt(req.body.int_start.startNextDay);
             let whenToStart;
             if (startNextDay == 1) {
@@ -984,7 +973,6 @@ exports.createIndividualNotification = async (req, res) => {
 
         if (req.body.int_end.stopEvent === "registration") {
           if (req.body.int_end.stopNextDay) {
-            // console.log('req.body.int_end.stopNextDay', req.body.int_end.stopNextDay);
             const endNextDay = parseInt(req.body.int_end.stopNextDay);
             let whenToEnd;
             if (endNextDay == 1) {
@@ -1057,8 +1045,6 @@ exports.createIndividualNotification = async (req, res) => {
 };
 
 exports.createFixedIndividualNotification = async (req, res) => {
-  // console.log("createFixedIndividualNotification - request body", req.body);
-
   if (req.body.intervals.length === 0) {
     res.status(400).send();
     return;
@@ -1344,8 +1330,6 @@ async function sendToSomeProjectUsers({
   // filter only the users whom we want to send notifications
   let tokens = [];
 
-  console.log("job controller 997: sendToSomeProjectUsers group_id", group_id);
-
   // if there are groups, find participants of those groups
   if (group_id) {
     tokens = project.mobileUsers
@@ -1353,7 +1337,8 @@ async function sendToSomeProjectUsers({
       .map(user => ({
         id: user.id,
         token: user.token,
-        username: user.username || user.id // transmit the username
+        username: user.username || user.id, // transmit the username
+        group: user.group && user.group.id // transmit the group code
       }));
   }
 
@@ -1410,12 +1395,12 @@ async function sendToAllProjectUsers(
   const tokens = users.map(user => ({
     id: user.id,
     token: user.token,
-    username: user.username || user.id // transmit the username
+    username: user.username || user.id, // transmit the username
+    group: user.group && user.group.id // transmit the group code
   }));
 
   // remove job
   if (notification_id && deleteself) {
-    // console.log('will remove notification with id ', notification_id);
     agenda.cancel(
       {
         "data.projectid": project_id,
@@ -1458,6 +1443,9 @@ async function sendMobileNotification(
       updatedUrl = url;
     }
     updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
+    if (pushToken.group) {
+      updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
+    }
     const customizedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
 
     messages.push({
@@ -1477,10 +1465,8 @@ async function sendMobileNotification(
   // recommend you batch your notifications to reduce the number of requests
   // and to compress them (notifications with similar content will get
   // compressed).
-  // console.log('messages', messages);
 
   let chunks = expo.chunkPushNotifications(messages);
-  // let tickets = [];
 
   await Promise.all(
     chunks.map(async chunk => {
@@ -1598,7 +1584,6 @@ exports.joinStudy = async (req, res) => {
 
         if (sub.stop_event === "registration") {
           if (sub.stop_next) {
-            // console.log('sub.stop_next', sub.stop_next);
             const endNextDay = parseInt(sub.stop_next);
             let whenToEnd;
             if (endNextDay == 1) {
@@ -1712,7 +1697,6 @@ exports.joinStudy = async (req, res) => {
         // pick up the random number between two dates
         for (let i = 0; i < sub.number; i++) {
           if (sub.window_from > sub.window_to) {
-            // console.log('The ending time is earlier than the beginning time');
             return;
           }
           const getRandomArbitrary = (min, max) => {
@@ -1973,22 +1957,3 @@ exports.scheduleAdminJob = async (req, res) => {
 exports.updateTokenInStudy = async (req, res) => {
   res.status(200).json({ message: "OK" });
 };
-
-// notify other users in the group
-// exports.updatelocation = async (req, res) => {
-//   const project = await Project.findOne(
-//     { samplycode: req.body.studySamplyCode },
-//     { _id: 1, name: 1, mobileUsers: 1 }
-//   );
-//   const logResults = () => {
-//     console.log("it is done");
-//   };
-//   sendToAllProjectUsers(
-//     logResults,
-//     project._id,
-//     req.body.message,
-//     `user token ${req.body.userToken}`,
-//     "https://open-lab.online/"
-//   );
-//   res.status(200).json({ message: "OK" });
-// };

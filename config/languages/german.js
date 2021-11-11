@@ -322,7 +322,23 @@ module.exports = {
     `,
     emailIsConfirmed: "Email ist bestätigt",
     emailIsNotConfirmed: "EMail ist nicht bestätigt",
-    sendLink: "Bestätigungslink senden"
+    sendLink: "Bestätigungslink senden",
+    payableAccountTitle: "Zahlbares Konto",
+    payableAccountCharges: "Konto",
+    payableEnabled: "Aktiviert",
+    payableDisabled: "Deaktiviert",
+    payableAccountDetails: "Details",
+    payableSubmitted: "Eingereicht",
+    payableNotSubmitted: "Nicht eingereicht",
+    payableAccountPayouts: "Auszahlungen",
+    payableCreateAccount: `
+      Sie können ein Zahlungskonto anlegen, um Zahlungen für die Teilnahme an Studien zu erhalten.
+      Zahlungen und Rechnungsstellung werden von unserem Partner Stripe verwaltet.
+    `,
+    payableConfirmEmail:
+      "Bestätigen Sie zunächst Ihre E-Mail-Adresse, um ein Zahlungskonto zu registrieren",
+    payableEdit: "Zahlungskonto bearbeiten",
+    payableCreate: "Zahlungskonto erstellen"
   },
 
   index: {
@@ -548,6 +564,7 @@ module.exports = {
     table_code: "Teilnehmer Code",
     table_group: "Gruppe",
     table_details: "Teilnehmer-Voreinstellungen",
+    table_payout: "Auszahlung",
     table_language: "Sprache",
     table_tests: "Aufgaben",
     table_data: "Daten",
@@ -1021,5 +1038,42 @@ module.exports = {
 
   messages: {
     open: "Link öffnen"
+  },
+
+  payout: {
+    info: "Informationen zum Teilnehmer",
+    infoSamplyID: "Samply ID",
+    infoName: "Name",
+    infoEmail: "E-Mail",
+    infoPayments: "Zahlungen",
+    infoEnabled: "Aktiviert",
+    infoDisabled: "Deaktiviert",
+    paymentTitle: "Zahlung an Teilnehmer",
+    paymentCurrency: "Währung",
+    paymentAmount: "Betrag",
+    paymentCheckout: "Checkout",
+    paymentInfo: `
+      Zahlungen und Rechnungsstellung werden von unserem Partner Stripe verwaltet. Eine 5% Bearbeitungsgebühr wird von der Zahlung abgezogen.
+    `
+  },
+
+  receipts: {
+    info: "Informationen zum Teilnehmer",
+    infoSamplyID: "Samply ID",
+    infoName: "Name",
+    infoEmail: "E-Mail",
+    infoPayments: "Zahlungen",
+    infoEnabled: "Aktiviert",
+    infoDisabled: "Deaktiviert",
+    receiptsTitle: "Quittungen",
+    receiptsDownload: "Herunterladen",
+    receiptsDate: "Datum",
+    receiptsReceiptID: "Quittungs-ID",
+    receiptsStatus: "Status",
+    receiptsCurrency: "Währung",
+    receiptsAmount: "Betrag",
+    receiptsFee: "Gebühr",
+    receiptsURL: "QuittungsURL",
+    receiptsLink: "Link"
   }
 };

@@ -1051,11 +1051,13 @@ input[type=range]:focus::-ms-fill-upper {
       width: 30px;
       transition: all 0.2s;
       fill: white; }
-    .nav__link:hover svg, .nav__link--active svg {
-      -ms-transform: scale(1.2);
-          transform: scale(1.2); }
-    .nav__link:hover h6, .nav__link--active h6 {
-      color: midnightblue; }
+    .nav__link:hover, .nav__link--active {
+      border-bottom: 3px solid orange; }
+      .nav__link:hover svg, .nav__link--active svg {
+        -ms-transform: scale(1.2);
+            transform: scale(1.2); }
+      .nav__link:hover h6, .nav__link--active h6 {
+        color: midnightblue; }
     .nav__link--logo:hover svg {
       -ms-transform: none;
           transform: none; }
@@ -1986,6 +1988,19 @@ i.yes:after {
       justify-content: left; }
   .emailBox .button {
     text-align: center; }
+
+.participantInformation {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: auto 1fr;
+      grid-template-columns: auto 1fr;
+  grid-gap: 2rem;
+  background: white;
+  margin: 2rem 0rem;
+  padding: 3rem;
+  border: 1px solid lightgrey;
+  width: -webkit-fit-content;
+  width: fit-content; }
 
 /**
 * The CSS shown here will not be introduced in the Quickstart guide, but

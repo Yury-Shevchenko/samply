@@ -1,0 +1,61 @@
+extends layout
+
+block content
+  .inner
+    p
+    header.top
+      nav.nav
+        .nav__section.nav__section--pages
+          li.nav__item: a.nav__link(href=`/payout/${samplyid}`, class=(currentPath.startsWith('/payout') ? 'nav__link--active' : '')) Payouts
+          li.nav__item: a.nav__link(href=`/receipts/${samplyid}`, class=(currentPath.startsWith('/receipts') ? 'nav__link--active' : '')) Receipts
+  
+    
+    h2 #{l.info}
+    .participantInformation
+      .cell #{l.infoSamplyID} 
+      .cell= `${samplyid}`
+      .cell #{l.infoName} 
+      .cell= `${participant.name}`
+      .cell #{l.infoEmail} 
+      .cell= `${participant.email}`
+      .cell #{l.infoPayments}  
+      if(participant.stripeInformation && participant.stripeInformation.payouts_enabled)
+        .cell #{l.infoEnabled} 
+      else 
+        .cell #{l.infoDisabled} 
+              
+    h2 #{l.receiptsTitle}  
+    
+    p
+      a(style={color:'black'} href=`/downloadreceipts/${samplyid}`) #{l.receiptsDownload} 
+    
+    .card 
+      .users
+        table.table
+          thead
+            td №
+            td #{l.receiptsDate} 
+            td #{l.receiptsReceiptID} 
+            td #{l.receiptsStatus} 
+            td #{l.receiptsCurrency} 
+            td #{l.receiptsAmount}  
+            td #{l.receiptsFee}  
+            td #{l.receiptsURL} 
+          
+          if(receipts)  
+            each receipt, i in receipts
+              .user
+                tr
+                  td #{i + 1}
+                  td= h.moment(receipt.created).locale(language).format('MM-DD-YY, H:mm')
+                  td= receipt.receiptId
+                  td= receipt.status
+                  td= receipt.paymentInfo.currency
+                  td= receipt.paymentInfo.amount
+                  td= receipt.paymentInfo.fee
+                  td
+                    a(style="border-bottom: 2px solid #FFC40E;" target="_blank" href=`${receipt.paymentInfo.url}`) #{l.receiptsLink} 
+                    
+                
+
+  //- pre=h.dump(receipts)

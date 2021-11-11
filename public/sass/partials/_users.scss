@@ -1,4 +1,4 @@
-.userTable{
+.userTable {
   max-width: 1300px;
   margin: 0 auto;
   @media all and (max-width: 1500px) {
@@ -6,7 +6,7 @@
   }
 }
 
-.researchersTable{
+.researchersTable {
   max-width: 1800px;
   margin: 0 auto;
   @media all and (max-width: 1500px) {
@@ -19,7 +19,7 @@
   grid-gap: 5px;
 }
 
-.results{
+.results {
   display: grid;
   grid-gap: 5px;
   grid-template-columns: 200px auto;
@@ -37,7 +37,6 @@
 }
 
 .user {
-
 }
 
 .emailBox {
@@ -49,4 +48,15 @@
   .button {
     text-align: center;
   }
+}
+
+.participantInformation {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-gap: 2rem;
+  background: white;
+  margin: 2rem 0rem;
+  padding: 3rem;
+  border: 1px solid lightgrey;
+  width: fit-content;
 }
