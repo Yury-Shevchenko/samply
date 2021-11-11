@@ -49,7 +49,10 @@ exports.createAccountLink = async (req, res) => {
 
 exports.webhook = async (req, res) => {
   let event;
-  const endpointSecret = process.env.STRIPE_WEBHOOK_KEY_DEV;
+  const endpointSecret =
+    process.env.NODE_ENV == "production"
+      ? process.env.STRIPE_WEBHOOK_KEY
+      : process.env.STRIPE_WEBHOOK_KEY_DEV;
   const signature = req.headers["stripe-signature"];
   try {
     event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
