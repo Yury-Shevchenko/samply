@@ -9,7 +9,10 @@ const Receipt = mongoose.model("Receipt");
 
 const keys = require("../config/keys");
 const stripe = require("stripe")(keys.stripeSecretKey);
-const DOMAIN = "http://localhost";
+const DOMAIN =
+  process.env.NODE_ENV == "production"
+    ? "https://samply.uni-konstanz.de"
+    : "http://localhost";
 
 const { nanoid } = require("nanoid");
 
