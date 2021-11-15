@@ -16,6 +16,7 @@ const passport = require("passport");
 router.get("/researcher", appController.researcherPage);
 router.get("/researcher/:action", appController.researcherPage);
 router.get("/participant/:action", appController.participantPage);
+router.get("/participant/:action/:email", appController.participantPage);
 router.get("/docs", appController.docs);
 router.get("/docs/:page", appController.docs);
 router.get("/news", appController.news);

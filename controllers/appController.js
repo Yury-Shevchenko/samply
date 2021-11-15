@@ -9,7 +9,10 @@ exports.participantPage = async (req, res) => {
   if (req.user) {
     res.redirect("/account");
   } else {
-    res.render("participant", { action: req.params.action });
+    res.render("participant", {
+      action: req.params.action,
+      email: req.params.email
+    });
   }
 };
 
