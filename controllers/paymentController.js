@@ -73,7 +73,8 @@ exports.webhook = async (req, res) => {
           stripeInformation: {
             charges_enabled: event.data.object.charges_enabled,
             details_submitted: event.data.object.details_submitted,
-            payouts_enabled: event.data.object.payouts_enabled
+            payouts_enabled: event.data.object.payouts_enabled,
+            country: event.data.object.country
           }
         },
         {}

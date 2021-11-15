@@ -83,6 +83,7 @@ module.exports = {
     forParticipants: "Für TeilnehmerInnen",
     signup_button: "Neuen Account erstellen",
     login: "Einloggen",
+    participantLogin: "Teilnehmer-Login",
     enterCode: "Code eintragen",
     howitworks: "Wie es funktioniert",
     pricing: "Preise",

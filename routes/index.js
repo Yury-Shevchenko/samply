@@ -15,6 +15,7 @@ const passport = require("passport");
 
 router.get("/researcher", appController.researcherPage);
 router.get("/researcher/:action", appController.researcherPage);
+router.get("/participant/:action", appController.participantPage);
 router.get("/docs", appController.docs);
 router.get("/docs/:page", appController.docs);
 router.get("/news", appController.news);
@@ -45,6 +46,15 @@ router.post(
   passport.authenticate("website-login", {
     successRedirect: "/",
     failureRedirect: "/",
+    failureFlash: true
+  })
+);
+
+router.post(
+  "/auth/participant/email/login",
+  passport.authenticate("website-login", {
+    successRedirect: "/account",
+    failureRedirect: "/participant/login",
     failureFlash: true
   })
 );
