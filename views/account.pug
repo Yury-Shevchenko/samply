@@ -2,12 +2,58 @@ extends layout
 
 block content
   .inner
-  
-    h2 #{l.title}
     
-    li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : '') style="width:100px; background-color: #c9f4db; border-radius: 5px;")
-      h6 #{layout.logout}
-    p    
+    //- li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : '') style="width:100px; background-color: #c9f4db; border-radius: 5px;")
+    //-   h6 #{layout.logout}
+    p   
+    
+    if user.level < 10
+      .card
+        h2 #{l.payableAccountTitle} 
+        
+        if(user.stripeAccountId) 
+          .participantInformation
+            .cell #{l.payableAccountCharges} 
+            if(user.stripeInformation && user.stripeInformation.charges_enabled)
+              .cell #{l.payableEnabled} 
+            else 
+              .cell #{l.payableDisabled} 
+              
+            .cell #{l.payableAccountDetails} 
+            if(user.stripeInformation && user.stripeInformation.details_submitted)
+              .cell #{l.payableSubmitted} 
+            else 
+              .cell #{l.payableNotSubmitted} 
+                
+            .cell #{l.payableAccountPayouts} 
+            if(user.stripeInformation && user.stripeInformation.payouts_enabled)
+              .cell #{l.payableEnabled}
+            else 
+              .cell #{l.payableDisabled}   
+        
+          if(user.emailIsConfirmed)    
+            form(action="/create-account-link" method="POST" id="stripe")
+              input(type='hidden' name='userId' value=user._id)
+              input(type='hidden' name='stripeAccountId' value=user.stripeAccountId)
+              input(type="hidden" name="email" value= user.email)
+              input.button(type="submit" value=l.payableEdit form="stripe")
+                   
+        else 
+          p #{l.payableCreateAccount}  
+          p 
+        
+          if(user.emailIsConfirmed)    
+            form(action="/create-account-link" method="POST" id="stripe")
+              input(type='hidden' name='userId' value=user._id)
+              input(type='hidden' name='stripeAccountId' value=user.stripeAccountId)
+              input(type="hidden" name="email" value= user.email)
+              input.button(type="submit" value=l.payableCreate form="stripe")
+          else 
+            h6 #{l.payableConfirmEmail}  
+
+    p
+    h2 #{l.title}
+   
     .card
     
       form(action="/account/confirm" method="POST" id="email")
@@ -62,48 +108,5 @@ block content
     
     p
       
-    if user.level < 10
-      .card
-        h2 #{l.payableAccountTitle} 
-        
-        if(user.stripeAccountId) 
-          .participantInformation
-            .cell #{l.payableAccountCharges} 
-            if(user.stripeInformation && user.stripeInformation.charges_enabled)
-              .cell #{l.payableEnabled} 
-            else 
-              .cell #{l.payableDisabled} 
-              
-            .cell #{l.payableAccountDetails} 
-            if(user.stripeInformation && user.stripeInformation.details_submitted)
-              .cell #{l.payableSubmitted} 
-            else 
-              .cell #{l.payableNotSubmitted} 
-                
-            .cell #{l.payableAccountPayouts} 
-            if(user.stripeInformation && user.stripeInformation.payouts_enabled)
-              .cell #{l.payableEnabled}
-            else 
-              .cell #{l.payableDisabled}   
-        
-          if(user.emailIsConfirmed)    
-            form(action="/create-account-link" method="POST" id="stripe")
-              input(type='hidden' name='userId' value=user._id)
-              input(type='hidden' name='stripeAccountId' value=user.stripeAccountId)
-              input(type="hidden" name="email" value= user.email)
-              input.button(type="submit" value=l.payableEdit form="stripe")
-                   
-        else 
-          p #{l.payableCreateAccount}  
-          p 
-        
-          if(user.emailIsConfirmed)    
-            form(action="/create-account-link" method="POST" id="stripe")
-              input(type='hidden' name='userId' value=user._id)
-              input(type='hidden' name='stripeAccountId' value=user.stripeAccountId)
-              input(type="hidden" name="email" value= user.email)
-              input.button(type="submit" value=l.payableCreate form="stripe")
-          else 
-            h6 #{l.payableConfirmEmail}  
-
+    
         

@@ -6,7 +6,11 @@ exports.researcherPage = async (req, res) => {
 };
 
 exports.participantPage = async (req, res) => {
-  res.render("participant", { action: req.params.action });
+  if (req.user) {
+    res.redirect("/account");
+  } else {
+    res.render("participant", { action: req.params.action });
+  }
 };
 
 exports.docs = (req, res) => {

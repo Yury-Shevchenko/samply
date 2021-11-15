@@ -326,6 +326,7 @@ router.post("/api/updatestatus", resultController.updateStatus);
 router.post("/api/history", resultController.getHistory);
 router.post("/api/reset", userController.resetPassword);
 router.post("/api/update", jobController.updateTokenInStudy);
+router.post("/api/checkpayableaccount", userController.checkPayableAccount);
 // router.post("/api/updatelocation", jobController.updatelocation);
 // hook api
 router.post("/api/creategroup", hookController.creategroup);

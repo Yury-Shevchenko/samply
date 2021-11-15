@@ -182,3 +182,14 @@ exports.resetPassword = async (req, res) => {
   });
   res.status(200).json({ message: "OK" });
 };
+
+exports.checkPayableAccount = async (req, res) => {
+  const userData = req.body;
+  const user = await User.findOne(
+    { email: userData.email, samplyId: userData.id },
+    {
+      stripeInformation: 1
+    }
+  );
+  res.send(user);
+};
