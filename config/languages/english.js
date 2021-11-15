@@ -787,7 +787,7 @@ module.exports = {
           `,
     notifications_2: `
             The URL link may contain the participant’s ID: the placeholder “%PARTICIPANT_CODE%” inside the weblink will be replaced with each user’s Samply ID (e.g., https://examplesurvey.com/?id=%PARTICIPANT_CODE%).
-            This can be used to track survey participation if the URL query parameters are captured and saved in the survey.
+            This can be used to track survey participation if the URL query parameters are captured and saved in the survey. See the list of possible query placeholders below.
           `,
     notifications_3: `
             If the user interface is followed step-by-step, a few choices have to be made in order to define the notifications schedule.

@@ -35,4 +35,31 @@ mixin notifications()
   p.card-message 
     | !{l.notifications_10} 
     
-  
+  h5 
+    .headerLink Query placeholders
+    
+  table
+    tr
+      th Placeholder
+      th Name
+      th Information
+    tr
+      td %MESSAGE_ID%
+      td Message ID
+      td Each notification has a unique ID
+    tr
+      td %SAMPLY_ID%
+      td Samply ID
+      td The ID of participant on the platform Samply
+    tr
+      td %PARTICIPANT_CODE%
+      td Participant code
+      td The participant code entered by a participant when joining your study
+    tr
+      td %GROUP_ID%
+      td Samply ID
+      td The group code entered by a participant when joining your study
+    tr
+      td %TIMESTAMP_SENT%
+      td Timestamp 
+      td When the message is sent from the server (the number of milliseconds elapsed since January 1, 1970)

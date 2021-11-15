@@ -814,6 +814,7 @@ module.exports = {
     notifications_2: `
           Der URL-Link kann die ID des Teilnehmers enthalten: der Platzhalter "%PARTICIPANT_CODE%" innerhalb des Weblinks wird durch die Samply-ID jedes Benutzers ersetzt (z.B. https://examplesurvey.com/?id=%PARTICIPANT_CODE%).
           Dies kann zur Verfolgung der Umfrageteilnahme verwendet werden, wenn die URL-Abfrageparameter in der Umfrage erfasst und gespeichert werden.
+          Siehe die Liste der möglichen Abfrageplatzhalter unten.
         `,
     notifications_3: `
           Wenn man der Benutzeroberfläche Schritt für Schritt folgt, müssen einige Auswahlmöglichkeiten getroffen werden, um den Zeitplan für die Benachrichtigungen zu definieren.

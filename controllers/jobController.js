@@ -97,7 +97,8 @@ agenda.on("ready", function() {
       message: job.attrs.data.message,
       url: job.attrs.data.url,
       notification_id: job.attrs.data.id,
-      deleteself: job.attrs.data.deleteself
+      deleteself: job.attrs.data.deleteself,
+      schedule_id: job.attrs.data.scheduleid
     });
     done();
   });
@@ -1127,6 +1128,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             Date.parse(to)
           );
           const date = new Date(randomEvent).toISOString();
+          const scheduleId = uniqid();
 
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
@@ -1136,7 +1138,8 @@ exports.createFixedIndividualNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
-            deleteself: true
+            deleteself: true,
+            scheduleid: scheduleId
           });
         }
       });
@@ -1161,6 +1164,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             Date.parse(to)
           );
           const date = new Date(randomEvent).toISOString();
+          const scheduleId = uniqid();
 
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
@@ -1170,7 +1174,8 @@ exports.createFixedIndividualNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
-            deleteself: true
+            deleteself: true,
+            scheduleid: scheduleId
           });
         }
       });
@@ -1314,7 +1319,8 @@ async function sendToSomeProjectUsers({
   message,
   url,
   notification_id,
-  deleteself
+  deleteself,
+  schedule_id
 }) {
   const content = {
     title,
@@ -1337,7 +1343,7 @@ async function sendToSomeProjectUsers({
       .map(user => ({
         id: user.id,
         token: user.token,
-        username: user.username || user.id, // transmit the username
+        username: user.username, // transmit the username
         group: user.group && user.group.id // transmit the group code
       }));
   }
@@ -1349,7 +1355,8 @@ async function sendToSomeProjectUsers({
       .map(user => ({
         id: user.id,
         token: user.token,
-        username: user.username || user.id // transmit the username
+        username: user.username, // transmit the username
+        group: user.group && user.group.id // transmit the group code
       }));
   }
 
@@ -1358,7 +1365,8 @@ async function sendToSomeProjectUsers({
     agenda.cancel(
       {
         "data.projectid": project_id,
-        "data.id": notification_id
+        "data.id": notification_id,
+        "data.scheduleid": schedule_id
       },
       (err, numRemoved) => {}
     );
@@ -1392,10 +1400,11 @@ async function sendToAllProjectUsers(
   if (excludeUntil) {
     users = users.filter(user => user.created > excludeUntil);
   }
+
   const tokens = users.map(user => ({
     id: user.id,
     token: user.token,
-    username: user.username || user.id, // transmit the username
+    username: user.username, // transmit the username
     group: user.group && user.group.id // transmit the group code
   }));
 
@@ -1422,6 +1431,7 @@ async function sendMobileNotification(
   project_name
 ) {
   const { title, message, url } = content;
+  const timestampSent = Date.now();
 
   let messages = [];
   for (let pushToken of tokens) {
@@ -1436,24 +1446,35 @@ async function sendMobileNotification(
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     const messageId = makeRandomCodeForMessageID();
 
-    let updatedUrl;
-    if (pushToken.username) {
-      updatedUrl = url.replace("%PARTICIPANT_CODE%", pushToken.username);
-    } else {
-      updatedUrl = url;
+    let updatedUrl = url;
+
+    if (url.includes("%")) {
+      if (url.includes("%MESSAGE_ID%")) {
+        updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
+      }
+      if (url.includes("%SAMPLY_ID%")) {
+        updatedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
+      }
+      if (url.includes("%PARTICIPANT_CODE%") && pushToken.username) {
+        updatedUrl = updatedUrl.replace(
+          "%PARTICIPANT_CODE%",
+          pushToken.username
+        );
+      }
+      if (url.includes("%GROUP_ID%") && pushToken.group) {
+        updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
+      }
+      if (url.includes("%TIMESTAMP_SENT%")) {
+        updatedUrl = updatedUrl.replace("%TIMESTAMP_SENT%", timestampSent);
+      }
     }
-    updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
-    if (pushToken.group) {
-      updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
-    }
-    const customizedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
 
     messages.push({
       to: pushToken.token,
       sound: "default",
       title: title,
       body: message,
-      data: { title, message, url: customizedUrl, messageId },
+      data: { title, message, url: updatedUrl, messageId },
       id: pushToken.id,
       priority: "high",
       channelId: "default",
@@ -1479,7 +1500,7 @@ async function sendMobileNotification(
           data: chunk[i].data,
           ticket: ticket,
           messageId: chunk[i].data.messageId,
-          events: [{ status: "sent", created: Date.now() }]
+          events: [{ status: "sent", created: timestampSent }]
         });
         await result.save();
       });
