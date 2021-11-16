@@ -14,10 +14,12 @@ block content
     .participantInformation
       .cell #{l.infoSamplyID} 
       .cell= `${samplyid}`
-      .cell #{l.infoName} 
-      .cell= `${participant.name}`
-      .cell #{l.infoEmail} 
-      .cell= `${participant.email}`
+      if (participant.name)
+        .cell #{l.infoName} 
+        .cell= `${participant.name}`
+      if(participant.stripeInformation && participant.stripeInformation.payouts_enabled) 
+        .cell #{l.infoEmail} 
+        .cell= `${participant.email}`
       .cell #{l.infoPayments}  
       if(participant.stripeInformation && participant.stripeInformation.payouts_enabled)
         .cell #{l.infoEnabled} 

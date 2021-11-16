@@ -1026,6 +1026,10 @@ module.exports = {
     paymentCheckout: "Checkout",
     paymentInfo: `
       Payments and invoicing are managed by our partner Stripe. A 5% processing fee is deducted from the payment.
+    `,
+    paymentInfoNotRegistered: `
+      To receive payments, the participant should register a payable account.
+      To do that, the participant should log in to the website and navigate to the <a target='blank' href='/account'>profile page</a>.
     `
   },
 

@@ -1056,6 +1056,10 @@ module.exports = {
     paymentCheckout: "Checkout",
     paymentInfo: `
       Zahlungen und Rechnungsstellung werden von unserem Partner Stripe verwaltet. Eine 5% Bearbeitungsgebühr wird von der Zahlung abgezogen.
+    `,
+    paymentInfoNotRegistered: `
+      Um Zahlungen zu erhalten, muss der Teilnehmer ein Zahlungskonto einrichten.
+      Dazu muss sich der Teilnehmer auf der Website anmelden und zur <a target='blank' href='/account'>Profilseite</a> navigieren.
     `
   },
 
