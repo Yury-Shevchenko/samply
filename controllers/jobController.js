@@ -506,7 +506,7 @@ exports.createIntervalNotification = async (req, res) => {
                   whenToEnd = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
                 } else {
                   whenToEnd = moment(latestUser.created)
-                    .add({ days: endNextDay - 1 })
+                    .add({ days: endNextDay })
                     .startOf("day")
                     .add({
                       minutes: Math.floor(Math.random() * 10),
@@ -618,7 +618,7 @@ exports.createIntervalNotification = async (req, res) => {
                 whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
               } else {
                 whenToEnd = moment(user.created)
-                  .add({ days: endNextDay - 1 })
+                  .add({ days: endNextDay })
                   .startOf("day")
                   .add({
                     minutes: Math.floor(Math.random() * 10),
@@ -885,7 +885,7 @@ exports.createIndividualNotification = async (req, res) => {
               whenToEnd = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
               whenToEnd = moment(latestUser.created)
-                .add({ days: endNextDay - 1 })
+                .add({ days: endNextDay })
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
@@ -980,7 +980,7 @@ exports.createIndividualNotification = async (req, res) => {
               whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
               whenToEnd = moment(user.created)
-                .add({ days: endNextDay - 1 })
+                .add({ days: endNextDay })
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
@@ -1611,7 +1611,7 @@ exports.joinStudy = async (req, res) => {
               whenToEnd = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
               whenToEnd = moment()
-                .add({ days: endNextDay - 1 })
+                .add({ days: endNextDay })
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
