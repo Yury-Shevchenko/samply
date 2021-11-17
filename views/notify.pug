@@ -140,12 +140,12 @@ block content
             input(type='radio', name='date', value='spec-week')#date-spec-week
             label(for='date-spec-week')
               span #{l.step_3_weekday} 
-              - var specific_weekdays = [l.Monday, l.Tuesday, l.Wednesday, l.Thursday, l.Friday, l.Saturday, l.Sunday]
+              - var specific_weekdays = [ {value: "MON", name:l.Monday}, {value: "TUE", name:l.Tuesday}, {value: "WED", name:l.Wednesday}, {value: "THU", name:l.Thursday}, {value: "FRI", name:l.Friday}, {value: "SAT", name:l.Saturday}, {value: "SUN", name:l.Sunday} ]
               .weekTags
                 each day in specific_weekdays 
                   .tag.tag__choice
-                    input(type = 'checkbox' id=day value=day name='date-spec-week-day')
-                    label(for=day class="tagLabel") #{day}
+                    input(type = 'checkbox' id=day.value value=day.value name='date-spec-week-day')
+                    label(for=day.value class="tagLabel") #{day.name}
           
             input(type='radio', name='date', value='spec-month')#date-spec-month
             label(for='date-spec-month')
@@ -179,12 +179,12 @@ block content
             input(type='radio', name='month', value='specific')#month-spec
             label(for='month-spec')
               span #{l.step_4_specific} 
-              - var specific_months = [l.january, l.february, l.march, l.april, l.may, l.june, l.july, l.august, l.september, l.october, l.november, l.december]
+              - var specific_months = [{value: "JAN", name: l.january}, {value: "FEB", name: l.february}, {value: "MAR", name: l.march}, {value: "APR", name: l.april}, {value: "MAY", name: l.may}, {value: "JUN", name: l.june}, {value: "JUL", name: l.july}, {value: "AUG", name: l.august},{value: "SEP", name: l.september}, {value: "OCT", name: l.october}, {value: "NOV", name: l.november}, {value: "DEC", name: l.december}]
               .weekTags
                 each month in specific_months 
                   .tag.tag__choice
-                    input(type = 'checkbox' id=month value=month name='month-spec-month')
-                    label(for=month class="tagLabel") #{month}
+                    input(type = 'checkbox' id=month.value value=month.value name='month-spec-month')
+                    label(for=month.value class="tagLabel") #{month.name}
               
         
         #choose-start

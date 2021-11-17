@@ -179,7 +179,7 @@ function createNotification() {
     const days = document.querySelectorAll("input[name='date-spec-week-day']");
     const daysShorted = Array.from(days)
       .filter(input => input.checked)
-      .map(input => input.value.slice(0, 3).toUpperCase());
+      .map(input => input.value);
     if (!daysShorted || daysShorted.length === 0) {
       alert("Choose specific week days or select other options");
       return;
@@ -215,7 +215,7 @@ function createNotification() {
     const months = document.querySelectorAll("input[name='month-spec-month']");
     const monthShorted = Array.from(months)
       .filter(input => input.checked)
-      .map(input => input.value.slice(0, 3).toUpperCase());
+      .map(input => input.value);
     if (!monthShorted || monthShorted.length === 0) {
       alert("Choose specific months or select other options");
       return;
