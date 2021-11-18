@@ -328,7 +328,7 @@ router.post("/api/history", resultController.getHistory);
 router.post("/api/reset", userController.resetPassword);
 router.post("/api/update", jobController.updateTokenInStudy);
 router.post("/api/checkpayableaccount", userController.checkPayableAccount);
-// router.post("/api/updatelocation", jobController.updatelocation);
+router.post("/api/updatelocation", resultController.updatelocation);
 // hook api
 router.post("/api/creategroup", hookController.creategroup);
 router.post("/api/deletegroup", hookController.deletegroup);
