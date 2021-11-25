@@ -468,7 +468,45 @@ module.exports = {
     removeFromPublicBtn:
       "Remove the study from the public list in the mobile application",
     projectActive: "Active",
-    projectPublic: "Public"
+    projectPublic: "Public",
+    enableGeofencingToggle:
+      "Enable Geofencing (geofencing allows you to notify and send surveys to your participants when they enter or leave specific areas, e.g. home, supermarket, workplace)",
+    geoTitle: "Geofencing",
+    geoExplained:
+      "Geofencing requires a constant tracking of geolocation. This tracking happens on the participant device, so neither Samply nor you will have the information about the absolute geolocation of participants. However, it is important that participants understand how you will use the information, such as when they enter or leave geofenced areas. Please provide the information about the geofencing to the participant. This instruction will be shown when the participant has joined your study.",
+    geoUserDefinedTitle: "User-defined locations",
+    geoUserDefinedTitleExplained:
+      "If you ask participants to provide their own locations, specify the URL link of the survey/task and the radius (in meters) for a location. Leave the URL field blank if you do not use an external online task/survey. In this case, participants will be only notified when they enter or exit the geofenced area.",
+    geoTriggerEnter: "Trigger on enter",
+    geoTriggerExit: "Trigger on exit",
+    geoTriggerHide: "Hide notifications but record the events",
+    geoUserDefinedLinkPlaceholder:
+      "Enter the link to your online survey (the link will be sent with the notification)",
+    geoUserDefinedRadiusPlaceholder: "Enter the radius (in meters)",
+    geoResearcherDefinedTitle: "Researcher-defined locations",
+    geoMapTitle: "Map of geofenced locations",
+    geoDelete: "Delete",
+    geoResearcherDefinedExplained: `
+      Enter the information about locations that should apply to all participants.
+      Start adding new locations, and they will be shown on the map after you click "Save".
+      Then you can edit the locations by dragging markers on the map.
+    `,
+    geoAddLocation: "Add location",
+    geoPlaceholderTitle: "title",
+    geoPlaceholderLatitude: "latitude",
+    geoPlaceholderLongitude: "longitude",
+    geoPlaceholderRadius: "radius (in meters)",
+    geoPlaceholderLink: "url link",
+    geoAlertEnterLocationName: "Enter the location name",
+    geoPlaceholderEnterTitle: "Enter title",
+    geoPlaceholderEnterLatitude: "Enter latitude",
+    geoPlaceholderEnterLongitude: "Enter longitude",
+    geoPlaceholderEnterRadius: "Enter radius (in meters)",
+    geoPlaceholderEnterLink: "Enter the URL link to your online task or survey",
+    geoNotifyEnter: "Notify on enter",
+    geoNotifyExit: "Notify on exit",
+    geoNotifyHide:
+      "Invisible mode (do not show notifications but record the events)"
   },
 
   testing: {
@@ -834,7 +872,23 @@ module.exports = {
     notifications_10: `
             When a notification has been added, it appears in the list of scheduled notifications, which can be controlled and cancelled at any time by clicking either the delete icon in the table or the “Delete all notifications” button.
           `,
-
+    queryTitle: "Query placeholders",
+    queryPlaceholder: "Placeholder",
+    queryName: "Name",
+    queryInformation: "Information",
+    queryMessage: "Message ID",
+    querySamplyID: "Samply ID",
+    queryCode: "Participant code",
+    queryGroupID: "Group ID",
+    queryTime: "Timestamp",
+    queryMessageInfo: "Each notification has a unique ID",
+    querySamplyIDInfo: "The ID of participant on the platform Samply",
+    queryCodeInfo:
+      "The participant code entered by a participant when joining your study",
+    queryGroupIDInfo:
+      "The group code entered by a participant when joining your study",
+    queryTimeInfo:
+      "When the message is sent from the server (the number of milliseconds elapsed since January 1, 1970)",
     data_title: "Participants & History",
     data_results_title: `<a target='blank' href='../data'>Results</a> `,
     data_results_1:
@@ -912,6 +966,7 @@ module.exports = {
     step_1_future: "All future participants",
     step_1_current: "Current participants",
     step_1_all: "All",
+    step_1_groups: "Groups",
     step_2_header: "2. Choose time",
     step_2_timepoints: "Specific time point(s)",
     step_2_windows:
@@ -924,6 +979,18 @@ module.exports = {
     step_2_add_window: "Add one more time window",
     step_2_random:
       "How many time points should be randomly selected from this time window?",
+    step_2_repeat: "Repeat",
+    step_2_every_minute: "every minute",
+    step_2_every_2_minute:
+      "at every 2nd minute past each hour (e.g., at 12:00, 12:02, 12:04, ...)",
+    step_2_every_5_minute:
+      "at every 5th minute past each hour (e.g., at 12:00, 12:05, 12:10, ...)",
+    step_2_every_10_minute:
+      "at every 10th minute past each hour (e.g., at 12:00, 12:10, 12:20, ...)",
+    step_2_every_15_minute:
+      "at every 15th minute past each hour (e.g., at 12:00, 12:15, 12:30, ...)",
+    step_2_every_30_minute:
+      "at every 30th minute past each hour (e.g., at 12:00, 12:30, 13:00, ...)",
     step_3_header: "3. Choose date(s)",
     step_3_dates: "Specific date(s)",
     step_3_every: "Repeat every",
@@ -1051,5 +1118,28 @@ module.exports = {
     receiptsFee: "Fee",
     receiptsURL: "Receipt URL",
     receiptsLink: "Link"
+  },
+
+  groups: {
+    groupsTitle: "Groups (beta)",
+    groupName: "Group Name",
+    groupTitle: "Group ID",
+    groupMembers: "Members",
+    groupAdd: "Add a new group",
+    groupDelete: "Delete",
+    groupSelectParticipants: "Select participants",
+    groupNoParticipantsLeft: "No participants left without group",
+    groupCreate: "Create group",
+    apiTitle: "Notify API",
+    apiToken: "Notification token",
+    apiValidUntil: "Token is valid until",
+    apiResetToken: "Reset notification token",
+    apiNewTokenExpires: "New token should expire on",
+    apiCode: "JavaScript code to use Samply API to send a notification",
+    apiExplained_1: `The notification will be sent to all members of the group (with the specified ID <code>groupID</code>) except the participant (with the specified ID <code>participantID</code>).`,
+    apiExplained_2: `Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.`,
+    apiCommentData: "// defining data",
+    apiCommentFunction:
+      "// function to send the POST request to activate the notification"
   }
 };

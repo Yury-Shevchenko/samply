@@ -480,7 +480,46 @@ module.exports = {
     removeFromPublicBtn:
       "Entfernen Sie die Studie aus der öffentlichen Liste in der mobilen Anwendung",
     projectActive: "Im Einsatz",
-    projectPublic: "Öffentlich"
+    projectPublic: "Öffentlich",
+    enableGeofencingToggle:
+      "Geofencing aktivieren (Geofencing ermöglicht es Ihnen Benachrichtigungen und Fragebögen an Ihre Teilnehmer zu schicken, wenn sie eine spezifisches Gebiet betreten oder verlassen, z.B. ihr Zuhause, den Supermarkt, Arbeitsplatz)",
+    geoTitle: "Geofencing",
+    geoExplained:
+      "Geofencing erfordert die ständige Messung des Standorts (Geolocation). Diese Messung findet auf dem Gerät des Teilnehmers statt, was bedeutet, dass weder Samply noch Sie die genaue Information über den Standort haben werden. Allerdings ist es trotzdem wichtig, dass Ihre Teilnehmer verstehen, wie Sie ihre Informationen über das Betreten oder Verlassen eines bestimmten Gebiets nutzen werden. Bitte teilen Sie Ihren Teilnehmern hier mit, wie Geofencing funktioniert. Diese Instruktion wird den Teilnehmern gezeigt werden, wenn sie der Studie beigetreten sind.",
+    geoUserDefinedTitle: "Teilnehmer-definierte Standorte",
+    geoUserDefinedTitleExplained:
+      "Wenn Sie Teilnehmer darum bitten ihren eigenen Standort anzugeben, dann geben Sie hier den URL-Link des Fragebogens/Aufgabe und den Radius (in Metern) für den Standort an. Wenn Sie keinen externen online Fragebogen/Aufgabe nutzen, dann lassen sie das URL-Feld leer. In diesem Fall, werden die Teilnehmer nur benachrichtigt, wenn sie das festgelegte Gebiet betreten oder verlassen, aber sie erhalten keinen Fragebogen/Aufgabe.",
+    geoTriggerEnter: "Ausgelöst beim Betreten",
+    geoTriggerExit: "Ausgelöst beim Verlassen",
+    geoTriggerHide: "Benachrichtigungen verstecken, aber Ereignisse erfassen",
+    geoUserDefinedLinkPlaceholder:
+      "Geben Sie den Link zum online Fragebogen ein (der Link wird mit der Benachrichtigung geschickt)",
+    geoUserDefinedRadiusPlaceholder: "Geben Sie den Radius ein (in Metern)",
+    geoResearcherDefinedTitle: "Forscher-basierte Standorte",
+    geoMapTitle: "Karte der Geofencing-Standorte",
+    geoDelete: "Löschen",
+    geoResearcherDefinedExplained: `
+          Geben Sie hier die Information über Standorte ein, welche alle Teilnehmer betreffen.
+          Beginnen Sie damit neue Standorte hinzuzufügen. Die Standorte werden nachdem sie auf “Speichern” geklickt haben auf der Karte gezeigt.
+          Sie können dann die Standorte bearbeiten indem Sie die Markierungen auf der Karte herum ziehen.
+        `,
+    geoAddLocation: "Standort hinzufügen",
+    geoPlaceholderTitle: "Titel",
+    geoPlaceholderLatitude: "Breitengrad",
+    geoPlaceholderLongitude: "Längengrad",
+    geoPlaceholderRadius: "Radius (in Metern)",
+    geoPlaceholderLink: "URL-Link",
+    geoAlertEnterLocationName: "Geben Sie den Namen des Standorts ein",
+    geoPlaceholderEnterTitle: "Geben Sie den Titel ein",
+    geoPlaceholderEnterLatitude: "Geben Sie den Breitengrad ein",
+    geoPlaceholderEnterLongitude: "Geben Sie den Längengrad ein",
+    geoPlaceholderEnterRadius: "Geben Sie den Radius ein (in Metern)",
+    geoPlaceholderEnterLink:
+      "Geben Sie den URL-Link zu ihrem online Fragebogen/ Aufgabe ein",
+    geoNotifyEnter: "Benachrichtigen beim Betreten",
+    geoNotifyExit: "Benachrichtigen beim Verlassen",
+    geoNotifyHide:
+      "Unsichtbarer Modus (Benachrichtigungen nicht anzeigen, aber die Ereignisse erfassen)"
   },
 
   testing: {
@@ -861,7 +900,23 @@ module.exports = {
     notifications_10: `
           Wenn eine Benachrichtigung hinzugefügt wurde, erscheint sie in der Liste der geplanten Benachrichtigungen, die jederzeit durch Klicken auf das Löschen-Symbol in der Tabelle oder die Schaltfläche "Alle Benachrichtigungen löschen" kontrolliert und gelöscht werden kann.
         `,
-
+    queryTitle: "Anfrage Platzhalter",
+    queryPlaceholder: "Platzhalter",
+    queryName: "Name",
+    queryInformation: "Information",
+    queryMessage: "Mitteilungs-ID",
+    querySamplyID: "Samply-ID",
+    queryCode: "Teilnehmer-Code",
+    queryGroupID: "Gruppen-ID",
+    queryTime: "Zeitstempel",
+    queryMessageInfo: "Jede Benachrichtigung hat eine einzigartige ID",
+    querySamplyIDInfo: "Die ID des Teilnehmers auf der Plattform Samply",
+    queryCodeInfo:
+      "Der Teilnehmer-Code, welcher vom Teilnehmer eingegeben wird, wenn er Ihrer Studie beitritt",
+    queryGroupIDInfo:
+      "Der Gruppen-Code, welcher vom Teilnehmer eingegeben wird, wenn er Ihrer Studie beitritt",
+    queryTimeInfo:
+      "Wann die Nachricht vom Server geschickt wurde (die Anzahl an Millisekunden welche verstrichen sind seit dem 1. Januar 1970)",
     data_title: "Teilnehmer & Verlauf",
     data_results_title: `<a target='blank' href='../data'>Ergebnisse</a> `,
     data_results_1:
@@ -939,6 +994,7 @@ module.exports = {
     step_1_future: "Alle zukünftigen Teilnehmer",
     step_1_current: "Derzeitige Teilnehmer",
     step_1_all: "Alle",
+    step_1_groups: "Gruppen",
     step_2_header: "2. Zeit auswählen",
     step_2_timepoints: "Bestimmte(r) Zeitpunkt(e)",
     step_2_windows:
@@ -951,6 +1007,18 @@ module.exports = {
     step_2_add_window: "Ein weiteres Zeitfenster hinzufügen",
     step_2_random:
       "Wie viele Zeitpunkte sollen aus diesem Zeitfenster zufällig ausgewählt werden?",
+    step_2_repeat: "Wiederholen",
+    step_2_every_minute: "jede Minute",
+    step_2_every_2_minute:
+      "zu jeder 2. Minute nach jeder Stunde (z. B. um 12:00, 12:02, 12:04, ...)",
+    step_2_every_5_minute:
+      "zu jeder 5. Minute nach jeder vollen Stunde (z. B. um 12:00, 12:05, 12:10, ...)",
+    step_2_every_10_minute:
+      "zu jeder 10. Minute nach jeder vollen Stunde (z. B. um 12:00, 12:10, 12:20, ...)",
+    step_2_every_15_minute:
+      "zu jeder 15. Minute nach jeder vollen Stunde (z. B. um 12:00, 12:15, 12:30, ...)",
+    step_2_every_30_minute:
+      "zu jeder 30. Minute nach jeder vollen Stunde (z. B. um 12:00, 12:30, 13:00, ...)",
     step_3_header: "3. Datum / Daten auswählen",
     step_3_dates: "Spezifische(s) Datum / Daten",
     step_3_every: "Wiederholung jeden",
@@ -1081,5 +1149,29 @@ module.exports = {
     receiptsFee: "Gebühr",
     receiptsURL: "QuittungsURL",
     receiptsLink: "Link"
+  },
+
+  groups: {
+    groupsTitle: "Gruppen (beta)",
+    groupName: "Gruppenname",
+    groupTitle: "Gruppen-ID",
+    groupMembers: "Mitglieder",
+    groupAdd: "Neue Gruppe hinzufügen",
+    groupDelete: "Löschen",
+    groupSelectParticipants: "Teilnehmer auswählen",
+    groupNoParticipantsLeft: "Keine Teilnehmer ohne Gruppe übrig",
+    groupCreate: "Gruppe erstellen",
+    apiTitle: "Benachrichtigungs API",
+    apiToken: "Benachrichtigungs-Token",
+    apiValidUntil: "Das Token ist gültig bis",
+    apiResetToken: "Das Benachrichtigungs-Token zurücksetzten",
+    apiNewTokenExpires: "Das neue Token verfällt am",
+    apiCode:
+      "JavaScript-Code um anhand der Samply-API  eine Benachrichtigung zu schicken",
+    apiExplained_1: `Die Benachrichtigung wird an alle Mitglieder der Gruppe geschickt (mit der festgelegten ID <code>groupID</code>) abgesehen von dem Teilnehmer (mit der festgelegten ID <code>participantID</code>).`,
+    apiExplained_2: `Parameter <code>title</code>, <code>message</code>, und <code>url</code> definieren den Inhalt der Benachrichtigung, welche angezeigt wird in der Benachrichtigung`,
+    apiCommentData: "// Daten definieren",
+    apiCommentFunction:
+      "// Funktion um den POST request zu senden und damit die Benachrichtigungen zu aktivieren"
   }
 };

@@ -5,7 +5,7 @@ include mixins/_groupCard
 block content
   .inner
     .userTable
-      h2 Groups (beta)
+      h2 #{l.groupsTitle} 
       
 
       if(project && user.project && user.project.name)
@@ -15,22 +15,22 @@ block content
             table.table
               thead
                 td №
-                td Group Name 
-                td Group ID 
-                td Members
+                td #{l.groupName} 
+                td #{l.groupTitle}  
+                td #{l.groupMembers}  
               
               if(users)  
                 each group, i in groups
                   +groupCard(users, group, i)
         
-        h2 Add a new group
+        h2 #{l.groupAdd}  
         
         form(action="/api/creategroup" method="POST" id="group")
         
-          h6 Group name  
+          h6 #{l.groupName} 
           input(type='text' name="groupName" value = '' required)
           p
-          h6 Select participants          
+          h6 #{l.groupSelectParticipants}   
           each user in users
             if(!user.group)
               .tag.tag__choice
@@ -40,23 +40,23 @@ block content
                     strong #{user.username} 
                   | #{user.id} 
           if(users.filter(user => !user.group).length === 0)
-            p No participants left without group
+            p #{l.groupNoParticipantsLeft}  
 
           p
-          input.button(type="submit" value="Create group" form="group")
+          input.button(type="submit" value=l.groupCreate form="group")
         
         
-        h2 Notify API
+        h2 #{l.apiTitle}  
 
-        h6 Notification token 
+        h6 #{l.apiToken} 
         p= project.notifyToken 
-        h6 Token is valid until
+        h6 #{l.apiValidUntil} 
         p= h.moment(project.notifyExpires).locale(language).format("MMMM Do, YYYY")
           
-        h4 Reset notification token
+        h4 #{l.apiResetToken} 
 
         form(action="/api/resetnotifytoken" method="POST" id="token")
-          h6 New token should expire on
+          h6 #{l.apiNewTokenExpires} 
           input(type='date' name="notifyExpires" required)
           input.button(type="submit" value="Reset token" form="token")
         
@@ -64,12 +64,12 @@ block content
         p
         p
         
-        h6 JavaScript code to use Samply API to send a notification
-        p The notification will be sent to all members of the group (with the specified ID <code>groupID</code>) except the participant (with the specified ID <code>participantID</code>).
-        p Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.
+        h6 #{l.apiCode} 
+        p !{l.apiExplained_1} 
+        p !{l.apiExplained_2} 
                 
         .code
-          .comment // defining data
+          .comment #{l.apiCommentData} 
           .div const url = "https://samply.uni-konstanz.de/api/notify";
           .div const data = {
           .one   projectID: "#{project.id}",
@@ -81,7 +81,7 @@ block content
           .one   url: "https://your-survey-link/?samplyid=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_CODE%&message=%MESSAGE_ID%"
           .div   }
           p
-          .comment // function to send the POST request to activate the notification 
+          .comment #{l.apiCommentFunction} 
           .div async function postData(url, data) {
           .one   const response = await fetch(url, {
           .two     method: 'POST', 

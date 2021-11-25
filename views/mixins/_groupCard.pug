@@ -15,6 +15,6 @@ mixin groupCard(users, group = {}, i)
       td
         form(action="/api/deletegroup" method="POST" id="delete")
           input(type='text' name="groupId" value=group.id hidden)
-          input.button(type="submit" value="Delete" form="delete")
+          input.button(type="submit" value=l.groupDelete form="delete")
         
       

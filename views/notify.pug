@@ -48,7 +48,7 @@ block content
                   
             .tag.tag__choice
               input(type = 'checkbox' id='groups' value='groups' name='participants_groups')
-              label(for='groups' class="tagLabel") Groups 
+              label(for='groups' class="tagLabel") #{l.step_1_groups} 
         
             .specificGroups(style=`display: ${groups ? 'block' : 'none'}`)
               label(for='tags') #{l.edit_tags}
@@ -76,9 +76,9 @@ block content
               
             input(type='radio', name='time', value='repeat')#time-repeat
             label(for='time-repeat')
-              span Repeat 
+              span #{l.step_2_repeat}  
               select(name="time-every-minute")
-                - var everymonthdays = [ { value: 1,  text: `every minute` }, { value: 2,  text: `at every 2nd minute past each hour (e.g., at 12:00, 12:02, 12:04, ...)` }, { value: 5,  text: `at every 5th minute past each hour (e.g., at 12:00, 12:05, 12:10, ...)` }, { value: 10,  text: `at every 10th minute past each hour (e.g., at 12:00, 12:10, 12:20, ...)` }, { value: 15,  text: `at every 15th minute past each hour (e.g., at 12:00, 12:15, 12:30, ...)` }, { value: 30,  text: `at every 30th minute past each hour (e.g., at 12:00, 12:30, 13:00, ...)` }]
+                - var everymonthdays = [ { value: 1,  text: l.step_2_every_minute }, { value: 2,  text: l.step_2_every_2_minute }, { value: 5,  text: l.step_2_every_5_minute }, { value: 10,  text: l.step_2_every_10_minute }, { value: 15,  text: l.step_2_every_15_minute }, { value: 30,  text: l.step_2_every_30_minute }]
                 each time in everymonthdays
                   option(value=time.value, selected=false)= time.text    
         
