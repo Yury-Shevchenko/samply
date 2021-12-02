@@ -343,7 +343,7 @@ module.exports = {
         on the notification, they open your online study in a mobile web-browser.
       `,
     test_drive: `
-        Are you a researcher and want to use Samply in your studies? Here is an <a href="/docs/intro">overview</a> of how Samply works and <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">our publication in Behavior Research Methods</a>.
+        Are you a researcher and want to use Samply in your studies? Here is an <a href="/docs/intro">overview</a> of how Samply works, <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">our publication in Behavior Research Methods</a>, and step-by-step tutorial in <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">German</a> (English is coming soon).
       `,
     features_header: `Main features`,
     feature_1: `Samply is free, there is no hidden costs (thanks to the generous support of the iScience group)`,
@@ -351,6 +351,10 @@ module.exports = {
     feature_3: `Different types of notifications schedule (one-time, repeat, user-dependent, randomized).`,
     feature_4: `Customization of messages and URL links that you send to participants.`,
     feature_5: `Recording participants' responses to your notifications.`,
+    tutorial_header: "Tutorial",
+    tutorial_german: `
+      <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Tutorial in German</a>
+    `,
     about_header: "About us",
     about_text: `
         Samply is developed by Yury Shevchenko and conceptualized by him and Ulf-Dietrich Reips,
@@ -360,6 +364,7 @@ module.exports = {
       `,
     contributors_header: "Contributors",
     contributors_usability: "User experience /  Usability testing",
+    contributors_tutorial: "Tutorial / German translation",
     contact_header: `Contact / find support / contribute`,
     contact_email: `Contact us by <a href="mailto:yury.shevchenko@uni.kn">email</a>`,
     contact_slack: `Join our <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack group</a>`,

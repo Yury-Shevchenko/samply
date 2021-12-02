@@ -351,7 +351,10 @@ module.exports = {
       auf die Benachrichtigung hin öffnen sie Ihre Online-Studie in einem mobilen Web-Browser.
     `,
     test_drive: `
-      Sie sind Forscher und wollen Samply in Ihren Studien einsetzen? Hier finden Sie einen <a href="/docs/intro">Überblick</a> über die Funktionsweise von Samply und <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">unsere Publikation in Behavior Research Methods</a>.
+      Sie sind Forscher und wollen Samply in Ihren Studien einsetzen?
+      Hier finden Sie einen <a href="/docs/intro">Überblick</a> über die Funktionsweise von Samply,
+       <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">unsere Publikation in Behavior Research Methods</a>,
+       und eine Schritt-für-Schritt-Anleitung auf <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Deutsch</a> (Englisch folgt in Kürze).
     `,
     features_header: `Hauptmerkmale`,
     feature_1: `Samply ist kostenlos, es gibt keine versteckten Kosten (dank der großzügigen Unterstützung der iScience-Gruppe).`,
@@ -359,6 +362,10 @@ module.exports = {
     feature_3: `Verschiedene Arten von Benachrichtigungen (einmalig, wiederholt, nutzerabhängig, randomisiert).`,
     feature_4: `Anpassung von Nachrichten und URL-Links, die Sie an Teilnehmer senden.`,
     feature_5: `Aufzeichnen der Reaktionen der Teilnehmer auf Ihre Benachrichtigungen.`,
+    tutorial_header: "Tutorial",
+    tutorial_german: `
+      <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Tutorial auf Deutsch</a>
+    `,
     about_header: "Über uns",
     about_text: `
       Samply wird von Yury Shevchenko entwickelt und von ihm und Ulf-Dietrich Reips
@@ -369,6 +376,7 @@ module.exports = {
     `,
     contributors_header: "Mitarbeiter",
     contributors_usability: "Benutzerfreundlichkeit / Usability",
+    contributors_tutorial: "Tutorial / Deutsche Übersetzung",
     contact_header: `Kontakt / Unterstützung finden / beitragen`,
     contact_email: `Kontaktieren Sie uns über <a href="mailto:yury.shevchenko@uni.kn">Email</a>`,
     contact_slack: `Nehmen Sie an unserer <a target='_blank' href="https://join.slack.com/t/samply-workspace/shared_invite/zt-e085hyyv-pFczGQFnVCA2w8lkcTmk6w">Slack chat</a> teil`,
