@@ -1535,7 +1535,8 @@ exports.joinStudy = async (req, res) => {
   // record the group if there is one
   let group;
   if (req.body.group) {
-    const newGroupName = req.body.group;
+    // remove whitespace from both ends of the string
+    const newGroupName = req.body.group.trim();
     // search for the group in the existing groups
     const groups = project.mobileUsers.filter(
       user => user.group && user.group.name === newGroupName
@@ -1549,10 +1550,15 @@ exports.joinStudy = async (req, res) => {
     }
   }
 
+  let username;
+  if (req.body.username) {
+    username = req.body.username.trim();
+  }
+
   const newUser = {
     id: req.body.id,
     token: req.body.token,
-    username: req.body.username,
+    username: username,
     group: group,
     information: req.body.information
   };
