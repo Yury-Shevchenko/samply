@@ -36,7 +36,7 @@ module.exports = {
       Dann können Sie innerhalb Ihrer Online-Studie den Teilnehmercode oder die Samply-ID aus der URL-Adresse entnehmen.
       Genauso können Sie die Benachrichtigungs-ID in die Abfrage aufnehmen, z. B. https://survey.com/?messageid=%MESSAGE_ID%.
       Die Kombination der Abfrageparameter würde wie folgt aussehen, z. B. https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%.
-      Lesen Sie mehr über Query Strings <a href="https://en.wikipedia.org/wiki/Query_string")>hier</a>.
+      Lesen Sie mehr über <a target="_blank" href="https://en.wikipedia.org/wiki/Query_string")>Query Strings</a> und finden alle verfügbaren Platzhalter <a target="_blank" href="/docs/notifications#placeholders">hier</a>.
     `,
     choose_the_type: "Wählen Sie die Art der Benachrichtigung",
     not_participant_id: "Teilnehmer-ID",

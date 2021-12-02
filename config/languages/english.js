@@ -35,7 +35,7 @@ module.exports = {
         Then, inside of your online study you can extract the participant code or the Samply ID from the url address.
         In the same way, you can include the notification ID in the query, e.g. https://survey.com/?messageid=%MESSAGE_ID%.
         The combination of query parameters would look like this, e.g. https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%.
-        Read more about query strings <a href="https://en.wikipedia.org/wiki/Query_string")>here</a>.
+        Read more about <a target="_blank" href="https://en.wikipedia.org/wiki/Query_string")>query strings</a> and see all available placeholders <a target="_blank" href="/docs/notifications#placeholders">here</a>.
       `,
     choose_the_type: "Choose the type of notification",
     not_participant_id: "Participant ID",
