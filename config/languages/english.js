@@ -343,7 +343,12 @@ module.exports = {
         on the notification, they open your online study in a mobile web-browser.
       `,
     test_drive: `
-        Are you a researcher and want to use Samply in your studies? Here is an <a href="/docs/intro">overview</a> of how Samply works, <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">our publication in Behavior Research Methods</a>, and step-by-step tutorial in <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">German</a> (English is coming soon).
+        Are you a researcher and want to use Samply in your studies? Here is an <a href="/docs/intro">overview</a> of how Samply works,
+        <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">our publication in Behavior Research Methods</a>,
+        and step-by-step tutorial in
+        <a target='_blank' href="https://docs.google.com/document/d/1qPX8uqrSnLONZQjy63r9v9cU6PUpFJ7IBCEqWPKxW4Q/edit?usp=sharing">English</a>
+        or
+        <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">German</a>.
       `,
     features_header: `Main features`,
     feature_1: `Samply is free, there is no hidden costs (thanks to the generous support of the iScience group)`,
@@ -352,6 +357,9 @@ module.exports = {
     feature_4: `Customization of messages and URL links that you send to participants.`,
     feature_5: `Recording participants' responses to your notifications.`,
     tutorial_header: "Tutorial",
+    tutorial_english: `
+      <a target='_blank' href="https://docs.google.com/document/d/1qPX8uqrSnLONZQjy63r9v9cU6PUpFJ7IBCEqWPKxW4Q/edit?usp=sharing">Tutorial in English</a>
+    `,
     tutorial_german: `
       <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Tutorial in German</a>
     `,

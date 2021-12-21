@@ -354,7 +354,10 @@ module.exports = {
       Sie sind Forscher und wollen Samply in Ihren Studien einsetzen?
       Hier finden Sie einen <a href="/docs/intro">Überblick</a> über die Funktionsweise von Samply,
        <a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">unsere Publikation in Behavior Research Methods</a>,
-       und eine Schritt-für-Schritt-Anleitung auf <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Deutsch</a> (Englisch folgt in Kürze).
+       und eine Schritt-für-Schritt-Anleitung auf
+       <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Deutsch</a>
+       oder auf
+       <a target='_blank' href="https://docs.google.com/document/d/1qPX8uqrSnLONZQjy63r9v9cU6PUpFJ7IBCEqWPKxW4Q/edit?usp=sharing">Englisch</a>.
     `,
     features_header: `Hauptmerkmale`,
     feature_1: `Samply ist kostenlos, es gibt keine versteckten Kosten (dank der großzügigen Unterstützung der iScience-Gruppe).`,
@@ -363,6 +366,9 @@ module.exports = {
     feature_4: `Anpassung von Nachrichten und URL-Links, die Sie an Teilnehmer senden.`,
     feature_5: `Aufzeichnen der Reaktionen der Teilnehmer auf Ihre Benachrichtigungen.`,
     tutorial_header: "Tutorial",
+    tutorial_english: `
+      <a target='_blank' href="https://docs.google.com/document/d/1qPX8uqrSnLONZQjy63r9v9cU6PUpFJ7IBCEqWPKxW4Q/edit?usp=sharing">Tutorial auf Englisch</a>
+    `,
     tutorial_german: `
       <a target='_blank' href="https://docs.google.com/document/d/1eT9u0durl25zx6yaMXTcdLOffVhUJx3AJ3kWRjMIs_U/edit?usp=sharing">Tutorial auf Deutsch</a>
     `,
