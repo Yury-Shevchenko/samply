@@ -951,7 +951,7 @@ module.exports = {
     alreadyAppHeader:
       "Already have installed the mobile application Samply Research?",
     already_instruction:
-      "Use the app to scan the QR code below to join the study.",
+      "Use the app to scan the QR code below to join the study, or just click the button below if you are already on a smartphone.",
     firstTimeHeader: "First time here?",
     firstTimeStep_1: `
             1. You should first install the mobile application <em>Samply Research</em> on your smartphone.
@@ -961,8 +961,9 @@ module.exports = {
     firstTimeStep_2:
       "2. When you open the app for the first time, you will need to create a participant account. The login information is stored securely on the Samply server (which is the server of the University of Konstanz in Germany) and is only used to authenticate users. The login information (your email and password) is not available to researchers.",
     firstTimeStep_3:
-      '3. Inside the app, click the button "Find a study", then "Scan QR code" and scan the following QR code. After that, follow the instructions of the study.',
-    scanQRcode: "QR code to join the study in the mobile app"
+      '3. Inside the app, click the button "Find a study", then "Scan QR code" and scan the following QR code. Alternatively, use the Camera app of your smartphone to scan the QR code. After that, follow the instructions of the study.',
+    scanQRcode: "Scan this QR code to join the study in the mobile app",
+    goToStudy: "Open the study in the app"
   },
 
   help: {

@@ -43,3 +43,6 @@ block content
           QRCode.toCanvas(document.getElementById('canvas'), `samply://--/study?id=${id}`, function (error) {  
             if (error) console.error(error)
           })
+        
+        a(href=`samply://--/study?id=${project._id}`)
+          button.button= l.goToStudy

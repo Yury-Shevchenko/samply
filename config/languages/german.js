@@ -980,7 +980,7 @@ module.exports = {
     alreadyAppHeader:
       "Sie haben bereits die mobile Applikation Samply Research installiert?",
     already_instruction:
-      "Scannen Sie mit der App den unten stehenden QR-Code, um an der Studie teilzunehmen.",
+      "Scannen Sie mit der App den unten stehenden QR-Code, um an der Studie teilzunehmen, oder klicken Sie einfach auf die Schaltfläche unten, wenn Sie bereits über ein Smartphone verfügen.",
     firstTimeHeader: "Zum ersten Mal hier?",
     firstTimeStep_1: `
           1. Sie sollten zunächst die mobile Anwendung <em>Samply Research</em> auf Ihrem Smartphone installieren.
@@ -990,8 +990,10 @@ module.exports = {
     firstTimeStep_2:
       "2. Wenn Sie die App zum ersten Mal öffnen, müssen Sie ein Teilnehmerkonto erstellen. Die Anmeldeinformationen werden sicher auf dem Samply-Server (dem Server der Universität Konstanz in Deutschland) gespeichert und nur zur Authentifizierung der Benutzer verwendet. Die Anmeldeinformationen (Ihre E-Mail und Ihr Passwort) sind für Forscher nicht zugänglich.",
     firstTimeStep_3:
-      '3. Klicken Sie innerhalb der App auf die Schaltfläche "Find a study", dann auf "Scan QR code" und scannen Sie den folgenden QR-Code. Folgen Sie danach den Anweisungen der Studie.',
-    scanQRcode: "QR-Code zum Beitritt zur Studie in der mobilen App"
+      '3. Klicken Sie innerhalb der App auf die Schaltfläche "Find a study", dann auf "Scan QR code" und scannen Sie den folgenden QR-Code. Alternativ können Sie auch die Kamera-App Ihres Smartphones verwenden, um den QR-Code zu scannen. Folgen Sie danach den Anweisungen der Studie.',
+    scanQRcode:
+      "Scannen Sie diesen QR-Code, um an der Studie in der mobilen App teilzunehmen",
+    goToStudy: "Die Studie in der App öffnen"
   },
 
   help: {
