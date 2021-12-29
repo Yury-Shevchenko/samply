@@ -6,6 +6,25 @@ const uniqid = require("uniqid");
 const mail = require("../handlers/mail");
 const { nanoid } = require("nanoid");
 
+const confirmOwner = (project, user) => {
+  if (!project.creator.equals(user._id) || user.level <= 10) {
+    throw Error("You must own a project in order to do it!");
+  }
+};
+
+const confirmOwnerOrMember = (project, user) => {
+  const isCreator = project.creator.equals(user._id);
+  const isMember = project.members
+    .map(id => id.toString())
+    .includes(user._id.toString());
+  const isParticipant = user.level <= 10;
+  if (!(isCreator || isMember) || isParticipant) {
+    throw Error(
+      "You must be a creator or a member of a project in order to do it!"
+    );
+  }
+};
+
 exports.welcomePage = async (req, res) => {
   res.render("index");
 };
@@ -130,19 +149,6 @@ exports.activateProject = async (req, res) => {
     `${activeProject.name} ${res.locals.layout.flash_activate_project}`
   );
   res.redirect("back");
-};
-
-const confirmOwnerOrMember = (project, user) => {
-  const isCreator = project.creator.equals(user._id);
-  const isMember = project.members
-    .map(id => id.toString())
-    .includes(user._id.toString());
-  const isParticipant = user.level <= 10;
-  if (!(isCreator || isMember) || isParticipant) {
-    throw Error(
-      "You must be a creator or a member of a project in order to do it!"
-    );
-  }
 };
 
 exports.createProject = async (req, res) => {
@@ -337,23 +343,13 @@ exports.editProject = async (req, res) => {
   res.render("editProject", { project, membersEmails });
 };
 
-const confirmOwner = (project, user) => {
-  if (!project.creator.equals(user._id) || user.level <= 10) {
-    throw Error("You must own a project in order to edit it!");
-  }
-};
-
 exports.trydeleteProject = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
-  if (!project.creator.equals(req.user._id) || req.user.level <= 10) {
-    req.flash("error", `${res.locals.layout.flash_project_no_rights}`);
-    res.redirect("back");
-  } else {
-    const resultsCount = await Result.where({
-      project: req.params.id
-    }).countDocuments();
-    res.render("deleteProjectForm", { project, resultsCount });
-  }
+  confirmOwner(project, req.user);
+  const resultsCount = await Result.where({
+    project: req.params.id
+  }).countDocuments();
+  res.render("deleteProjectForm", { project, resultsCount });
 };
 
 exports.removeProject = async (req, res) => {
@@ -623,12 +619,8 @@ exports.getMobileGroups = async (req, res) => {
 
 exports.approveProject = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
-  if (!project.creator.equals(req.user._id) || req.user.level <= 10) {
-    req.flash("error", `${res.locals.layout.flash_project_no_rights}`);
-    res.redirect("back");
-  } else {
-    res.render("approveProjectForm", { project });
-  }
+  confirmOwnerOrMember(project, req.user);
+  res.render("approveProjectForm", { project });
 };
 
 exports.sendApprovalRequest = async (req, res) => {
@@ -654,4 +646,34 @@ exports.removeFromPublic = async (req, res) => {
   } else {
     res.redirect("back");
   }
+};
+
+exports.changeStatusParticipant = async (req, res) => {
+  const project = await Project.findOne(
+    { _id: req.user.project._id },
+    {
+      mobileUsers: 1,
+      creator: 1,
+      members: 1
+    }
+  );
+  confirmOwnerOrMember(project, req.user);
+  const userId = req.params.id;
+  // update the project
+  if (!project.mobileUsers) {
+    project.mobileUsers = [];
+  }
+  project.mobileUsers = project.mobileUsers.map(user => {
+    if (user.id === userId && user.token.startsWith("ExponentPushToken")) {
+      const updatedUser = {
+        ...user._doc,
+        deactivated: req.params.action === "off"
+      };
+      return updatedUser;
+    } else {
+      return user;
+    }
+  });
+  await project.save();
+  res.redirect("back");
 };

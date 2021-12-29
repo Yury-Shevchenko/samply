@@ -91,7 +91,8 @@ const projectSchema = new mongoose.Schema({
       start_next: Number,
       stop_next: Number,
       allCurrentParticipants: Boolean,
-      allCurrentGroups: Boolean
+      allCurrentGroups: Boolean,
+      timezone: String
     }
   ],
   mobileUsers: [
@@ -105,7 +106,8 @@ const projectSchema = new mongoose.Schema({
       username: String,
       information: JSON,
       group: JSON,
-      stripe: JSON
+      stripe: JSON,
+      deactivated: Boolean
     }
   ],
   settings: JSON,

@@ -3,7 +3,15 @@ extends layout
 include mixins/_scheduledNotification
 
 block content
-  script(src='/javascripts/datepicker/jquery-3.3.1.min.js' nonce=`${noncevalue}`)
+  link(href='/javascripts/select/select2.css' rel='stylesheet' nonce=`${noncevalue}`)
+  link(href='/javascripts/timezone-picker/timezone-picker.css' rel='stylesheet' nonce=`${noncevalue}`)
+  
+  script(src='/javascripts/modules/moment.js' nonce=`${noncevalue}`)
+  script(src='/javascripts/modules/moment-timezone.js' nonce=`${noncevalue}`)
+  script(src='/javascripts/modules/jquery-3.6.0.min.js' nonce=`${noncevalue}`)
+  script(src='/javascripts/select/select2.min.js' nonce=`${noncevalue}`)
+  script(src='/javascripts/timezone-picker/timezone-picker.min.js' nonce=`${noncevalue}`)
+  
   
   .inner
     if !project
@@ -21,6 +29,10 @@ block content
       h6 #{layout.web_link} 
       input#urlContent(type='text', value = 'https://')
       p !{layout.example_web_link}
+      
+      h2 #{l.step_0_header} 
+      
+      .zone-picker
     
       .notifications_scheduler
       
@@ -289,16 +301,29 @@ block content
           
         div#output
         
-        //- pre= h.dump(jobs)
-        
         script(type='text/javascript', src='/notifications/create.js' nonce=`${noncevalue}`)
         script(type='text/javascript', src='/notifications/timePicker.js' nonce=`${noncevalue}`)
         script(type='text/javascript', src='/notifications/datePicker.js' nonce=`${noncevalue}`)
-        script(src='/javascripts/modules/moment.js' nonce=`${noncevalue}`)
-        
+
+  
         
         script(defer type='text/javascript' nonce=`${noncevalue}`).
           $(document).ready( function () {
+            
+            // choose the default timezone based on user settings
+            $('.zone-picker').timezonePicker({ 
+              defaultValue: { value: moment.tz.guess(), attribute: "timezone" },
+              quickLink: [{
+                "PST": "PST",
+                "EST": "EST",
+                "GMT": "GMT",
+                "CET": "CET",
+                "EET": "EET",
+                "MSK": "MSK",
+                "IST": "IST"
+              }]
+            });
+
             const output = document.querySelector('#output');
             const input = document.querySelectorAll('input');
             input.addEventListener('change', updateValue);
@@ -306,9 +331,7 @@ block content
               if( target.type === 'text') {
                 return;
               }
-              
               const { name,  value } = target;
-              //- console.log('name', name, value)
                
               // change css styles of chosen and not chosen options
               document.querySelectorAll(`input[name=${target.name}]`).forEach(target => {

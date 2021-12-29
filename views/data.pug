@@ -15,6 +15,7 @@ block content
             table.table
               thead
                 td №
+                td Status
                 td #{l.table_samplyId}
                 td #{l.table_token}
                 td #{l.table_date}
@@ -29,10 +30,11 @@ block content
               
               if(users)  
                 each person, i in users
-                  +userCard(person, i)
+                  +userCard(person, i, project)
 
       else
         p !{l.message_create_project}
 
-
+  
+  //- pre=h.dump(project)
   //- pre=h.dump(users)

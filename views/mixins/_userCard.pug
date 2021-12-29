@@ -1,10 +1,17 @@
-mixin userCard(person = {}, i)
+mixin userCard(person = {}, i, project)
 
   .user
     tr
       td #{i + 1}
+      td
+        if(person.deactivated)
+          a(href=`/changestatusofparticipant/${person.id}/on`)
+            != h.icon('switchOff')
+        else
+          a(href=`/changestatusofparticipant/${person.id}/off`)
+            != h.icon('switchOn')
       td= person.id
-      td= person.token.startsWith('ExponentPushToken') ? 'Ok' : 'Error'
+      td= person.token.startsWith('ExponentPushToken') ? 'Ok' : person.token
       td= h.moment(person.created).locale(language).format('MM-DD-YY, H:mm')
       td= person.username
       td= person.group && person.group.name

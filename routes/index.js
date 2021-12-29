@@ -159,6 +159,11 @@ router.get(
   authController.isAdminLoggedIn,
   catchErrors(projectController.changeStatusProject)
 );
+router.get(
+  "/changestatusofparticipant/:id/:action",
+  authController.isAdminLoggedIn,
+  catchErrors(projectController.changeStatusParticipant)
+);
 
 router.get(
   "/projects/approveproject/:id",

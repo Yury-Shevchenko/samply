@@ -70,7 +70,8 @@ agenda.on("ready", function() {
       groupid: job.attrs.data.groupid
     });
     newjob.repeatEvery(job.attrs.data.interval, {
-      skipImmediate: true
+      skipImmediate: true,
+      timezone: job.attrs.data.timezone
     });
     newjob.save();
     done();
@@ -115,7 +116,8 @@ agenda.on("ready", function() {
       deleteself: false
     });
     newjob.repeatEvery(job.attrs.data.interval, {
-      skipImmediate: true
+      skipImmediate: true,
+      timezone: job.attrs.data.timezone
     });
     newjob.save();
     done();
@@ -168,7 +170,8 @@ agenda.on("ready", function() {
       number: job.attrs.data.number
     });
     newjob.repeatEvery(job.attrs.data.interval, {
-      skipImmediate: true
+      skipImmediate: true,
+      timezone: job.attrs.data.timezone
     });
     newjob.save();
     done();
@@ -201,7 +204,8 @@ agenda.on("ready", function() {
       number: job.attrs.data.number
     });
     newjob.repeatEvery(job.attrs.data.interval, {
-      skipImmediate: true
+      skipImmediate: true,
+      timezone: job.attrs.data.timezone
     });
     newjob.save();
     done();
@@ -236,6 +240,7 @@ agenda.on("ready", function() {
 });
 
 exports.createScheduleNotification = async (req, res) => {
+  // console.log("req.body", req.body);
   // check whether the request body contains required information
   if (!req.body || !req.body.target || !req.body.schedule) {
     return res.status(400).end();
@@ -268,7 +273,8 @@ exports.createScheduleNotification = async (req, res) => {
           req.body.participantId && req.body.participantId.length === 0,
         allCurrentGroups: req.body.groups && req.body.groups.length === 0,
         name: req.body.name,
-        scheduleInFuture: req.body.scheduleInFuture
+        scheduleInFuture: req.body.scheduleInFuture,
+        timezone: req.body.timezone
       });
 
       // check whether there are groups to schedule notifications
@@ -367,6 +373,7 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
+  console.log("372 req.body", req.body);
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -452,9 +459,12 @@ exports.createIntervalNotification = async (req, res) => {
         readable: {
           from: window.from && cronstrue.toString(window.from),
           to: window.to && cronstrue.toString(window.to)
-        }
+        },
+        timezone: req.body.timezone
       });
     });
+
+    console.log("groups", groups);
 
     // TODO this one below should be copied and modified for groups of users
     // new jobs should be created or modified to account for the situations where the notifications are yoked
@@ -561,7 +571,8 @@ exports.createIntervalNotification = async (req, res) => {
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
-              number: window.number
+              number: window.number,
+              timezone: req.body.timezone
             });
             agenda.schedule(int_end, "end_random_group_manager", {
               groupid: group,
@@ -572,7 +583,8 @@ exports.createIntervalNotification = async (req, res) => {
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
-              number: window.number
+              number: window.number,
+              timezone: req.body.timezone
             });
           });
         }
@@ -671,7 +683,8 @@ exports.createIntervalNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
-            number: window.number
+            number: window.number,
+            timezone: req.body.timezone
           });
           agenda.schedule(int_end, "end_random_personal_manager", {
             userid: user.id,
@@ -682,7 +695,8 @@ exports.createIntervalNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
-            number: window.number
+            number: window.number,
+            timezone: req.body.timezone
           });
         });
       });
@@ -710,7 +724,8 @@ exports.createIntervalNotification = async (req, res) => {
         scheduleInFuture: req.body.scheduleInFuture,
         readable: {
           interval: cronstrue.toString(interval)
-        }
+        },
+        timezone: req.body.timezone
       });
 
       if (users || groups) {
@@ -722,7 +737,8 @@ exports.createIntervalNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           participantId: req.body.participantId,
-          groupid: req.body.groups
+          groupid: req.body.groups,
+          timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_manager", {
           projectid: req.user.project._id,
@@ -732,7 +748,8 @@ exports.createIntervalNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           participantId: req.body.participantId,
-          groupid: req.body.groups
+          groupid: req.body.groups,
+          timezone: req.body.timezone
         });
       }
     });
@@ -748,6 +765,7 @@ exports.createIntervalNotification = async (req, res) => {
 };
 
 exports.createIndividualNotification = async (req, res) => {
+  console.log("767 req.body", req.body);
   if (req.body.interval.length === 0) {
     res.status(400).send();
     return;
@@ -832,7 +850,8 @@ exports.createIndividualNotification = async (req, res) => {
       scheduleInFuture: req.body.scheduleInFuture,
       readable: {
         interval: cronstrue.toString(interval)
-      }
+      },
+      timezone: req.body.timezone
     });
   });
 
@@ -854,7 +873,8 @@ exports.createIndividualNotification = async (req, res) => {
             if (startNextDay == 1) {
               whenToStart = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
-              whenToStart = moment(latestUser.created)
+              whenToStart = moment
+                .tz(latestUser.created, req.body.timezone)
                 .add({ days: startNextDay - 1 })
                 .startOf("day")
                 .add({
@@ -884,7 +904,8 @@ exports.createIndividualNotification = async (req, res) => {
             if (endNextDay == 1) {
               whenToEnd = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
-              whenToEnd = moment(latestUser.created)
+              whenToEnd = moment
+                .tz(latestUser.created, req.body.timezone)
                 .add({ days: endNextDay })
                 .startOf("day")
                 .add({
@@ -924,7 +945,8 @@ exports.createIndividualNotification = async (req, res) => {
           interval: updatedInterval,
           title: req.body.title,
           message: req.body.message,
-          url: req.body.url
+          url: req.body.url,
+          timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
           groupid: group,
@@ -933,7 +955,8 @@ exports.createIndividualNotification = async (req, res) => {
           interval: updatedInterval,
           title: req.body.title,
           message: req.body.message,
-          url: req.body.url
+          url: req.body.url,
+          timezone: req.body.timezone
         });
       });
     });
@@ -945,13 +968,16 @@ exports.createIndividualNotification = async (req, res) => {
         let updatedInterval = interval;
 
         if (req.body.int_start.startEvent === "registration") {
+          // TO DO: adjust here based on the timezone
           if (req.body.int_start.startNextDay) {
             const startNextDay = parseInt(req.body.int_start.startNextDay);
             let whenToStart;
             if (startNextDay == 1) {
               whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
-              whenToStart = moment(user.created)
+              // here should be local timezone
+              whenToStart = moment
+                .tz(user.created, req.body.timezone)
                 .add({ days: startNextDay - 1 })
                 .startOf("day")
                 .add({
@@ -979,7 +1005,8 @@ exports.createIndividualNotification = async (req, res) => {
             if (endNextDay == 1) {
               whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
-              whenToEnd = moment(user.created)
+              whenToEnd = moment
+                .tz(user.created, req.body.timezone)
                 .add({ days: endNextDay })
                 .startOf("day")
                 .add({
@@ -1000,7 +1027,7 @@ exports.createIndividualNotification = async (req, res) => {
           }
         }
 
-        //update interval if there is missing information
+        // update interval if there is missing information
         if (updatedInterval && updatedInterval.includes("*/")) {
           let parsedInterval = updatedInterval.split(" ");
           if (parsedInterval[3].includes("*/")) {
@@ -1019,7 +1046,8 @@ exports.createIndividualNotification = async (req, res) => {
           interval: updatedInterval,
           title: req.body.title,
           message: req.body.message,
-          url: req.body.url
+          url: req.body.url,
+          timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
           userid: user.id,
@@ -1028,7 +1056,8 @@ exports.createIndividualNotification = async (req, res) => {
           interval: updatedInterval,
           title: req.body.title,
           message: req.body.message,
-          url: req.body.url
+          url: req.body.url,
+          timezone: req.body.timezone
         });
       });
     });
@@ -1046,6 +1075,7 @@ exports.createIndividualNotification = async (req, res) => {
 };
 
 exports.createFixedIndividualNotification = async (req, res) => {
+  console.log("1052 req.body", req.body);
   if (req.body.intervals.length === 0) {
     res.status(400).send();
     return;
@@ -1094,7 +1124,8 @@ exports.createFixedIndividualNotification = async (req, res) => {
       window_from: interval.from,
       window_to: interval.to,
       number: parseInt(interval.number),
-      scheduleInFuture: req.body.scheduleInFuture
+      scheduleInFuture: req.body.scheduleInFuture,
+      timezone: req.body.timezone
     });
   });
 
@@ -1344,7 +1375,8 @@ async function sendToSomeProjectUsers({
         id: user.id,
         token: user.token,
         username: user.username, // transmit the username
-        group: user.group && user.group.id // transmit the group code
+        group: user.group && user.group.id, // transmit the group code
+        deactivated: user.deactivated // whether the participant was deactivated
       }));
   }
 
@@ -1356,7 +1388,8 @@ async function sendToSomeProjectUsers({
         id: user.id,
         token: user.token,
         username: user.username, // transmit the username
-        group: user.group && user.group.id // transmit the group code
+        group: user.group && user.group.id, // transmit the group code
+        deactivated: user.deactivated // whether the participant was deactivated
       }));
   }
 
@@ -1405,7 +1438,8 @@ async function sendToAllProjectUsers(
     id: user.id,
     token: user.token,
     username: user.username, // transmit the username
-    group: user.group && user.group.id // transmit the group code
+    group: user.group && user.group.id, // transmit the group code
+    deactivated: user.deactivated // whether the participant was deactivated
   }));
 
   // remove job
@@ -1435,6 +1469,11 @@ async function sendMobileNotification(
 
   let messages = [];
   for (let pushToken of tokens) {
+    // Do not send notifications to deactivated participants
+    if (pushToken.deactivated) {
+      continue;
+    }
+
     // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
     // Check that all your push tokens appear to be valid Expo push tokens
     if (!Expo.isExpoPushToken(pushToken.token)) {
@@ -1443,6 +1482,7 @@ async function sendMobileNotification(
       );
       continue;
     }
+
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     const messageId = makeRandomCodeForMessageID();
 
@@ -1566,6 +1606,7 @@ exports.joinStudy = async (req, res) => {
   project.mobileUsers.map(user => {
     if (user.id === newUser.id) {
       user.token = newUser.token;
+      user.deactivated = false;
       isNew = false;
     }
     return user;
@@ -1588,7 +1629,8 @@ exports.joinStudy = async (req, res) => {
             if (startNextDay == 1) {
               whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
-              whenToStart = moment()
+              whenToStart = moment
+                .tz(sub.timezone)
                 .add({ days: startNextDay - 1 })
                 .startOf("day")
                 .add({
@@ -1616,7 +1658,8 @@ exports.joinStudy = async (req, res) => {
             if (endNextDay == 1) {
               whenToEnd = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
-              whenToEnd = moment()
+              whenToEnd = moment
+                .tz(sub.timezone)
                 .add({ days: endNextDay })
                 .startOf("day")
                 .add({
@@ -1673,7 +1716,8 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
-            number: sub.windowInterval && sub.windowInterval.number
+            number: sub.windowInterval && sub.windowInterval.number,
+            timezone: sub.timezone
           });
           agenda.schedule(user_int_end, "end_random_personal_manager", {
             userid: req.body.id,
@@ -1684,7 +1728,8 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
-            number: sub.windowInterval && sub.windowInterval.number
+            number: sub.windowInterval && sub.windowInterval.number,
+            timezone: sub.timezone
           });
         } else {
           let updatedInterval = sub.interval;
@@ -1708,7 +1753,8 @@ exports.joinStudy = async (req, res) => {
             interval: updatedInterval,
             title: sub.title,
             message: sub.message,
-            url: sub.url
+            url: sub.url,
+            timezone: sub.timezone
           });
           agenda.schedule(user_int_end, "end_personal_manager", {
             userid: req.body.id,
@@ -1717,7 +1763,8 @@ exports.joinStudy = async (req, res) => {
             interval: updatedInterval,
             title: sub.title,
             message: sub.message,
-            url: sub.url
+            url: sub.url,
+            timezone: sub.timezone
           });
         }
       } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
@@ -1794,9 +1841,19 @@ exports.leaveStudy = async (req, res) => {
     project.mobileUsers = [];
   }
   const removeUserId = req.body.id;
-  project.mobileUsers = project.mobileUsers.filter(
-    user => user.id !== removeUserId
-  );
+  project.mobileUsers = project.mobileUsers.map(user => {
+    if (user.id === removeUserId) {
+      const updatedUser = {
+        ...user._doc,
+        deactivated: true,
+        token: "User left the study"
+      };
+      return updatedUser;
+    } else {
+      return user;
+    }
+  });
+
   await project.save();
   const updatedUser = await User.findOneAndUpdate(
     { samplyId: req.body.id },

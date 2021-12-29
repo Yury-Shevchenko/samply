@@ -14,47 +14,99 @@ mixin scheduledNotification(notification, i)
       a(href=`/removenotification/${notification.id}`)
         != h.icon('remove')
   
-  .review__body
-    if(notification.name === 'One-time')
-      if(notification.date)
-        span= `${l.table_scheduled_at} ${h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
-      if(notification.window_from)
-        span= `${l.step_2_from} ${h.moment.utc(notification.window_from).local().locale(language).format('MMMM Do YYYY, H:mm')}`
-      if(notification.window_to)
-        span= `${l.step_2_to} ${h.moment.utc(notification.window_to).local().locale(language).format('MMMM Do YYYY, H:mm')}`
-      if(notification.number)
-        span= `${l.table_number_timepoints}: ${notification.number}`
-      
-    if(notification.name === 'Repeat')
-      if(notification.int_start)
-        span= `${l.table_start}: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
-      if(notification.start_event && notification.start_event === 'registration')
-        if(notification.start_next)
-          span= `Start on the ${notification.start_next} day from ${l.table_participant_registration}` 
-        if(notification.start_after.days)
-          span= `${l.table_start_after} ${notification.start_after.days} ${l.step_5_days}, ${notification.start_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.start_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
-      if(notification.int_end)
-        span=  `${l.table_end}: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
-      if(notification.stop_event && notification.stop_event === 'registration')
-        if(notification.stop_next)
-          span= `Stop on the ${notification.stop_next} day from ${l.table_participant_registration}` 
-        if(notification.stop_after.days)
-          span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
-      if(notification.readable && notification.readable.from && notification.readable.to)
-        span= `${l.table_repeat_window} ${notification.readable.from}, to ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
-      if(notification.readable && notification.readable.interval)
-        span= `${l.table_repeat} ${notification.readable.interval}`
-      
-    if(notification.allCurrentParticipants)
-      span= `${l.table_all_participants}` 
-    if(notification.allCurrentGroups)
-      span= `Applies to all groups at the moment of notification creation` 
-    if(notification.participantId && notification.participantId.length > 0)
-      span= `${l.table_for_participants}: ${notification.participantId}` 
-    if(notification.groups && notification.groups.length > 0)
-      span= `${l.table_for_groups}: ${notification.groups}` 
-    if(notification.randomize)
-      span= `${l.table_randomized}` 
-    if(notification.scheduleInFuture)  
-      span= `${l.table_future_participants}` 
+  if(notification.timezone)
+  
+    .review__body
+    
+      span= `Timezone: ${h.moment.tz.zone(notification.timezone).name}`
+        
+      if(notification.name === 'One-time')
+        if(notification.date)
+          span= `${l.table_scheduled_at} ${h.moment.tz(notification.date, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}` 
+        if(notification.window_from)
+          span= `${l.step_2_from} ${h.moment.tz(notification.window_from, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}`
+        if(notification.window_to)
+          span= `${l.step_2_to} ${h.moment.tz(notification.window_to, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}`
+        if(notification.number)
+          span= `${l.table_number_timepoints}: ${notification.number}`
+        
+      if(notification.name === 'Repeat')
+        if(notification.int_start)
+          span= `${l.table_start}: ${h.moment.tz(notification.int_start, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}` 
+        if(notification.start_event && notification.start_event === 'registration')
+          if(notification.start_next)
+            span= `Start on the ${notification.start_next} day from ${l.table_participant_registration}` 
+          if(notification.start_after.days)
+            span= `${l.table_start_after} ${notification.start_after.days} ${l.step_5_days}, ${notification.start_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.start_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
+        if(notification.int_end)
+          span=  `${l.table_end}: ${h.moment.tz(notification.int_end, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}`
+        if(notification.stop_event && notification.stop_event === 'registration')
+          if(notification.stop_next)
+            span= `Stop on the ${notification.stop_next} day from ${l.table_participant_registration}` 
+          if(notification.stop_after.days)
+            span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
+        if(notification.readable && notification.readable.from && notification.readable.to)
+          span= `${l.table_repeat_window} ${notification.readable.from}, to ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
+        if(notification.readable && notification.readable.interval)
+          span= `${l.table_repeat} ${notification.readable.interval}`
+        
+      if(notification.allCurrentParticipants)
+        span= `${l.table_all_participants}` 
+      if(notification.allCurrentGroups)
+        span= `Applies to all groups at the moment of notification creation` 
+      if(notification.participantId && notification.participantId.length > 0)
+        span= `${l.table_for_participants}: ${notification.participantId}` 
+      if(notification.groups && notification.groups.length > 0)
+        span= `${l.table_for_groups}: ${notification.groups}` 
+      if(notification.randomize)
+        span= `${l.table_randomized}` 
+      if(notification.scheduleInFuture)  
+        span= `${l.table_future_participants}` 
+
+  else 
+    
+    .review__body
+    
+      if(notification.name === 'One-time')
+        if(notification.date)
+          span= `${l.table_scheduled_at} ${h.moment.utc(notification.date).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
+        if(notification.window_from)
+          span= `${l.step_2_from} ${h.moment.utc(notification.window_from).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+        if(notification.window_to)
+          span= `${l.step_2_to} ${h.moment.utc(notification.window_to).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+        if(notification.number)
+          span= `${l.table_number_timepoints}: ${notification.number}`
+        
+      if(notification.name === 'Repeat')
+        if(notification.int_start)
+          span= `${l.table_start}: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
+        if(notification.start_event && notification.start_event === 'registration')
+          if(notification.start_next)
+            span= `Start on the ${notification.start_next} day from ${l.table_participant_registration}` 
+          if(notification.start_after.days)
+            span= `${l.table_start_after} ${notification.start_after.days} ${l.step_5_days}, ${notification.start_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.start_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
+        if(notification.int_end)
+          span=  `${l.table_end}: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
+        if(notification.stop_event && notification.stop_event === 'registration')
+          if(notification.stop_next)
+            span= `Stop on the ${notification.stop_next} day from ${l.table_participant_registration}` 
+          if(notification.stop_after.days)
+            span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
+        if(notification.readable && notification.readable.from && notification.readable.to)
+          span= `${l.table_repeat_window} ${notification.readable.from}, to ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
+        if(notification.readable && notification.readable.interval)
+          span= `${l.table_repeat} ${notification.readable.interval}`
+        
+      if(notification.allCurrentParticipants)
+        span= `${l.table_all_participants}` 
+      if(notification.allCurrentGroups)
+        span= `Applies to all groups at the moment of notification creation` 
+      if(notification.participantId && notification.participantId.length > 0)
+        span= `${l.table_for_participants}: ${notification.participantId}` 
+      if(notification.groups && notification.groups.length > 0)
+        span= `${l.table_for_groups}: ${notification.groups}` 
+      if(notification.randomize)
+        span= `${l.table_randomized}` 
+      if(notification.scheduleInFuture)  
+        span= `${l.table_future_participants}` 
   

@@ -4,7 +4,16 @@ const titleContent = document.querySelector("#titleContent");
 const urlContent = document.querySelector("#urlContent");
 
 function createNotification() {
-  // console.log('creating notifications');
+  let timezone;
+  const zones = $(".zone-picker")
+    .data("timezonePicker")
+    .getValue();
+  if (zones.length) {
+    timezone = zones[0].timezone;
+  } else {
+    alert("Choose timezone");
+    return;
+  }
 
   // 1. get all information from the input fiels
   const input = document.querySelectorAll("input");
@@ -243,13 +252,16 @@ function createNotification() {
       month: selected["start-specific-month"] - 1,
       year: selected["start-specific-year"]
     };
-    const stCon = moment({
-      year: st.year,
-      month: st.month,
-      day: st.day,
-      hour: st.hour,
-      minute: st.minute
-    });
+    const stCon = moment.tz(
+      {
+        year: st.year,
+        month: st.month,
+        day: st.day,
+        hour: st.hour,
+        minute: st.minute
+      },
+      timezone
+    );
     startMoment = stCon.toISOString();
     // change the interval if was not specified
     if (dayMonthCron && dayMonthCron.includes("*/")) {
@@ -333,13 +345,16 @@ function createNotification() {
       month: selected["stop-specific-month"] - 1,
       year: selected["stop-specific-year"]
     };
-    const stopCon = moment({
-      year: stopMom.year,
-      month: stopMom.month,
-      day: stopMom.day,
-      hour: stopMom.hour,
-      minute: stopMom.minute
-    });
+    const stopCon = moment.tz(
+      {
+        year: stopMom.year,
+        month: stopMom.month,
+        day: stopMom.day,
+        hour: stopMom.hour,
+        minute: stopMom.minute
+      },
+      timezone
+    );
     stopMoment = stopCon.toISOString();
     // console.log('stopMoment', stopMoment);
     if (!stopMoment) {
@@ -409,14 +424,17 @@ function createNotification() {
   timepoints.map(time => {
     dates.map(date => {
       const sec = Math.floor(Math.random() * 60); //get the random value for the seconds
-      const constructedDate = moment({
-        year: date.year,
-        month: date.month,
-        day: date.day,
-        hour: time.hour,
-        minute: time.minute,
-        second: sec
-      });
+      const constructedDate = moment.tz(
+        {
+          year: date.year,
+          month: date.month,
+          day: date.day,
+          hour: time.hour,
+          minute: time.minute,
+          second: sec
+        },
+        timezone
+      );
       const isoDate = constructedDate.toISOString();
       constructedDates.push(isoDate);
     });
@@ -427,21 +445,27 @@ function createNotification() {
   let constructedIntervals = [];
   timeintervals.map(time => {
     dates.map(date => {
-      const constructedDateFrom = moment({
-        year: date.year,
-        month: date.month,
-        day: date.day,
-        hour: time.hourStart,
-        minute: time.minuteStart
-      });
+      const constructedDateFrom = moment.tz(
+        {
+          year: date.year,
+          month: date.month,
+          day: date.day,
+          hour: time.hourStart,
+          minute: time.minuteStart
+        },
+        timezone
+      );
       const isoDateFrom = constructedDateFrom.toISOString();
-      const constructedDateTo = moment({
-        year: date.year,
-        month: date.month,
-        day: date.day,
-        hour: time.hourEnd,
-        minute: time.minuteEnd
-      });
+      const constructedDateTo = moment.tz(
+        {
+          year: date.year,
+          month: date.month,
+          day: date.day,
+          hour: time.hourEnd,
+          minute: time.minuteEnd
+        },
+        timezone
+      );
       const isoDateTo = constructedDateTo.toISOString();
       constructedIntervals.push({
         from: isoDateFrom,
@@ -515,7 +539,8 @@ function createNotification() {
           constructedCronSchedulesForTime,
           startingStrategy,
           stopingStrategy,
-          scheduleInFuture
+          scheduleInFuture,
+          timezone
         );
       } else {
         createFixedIntervalNotification(
@@ -524,7 +549,8 @@ function createNotification() {
           constructedCronSchedulesForTime,
           startingStrategy,
           stopingStrategy,
-          scheduleInFuture
+          scheduleInFuture,
+          timezone
         );
       }
     }
@@ -537,7 +563,8 @@ function createNotification() {
         participants,
         groups,
         constructedDates,
-        scheduleInFuture
+        scheduleInFuture,
+        timezone
       );
     } else {
       // create fixed interval schedule
@@ -551,7 +578,8 @@ function createNotification() {
           constructedCronSchedules,
           startingStrategy,
           stopingStrategy,
-          scheduleInFuture
+          scheduleInFuture,
+          timezone
         );
       } else {
         createFixedIntervalNotification(
@@ -560,7 +588,8 @@ function createNotification() {
           constructedCronSchedules,
           startingStrategy,
           stopingStrategy,
-          scheduleInFuture
+          scheduleInFuture,
+          timezone
         );
       }
     }
@@ -573,7 +602,8 @@ function createNotification() {
         participants,
         groups,
         constructedIntervals,
-        scheduleInFuture
+        scheduleInFuture,
+        timezone
       );
     } else {
       // create randomized interval notifications
@@ -583,7 +613,8 @@ function createNotification() {
         constructedCronIntervals,
         startingStrategy,
         stopingStrategy,
-        scheduleInFuture
+        scheduleInFuture,
+        timezone
       );
     }
   }
@@ -595,7 +626,8 @@ function createFixedScheduledNotification(
   participants,
   groups,
   times,
-  scheduleInFuture
+  scheduleInFuture,
+  timezone
 ) {
   fetch("/createschedulenotification", {
     method: "POST",
@@ -614,7 +646,8 @@ function createFixedScheduledNotification(
       title: titleContent.value,
       url: urlContent.value,
       name: "One-time",
-      scheduleInFuture: scheduleInFuture
+      scheduleInFuture: scheduleInFuture,
+      timezone: timezone
     })
   })
     .then(res => {
@@ -634,7 +667,8 @@ function createFixedIntervalNotification(
   constructedCronSchedules,
   startingStrategy,
   stopingStrategy,
-  scheduleInFuture
+  scheduleInFuture,
+  timezone
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -655,7 +689,8 @@ function createFixedIntervalNotification(
       title: titleContent.value,
       url: urlContent.value,
       name: "Repeat",
-      scheduleInFuture: scheduleInFuture
+      scheduleInFuture: scheduleInFuture,
+      timezone: timezone
     })
   })
     .then(res => {
@@ -675,7 +710,8 @@ function createIndividualSpecificNotification(
   constructedCronSchedules,
   startingStrategy,
   stopingStrategy,
-  scheduleInFuture
+  scheduleInFuture,
+  timezone
 ) {
   fetch("/createindividualnotification", {
     method: "POST",
@@ -696,7 +732,8 @@ function createIndividualSpecificNotification(
       name: "Repeat",
       participantId: participants,
       groups: groups,
-      scheduleInFuture: scheduleInFuture
+      scheduleInFuture: scheduleInFuture,
+      timezone: timezone
     })
   })
     .then(res => {
@@ -714,7 +751,8 @@ function createRandomFixedNotification(
   participants,
   groups,
   constructedIntervals,
-  scheduleInFuture
+  scheduleInFuture,
+  timezone
 ) {
   fetch("/createfixedindividualnotification", {
     method: "POST",
@@ -733,7 +771,8 @@ function createRandomFixedNotification(
       name: "One-time",
       participantId: participants,
       groups: groups,
-      scheduleInFuture: scheduleInFuture
+      scheduleInFuture: scheduleInFuture,
+      timezone: timezone
     })
   })
     .then(res => {
@@ -753,7 +792,8 @@ function createRandomIntervalNotification(
   constructedCronIntervals,
   startingStrategy,
   stopingStrategy,
-  scheduleInFuture
+  scheduleInFuture,
+  timezone
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -774,7 +814,8 @@ function createRandomIntervalNotification(
       title: titleContent.value,
       url: urlContent.value,
       name: "Repeat",
-      scheduleInFuture: scheduleInFuture
+      scheduleInFuture: scheduleInFuture,
+      timezone: timezone
     })
   })
     .then(res => {
