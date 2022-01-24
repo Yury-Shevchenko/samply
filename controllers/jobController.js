@@ -150,7 +150,8 @@ agenda.on("ready", function() {
       deleteself: job.attrs.data.deleteself,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
-      number: job.attrs.data.number
+      number: job.attrs.data.number,
+      timezone: job.attrs.data.timezone
     });
     done();
   });
@@ -167,7 +168,8 @@ agenda.on("ready", function() {
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
-      number: job.attrs.data.number
+      number: job.attrs.data.number,
+      timezone: job.attrs.data.timezone
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
@@ -201,7 +203,8 @@ agenda.on("ready", function() {
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
-      number: job.attrs.data.number
+      number: job.attrs.data.number,
+      timezone: job.attrs.data.timezone
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
@@ -373,7 +376,7 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
-  console.log("372 req.body", req.body);
+  // console.log("372 req.body", req.body);
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -464,7 +467,7 @@ exports.createIntervalNotification = async (req, res) => {
       });
     });
 
-    console.log("groups", groups);
+    // console.log("groups", groups);
 
     // TODO this one below should be copied and modified for groups of users
     // new jobs should be created or modified to account for the situations where the notifications are yoked
@@ -765,7 +768,7 @@ exports.createIntervalNotification = async (req, res) => {
 };
 
 exports.createIndividualNotification = async (req, res) => {
-  console.log("767 req.body", req.body);
+  // console.log("767 req.body", req.body);
   if (req.body.interval.length === 0) {
     res.status(400).send();
     return;
@@ -1075,7 +1078,7 @@ exports.createIndividualNotification = async (req, res) => {
 };
 
 exports.createFixedIndividualNotification = async (req, res) => {
-  console.log("1052 req.body", req.body);
+  // console.log("1052 req.body", req.body);
   if (req.body.intervals.length === 0) {
     res.status(400).send();
     return;
@@ -1297,10 +1300,13 @@ async function pickUpRandomTimeFromInterval({
   deleteself,
   interval,
   interval_max,
-  number
+  number,
+  timezone
 }) {
   // get the next execution time
-  const cronInstance = new Cron();
+  const cronInstance = new Cron({
+    timezone: timezone
+  });
   const arr = interval_max.split(" ");
   arr.shift();
   const interval_max_striped = arr.join(" ");
