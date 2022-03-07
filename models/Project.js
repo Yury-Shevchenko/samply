@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const slug = require("slugs");
-const { nanoid } = require("nanoid");
+const { customAlphabet } = require("nanoid");
+const { lowercase } = require("nanoid-dictionary");
 
 const projectSchema = new mongoose.Schema({
   created: {
@@ -208,7 +209,8 @@ projectSchema.pre("save", async function(next) {
     const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, "i"); // regular expression
     const studiesWithSlug = await this.constructor.find({ slug: slugRegEx });
     if (studiesWithSlug.length) {
-      this.slug = `${this.slug}-${studiesWithSlug.length + 1}`;
+      const randomBits = customAlphabet(lowercase, 6);
+      this.slug = `${this.slug}-${randomBits()}`;
     }
   }
 
@@ -228,32 +230,6 @@ projectSchema.pre("save", async function(next) {
     }
   });
 });
-
-//pre-save validation to make sure that the project with the same name does not already exist
-// projectSchema.pre('save', async function(next){
-//   if (!this.isModified('name')){
-//     next();//skip it
-//   };
-//
-//   this.slug = slug(this.name);
-//   const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, 'i');//regular expression
-//   const projectsWithSlug = await this.constructor.find({ slug: slugRegEx });
-//   if(projectsWithSlug.length){
-//     this.slug = `${this.slug}-${projectsWithSlug.length + 1}`;
-//   }
-//   next();
-//   // var self = this;
-//   // mongoose.models["Project"].findOne({name: self.name}, function(err, project){
-//   //   if(err){
-//   //     next(err);
-//   //   } else if(project){
-//   //     self.invalidate("name", "This name already exists");
-//   //     next(new Error('This name is already taken'));
-//   //   } else {
-//   //     next();
-//   //   }
-//   // });
-// });
 
 //find projects which user has created
 projectSchema.virtual("participants", {
