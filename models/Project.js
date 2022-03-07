@@ -176,6 +176,7 @@ projectSchema.statics.debugProjects = function() {
     {
       $project: {
         name: "$$ROOT.name",
+        slug: "$$ROOT.slug",
         description: "$$ROOT.description",
         codeMessage: "$$ROOT.codeMessage",
         geofencingInstruction: "$$ROOT.geofencingInstruction",

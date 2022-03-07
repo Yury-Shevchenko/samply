@@ -12,6 +12,7 @@ block content
           td X
           td N.
           td Name
+          td Slug
           td Description
           td Code message
           td Geofencing instruction
@@ -34,6 +35,7 @@ block content
                 <i class="far fa-trash-alt"></i>
             td #{i + 1}
             td= project.name
+            td= project.slug
             td= project.description.split(' ').slice(0, 10).join(' ') 
             td= project.codeMessage && project.codeMessage.split(' ').slice(0, 10).join(' ') 
             td= project.geofencingInstruction && project.geofencingInstruction.split(' ').slice(0, 10).join(' ') 
