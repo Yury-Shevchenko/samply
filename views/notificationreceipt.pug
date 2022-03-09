@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .inner
+  
+    p Note: Even if a receipt's status says ok, this doesn't guarantee that the device has received the message; "ok" in a push receipt means that the Android or iOS push notification service successfully received the notification. If the recipient device is turned off, for example, the iOS or Android push notification service will try to deliver the message but the device won't necessarily receive it.
+      
+    p Receipt ID
+    p #{id}
+    p Status
+    p #{receipt.status}
+    
+    if(receipt.message)
+      p Message: #{receipt.message}
+    if(receipt.details)
+      p Details: #{receipt.details}
+    
+      

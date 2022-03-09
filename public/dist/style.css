@@ -1415,7 +1415,7 @@ and also iPads specifically.
   .review:before {
     width: 5px;
     left: 0;
-    content: '';
+    content: "";
     display: block;
     background: linear-gradient(0, #48ded4 0%, #a026bf 20%, #e82c75 60%, #FFC40E 85%, #48ded4 95%);
     position: absolute;

@@ -4,6 +4,16 @@ const titleContent = document.querySelector("#titleContent");
 const urlContent = document.querySelector("#urlContent");
 
 function createNotification() {
+  if (!titleContent.value || titleContent.value.trim() === "") {
+    alert("Enter a title");
+    return;
+  }
+
+  if (!messageContent.value || messageContent.value.trim() === "") {
+    alert("Enter a message");
+    return;
+  }
+
   let timezone;
   const zones = $(".zone-picker")
     .data("timezonePicker")
@@ -79,8 +89,6 @@ function createNotification() {
     alert("Choose specific groups or select the all groups option");
     return;
   }
-
-  // console.log("groups", groups);
 
   // time
   let timepoints = [],
@@ -171,9 +179,6 @@ function createNotification() {
     } else {
       dayMonthCron = `*/${everyday}`; // by default * will be 1 (but has to be replaced later dependent on the starting point)
     }
-
-    // console.log('everyday', everyday);
-    // console.log('dayMonthCron', dayMonthCron);
   } else if (date === "start-month") {
     dayWeekCron = "*";
     const every = document.querySelector(
@@ -212,9 +217,6 @@ function createNotification() {
     return;
   }
 
-  // console.log('dates', dates);
-  // console.log('dayMonthCron dayWeekCron', dayMonthCron, dayWeekCron);
-
   // month
   let monthCron = "";
   const month = selected.month;
@@ -236,7 +238,6 @@ function createNotification() {
       return;
     }
   }
-  // console.log('monthCron', monthCron);
 
   // start moment
   let startMoment = "",
@@ -329,7 +330,6 @@ function createNotification() {
     startEvent,
     startNextDay
   };
-  // console.log("startingStrategy", startingStrategy);
 
   // stop moment
   let stopMoment = "",
@@ -414,8 +414,20 @@ function createNotification() {
     stopEvent,
     stopNextDay
   };
-  // console.log("stopingStrategy", stopingStrategy);
-  // console.log('stopMoment', stopMoment, stopAfter, stopEvent);
+
+  // expiration time
+  // calculate the number of ms
+  if (!selected["expire"]) {
+    alert("Choose whether the link should expire");
+    return;
+  }
+  let expireIn = null;
+  if (selected["expire"] === "yes") {
+    expireIn =
+      24 * 60 * 60000 * selected["expire-in-days"] +
+      60 * 60000 * selected["expire-in-hours"] +
+      60000 * selected["expire-in-minutes"];
+  }
 
   // 2. transform this information into the object with notification schedule
 
@@ -439,7 +451,6 @@ function createNotification() {
       constructedDates.push(isoDate);
     });
   });
-  // console.log('constructedDates', constructedDates);
 
   // constructed intervals
   let constructedIntervals = [];
@@ -474,7 +485,6 @@ function createNotification() {
       });
     });
   });
-  // console.log('constructedIntervals', constructedIntervals);
 
   // constructed cron schedules with fixed time
   let constructedCronSchedules = [];
@@ -540,7 +550,8 @@ function createNotification() {
           startingStrategy,
           stopingStrategy,
           scheduleInFuture,
-          timezone
+          timezone,
+          expireIn
         );
       } else {
         createFixedIntervalNotification(
@@ -550,7 +561,8 @@ function createNotification() {
           startingStrategy,
           stopingStrategy,
           scheduleInFuture,
-          timezone
+          timezone,
+          expireIn
         );
       }
     }
@@ -564,7 +576,8 @@ function createNotification() {
         groups,
         constructedDates,
         scheduleInFuture,
-        timezone
+        timezone,
+        expireIn
       );
     } else {
       // create fixed interval schedule
@@ -579,7 +592,8 @@ function createNotification() {
           startingStrategy,
           stopingStrategy,
           scheduleInFuture,
-          timezone
+          timezone,
+          expireIn
         );
       } else {
         createFixedIntervalNotification(
@@ -589,7 +603,8 @@ function createNotification() {
           startingStrategy,
           stopingStrategy,
           scheduleInFuture,
-          timezone
+          timezone,
+          expireIn
         );
       }
     }
@@ -603,7 +618,8 @@ function createNotification() {
         groups,
         constructedIntervals,
         scheduleInFuture,
-        timezone
+        timezone,
+        expireIn
       );
     } else {
       // create randomized interval notifications
@@ -614,7 +630,8 @@ function createNotification() {
         startingStrategy,
         stopingStrategy,
         scheduleInFuture,
-        timezone
+        timezone,
+        expireIn
       );
     }
   }
@@ -627,7 +644,8 @@ function createFixedScheduledNotification(
   groups,
   times,
   scheduleInFuture,
-  timezone
+  timezone,
+  expireIn
 ) {
   fetch("/createschedulenotification", {
     method: "POST",
@@ -647,7 +665,8 @@ function createFixedScheduledNotification(
       url: urlContent.value,
       name: "One-time",
       scheduleInFuture: scheduleInFuture,
-      timezone: timezone
+      timezone: timezone,
+      expireIn: expireIn
     })
   })
     .then(res => {
@@ -668,7 +687,8 @@ function createFixedIntervalNotification(
   startingStrategy,
   stopingStrategy,
   scheduleInFuture,
-  timezone
+  timezone,
+  expireIn
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -690,7 +710,8 @@ function createFixedIntervalNotification(
       url: urlContent.value,
       name: "Repeat",
       scheduleInFuture: scheduleInFuture,
-      timezone: timezone
+      timezone: timezone,
+      expireIn: expireIn
     })
   })
     .then(res => {
@@ -711,7 +732,8 @@ function createIndividualSpecificNotification(
   startingStrategy,
   stopingStrategy,
   scheduleInFuture,
-  timezone
+  timezone,
+  expireIn
 ) {
   fetch("/createindividualnotification", {
     method: "POST",
@@ -733,7 +755,8 @@ function createIndividualSpecificNotification(
       participantId: participants,
       groups: groups,
       scheduleInFuture: scheduleInFuture,
-      timezone: timezone
+      timezone: timezone,
+      expireIn: expireIn
     })
   })
     .then(res => {
@@ -752,7 +775,8 @@ function createRandomFixedNotification(
   groups,
   constructedIntervals,
   scheduleInFuture,
-  timezone
+  timezone,
+  expireIn
 ) {
   fetch("/createfixedindividualnotification", {
     method: "POST",
@@ -772,7 +796,8 @@ function createRandomFixedNotification(
       participantId: participants,
       groups: groups,
       scheduleInFuture: scheduleInFuture,
-      timezone: timezone
+      timezone: timezone,
+      expireIn: expireIn
     })
   })
     .then(res => {
@@ -793,7 +818,8 @@ function createRandomIntervalNotification(
   startingStrategy,
   stopingStrategy,
   scheduleInFuture,
-  timezone
+  timezone,
+  expireIn
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -815,7 +841,8 @@ function createRandomIntervalNotification(
       url: urlContent.value,
       name: "Repeat",
       scheduleInFuture: scheduleInFuture,
-      timezone: timezone
+      timezone: timezone,
+      expireIn: expireIn
     })
   })
     .then(res => {

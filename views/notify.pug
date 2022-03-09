@@ -294,6 +294,25 @@ block content
                 - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events
                   option(value=event.value, selected=false)= event.text        
+        
+        #choose-expire
+          h2 #{l.step_7_header}  
+            
+          .options
+            input(type='radio', name='expire', value='no')#expire-no
+            label(for='expire-no')
+              span #{l.step_7_not}  
+
+            input(type='radio', name='expire', value='yes')#expire-yes
+            label(for='expire-yes')
+              span #{l.step_7_yes} 
+              input(name="expire-in-days" type='number' min=0 style="width: 60px;" value=0)
+              span #{l.step_5_days}   
+              input(name="expire-in-hours" type='number' min=0 style="width: 60px;" value=0)
+              span #{l.step_5_hours} 
+              input(name="expire-in-minutes" type='number' min=0 style="width: 60px;" value=0)
+              span #{l.step_7_minutes}  
+                  
         p
         p          
         #send-button 

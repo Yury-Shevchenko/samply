@@ -358,5 +358,11 @@ router.get(
   authController.isAdminLoggedIn,
   paymentController.receiptsToParticipant
 );
+// notification receipt page
+router.get(
+  "/notificationreceipt/:id",
+  authController.isAdminLoggedIn,
+  resultController.checkNotificationReceipt
+);
 
 module.exports = router;

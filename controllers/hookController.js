@@ -79,9 +79,6 @@ exports.creategroup = async (req, res) => {
 
 // reset notification token with the expiration date
 exports.resetNotifyToken = async (req, res) => {
-  // console.log("req", req);
-  // console.log("req.body", req.body);
-
   const project = await Project.findOne(
     { _id: req.user.project._id },
     { creator: 1 }
@@ -97,9 +94,6 @@ exports.resetNotifyToken = async (req, res) => {
 };
 
 exports.notify = async (req, res) => {
-  // console.log("req", req);
-  console.log("req.body", req.body);
-
   // 1. Parse request and get all information
   const { token, projectID, groupID, participantID } = req.body;
 
@@ -119,7 +113,6 @@ exports.notify = async (req, res) => {
   }
 
   let users = project.mobileUsers;
-  console.log("users", users);
 
   //4. Extract the IDs of other people in the group
   const tokens = users
@@ -131,8 +124,6 @@ exports.notify = async (req, res) => {
       group: user.group,
       username: user.username
     }));
-
-  console.log("tokens", tokens);
 
   // Send a notification to the other people in the group (immediately)
   // Define the content of the notification

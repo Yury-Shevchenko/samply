@@ -9,8 +9,8 @@ block content
         h2= `${layout.history_notifications} ${typeof(participant) === 'number' ? layout.history_for_participant + participant : ''}`
     
         p
-          a(style={color:'black'} href=`/downloadhistory/${user.project._id}`) Download
-        p When you download the history of notifications, the time of the events is saved as a timestamp. In JavaScript, a timestamp is the number of milliseconds that have passed since January 1, 1970.
+          a(style={color:'black'} href=`/downloadhistory/${user.project._id}`) #{l.download} 
+        p #{l.downloadInfo} 
           
         table.table
           thead
@@ -19,13 +19,16 @@ block content
             td #{layout.history_notifications_Title} 
             td #{layout.history_notifications_Message} 
             td #{layout.history_notifications_url} 
-            td Sent from the server
-            td Received when the app was open
-            td Tapped (the notification bar)
-            td Opened in the app (messages)
-            td Deleted by user
-            td Geofencing event triggered
-            td Message ID
+            td #{l.sentFromServer} 
+            td #{l.expire} 
+            td #{l.receivedInOpenApp} 
+            td #{l.tappedNotificationBar} 
+            td #{l.openInApp} 
+            td #{l.deletedByUser} 
+            td #{l.geofenceEventTriggered} 
+            td #{l.messageID} 
+            td #{l.status} 
+            td #{l.receipt} 
             
             td #{layout.history_notifications_Delete} 
           each notification, i in history
@@ -36,14 +39,19 @@ block content
               td= notification.data.title 
               td= notification.data.message
               td
-                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url) #{notification.data.url}
+                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url target="blank_") Link
               td= notification.events.filter(e => e.status === 'sent').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
+              td= notification.data.expireAt && h.moment.utc(notification.data.expireAt).local().locale(language).format('DD.MM.YY, H:mm:ss') 
               td= notification.events.filter(e => e.status === 'received-in-app').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss'))               
               td= notification.events.filter(e => e.status === 'tapped').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'opened-in-app').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'archived').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'geofencing-event').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.messageId  
+              td= notification.ticket.status  
+              td
+                p
+                  a(style={color:'black'} href=`/notificationreceipt/${notification.ticket.id}`) Open
               
               td
                 a(href=`/removerecord/${notification._id}`)

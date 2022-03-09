@@ -9,7 +9,7 @@ mixin scheduledNotification(notification, i)
     .review__author
       p= `${notification.message}`
     .review__author
-      p= `${notification.url}`
+      a(style="border-bottom: 2px solid #FFC40E;" href=notification.url target="_blank") Link
     .review__author
       a(href=`/removenotification/${notification.id}`)
         != h.icon('remove')

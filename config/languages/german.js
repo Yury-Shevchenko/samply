@@ -1079,6 +1079,10 @@ module.exports = {
     step_6_header: "7. Endzeitpunkt wählen",
     step_6_timepoint: "An einem bestimmten Zeitpunkt stoppen",
     step_6_participant: "Ende der Benachrichtigung für jeden Teilnehmer nach ",
+    step_7_header: "8. Zeitpunkt für den Ablauf des Links wählen",
+    step_7_not: "Der Link verfällt nicht",
+    step_7_yes: "Der Link verfällt ",
+    step_7_minutes: "Minuten nach Versand der Benachrichtigung",
     schedule_notifications: "Benachrichtigungen festlegen",
     scheduled_notifications: "Geplante Benachrichtigungen",
     delete_notifications: "Alle Benachrichtigungen löschen",
@@ -1190,5 +1194,23 @@ module.exports = {
     apiCommentData: "// Daten definieren",
     apiCommentFunction:
       "// Funktion um den POST request zu senden und damit die Benachrichtigungen zu aktivieren"
+  },
+
+  history: {
+    download: "Herunterladen",
+    downloadInfo: `
+      Wenn Sie den Verlauf von Benachrichtigungen herunterladen, wird der Zeitpunkt der Ereignisse als Zeitstempel gespeichert.
+      In JavaScript ist ein Zeitstempel die Anzahl der Millisekunden, die seit dem 1. Januar 1970 vergangen sind.
+    `,
+    expire: "Der Link verfällt",
+    sentFromServer: "Gesendet vom Server",
+    receivedInOpenApp: "Empfangen, als die App geöffnet war",
+    tappedNotificationBar: "Getippt in der Benachrichtigungsleiste",
+    openInApp: "Geöffnet in der App",
+    deletedByUser: "Gelöscht vom Benutzer",
+    geofenceEventTriggered: "Geofencing-Ereignis ausgelöst",
+    messageID: "Nachrichten-ID",
+    status: "Status",
+    receipt: "Quittung"
   }
 };

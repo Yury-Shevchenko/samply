@@ -21,16 +21,17 @@ const agenda = new Agenda({
 
 agenda.on("ready", function() {
   agenda.define("one_time_notification", (job, done) => {
-    sendToAllProjectUsers(
-      done,
-      job.attrs.data.projectid,
-      job.attrs.data.title,
-      job.attrs.data.message,
-      job.attrs.data.url,
-      job.attrs.data.id,
-      job.attrs.data.deleteself,
-      job.attrs.data.excludeUntil
-    );
+    sendToAllProjectUsers({
+      done: done,
+      project_id: job.attrs.data.projectid,
+      title: job.attrs.data.title,
+      message: job.attrs.data.message,
+      url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
+      notification_id: job.attrs.data.id,
+      deleteself: job.attrs.data.deleteself,
+      excludeUntil: job.attrs.data.excludeUntil
+    });
   });
 
   agenda.define("regular_notification", (job, done) => {
@@ -46,16 +47,18 @@ agenda.on("ready", function() {
         group_id: job.attrs.data.groupid,
         title: job.attrs.data.title,
         message: job.attrs.data.message,
-        url: job.attrs.data.url
+        url: job.attrs.data.url,
+        expireIn: job.attrs.data.expireIn
       });
     } else {
-      sendToAllProjectUsers(
-        done,
-        job.attrs.data.projectid,
-        job.attrs.data.title,
-        job.attrs.data.message,
-        job.attrs.data.url
-      );
+      sendToAllProjectUsers({
+        done: done,
+        project_id: job.attrs.data.projectid,
+        title: job.attrs.data.title,
+        message: job.attrs.data.message,
+        url: job.attrs.data.url,
+        expireIn: job.attrs.data.expireIn
+      });
     }
   });
 
@@ -66,6 +69,7 @@ agenda.on("ready", function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
       participantId: job.attrs.data.participantId,
       groupid: job.attrs.data.groupid
     });
@@ -97,6 +101,7 @@ agenda.on("ready", function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
       notification_id: job.attrs.data.id,
       deleteself: job.attrs.data.deleteself,
       schedule_id: job.attrs.data.scheduleid
@@ -113,6 +118,7 @@ agenda.on("ready", function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
       deleteself: false
     });
     newjob.repeatEvery(job.attrs.data.interval, {
@@ -146,6 +152,7 @@ agenda.on("ready", function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
       notification_id: job.attrs.data.id,
       deleteself: job.attrs.data.deleteself,
       interval: job.attrs.data.interval,
@@ -165,6 +172,7 @@ agenda.on("ready", function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
@@ -200,6 +208,7 @@ agenda.on("ready", function() {
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
+      expireIn: job.attrs.data.expireIn,
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
@@ -243,7 +252,6 @@ agenda.on("ready", function() {
 });
 
 exports.createScheduleNotification = async (req, res) => {
-  // console.log("req.body", req.body);
   // check whether the request body contains required information
   if (!req.body || !req.body.target || !req.body.schedule) {
     return res.status(400).end();
@@ -277,7 +285,8 @@ exports.createScheduleNotification = async (req, res) => {
         allCurrentGroups: req.body.groups && req.body.groups.length === 0,
         name: req.body.name,
         scheduleInFuture: req.body.scheduleInFuture,
-        timezone: req.body.timezone
+        timezone: req.body.timezone,
+        expireIn: req.body.expireIn
       });
 
       // check whether there are groups to schedule notifications
@@ -291,6 +300,7 @@ exports.createScheduleNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             deleteself: true
           });
         } else {
@@ -305,6 +315,7 @@ exports.createScheduleNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             deleteself: true
           });
         }
@@ -320,6 +331,7 @@ exports.createScheduleNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             deleteself: true
           });
         } else {
@@ -331,6 +343,7 @@ exports.createScheduleNotification = async (req, res) => {
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
+              expireIn: req.body.expireIn,
               deleteself: true
             });
           } else {
@@ -343,6 +356,7 @@ exports.createScheduleNotification = async (req, res) => {
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
+              expireIn: req.body.expireIn,
               deleteself: true
             });
           }
@@ -356,6 +370,7 @@ exports.createScheduleNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             deleteself: true,
             excludeUntil: Date.now()
           });
@@ -376,7 +391,6 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
-  // console.log("372 req.body", req.body);
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -463,11 +477,10 @@ exports.createIntervalNotification = async (req, res) => {
           from: window.from && cronstrue.toString(window.from),
           to: window.to && cronstrue.toString(window.to)
         },
-        timezone: req.body.timezone
+        timezone: req.body.timezone,
+        expireIn: req.body.expireIn
       });
     });
-
-    // console.log("groups", groups);
 
     // TODO this one below should be copied and modified for groups of users
     // new jobs should be created or modified to account for the situations where the notifications are yoked
@@ -574,6 +587,7 @@ exports.createIntervalNotification = async (req, res) => {
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
+              expireIn: req.body.expireIn,
               number: window.number,
               timezone: req.body.timezone
             });
@@ -586,6 +600,7 @@ exports.createIntervalNotification = async (req, res) => {
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
+              expireIn: req.body.expireIn,
               number: window.number,
               timezone: req.body.timezone
             });
@@ -686,6 +701,7 @@ exports.createIntervalNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             number: window.number,
             timezone: req.body.timezone
           });
@@ -698,6 +714,7 @@ exports.createIntervalNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             number: window.number,
             timezone: req.body.timezone
           });
@@ -728,7 +745,8 @@ exports.createIntervalNotification = async (req, res) => {
         readable: {
           interval: cronstrue.toString(interval)
         },
-        timezone: req.body.timezone
+        timezone: req.body.timezone,
+        expireIn: req.body.expireIn
       });
 
       if (users || groups) {
@@ -739,6 +757,7 @@ exports.createIntervalNotification = async (req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          expireIn: req.body.expireIn,
           participantId: req.body.participantId,
           groupid: req.body.groups,
           timezone: req.body.timezone
@@ -750,6 +769,7 @@ exports.createIntervalNotification = async (req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          expireIn: req.body.expireIn,
           participantId: req.body.participantId,
           groupid: req.body.groups,
           timezone: req.body.timezone
@@ -768,7 +788,6 @@ exports.createIntervalNotification = async (req, res) => {
 };
 
 exports.createIndividualNotification = async (req, res) => {
-  // console.log("767 req.body", req.body);
   if (req.body.interval.length === 0) {
     res.status(400).send();
     return;
@@ -854,7 +873,8 @@ exports.createIndividualNotification = async (req, res) => {
       readable: {
         interval: cronstrue.toString(interval)
       },
-      timezone: req.body.timezone
+      timezone: req.body.timezone,
+      expireIn: req.body.expireIn
     });
   });
 
@@ -949,6 +969,7 @@ exports.createIndividualNotification = async (req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          expireIn: req.body.expireIn,
           timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
@@ -959,6 +980,7 @@ exports.createIndividualNotification = async (req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          expireIn: req.body.expireIn,
           timezone: req.body.timezone
         });
       });
@@ -1050,6 +1072,7 @@ exports.createIndividualNotification = async (req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          expireIn: req.body.expireIn,
           timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
@@ -1060,6 +1083,7 @@ exports.createIndividualNotification = async (req, res) => {
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
+          expireIn: req.body.expireIn,
           timezone: req.body.timezone
         });
       });
@@ -1078,7 +1102,6 @@ exports.createIndividualNotification = async (req, res) => {
 };
 
 exports.createFixedIndividualNotification = async (req, res) => {
-  // console.log("1052 req.body", req.body);
   if (req.body.intervals.length === 0) {
     res.status(400).send();
     return;
@@ -1128,7 +1151,8 @@ exports.createFixedIndividualNotification = async (req, res) => {
       window_to: interval.to,
       number: parseInt(interval.number),
       scheduleInFuture: req.body.scheduleInFuture,
-      timezone: req.body.timezone
+      timezone: req.body.timezone,
+      expireIn: req.body.expireIn
     });
   });
 
@@ -1172,6 +1196,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             deleteself: true,
             scheduleid: scheduleId
           });
@@ -1208,6 +1233,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
+            expireIn: req.body.expireIn,
             deleteself: true,
             scheduleid: scheduleId
           });
@@ -1296,6 +1322,7 @@ async function pickUpRandomTimeFromInterval({
   title,
   message,
   url,
+  expireIn,
   notification_id,
   deleteself,
   interval,
@@ -1340,6 +1367,7 @@ async function pickUpRandomTimeFromInterval({
       title: title,
       message: message,
       url: url,
+      expireIn: expireIn,
       deleteself: deleteself
     });
   }
@@ -1355,6 +1383,7 @@ async function sendToSomeProjectUsers({
   title,
   message,
   url,
+  expireIn,
   notification_id,
   deleteself,
   schedule_id
@@ -1362,7 +1391,8 @@ async function sendToSomeProjectUsers({
   const content = {
     title,
     message,
-    url
+    url,
+    expireIn
   };
   // find the project
   const project = await Project.findOne(
@@ -1415,20 +1445,22 @@ async function sendToSomeProjectUsers({
 }
 
 // send the notificaiton to all users who are members of the project (mobileUsers)
-async function sendToAllProjectUsers(
+async function sendToAllProjectUsers({
   done,
   project_id,
   title,
   message,
   url,
+  expireIn,
   notification_id,
   deleteself,
   excludeUntil
-) {
+}) {
   const content = {
     title,
     message,
-    url
+    url,
+    expireIn
   };
   // find the project
   const project = await Project.findOne(
@@ -1470,7 +1502,7 @@ async function sendMobileNotification(
   project_id,
   project_name
 ) {
-  const { title, message, url } = content;
+  const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
 
   let messages = [];
@@ -1515,12 +1547,20 @@ async function sendMobileNotification(
       }
     }
 
+    const expireAt = expireIn ? timestampSent + parseInt(expireIn) : null;
+
     messages.push({
       to: pushToken.token,
       sound: "default",
       title: title,
       body: message,
-      data: { title, message, url: updatedUrl, messageId },
+      data: {
+        title,
+        message,
+        url: updatedUrl,
+        messageId,
+        expireAt
+      },
       id: pushToken.id,
       priority: "high",
       channelId: "default",
@@ -1722,6 +1762,7 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            expireIn: sub.expireIn,
             number: sub.windowInterval && sub.windowInterval.number,
             timezone: sub.timezone
           });
@@ -1734,6 +1775,7 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            expireIn: sub.expireIn,
             number: sub.windowInterval && sub.windowInterval.number,
             timezone: sub.timezone
           });
@@ -1760,6 +1802,7 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            expireIn: sub.expireIn,
             timezone: sub.timezone
           });
           agenda.schedule(user_int_end, "end_personal_manager", {
@@ -1770,6 +1813,7 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            expireIn: sub.expireIn,
             timezone: sub.timezone
           });
         }
@@ -1797,6 +1841,7 @@ exports.joinStudy = async (req, res) => {
             title: sub.title,
             message: sub.message,
             url: sub.url,
+            expireIn: sub.expireIn,
             deleteself: true
           });
         }

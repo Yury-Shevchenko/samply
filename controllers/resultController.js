@@ -1,11 +1,34 @@
 const mongoose = require("mongoose");
 const papaparse = require("papaparse");
+const axios = require("axios");
+const fetch = require("node-fetch");
 const fs = require("fs");
 const stream = require("stream");
 const flatMap = require("flatmap");
 const Result = mongoose.model("Result");
 const User = mongoose.model("User");
 const Project = mongoose.model("Project");
+
+const confirmOwner = (project, user) => {
+  const isCreator = project.creator.equals(user._id);
+  const isAdministrator = user.level > 100;
+  if (!isCreator && !isAdministrator) {
+    throw Error("You must be a creator a project in order to do it!");
+  }
+};
+
+const confirmOwnerOrMember = (project, user) => {
+  const isCreator = project.creator.equals(user._id);
+  const isMember = project.members
+    .map(id => id.toString())
+    .includes(user._id.toString());
+  const isParticipant = user.level <= 10;
+  if (!(isCreator || isMember) || isParticipant) {
+    throw Error(
+      "You must be a creator or a member of a project in order to do it!"
+    );
+  }
+};
 
 // update status
 exports.updateStatus = async (req, res) => {
@@ -321,23 +344,24 @@ exports.downloadHistory = async (req, res) => {
   const processor = input.pipe(res);
 };
 
-const confirmOwner = (project, user) => {
-  const isCreator = project.creator.equals(user._id);
-  const isAdministrator = user.level > 100;
-  if (!isCreator && !isAdministrator) {
-    throw Error("You must be a creator a project in order to do it!");
-  }
-};
+// check notificaiton receipt from EXPO
+exports.checkNotificationReceipt = async (req, res) => {
+  const { id } = req.params;
+  const url = "https://exp.host/--/api/v2/push/getReceipts";
+  const data = {
+    ids: [id]
+  };
 
-const confirmOwnerOrMember = (project, user) => {
-  const isCreator = project.creator.equals(user._id);
-  const isMember = project.members
-    .map(id => id.toString())
-    .includes(user._id.toString());
-  const isParticipant = user.level <= 10;
-  if (!(isCreator || isMember) || isParticipant) {
-    throw Error(
-      "You must be a creator or a member of a project in order to do it!"
-    );
-  }
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+  const json = await response.json();
+  const receipts = json && json.data;
+  const receipt = receipts && receipts[id];
+
+  res.render("notificationreceipt", { id, receipt });
 };

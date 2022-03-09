@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
 const resultSchema = new mongoose.Schema({
@@ -9,32 +9,32 @@ const resultSchema = new mongoose.Schema({
   },
   project: {
     type: mongoose.Schema.ObjectId,
-    ref: 'Project'
+    ref: "Project"
   },
   samplyid: String,
   data: {
     title: String,
     message: String,
     url: String,
+    expireAt: Number // timestamp
   },
   ticket: JSON,
   events: [
     {
       status: String,
       created: Date,
-      data: JSON,
+      data: JSON
     }
   ], // sent, tapped
-  project_name: String,
+  project_name: String
 });
 
-
 function autopopulate(next) {
-  this.populate('author');
+  this.populate("author");
   next();
-};
+}
 
-resultSchema.pre('find', autopopulate);
-resultSchema.pre('findOne', autopopulate);
+resultSchema.pre("find", autopopulate);
+resultSchema.pre("findOne", autopopulate);
 
-module.exports = mongoose.model('Result', resultSchema);
+module.exports = mongoose.model("Result", resultSchema);

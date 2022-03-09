@@ -1046,6 +1046,10 @@ module.exports = {
     step_6_header: "7. Choose when to stop ",
     step_6_timepoint: "Stop at specific timepoint",
     step_6_participant: "Stop sending notification for each participant after",
+    step_7_header: "8. Choose when the link should expire",
+    step_7_not: "The link should not expire",
+    step_7_yes: "The link should expire",
+    step_7_minutes: "minutes after the notification is sent",
     schedule_notifications: "Schedule notifications",
     scheduled_notifications: "Scheduled notifications",
     delete_notifications: "Delete all notifications",
@@ -1156,5 +1160,23 @@ module.exports = {
     apiCommentData: "// defining data",
     apiCommentFunction:
       "// function to send the POST request to activate the notification"
+  },
+
+  history: {
+    download: "Download",
+    downloadInfo: `
+      When you download the history of notifications, the time of the events is saved as a timestamp.
+      In JavaScript, a timestamp is the number of milliseconds that have passed since January 1, 1970.
+    `,
+    expire: "The link expires",
+    sentFromServer: "Sent from the server",
+    receivedInOpenApp: "Received when the app was open",
+    tappedNotificationBar: "Tapped in the notification bar",
+    openInApp: "Opened in the app (messages)",
+    deletedByUser: "Deleted by user",
+    geofenceEventTriggered: "Geofencing event triggered",
+    messageID: "Message ID",
+    status: "Status",
+    receipt: "Receipt"
   }
 };
