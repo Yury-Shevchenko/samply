@@ -109,6 +109,11 @@ exports.createMobileAccount = async (req, res) => {
       newUser.local.password = newUser.generateHash(userData.password);
       const userToken = makeRandomCode();
       newUser.samplyId = userToken;
+      if (userData.timezone) {
+        newUser.information = {
+          timezone: userData.timezone
+        };
+      }
       newUser.save(function(err) {
         if (err) throw err;
         res.status(200).json({ message: "OK", userToken: userToken });
@@ -188,7 +193,8 @@ exports.checkPayableAccount = async (req, res) => {
   const user = await User.findOne(
     { email: userData.email, samplyId: userData.id },
     {
-      stripeInformation: 1
+      stripeInformation: 1,
+      information: 1
     }
   );
   res.send(user);

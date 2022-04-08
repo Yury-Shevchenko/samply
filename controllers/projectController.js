@@ -576,6 +576,17 @@ exports.getMobileUsers = async (req, res) => {
         };
       }
 
+      if (
+        participant &&
+        participant.information &&
+        participant.information.timezone
+      ) {
+        user.information = {
+          ...user.information,
+          timezone: participant.information.timezone
+        };
+      }
+
       if (participant && participant.stripeAccountId) {
         user.stripe = {
           account: participant.stripeAccountId,

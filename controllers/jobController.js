@@ -278,10 +278,10 @@ exports.createScheduleNotification = async (req, res) => {
         title: req.body.title,
         message: req.body.message,
         url: req.body.url,
-        participantId: req.body.participantId,
+        participantId: req.body.participants,
         groups: req.body.groups,
         allCurrentParticipants:
-          req.body.participantId && req.body.participantId.length === 0,
+          req.body.participants && req.body.participants.length === 0,
         allCurrentGroups: req.body.groups && req.body.groups.length === 0,
         name: req.body.name,
         scheduleInFuture: req.body.scheduleInFuture,
@@ -321,11 +321,17 @@ exports.createScheduleNotification = async (req, res) => {
         }
       }
 
+      // to do: when "All future participants" are selected, we need to save information
+      // in the project, and when a new user joins, schedule a new notification for her.
+      // the old way of scheduling for everyone should be deprecated.
+      // in this way, individual timezones can be used for each participant.
+
       // check whether there are current participants to schedule the notifications
-      if (req.body.participantId) {
-        if (req.body.participantId.length > 0) {
+      if (req.body.participants) {
+        // specific participants are selected when the array has elements
+        if (req.body.participants.length > 0) {
           agenda.schedule(date, "personal_notification", {
-            userid: req.body.participantId,
+            userid: req.body.participants,
             projectid: req.user.project._id,
             id: id,
             title: req.body.title,
@@ -335,6 +341,7 @@ exports.createScheduleNotification = async (req, res) => {
             deleteself: true
           });
         } else {
+          // "all curent participants" was selected when the array is empty
           if (req.body.scheduleInFuture) {
             // schedule one time notification which will go to all users of project
             agenda.schedule(date, "one_time_notification", {
@@ -362,6 +369,7 @@ exports.createScheduleNotification = async (req, res) => {
           }
         }
       } else {
+        // no current participants were selected
         if (req.body.scheduleInFuture) {
           // schedule only for future users
           agenda.schedule(date, "one_time_notification", {

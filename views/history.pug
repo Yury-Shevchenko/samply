@@ -48,10 +48,11 @@ block content
               td= notification.events.filter(e => e.status === 'archived').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'geofencing-event').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.messageId  
-              td= notification.ticket.status  
+              td= notification.ticket && notification.ticket.status  
               td
-                p
-                  a(style={color:'black'} href=`/notificationreceipt/${notification.ticket.id}`) Open
+                if(notification.ticket && notification.ticket.status)
+                  p
+                    a(style={color:'black'} href=`/notificationreceipt/${notification.ticket.id}`) Open
               
               td
                 a(href=`/removerecord/${notification._id}`)

@@ -75,7 +75,7 @@ const projectSchema = new mongoose.Schema({
       message: { type: String, default: "Please complete a test." },
       duration: { type: Number },
       url: { type: String, default: "" },
-      participantId: [{ type: String }],
+      participantId: [{ type: String }], // participants
       groups: [{ type: String }],
       name: String,
       start_after: JSON,
