@@ -54,8 +54,7 @@ block content
               td= notification.ticket && notification.ticket.status  
               td
                 if(notification.ticket && notification.ticket.status)
-                  button(class="receiptBtn" id=notification.ticket.id) Read
-                  //- p
+                  p
                     a(style={color:'black'} href=`/notificationreceipt/${notification.ticket.id}`) Open
               
               td
@@ -75,32 +74,5 @@ block content
     else 
       h2= `${layout.history_notifications}`
       p !{layout.message_history_create_project}
-      
-    script(defer type='text/javascript' nonce=`${noncevalue}`).
-      $(document).ready( function () {   
-        console.log("document is ready");
-        $('.receiptBtn').click(async function(e) {
-        
-          const { id } = e.target;
-          
-          const url = "https://exp.host/--/api/v2/push/getReceipts";
-          const data = {
-            ids: [id]
-          };
-          
-          const response = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-          });
-          const json = await response.json();
-          const receipts = json && json.data;
-          const receipt = receipts && receipts[id];
-          console.log({ receipt });
-          
-        });
-      })   
       
     //- pre= h.dump(history)        
