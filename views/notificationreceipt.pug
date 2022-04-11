@@ -17,6 +17,12 @@ block content
       if(receipt.details)
         p Details: #{receipt.details}
     
-    else 
+    else
       
-      p ⚠️ In development 
+      p Push receipts are cleared after 24 hours. 
+      
+      p 
+        | Notification service recommends checking push receipts 15 minutes after sending your push notifications. 
+        | While push receipts are often available much sooner, a 15-minute window gives the push notification service a comfortable amount of time to make the receipts available to you. 
+        | If after 15 minutes there is no push receipt, this likely indicates an error with the push notification service. 
+        | Read more about push receipts <a target="_blank" href="https://docs.expo.dev/push-notifications/sending-notifications/#check-push-receipts-for-errors">here</a>.
