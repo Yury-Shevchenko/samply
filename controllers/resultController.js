@@ -359,7 +359,9 @@ exports.checkNotificationReceipt = async (req, res) => {
     },
     body: JSON.stringify(data)
   });
+  console.log("response", response);
   const json = await response.json();
+  console.log("json", json);
   const receipts = json && json.data;
   const receipt = receipts && receipts[id];
 
