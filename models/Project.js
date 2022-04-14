@@ -3,6 +3,7 @@ mongoose.Promise = global.Promise;
 const slug = require("slugs");
 const { customAlphabet } = require("nanoid");
 const { lowercase } = require("nanoid-dictionary");
+const randomBits = customAlphabet(lowercase, 8);
 
 const projectSchema = new mongoose.Schema({
   created: {
@@ -19,7 +20,8 @@ const projectSchema = new mongoose.Schema({
     type: String
   },
   slug: {
-    type: String
+    type: String,
+    default: () => randomBits()
   },
   samplycode: {
     type: String
@@ -199,38 +201,37 @@ projectSchema.statics.debugProjects = function() {
 };
 
 // pre-save validation to make sure that the project with the same name does not already exist
-projectSchema.pre("save", async function(next) {
-  // create slug
-  if (
-    this.name !== "" &&
-    typeof this.name !== "undefined" &&
-    (!this.slug || this.isModified("name"))
-  ) {
-    this.slug = slug(this.name);
-    const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, "i"); // regular expression
-    const studiesWithSlug = await this.constructor.find({ slug: slugRegEx });
-    if (studiesWithSlug.length) {
-      const randomBits = customAlphabet(lowercase, 6);
-      this.slug = `${this.slug}-${randomBits()}`;
-    }
-  }
-
-  if (!this.isModified("name") || this.name === "") {
-    next(); // skip it
-  }
-
-  const self = this;
-  mongoose.models.Project.findOne({ name: self.name }, function(err, project) {
-    if (err) {
-      next(err);
-    } else if (project) {
-      self.invalidate("name", "This name already exists");
-      next(new Error("This name is already taken"));
-    } else {
-      next();
-    }
-  });
-});
+// projectSchema.pre("save", async function(next) {
+// create slug
+// if (
+//   this.name !== "" &&
+//   typeof this.name !== "undefined" &&
+//   (!this.slug || this.isModified("name"))
+// ) {
+//   this.slug = slug(this.name);
+//   const slugRegEx = new RegExp(`^(${this.slug})((-[0-9]*$)?)$`, "i"); // regular expression
+//   const studiesWithSlug = await this.constructor.find({ slug: slugRegEx });
+//   if (studiesWithSlug.length) {
+//     const randomBits = customAlphabet(lowercase, 6);
+//     this.slug = `${this.slug}-${randomBits()}`;
+//   }
+// }
+// if (!this.isModified("name") || this.name === "") {
+//   next(); // skip it
+// }
+//
+// const self = this;
+// mongoose.models.Project.findOne({ name: self.name }, function(err, project) {
+//   if (err) {
+//     next(err);
+//   } else if (project) {
+//     self.invalidate("name", "This name already exists");
+//     next(new Error("This name is already taken"));
+//   } else {
+//     next();
+//   }
+// });
+// });
 
 //find projects which user has created
 projectSchema.virtual("participants", {

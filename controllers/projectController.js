@@ -152,7 +152,7 @@ exports.activateProject = async (req, res) => {
 };
 
 exports.createProject = async (req, res) => {
-  if (req.body.name != "") {
+  if (req.body.name.trim() != "") {
     try {
       let membersData = [];
       if (req.body.members) {
@@ -183,7 +183,7 @@ exports.createProject = async (req, res) => {
         };
       });
       const project = await new Project({
-        name: req.body.name,
+        name: req.body.name.trim(),
         image: req.body.image,
         description: req.body.description,
         welcomeMessage: req.body.welcomeMessage,
@@ -244,89 +244,94 @@ exports.createProject = async (req, res) => {
 };
 
 exports.updateProject = async (req, res) => {
-  try {
-    let membersData = [];
-    if (req.body.members) {
-      const users = await User.find({ email: { $in: req.body.members } });
-      membersData = users
-        .map(e => {
-          if (
-            e.email &&
-            e.email != null &&
-            typeof e.email != "undefined" &&
-            e.email != req.user.email
-          ) {
-            return e._id;
-          }
-        })
-        .filter(e => typeof e != "undefined");
-    }
-    const project = await Project.findOne({ _id: req.params.id });
-    project.name = req.body.name;
-    project.image = req.body.image;
-    project.description = req.body.description;
-    project.welcomeMessage = req.body.welcomeMessage;
-    project.codeMessage = req.body.codeMessage;
-    project.groupMessage = req.body.groupMessage;
-    project.messageAfterJoin = req.body.messageAfterJoin;
-    project.geofencingInstruction = req.body.geofencingInstruction;
-    project.members = membersData;
-    if (!project.settings) project.settings = {};
-    if (!project.samplycode) {
-      project.samplycode = nanoid(6);
-    }
-
-    const locationSlugs = Object.keys(req.body)
-      .filter(key => key.startsWith("slug"))
-      .map(key => key.substring(5));
-    const locations = locationSlugs.map(slug => {
-      return {
-        slug: slug,
-        title: req.body[`title-${slug}`],
-        latitude: parseFloat(req.body[`latitude-${slug}`]),
-        longitude: parseFloat(req.body[`longitude-${slug}`]),
-        radius: parseFloat(req.body[`radius-${slug}`]),
-        events: [
-          req.body[`event-enter-${slug}`] === "on" ? "enter" : undefined,
-          req.body[`event-exit-${slug}`] === "on" ? "exit" : undefined
-        ].filter(e => !!e),
-        link: req.body[`link-${slug}`],
-        invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0
-      };
-    });
-
-    project.settings = {
-      askParticipantCode:
-        req.body.askParticipantCode && req.body.askParticipantCode === "on"
-          ? true
-          : false,
-      askParticipantGroup:
-        req.body.askParticipantGroup && req.body.askParticipantGroup === "on"
-          ? true
-          : false,
-      enableGeofencing:
-        req.body.enableGeofencing && req.body.enableGeofencing === "on"
-          ? true
-          : false,
-      geofencing: {
-        locations: locations,
-        link: req.body.geofencingURL,
-        radius: req.body.userLocationRadius,
-        events: [
-          req.body[`event-enter`] === "on" ? "enter" : undefined,
-          req.body[`event-exit`] === "on" ? "exit" : undefined
-        ].filter(e => !!e),
-        invisible: req.body[`invisible`] === "on" ? 1 : 0
+  if (req.body.name.trim() != "") {
+    try {
+      let membersData = [];
+      if (req.body.members) {
+        const users = await User.find({ email: { $in: req.body.members } });
+        membersData = users
+          .map(e => {
+            if (
+              e.email &&
+              e.email != null &&
+              typeof e.email != "undefined" &&
+              e.email != req.user.email
+            ) {
+              return e._id;
+            }
+          })
+          .filter(e => typeof e != "undefined");
       }
-    };
+      const project = await Project.findOne({ _id: req.params.id });
+      project.name = req.body.name.trim();
+      project.image = req.body.image;
+      project.description = req.body.description;
+      project.welcomeMessage = req.body.welcomeMessage;
+      project.codeMessage = req.body.codeMessage;
+      project.groupMessage = req.body.groupMessage;
+      project.messageAfterJoin = req.body.messageAfterJoin;
+      project.geofencingInstruction = req.body.geofencingInstruction;
+      project.members = membersData;
+      if (!project.settings) project.settings = {};
+      if (!project.samplycode) {
+        project.samplycode = nanoid(6);
+      }
 
-    await project.save();
-    req.flash("success", `${res.locals.layout.flash_project_updated}`);
+      const locationSlugs = Object.keys(req.body)
+        .filter(key => key.startsWith("slug"))
+        .map(key => key.substring(5));
+      const locations = locationSlugs.map(slug => {
+        return {
+          slug: slug,
+          title: req.body[`title-${slug}`],
+          latitude: parseFloat(req.body[`latitude-${slug}`]),
+          longitude: parseFloat(req.body[`longitude-${slug}`]),
+          radius: parseFloat(req.body[`radius-${slug}`]),
+          events: [
+            req.body[`event-enter-${slug}`] === "on" ? "enter" : undefined,
+            req.body[`event-exit-${slug}`] === "on" ? "exit" : undefined
+          ].filter(e => !!e),
+          link: req.body[`link-${slug}`],
+          invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0
+        };
+      });
+
+      project.settings = {
+        askParticipantCode:
+          req.body.askParticipantCode && req.body.askParticipantCode === "on"
+            ? true
+            : false,
+        askParticipantGroup:
+          req.body.askParticipantGroup && req.body.askParticipantGroup === "on"
+            ? true
+            : false,
+        enableGeofencing:
+          req.body.enableGeofencing && req.body.enableGeofencing === "on"
+            ? true
+            : false,
+        geofencing: {
+          locations: locations,
+          link: req.body.geofencingURL,
+          radius: req.body.userLocationRadius,
+          events: [
+            req.body[`event-enter`] === "on" ? "enter" : undefined,
+            req.body[`event-exit`] === "on" ? "exit" : undefined
+          ].filter(e => !!e),
+          invisible: req.body[`invisible`] === "on" ? 1 : 0
+        }
+      };
+
+      await project.save();
+      req.flash("success", `${res.locals.layout.flash_project_updated}`);
+      res.redirect("back");
+    } catch (err) {
+      req.flash("error", err.message);
+      res.redirect("back");
+      return;
+    }
+  } else {
+    req.flash("error", `${res.locals.layout.flash_give_name}`);
     res.redirect("back");
-  } catch (err) {
-    req.flash("error", err.message);
-    res.redirect("back");
-    return;
   }
 };
 
