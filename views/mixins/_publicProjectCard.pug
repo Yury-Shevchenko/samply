@@ -2,7 +2,10 @@ mixin publicProjectCard(project = {})
   a(href=`/studies/${project.slug}`)
     .project
       .project__hero
-        h2.project__title #{project.name}
+        if(project.name.split(' ').length > 5)
+          h2.project__title= `${project.name.split(' ').slice(0, 5).join(' ')}...`
+        else 
+          h2.project__title #{project.name}
       .project__details
         if(project.description.split(' ').length > 20)
           p(style="font-size:1.5rem")= `${project.description.split(' ').slice(0, 20).join(' ')}...`
