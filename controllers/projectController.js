@@ -39,6 +39,7 @@ exports.listPublicProjects = async (req, res) => {
     .limit(limit);
   const countPromise = Project.where({
     currentlyActive: true,
+    public: true,
     creator: { $exists: true }
   }).countDocuments();
   const [projects, count] = await Promise.all([projectsPromise, countPromise]);
