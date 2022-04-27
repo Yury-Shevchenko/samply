@@ -36,14 +36,13 @@ agenda.on("ready", function() {
 
   agenda.define("regular_notification", (job, done) => {
     if (
-      (job.attrs.data.participantId &&
-        job.attrs.data.participantId.length > 0) ||
+      (job.attrs.data.userid && job.attrs.data.userid.length > 0) ||
       (job.attrs.data.groupid && job.attrs.data.groupid.length > 0)
     ) {
       sendToSomeProjectUsers({
         done: done,
         project_id: job.attrs.data.projectid,
-        user_id: job.attrs.data.participantId,
+        user_id: job.attrs.data.userid,
         group_id: job.attrs.data.groupid,
         title: job.attrs.data.title,
         message: job.attrs.data.message,
@@ -65,12 +64,12 @@ agenda.on("ready", function() {
   agenda.define("start_manager", (job, done) => {
     const newjob = agenda.create("regular_notification", {
       projectid: job.attrs.data.projectid,
+      userid: job.attrs.data.userid,
       id: job.attrs.data.id,
       title: job.attrs.data.title,
       message: job.attrs.data.message,
       url: job.attrs.data.url,
       expireIn: job.attrs.data.expireIn,
-      participantId: job.attrs.data.participantId,
       groupid: job.attrs.data.groupid
     });
     newjob.repeatEvery(job.attrs.data.interval, {
@@ -587,7 +586,7 @@ exports.createIntervalNotification = async (req, res) => {
               }
             }
             agenda.schedule(int_start, "start_random_group_manager", {
-              groupid: group,
+              groupid: [group],
               projectid: req.user.project._id,
               id: id,
               interval: windowFrom,
@@ -600,7 +599,7 @@ exports.createIntervalNotification = async (req, res) => {
               timezone: req.body.timezone
             });
             agenda.schedule(int_end, "end_random_group_manager", {
-              groupid: group,
+              groupid: [group],
               projectid: req.user.project._id,
               id: id,
               interval: windowFrom,
@@ -701,7 +700,7 @@ exports.createIntervalNotification = async (req, res) => {
             }
           }
           agenda.schedule(int_start, "start_random_personal_manager", {
-            userid: user.id,
+            userid: [user.id],
             projectid: req.user.project._id,
             id: id,
             interval: windowFrom,
@@ -714,7 +713,7 @@ exports.createIntervalNotification = async (req, res) => {
             timezone: req.body.timezone
           });
           agenda.schedule(int_end, "end_random_personal_manager", {
-            userid: user.id,
+            userid: [user.id],
             projectid: req.user.project._id,
             id: id,
             interval: windowFrom,
@@ -757,29 +756,56 @@ exports.createIntervalNotification = async (req, res) => {
         expireIn: req.body.expireIn
       });
 
-      if (users || groups) {
+      if (users && users.length) {
+        const user_ids = users.map(user => user.id);
+
         agenda.schedule(int_start, "start_manager", {
-          projectid: req.user.project._id,
           id: id,
+          projectid: req.user.project._id,
+          userid: user_ids,
           interval: interval,
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          participantId: req.body.participantId,
           groupid: req.body.groups,
           timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_manager", {
-          projectid: req.user.project._id,
           id: id,
+          projectid: req.user.project._id,
+          userid: user_ids,
           interval: interval,
           title: req.body.title,
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          participantId: req.body.participantId,
           groupid: req.body.groups,
+          timezone: req.body.timezone
+        });
+      }
+
+      if (groups && groups.length) {
+        agenda.schedule(int_start, "start_manager", {
+          id: id,
+          projectid: req.user.project._id,
+          interval: interval,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+          expireIn: req.body.expireIn,
+          groupid: groups,
+          timezone: req.body.timezone
+        });
+        agenda.schedule(int_end, "end_manager", {
+          id: id,
+          projectid: req.user.project._id,
+          interval: interval,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+          expireIn: req.body.expireIn,
+          groupid: groups,
           timezone: req.body.timezone
         });
       }
@@ -970,7 +996,7 @@ exports.createIndividualNotification = async (req, res) => {
         }
 
         agenda.schedule(int_start, "start_personal_manager", {
-          groupid: group,
+          groupid: [group],
           projectid: req.user.project._id,
           id: id,
           interval: updatedInterval,
@@ -981,7 +1007,7 @@ exports.createIndividualNotification = async (req, res) => {
           timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
-          groupid: group,
+          groupid: [group],
           projectid: req.user.project._id,
           id: id,
           interval: updatedInterval,
@@ -1073,7 +1099,7 @@ exports.createIndividualNotification = async (req, res) => {
         }
 
         agenda.schedule(int_start, "start_personal_manager", {
-          userid: user.id,
+          userid: [user.id],
           projectid: req.user.project._id,
           id: id,
           interval: updatedInterval,
@@ -1084,7 +1110,7 @@ exports.createIndividualNotification = async (req, res) => {
           timezone: req.body.timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
-          userid: user.id,
+          userid: [user.id],
           projectid: req.user.project._id,
           id: id,
           interval: updatedInterval,
@@ -1198,7 +1224,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
 
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
-            groupid: group,
+            groupid: [group],
             projectid: req.user.project._id,
             id: id,
             title: req.body.title,
@@ -1235,7 +1261,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
 
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
-            userid: user.id,
+            userid: [user.id],
             projectid: req.user.project._id,
             id: id,
             title: req.body.title,
@@ -1762,7 +1788,7 @@ exports.joinStudy = async (req, res) => {
           }
 
           agenda.schedule(user_int_start, "start_random_personal_manager", {
-            userid: req.body.id,
+            userid: [req.body.id],
             projectid: project._id,
             id: sub.id,
             interval: windowFrom,
@@ -1775,7 +1801,7 @@ exports.joinStudy = async (req, res) => {
             timezone: sub.timezone
           });
           agenda.schedule(user_int_end, "end_random_personal_manager", {
-            userid: req.body.id,
+            userid: [req.body.id],
             projectid: project._id,
             id: sub.id,
             interval: windowFrom,
@@ -1803,7 +1829,7 @@ exports.joinStudy = async (req, res) => {
           }
 
           agenda.schedule(user_int_start, "start_personal_manager", {
-            userid: req.body.id,
+            userid: [req.body.id],
             projectid: project._id,
             id: sub.id,
             interval: updatedInterval,
@@ -1814,7 +1840,7 @@ exports.joinStudy = async (req, res) => {
             timezone: sub.timezone
           });
           agenda.schedule(user_int_end, "end_personal_manager", {
-            userid: req.body.id,
+            userid: [req.body.id],
             projectid: project._id,
             id: sub.id,
             interval: updatedInterval,
@@ -1843,7 +1869,7 @@ exports.joinStudy = async (req, res) => {
 
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
-            userid: req.body.id,
+            userid: [req.body.id],
             projectid: project._id,
             id: sub.id,
             title: sub.title,
@@ -1892,7 +1918,7 @@ exports.leaveStudy = async (req, res) => {
   agenda.cancel(
     {
       "data.projectid": project._id,
-      "data.userid": req.body.id
+      "data.userid": [req.body.id]
     },
     (err, numRemoved) => {}
   );
