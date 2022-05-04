@@ -32,6 +32,12 @@ block content
       
       h2 #{l.step_0_header} 
       
+      .multipleOptions
+        .tag.tag__choice
+          input(type = 'checkbox' id='useParticipantTimezone' value='true' name='useParticipantTimezone')
+          label(for='useParticipantTimezone' class="tagLabel") #{l.step_0_participant_timezone}
+      p
+      
       .zone-picker
     
       .notifications_scheduler
@@ -54,9 +60,10 @@ block content
                   input(type = 'checkbox' id='allCurrentParticipants' value='all' checked=!participant name='participants')
                   label(for='allCurrentParticipants' class="tagLabel") #{l.step_1_all}
                 each user in project.mobileUsers
-                  .tag.tag__choice
-                    input(type = 'checkbox' id=user.id value=user.id name='participants_ids' checked=user.id === participant)
-                    label(for=user.id class="tagLabel") #{user.id}
+                  if(!user.deactivated)
+                    .tag.tag__choice
+                      input(type = 'checkbox' id=user.id value=user.id name='participants_ids' checked=user.id === participant)
+                      label(for=user.id class="tagLabel") #{user.id}
                   
             .tag.tag__choice
               input(type = 'checkbox' id='groups' value='groups' name='participants_groups')

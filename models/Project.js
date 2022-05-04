@@ -96,7 +96,8 @@ const projectSchema = new mongoose.Schema({
       allCurrentParticipants: Boolean,
       allCurrentGroups: Boolean,
       timezone: String,
-      expireIn: Number // number of milliseconds
+      expireIn: Number, // number of milliseconds
+      useParticipantTimezone: Boolean
     }
   ],
   mobileUsers: [

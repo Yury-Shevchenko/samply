@@ -265,6 +265,9 @@ exports.createScheduleNotification = async (req, res) => {
     }
   );
 
+  // when "All future participants" are selected, we save information
+  // in the project, and when a new user joins, schedule a new notification
+
   if (req.body.date && req.body.date.length > 0) {
     await req.body.date.map(date => {
       const id = uniqid();
@@ -285,103 +288,50 @@ exports.createScheduleNotification = async (req, res) => {
         name: req.body.name,
         scheduleInFuture: req.body.scheduleInFuture,
         timezone: req.body.timezone,
-        expireIn: req.body.expireIn
+        expireIn: req.body.expireIn,
+        useParticipantTimezone: req.body.useParticipantTimezone
       });
 
-      // check whether there are groups to schedule notifications
+      let groups;
       if (req.body.groups) {
         if (req.body.groups.length > 0) {
-          // schedule for specific groups
-          agenda.schedule(date, "personal_notification", {
-            groupid: req.body.groups,
-            projectid: req.user.project._id,
-            id: id,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            deleteself: true
-          });
+          groups = req.body.groups;
         } else {
-          // schedule only for all users in groups
-          const allUsersInGroups = project.mobileUsers
-            .filter(user => user.group && user.group.id)
-            .map(user => user.id);
-          agenda.schedule(date, "personal_notification", {
-            userid: allUsersInGroups,
-            projectid: req.user.project._id,
-            id: id,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            deleteself: true
-          });
+          const allGroups = project.mobileUsers
+            .map(user => user.group)
+            .filter(item => typeof item !== "undefined");
+          const allGroupsIds = allGroups.map(group => group.id);
+          groups = [...new Set(allGroupsIds)];
         }
+        agenda.schedule(date, "personal_notification", {
+          groupid: groups,
+          projectid: req.user.project._id,
+          id: id,
+          title: req.body.title,
+          message: req.body.message,
+          url: req.body.url,
+          expireIn: req.body.expireIn,
+          deleteself: true
+        });
       }
 
-      // to do: when "All future participants" are selected, we need to save information
-      // in the project, and when a new user joins, schedule a new notification for her.
-      // the old way of scheduling for everyone should be deprecated.
-      // in this way, individual timezones can be used for each participant.
-
-      // check whether there are current participants to schedule the notifications
+      let users;
       if (req.body.participants) {
-        // specific participants are selected when the array has elements
         if (req.body.participants.length > 0) {
-          agenda.schedule(date, "personal_notification", {
-            userid: req.body.participants,
-            projectid: req.user.project._id,
-            id: id,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            deleteself: true
-          });
+          users = req.body.participants;
         } else {
-          // "all curent participants" was selected when the array is empty
-          if (req.body.scheduleInFuture) {
-            // schedule one time notification which will go to all users of project
-            agenda.schedule(date, "one_time_notification", {
-              projectid: req.user.project._id,
-              id: id,
-              title: req.body.title,
-              message: req.body.message,
-              url: req.body.url,
-              expireIn: req.body.expireIn,
-              deleteself: true
-            });
-          } else {
-            // schedule only for all current users of the project
-            const allUsers = project.mobileUsers.map(user => user.id);
-            agenda.schedule(date, "personal_notification", {
-              userid: allUsers,
-              projectid: req.user.project._id,
-              id: id,
-              title: req.body.title,
-              message: req.body.message,
-              url: req.body.url,
-              expireIn: req.body.expireIn,
-              deleteself: true
-            });
-          }
+          users = project.mobileUsers
+            .filter(user => !user.deactivated)
+            .map(user => user.id);
         }
-      } else {
-        // no current participants were selected
-        if (req.body.scheduleInFuture) {
-          // schedule only for future users
-          agenda.schedule(date, "one_time_notification", {
-            projectid: req.user.project._id,
-            id: id,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            deleteself: true,
-            excludeUntil: Date.now()
-          });
-        }
+        const res = schedulePersonalNotificationsForUsers({
+          date: date,
+          users: users, // []
+          projectid: req.user.project._id, // String
+          notificationid: id, // String - notification ID
+          body: req.body, // {}
+          deleteself: true // Boolean
+        });
       }
     });
     await project.save((saveErr, updatedproject) => {
@@ -410,7 +360,7 @@ exports.createIntervalNotification = async (req, res) => {
       mobileUsers: 1
     }
   );
-  const id = uniqid();
+  const id = uniqid(); // notification id
 
   // dependent on the strategy
   let int_start, int_end;
@@ -435,7 +385,7 @@ exports.createIntervalNotification = async (req, res) => {
         req.body.participantId.includes(user.id)
       );
     } else {
-      users = project.mobileUsers;
+      users = project.mobileUsers.filter(user => !user.deactivated);
     }
   }
 
@@ -485,7 +435,8 @@ exports.createIntervalNotification = async (req, res) => {
           to: window.to && cronstrue.toString(window.to)
         },
         timezone: req.body.timezone,
-        expireIn: req.body.expireIn
+        expireIn: req.body.expireIn,
+        useParticipantTimezone: req.body.useParticipantTimezone
       });
     });
 
@@ -617,8 +568,8 @@ exports.createIntervalNotification = async (req, res) => {
     }
 
     if (users) {
-      users.map(user => {
-        intervalWindows.map(window => {
+      users.map(async user => {
+        intervalWindows.map(async window => {
           if (req.body.int_start.startEvent === "registration") {
             if (req.body.int_start.startNextDay) {
               const startNextDay = parseInt(req.body.int_start.startNextDay);
@@ -699,6 +650,23 @@ exports.createIntervalNotification = async (req, res) => {
               windowTo = parsedTo.join(" ");
             }
           }
+
+          let timezone = req.body.timezone;
+          // select timezone based on the user timezone
+          if (req.body.useParticipantTimezone) {
+            const participant = await User.findOne(
+              { samplyId: user.id },
+              { information: 1 }
+            );
+            if (
+              participant &&
+              participant.information &&
+              participant.information.timezone
+            ) {
+              timezone = participant.information.timezone;
+            }
+          }
+
           agenda.schedule(int_start, "start_random_personal_manager", {
             userid: [user.id],
             projectid: req.user.project._id,
@@ -710,7 +678,7 @@ exports.createIntervalNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             number: window.number,
-            timezone: req.body.timezone
+            timezone
           });
           agenda.schedule(int_end, "end_random_personal_manager", {
             userid: [user.id],
@@ -723,7 +691,7 @@ exports.createIntervalNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             number: window.number,
-            timezone: req.body.timezone
+            timezone
           });
         });
       });
@@ -753,36 +721,79 @@ exports.createIntervalNotification = async (req, res) => {
           interval: cronstrue.toString(interval)
         },
         timezone: req.body.timezone,
-        expireIn: req.body.expireIn
+        expireIn: req.body.expireIn,
+        useParticipantTimezone: req.body.useParticipantTimezone
       });
 
       if (users && users.length) {
-        const user_ids = users.map(user => user.id);
-
-        agenda.schedule(int_start, "start_manager", {
-          id: id,
-          projectid: req.user.project._id,
-          userid: user_ids,
-          interval: interval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          groupid: req.body.groups,
-          timezone: req.body.timezone
-        });
-        agenda.schedule(int_end, "end_manager", {
-          id: id,
-          projectid: req.user.project._id,
-          userid: user_ids,
-          interval: interval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          groupid: req.body.groups,
-          timezone: req.body.timezone
-        });
+        // select timezone for each participant based on the user timezone
+        if (req.body.useParticipantTimezone) {
+          users.map(async user => {
+            const participant = await User.findOne(
+              { samplyId: user.id },
+              { information: 1 }
+            );
+            let timezone = req.body.timezone;
+            if (
+              participant &&
+              participant.information &&
+              participant.information.timezone
+            ) {
+              timezone = participant.information.timezone;
+            }
+            agenda.schedule(int_start, "start_manager", {
+              id: id,
+              projectid: req.user.project._id,
+              userid: [user.id],
+              interval: interval,
+              title: req.body.title,
+              message: req.body.message,
+              url: req.body.url,
+              expireIn: req.body.expireIn,
+              groupid: req.body.groups,
+              timezone
+            });
+            agenda.schedule(int_end, "end_manager", {
+              id: id,
+              projectid: req.user.project._id,
+              userid: [user.id],
+              interval: interval,
+              title: req.body.title,
+              message: req.body.message,
+              url: req.body.url,
+              expireIn: req.body.expireIn,
+              groupid: req.body.groups,
+              timezone
+            });
+          });
+        } else {
+          const user_ids = users.map(user => user.id);
+          // make general scheduler for all participants
+          agenda.schedule(int_start, "start_manager", {
+            id: id,
+            projectid: req.user.project._id,
+            userid: user_ids,
+            interval: interval,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+            expireIn: req.body.expireIn,
+            groupid: req.body.groups,
+            timezone: req.body.timezone
+          });
+          agenda.schedule(int_end, "end_manager", {
+            id: id,
+            projectid: req.user.project._id,
+            userid: user_ids,
+            interval: interval,
+            title: req.body.title,
+            message: req.body.message,
+            url: req.body.url,
+            expireIn: req.body.expireIn,
+            groupid: req.body.groups,
+            timezone: req.body.timezone
+          });
+        }
       }
 
       if (groups && groups.length) {
@@ -860,7 +871,7 @@ exports.createIndividualNotification = async (req, res) => {
         req.body.participantId.includes(user.id)
       );
     } else {
-      users = project.mobileUsers;
+      users = project.mobileUsers.filter(user => !user.deactivated);
     }
   }
 
@@ -908,7 +919,8 @@ exports.createIndividualNotification = async (req, res) => {
         interval: cronstrue.toString(interval)
       },
       timezone: req.body.timezone,
-      expireIn: req.body.expireIn
+      expireIn: req.body.expireIn,
+      useParticipantTimezone: req.body.useParticipantTimezone
     });
   });
 
@@ -1022,8 +1034,8 @@ exports.createIndividualNotification = async (req, res) => {
   }
 
   if (users) {
-    users.map(user => {
-      intervals.map(interval => {
+    users.map(async user => {
+      intervals.map(async interval => {
         let updatedInterval = interval;
 
         if (req.body.int_start.startEvent === "registration") {
@@ -1098,6 +1110,22 @@ exports.createIndividualNotification = async (req, res) => {
           }
         }
 
+        let timezone = req.body.timezone;
+        // select timezone based on the user timezone
+        if (req.body.useParticipantTimezone) {
+          const participant = await User.findOne(
+            { samplyId: user.id },
+            { information: 1 }
+          );
+          if (
+            participant &&
+            participant.information &&
+            participant.information.timezone
+          ) {
+            timezone = participant.information.timezone;
+          }
+        }
+
         agenda.schedule(int_start, "start_personal_manager", {
           userid: [user.id],
           projectid: req.user.project._id,
@@ -1107,7 +1135,7 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          timezone: req.body.timezone
+          timezone
         });
         agenda.schedule(int_end, "end_personal_manager", {
           userid: [user.id],
@@ -1118,7 +1146,7 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          timezone: req.body.timezone
+          timezone
         });
       });
     });
@@ -1149,7 +1177,19 @@ exports.createFixedIndividualNotification = async (req, res) => {
       mobileUsers: 1
     }
   );
-  const id = uniqid();
+  const id = uniqid(); // notification id
+
+  // check whether there are current participants to schedule the notifications
+  let users;
+  if (req.body.participantId) {
+    if (req.body.participantId.length > 0) {
+      users = project.mobileUsers.filter(user =>
+        req.body.participantId.includes(user.id)
+      );
+    } else {
+      users = project.mobileUsers.filter(user => !user.deactivated);
+    }
+  }
 
   // check groups
   let groups;
@@ -1186,21 +1226,10 @@ exports.createFixedIndividualNotification = async (req, res) => {
       number: parseInt(interval.number),
       scheduleInFuture: req.body.scheduleInFuture,
       timezone: req.body.timezone,
-      expireIn: req.body.expireIn
+      expireIn: req.body.expireIn,
+      useParticipantTimezone: req.body.useParticipantTimezone
     });
   });
-
-  // check whether there are current participants to schedule the notifications
-  let users;
-  if (req.body.participantId) {
-    if (req.body.participantId.length > 0) {
-      users = project.mobileUsers.filter(user =>
-        req.body.participantId.includes(user.id)
-      );
-    } else {
-      users = project.mobileUsers;
-    }
-  }
 
   if (groups) {
     groups.map(group => {
@@ -1260,16 +1289,14 @@ exports.createFixedIndividualNotification = async (req, res) => {
           const scheduleId = uniqid();
 
           // schedule the notification
-          agenda.schedule(date, "personal_notification", {
-            userid: [user.id],
-            projectid: req.user.project._id,
-            id: id,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            deleteself: true,
-            scheduleid: scheduleId
+          const res = schedulePersonalNotificationsForUsers({
+            date: date,
+            users: [user.id], // []
+            projectid: req.user.project._id, // String
+            notificationid: id, // String - notification ID
+            body: req.body, // {}
+            deleteself: true, // Boolean
+            scheduleid: scheduleId // String
           });
         }
       });
@@ -1652,6 +1679,19 @@ exports.joinStudy = async (req, res) => {
     project.mobileUsers = [];
   }
 
+  let participantTimezone;
+  const participant = await User.findOne(
+    { samplyId: req.body.id },
+    { information: 1 }
+  );
+  if (
+    participant &&
+    participant.information &&
+    participant.information.timezone
+  ) {
+    participantTimezone = participant.information.timezone;
+  }
+
   // record the group if there is one
   let group;
   if (req.body.group) {
@@ -1698,7 +1738,13 @@ exports.joinStudy = async (req, res) => {
 
   // if there are scheduled notifications, create them for the new user
   if (project && project.notifications && project.notifications.length > 0) {
-    project.notifications.map(sub => {
+    project.notifications.map(async sub => {
+      let timezone = sub.timezone;
+      // select timezone based on the user timezone
+      if (sub.useParticipantTimezone && participantTimezone) {
+        timezone = participantTimezone;
+      }
+
       if (sub.scheduleInFuture && sub.schedule === "repeat") {
         let user_int_start = sub.int_start;
         let user_int_end = sub.int_end;
@@ -1710,7 +1756,7 @@ exports.joinStudy = async (req, res) => {
               whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
               whenToStart = moment
-                .tz(sub.timezone)
+                .tz(timezone)
                 .add({ days: startNextDay - 1 })
                 .startOf("day")
                 .add({
@@ -1739,7 +1785,7 @@ exports.joinStudy = async (req, res) => {
               whenToEnd = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
             } else {
               whenToEnd = moment
-                .tz(sub.timezone)
+                .tz(timezone)
                 .add({ days: endNextDay })
                 .startOf("day")
                 .add({
@@ -1798,7 +1844,7 @@ exports.joinStudy = async (req, res) => {
             url: sub.url,
             expireIn: sub.expireIn,
             number: sub.windowInterval && sub.windowInterval.number,
-            timezone: sub.timezone
+            timezone: timezone
           });
           agenda.schedule(user_int_end, "end_random_personal_manager", {
             userid: [req.body.id],
@@ -1811,7 +1857,7 @@ exports.joinStudy = async (req, res) => {
             url: sub.url,
             expireIn: sub.expireIn,
             number: sub.windowInterval && sub.windowInterval.number,
-            timezone: sub.timezone
+            timezone: timezone
           });
         } else {
           let updatedInterval = sub.interval;
@@ -1837,7 +1883,7 @@ exports.joinStudy = async (req, res) => {
             message: sub.message,
             url: sub.url,
             expireIn: sub.expireIn,
-            timezone: sub.timezone
+            timezone: timezone
           });
           agenda.schedule(user_int_end, "end_personal_manager", {
             userid: [req.body.id],
@@ -1848,36 +1894,67 @@ exports.joinStudy = async (req, res) => {
             message: sub.message,
             url: sub.url,
             expireIn: sub.expireIn,
-            timezone: sub.timezone
+            timezone: timezone
           });
         }
       } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
-        // pick up the random number between two dates
-        for (let i = 0; i < sub.number; i++) {
-          if (sub.window_from > sub.window_to) {
-            return;
+        if (sub.target === "fixed-times") {
+          const momentDate = moment.tz(sub.date, sub.timezone);
+          const dateForParticipant = momentDate
+            .tz(timezone, true)
+            .toISOString();
+          const dateConverted = new Date(dateForParticipant);
+          const timestampForParticipant = dateConverted.getTime();
+
+          // check whether the date is in the future
+          if (timestampForParticipant > Date.now()) {
+            agenda.schedule(dateForParticipant, "personal_notification", {
+              userid: [req.body.id],
+              projectid: project._id,
+              id: sub.id,
+              title: sub.title,
+              message: sub.message,
+              url: sub.url,
+              expireIn: sub.expireIn,
+              deleteself: true
+            });
           }
-          const getRandomArbitrary = (min, max) => {
-            return Math.round(Math.random() * (max - min) + min);
-          };
-          const randomEvent = getRandomArbitrary(
-            Date.parse(sub.window_from),
-            Date.parse(sub.window_to)
-          );
+        }
+        if (sub.target === "user-specific") {
+          // pick up the random number between two dates
+          for (let i = 0; i < sub.number; i++) {
+            if (sub.window_from > sub.window_to) {
+              return;
+            }
+            const getRandomArbitrary = (min, max) => {
+              return Math.round(Math.random() * (max - min) + min);
+            };
+            const randomEvent = getRandomArbitrary(
+              Date.parse(sub.window_from),
+              Date.parse(sub.window_to)
+            );
 
-          const date = new Date(randomEvent).toISOString();
+            const date = new Date(randomEvent).toISOString();
+            const scheduleId = uniqid();
 
-          // schedule the notification
-          agenda.schedule(date, "personal_notification", {
-            userid: [req.body.id],
-            projectid: project._id,
-            id: sub.id,
-            title: sub.title,
-            message: sub.message,
-            url: sub.url,
-            expireIn: sub.expireIn,
-            deleteself: true
-          });
+            // schedule the notification
+            const res = schedulePersonalNotificationsForUsers({
+              date: date,
+              users: [req.body.id], // []
+              projectid: project._id, // String
+              notificationid: sub.id, // String - notification ID
+              body: {
+                title: sub.title,
+                message: sub.message,
+                url: sub.url,
+                expireIn: sub.expireIn,
+                useParticipantTimezone: sub.useParticipantTimezone,
+                timezone: sub.timezone
+              }, // {}
+              deleteself: true, // Boolean
+              scheduleid: scheduleId // String
+            });
+          }
         }
       }
     });
@@ -2126,3 +2203,75 @@ exports.scheduleAdminJob = async (req, res) => {
 exports.updateTokenInStudy = async (req, res) => {
   res.status(200).json({ message: "OK" });
 };
+
+// TODO groups
+async function schedulePersonalNotificationsForUsers({
+  date, // String
+  users, // Array
+  groups, // Array
+  projectid, // String
+  notificationid, // String
+  body, // Object
+  deleteself, // Boolean
+  scheduleid // String
+}) {
+  if (!body.useParticipantTimezone) {
+    const dateConverted = new Date(date);
+    const timestamp = dateConverted.getTime();
+    // check whether the date is in the future
+    if (timestamp > Date.now()) {
+      // schedule with agenda
+      agenda.schedule(date, "personal_notification", {
+        userid: users,
+        projectid: projectid,
+        id: notificationid,
+        title: body.title,
+        message: body.message,
+        url: body.url,
+        expireIn: body.expireIn,
+        deleteself: deleteself,
+        scheduleid: scheduleid
+      });
+    }
+  } else {
+    // schedule dependent on timezone of participant
+    users.map(async user => {
+      // find the user settings in the database
+      const participant = await User.findOne(
+        { samplyId: user },
+        { information: 1 }
+      );
+      let dateForParticipant = date;
+
+      if (
+        participant &&
+        participant.information &&
+        participant.information.timezone
+      ) {
+        const timezone = participant.information.timezone;
+        const momentDate = moment.tz(date, body.timezone);
+        dateForParticipant = momentDate.tz(timezone, true).toISOString();
+      }
+
+      const dateForParticipantConverted = new Date(dateForParticipant);
+      const timestampForParticipant = dateForParticipantConverted.getTime();
+      // check whether the date is in the future
+      if (timestampForParticipant > Date.now()) {
+        // schedule notification dependend on the user local timezone
+        agenda.schedule(dateForParticipant, "personal_notification", {
+          userid: [user],
+          projectid: projectid,
+          id: notificationid,
+          title: body.title,
+          message: body.message,
+          url: body.url,
+          expireIn: body.expireIn,
+          deleteself: deleteself,
+          scheduleid: scheduleid
+        });
+      }
+    });
+  }
+
+  return { message: "Success" };
+}

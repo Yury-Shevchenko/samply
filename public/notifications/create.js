@@ -35,6 +35,8 @@ function createNotification() {
       return obj;
     }, {});
 
+  const useParticipantTimezone = selected.useParticipantTimezone ? true : false;
+
   // participants
   let participants, scheduleInFuture;
   if (
@@ -551,7 +553,8 @@ function createNotification() {
           stopingStrategy,
           scheduleInFuture,
           timezone,
-          expireIn
+          expireIn,
+          useParticipantTimezone
         );
       } else {
         createFixedIntervalNotification(
@@ -562,7 +565,8 @@ function createNotification() {
           stopingStrategy,
           scheduleInFuture,
           timezone,
-          expireIn
+          expireIn,
+          useParticipantTimezone
         );
       }
     }
@@ -577,7 +581,8 @@ function createNotification() {
         constructedDates,
         scheduleInFuture,
         timezone,
-        expireIn
+        expireIn,
+        useParticipantTimezone
       );
     } else {
       // create fixed interval schedule
@@ -593,7 +598,8 @@ function createNotification() {
           stopingStrategy,
           scheduleInFuture,
           timezone,
-          expireIn
+          expireIn,
+          useParticipantTimezone
         );
       } else {
         createFixedIntervalNotification(
@@ -604,7 +610,8 @@ function createNotification() {
           stopingStrategy,
           scheduleInFuture,
           timezone,
-          expireIn
+          expireIn,
+          useParticipantTimezone
         );
       }
     }
@@ -619,7 +626,8 @@ function createNotification() {
         constructedIntervals,
         scheduleInFuture,
         timezone,
-        expireIn
+        expireIn,
+        useParticipantTimezone
       );
     } else {
       // create randomized interval notifications
@@ -631,7 +639,8 @@ function createNotification() {
         stopingStrategy,
         scheduleInFuture,
         timezone,
-        expireIn
+        expireIn,
+        useParticipantTimezone
       );
     }
   }
@@ -645,7 +654,8 @@ function createFixedScheduledNotification(
   times,
   scheduleInFuture,
   timezone,
-  expireIn
+  expireIn,
+  useParticipantTimezone
 ) {
   fetch("/createschedulenotification", {
     method: "POST",
@@ -657,7 +667,6 @@ function createFixedScheduledNotification(
       target: "fixed-times",
       schedule: "one-time",
       randomize: false,
-      // participantId: participants,
       participants: participants,
       groups: groups,
       date: times,
@@ -667,7 +676,8 @@ function createFixedScheduledNotification(
       name: "One-time",
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
-      expireIn: expireIn
+      expireIn: expireIn,
+      useParticipantTimezone: useParticipantTimezone
     })
   })
     .then(res => {
@@ -689,7 +699,8 @@ function createFixedIntervalNotification(
   stopingStrategy,
   scheduleInFuture,
   timezone,
-  expireIn
+  expireIn,
+  useParticipantTimezone
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -712,7 +723,8 @@ function createFixedIntervalNotification(
       name: "Repeat",
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
-      expireIn: expireIn
+      expireIn: expireIn,
+      useParticipantTimezone: useParticipantTimezone
     })
   })
     .then(res => {
@@ -734,7 +746,8 @@ function createIndividualSpecificNotification(
   stopingStrategy,
   scheduleInFuture,
   timezone,
-  expireIn
+  expireIn,
+  useParticipantTimezone
 ) {
   fetch("/createindividualnotification", {
     method: "POST",
@@ -757,7 +770,8 @@ function createIndividualSpecificNotification(
       groups: groups,
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
-      expireIn: expireIn
+      expireIn: expireIn,
+      useParticipantTimezone: useParticipantTimezone
     })
   })
     .then(res => {
@@ -777,7 +791,8 @@ function createRandomFixedNotification(
   constructedIntervals,
   scheduleInFuture,
   timezone,
-  expireIn
+  expireIn,
+  useParticipantTimezone
 ) {
   fetch("/createfixedindividualnotification", {
     method: "POST",
@@ -798,7 +813,8 @@ function createRandomFixedNotification(
       groups: groups,
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
-      expireIn: expireIn
+      expireIn: expireIn,
+      useParticipantTimezone: useParticipantTimezone
     })
   })
     .then(res => {
@@ -820,7 +836,8 @@ function createRandomIntervalNotification(
   stopingStrategy,
   scheduleInFuture,
   timezone,
-  expireIn
+  expireIn,
+  useParticipantTimezone
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -843,7 +860,8 @@ function createRandomIntervalNotification(
       name: "Repeat",
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
-      expireIn: expireIn
+      expireIn: expireIn,
+      useParticipantTimezone: useParticipantTimezone
     })
   })
     .then(res => {

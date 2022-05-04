@@ -16,7 +16,11 @@ mixin userCard(person = {}, i, project)
       td= person.username
       td= person.group && person.group.name
       if(person.information && Object.keys(person.information).length)
-        td= Object.keys(person.information).filter(k => k !== 'id').map(key => `${key}: ${person.information[key]}`)
+        td= Object.keys(person.information).filter(k => k !== 'id' && k!== "timezone").map(key => `${key}: ${person.information[key]}`)
+      else 
+        td
+      if(person.information && person.information.timezone)
+        td= person.information.timezone
       else 
         td
         

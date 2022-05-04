@@ -617,7 +617,8 @@ module.exports = {
     table_token: "Benachrichtigungs-Token",
     table_code: "Teilnehmer Code",
     table_group: "Gruppe",
-    table_details: "Teilnehmer-Voreinstellungen",
+    table_time_preferences: "Zeitpräferenzen",
+    table_timezone: "Zeitzone",
     table_payout: "Auszahlung",
     table_language: "Sprache",
     table_tests: "Aufgaben",
@@ -873,6 +874,15 @@ module.exports = {
     notifications_3: `
           Wenn man der Benutzeroberfläche Schritt für Schritt folgt, müssen einige Auswahlmöglichkeiten getroffen werden, um den Zeitplan für die Benachrichtigungen zu definieren.
         `,
+    notifications_3_1: `
+          Choose time zone
+        `,
+    notifications_3_2: `
+          Sie können die spezifische Zeitzone für Benachrichtigungen auswählen oder die Zeit an die Zeitzone des Teilnehmers anpassen.
+          Die Anpassung der Zeit an die Zeitzone des Teilnehmers funktioniert für zukünftige und aktuelle Teilnehmer mit einer bestimmten Zeitzone.
+          Die Anpassung der Zeitzone funktioniert nicht für Gruppenbenachrichtigungen, da Gruppenbenachrichtigungen an alle Gruppenmitglieder zur gleichen Zeit gesendet werden.
+          Daher müssen Sie die Zeitzone für diese Benachrichtigungen explizit auswählen.
+        `,
     notifications_4_1: `
           Teilnehmer auswählen
         `,
@@ -1007,8 +1017,12 @@ module.exports = {
     title: "Titel",
     message: "Nachricht",
     step_0_header: "1. Zeitzone auswählen",
+    step_0_participant_timezone: `
+      Die Zeit an die Zeitzone des Teilnehmers anpassen (dies sollte für zukünftige und aktuelle Teilnehmer mit einer bestimmten Zeitzone funktionieren).
+    `,
     step_1_header: "2. Teilnehmer auswählen",
-    step_1_future: "Alle zukünftigen Teilnehmer",
+    step_1_future:
+      "Alle zukünftigen Teilnehmer (mit Ausnahme der derzeitigen Teilnehmer)",
     step_1_current: "Derzeitige Teilnehmer",
     step_1_all: "Alle",
     step_1_groups: "Gruppen",
@@ -1105,6 +1119,9 @@ module.exports = {
     Friday: "Freitag",
     Saturday: "Samstag",
     Sunday: "Sonntag",
+    table_adjusting_timezone: `
+      Anpassung an die Zeitzone des Teilnehmers
+    `,
     table_created_at: "Erstellt am",
     table_scheduled_at: "Geplant um",
     table_number_timepoints: "Anzahl der Zeitpunkte",

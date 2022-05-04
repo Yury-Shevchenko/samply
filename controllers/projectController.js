@@ -534,14 +534,18 @@ exports.getPublicStudy = async (req, res) => {
       }
     );
   }
+  if (!study) {
+    return res.send({ error: "No study found" });
+  }
   let participant = {};
-  if (study.mobileUsers.filter(user => user.id === token).length) {
+  if (study && study.mobileUsers.filter(user => user.id === token).length) {
     participant = study.mobileUsers.filter(user => user.id === token)[0];
   }
   const studyUser = {
     ...study._doc,
     participant
   };
+
   delete studyUser.mobileUsers;
   res.send(studyUser);
 };
@@ -686,6 +690,17 @@ exports.changeStatusParticipant = async (req, res) => {
         ...user._doc,
         deactivated: req.params.action === "off"
       };
+      if (req.params.action === "off") {
+        req.flash(
+          "error",
+          `Sending notifications for the participant ${req.params.id} is disabled. The participant will not receive notifications.`
+        );
+      } else {
+        req.flash(
+          "success",
+          `Sending notifications for the participant ${req.params.id} is enabled. The participant will receive notifications.`
+        );
+      }
       return updatedUser;
     } else {
       return user;

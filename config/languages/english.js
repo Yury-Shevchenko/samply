@@ -603,7 +603,8 @@ module.exports = {
     table_token: "Notification token",
     table_code: "Participant Code",
     table_group: "Group",
-    table_details: "Participant preferences",
+    table_time_preferences: "Time preferences",
+    table_timezone: "Timezone",
     table_payout: "Payout",
     table_aggregated: "Summary",
     table_language: "Language",
@@ -842,7 +843,16 @@ module.exports = {
             This can be used to track survey participation if the URL query parameters are captured and saved in the survey. See the list of possible query placeholders below.
           `,
     notifications_3: `
-            If the user interface is followed step-by-step, a few choices have to be made in order to define the notifications schedule.
+            If the user interface is followed step-by-step, the following choices have to be made in order to define the notifications schedule.
+          `,
+    notifications_3_1: `
+            Choose time zone
+          `,
+    notifications_3_2: `
+            You can select the specific time zone for notifications or adjust the time to the participant's time zone.
+            Adjusting the time to the participant's time zone works work for future and current participants with a specified time zone.
+            Adjusting the time zone does not work for group notifications because group notifications are sent to
+            all group members at the same time, so you must explicitly select the time zone for these notifications.
           `,
     notifications_4_1: `
             Choose participants
@@ -977,8 +987,11 @@ module.exports = {
     title: "Title",
     message: "Message",
     step_0_header: "1. Choose timezone",
+    step_0_participant_timezone: `
+      Adjust the time to the participant's time zone (this should work for future and current participants with a specified time zone).
+    `,
     step_1_header: "2. Choose participants",
-    step_1_future: "All future participants",
+    step_1_future: "All future participants (excluding current participants)",
     step_1_current: "Current participants",
     step_1_all: "All",
     step_1_groups: "Groups",
@@ -1072,6 +1085,9 @@ module.exports = {
     Friday: "Friday",
     Saturday: "Saturday",
     Sunday: "Sunday",
+    table_adjusting_timezone: `
+      Adjusting to the participant's time zone
+    `,
     table_created_at: "Created at",
     table_scheduled_at: "Scheduled at",
     table_number_timepoints: "Number of time points",
