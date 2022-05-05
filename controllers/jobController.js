@@ -1461,6 +1461,20 @@ async function sendToSomeProjectUsers({
     { mobileUsers: 1, name: 1 }
   );
 
+  if (!project) {
+    console.log(
+      `We wanted to send a notification, but the project with id ${project_id} does not exist. . Therefore, all notifications for this project will be cancelled.`
+    );
+    agenda.cancel(
+      {
+        "data.projectid": project_id
+      },
+      (err, numRemoved) => {}
+    );
+    done();
+    return;
+  }
+
   // filter only the users whom we want to send notifications
   let tokens = [];
 
@@ -1528,6 +1542,21 @@ async function sendToAllProjectUsers({
     { _id: project_id },
     { mobileUsers: 1, name: 1 }
   );
+
+  if (!project) {
+    console.log(
+      `We wanted to send a notification, but the project with id ${project_id} does not exist. Therefore, all notifications for this project will be cancelled.`
+    );
+    agenda.cancel(
+      {
+        "data.projectid": project_id
+      },
+      (err, numRemoved) => {}
+    );
+    done();
+    return;
+  }
+
   let users = project.mobileUsers;
   if (excludeUntil) {
     users = users.filter(user => user.created > excludeUntil);
@@ -1566,27 +1595,22 @@ async function sendMobileNotification(
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
 
-  let messages = [];
-  for (let pushToken of tokens) {
-    // Do not send notifications to deactivated participants
-    if (pushToken.deactivated) {
-      continue;
+  const messages = tokens.map(pushToken => {
+    if (
+      pushToken.deactivated ||
+      !pushToken.token ||
+      pushToken.token === "User left the study" ||
+      pushToken.token === "miss" ||
+      !Expo.isExpoPushToken(pushToken.token)
+    ) {
+      return {
+        error: "Token is missing or it is invalid"
+      };
     }
 
-    // Each push token looks like ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]
-    // Check that all your push tokens appear to be valid Expo push tokens
-    if (!Expo.isExpoPushToken(pushToken.token)) {
-      console.error(
-        `Push token ${pushToken.token} is not a valid Expo push token`
-      );
-      continue;
-    }
-
-    // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
+    // construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     const messageId = makeRandomCodeForMessageID();
-
     let updatedUrl = url;
-
     if (url.includes("%")) {
       if (url.includes("%MESSAGE_ID%")) {
         updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
@@ -1610,7 +1634,7 @@ async function sendMobileNotification(
 
     const expireAt = expireIn ? timestampSent + parseInt(expireIn) : null;
 
-    messages.push({
+    return {
       to: pushToken.token,
       sound: "default",
       title: title,
@@ -1626,31 +1650,31 @@ async function sendMobileNotification(
       priority: "high",
       channelId: "default",
       _displayInForeground: true
-    });
-  }
-  // The Expo push notification service accepts batches of notifications so
-  // that you don't need to send 1000 requests to send 1000 notifications. We
-  // recommend you batch your notifications to reduce the number of requests
-  // and to compress them (notifications with similar content will get
-  // compressed).
+    };
+  });
 
-  let chunks = expo.chunkPushNotifications(messages);
+  const validMessages = messages.filter(message => !message.error);
+  let chunks = expo.chunkPushNotifications(validMessages);
 
   await Promise.all(
     chunks.map(async chunk => {
-      let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
-      ticketChunk.map(async (ticket, i) => {
-        const result = new Result({
-          project: project_id,
-          project_name: project_name,
-          samplyid: chunk[i].id,
-          data: chunk[i].data,
-          ticket: ticket,
-          messageId: chunk[i].data.messageId,
-          events: [{ status: "sent", created: timestampSent }]
+      try {
+        let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        ticketChunk.map(async (ticket, i) => {
+          const result = new Result({
+            project: project_id,
+            project_name: project_name,
+            samplyid: chunk[i].id,
+            data: chunk[i].data,
+            ticket: ticket,
+            messageId: chunk[i].data.messageId,
+            events: [{ status: "sent", created: timestampSent }]
+          });
+          await result.save();
         });
-        await result.save();
-      });
+      } catch (error) {
+        console.error("Error with EXPO notification token", error);
+      }
       // tickets.push(...ticketChunk);
       // NOTE: If a ticket contains an error code in ticket.details.error, you
       // must handle it appropriately. The error codes are listed in the Expo
@@ -2165,7 +2189,7 @@ exports.manageNotifications = async (req, res) => {
   );
 
   let groups = [];
-  if (project.mobileUsers.map(user => user.group).length) {
+  if (project && project.mobileUsers.map(user => user.group).length) {
     const allGroups = project.mobileUsers
       .map(user => user.group)
       .filter(item => typeof item !== "undefined");
@@ -2178,9 +2202,9 @@ exports.manageNotifications = async (req, res) => {
           .map(group => group.name)[0]
       };
     });
+    project.groups = groups;
   }
 
-  project.groups = groups;
   res.render("notify", { project, participant });
 };
 

@@ -557,6 +557,9 @@ exports.getMobileUsers = async (req, res) => {
       mobileUsers: 1
     }
   );
+  if (!project) {
+    return res.render("data", {});
+  }
   const users = await Promise.all(
     project.mobileUsers.map(async user => {
       const participant = await User.findOne(
@@ -619,6 +622,9 @@ exports.getMobileGroups = async (req, res) => {
       notifyExpires: 1
     }
   );
+  if (!project) {
+    return res.render("groups", {});
+  }
   const users = project.mobileUsers;
   let groups = [];
   if (project.mobileUsers.map(user => user.group).length) {
