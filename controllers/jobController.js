@@ -1674,6 +1674,7 @@ async function sendMobileNotification(
         });
       } catch (error) {
         console.error("Error with EXPO notification token", error);
+        // TODO try to send notification again after some time
       }
       // tickets.push(...ticketChunk);
       // NOTE: If a ticket contains an error code in ticket.details.error, you
@@ -2189,7 +2190,12 @@ exports.manageNotifications = async (req, res) => {
   );
 
   let groups = [];
-  if (project && project.mobileUsers.map(user => user.group).length) {
+  console.log("project", project);
+  if (
+    project &&
+    project.mobileUsers.length &&
+    project.mobileUsers.map(user => user.group).length
+  ) {
     const allGroups = project.mobileUsers
       .map(user => user.group)
       .filter(item => typeof item !== "undefined");
@@ -2202,8 +2208,8 @@ exports.manageNotifications = async (req, res) => {
           .map(group => group.name)[0]
       };
     });
-    project.groups = groups;
   }
+  project.groups = groups;
 
   res.render("notify", { project, participant });
 };
