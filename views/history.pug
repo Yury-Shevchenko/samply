@@ -19,6 +19,7 @@ block content
           thead
             td N.
             td #{layout.history_notifications_ID} 
+            td #{layout.history_batch} 
             td #{layout.history_notifications_Title} 
             td #{layout.history_notifications_Message} 
             td #{layout.history_notifications_url} 
@@ -39,6 +40,7 @@ block content
               td #{i + 1 + skip}
               td
                 a(style="border-bottom: 2px solid #FFC40E;" href=`/history/?id=${notification.samplyid}`) #{notification.samplyid}
+              td= notification.batch
               td= notification.data.title 
               td= notification.data.message
               td

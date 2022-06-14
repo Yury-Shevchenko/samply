@@ -46,6 +46,7 @@ module.exports = {
     history_for_participant: "for participant",
     history_notifications_Event: "Event",
     history_notifications_ID: "Participant ID",
+    history_batch: "Batch",
     history_notifications_Time_user: "Time (user)",
     history_notifications_Time_server: "Time (server)",
     history_notifications_Title: "Title",

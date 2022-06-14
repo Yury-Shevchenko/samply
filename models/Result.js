@@ -26,7 +26,8 @@ const resultSchema = new mongoose.Schema({
       data: JSON
     }
   ], // sent, tapped
-  project_name: String
+  project_name: String,
+  batch: Number
 });
 
 function autopopulate(next) {

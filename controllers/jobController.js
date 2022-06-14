@@ -1463,7 +1463,7 @@ async function sendToSomeProjectUsers({
 
   if (!project) {
     console.log(
-      `We wanted to send a notification, but the project with id ${project_id} does not exist. . Therefore, all notifications for this project will be cancelled.`
+      `We wanted to send a notification, but the project with id ${project_id} does not exist. Therefore, all notifications for this project will be cancelled.`
     );
     agenda.cancel(
       {
@@ -1595,63 +1595,77 @@ async function sendMobileNotification(
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
 
-  const messages = tokens.map(pushToken => {
-    if (
-      pushToken.deactivated ||
-      !pushToken.token ||
-      pushToken.token === "User left the study" ||
-      pushToken.token === "miss" ||
-      !Expo.isExpoPushToken(pushToken.token)
-    ) {
+  const messages = await Promise.all(
+    tokens.map(async pushToken => {
+      if (
+        pushToken.deactivated ||
+        !pushToken.token ||
+        pushToken.token === "User left the study" ||
+        pushToken.token === "miss" ||
+        !Expo.isExpoPushToken(pushToken.token)
+      ) {
+        return {
+          error: "Token is missing or it is invalid"
+        };
+      }
+
+      // calculate what is the batch number by looking at how many notifications were sent for the project
+      const countRecords = await Result.where({
+        project: project_id,
+        samplyid: pushToken.id
+      }).countDocuments();
+      const batch = countRecords + 1;
+
+      // construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
+      const messageId = makeRandomCodeForMessageID();
+      let updatedUrl = url;
+      if (url.includes("%")) {
+        if (url.includes("%MESSAGE_ID%")) {
+          updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
+        }
+        if (url.includes("%SAMPLY_ID%")) {
+          updatedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
+        }
+        if (url.includes("%PARTICIPANT_CODE%") && pushToken.username) {
+          updatedUrl = updatedUrl.replace(
+            "%PARTICIPANT_CODE%",
+            pushToken.username
+          );
+        }
+        if (url.includes("%GROUP_ID%") && pushToken.group) {
+          updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
+        }
+        if (url.includes("%TIMESTAMP_SENT%")) {
+          updatedUrl = updatedUrl.replace("%TIMESTAMP_SENT%", timestampSent);
+        }
+        if (url.includes("%BATCH%")) {
+          updatedUrl = updatedUrl.replace("%BATCH%", batch);
+        }
+      }
+
+      const expireAt = expireIn ? timestampSent + parseInt(expireIn) : null;
+
       return {
-        error: "Token is missing or it is invalid"
+        to: pushToken.token,
+        sound: "default",
+        title: title,
+        body: message,
+        data: {
+          title,
+          message,
+          url: updatedUrl,
+          messageId,
+          expireAt
+        },
+        id: pushToken.id,
+        priority: "high",
+        channelId: "default",
+        _displayInForeground: true,
+        batch: batch
       };
-    }
-
-    // construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
-    const messageId = makeRandomCodeForMessageID();
-    let updatedUrl = url;
-    if (url.includes("%")) {
-      if (url.includes("%MESSAGE_ID%")) {
-        updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
-      }
-      if (url.includes("%SAMPLY_ID%")) {
-        updatedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
-      }
-      if (url.includes("%PARTICIPANT_CODE%") && pushToken.username) {
-        updatedUrl = updatedUrl.replace(
-          "%PARTICIPANT_CODE%",
-          pushToken.username
-        );
-      }
-      if (url.includes("%GROUP_ID%") && pushToken.group) {
-        updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
-      }
-      if (url.includes("%TIMESTAMP_SENT%")) {
-        updatedUrl = updatedUrl.replace("%TIMESTAMP_SENT%", timestampSent);
-      }
-    }
-
-    const expireAt = expireIn ? timestampSent + parseInt(expireIn) : null;
-
-    return {
-      to: pushToken.token,
-      sound: "default",
-      title: title,
-      body: message,
-      data: {
-        title,
-        message,
-        url: updatedUrl,
-        messageId,
-        expireAt
-      },
-      id: pushToken.id,
-      priority: "high",
-      channelId: "default",
-      _displayInForeground: true
-    };
-  });
+    })
+  );
+  // console.log('messages', messages);
 
   const validMessages = messages.filter(message => !message.error);
   let chunks = expo.chunkPushNotifications(validMessages);
@@ -1668,7 +1682,8 @@ async function sendMobileNotification(
             data: chunk[i].data,
             ticket: ticket,
             messageId: chunk[i].data.messageId,
-            events: [{ status: "sent", created: timestampSent }]
+            events: [{ status: "sent", created: timestampSent }],
+            batch: chunk[i].batch
           });
           await result.save();
         });
@@ -2190,7 +2205,6 @@ exports.manageNotifications = async (req, res) => {
   );
 
   let groups = [];
-  console.log("project", project);
   if (
     project &&
     project.mobileUsers.length &&
