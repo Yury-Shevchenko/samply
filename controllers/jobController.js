@@ -2321,7 +2321,7 @@ function getNumberBetween(min, max) {
 function getNumbersInInterval(min, max, number, distance){
   const step = (max - min) / number;
   const maxAmountNotifications = (max - min) / distance;
-
+ 
   if(number > maxAmountNotifications + 1) {
     throw new Error("The minimum interval between notifications is too big");
   }
@@ -2329,7 +2329,7 @@ function getNumbersInInterval(min, max, number, distance){
   if (number == maxAmountNotifications + 1) {
     for (let i = 0; i < number; i++ ) {
       const num = min + i * distance;
-      numbers.push(num);
+      numbers.push(num); 
     }
   } else {
     for (let i = 0; i < number; i++ ) {

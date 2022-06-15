@@ -127,20 +127,43 @@ function createNotification() {
         throw new Error("Missing time values");
       }
       // calculate the minimum distance 
+      const number = parseInt(container.querySelector(".timeWindowNumberOfPointsInput").value);
+
       const distanceHour = parseInt(container.querySelector(".windowPickerHourDistance").value);
       const distanceMin = parseInt(container.querySelector(".windowPickerMinuteDistance").value);
       const distanceMinInMS = distanceMin * 60 * 1000 || 0;
       const distanceHourInMS = distanceHour * 60 * 60 * 1000 || 0;
       const distance = distanceHourInMS + distanceMinInMS;
-      console.log({ distanceMinInMS }, { distanceHourInMS }, { distance });
+      
+      const hourStart = parseInt(container.querySelector(".windowPickerHourStart").value);
+      const minuteStart = parseInt(container.querySelector(".windowPickerMinuteStart").value);
+      const hourEnd = parseInt(container.querySelector(".windowPickerHourEnd").value);
+      const minuteEnd = parseInt(container.querySelector(".windowPickerMinuteEnd").value);
+
+      const difference = ((hourEnd * 60) + minuteEnd - (hourStart * 60) - minuteStart) * 60 * 1000;
+      if(difference <= 0) {
+        alert(
+          "The time window is set incorrectly. The end time should be after the start time."
+        );
+        throw new Error("The time window is set incorrectly. The end time should be after the start time.")
+      }
+     
+      const maxAmountNotifications = difference / distance;
+
+      if(number > maxAmountNotifications + 1) {
+        alert(
+          "The minimum interval between notifications is too large"
+        );
+        throw new Error("The minimum interval between notifications is too large")
+      }
+
       return {
-        hourStart: container.querySelector(".windowPickerHourStart").value,
-        minuteStart: container.querySelector(".windowPickerMinuteStart").value,
-        hourEnd: container.querySelector(".windowPickerHourEnd").value,
-        minuteEnd: container.querySelector(".windowPickerMinuteEnd").value,
-        hourEnd: container.querySelector(".windowPickerHourEnd").value,
+        hourStart: hourStart,
+        minuteStart: minuteStart,
+        hourEnd: hourEnd,
+        minuteEnd: minuteEnd,
         distance: distance,
-        number: container.querySelector(".timeWindowNumberOfPointsInput").value
+        number: number
       };
     });
   } else if (time === "repeat") {
@@ -148,7 +171,6 @@ function createNotification() {
       "select[name='time-every-minute']"
     ).value;
     minuteCron = `*/${repeatMinute}`;
-    // console.log('DEBUG line 82, minuteCron', minuteCron);
   } else {
     alert("Choose time");
     return;
@@ -276,7 +298,6 @@ function createNotification() {
     if (dayMonthCron && dayMonthCron.includes("*/")) {
       dayMonthCron = dayMonthCron.replace("*", st.day);
     }
-    // console.log('startMoment', dayMonthCron, st.day, startMoment);
     if (!startMoment) {
       alert("The date to start notifications is misspecified.");
       return;
@@ -298,7 +319,6 @@ function createNotification() {
       if (dayMonthCron && dayMonthCron.includes("*/")) {
         dayMonthCron = dayMonthCron.replace("*", whenToStart.date());
       }
-      // console.log('startMoment', dayMonthCron, whenToStart.date());
     }
   } else if (start === "next") {
     // option to start on the next day
@@ -364,7 +384,6 @@ function createNotification() {
       timezone
     );
     stopMoment = stopCon.toISOString();
-    // console.log('stopMoment', stopMoment);
     if (!stopMoment) {
       alert("The date to stop notifications is misspecified.");
       return;
@@ -502,7 +521,6 @@ function createNotification() {
     const cronFixedIntervalSchedule = `${sec} ${time.minute} ${time.hour} ${dayMonthCron} ${monthCron} ${dayWeekCron}`;
     constructedCronSchedules.push(cronFixedIntervalSchedule);
   });
-  // console.log('constructedCronSchedules', constructedCronSchedules);
 
   let constructedCronSchedulesForTime = [];
   if (minuteCron) {
@@ -552,7 +570,6 @@ function createNotification() {
         startingStrategy.startEvent === "registration" ||
         stopingStrategy.stopEvent === "registration"
       ) {
-        // console.log('participant-dependent specific interval notifications', participants, constructedCronSchedulesForTime, startingStrategy, stopingStrategy, scheduleInFuture);
         createIndividualSpecificNotification(
           participants,
           groups,
