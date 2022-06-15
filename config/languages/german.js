@@ -934,6 +934,7 @@ module.exports = {
     queryCode: "Teilnehmer-Code",
     queryGroupID: "Gruppen-ID",
     queryTime: "Zeitstempel",
+    queryBatch: "Batch-Nummer",
     queryMessageInfo: "Jede Benachrichtigung hat eine einzigartige ID",
     querySamplyIDInfo: "Die ID des Teilnehmers auf der Plattform Samply",
     queryCodeInfo:
@@ -942,6 +943,8 @@ module.exports = {
       "Der Gruppen-Code, welcher vom Teilnehmer eingegeben wird, wenn er Ihrer Studie beitritt",
     queryTimeInfo:
       "Wann die Nachricht vom Server geschickt wurde (die Anzahl an Millisekunden welche verstrichen sind seit dem 1. Januar 1970)",
+    queryBatchInfo:
+      "Die Nummer der Benachrichtigung für jeden Teilnehmer. Die Nummer beginnt mit 1 und erhöht sich mit jeder gesendeten Benachrichtigung um 1.",
     data_title: "Teilnehmer & Verlauf",
     data_results_title: `<a target='blank' href='../data'>Ergebnisse</a> `,
     data_results_1:
@@ -1036,6 +1039,7 @@ module.exports = {
     step_2_add_timepoint: "Einen weiteren Zeitpunkt hinzufügen",
     step_2_from: "Von",
     step_2_to: "Bis",
+    step_2_distance: "Mindestabstand zwischen Benachrichtigungen",
     step_2_add_window: "Ein weiteres Zeitfenster hinzufügen",
     step_2_random:
       "Wie viele Zeitpunkte sollen aus diesem Zeitfenster zufällig ausgewählt werden?",

@@ -107,7 +107,6 @@ function createNotification() {
       ) {
         alert("Choose specific time points");
         throw new Error("Missing time values");
-        return;
       }
       return {
         hour: container.querySelector(".timePickerHour").value,
@@ -126,13 +125,21 @@ function createNotification() {
       ) {
         alert("Choose specific time points");
         throw new Error("Missing time values");
-        return;
       }
+      // calculate the minimum distance 
+      const distanceHour = parseInt(container.querySelector(".windowPickerHourDistance").value);
+      const distanceMin = parseInt(container.querySelector(".windowPickerMinuteDistance").value);
+      const distanceMinInMS = distanceMin * 60 * 1000 || 0;
+      const distanceHourInMS = distanceHour * 60 * 60 * 1000 || 0;
+      const distance = distanceHourInMS + distanceMinInMS;
+      console.log({ distanceMinInMS }, { distanceHourInMS }, { distance });
       return {
         hourStart: container.querySelector(".windowPickerHourStart").value,
         minuteStart: container.querySelector(".windowPickerMinuteStart").value,
         hourEnd: container.querySelector(".windowPickerHourEnd").value,
         minuteEnd: container.querySelector(".windowPickerMinuteEnd").value,
+        hourEnd: container.querySelector(".windowPickerHourEnd").value,
+        distance: distance,
         number: container.querySelector(".timeWindowNumberOfPointsInput").value
       };
     });
@@ -162,7 +169,6 @@ function createNotification() {
         ) {
           alert("Choose specific dates");
           throw new Error("Missing dates values");
-          return;
         }
         return {
           day: container.querySelector(".datePickerDay").value,
@@ -483,7 +489,8 @@ function createNotification() {
       constructedIntervals.push({
         from: isoDateFrom,
         to: isoDateTo,
-        number: time.number
+        number: time.number,
+        distance: time.distance,
       });
     });
   });
@@ -518,7 +525,8 @@ function createNotification() {
     constructedCronIntervals.push({
       from: startCron,
       to: stopCron,
-      number: interval.number
+      number: interval.number,
+      distance: interval.distance
     });
   });
 

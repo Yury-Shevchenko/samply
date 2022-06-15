@@ -156,6 +156,7 @@ agenda.on("ready", function() {
       deleteself: job.attrs.data.deleteself,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
+      distance: job.attrs.data.distance,
       number: job.attrs.data.number,
       timezone: job.attrs.data.timezone
     });
@@ -175,6 +176,7 @@ agenda.on("ready", function() {
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
+      distance: job.attrs.data.distance,
       number: job.attrs.data.number,
       timezone: job.attrs.data.timezone
     });
@@ -211,6 +213,7 @@ agenda.on("ready", function() {
       deleteself: false,
       interval: job.attrs.data.interval,
       interval_max: job.attrs.data.interval_max,
+      distance: job.attrs.data.distance,
       number: job.attrs.data.number,
       timezone: job.attrs.data.timezone
     });
@@ -348,6 +351,7 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
+
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -440,7 +444,6 @@ exports.createIntervalNotification = async (req, res) => {
       });
     });
 
-    // TODO this one below should be copied and modified for groups of users
     // new jobs should be created or modified to account for the situations where the notifications are yoked
     if (groups) {
       groups.map(group => {
@@ -514,6 +517,7 @@ exports.createIntervalNotification = async (req, res) => {
 
             let windowFrom = window.from;
             let windowTo = window.to;
+            let distance = window.distance || 0;
 
             // update interval if there is missing information
             if (windowFrom && windowFrom.includes("*/")) {
@@ -542,6 +546,7 @@ exports.createIntervalNotification = async (req, res) => {
               id: id,
               interval: windowFrom,
               interval_max: windowTo,
+              distance: distance,
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
@@ -555,6 +560,7 @@ exports.createIntervalNotification = async (req, res) => {
               id: id,
               interval: windowFrom,
               interval_max: windowTo,
+              distance: distance,
               title: req.body.title,
               message: req.body.message,
               url: req.body.url,
@@ -628,6 +634,7 @@ exports.createIntervalNotification = async (req, res) => {
 
           let windowFrom = window.from;
           let windowTo = window.to;
+          let distance = window.distance || 0;
 
           // update interval if there is missing information
           if (windowFrom && windowFrom.includes("*/")) {
@@ -673,6 +680,7 @@ exports.createIntervalNotification = async (req, res) => {
             id: id,
             interval: windowFrom,
             interval_max: windowTo,
+            distance: distance,
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
@@ -686,6 +694,7 @@ exports.createIntervalNotification = async (req, res) => {
             id: id,
             interval: windowFrom,
             interval_max: windowTo,
+            distance: distance,
             title: req.body.title,
             message: req.body.message,
             url: req.body.url,
@@ -1164,6 +1173,7 @@ exports.createIndividualNotification = async (req, res) => {
 };
 
 exports.createFixedIndividualNotification = async (req, res) => {
+
   if (req.body.intervals.length === 0) {
     res.status(400).send();
     return;
@@ -1224,6 +1234,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
       window_from: interval.from,
       window_to: interval.to,
       number: parseInt(interval.number),
+      distance: parseInt(interval.distance), // min distance in milliseconds
       scheduleInFuture: req.body.scheduleInFuture,
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
@@ -1234,23 +1245,15 @@ exports.createFixedIndividualNotification = async (req, res) => {
   if (groups) {
     groups.map(group => {
       intervals.map(interval => {
-        // pick up the random number between two dates
-        const { from, to, number } = interval;
-
-        for (let i = 0; i < number; i++) {
-          if (from > to) {
-            return;
-          }
-          const getRandomArbitrary = (min, max) => {
-            return Math.round(Math.random() * (max - min) + min);
-          };
-          const randomEvent = getRandomArbitrary(
-            Date.parse(from),
-            Date.parse(to)
-          );
-          const date = new Date(randomEvent).toISOString();
+        const { from, to, number, distance } = interval;
+        if (from > to) {
+          return;
+        }
+        const nums = getDatesInInterval(Date.parse(from), Date.parse(to), number, distance);
+        const ds = nums.map(n => new Date(n).toISOString());
+        // map over ds to schedule the notifications
+        ds.map(date => {
           const scheduleId = uniqid();
-
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
             groupid: [group],
@@ -1263,7 +1266,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             deleteself: true,
             scheduleid: scheduleId
           });
-        }
+        })
       });
     });
   }
@@ -1271,23 +1274,15 @@ exports.createFixedIndividualNotification = async (req, res) => {
   if (users) {
     users.map(user => {
       intervals.map(interval => {
-        // pick up the random number between two dates
-        const { from, to, number } = interval;
-
-        for (let i = 0; i < number; i++) {
-          if (from > to) {
-            return;
-          }
-          const getRandomArbitrary = (min, max) => {
-            return Math.round(Math.random() * (max - min) + min);
-          };
-          const randomEvent = getRandomArbitrary(
-            Date.parse(from),
-            Date.parse(to)
-          );
-          const date = new Date(randomEvent).toISOString();
+        const { from, to, number, distance } = interval;
+        if (from > to) {
+          return;
+        }
+        const nums = getDatesInInterval(Date.parse(from), Date.parse(to), number, distance);
+        const ds = nums.map(n => new Date(n).toISOString());
+        // map over ds to schedule the notifications
+        ds.map(date => {
           const scheduleId = uniqid();
-
           // schedule the notification
           const res = schedulePersonalNotificationsForUsers({
             date: date,
@@ -1298,7 +1293,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             deleteself: true, // Boolean
             scheduleid: scheduleId // String
           });
-        }
+        })
       });
     });
   }
@@ -1388,6 +1383,7 @@ async function pickUpRandomTimeFromInterval({
   deleteself,
   interval,
   interval_max,
+  distance,
   number,
   timezone
 }) {
@@ -1411,14 +1407,11 @@ async function pickUpRandomTimeFromInterval({
     return;
   }
 
-  const getRandomArbitrary = (min, max) => {
-    return Math.round(Math.random() * (max - min) + min);
-  };
-
-  for (let i = 0; i < number; i++) {
-    const randomEvent = getRandomArbitrary(int_start, int_end);
-    const date = new Date(randomEvent).toISOString();
-
+  const nums = getDatesInInterval(int_start, int_end, number, distance);
+  const ds = nums.map(n => new Date(n).toISOString());
+  
+  // map over ds to schedule the notifications
+  ds.map(date => {
     // schedule personal_notification
     agenda.schedule(date, "personal_notification", {
       userid: user_id,
@@ -1431,7 +1424,7 @@ async function pickUpRandomTimeFromInterval({
       expireIn: expireIn,
       deleteself: deleteself
     });
-  }
+  })
 
   done();
 }
@@ -1665,7 +1658,6 @@ async function sendMobileNotification(
       };
     })
   );
-  // console.log('messages', messages);
 
   const validMessages = messages.filter(message => !message.error);
   let chunks = expo.chunkPushNotifications(validMessages);
@@ -1850,6 +1842,7 @@ exports.joinStudy = async (req, res) => {
         if (sub.randomize) {
           let windowFrom = sub.windowInterval && sub.windowInterval.from;
           let windowTo = sub.windowInterval && sub.windowInterval.to;
+          let distance = (sub.windowInterval && sub.windowInterval.distance) || 0;
 
           //update interval if there is missing information
           if (windowFrom && windowFrom.includes("*/")) {
@@ -1879,6 +1872,7 @@ exports.joinStudy = async (req, res) => {
             id: sub.id,
             interval: windowFrom,
             interval_max: windowTo,
+            distance: distance,
             title: sub.title,
             message: sub.message,
             url: sub.url,
@@ -1892,6 +1886,7 @@ exports.joinStudy = async (req, res) => {
             id: sub.id,
             interval: windowFrom,
             interval_max: windowTo,
+            distance: distance,
             title: sub.title,
             message: sub.message,
             url: sub.url,
@@ -1961,22 +1956,20 @@ exports.joinStudy = async (req, res) => {
           }
         }
         if (sub.target === "user-specific") {
-          // pick up the random number between two dates
-          for (let i = 0; i < sub.number; i++) {
-            if (sub.window_from > sub.window_to) {
-              return;
-            }
-            const getRandomArbitrary = (min, max) => {
-              return Math.round(Math.random() * (max - min) + min);
-            };
-            const randomEvent = getRandomArbitrary(
-              Date.parse(sub.window_from),
-              Date.parse(sub.window_to)
-            );
 
-            const date = new Date(randomEvent).toISOString();
+          if (sub.window_from > sub.window_to) {
+            return;
+          }
+
+          const { window_from, window_to, number } = sub;
+          const distance = sub.distance || 0;
+
+          const nums = getDatesInInterval(Date.parse(window_from), Date.parse(window_to), number, distance);
+          const ds = nums.map(n => new Date(n).toISOString());
+
+          // map over ds to schedule the notifications
+          ds.map(date => {
             const scheduleId = uniqid();
-
             // schedule the notification
             const res = schedulePersonalNotificationsForUsers({
               date: date,
@@ -1994,7 +1987,8 @@ exports.joinStudy = async (req, res) => {
               deleteself: true, // Boolean
               scheduleid: scheduleId // String
             });
-          }
+          })
+
         }
       }
     });
@@ -2039,7 +2033,7 @@ exports.leaveStudy = async (req, res) => {
     },
     (err, numRemoved) => {}
   );
-  if (!project.mobileUsers) {
+  if (!project.mobileUsers) {  
     project.mobileUsers = [];
   }
   const removeUserId = req.body.id;
@@ -2054,7 +2048,7 @@ exports.leaveStudy = async (req, res) => {
     } else {
       return user;
     }
-  });
+  });  
 
   await project.save();
   const updatedUser = await User.findOneAndUpdate(
@@ -2202,7 +2196,7 @@ exports.manageNotifications = async (req, res) => {
       notifications: 1,
       mobileUsers: 1
     }
-  );
+  );  
 
   let groups = [];
   if (
@@ -2248,7 +2242,7 @@ exports.updateTokenInStudy = async (req, res) => {
   res.status(200).json({ message: "OK" });
 };
 
-// TODO groups
+
 async function schedulePersonalNotificationsForUsers({
   date, // String
   users, // Array
@@ -2318,4 +2312,60 @@ async function schedulePersonalNotificationsForUsers({
   }
 
   return { message: "Success" };
+}
+
+function getNumberBetween(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
+
+function getNumbersInInterval(min, max, number, distance){
+  const step = (max - min) / number;
+  const maxAmountNotifications = (max - min) / distance;
+
+  if(number > maxAmountNotifications + 1) {
+    throw new Error("The minimum interval between notifications is too big");
+  }
+  const numbers = [];
+  if (number == maxAmountNotifications + 1) {
+    for (let i = 0; i < number; i++ ) {
+      const num = min + i * distance;
+      numbers.push(num);
+    }
+  } else {
+    for (let i = 0; i < number; i++ ) {
+      const minStep = min + i * step;
+      const maxStep = min + (i + 1) * step;
+      numbers.push(getNumberBetween(minStep, maxStep))
+    }
+  }
+  return numbers;
+}
+
+function checkTheMinimalDistance(numbers, distance) {
+  if (numbers.length < 2) {
+    return false;
+  }
+  for (let i = 0; i < numbers.length - 1; i ++) {
+    if(numbers[i + 1] - numbers[i] < distance) {
+      return true
+    }
+  }
+  return false;
+}
+
+function getDatesInInterval(min, max, number, distance){
+  let numbers = [];
+  let i = 0;
+  let adjDistance = distance;
+  do {
+    numbers = getNumbersInInterval(min, max, number, adjDistance);
+    i = i + 1;
+    const ds = numbers.map(n => new Date(n).toISOString());
+    if(i > 100){
+      adjDistance = adjDistance - adjDistance/1000;
+    }
+  } while (checkTheMinimalDistance(numbers, adjDistance) && i < 1000);
+  // console.log({ i });
+  // console.log ("adjusted distance", adjDistance / (1000 * 60), "min");
+  return numbers;
 }

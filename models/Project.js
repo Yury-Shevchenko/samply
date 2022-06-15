@@ -87,6 +87,7 @@ const projectSchema = new mongoose.Schema({
       window_from: Date,
       window_to: Date,
       number: Number,
+      distance: Number,
       windowInterval: JSON,
       scheduleInFuture: Boolean,
       created: { type: Date, default: Date.now },

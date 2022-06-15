@@ -92,6 +92,26 @@ document.getElementById('addTimeWindow').addEventListener('click', function addW
 
   var endLabel = document.createElement('label');
 
+  var hourInputDistance = document.createElement('input');
+  hourInputDistance.classList.add('timeWindowInput');
+  hourInputDistance.classList.add('windowPickerHourDistance');
+  hourInputDistance.type = 'number';
+  hourInputDistance.min = 0;
+  hourInputDistance.max = 23;
+  hourInputDistance.value = 0;
+  hourInputDistance.name = `time-window-distance-hour-${windowPickerNum}`
+
+  var minuteInputDistance = document.createElement('input');
+  minuteInputDistance.classList.add('timeWindowInput');
+  minuteInputDistance.classList.add('windowPickerMinuteDistance');
+  minuteInputDistance.type = 'number';
+  minuteInputDistance.min = 0;
+  minuteInputDistance.max = 59;
+  minuteInputDistance.value = 0;
+  minuteInputDistance.name = `time-window-distance-minute-${windowPickerNum}`
+
+  var emptyDistLabel = document.createElement('label');
+
   var numberTimePoints = document.createElement('input');
   numberTimePoints.classList.add('timeWindowNumberOfPointsInput');
   numberTimePoints.type = 'number';
@@ -105,6 +125,9 @@ document.getElementById('addTimeWindow').addEventListener('click', function addW
   newPicker.appendChild(hourInputEnd);
   newPicker.appendChild(minuteInputEnd);
   newPicker.appendChild(endLabel);
+  newPicker.appendChild(hourInputDistance);
+  newPicker.appendChild(minuteInputDistance);
+  newPicker.appendChild(emptyDistLabel);
   newPicker.appendChild(numberTimePoints);
 
   var removePickerBtn = document.createElement('button');

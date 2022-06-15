@@ -2396,8 +2396,8 @@ i.yes:after {
 .containerTimeWindow {
   display: -ms-grid;
   display: grid;
-  -ms-grid-columns: auto auto 30px auto auto 30px auto auto;
-      grid-template-columns: auto auto 30px auto auto 30px auto auto;
+  -ms-grid-columns: auto auto 30px auto auto 30px auto auto 30px auto auto;
+      grid-template-columns: auto auto 30px auto auto 30px auto auto 30px auto auto;
   grid-column-gap: 10px;
   padding-top: 10px;
   -ms-grid-column-align: start;
@@ -2425,6 +2425,13 @@ i.yes:after {
         grid-column: 4 / span 2;
     justify-self: center;
     font-size: 1.5em; }
+  .containerTimeWindow .distanceContainer {
+    -ms-grid-column-span: 2;
+    -ms-grid-column: 7;
+        grid-column: 7 / span 2;
+    justify-self: center;
+    text-align: center;
+    max-width: 200px; }
 
 .containerDatePicker {
   display: -ms-grid;

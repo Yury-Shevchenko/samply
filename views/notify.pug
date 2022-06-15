@@ -114,13 +114,19 @@ block content
             label.fromContainer #{l.step_2_from}  
             
             label 
-            label.toContainer #{l.step_2_to}  
+            label.toContainer #{l.step_2_to} 
+
+            label 
+            label.distanceContainer #{l.step_2_distance} 
             
             label
             label
             button(type="button" value="Add new window" id="addTimeWindow") #{l.step_2_add_window}   
             
             label #{l.step_2_hour}  
+            label #{l.step_2_minute}  
+            label 
+            label #{l.step_2_hour} 
             label #{l.step_2_minute}  
             label 
             label #{l.step_2_hour} 
@@ -134,6 +140,9 @@ block content
             label 
             input(name="time-window-end-hour" class='timeWindowInput windowPickerHourEnd' type='number' min=0 max=23 value='') 
             input(name="time-window-end-minute" class='timeWindowInput windowPickerMinuteEnd' type='number' min=0 max=59 value='')   
+            label
+            input(name="time-window-distance-hour" class='timeWindowInput windowPickerHourDistance' type='number' min=0 max=23 value=0) 
+            input(name="time-window-distance-minute" class='timeWindowInput windowPickerMinuteDistance' type='number' min=0 max=59 value=0)   
             label
             input(name="time-window-number-points" class='timeWindowNumberOfPointsInput' type='number' min=1 value=1) 
     

@@ -905,6 +905,7 @@ module.exports = {
     queryCode: "Participant code",
     queryGroupID: "Group ID",
     queryTime: "Timestamp",
+    queryBatch: "Batch number",
     queryMessageInfo: "Each notification has a unique ID",
     querySamplyIDInfo: "The ID of participant on the platform Samply",
     queryCodeInfo:
@@ -913,6 +914,8 @@ module.exports = {
       "The group code entered by a participant when joining your study",
     queryTimeInfo:
       "When the message is sent from the server (the number of milliseconds elapsed since January 1, 1970)",
+    queryBatchInfo:
+      "The notification number for each participant. The number begins with 1 and increases by 1 with each notification sent.",
     data_title: "Participants & History",
     data_results_title: `<a target='blank' href='../data'>Results</a> `,
     data_results_1:
@@ -1005,6 +1008,7 @@ module.exports = {
     step_2_add_timepoint: "Add one more time point",
     step_2_from: "From",
     step_2_to: "To",
+    step_2_distance: "Minimum interval between notifications",
     step_2_add_window: "Add one more time window",
     step_2_random:
       "How many time points should be randomly selected from this time window?",
