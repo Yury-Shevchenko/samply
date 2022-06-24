@@ -161,7 +161,7 @@ block content
             label(for='date-every')
               span #{l.step_3_every}  
               select(name="date-every-day")
-                - var everymonthdays = [ { value: 1,  text: `${l.step_every_day}` }, ...[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20,21,22,23,24,25,26,27,28,29,30,31].map(d => {return( { value: d, text: `${d}${l.step_dot}`} )}) ]
+                - var everymonthdays = [ { value: 1,  text: `${l.step_every_day}` }, ...[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31].map(d => {return( { value: d, text: `${d}${l.step_dot}`} )}) ]
                 each day in everymonthdays
                   option(value=day.value, selected=false)= day.text 
               
@@ -253,7 +253,7 @@ block content
             label(for='start-next')
               span #{l.step_5_next}   
               select(name="start-next-day")
-                - var nextstartdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
+                - var nextstartdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
                 each day in nextstartdays
                   option(value=day.value, selected=false)= day.text  
               span #{l.step_day_after}  
@@ -302,10 +302,10 @@ block content
             label(for='stop-next')
               span #{l.step_6_next}    
               select(name="stop-next-day")
-                - var nextstopdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,29,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
+                - var nextstopdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
                 each day in nextstopdays
                   option(value=day.value, selected=false)= day.text        
-              span #{l.step_day_after}     
+              span #{l.step_day_after_stop}     
               select(name="stop-next-at")
                 - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events
