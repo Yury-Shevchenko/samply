@@ -488,18 +488,13 @@ exports.createIntervalNotification = async (req, res) => {
             if (req.body.int_end.stopEvent === "registration") {
               if (req.body.int_end.stopNextDay) {
                 const endNextDay = parseInt(req.body.int_end.stopNextDay);
-                let whenToEnd;
-                if (endNextDay == 1) {
-                  whenToEnd = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-                } else {
-                  whenToEnd = moment(latestUser.created)
-                    .add({ days: endNextDay })
-                    .startOf("day")
-                    .add({
-                      minutes: Math.floor(Math.random() * 10),
-                      seconds: Math.floor(Math.random() * 60)
-                    });
-                }
+                const whenToEnd = moment(latestUser.created)
+                  .add({ days: endNextDay })
+                  .startOf("day")
+                  .add({
+                    minutes: Math.floor(Math.random() * 10),
+                    seconds: Math.floor(Math.random() * 60)
+                  });
                 int_end = whenToEnd.toISOString();
               } else {
                 const stop_event_ms = moment
@@ -607,18 +602,13 @@ exports.createIntervalNotification = async (req, res) => {
           if (req.body.int_end.stopEvent === "registration") {
             if (req.body.int_end.stopNextDay) {
               const endNextDay = parseInt(req.body.int_end.stopNextDay);
-              let whenToEnd;
-              if (endNextDay == 1) {
-                whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-              } else {
-                whenToEnd = moment(user.created)
-                  .add({ days: endNextDay })
-                  .startOf("day")
-                  .add({
-                    minutes: Math.floor(Math.random() * 10),
-                    seconds: Math.floor(Math.random() * 60)
-                  });
-              }
+              const whenToEnd = moment(user.created)
+                .add({ days: endNextDay })
+                .startOf("day")
+                .add({
+                  minutes: Math.floor(Math.random() * 10),
+                  seconds: Math.floor(Math.random() * 60)
+                });
               int_end = whenToEnd.toISOString();
             } else {
               const stop_event_ms = moment
@@ -978,19 +968,14 @@ exports.createIndividualNotification = async (req, res) => {
         if (req.body.int_end.stopEvent === "registration") {
           if (req.body.int_end.stopNextDay) {
             const endNextDay = parseInt(req.body.int_end.stopNextDay);
-            let whenToEnd;
-            if (endNextDay == 1) {
-              whenToEnd = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-            } else {
-              whenToEnd = moment
-                .tz(latestUser.created, req.body.timezone)
-                .add({ days: endNextDay })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
-                });
-            }
+            const whenToEnd = moment
+              .tz(latestUser.created, req.body.timezone)
+              .add({ days: endNextDay })
+              .startOf("day")
+              .add({
+                minutes: Math.floor(Math.random() * 10),
+                seconds: Math.floor(Math.random() * 60)
+              })
             int_end = whenToEnd.toISOString();
           } else {
             const stop_event_ms = moment
@@ -1042,7 +1027,9 @@ exports.createIndividualNotification = async (req, res) => {
     });
   }
 
+
   if (users) {
+
     users.map(async user => {
       intervals.map(async interval => {
         let updatedInterval = interval;
@@ -1081,19 +1068,14 @@ exports.createIndividualNotification = async (req, res) => {
         if (req.body.int_end.stopEvent === "registration") {
           if (req.body.int_end.stopNextDay) {
             const endNextDay = parseInt(req.body.int_end.stopNextDay);
-            let whenToEnd;
-            if (endNextDay == 1) {
-              whenToEnd = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-            } else {
-              whenToEnd = moment
-                .tz(user.created, req.body.timezone)
-                .add({ days: endNextDay })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
-                });
-            }
+            const whenToEnd = moment
+              .tz(user.created, req.body.timezone)
+              .add({ days: endNextDay })
+              .startOf("day")
+              .add({
+                minutes: Math.floor(Math.random() * 10),
+                seconds: Math.floor(Math.random() * 60)
+              });
             int_end = whenToEnd.toISOString();
           } else {
             const stop_event_ms = moment
@@ -1409,7 +1391,7 @@ async function pickUpRandomTimeFromInterval({
 
   const nums = getDatesInInterval(int_start, int_end, number, distance);
   const ds = nums.map(n => new Date(n).toISOString());
-  
+
   // map over ds to schedule the notifications
   ds.map(date => {
     // schedule personal_notification
@@ -1812,19 +1794,14 @@ exports.joinStudy = async (req, res) => {
         if (sub.stop_event === "registration") {
           if (sub.stop_next) {
             const endNextDay = parseInt(sub.stop_next);
-            let whenToEnd;
-            if (endNextDay == 1) {
-              whenToEnd = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-            } else {
-              whenToEnd = moment
-                .tz(timezone)
-                .add({ days: endNextDay })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
-                });
-            }
+            const whenToEnd = moment
+              .tz(timezone)
+              .add({ days: endNextDay })
+              .startOf("day")
+              .add({
+                minutes: Math.floor(Math.random() * 10),
+                seconds: Math.floor(Math.random() * 60)
+              });
             user_int_end = whenToEnd.toISOString();
           } else {
             const stop_event_ms = moment
@@ -2033,7 +2010,7 @@ exports.leaveStudy = async (req, res) => {
     },
     (err, numRemoved) => {}
   );
-  if (!project.mobileUsers) {  
+  if (!project.mobileUsers) {
     project.mobileUsers = [];
   }
   const removeUserId = req.body.id;
@@ -2048,7 +2025,7 @@ exports.leaveStudy = async (req, res) => {
     } else {
       return user;
     }
-  });  
+  });
 
   await project.save();
   const updatedUser = await User.findOneAndUpdate(
@@ -2196,7 +2173,7 @@ exports.manageNotifications = async (req, res) => {
       notifications: 1,
       mobileUsers: 1
     }
-  );  
+  );
 
   let groups = [];
   if (
@@ -2321,7 +2298,7 @@ function getNumberBetween(min, max) {
 function getNumbersInInterval(min, max, number, distance){
   const step = (max - min) / number;
   const maxAmountNotifications = (max - min) / distance;
- 
+
   if(number > maxAmountNotifications + 1) {
     throw new Error("The minimum interval between notifications is too big");
   }
@@ -2329,7 +2306,7 @@ function getNumbersInInterval(min, max, number, distance){
   if (number == maxAmountNotifications + 1) {
     for (let i = 0; i < number; i++ ) {
       const num = min + i * distance;
-      numbers.push(num); 
+      numbers.push(num);
     }
   } else {
     for (let i = 0; i < number; i++ ) {
@@ -2365,7 +2342,5 @@ function getDatesInInterval(min, max, number, distance){
       adjDistance = adjDistance - adjDistance/1000;
     }
   } while (checkTheMinimalDistance(numbers, adjDistance) && i < 1000);
-  // console.log({ i });
-  // console.log ("adjusted distance", adjDistance / (1000 * 60), "min");
   return numbers;
 }

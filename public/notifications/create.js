@@ -126,7 +126,7 @@ function createNotification() {
         alert("Choose specific time points");
         throw new Error("Missing time values");
       }
-      // calculate the minimum distance 
+      // calculate the minimum distance
       const number = parseInt(container.querySelector(".timeWindowNumberOfPointsInput").value);
 
       const distanceHour = parseInt(container.querySelector(".windowPickerHourDistance").value);
@@ -134,7 +134,7 @@ function createNotification() {
       const distanceMinInMS = distanceMin * 60 * 1000 || 0;
       const distanceHourInMS = distanceHour * 60 * 60 * 1000 || 0;
       const distance = distanceHourInMS + distanceMinInMS;
-      
+
       const hourStart = parseInt(container.querySelector(".windowPickerHourStart").value);
       const minuteStart = parseInt(container.querySelector(".windowPickerMinuteStart").value);
       const hourEnd = parseInt(container.querySelector(".windowPickerHourEnd").value);
@@ -147,7 +147,7 @@ function createNotification() {
         );
         throw new Error("The time window is set incorrectly. The end time should be after the start time.")
       }
-     
+
       const maxAmountNotifications = difference / distance;
 
       if(number > maxAmountNotifications + 1) {
@@ -697,7 +697,7 @@ function createFixedScheduledNotification(
       date: times,
       message: messageContent.value,
       title: titleContent.value,
-      url: urlContent.value,
+      url: urlContent.value.trim(),
       name: "One-time",
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
@@ -744,7 +744,7 @@ function createFixedIntervalNotification(
       int_end: stopingStrategy,
       message: messageContent.value,
       title: titleContent.value,
-      url: urlContent.value,
+      url: urlContent.value.trim(),
       name: "Repeat",
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
@@ -789,7 +789,7 @@ function createIndividualSpecificNotification(
       int_end: stopingStrategy,
       message: messageContent.value,
       title: titleContent.value,
-      url: urlContent.value,
+      url: urlContent.value.trim(),
       name: "Repeat",
       participantId: participants,
       groups: groups,
@@ -832,7 +832,7 @@ function createRandomFixedNotification(
       intervals: constructedIntervals,
       message: messageContent.value,
       title: titleContent.value,
-      url: urlContent.value,
+      url: urlContent.value.trim(),
       name: "One-time",
       participantId: participants,
       groups: groups,
@@ -881,7 +881,7 @@ function createRandomIntervalNotification(
       int_end: stopingStrategy,
       message: messageContent.value,
       title: titleContent.value,
-      url: urlContent.value,
+      url: urlContent.value.trim(),
       name: "Repeat",
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,

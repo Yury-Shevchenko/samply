@@ -38,25 +38,25 @@ mixin scheduledNotification(notification, i)
           span= `${l.table_start}: ${h.moment.tz(notification.int_start, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}` 
         if(notification.start_event && notification.start_event === 'registration')
           if(notification.start_next)
-            span= `Start on the ${notification.start_next} day from ${l.table_participant_registration}` 
+            span= `${l.table_start_on_the} ${notification.start_next} ${l.table_day_from} ${l.table_participant_registration}` 
           if(notification.start_after.days)
             span= `${l.table_start_after} ${notification.start_after.days} ${l.step_5_days}, ${notification.start_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.start_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
         if(notification.int_end)
           span=  `${l.table_end}: ${h.moment.tz(notification.int_end, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}`
         if(notification.stop_event && notification.stop_event === 'registration')
           if(notification.stop_next)
-            span= `Stop on the ${notification.stop_next} day from ${l.table_participant_registration}` 
+            span= `${l.table_stop_at_the_end_of} ${notification.stop_next} ${l.table_day_from} ${l.table_participant_registration}` 
           if(notification.stop_after.days)
             span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
         if(notification.readable && notification.readable.from && notification.readable.to)
-          span= `${l.table_repeat_window} ${notification.readable.from}, to ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
+          span= `${l.table_repeat_window} ${notification.readable.from}, ${l.table_to} ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
         if(notification.readable && notification.readable.interval)
           span= `${l.table_repeat} ${notification.readable.interval}`
         
       if(notification.allCurrentParticipants)
         span= `${l.table_all_participants}` 
       if(notification.allCurrentGroups)
-        span= `Applies to all groups at the moment of notification creation` 
+        span= `${l.table_all_groups}` 
       if(notification.participantId && notification.participantId.length > 0)
         span= `${l.table_for_participants}: ${notification.participantId}` 
       if(notification.groups && notification.groups.length > 0)
@@ -85,25 +85,25 @@ mixin scheduledNotification(notification, i)
           span= `${l.table_start}: ${h.moment.utc(notification.int_start).local().locale(language).format('MMMM Do YYYY, H:mm')}` 
         if(notification.start_event && notification.start_event === 'registration')
           if(notification.start_next)
-            span= `Start on the ${notification.start_next} day from ${l.table_participant_registration}` 
+            span= `${l.table_start_on_the} ${notification.start_next} ${l.table_day_from} ${l.table_participant_registration}` 
           if(notification.start_after.days)
             span= `${l.table_start_after} ${notification.start_after.days} ${l.step_5_days}, ${notification.start_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.start_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
         if(notification.int_end)
           span=  `${l.table_end}: ${h.moment.utc(notification.int_end).local().locale(language).format('MMMM Do YYYY, H:mm')}`
         if(notification.stop_event && notification.stop_event === 'registration')
           if(notification.stop_next)
-            span= `Stop on the ${notification.stop_next} day from ${l.table_participant_registration}` 
+            span= `${l.table_stop_at_the_end_of} ${notification.stop_next} ${l.table_day_from} ${l.table_participant_registration}` 
           if(notification.stop_after.days)
             span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
         if(notification.readable && notification.readable.from && notification.readable.to)
-          span= `${l.table_repeat_window} ${notification.readable.from}, to ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
+          span= `${l.table_repeat_window} ${notification.readable.from}, ${l.table_to} ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
         if(notification.readable && notification.readable.interval)
           span= `${l.table_repeat} ${notification.readable.interval}`
         
       if(notification.allCurrentParticipants)
         span= `${l.table_all_participants}` 
       if(notification.allCurrentGroups)
-        span= `Applies to all groups at the moment of notification creation` 
+        span= `${l.table_all_groups}` 
       if(notification.participantId && notification.participantId.length > 0)
         span= `${l.table_for_participants}: ${notification.participantId}` 
       if(notification.groups && notification.groups.length > 0)

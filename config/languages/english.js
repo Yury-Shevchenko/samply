@@ -851,7 +851,7 @@ module.exports = {
           `,
     notifications_3_2: `
             You can select the specific time zone for notifications or adjust the time to the participant's time zone.
-            Adjusting the time to the participant's time zone works work for future and current participants with a specified time zone.
+            Adjusting the time to the participant's time zone works for future and current participants with a specified time zone.
             Adjusting the time zone does not work for group notifications because group notifications are sent to
             all group members at the same time, so you must explicitly select the time zone for these notifications.
           `,
@@ -885,7 +885,7 @@ module.exports = {
             Choose when to start
           `,
     notifications_8_2: `
-            Notifications can begin to be sent at specific time points defined by the time and date. Alternatively, a time point can be picked relative to the current moment or the moment of participant registration. In the latter case, the starting point will be different for each participant and will be determined by the time when a participant joins the study via the mobile app.
+            Notifications can begin to be sent at specific time points defined by the time and date. Alternatively, a time point can be picked relative to the current moment or the moment of participant registration. In the latter case, the starting point will be different for each participant and will be determined by the time when a participant joins the study for the first time via the mobile app.
           `,
     notifications_9_1: `
             Choose when to stop
@@ -1059,7 +1059,7 @@ module.exports = {
     step_rd: "rd",
     step_same: "same",
     step_next: "next",
-    step_6_next: "Stop sending notification for each participant at the start of the ",
+    step_6_next: "Stop sending notification for each participant at the end of the ",
     step_5_registration: "the moment of the participant registration",
     step_5_now: "now",
     step_6_header: "7. Choose when to stop ",
@@ -1113,7 +1113,12 @@ module.exports = {
     table_for_participants: "For participants",
     table_for_groups: "For groups",
     table_randomized: "Randomized",
-    table_future_participants: "Applies to future participants"
+    table_future_participants: "Applies to future participants",
+    table_all_groups: `Applies to all groups at the moment of notification creation`,
+    table_start_on_the: `Start on the`,
+    table_day_from: `day from`,
+    table_stop_at_the_end_of: `Stop at the end of the`,
+    table_to: `to`,
   },
 
   messages: {

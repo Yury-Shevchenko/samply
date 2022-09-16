@@ -876,7 +876,7 @@ module.exports = {
           Wenn man der Benutzeroberfläche Schritt für Schritt folgt, müssen einige Auswahlmöglichkeiten getroffen werden, um den Zeitplan für die Benachrichtigungen zu definieren.
         `,
     notifications_3_1: `
-          Choose time zone
+          Zeitzone wählen
         `,
     notifications_3_2: `
           Sie können die spezifische Zeitzone für Benachrichtigungen auswählen oder die Zeit an die Zeitzone des Teilnehmers anpassen.
@@ -914,7 +914,7 @@ module.exports = {
           Startzeitpunkt wählen
         `,
     notifications_8_2: `
-          Benachrichtigungen können zu bestimmten Zeitpunkten, die durch Uhrzeit und Datum definiert sind, versandt werden. Alternativ kann ein Zeitpunkt relativ zum aktuellen Zeitpunkt oder zum Zeitpunkt der Teilnehmerregistrierung gewählt werden. Im letzteren Fall ist der Startpunkt für jeden Teilnehmer unterschiedlich und wird durch den Zeitpunkt bestimmt, zu dem ein Teilnehmer der Studie über die mobile App beitritt.
+          Benachrichtigungen können zu bestimmten Zeitpunkten, die durch Uhrzeit und Datum definiert sind, versandt werden. Alternativ kann ein Zeitpunkt relativ zum aktuellen Zeitpunkt oder zum Zeitpunkt der Teilnehmerregistrierung gewählt werden. Im letzteren Fall ist der Startpunkt für jeden Teilnehmer unterschiedlich und wird durch den Zeitpunkt bestimmt, zu dem ein Teilnehmer zum ersten Mal der Studie über die mobile App beitritt.
         `,
     notifications_9_1: `
           Endzeitpunkt wählen
@@ -1093,7 +1093,7 @@ module.exports = {
     step_rd: ".",
     step_same: "gleichen",
     step_next: "nächsten",
-    step_6_next: "Ende der Benachrichtigung für jeden Teilnehmer zu Beginn des ",
+    step_6_next: "Ende der Benachrichtigung für jeden Teilnehmer am Ende des ",
     step_5_registration: "dem Moment der Teilnehmerregistrierung",
     step_5_now: "jetzt",
     step_6_header: "7. Endzeitpunkt wählen",
@@ -1147,7 +1147,12 @@ module.exports = {
     table_for_participants: "Für Teilnehmer",
     table_for_groups: "Für Gruppen",
     table_randomized: "Randomisiert",
-    table_future_participants: "Gilt für zukünftige Teilnehmer"
+    table_future_participants: "Gilt für zukünftige Teilnehmer",
+    table_all_groups: `Gilt für alle Gruppen zum Zeitpunkt der Erstellung der Meldung`,
+    table_start_on_the: `Start am`,
+    table_day_from: `Tag von`,
+    table_stop_at_the_end_of: `Stop am Ende des`,
+    table_to: `bis`,
   },
 
   messages: {
