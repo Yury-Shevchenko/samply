@@ -1,6 +1,6 @@
 mixin projectForm(project = {})
 
-  form(action=`/projects/${project._id || ''}` method = 'POST')
+  form(action=`/projects/${project._id || ''}` method = 'POST' enctype="multipart/form-data")
     label(for='name') #{l.name}
     input(type='text' name='name' value=project.name required)
       
@@ -31,8 +31,31 @@ mixin projectForm(project = {})
     label(for='messageAfterJoin') #{l.messageAfterJoin}
     textarea(type='text' name='messageAfterJoin')= project.messageAfterJoin
     
-    label(for='image') #{l.imageURL} 
-    input(type='text' name='image' value=project.image)
+    p !{l.permanentLink}
+    input(type='text' name='permanentLink' value=project.settings && project.settings.permanentLink)
+    
+    label(for='image')  #{l.imageURL} 
+    input(type='file' name='image' id='image' accept="image/gif, image/png, image/jpeg")
+    if project.image
+      img(src=`${project.image}`, alt=project.name width=200)
+      input(type='hidden' name='image' value=project.image)
+  
+    if !project.image
+      script(nonce=`${noncevalue}`).
+        document.addEventListener('DOMContentLoaded', function (){
+          document.getElementById('lucky').addEventListener('click', function removePictureUpload() {
+            if (document.getElementById('image').style.display == 'none'){
+              document.getElementById('image').style.display = 'block';
+            } else {
+              document.getElementById('image').style.display = 'none';
+            }
+          });
+        });
+
+      div.inputCheckBox
+        input(type = 'checkbox' id = 'lucky' name = 'lucky' checked = false)
+        label(for='lucky')
+          span #{l.feelingLucky} 
     
     p
     .div(id="membersList")

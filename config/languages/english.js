@@ -29,14 +29,14 @@ module.exports = {
     fill_in_information: "Fill in the information for your notification",
     title_information: `Notifications with the same title will replace each other to avoid the users' screen being filled with a huge number of similar notifications.`,
     not_all_participants: "All participants",
-    example_web_link: `If you need to record the participant Samply ID in your task or survey, use the placeholder %SAMPLY_ID% inside the URL, for example https://survey.com/?id=%SAMPLY_ID%.
-        If you want to capture the participant code entered when joining your study, use the placeholder %PARTICIPANT_CODE%, for example https://survey.com/?code=%PARTICIPANT_CODE%.
+    example_web_link: `
+        If you need to record the participant Samply ID in your task or survey, use the placeholder %SAMPLY_ID% inside the URL.
+        If you want to capture the participant code entered when joining your study, use the placeholder %PARTICIPANT_CODE%.
         Note that if a participant did not enter a code, %PARTICIPANT_CODE% will be replaced by the Samply ID.
         Then, inside of your online study you can extract the participant code or the Samply ID from the url address.
-        In the same way, you can include the notification ID in the query, e.g. https://survey.com/?messageid=%MESSAGE_ID%.
-        The combination of query parameters would look like this, e.g. https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%.
         Read more about <a target="_blank" href="https://en.wikipedia.org/wiki/Query_string")>query strings</a> and see all available placeholders <a target="_blank" href="/docs/notifications#placeholders">here</a>.
-      `,
+        The combination of query parameters would look like this, e.g. <span class="example-link">https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%</span>.
+        `,
     choose_the_type: "Choose the type of notification",
     not_participant_id: "Participant ID",
     web_link: "Web link to your survey",
@@ -445,13 +445,26 @@ module.exports = {
       "Ask users to allow notifications (we are currently testing notifications, participants should use Chrome on a desktop computer).",
     askUsername: `Ask participants to enter an <b>individual participant code</b> in the mobile application when joining your study`,
     askGroup: `Ask participants to enter a <b>group code</b> in the mobile application when joining your study`,
-    imageURL: `Image (paste the image URL here - the image will be displayed next to your study in the mobile application)`,
+    imageURL: `
+      Image to display next to your study on the website and in the mobile application
+    `,
     codeMessage:
       "Please write the instructions for the participant on what to enter as an individual participant code.",
     groupMessage:
       "Please write the instructions for the participant on what to enter as a group code.",
     messageAfterJoin:
       "The text that will be displayed to participants after they have joined the study.",
+    permanentLink: `
+      The permanent link for your study that can be used for event-contingent designs where participants are asked to initiate a report after a specific event occurs.
+      The link is displayed to participants in the mobile app after they join your study.
+      You can include the participant's Samply ID, participant code (entered when they joined the study), group ID, and timestamp in the link.
+      To do this, use the <a target="_blank" href="/docs/notifications#placeholders">placeholders</a> %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%,
+      and %TIMESTAMP% within the URL as part of the <a target="_blank" href="https://en.wikipedia.org/wiki/Query_string")>query strings</a>,
+      for example <span class="example-link ">https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%</span>.
+    `,
+    feelingLucky: `
+      I'm feeling lucky; I’ll choose a random picture.
+    `,
     approval_technical_note: ``,
     approvalFormTitle: "Approval form",
     sendRequestBtn: "Submit approval request",

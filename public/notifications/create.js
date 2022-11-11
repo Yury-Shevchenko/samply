@@ -3,6 +3,12 @@ const messageContent = document.querySelector("#messageContent");
 const titleContent = document.querySelector("#titleContent");
 const urlContent = document.querySelector("#urlContent");
 
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
+}
+
 function createNotification() {
   if (!titleContent.value || titleContent.value.trim() === "") {
     alert("Enter a title");
@@ -524,7 +530,8 @@ function createNotification() {
 
   let constructedCronSchedulesForTime = [];
   if (minuteCron) {
-    const sec = Math.floor(Math.random() * 60); // get the random value for the seconds
+    // const sec = Math.floor(Math.random() * 60); // get the random value for the seconds
+    const sec = getRandomIntInclusive(25, 35); // get the random value between 25th and 35th second
     const hour = "*";
     constructedCronSchedulesForTime.push(
       `${sec} ${minuteCron} ${hour} ${dayMonthCron} ${monthCron} ${dayWeekCron}`

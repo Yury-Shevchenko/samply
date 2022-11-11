@@ -132,11 +132,15 @@ router.get(
 router.post(
   "/projects",
   authController.isAdminLoggedIn,
+  projectController.upload,
+  catchErrors(projectController.resize),
   catchErrors(projectController.createProject)
 );
 router.post(
   "/projects/:id",
   authController.isAdminLoggedIn,
+  projectController.upload,
+  catchErrors(projectController.resize),
   catchErrors(projectController.updateProject)
 );
 router.get(

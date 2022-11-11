@@ -2332,6 +2332,13 @@ i.yes:after {
   padding: 1rem 0rem 1rem 0rem;
   border-bottom: 1px solid lightgrey; }
 
+.example-link {
+  font-size: 12px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
+  padding: 5px; }
+
 .notifications_scheduler button {
   background: #fcf4b6;
   box-shadow: 0 8px 6px -6px #d9cfcf;

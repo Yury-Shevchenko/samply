@@ -104,7 +104,7 @@ const projectSchema = new mongoose.Schema({
   mobileUsers: [
     {
       id: String,
-      token: String,
+      token: String, 
       created: {
         type: Date,
         default: Date.now

@@ -2175,26 +2175,28 @@ exports.manageNotifications = async (req, res) => {
     }
   );
 
-  let groups = [];
-  if (
-    project &&
-    project.mobileUsers.length &&
-    project.mobileUsers.map(user => user.group).length
-  ) {
-    const allGroups = project.mobileUsers
-      .map(user => user.group)
-      .filter(item => typeof item !== "undefined");
-    const allGroupsIds = allGroups.map(group => group.id);
-    groups = [...new Set(allGroupsIds)].map(id => {
-      return {
-        id,
-        name: allGroups
-          .filter(group => group.id === id)
-          .map(group => group.name)[0]
-      };
-    });
+  if(project) {
+    let groups = [];
+    if (
+      project.mobileUsers &&
+      project.mobileUsers.length &&
+      project.mobileUsers.map(user => user.group).length
+    ) {
+      const allGroups = project.mobileUsers
+        .map(user => user.group)
+        .filter(item => typeof item !== "undefined");
+      const allGroupsIds = allGroups.map(group => group.id);
+      groups = [...new Set(allGroupsIds)].map(id => {
+        return {
+          id,
+          name: allGroups
+            .filter(group => group.id === id)
+            .map(group => group.name)[0]
+        };
+      });
+    }
+    project.groups = groups;
   }
-  project.groups = groups;
 
   res.render("notify", { project, participant });
 };

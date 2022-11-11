@@ -1,10 +1,21 @@
 const mongoose = require("mongoose");
+const multer = require('multer');
+const jimp = require('jimp');
+const uuid = require('uuid'); // make unique identifier
+const uniqid = require("uniqid");
+const { nanoid } = require("nanoid");
+const fs = require('fs');
+
+const mail = require("../handlers/mail");
+
 const User = mongoose.model("User");
 const Result = mongoose.model("Result");
 const Project = mongoose.model("Project");
-const uniqid = require("uniqid");
-const mail = require("../handlers/mail");
-const { nanoid } = require("nanoid");
+
+const DOMAIN =
+  process.env.NODE_ENV == "production"
+    ? "https://samply.uni-konstanz.de"
+    : "http://localhost";
 
 const confirmOwner = (project, user) => {
   if (!project.creator.equals(user._id) || user.level <= 10) {
@@ -22,6 +33,72 @@ const confirmOwnerOrMember = (project, user) => {
     throw Error(
       "You must be a creator or a member of a project in order to do it!"
     );
+  }
+};
+
+const multerOptions = {
+  storage: multer.memoryStorage(),
+  fileFilter(req, file, next) {
+    const isOk =
+      file.mimetype.startsWith('image/') ||
+      file.mimetype.startsWith('application/json');
+    if (isOk) {
+      next(null, true);
+    } else {
+      next({ message: 'That filetype is not allowed ' }, false);
+    }
+  },
+};
+
+// try to delete the image if it exists in the file system on the server
+const deleteImageFromServer = (image) => {
+  if(image.includes(DOMAIN)){
+    const name = image.split(`${DOMAIN}/uploads/`)[1];
+    const location = `./public/uploads/${name}`;
+    fs.stat(location, function (err, stats) {
+      if (err) {
+        return console.error(err);
+      }
+      fs.unlink(location, function (err) {
+        if (err) return console.log(err);
+      });
+    });
+  } 
+}
+
+exports.upload = multer(multerOptions).fields([
+  { name: 'image' },
+]);
+
+exports.resize = async (req, res, next) => {
+  if (req.files.image && typeof req.body.lucky === 'undefined') {
+    if(req.body.image) {
+      const { image } = req.body;
+      deleteImageFromServer(image);
+    }
+    const extension = req.files.image[0].mimetype.split('/')[1];
+    const fileName = `${uuid.v4()}.${extension}`;
+    req.body.image = `${DOMAIN}/uploads/${fileName}`;
+    const image = await jimp.read(req.files.image[0].buffer);
+    await image.resize(800, jimp.AUTO);
+    await image.write(`./public/uploads/${fileName}`);
+    next();
+  } else {
+    if (
+      !req.body.image &&
+      typeof req.body.lucky !== 'undefined' &&
+      req.body.lucky == 'on'
+    ) {
+      const image = await jimp.read('https://source.unsplash.com/random'); // https://source.unsplash.com/featured/?moon
+      if (image) {
+        const extension = image._originalMime.split('/')[1];
+        const fileName = `${uuid.v4()}.${extension}`;
+        req.body.image = `${DOMAIN}/uploads/${fileName}`;
+        await image.resize(800, jimp.AUTO);
+        await image.write(`./public/uploads/${fileName}`);
+      }
+    }
+    next();
   }
 };
 
@@ -212,7 +289,8 @@ exports.createProject = async (req, res) => {
               req.body[`event-exit`] === "on" ? "exit" : undefined
             ].filter(e => !!e),
             invisible: req.body[`invisible`] === "on" ? 1 : 0
-          }
+          },
+          permanentLink: req.body.permanentLink.trim()
         },
         samplycode: nanoid(6)
       }).save();
@@ -296,7 +374,6 @@ exports.updateProject = async (req, res) => {
           invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0
         };
       });
-
       project.settings = {
         askParticipantCode:
           req.body.askParticipantCode && req.body.askParticipantCode === "on"
@@ -318,8 +395,9 @@ exports.updateProject = async (req, res) => {
             req.body[`event-enter`] === "on" ? "enter" : undefined,
             req.body[`event-exit`] === "on" ? "exit" : undefined
           ].filter(e => !!e),
-          invisible: req.body[`invisible`] === "on" ? 1 : 0
-        }
+          invisible: req.body[`invisible`] === "on" ? 1 : 0,
+        },
+        permanentLink: req.body.permanentLink.trim()
       };
 
       await project.save();
@@ -364,6 +442,10 @@ exports.removeProject = async (req, res) => {
     project: req.params.id
   }).countDocuments();
   if (req.body.confirmation == project.name) {
+    if (project.image) {
+      const { image } = project;
+      deleteImageFromServer(image);
+    }
     if (resultsCount > 0) {
       const deletedResultsPromise = Result.deleteMany({
         project: req.params.id

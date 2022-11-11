@@ -30,13 +30,13 @@ module.exports = {
     title_information: `Benachrichtigungen mit dem gleichen Titel werden sich gegenseitig ersetzen, um zu vermeiden, dass der Bildschirm der Benutzer mit einer großen Anzahl ähnlicher Benachrichtigungen gefüllt wird.`,
     not_all_participants: "Alle Teilnehmer",
     example_web_link: `
-      Wenn Sie die Teilnehmer-Samply-ID in Ihrer Aufgabe oder Umfrage aufzeichnen möchten, verwenden Sie den Platzhalter %SAMPLY_ID% innerhalb der URL, z. B. https://survey.com/?id=%SAMPLY_ID%.
-      Wenn Sie den Teilnehmercode erfassen möchten, der beim Beitritt zu Ihrer Studie eingegeben wurde, verwenden Sie den Platzhalter %PARTICIPANT_CODE%, z. B. https://survey.com/?code=%PARTICIPANT_CODE%.
+      Wenn Sie die Teilnehmer-Samply-ID in Ihrer Aufgabe oder Umfrage aufzeichnen möchten, verwenden Sie den Platzhalter %SAMPLY_ID% innerhalb der URL.
+      Wenn Sie den Teilnehmercode erfassen möchten, der beim Beitritt zu Ihrer Studie eingegeben wurde, verwenden Sie den Platzhalter %PARTICIPANT_CODE%.
       Beachten Sie, dass, wenn ein Teilnehmer keinen Code eingegeben hat, %PARTICIPANT_CODE% durch die Samply-ID ersetzt wird.
       Dann können Sie innerhalb Ihrer Online-Studie den Teilnehmercode oder die Samply-ID aus der URL-Adresse entnehmen.
-      Genauso können Sie die Benachrichtigungs-ID in die Abfrage aufnehmen, z. B. https://survey.com/?messageid=%MESSAGE_ID%.
-      Die Kombination der Abfrageparameter würde wie folgt aussehen, z. B. https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%.
       Lesen Sie mehr über <a target="_blank" href="https://en.wikipedia.org/wiki/Query_string")>Query Strings</a> und finden alle verfügbaren Platzhalter <a target="_blank" href="/docs/notifications#placeholders">hier</a>.
+      Die Kombination der Abfrageparameter würde wie folgt aussehen, z. B. <span class="example-link">https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%</span>.
+
     `,
     choose_the_type: "Wählen Sie die Art der Benachrichtigung",
     not_participant_id: "Teilnehmer-ID",
@@ -458,13 +458,27 @@ module.exports = {
       "Fragen an die Benutzer, ob sie Benachrichtigungen zulassen dürfen (wir testen derzeit Benachrichtigungen, Teilnehmer sollten Chrome auf einem Desktop-Computer verwenden).",
     askUsername: `Bitten Sie die Teilnehmer, bei der Teilnahme an Ihrer Studie einen <b>individuellen Teilnehmercode</b> in die mobile Anwendung einzugeben`,
     askGroup: `Bitten Sie die Teilnehmer, einen <b>Gruppencode</b> in die mobile Anwendung einzugeben, wenn sie an Ihrer Studie teilnehmen`,
-    imageURL: `Bild (fügen Sie die Bild-URL hier ein - das Bild wird neben Ihrer Studie in der mobilen Anwendung angezeigt)`,
+    imageURL: `
+      Bild zur Anzeige neben Ihrer Studie auf der Website und in der mobilen Anwendung
+    `,
     codeMessage:
       "Bitte schreiben Sie die Anweisungen für die Teilnehmer, was sie als individuellen Teilnehmercode eingeben sollen.",
     groupMessage:
       "Bitte schreiben Sie die Anweisungen für die Teilnehmer, was sie als Gruppencode eingeben sollen.",
     messageAfterJoin:
       "Der Text, der den Teilnehmern angezeigt wird, nachdem sie an der Studie angemeldet haben.",
+    permanentLink: `
+      Der permanente Link für Ihre Studie, der für ereigniskontingente Designs verwendet werden kann, bei denen die Teilnehmer aufgefordert werden, einen Bericht zu initiieren, nachdem ein bestimmtes Ereignis eingetreten ist.
+      Der Link wird den Teilnehmern in der mobilen App angezeigt, nachdem sie an Ihrer Studie teilgenommen haben.
+      Sie können die Samply-ID des Teilnehmers, den Teilnehmercode (eingegeben bei der Teilnahme an der Studie), die Gruppen-ID und den Zeitstempel in den Link aufnehmen.
+      Verwenden Sie dazu die <a target="_blank" href="/docs/notifications#placeholders">Platzhalter</a>
+      %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, und %TIMESTAMP%
+      innerhalb der URL als Teil der <a target="_blank" href="https://de.wikipedia.org/wiki/Query-String")>Query-String</a>,
+      zum Beispiel <span class="example-link ">https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%</span>.
+    `,
+    feelingLucky: `
+      Ich habe Glück und werde ein zufälliges Bild auswählen.
+    `,
     approval_technical_note: ``,
     approvalFormTitle: "Genehmigungsantrag",
     sendRequestBtn: "Genehmigungsantrag einreichen",

@@ -130,11 +130,11 @@
 }
 
 
-.project_not_chosen{
+.project_not_chosen {
   opacity: 0.5;
 }
 
-.project_chosen{
+.project_chosen {
 
 }
 
@@ -147,4 +147,12 @@
   margin: 1rem 0rem 1rem 0rem;
   padding: 1rem 0rem 1rem 0rem;
   border-bottom: 1px solid lightgrey;
+}
+
+.example-link {
+  font-size: 12px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid lightgrey;
+  padding: 5px;
 }
