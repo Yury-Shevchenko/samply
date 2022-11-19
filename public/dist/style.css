@@ -1897,6 +1897,27 @@ i.yes:after {
 .docs-content {
   background-color: #fff; }
 
+.videoTutorial {
+  overflow: hidden;
+  padding-top: 56.25%;
+  position: relative; }
+
+.videoTutorial iframe {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%; }
+
+.videoTutorial video {
+  border: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%; }
+
 .authform {
   background: white;
   text-align: center;
