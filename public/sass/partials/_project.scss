@@ -156,3 +156,14 @@
   border: 1px solid lightgrey;
   padding: 5px;
 }
+
+.studyDescription {
+  margin: 10px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-gap: 10px;
+  .header {
+    display: grid;
+    grid-gap: 7px;
+  }
+}

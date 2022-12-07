@@ -2,24 +2,22 @@ extends layout
 
 block content
   .inner
-
-    h2= l.info 
-    .card 
-      h6= project.name
-      p(style="color: #3b4051") !{project.description}
-
+    .card     
+      .studyDescription
+        .header
+          h4= project.name
+          div= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
+          if(author && (author.name || author.institute))  
+            div= author.name
+            div= author.institute
+          p(style="color: #3b4051") !{project.description}
+        if project.image
+          .div
+            img(src=`${project.image}`, alt=project.name width=200)
+        
+      p
       
-      if(author && (author.name || author.institute))  
-        h6= l.authors 
-        
-        ol.card-message
-          p= author.name
-          p= author.institute
-        
-        p= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
-    
-    h2= `${l.how_to_participate}`
-    .card
+      h5= `${l.how_to_participate}`
       if(user && user.participant_projects.map(project => project._id.toString()).includes(project._id.toString()))
         p= l.arleadyParticipant 
         
@@ -46,3 +44,5 @@ block content
         
         a(href=`samply://--/study?id=${project._id}`)
           button.button= l.goToStudy
+
+      //- pre=h.dump(project)

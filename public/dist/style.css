@@ -2360,6 +2360,18 @@ i.yes:after {
   border: 1px solid lightgrey;
   padding: 5px; }
 
+.studyDescription {
+  margin: 10px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr auto;
+      grid-template-columns: 1fr auto;
+  grid-gap: 10px; }
+  .studyDescription .header {
+    display: -ms-grid;
+    display: grid;
+    grid-gap: 7px; }
+
 .notifications_scheduler button {
   background: #fcf4b6;
   box-shadow: 0 8px 6px -6px #d9cfcf;

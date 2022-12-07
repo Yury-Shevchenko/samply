@@ -63,7 +63,7 @@ const deleteImageFromServer = (image) => {
         if (err) return console.log(err);
       });
     });
-  } 
+  }
 }
 
 exports.upload = multer(multerOptions).fields([
@@ -145,7 +145,8 @@ exports.showProjectDescription = async (req, res) => {
       tests: 1,
       creator: 1,
       created: 1,
-      slug: 1
+      slug: 1,
+      image: 1
     }
   );
   let author;
