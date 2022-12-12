@@ -1,6 +1,22 @@
 mixin intro()
   
   h5 
+    .headerLink Support for event-contingent designs
+      p  12 December 2022
+
+  p.card-message
+    | This update allows you implement an event-contingent design in the app. 
+    | You can specify a permanent URL link that participants can click in the app to 
+    | initiate a report after a specific event occurs. 
+    | The link is displayed to participants in the mobile app after they join your study. 
+    | You can include the participant's Samply ID, participant code (entered when they joined the study), 
+    | group ID, and timestamp in the link. 
+    | To do this, use the  <a target="_blank" href="/docs/notifications#placeholders">placeholders</a> 
+    | %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, and %TIMESTAMP% 
+    | within the URL as part of the <a target="_blank" href="https://en.wikipedia.org/wiki/Query_string")>query strings</a>, for example
+    | <span class="example-link ">https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%</span>
+
+  h5 
     .headerLink Adjusting to the participant's time zone
       p  4 May 2022
 
