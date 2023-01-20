@@ -37,15 +37,6 @@ app.use(bodyParser.json({ limit: "500mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(expressValidator());
 
-// app.use(function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
-
 app.use(
   session({
     secret: process.env.SECRET,
@@ -53,7 +44,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 } // 1 year
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 }, // 1 year
   })
 );
 
@@ -81,6 +72,7 @@ app.use((req, res, next) => {
   res.locals.currentPath = req.path;
   res.locals.visitor_language = req.session.visitor_language;
   const path = String(req.path).split("/")[1] || "index";
+
   if (
     res.locals.user != null &&
     res.locals.user.language &&
@@ -114,6 +106,11 @@ app.use((req, res, next) => {
           res.locals.l = language["german"][path];
           res.locals.layout = language["german"]["layout"];
           res.locals.language = "de";
+        } else if (lang == "nl") {
+          res.locals.locale_language = "dutch";
+          res.locals.l = language["dutch"][path];
+          res.locals.layout = language["dutch"]["layout"];
+          res.locals.language = "nl";
         } else {
           res.locals.locale_language = "english";
           res.locals.l = language["english"][path];

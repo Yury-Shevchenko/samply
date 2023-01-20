@@ -99,7 +99,7 @@ block content
         label(for="language") #{l.language}
         .custom-select
           select(name="language")
-            - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}]
+            - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}, {value: 'dutch', label: 'Nederlands'}]
             each option in options
               option(value=option.value, selected=(user.language === option.value))= option.label
 

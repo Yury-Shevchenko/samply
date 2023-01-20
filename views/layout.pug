@@ -16,13 +16,14 @@ html
           .nav__section.nav__section--pages
 
             if !user
+              .custom-select
+                select(name="language" id="languageSwitch")
+                  - var options = [{value: 'english', label: 'English'}, {value: 'german', label: 'Deutsch'}, {value: 'dutch', label: 'Nederlands'}]
+                  each option in options
+                    option(value=option.value, selected=(locale_language === option.value))
+                      h6 #{option.label}
+
               li.nav__item.nav__main_link
-                li.nav__item(style = "display:grid; grid-template-columns: 1fr auto 1fr;")
-                  a.nav__main_link(href='/languages/german', class=(locale_language == 'german' ? 'nav__main_link' : 'nav__main_link--passive'))
-                    h6 DE
-                  p /  
-                  a.nav__main_link(href='/languages/english', class=(locale_language == 'english' ? 'nav__main_link' : 'nav__main_link--passive'))
-                    h6 EN
                 li.nav__item
                   a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))
                     h6 #{layout && layout.studies}
@@ -67,6 +68,7 @@ html
                         window.location.href = `/projects/${project}`;
                       }
                     });
+  
                   });
 
                 nav__section.nav__section--search
@@ -144,4 +146,12 @@ html
     block scripts
       script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&libraries=places` nonce=`${noncevalue}`)
       script(src="/dist/App.bundle.js" nonce=`${noncevalue}`)
+      script(nonce=`${noncevalue}`).
+        document.addEventListener('DOMContentLoaded', function (){
+          document.getElementById("languageSwitch").onchange = function(e) {
+            const language = e.target.value;
+            window.location.href = `/languages/${language}`;
+          }
+        });
+      
       //- script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
