@@ -102,6 +102,11 @@ mixin projectForm(project = {})
         .div  
           input(type='text' name='geofencingURL' value=project.settings && project.settings.geofencing && project.settings.geofencing.link placeholder=l.geoUserDefinedLinkPlaceholder)
           input(type='text' name=`userLocationRadius` value=project.settings && project.settings.geofencing && project.settings.geofencing.radius placeholder=l.geoUserDefinedRadiusPlaceholder)
+          input(type='text' name=`userLocationHeader` value=project.settings && project.settings.geofencing && project.settings.geofencing.header placeholder=l.geoPlaceholderHeader)
+          input(type='text' name=`userLocationMessage` value=project.settings && project.settings.geofencing && project.settings.geofencing.message placeholder=l.geoPlaceholderMessage)
+          input(type='number' name=`userLocationExitzone` value=project.settings && project.settings.geofencing && project.settings.geofencing.exitzone placeholder=l.geoPlaceholderExitZone)
+          input(type='number' name=`userLocationMintimewindow` value=project.settings && project.settings.geofencing && project.settings.geofencing.mintimewindow placeholder=l.geoPlaceholderMinTimeWindow)
+        
         .div
           div.inputCheckBox
             input(type='checkbox' id=`event-enter` name=`event-enter` checked = project.settings && project.settings.geofencing && project.settings.geofencing.events && project.settings && project.settings.geofencing && project.settings.geofencing.events.includes('enter'))
@@ -133,8 +138,12 @@ mixin projectForm(project = {})
               input(type='text' name=`title-${location.slug}` value=location.title placeholder=l.geoPlaceholderTitle)
               input(type='text' name=`latitude-${location.slug}` value=location.latitude placeholder=l.geoPlaceholderLatitude)
               input(type='text' name=`longitude-${location.slug}` value=location.longitude placeholder=l.geoPlaceholderLongitude)
-              input(type='text' name=`radius-${location.slug}` value=location.radius placeholder=l.geoPlaceholderRadius)
+              input(type='number' name=`radius-${location.slug}` value=location.radius placeholder=l.geoPlaceholderRadius)
+              input(type='text' name=`header-${location.slug}` value=location.header placeholder=l.geoPlaceholderHeader)
+              input(type='text' name=`message-${location.slug}` value=location.message placeholder=l.geoPlaceholderMessage)
               input(type='text' name=`link-${location.slug}` value=location.link placeholder=l.geoPlaceholderLink)
+              input(type='number' name=`exitzone-${location.slug}` value=location.exitzone placeholder=l.geoPlaceholderExitZone)
+              input(type='number' name=`mintimewindow-${location.slug}` value=location.mintimewindow placeholder=l.geoPlaceholderMinTimeWindow)
             
             .div
               div.inputCheckBox
@@ -205,11 +214,27 @@ mixin projectForm(project = {})
           rad_input.type = 'text';
           rad_input.name = `radius-${locationSlug}`;
           rad_input.placeholder = l.geoPlaceholderEnterRadius;
+          var header = document.createElement('input');
+          header.name = `header-${locationSlug}`;
+          header.type = 'text';
+          header.placeholder = l.geoPlaceholderHeader;
+          var message = document.createElement('input');
+          message.name = `message-${locationSlug}`;
+          message.type = 'text';
+          message.placeholder = l.geoPlaceholderMessage;
           var link = document.createElement('input');
           link.name = `link-${locationSlug}`;
           link.type = 'text';
-          link.placeholder = l.geoPlaceholderEnterLink;
-          
+          link.placeholder = l.geoPlaceholderLink;
+          var exitzone = document.createElement('input');
+          exitzone.name = `exitzone-${locationSlug}`;
+          exitzone.type = 'number';
+          exitzone.placeholder = l.geoPlaceholderExitZone;
+          var mintimewindow = document.createElement('input');
+          mintimewindow.name = `mintimewindow-${locationSlug}`;
+          mintimewindow.type = 'number';
+          mintimewindow.placeholder = l.geoPlaceholderMinTimeWindow;
+
           // add events 
           var event_enter_input_div = document.createElement("div");
           event_enter_input_div.classList.add('inputCheckBox');
@@ -261,7 +286,11 @@ mixin projectForm(project = {})
           firstColumnDiv.appendChild(lat_input);
           firstColumnDiv.appendChild(lon_input);
           firstColumnDiv.appendChild(rad_input);
+          firstColumnDiv.appendChild(header);
+          firstColumnDiv.appendChild(message);
           firstColumnDiv.appendChild(link);
+          firstColumnDiv.appendChild(exitzone);
+          firstColumnDiv.appendChild(mintimewindow);
           secondColumnDiv.appendChild(event_enter_input_div);
           secondColumnDiv.appendChild(event_exit_input_div);
           secondColumnDiv.appendChild(invisible_mode_div);

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const multer = require('multer');
-const jimp = require('jimp');
-const uuid = require('uuid'); // make unique identifier
+const multer = require("multer");
+const jimp = require("jimp");
+const uuid = require("uuid"); // make unique identifier
 const uniqid = require("uniqid");
 const { nanoid } = require("nanoid");
-const fs = require('fs');
+const fs = require("fs");
 
 const mail = require("../handlers/mail");
 
@@ -26,7 +26,7 @@ const confirmOwner = (project, user) => {
 const confirmOwnerOrMember = (project, user) => {
   const isCreator = project.creator.equals(user._id);
   const isMember = project.members
-    .map(id => id.toString())
+    .map((id) => id.toString())
     .includes(user._id.toString());
   const isParticipant = user.level <= 10;
   if (!(isCreator || isMember) || isParticipant) {
@@ -40,19 +40,19 @@ const multerOptions = {
   storage: multer.memoryStorage(),
   fileFilter(req, file, next) {
     const isOk =
-      file.mimetype.startsWith('image/') ||
-      file.mimetype.startsWith('application/json');
+      file.mimetype.startsWith("image/") ||
+      file.mimetype.startsWith("application/json");
     if (isOk) {
       next(null, true);
     } else {
-      next({ message: 'That filetype is not allowed ' }, false);
+      next({ message: "That filetype is not allowed " }, false);
     }
   },
 };
 
 // try to delete the image if it exists in the file system on the server
 const deleteImageFromServer = (image) => {
-  if(image.includes(DOMAIN)){
+  if (image.includes(DOMAIN)) {
     const name = image.split(`${DOMAIN}/uploads/`)[1];
     const location = `./public/uploads/${name}`;
     fs.stat(location, function (err, stats) {
@@ -64,19 +64,17 @@ const deleteImageFromServer = (image) => {
       });
     });
   }
-}
+};
 
-exports.upload = multer(multerOptions).fields([
-  { name: 'image' },
-]);
+exports.upload = multer(multerOptions).fields([{ name: "image" }]);
 
 exports.resize = async (req, res, next) => {
-  if (req.files.image && typeof req.body.lucky === 'undefined') {
-    if(req.body.image) {
+  if (req.files.image && typeof req.body.lucky === "undefined") {
+    if (req.body.image) {
       const { image } = req.body;
       deleteImageFromServer(image);
     }
-    const extension = req.files.image[0].mimetype.split('/')[1];
+    const extension = req.files.image[0].mimetype.split("/")[1];
     const fileName = `${uuid.v4()}.${extension}`;
     req.body.image = `${DOMAIN}/uploads/${fileName}`;
     const image = await jimp.read(req.files.image[0].buffer);
@@ -86,12 +84,12 @@ exports.resize = async (req, res, next) => {
   } else {
     if (
       !req.body.image &&
-      typeof req.body.lucky !== 'undefined' &&
-      req.body.lucky == 'on'
+      typeof req.body.lucky !== "undefined" &&
+      req.body.lucky == "on"
     ) {
-      const image = await jimp.read('https://source.unsplash.com/random'); // https://source.unsplash.com/featured/?moon
+      const image = await jimp.read("https://source.unsplash.com/random"); // https://source.unsplash.com/featured/?moon
       if (image) {
-        const extension = image._originalMime.split('/')[1];
+        const extension = image._originalMime.split("/")[1];
         const fileName = `${uuid.v4()}.${extension}`;
         req.body.image = `${DOMAIN}/uploads/${fileName}`;
         await image.resize(800, jimp.AUTO);
@@ -111,13 +109,11 @@ exports.listPublicProjects = async (req, res) => {
   const page = req.params.page || 1;
   const limit = 20;
   const skip = page * limit - limit;
-  const projectsPromise = Project.findAllPublic()
-    .skip(skip)
-    .limit(limit);
+  const projectsPromise = Project.findAllPublic().skip(skip).limit(limit);
   const countPromise = Project.where({
     currentlyActive: true,
     public: true,
-    creator: { $exists: true }
+    creator: { $exists: true },
   }).countDocuments();
   const [projects, count] = await Promise.all([projectsPromise, countPromise]);
   const pages = Math.ceil(count / limit);
@@ -136,7 +132,7 @@ exports.showProjectDescription = async (req, res) => {
   const project = await Project.findOne(
     {
       slug: req.params.study,
-      currentlyActive: true
+      currentlyActive: true,
     },
     {
       name: 1,
@@ -146,7 +142,7 @@ exports.showProjectDescription = async (req, res) => {
       creator: 1,
       created: 1,
       slug: 1,
-      image: 1
+      image: 1,
     }
   );
   let author;
@@ -155,7 +151,7 @@ exports.showProjectDescription = async (req, res) => {
       { _id: project.creator },
       {
         name: 1,
-        institute: 1
+        institute: 1,
       }
     );
     res.render("study", { project, author });
@@ -168,12 +164,12 @@ exports.activateParticipantProject = async (req, res) => {
   const activeProject = await Project.findOne({ _id: req.params.id });
   const updatedUser = await User.findOneAndUpdate(
     {
-      _id: req.user._id
+      _id: req.user._id,
     },
     { participantInProject: activeProject._id },
     {
       new: true,
-      upsert: true
+      upsert: true,
     }
   ).exec();
   res.redirect("/testing");
@@ -191,7 +187,7 @@ exports.getUserProjects = async (req, res) => {
       currentlyActive: 1,
       creator: 1,
       slug: 1,
-      public: 1
+      public: 1,
     }
   );
   const invitedprojects = await Project.find(
@@ -204,7 +200,7 @@ exports.getUserProjects = async (req, res) => {
       currentlyActive: 1,
       creator: 1,
       slug: 1,
-      public: 1
+      public: 1,
     }
   );
   res.render("projects", { projects, invitedprojects });
@@ -215,12 +211,12 @@ exports.activateProject = async (req, res) => {
   confirmOwnerOrMember(activeProject, req.user);
   const updatedUser = await User.findOneAndUpdate(
     {
-      _id: req.user._id
+      _id: req.user._id,
     },
     { project: activeProject },
     {
       new: true,
-      upsert: true
+      upsert: true,
     }
   ).exec();
   req.flash(
@@ -237,16 +233,16 @@ exports.createProject = async (req, res) => {
       if (req.body.members) {
         const users = await User.find({
           email: { $in: req.body.members },
-          level: { $gt: 10 }
+          level: { $gt: 10 },
         });
-        membersData = users.map(e => {
+        membersData = users.map((e) => {
           return e._id;
         });
       }
       const locationSlugs = Object.keys(req.body)
-        .filter(key => key.startsWith("slug"))
-        .map(key => key.substring(5));
-      const locations = locationSlugs.map(slug => {
+        .filter((key) => key.startsWith("slug"))
+        .map((key) => key.substring(5));
+      const locations = locationSlugs.map((slug) => {
         return {
           slug: slug,
           title: req.body[`title-${slug}`],
@@ -255,10 +251,10 @@ exports.createProject = async (req, res) => {
           radius: parseFloat(req.body[`radius-${slug}`]),
           events: [
             req.body[`event-enter-${slug}`] === "on" ? "enter" : undefined,
-            req.body[`event-exit-${slug}`] === "on" ? "exit" : undefined
-          ].filter(e => !!e),
+            req.body[`event-exit-${slug}`] === "on" ? "exit" : undefined,
+          ].filter((e) => !!e),
           link: req.body[`link-${slug}`],
-          invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0
+          invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0,
         };
       });
       const project = await new Project({
@@ -285,25 +281,33 @@ exports.createProject = async (req, res) => {
             locations: locations,
             link: req.body.geofencingURL,
             radius: req.body.userLocationRadius,
+            header: req.body.userLocationHeader,
+            message: req.body.userLocationMessage,
+            exitzone: parseInt(req.body.userLocationExitzone),
+            mintimewindow: parseInt(req.body.userLocationMintimewindow),
             events: [
               req.body[`event-enter`] === "on" ? "enter" : undefined,
-              req.body[`event-exit`] === "on" ? "exit" : undefined
-            ].filter(e => !!e),
-            invisible: req.body[`invisible`] === "on" ? 1 : 0
+              req.body[`event-exit`] === "on" ? "exit" : undefined,
+            ].filter((e) => !!e),
+            invisible: req.body[`invisible`] === "on" ? 1 : 0,
+            header: req.body[`header-${slug}`],
+            message: req.body[`message-${slug}`],
+            exitzone: parseInt(req.body[`exitzone-${slug}`]),
+            mintimewindow: parseInt(req.body[`mintimewindow-${slug}`]),
           },
-          permanentLink: req.body.permanentLink.trim()
+          permanentLink: req.body.permanentLink.trim(),
         },
-        samplycode: nanoid(6)
+        samplycode: nanoid(6),
       }).save();
       if (typeof req.user.project._id == "undefined") {
         const updatedUser = await User.findOneAndUpdate(
           {
-            _id: req.user._id
+            _id: req.user._id,
           },
           { project: project },
           {
             new: true,
-            upsert: true
+            upsert: true,
           }
         ).exec();
       }
@@ -330,7 +334,7 @@ exports.updateProject = async (req, res) => {
       if (req.body.members) {
         const users = await User.find({ email: { $in: req.body.members } });
         membersData = users
-          .map(e => {
+          .map((e) => {
             if (
               e.email &&
               e.email != null &&
@@ -340,7 +344,7 @@ exports.updateProject = async (req, res) => {
               return e._id;
             }
           })
-          .filter(e => typeof e != "undefined");
+          .filter((e) => typeof e != "undefined");
       }
       const project = await Project.findOne({ _id: req.params.id });
       project.name = req.body.name.trim();
@@ -358,9 +362,10 @@ exports.updateProject = async (req, res) => {
       }
 
       const locationSlugs = Object.keys(req.body)
-        .filter(key => key.startsWith("slug"))
-        .map(key => key.substring(5));
-      const locations = locationSlugs.map(slug => {
+        .filter((key) => key.startsWith("slug"))
+        .map((key) => key.substring(5));
+
+      const locations = locationSlugs.map((slug) => {
         return {
           slug: slug,
           title: req.body[`title-${slug}`],
@@ -369,10 +374,14 @@ exports.updateProject = async (req, res) => {
           radius: parseFloat(req.body[`radius-${slug}`]),
           events: [
             req.body[`event-enter-${slug}`] === "on" ? "enter" : undefined,
-            req.body[`event-exit-${slug}`] === "on" ? "exit" : undefined
-          ].filter(e => !!e),
+            req.body[`event-exit-${slug}`] === "on" ? "exit" : undefined,
+          ].filter((e) => !!e),
           link: req.body[`link-${slug}`],
-          invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0
+          invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0,
+          header: req.body[`header-${slug}`],
+          message: req.body[`message-${slug}`],
+          exitzone: parseInt(req.body[`exitzone-${slug}`]),
+          mintimewindow: parseInt(req.body[`mintimewindow-${slug}`]),
         };
       });
       project.settings = {
@@ -392,13 +401,17 @@ exports.updateProject = async (req, res) => {
           locations: locations,
           link: req.body.geofencingURL,
           radius: req.body.userLocationRadius,
+          header: req.body.userLocationHeader,
+          message: req.body.userLocationMessage,
+          exitzone: parseInt(req.body.userLocationExitzone),
+          mintimewindow: parseInt(req.body.userLocationMintimewindow),
           events: [
             req.body[`event-enter`] === "on" ? "enter" : undefined,
-            req.body[`event-exit`] === "on" ? "exit" : undefined
-          ].filter(e => !!e),
+            req.body[`event-exit`] === "on" ? "exit" : undefined,
+          ].filter((e) => !!e),
           invisible: req.body[`invisible`] === "on" ? 1 : 0,
         },
-        permanentLink: req.body.permanentLink.trim()
+        permanentLink: req.body.permanentLink.trim(),
       };
 
       await project.save();
@@ -420,7 +433,7 @@ exports.editProject = async (req, res) => {
   let membersEmails = [];
   if (project.members) {
     const users = await User.find({ _id: { $in: project.members } });
-    membersEmails = users.map(e => {
+    membersEmails = users.map((e) => {
       return e.email;
     });
   }
@@ -432,7 +445,7 @@ exports.trydeleteProject = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
   confirmOwner(project, req.user);
   const resultsCount = await Result.where({
-    project: req.params.id
+    project: req.params.id,
   }).countDocuments();
   res.render("deleteProjectForm", { project, resultsCount });
 };
@@ -440,7 +453,7 @@ exports.trydeleteProject = async (req, res) => {
 exports.removeProject = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
   const resultsCount = await Result.where({
-    project: req.params.id
+    project: req.params.id,
   }).countDocuments();
   if (req.body.confirmation == project.name) {
     if (project.image) {
@@ -449,7 +462,7 @@ exports.removeProject = async (req, res) => {
     }
     if (resultsCount > 0) {
       const deletedResultsPromise = Result.deleteMany({
-        project: req.params.id
+        project: req.params.id,
       });
       const projectRemovePromise = project.remove();
       await Promise.all([deletedResultsPromise, projectRemovePromise]);
@@ -498,18 +511,20 @@ exports.inviteParticipants = async (req, res) => {
       .replace(/ /g, "")
       .split(/\r\n|,|;/);
     if (emailsRaw) {
-      emails = emails.concat(emailsRaw.filter(e => e && e != null && e != ""));
+      emails = emails.concat(
+        emailsRaw.filter((e) => e && e != null && e != "")
+      );
     }
   }
   const project = await Project.findOne({ name: req.params.project });
   let sentEmails = [];
   if (project && project.invitations && project.invitations.length > 0) {
     sentEmails = project.invitations
-      .filter(e => typeof e != "undefined" && e != null && e.email != null)
-      .map(e => e.email);
+      .filter((e) => typeof e != "undefined" && e != null && e.email != null)
+      .map((e) => e.email);
   }
   const newInvitationEmails = emails.filter(
-    e => e != null && e != "" && sentEmails.indexOf(e) == -1
+    (e) => e != null && e != "" && sentEmails.indexOf(e) == -1
   );
   if (sentEmails.length > 100) {
     req.flash("error", `${res.locals.layout.flash_invitation_overlimit}`);
@@ -520,19 +535,19 @@ exports.inviteParticipants = async (req, res) => {
   const subject = res.locals.layout.flash_invitation;
   try {
     sentInvitations = await Promise.all(
-      newInvitationEmails.map(async email => {
+      newInvitationEmails.map(async (email) => {
         if (email && email != null) {
           const token = uniqid();
           const participant = {
             email: email,
-            project: project.name
+            project: project.name,
           };
           const singupURL = `https://${req.headers.host}/code/${req.params.project}/${token}`;
           await mail.send({
             participant,
             subject,
             singupURL,
-            filename: "invitation-" + req.user.language
+            filename: "invitation-" + req.user.language,
           });
           return { email: email, token: token };
         }
@@ -558,7 +573,7 @@ exports.invitations = async (req, res) => {
       name: 1,
       invitations: 1,
       slug: 1,
-      currentlyActive: 1
+      currentlyActive: 1,
     }
   );
   res.render("invitations", { project });
@@ -598,7 +613,7 @@ exports.getPublicStudy = async (req, res) => {
         geofencingInstruction: 1,
         settings: 1,
         samplycode: 1,
-        mobileUsers: 1
+        mobileUsers: 1,
       }
     );
   } else {
@@ -613,7 +628,7 @@ exports.getPublicStudy = async (req, res) => {
         geofencingInstruction: 1,
         settings: 1,
         samplycode: 1,
-        mobileUsers: 1
+        mobileUsers: 1,
       }
     );
   }
@@ -621,12 +636,12 @@ exports.getPublicStudy = async (req, res) => {
     return res.send({ error: "No study found" });
   }
   let participant = {};
-  if (study && study.mobileUsers.filter(user => user.id === token).length) {
-    participant = study.mobileUsers.filter(user => user.id === token)[0];
+  if (study && study.mobileUsers.filter((user) => user.id === token).length) {
+    participant = study.mobileUsers.filter((user) => user.id === token)[0];
   }
   const studyUser = {
     ...study._doc,
-    participant
+    participant,
   };
 
   delete studyUser.mobileUsers;
@@ -637,14 +652,14 @@ exports.getMobileUsers = async (req, res) => {
   const project = await Project.findOne(
     { _id: req.user.project._id },
     {
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
   if (!project) {
     return res.render("data", {});
   }
   const users = await Promise.all(
-    project.mobileUsers.map(async user => {
+    project.mobileUsers.map(async (user) => {
       const participant = await User.findOne(
         { samplyId: user.id },
         { information: 1, stripeAccountId: 1, stripeInformation: 1 }
@@ -668,7 +683,7 @@ exports.getMobileUsers = async (req, res) => {
         user.information = {
           ...user.information,
           from: startTime,
-          to: endTime
+          to: endTime,
         };
       }
 
@@ -679,14 +694,14 @@ exports.getMobileUsers = async (req, res) => {
       ) {
         user.information = {
           ...user.information,
-          timezone: participant.information.timezone
+          timezone: participant.information.timezone,
         };
       }
 
       if (participant && participant.stripeAccountId) {
         user.stripe = {
           account: participant.stripeAccountId,
-          information: participant.stripeInformation
+          information: participant.stripeInformation,
         };
       }
 
@@ -702,7 +717,7 @@ exports.getMobileGroups = async (req, res) => {
     {
       mobileUsers: 1,
       notifyToken: 1,
-      notifyExpires: 1
+      notifyExpires: 1,
     }
   );
   if (!project) {
@@ -710,17 +725,17 @@ exports.getMobileGroups = async (req, res) => {
   }
   const users = project.mobileUsers;
   let groups = [];
-  if (project.mobileUsers.map(user => user.group).length) {
+  if (project.mobileUsers.map((user) => user.group).length) {
     const allGroups = project.mobileUsers
-      .map(user => user.group)
-      .filter(item => typeof item !== "undefined");
-    const allGroupsIds = allGroups.map(group => group.id);
-    groups = [...new Set(allGroupsIds)].map(id => {
+      .map((user) => user.group)
+      .filter((item) => typeof item !== "undefined");
+    const allGroupsIds = allGroups.map((group) => group.id);
+    groups = [...new Set(allGroupsIds)].map((id) => {
       return {
         id,
         name: allGroups
-          .filter(group => group.id === id)
-          .map(group => group.name)[0]
+          .filter((group) => group.id === id)
+          .map((group) => group.name)[0],
       };
     });
   }
@@ -764,7 +779,7 @@ exports.changeStatusParticipant = async (req, res) => {
     {
       mobileUsers: 1,
       creator: 1,
-      members: 1
+      members: 1,
     }
   );
   confirmOwnerOrMember(project, req.user);
@@ -773,11 +788,11 @@ exports.changeStatusParticipant = async (req, res) => {
   if (!project.mobileUsers) {
     project.mobileUsers = [];
   }
-  project.mobileUsers = project.mobileUsers.map(user => {
+  project.mobileUsers = project.mobileUsers.map((user) => {
     if (user.id === userId && user.token.startsWith("ExponentPushToken")) {
       const updatedUser = {
         ...user._doc,
-        deactivated: req.params.action === "off"
+        deactivated: req.params.action === "off",
       };
       if (req.params.action === "off") {
         req.flash(
