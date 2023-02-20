@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .inner
+    form.form(action="/account/delete" method="POST")
+      h2 #{l.deleteMyAccount}
+
+      if projects && projects.length 
+        p #{l.removeProjectsFirst}
+        
+        ul
+          each project, i in projects 
+            li #{project.name}
+        p !{l.deleteProjectHere}
+       
+      else 
+        p #{l.deleteSureQuestion}
+        label(for="confirm") #{l.enterDelete}
+        input(type="text" name="confirm" required)
+        p
+        input.button(type="submit" value=l.deleteMyAccount)
+
+
+  //- pre=h.dump(projects)
+  //- pre=h.dump(user)

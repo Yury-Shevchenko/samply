@@ -32,13 +32,23 @@ router.post(
   catchErrors(authController.update)
 );
 router.get("/logout", authController.logout);
+router.get(
+  "/account/delete",
+  authController.isLoggedIn,
+  catchErrors(authController.requestDeleteAccount)
+);
+router.post(
+  "/account/delete",
+  authController.isLoggedIn,
+  catchErrors(authController.deleteAccount)
+);
 
 router.post(
   "/auth/researcher/email/register",
   passport.authenticate("website-signup-researcher", {
     successRedirect: "/projects",
     failureRedirect: "/researcher/register",
-    failureFlash: true
+    failureFlash: true,
   })
 );
 
@@ -46,8 +56,8 @@ router.post(
   "/auth/researcher/email/login",
   passport.authenticate("website-login", {
     successRedirect: "/",
-    failureRedirect: "/",
-    failureFlash: true
+    failureRedirect: "/researcher/login",
+    failureFlash: true,
   })
 );
 
@@ -55,8 +65,8 @@ router.post(
   "/auth/participant/email/login",
   passport.authenticate("website-login", {
     successRedirect: "/account",
-    failureRedirect: "/participant/login",
-    failureFlash: true
+    failureRedirect: "/researcher/login",
+    failureFlash: true,
   })
 );
 

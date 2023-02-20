@@ -1,0 +1,17 @@
+extends email-layout
+
+block content
+  h2 Uitnodiging
+  p Hallo. U bent uitgenodigd om deel te nemen aan de studie #{participant.project}. Dit is uw individuele privé link naar de studie. Klik op de volgende knop om verder te gaan met de studie. 
+  +button(singupURL, 'Перейти к исследованию →')
+  p Als u niet op de bovenstaande knop kunt klikken, ga dan naar #{singupURL}
+  br
+  p Als je deze e-mail niet hebt aangevraagd, negeer hem dan.
+
+  p 
+  p 
+  p 
+    a(style="color: #211505" target="_blank" href=`https://samply.uni-konstanz.de/docs/terms`) Gebruiksvoorwaarden
+
+  p 
+    a(style="color: #211505" target="_blank" href=`https://samply.uni-konstanz.de/docs/policy`) Privacybeleid

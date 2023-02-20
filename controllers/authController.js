@@ -1,7 +1,10 @@
 const crypto = require("crypto");
 const mongoose = require("mongoose");
-const User = mongoose.model("User");
 const mail = require("../handlers/mail");
+
+const User = mongoose.model("User");
+const Project = mongoose.model("Project");
+const Result = mongoose.model("Result");
 
 exports.isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -48,7 +51,7 @@ exports.forgot = async (req, res) => {
     participant: user,
     subject,
     resetURL,
-    filename: "password-reset-" + res.locals.locale_language
+    filename: "password-reset-" + res.locals.locale_language,
   });
   req.flash("success", `${res.locals.layout.flash_email_recovery_link}`);
   res.redirect("back");
@@ -57,7 +60,7 @@ exports.forgot = async (req, res) => {
 exports.reset = async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
-    resetPasswordExpires: { $gt: Date.now() } //greater than
+    resetPasswordExpires: { $gt: Date.now() }, //greater than
   });
   if (!user) {
     req.flash("error", `${res.locals.layout.flash_reset_invalid}`);
@@ -78,11 +81,12 @@ exports.sendEmailConfirmationLink = async (req, res) => {
   user.confirmEmailToken = crypto.randomBytes(20).toString("hex");
   user.confirmEmailExpires = Date.now() + 3600000;
   await user.save();
+  const subject = res.locals.layout.flash_emailConfirmation;
   mail.send({
     participant: user,
-    subject: "Email confirmation",
+    subject,
     resetURL: `https://${req.headers.host}/account/confirm/${user.confirmEmailToken}`,
-    filename: "email-confirmation-" + user.language
+    filename: "email-confirmation-" + user.language,
   });
   req.flash("success", `${res.locals.layout.flash_sent_confirm_email_ink}`);
   res.redirect("/account");
@@ -91,7 +95,7 @@ exports.sendEmailConfirmationLink = async (req, res) => {
 exports.confirmEmail = async (req, res) => {
   const user = await User.findOne({
     confirmEmailToken: req.params.token,
-    confirmEmailExpires: { $gt: Date.now() } // greater than
+    confirmEmailExpires: { $gt: Date.now() }, // greater than
   });
   if (!user) {
     req.flash("error", `${res.locals.layout.flash_confirm_email_invalid}`);
@@ -124,7 +128,7 @@ exports.confirmedPasswords = (req, res, next) => {
 exports.update = async (req, res) => {
   const user = await User.findOne({
     resetPasswordToken: req.params.token,
-    resetPasswordExpires: { $gt: Date.now() } //greater than
+    resetPasswordExpires: { $gt: Date.now() }, //greater than
   });
   if (!user) {
     req.flash("error", `${res.locals.layout.flash_reset_invalid}`);
@@ -137,4 +141,46 @@ exports.update = async (req, res) => {
   await req.login(updatedUser); //login a user in
   req.flash("success", `${res.locals.layout.flash_password_is_reset}`);
   res.redirect("/");
+};
+
+exports.requestDeleteAccount = async (req, res) => {
+  // find projects associated with the account
+  const projects = await Project.find({ creator: req.user._id }, { name: 1 });
+  res.render("requestDeleteAccount", { projects });
+};
+
+exports.deleteAccount = async (req, res) => {
+  if (req.body.confirm === "delete") {
+    // check whether the account has a project assigned to it
+    // if it has some, ask user to delete projects
+    const projects = await Project.find({ creator: req.user._id }, { _id: 1 });
+    if (projects && projects.length) {
+      req.flash("error", `${res.locals.layout.flash_removeProjectsFirst}`);
+      res.redirect("back");
+    } else {
+      // delete the account with all other information
+      const user = await User.findOne({ _id: req.user._id });
+      const resultsCount = await Result.where({
+        samplyid: req.user.samplyId,
+      }).countDocuments();
+      if (resultsCount > 0) {
+        await Result.deleteMany({ user: req.user._id });
+      }
+      await user.remove();
+      // if the user has confirmed the email, send an email with a goodbye message
+      if (user.emailIsConfirmed) {
+        const subject = res.locals.layout.flash_emailYourAccountDeleted;
+        await mail.send({
+          participant: user,
+          subject,
+          filename: "account-deleted-" + res.locals.language,
+        });
+      }
+      req.flash("success", `${res.locals.layout.flash_yourAccountDeleted}`);
+      res.redirect("/");
+    }
+  } else {
+    req.flash("error", `${res.locals.layout.flash_enterDeleteToConfirm}`);
+    res.redirect("back");
+  }
 };
