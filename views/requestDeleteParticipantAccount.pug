@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  .inner
+    form.form(action="/account/remove" method="POST")
+      h2 #{l.deleteMyAccount}
+
+      p #{l.deleteSureQuestion}
+
+      p To confirm, please enter your email and password, and then press the button "Delete my account".
+
+      span Email
+      input(type="email" name="email" value=email placeholder="Email" style="border-top-left-radius: 6px; border-top-right-radius: 6px;" required)
+      p
+      span Password
+      input(type="password" name="password" placeholder="Password" style="border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;" required)
+      p
+      input.button(type="submit" value=l.deleteMyAccount)
+
+
+  //- pre=h.dump(projects)
+  //- pre=h.dump(user)

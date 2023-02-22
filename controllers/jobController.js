@@ -16,10 +16,10 @@ let expo = new Expo();
 
 const agenda = new Agenda({
   name: "samply-notifications",
-  db: { address: process.env.DATABASE, collection: "Job" }
+  db: { address: process.env.DATABASE, collection: "Job" },
 });
 
-agenda.on("ready", function() {
+agenda.on("ready", function () {
   agenda.define("one_time_notification", (job, done) => {
     sendToAllProjectUsers({
       done: done,
@@ -30,7 +30,7 @@ agenda.on("ready", function() {
       expireIn: job.attrs.data.expireIn,
       notification_id: job.attrs.data.id,
       deleteself: job.attrs.data.deleteself,
-      excludeUntil: job.attrs.data.excludeUntil
+      excludeUntil: job.attrs.data.excludeUntil,
     });
   });
 
@@ -47,7 +47,7 @@ agenda.on("ready", function() {
         title: job.attrs.data.title,
         message: job.attrs.data.message,
         url: job.attrs.data.url,
-        expireIn: job.attrs.data.expireIn
+        expireIn: job.attrs.data.expireIn,
       });
     } else {
       sendToAllProjectUsers({
@@ -56,7 +56,7 @@ agenda.on("ready", function() {
         title: job.attrs.data.title,
         message: job.attrs.data.message,
         url: job.attrs.data.url,
-        expireIn: job.attrs.data.expireIn
+        expireIn: job.attrs.data.expireIn,
       });
     }
   });
@@ -70,11 +70,11 @@ agenda.on("ready", function() {
       message: job.attrs.data.message,
       url: job.attrs.data.url,
       expireIn: job.attrs.data.expireIn,
-      groupid: job.attrs.data.groupid
+      groupid: job.attrs.data.groupid,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     newjob.save();
     done();
@@ -84,7 +84,7 @@ agenda.on("ready", function() {
     agenda.cancel(
       {
         "data.projectid": job.attrs.data.projectid,
-        "data.id": job.attrs.data.id
+        "data.id": job.attrs.data.id,
       },
       (err, numRemoved) => {}
     );
@@ -103,7 +103,7 @@ agenda.on("ready", function() {
       expireIn: job.attrs.data.expireIn,
       notification_id: job.attrs.data.id,
       deleteself: job.attrs.data.deleteself,
-      schedule_id: job.attrs.data.scheduleid
+      schedule_id: job.attrs.data.scheduleid,
     });
     done();
   });
@@ -118,11 +118,11 @@ agenda.on("ready", function() {
       message: job.attrs.data.message,
       url: job.attrs.data.url,
       expireIn: job.attrs.data.expireIn,
-      deleteself: false
+      deleteself: false,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     newjob.save();
     done();
@@ -134,7 +134,7 @@ agenda.on("ready", function() {
         "data.projectid": job.attrs.data.projectid,
         "data.id": job.attrs.data.id,
         "data.userid": job.attrs.data.userid,
-        "data.groupid": job.attrs.data.groupid
+        "data.groupid": job.attrs.data.groupid,
       },
       (err, numRemoved) => {}
     );
@@ -158,7 +158,7 @@ agenda.on("ready", function() {
       interval_max: job.attrs.data.interval_max,
       distance: job.attrs.data.distance,
       number: job.attrs.data.number,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     done();
   });
@@ -178,11 +178,11 @@ agenda.on("ready", function() {
       interval_max: job.attrs.data.interval_max,
       distance: job.attrs.data.distance,
       number: job.attrs.data.number,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     newjob.save();
     done();
@@ -193,7 +193,7 @@ agenda.on("ready", function() {
       {
         "data.projectid": job.attrs.data.projectid,
         "data.id": job.attrs.data.id,
-        "data.userid": job.attrs.data.userid
+        "data.userid": job.attrs.data.userid,
       },
       (err, numRemoved) => {}
     );
@@ -215,11 +215,11 @@ agenda.on("ready", function() {
       interval_max: job.attrs.data.interval_max,
       distance: job.attrs.data.distance,
       number: job.attrs.data.number,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
-      timezone: job.attrs.data.timezone
+      timezone: job.attrs.data.timezone,
     });
     newjob.save();
     done();
@@ -230,7 +230,7 @@ agenda.on("ready", function() {
       {
         "data.projectid": job.attrs.data.projectid,
         "data.id": job.attrs.data.id,
-        "data.groupid": job.attrs.data.groupid
+        "data.groupid": job.attrs.data.groupid,
       },
       (err, numRemoved) => {}
     );
@@ -264,7 +264,7 @@ exports.createScheduleNotification = async (req, res) => {
     {
       name: 1,
       notifications: 1,
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
 
@@ -272,7 +272,7 @@ exports.createScheduleNotification = async (req, res) => {
   // in the project, and when a new user joins, schedule a new notification
 
   if (req.body.date && req.body.date.length > 0) {
-    await req.body.date.map(date => {
+    await req.body.date.map((date) => {
       const id = uniqid();
       project.notifications.push({
         id: id,
@@ -292,7 +292,7 @@ exports.createScheduleNotification = async (req, res) => {
         scheduleInFuture: req.body.scheduleInFuture,
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
-        useParticipantTimezone: req.body.useParticipantTimezone
+        useParticipantTimezone: req.body.useParticipantTimezone,
       });
 
       let groups;
@@ -301,9 +301,9 @@ exports.createScheduleNotification = async (req, res) => {
           groups = req.body.groups;
         } else {
           const allGroups = project.mobileUsers
-            .map(user => user.group)
-            .filter(item => typeof item !== "undefined");
-          const allGroupsIds = allGroups.map(group => group.id);
+            .map((user) => user.group)
+            .filter((item) => typeof item !== "undefined");
+          const allGroupsIds = allGroups.map((group) => group.id);
           groups = [...new Set(allGroupsIds)];
         }
         agenda.schedule(date, "personal_notification", {
@@ -314,7 +314,7 @@ exports.createScheduleNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          deleteself: true
+          deleteself: true,
         });
       }
 
@@ -324,8 +324,8 @@ exports.createScheduleNotification = async (req, res) => {
           users = req.body.participants;
         } else {
           users = project.mobileUsers
-            .filter(user => !user.deactivated)
-            .map(user => user.id);
+            .filter((user) => !user.deactivated)
+            .map((user) => user.id);
         }
         const res = schedulePersonalNotificationsForUsers({
           date: date,
@@ -333,7 +333,7 @@ exports.createScheduleNotification = async (req, res) => {
           projectid: req.user.project._id, // String
           notificationid: id, // String - notification ID
           body: req.body, // {}
-          deleteself: true // Boolean
+          deleteself: true, // Boolean
         });
       }
     });
@@ -351,7 +351,6 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
-
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -361,7 +360,7 @@ exports.createIntervalNotification = async (req, res) => {
     {
       name: 1,
       notifications: 1,
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
   const id = uniqid(); // notification id
@@ -385,11 +384,11 @@ exports.createIntervalNotification = async (req, res) => {
   let users;
   if (req.body.participantId) {
     if (req.body.participantId.length > 0) {
-      users = project.mobileUsers.filter(user =>
+      users = project.mobileUsers.filter((user) =>
         req.body.participantId.includes(user.id)
       );
     } else {
-      users = project.mobileUsers.filter(user => !user.deactivated);
+      users = project.mobileUsers.filter((user) => !user.deactivated);
     }
   }
 
@@ -400,16 +399,16 @@ exports.createIntervalNotification = async (req, res) => {
       groups = req.body.groups;
     } else {
       const allGroups = project.mobileUsers
-        .map(user => user.group)
-        .filter(item => typeof item !== "undefined");
-      const allGroupsIds = allGroups.map(group => group.id);
+        .map((user) => user.group)
+        .filter((item) => typeof item !== "undefined");
+      const allGroupsIds = allGroups.map((group) => group.id);
       groups = [...new Set(allGroupsIds)];
     }
   }
 
   if (req.body.randomize) {
     const intervalWindows = req.body.intervalWindows;
-    intervalWindows.map(window => {
+    intervalWindows.map((window) => {
       project.notifications.push({
         id: id,
         target: req.body.target,
@@ -436,25 +435,25 @@ exports.createIntervalNotification = async (req, res) => {
         scheduleInFuture: req.body.scheduleInFuture,
         readable: {
           from: window.from && cronstrue.toString(window.from),
-          to: window.to && cronstrue.toString(window.to)
+          to: window.to && cronstrue.toString(window.to),
         },
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
-        useParticipantTimezone: req.body.useParticipantTimezone
+        useParticipantTimezone: req.body.useParticipantTimezone,
       });
     });
 
     // new jobs should be created or modified to account for the situations where the notifications are yoked
     if (groups) {
-      groups.map(group => {
+      groups.map((group) => {
         const sortedUsers = project.mobileUsers
-          .filter(user => user.group && user.group.id === group)
+          .filter((user) => user.group && user.group.id === group)
           .sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
         // use the latest user as a benchmark
         const latestUser = sortedUsers.length ? sortedUsers[0] : undefined;
 
         if (latestUser) {
-          intervalWindows.map(window => {
+          intervalWindows.map((window) => {
             if (req.body.int_start.startEvent === "registration") {
               if (req.body.int_start.startNextDay) {
                 const startNextDay = parseInt(req.body.int_start.startNextDay);
@@ -467,7 +466,7 @@ exports.createIntervalNotification = async (req, res) => {
                     .startOf("day")
                     .add({
                       minutes: Math.floor(Math.random() * 10),
-                      seconds: Math.floor(Math.random() * 60)
+                      seconds: Math.floor(Math.random() * 60),
                     });
                 }
                 int_start = whenToStart.toISOString();
@@ -476,7 +475,7 @@ exports.createIntervalNotification = async (req, res) => {
                   .duration({
                     days: req.body.int_start.startAfter.days,
                     hours: req.body.int_start.startAfter.hours,
-                    minutes: req.body.int_start.startAfter.minutes
+                    minutes: req.body.int_start.startAfter.minutes,
                   })
                   .asMilliseconds();
                 int_start = new Date(
@@ -493,7 +492,7 @@ exports.createIntervalNotification = async (req, res) => {
                   .startOf("day")
                   .add({
                     minutes: Math.floor(Math.random() * 10),
-                    seconds: Math.floor(Math.random() * 60)
+                    seconds: Math.floor(Math.random() * 60),
                   });
                 int_end = whenToEnd.toISOString();
               } else {
@@ -501,7 +500,7 @@ exports.createIntervalNotification = async (req, res) => {
                   .duration({
                     days: req.body.int_end.stopAfter.days,
                     hours: req.body.int_end.stopAfter.hours,
-                    minutes: req.body.int_end.stopAfter.minutes
+                    minutes: req.body.int_end.stopAfter.minutes,
                   })
                   .asMilliseconds();
                 int_end = new Date(
@@ -547,7 +546,7 @@ exports.createIntervalNotification = async (req, res) => {
               url: req.body.url,
               expireIn: req.body.expireIn,
               number: window.number,
-              timezone: req.body.timezone
+              timezone: req.body.timezone,
             });
             agenda.schedule(int_end, "end_random_group_manager", {
               groupid: [group],
@@ -561,7 +560,7 @@ exports.createIntervalNotification = async (req, res) => {
               url: req.body.url,
               expireIn: req.body.expireIn,
               number: window.number,
-              timezone: req.body.timezone
+              timezone: req.body.timezone,
             });
           });
         }
@@ -569,8 +568,8 @@ exports.createIntervalNotification = async (req, res) => {
     }
 
     if (users) {
-      users.map(async user => {
-        intervalWindows.map(async window => {
+      users.map(async (user) => {
+        intervalWindows.map(async (window) => {
           if (req.body.int_start.startEvent === "registration") {
             if (req.body.int_start.startNextDay) {
               const startNextDay = parseInt(req.body.int_start.startNextDay);
@@ -583,7 +582,7 @@ exports.createIntervalNotification = async (req, res) => {
                   .startOf("day")
                   .add({
                     minutes: Math.floor(Math.random() * 10),
-                    seconds: Math.floor(Math.random() * 60)
+                    seconds: Math.floor(Math.random() * 60),
                   });
               }
               int_start = whenToStart.toISOString();
@@ -592,7 +591,7 @@ exports.createIntervalNotification = async (req, res) => {
                 .duration({
                   days: req.body.int_start.startAfter.days,
                   hours: req.body.int_start.startAfter.hours,
-                  minutes: req.body.int_start.startAfter.minutes
+                  minutes: req.body.int_start.startAfter.minutes,
                 })
                 .asMilliseconds();
               int_start = new Date(Date.parse(user.created) + start_event_ms);
@@ -607,7 +606,7 @@ exports.createIntervalNotification = async (req, res) => {
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
+                  seconds: Math.floor(Math.random() * 60),
                 });
               int_end = whenToEnd.toISOString();
             } else {
@@ -615,7 +614,7 @@ exports.createIntervalNotification = async (req, res) => {
                 .duration({
                   days: req.body.int_end.stopAfter.days,
                   hours: req.body.int_end.stopAfter.hours,
-                  minutes: req.body.int_end.stopAfter.minutes
+                  minutes: req.body.int_end.stopAfter.minutes,
                 })
                 .asMilliseconds();
               int_end = new Date(Date.parse(user.created) + stop_event_ms);
@@ -676,7 +675,7 @@ exports.createIntervalNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             number: window.number,
-            timezone
+            timezone,
           });
           agenda.schedule(int_end, "end_random_personal_manager", {
             userid: [user.id],
@@ -690,14 +689,14 @@ exports.createIntervalNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             number: window.number,
-            timezone
+            timezone,
           });
         });
       });
     }
   } else {
     const intervals = req.body.interval;
-    intervals.map(interval => {
+    intervals.map((interval) => {
       project.notifications.push({
         id: id,
         target: req.body.target,
@@ -717,17 +716,17 @@ exports.createIntervalNotification = async (req, res) => {
         name: req.body.name,
         scheduleInFuture: req.body.scheduleInFuture,
         readable: {
-          interval: cronstrue.toString(interval)
+          interval: cronstrue.toString(interval),
         },
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
-        useParticipantTimezone: req.body.useParticipantTimezone
+        useParticipantTimezone: req.body.useParticipantTimezone,
       });
 
       if (users && users.length) {
         // select timezone for each participant based on the user timezone
         if (req.body.useParticipantTimezone) {
-          users.map(async user => {
+          users.map(async (user) => {
             const participant = await User.findOne(
               { samplyId: user.id },
               { information: 1 }
@@ -750,7 +749,7 @@ exports.createIntervalNotification = async (req, res) => {
               url: req.body.url,
               expireIn: req.body.expireIn,
               groupid: req.body.groups,
-              timezone
+              timezone,
             });
             agenda.schedule(int_end, "end_manager", {
               id: id,
@@ -762,11 +761,11 @@ exports.createIntervalNotification = async (req, res) => {
               url: req.body.url,
               expireIn: req.body.expireIn,
               groupid: req.body.groups,
-              timezone
+              timezone,
             });
           });
         } else {
-          const user_ids = users.map(user => user.id);
+          const user_ids = users.map((user) => user.id);
           // make general scheduler for all participants
           agenda.schedule(int_start, "start_manager", {
             id: id,
@@ -778,7 +777,7 @@ exports.createIntervalNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             groupid: req.body.groups,
-            timezone: req.body.timezone
+            timezone: req.body.timezone,
           });
           agenda.schedule(int_end, "end_manager", {
             id: id,
@@ -790,7 +789,7 @@ exports.createIntervalNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             groupid: req.body.groups,
-            timezone: req.body.timezone
+            timezone: req.body.timezone,
           });
         }
       }
@@ -805,7 +804,7 @@ exports.createIntervalNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           groupid: groups,
-          timezone: req.body.timezone
+          timezone: req.body.timezone,
         });
         agenda.schedule(int_end, "end_manager", {
           id: id,
@@ -816,7 +815,7 @@ exports.createIntervalNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           groupid: groups,
-          timezone: req.body.timezone
+          timezone: req.body.timezone,
         });
       }
     });
@@ -842,7 +841,7 @@ exports.createIndividualNotification = async (req, res) => {
     {
       name: 1,
       notifications: 1,
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
   const id = uniqid();
@@ -866,11 +865,11 @@ exports.createIndividualNotification = async (req, res) => {
   let users;
   if (req.body.participantId) {
     if (req.body.participantId.length > 0) {
-      users = project.mobileUsers.filter(user =>
+      users = project.mobileUsers.filter((user) =>
         req.body.participantId.includes(user.id)
       );
     } else {
-      users = project.mobileUsers.filter(user => !user.deactivated);
+      users = project.mobileUsers.filter((user) => !user.deactivated);
     }
   }
 
@@ -881,15 +880,15 @@ exports.createIndividualNotification = async (req, res) => {
       groups = req.body.groups;
     } else {
       const allGroups = project.mobileUsers
-        .map(user => user.group)
-        .filter(item => typeof item !== "undefined");
-      const allGroupsIds = allGroups.map(group => group.id);
+        .map((user) => user.group)
+        .filter((item) => typeof item !== "undefined");
+      const allGroupsIds = allGroups.map((group) => group.id);
       groups = [...new Set(allGroupsIds)];
     }
   }
 
   const intervals = req.body.interval;
-  intervals.map(interval => {
+  intervals.map((interval) => {
     project.notifications.push({
       id: id,
       target: req.body.target,
@@ -915,23 +914,23 @@ exports.createIndividualNotification = async (req, res) => {
       stop_event: req.body.int_end.stopEvent,
       scheduleInFuture: req.body.scheduleInFuture,
       readable: {
-        interval: cronstrue.toString(interval)
+        interval: cronstrue.toString(interval),
       },
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
-      useParticipantTimezone: req.body.useParticipantTimezone
+      useParticipantTimezone: req.body.useParticipantTimezone,
     });
   });
 
   if (groups) {
-    groups.map(group => {
+    groups.map((group) => {
       const sortedUsers = project.mobileUsers
-        .filter(user => user.group && user.group.id === group)
+        .filter((user) => user.group && user.group.id === group)
         .sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
       // use the latest user as a benchmark
       const latestUser = sortedUsers.length ? sortedUsers[0] : undefined;
 
-      intervals.map(interval => {
+      intervals.map((interval) => {
         let updatedInterval = interval;
 
         if (req.body.int_start.startEvent === "registration") {
@@ -947,7 +946,7 @@ exports.createIndividualNotification = async (req, res) => {
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
+                  seconds: Math.floor(Math.random() * 60),
                 });
             }
             int_start = whenToStart.toISOString();
@@ -956,7 +955,7 @@ exports.createIndividualNotification = async (req, res) => {
               .duration({
                 days: req.body.int_start.startAfter.days,
                 hours: req.body.int_start.startAfter.hours,
-                minutes: req.body.int_start.startAfter.minutes
+                minutes: req.body.int_start.startAfter.minutes,
               })
               .asMilliseconds();
             int_start = new Date(
@@ -974,15 +973,15 @@ exports.createIndividualNotification = async (req, res) => {
               .startOf("day")
               .add({
                 minutes: Math.floor(Math.random() * 10),
-                seconds: Math.floor(Math.random() * 60)
-              })
+                seconds: Math.floor(Math.random() * 60),
+              });
             int_end = whenToEnd.toISOString();
           } else {
             const stop_event_ms = moment
               .duration({
                 days: req.body.int_end.stopAfter.days,
                 hours: req.body.int_end.stopAfter.hours,
-                minutes: req.body.int_end.stopAfter.minutes
+                minutes: req.body.int_end.stopAfter.minutes,
               })
               .asMilliseconds();
             int_end = new Date(Date.parse(latestUser.created) + stop_event_ms);
@@ -1010,7 +1009,7 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          timezone: req.body.timezone
+          timezone: req.body.timezone,
         });
         agenda.schedule(int_end, "end_personal_manager", {
           groupid: [group],
@@ -1021,17 +1020,15 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          timezone: req.body.timezone
+          timezone: req.body.timezone,
         });
       });
     });
   }
 
-
   if (users) {
-
-    users.map(async user => {
-      intervals.map(async interval => {
+    users.map(async (user) => {
+      intervals.map(async (interval) => {
         let updatedInterval = interval;
 
         if (req.body.int_start.startEvent === "registration") {
@@ -1049,7 +1046,7 @@ exports.createIndividualNotification = async (req, res) => {
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
+                  seconds: Math.floor(Math.random() * 60),
                 });
             }
             int_start = whenToStart.toISOString();
@@ -1058,7 +1055,7 @@ exports.createIndividualNotification = async (req, res) => {
               .duration({
                 days: req.body.int_start.startAfter.days,
                 hours: req.body.int_start.startAfter.hours,
-                minutes: req.body.int_start.startAfter.minutes
+                minutes: req.body.int_start.startAfter.minutes,
               })
               .asMilliseconds();
             int_start = new Date(Date.parse(user.created) + start_event_ms);
@@ -1074,7 +1071,7 @@ exports.createIndividualNotification = async (req, res) => {
               .startOf("day")
               .add({
                 minutes: Math.floor(Math.random() * 10),
-                seconds: Math.floor(Math.random() * 60)
+                seconds: Math.floor(Math.random() * 60),
               });
             int_end = whenToEnd.toISOString();
           } else {
@@ -1082,7 +1079,7 @@ exports.createIndividualNotification = async (req, res) => {
               .duration({
                 days: req.body.int_end.stopAfter.days,
                 hours: req.body.int_end.stopAfter.hours,
-                minutes: req.body.int_end.stopAfter.minutes
+                minutes: req.body.int_end.stopAfter.minutes,
               })
               .asMilliseconds();
             int_end = new Date(Date.parse(user.created) + stop_event_ms);
@@ -1126,7 +1123,7 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          timezone
+          timezone,
         });
         agenda.schedule(int_end, "end_personal_manager", {
           userid: [user.id],
@@ -1137,7 +1134,7 @@ exports.createIndividualNotification = async (req, res) => {
           message: req.body.message,
           url: req.body.url,
           expireIn: req.body.expireIn,
-          timezone
+          timezone,
         });
       });
     });
@@ -1155,7 +1152,6 @@ exports.createIndividualNotification = async (req, res) => {
 };
 
 exports.createFixedIndividualNotification = async (req, res) => {
-
   if (req.body.intervals.length === 0) {
     res.status(400).send();
     return;
@@ -1166,7 +1162,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
     {
       name: 1,
       notifications: 1,
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
   const id = uniqid(); // notification id
@@ -1175,11 +1171,11 @@ exports.createFixedIndividualNotification = async (req, res) => {
   let users;
   if (req.body.participantId) {
     if (req.body.participantId.length > 0) {
-      users = project.mobileUsers.filter(user =>
+      users = project.mobileUsers.filter((user) =>
         req.body.participantId.includes(user.id)
       );
     } else {
-      users = project.mobileUsers.filter(user => !user.deactivated);
+      users = project.mobileUsers.filter((user) => !user.deactivated);
     }
   }
 
@@ -1190,15 +1186,15 @@ exports.createFixedIndividualNotification = async (req, res) => {
       groups = req.body.groups;
     } else {
       const allGroups = project.mobileUsers
-        .map(user => user.group)
-        .filter(item => typeof item !== "undefined");
-      const allGroupsIds = allGroups.map(group => group.id);
+        .map((user) => user.group)
+        .filter((item) => typeof item !== "undefined");
+      const allGroupsIds = allGroups.map((group) => group.id);
       groups = [...new Set(allGroupsIds)];
     }
   }
 
   const intervals = req.body.intervals;
-  intervals.map(interval => {
+  intervals.map((interval) => {
     project.notifications.push({
       id: id,
       target: req.body.target,
@@ -1220,21 +1216,26 @@ exports.createFixedIndividualNotification = async (req, res) => {
       scheduleInFuture: req.body.scheduleInFuture,
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
-      useParticipantTimezone: req.body.useParticipantTimezone
+      useParticipantTimezone: req.body.useParticipantTimezone,
     });
   });
 
   if (groups) {
-    groups.map(group => {
-      intervals.map(interval => {
+    groups.map((group) => {
+      intervals.map((interval) => {
         const { from, to, number, distance } = interval;
         if (from > to) {
           return;
         }
-        const nums = getDatesInInterval(Date.parse(from), Date.parse(to), number, distance);
-        const ds = nums.map(n => new Date(n).toISOString());
+        const nums = getDatesInInterval(
+          Date.parse(from),
+          Date.parse(to),
+          number,
+          distance
+        );
+        const ds = nums.map((n) => new Date(n).toISOString());
         // map over ds to schedule the notifications
-        ds.map(date => {
+        ds.map((date) => {
           const scheduleId = uniqid();
           // schedule the notification
           agenda.schedule(date, "personal_notification", {
@@ -1246,24 +1247,29 @@ exports.createFixedIndividualNotification = async (req, res) => {
             url: req.body.url,
             expireIn: req.body.expireIn,
             deleteself: true,
-            scheduleid: scheduleId
+            scheduleid: scheduleId,
           });
-        })
+        });
       });
     });
   }
 
   if (users) {
-    users.map(user => {
-      intervals.map(interval => {
+    users.map((user) => {
+      intervals.map((interval) => {
         const { from, to, number, distance } = interval;
         if (from > to) {
           return;
         }
-        const nums = getDatesInInterval(Date.parse(from), Date.parse(to), number, distance);
-        const ds = nums.map(n => new Date(n).toISOString());
+        const nums = getDatesInInterval(
+          Date.parse(from),
+          Date.parse(to),
+          number,
+          distance
+        );
+        const ds = nums.map((n) => new Date(n).toISOString());
         // map over ds to schedule the notifications
-        ds.map(date => {
+        ds.map((date) => {
           const scheduleId = uniqid();
           // schedule the notification
           const res = schedulePersonalNotificationsForUsers({
@@ -1273,9 +1279,9 @@ exports.createFixedIndividualNotification = async (req, res) => {
             notificationid: id, // String - notification ID
             body: req.body, // {}
             deleteself: true, // Boolean
-            scheduleid: scheduleId // String
+            scheduleid: scheduleId, // String
           });
-        })
+        });
       });
     });
   }
@@ -1298,15 +1304,15 @@ exports.deleteProjectNotifications = async (req, res) => {
     { _id: req.user.project._id },
     {
       name: 1,
-      notifications: 1
+      notifications: 1,
     }
   );
   project.notifications = [];
   agenda.cancel(
     {
-      "data.projectid": projectID
+      "data.projectid": projectID,
     },
-    function(err, numRemoved) {
+    function (err, numRemoved) {
       console.log("Error", err);
     }
   );
@@ -1328,16 +1334,16 @@ exports.removeNotificationByID = async (req, res) => {
     { _id: projectID },
     {
       name: 1,
-      notifications: 1
+      notifications: 1,
     }
   );
-  project.notifications = await project.notifications.filter(n => {
+  project.notifications = await project.notifications.filter((n) => {
     return n.id !== notificationID;
   });
   agenda.cancel(
     {
       "data.projectid": projectID,
-      "data.id": notificationID
+      "data.id": notificationID,
     },
     (err, numRemoved) => {}
   );
@@ -1367,11 +1373,11 @@ async function pickUpRandomTimeFromInterval({
   interval_max,
   distance,
   number,
-  timezone
+  timezone,
 }) {
   // get the next execution time
   const cronInstance = new Cron({
-    timezone: timezone
+    timezone: timezone,
   });
   const arr = interval_max.split(" ");
   arr.shift();
@@ -1390,10 +1396,10 @@ async function pickUpRandomTimeFromInterval({
   }
 
   const nums = getDatesInInterval(int_start, int_end, number, distance);
-  const ds = nums.map(n => new Date(n).toISOString());
+  const ds = nums.map((n) => new Date(n).toISOString());
 
   // map over ds to schedule the notifications
-  ds.map(date => {
+  ds.map((date) => {
     // schedule personal_notification
     agenda.schedule(date, "personal_notification", {
       userid: user_id,
@@ -1404,9 +1410,9 @@ async function pickUpRandomTimeFromInterval({
       message: message,
       url: url,
       expireIn: expireIn,
-      deleteself: deleteself
+      deleteself: deleteself,
     });
-  })
+  });
 
   done();
 }
@@ -1422,13 +1428,13 @@ async function sendToSomeProjectUsers({
   expireIn,
   notification_id,
   deleteself,
-  schedule_id
+  schedule_id,
 }) {
   const content = {
     title,
     message,
     url,
-    expireIn
+    expireIn,
   };
   // find the project
   const project = await Project.findOne(
@@ -1442,7 +1448,7 @@ async function sendToSomeProjectUsers({
     );
     agenda.cancel(
       {
-        "data.projectid": project_id
+        "data.projectid": project_id,
       },
       (err, numRemoved) => {}
     );
@@ -1456,26 +1462,26 @@ async function sendToSomeProjectUsers({
   // if there are groups, find participants of those groups
   if (group_id) {
     tokens = project.mobileUsers
-      .filter(user => group_id.includes(user.group && user.group.id))
-      .map(user => ({
+      .filter((user) => group_id.includes(user.group && user.group.id))
+      .map((user) => ({
         id: user.id,
         token: user.token,
         username: user.username, // transmit the username
         group: user.group && user.group.id, // transmit the group code
-        deactivated: user.deactivated // whether the participant was deactivated
+        deactivated: user.deactivated, // whether the participant was deactivated
       }));
   }
 
   // if there are participants, find participants
   if (user_id) {
     tokens = project.mobileUsers
-      .filter(user => user_id.includes(user.id))
-      .map(user => ({
+      .filter((user) => user_id.includes(user.id))
+      .map((user) => ({
         id: user.id,
         token: user.token,
         username: user.username, // transmit the username
         group: user.group && user.group.id, // transmit the group code
-        deactivated: user.deactivated // whether the participant was deactivated
+        deactivated: user.deactivated, // whether the participant was deactivated
       }));
   }
 
@@ -1485,7 +1491,7 @@ async function sendToSomeProjectUsers({
       {
         "data.projectid": project_id,
         "data.id": notification_id,
-        "data.scheduleid": schedule_id
+        "data.scheduleid": schedule_id,
       },
       (err, numRemoved) => {}
     );
@@ -1504,13 +1510,13 @@ async function sendToAllProjectUsers({
   expireIn,
   notification_id,
   deleteself,
-  excludeUntil
+  excludeUntil,
 }) {
   const content = {
     title,
     message,
     url,
-    expireIn
+    expireIn,
   };
   // find the project
   const project = await Project.findOne(
@@ -1524,7 +1530,7 @@ async function sendToAllProjectUsers({
     );
     agenda.cancel(
       {
-        "data.projectid": project_id
+        "data.projectid": project_id,
       },
       (err, numRemoved) => {}
     );
@@ -1534,15 +1540,15 @@ async function sendToAllProjectUsers({
 
   let users = project.mobileUsers;
   if (excludeUntil) {
-    users = users.filter(user => user.created > excludeUntil);
+    users = users.filter((user) => user.created > excludeUntil);
   }
 
-  const tokens = users.map(user => ({
+  const tokens = users.map((user) => ({
     id: user.id,
     token: user.token,
     username: user.username, // transmit the username
     group: user.group && user.group.id, // transmit the group code
-    deactivated: user.deactivated // whether the participant was deactivated
+    deactivated: user.deactivated, // whether the participant was deactivated
   }));
 
   // remove job
@@ -1550,7 +1556,7 @@ async function sendToAllProjectUsers({
     agenda.cancel(
       {
         "data.projectid": project_id,
-        "data.id": notification_id
+        "data.id": notification_id,
       },
       (err, numRemoved) => {}
     );
@@ -1571,7 +1577,7 @@ async function sendMobileNotification(
   const timestampSent = Date.now();
 
   const messages = await Promise.all(
-    tokens.map(async pushToken => {
+    tokens.map(async (pushToken) => {
       if (
         pushToken.deactivated ||
         !pushToken.token ||
@@ -1580,14 +1586,14 @@ async function sendMobileNotification(
         !Expo.isExpoPushToken(pushToken.token)
       ) {
         return {
-          error: "Token is missing or it is invalid"
+          error: "Token is missing or it is invalid",
         };
       }
 
       // calculate what is the batch number by looking at how many notifications were sent for the project
       const countRecords = await Result.where({
         project: project_id,
-        samplyid: pushToken.id
+        samplyid: pushToken.id,
       }).countDocuments();
       const batch = countRecords + 1;
 
@@ -1630,22 +1636,22 @@ async function sendMobileNotification(
           message,
           url: updatedUrl,
           messageId,
-          expireAt
+          expireAt,
         },
         id: pushToken.id,
         priority: "high",
         channelId: "default",
         _displayInForeground: true,
-        batch: batch
+        batch: batch,
       };
     })
   );
 
-  const validMessages = messages.filter(message => !message.error);
+  const validMessages = messages.filter((message) => !message.error);
   let chunks = expo.chunkPushNotifications(validMessages);
 
   await Promise.all(
-    chunks.map(async chunk => {
+    chunks.map(async (chunk) => {
       try {
         let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
         ticketChunk.map(async (ticket, i) => {
@@ -1657,7 +1663,7 @@ async function sendMobileNotification(
             ticket: ticket,
             messageId: chunk[i].data.messageId,
             events: [{ status: "sent", created: timestampSent }],
-            batch: chunk[i].batch
+            batch: chunk[i].batch,
           });
           await result.save();
         });
@@ -1686,7 +1692,7 @@ exports.joinStudy = async (req, res) => {
       name: 1,
       description: 1,
       image: 1,
-      slug: 1
+      slug: 1,
     }
   );
   if (!project.mobileUsers) {
@@ -1713,7 +1719,7 @@ exports.joinStudy = async (req, res) => {
     const newGroupName = req.body.group.trim();
     // search for the group in the existing groups
     const groups = project.mobileUsers.filter(
-      user => user.group && user.group.name === newGroupName
+      (user) => user.group && user.group.name === newGroupName
     );
     if (groups.length) {
       // if group exists, add the group name and ID to a new user
@@ -1734,10 +1740,10 @@ exports.joinStudy = async (req, res) => {
     token: req.body.token,
     username: username,
     group: group,
-    information: req.body.information
+    information: req.body.information,
   };
   let isNew = true;
-  project.mobileUsers.map(user => {
+  project.mobileUsers.map((user) => {
     if (user.id === newUser.id) {
       user.token = newUser.token;
       user.deactivated = false;
@@ -1752,7 +1758,7 @@ exports.joinStudy = async (req, res) => {
 
   // if there are scheduled notifications, create them for the new user
   if (project && project.notifications && project.notifications.length > 0) {
-    project.notifications.map(async sub => {
+    project.notifications.map(async (sub) => {
       let timezone = sub.timezone;
       // select timezone based on the user timezone
       if (sub.useParticipantTimezone && participantTimezone) {
@@ -1775,7 +1781,7 @@ exports.joinStudy = async (req, res) => {
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60)
+                  seconds: Math.floor(Math.random() * 60),
                 });
             }
             user_int_start = whenToStart.toISOString();
@@ -1784,7 +1790,7 @@ exports.joinStudy = async (req, res) => {
               .duration({
                 days: sub.start_after.days,
                 hours: sub.start_after.hours,
-                minutes: sub.start_after.minutes
+                minutes: sub.start_after.minutes,
               })
               .asMilliseconds();
             user_int_start = new Date(Date.now() + start_event_ms);
@@ -1800,7 +1806,7 @@ exports.joinStudy = async (req, res) => {
               .startOf("day")
               .add({
                 minutes: Math.floor(Math.random() * 10),
-                seconds: Math.floor(Math.random() * 60)
+                seconds: Math.floor(Math.random() * 60),
               });
             user_int_end = whenToEnd.toISOString();
           } else {
@@ -1808,7 +1814,7 @@ exports.joinStudy = async (req, res) => {
               .duration({
                 days: sub.stop_after.days,
                 hours: sub.stop_after.hours,
-                minutes: sub.stop_after.minutes
+                minutes: sub.stop_after.minutes,
               })
               .asMilliseconds();
             user_int_end = new Date(Date.now() + stop_event_ms);
@@ -1819,7 +1825,8 @@ exports.joinStudy = async (req, res) => {
         if (sub.randomize) {
           let windowFrom = sub.windowInterval && sub.windowInterval.from;
           let windowTo = sub.windowInterval && sub.windowInterval.to;
-          let distance = (sub.windowInterval && sub.windowInterval.distance) || 0;
+          let distance =
+            (sub.windowInterval && sub.windowInterval.distance) || 0;
 
           //update interval if there is missing information
           if (windowFrom && windowFrom.includes("*/")) {
@@ -1855,7 +1862,7 @@ exports.joinStudy = async (req, res) => {
             url: sub.url,
             expireIn: sub.expireIn,
             number: sub.windowInterval && sub.windowInterval.number,
-            timezone: timezone
+            timezone: timezone,
           });
           agenda.schedule(user_int_end, "end_random_personal_manager", {
             userid: [req.body.id],
@@ -1869,7 +1876,7 @@ exports.joinStudy = async (req, res) => {
             url: sub.url,
             expireIn: sub.expireIn,
             number: sub.windowInterval && sub.windowInterval.number,
-            timezone: timezone
+            timezone: timezone,
           });
         } else {
           let updatedInterval = sub.interval;
@@ -1895,7 +1902,7 @@ exports.joinStudy = async (req, res) => {
             message: sub.message,
             url: sub.url,
             expireIn: sub.expireIn,
-            timezone: timezone
+            timezone: timezone,
           });
           agenda.schedule(user_int_end, "end_personal_manager", {
             userid: [req.body.id],
@@ -1906,7 +1913,7 @@ exports.joinStudy = async (req, res) => {
             message: sub.message,
             url: sub.url,
             expireIn: sub.expireIn,
-            timezone: timezone
+            timezone: timezone,
           });
         }
       } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
@@ -1928,24 +1935,28 @@ exports.joinStudy = async (req, res) => {
               message: sub.message,
               url: sub.url,
               expireIn: sub.expireIn,
-              deleteself: true
+              deleteself: true,
             });
           }
         }
         if (sub.target === "user-specific") {
-
           if (sub.window_from > sub.window_to) {
             return;
           }
 
           const { window_from, window_to, number } = sub;
-          const distance = sub.distance || 0;
+          const distance = sub.distance || 0;
 
-          const nums = getDatesInInterval(Date.parse(window_from), Date.parse(window_to), number, distance);
-          const ds = nums.map(n => new Date(n).toISOString());
+          const nums = getDatesInInterval(
+            Date.parse(window_from),
+            Date.parse(window_to),
+            number,
+            distance
+          );
+          const ds = nums.map((n) => new Date(n).toISOString());
 
           // map over ds to schedule the notifications
-          ds.map(date => {
+          ds.map((date) => {
             const scheduleId = uniqid();
             // schedule the notification
             const res = schedulePersonalNotificationsForUsers({
@@ -1959,13 +1970,12 @@ exports.joinStudy = async (req, res) => {
                 url: sub.url,
                 expireIn: sub.expireIn,
                 useParticipantTimezone: sub.useParticipantTimezone,
-                timezone: sub.timezone
+                timezone: sub.timezone,
               }, // {}
               deleteself: true, // Boolean
-              scheduleid: scheduleId // String
+              scheduleid: scheduleId, // String
             });
-          })
-
+          });
         }
       }
     });
@@ -1979,9 +1989,9 @@ exports.joinStudy = async (req, res) => {
           name: project.name,
           description: project.description,
           image: project.image,
-          slug: project.slug
-        }
-      }
+          slug: project.slug,
+        },
+      },
     },
     { upsert: true, new: true }
   );
@@ -1994,46 +2004,79 @@ exports.joinStudy = async (req, res) => {
   }
 };
 
-// participant leaves the study, the jobs with participant's id are deleted
-exports.leaveStudy = async (req, res) => {
-  const id = req.params.id;
+async function removeParticipantFromProject({
+  participantId,
+  projectId,
+  message,
+}) {
   const project = await Project.findOne(
-    { _id: id },
+    { _id: projectId },
     {
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
   agenda.cancel(
     {
       "data.projectid": project._id,
-      "data.userid": [req.body.id]
+      "data.userid": [participantId],
     },
     (err, numRemoved) => {}
   );
   if (!project.mobileUsers) {
     project.mobileUsers = [];
   }
-  const removeUserId = req.body.id;
-  project.mobileUsers = project.mobileUsers.map(user => {
-    if (user.id === removeUserId) {
+  project.mobileUsers = project.mobileUsers.map((user) => {
+    if (user.id === participantId) {
       const updatedUser = {
         ...user._doc,
         deactivated: true,
-        token: "User left the study"
+        token: message,
       };
       return updatedUser;
     } else {
       return user;
     }
   });
-
   await project.save();
+}
+
+// participant deletes the account from the mobile phone
+exports.deleteAccountFromMobileApp = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (user && user.validPassword(password)) {
+    // delete the participant from studies
+    if (user && user.participant_projects && user.participant_projects.length) {
+      await Promise.all(
+        user.participant_projects.map(async (project) => {
+          await removeParticipantFromProject({
+            participantId: user.samplyId,
+            projectId: project._id,
+            message: "User deleted the account",
+          });
+        })
+      );
+    }
+    await user.remove();
+    res.status(200).json({ message: "OK" });
+  } else {
+    res.status(400).json({ message: "Wrong password" });
+  }
+};
+
+// participant leaves the study, the jobs with participant's id are deleted
+exports.leaveStudy = async (req, res) => {
+  await removeParticipantFromProject({
+    participantId: req.body.id,
+    projectId: req.params.id,
+    message: "User left the study",
+  });
   const updatedUser = await User.findOneAndUpdate(
     { samplyId: req.body.id },
     {
       ["$pull"]: {
-        participant_projects: { _id: project._id }
-      }
+        participant_projects: { _id: req.params.id },
+      },
     },
     { upsert: true, new: true }
   );
@@ -2051,7 +2094,7 @@ exports.removeUser = async (req, res) => {
     { _id: req.user.project._id },
     {
       mobileUsers: 1,
-      creator: 1
+      creator: 1,
     }
   );
   if (!project.creator.equals(req.user._id)) {
@@ -2061,7 +2104,7 @@ exports.removeUser = async (req, res) => {
   agenda.cancel(
     {
       "data.projectid": project._id,
-      "data.userid": userId
+      "data.userid": userId,
     },
     (err, numRemoved) => {}
   );
@@ -2069,7 +2112,9 @@ exports.removeUser = async (req, res) => {
   if (!project.mobileUsers) {
     project.mobileUsers = [];
   }
-  project.mobileUsers = project.mobileUsers.filter(user => user.id !== userId);
+  project.mobileUsers = project.mobileUsers.filter(
+    (user) => user.id !== userId
+  );
   await project.save();
 
   // update the user
@@ -2077,8 +2122,8 @@ exports.removeUser = async (req, res) => {
     { samplyId: userId },
     {
       ["$pull"]: {
-        participant_projects: { _id: project._id }
-      }
+        participant_projects: { _id: project._id },
+      },
     },
     { upsert: true, new: true }
   );
@@ -2096,9 +2141,9 @@ const makeRandomCodeForMessageID = () => {
 const rescheduleRepeatJobs = async () => {
   // look for all jobs with repeat interval
   const rawJobs = await agenda.jobs({ repeatInterval: { $exists: true } });
-  const jobs = rawJobs.map(job => job.attrs);
+  const jobs = rawJobs.map((job) => job.attrs);
 
-  jobs.map(async job => {
+  jobs.map(async (job) => {
     let parsedInterval;
     if (!job.repeatInterval.includes("/")) {
       return;
@@ -2140,10 +2185,10 @@ const rescheduleRepeatJobs = async () => {
         const newjob = agenda.create(job.name, {
           ...job.data,
           interval: new_interval,
-          interval_max: new_interval_max
+          interval_max: new_interval_max,
         });
         newjob.repeatEvery(updatedInterval, {
-          skipImmediate: true
+          skipImmediate: true,
         });
         newjob.save();
       } else {
@@ -2151,10 +2196,10 @@ const rescheduleRepeatJobs = async () => {
         // personal_notification
         // regular_notification
         const newjob = agenda.create(job.name, {
-          ...job.data
+          ...job.data,
         });
         newjob.repeatEvery(updatedInterval, {
-          skipImmediate: true
+          skipImmediate: true,
         });
         newjob.save();
       }
@@ -2171,27 +2216,27 @@ exports.manageNotifications = async (req, res) => {
     {
       name: 1,
       notifications: 1,
-      mobileUsers: 1
+      mobileUsers: 1,
     }
   );
 
-  if(project) {
+  if (project) {
     let groups = [];
     if (
       project.mobileUsers &&
       project.mobileUsers.length &&
-      project.mobileUsers.map(user => user.group).length
+      project.mobileUsers.map((user) => user.group).length
     ) {
       const allGroups = project.mobileUsers
-        .map(user => user.group)
-        .filter(item => typeof item !== "undefined");
-      const allGroupsIds = allGroups.map(group => group.id);
-      groups = [...new Set(allGroupsIds)].map(id => {
+        .map((user) => user.group)
+        .filter((item) => typeof item !== "undefined");
+      const allGroupsIds = allGroups.map((group) => group.id);
+      groups = [...new Set(allGroupsIds)].map((id) => {
         return {
           id,
           name: allGroups
-            .filter(group => group.id === id)
-            .map(group => group.name)[0]
+            .filter((group) => group.id === id)
+            .map((group) => group.name)[0],
         };
       });
     }
@@ -2203,7 +2248,7 @@ exports.manageNotifications = async (req, res) => {
 
 exports.debug = async (req, res) => {
   const rawAdminJobs = await agenda.jobs({ name: "admin_job" });
-  const adminJobs = rawAdminJobs.map(job => job.attrs);
+  const adminJobs = rawAdminJobs.map((job) => job.attrs);
   res.render("debug", { adminJobs });
 };
 
@@ -2211,7 +2256,7 @@ exports.scheduleAdminJob = async (req, res) => {
   const { interval } = req.body;
   const monthlyScheduler = agenda.create("admin_job", {});
   monthlyScheduler.repeatEvery(interval, {
-    skipImmediate: true
+    skipImmediate: true,
   });
   monthlyScheduler.save();
   res.redirect(`back`);
@@ -2221,7 +2266,6 @@ exports.updateTokenInStudy = async (req, res) => {
   res.status(200).json({ message: "OK" });
 };
 
-
 async function schedulePersonalNotificationsForUsers({
   date, // String
   users, // Array
@@ -2230,7 +2274,7 @@ async function schedulePersonalNotificationsForUsers({
   notificationid, // String
   body, // Object
   deleteself, // Boolean
-  scheduleid // String
+  scheduleid, // String
 }) {
   if (!body.useParticipantTimezone) {
     const dateConverted = new Date(date);
@@ -2247,12 +2291,12 @@ async function schedulePersonalNotificationsForUsers({
         url: body.url,
         expireIn: body.expireIn,
         deleteself: deleteself,
-        scheduleid: scheduleid
+        scheduleid: scheduleid,
       });
     }
   } else {
     // schedule dependent on timezone of participant
-    users.map(async user => {
+    users.map(async (user) => {
       // find the user settings in the database
       const participant = await User.findOne(
         { samplyId: user },
@@ -2284,7 +2328,7 @@ async function schedulePersonalNotificationsForUsers({
           url: body.url,
           expireIn: body.expireIn,
           deleteself: deleteself,
-          scheduleid: scheduleid
+          scheduleid: scheduleid,
         });
       }
     });
@@ -2297,24 +2341,24 @@ function getNumberBetween(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-function getNumbersInInterval(min, max, number, distance){
+function getNumbersInInterval(min, max, number, distance) {
   const step = (max - min) / number;
   const maxAmountNotifications = (max - min) / distance;
 
-  if(number > maxAmountNotifications + 1) {
+  if (number > maxAmountNotifications + 1) {
     throw new Error("The minimum interval between notifications is too big");
   }
   const numbers = [];
   if (number == maxAmountNotifications + 1) {
-    for (let i = 0; i < number; i++ ) {
+    for (let i = 0; i < number; i++) {
       const num = min + i * distance;
       numbers.push(num);
     }
   } else {
-    for (let i = 0; i < number; i++ ) {
+    for (let i = 0; i < number; i++) {
       const minStep = min + i * step;
       const maxStep = min + (i + 1) * step;
-      numbers.push(getNumberBetween(minStep, maxStep))
+      numbers.push(getNumberBetween(minStep, maxStep));
     }
   }
   return numbers;
@@ -2324,25 +2368,25 @@ function checkTheMinimalDistance(numbers, distance) {
   if (numbers.length < 2) {
     return false;
   }
-  for (let i = 0; i < numbers.length - 1; i ++) {
-    if(numbers[i + 1] - numbers[i] < distance) {
-      return true
+  for (let i = 0; i < numbers.length - 1; i++) {
+    if (numbers[i + 1] - numbers[i] < distance) {
+      return true;
     }
   }
   return false;
 }
 
-function getDatesInInterval(min, max, number, distance){
+function getDatesInInterval(min, max, number, distance) {
   let numbers = [];
   let i = 0;
   let adjDistance = distance;
   do {
     numbers = getNumbersInInterval(min, max, number, adjDistance);
     i = i + 1;
-    const ds = numbers.map(n => new Date(n).toISOString());
-    if(i > 100){
-      adjDistance = adjDistance - adjDistance/1000;
+    const ds = numbers.map((n) => new Date(n).toISOString());
+    if (i > 100) {
+      adjDistance = adjDistance - adjDistance / 1000;
     }
-  } while (checkTheMinimalDistance(numbers, adjDistance) && i < 1000);
+  } while (checkTheMinimalDistance(numbers, adjDistance) && i < 1000);
   return numbers;
 }

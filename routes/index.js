@@ -42,6 +42,14 @@ router.post(
   authController.isLoggedIn,
   catchErrors(authController.deleteAccount)
 );
+router.get(
+  "/account/remove",
+  catchErrors(authController.requestDeleteParticipantAccount)
+);
+router.post(
+  "/account/remove",
+  catchErrors(authController.deleteParticipantAccount)
+);
 
 router.post(
   "/auth/researcher/email/register",
@@ -348,6 +356,11 @@ router.post("/api/reset", userController.resetPassword);
 router.post("/api/update", jobController.updateTokenInStudy);
 router.post("/api/checkpayableaccount", userController.checkPayableAccount);
 router.post("/api/updatelocation", resultController.updatelocation);
+router.post(
+  "/api/deleteparticipantaccount",
+  jobController.deleteAccountFromMobileApp
+);
+
 // hook api
 router.post("/api/creategroup", hookController.creategroup);
 router.post("/api/deletegroup", hookController.deletegroup);

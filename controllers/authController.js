@@ -184,3 +184,23 @@ exports.deleteAccount = async (req, res) => {
     res.redirect("back");
   }
 };
+
+exports.requestDeleteParticipantAccount = async (req, res) => {
+  res.render("requestDeleteParticipantAccount");
+};
+
+exports.deleteParticipantAccount = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (user && user.validPassword(password)) {
+    await user.remove();
+    req.flash("success", `${res.locals.layout.flash_yourAccountDeleted}`);
+    res.redirect("/");
+  } else {
+    req.flash(
+      "error",
+      `The user with this email does not exist or the password is wrong.`
+    );
+    res.redirect("back");
+  }
+};

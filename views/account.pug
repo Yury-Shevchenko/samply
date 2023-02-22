@@ -108,8 +108,9 @@ block content
 
     p
 
-    p 
-      a(href=`/account/delete`) #{l.deleteMyAccount}
-      
+    if user.level > 10
+      p 
+        a(href=`/account/delete`) #{l.deleteMyAccount}
+
     
         
