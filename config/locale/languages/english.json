@@ -69,7 +69,7 @@
 		"navigation_1_4": "<a href='../docs/data'>Data</a> Review the history of sent notifications",
 		"navigation_2": "In the Search tasks field, you can enter the name of the task you want to search for.",
 		"navigation_3": "If you have more than one study, you can switch between them by using the “Choose a study” drop-down menu in the top navigation bar.",
-		"navigation_4": "Under “Profile”, you can edit your name, research institute and language. English and German are supported at the moment.",
+		"navigation_4": "Under “Profile”, you can edit your name, research institute and language. English, German, and Dutch are supported at the moment.",
 		"navigation_title": "Navigation",
 		"notifications_1": "Setting up the notifications plan requires defining the notification content (a title, message, and study URL) and deciding on the schedule. It is recommended to keep the title and message shorter than 30 characters each (including spaces) to make them compatible with all potential devices and screen sizes. The title can contain the study’s name (e.g., “Study of life quality”) or the name of its current phase (“Life quality study – Day 1”). The message can include an instruction or what is expected from the participant, e.g., “Please complete a 1-minute survey”. Another strategy is placing a survey question in the notification title or message.",
 		"notifications_10": "When a notification has been added, it appears in the list of scheduled notifications, which can be controlled and cancelled at any time by clicking either the delete icon in the table or the “Delete all notifications” button.",
