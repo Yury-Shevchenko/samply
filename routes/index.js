@@ -246,6 +246,11 @@ router.get(
   catchErrors(adminController.getAllUsers)
 );
 router.get(
+  "/admin/users/page/:page",
+  authController.isSuperAdminLoggedIn,
+  catchErrors(adminController.getAllUsers)
+);
+router.get(
   "/admin/removeuser/:id",
   authController.isSuperAdminLoggedIn,
   catchErrors(adminController.removeUser)

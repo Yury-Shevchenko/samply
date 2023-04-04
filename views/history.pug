@@ -14,7 +14,17 @@ block content
         p
           a(style={color:'black'} href=`/downloadhistory/${user.project._id}`) #{l.download} 
         p #{l.downloadInfo} 
-          
+
+        .pagination
+          .pagination__prev
+            if page > 1
+              a(href=`/history/page/${page - 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
+          .pagination__text
+            p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
+          .pagination__next
+            if page < pages
+              a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_next}
+  
         table.table
           thead
             td N.

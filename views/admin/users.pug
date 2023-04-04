@@ -2,11 +2,21 @@ extends ../layout
 
 
 block content
-  .inner
+  .div
     p
     .card
       h4 Samply users
       
+      .pagination
+          .pagination__prev
+            if page > 1
+              a(href=`/admin/users/page/${page - 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
+          .pagination__text
+            p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
+          .pagination__next
+            if page < pages
+              a(href=`/admin/users/page/${parseFloat(page) + 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_next}
+  
       table.table 
       
         thead
@@ -29,7 +39,7 @@ block content
             td
               a(href=`/admin/removeuser/${user._id}`) 
                 <i class="far fa-trash-alt"></i>
-            td #{i + 1}
+            td #{i + 1 + skip}
             td= user.level
             td= h.moment(user.created).locale(language).format("MMM Do YY HH:mm") 
             td= user.samplyId
@@ -39,7 +49,17 @@ block content
             td= user.institute
             td= user.participant_projects.length
             td= user.projects.length
-            
+
+      .pagination
+          .pagination__prev
+            if page > 1
+              a(href=`/admin/users/page/${page - 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_prev}
+          .pagination__text
+            p= `${layout.pagination_page_1} ${page} ${layout.pagination_page_2} ${pages} - ${count} ${layout.pagination_page_3}`
+          .pagination__next
+            if page < pages
+              a(href=`/admin/users/page/${parseFloat(page) + 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_next}
+    
 
       
-    pre= h.dump(users)
+    //- pre= h.dump(users)

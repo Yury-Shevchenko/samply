@@ -164,7 +164,7 @@ exports.deleteAccount = async (req, res) => {
         samplyid: req.user.samplyId,
       }).countDocuments();
       if (resultsCount > 0) {
-        await Result.deleteMany({ user: req.user._id });
+        await Result.deleteMany({ samplyid: req.user.samplyId });
       }
       await user.remove();
       // if the user has confirmed the email, send an email with a goodbye message
