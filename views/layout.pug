@@ -144,14 +144,14 @@ html
         
 
     block scripts
-      script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&libraries=places` nonce=`${noncevalue}`)
       script(src="/dist/App.bundle.js" nonce=`${noncevalue}`)
       script(nonce=`${noncevalue}`).
         document.addEventListener('DOMContentLoaded', function (){
-          document.getElementById("languageSwitch").onchange = function(e) {
-            const language = e.target.value;
-            window.location.href = `/languages/${language}`;
+          if(document.getElementById("languageSwitch")){
+            document.getElementById("languageSwitch").onchange = function(e) {
+              const language = e.target.value;
+              window.location.href = `/languages/${language}`;
+            }
           }
         });
       
-      //- script(src="/javascripts/modules/service.js" nonce=`${noncevalue}`)
