@@ -21,9 +21,7 @@ function createNotification() {
   }
 
   let timezone;
-  const zones = $(".zone-picker")
-    .data("timezonePicker")
-    .getValue();
+  const zones = $(".zone-picker").data("timezonePicker").getValue();
   if (zones.length) {
     timezone = zones[0].timezone;
   } else {
@@ -34,8 +32,8 @@ function createNotification() {
   // 1. get all information from the input fiels
   const input = document.querySelectorAll("input");
   const selected = input
-    .filter(i => i.checked || i.type === "number")
-    .map(i => ({ name: i.name, value: i.value }))
+    .filter((i) => i.checked || i.type === "number")
+    .map((i) => ({ name: i.name, value: i.value }))
     .reduce((obj, item) => {
       obj[item.name] = item.value;
       return obj;
@@ -59,8 +57,8 @@ function createNotification() {
       "input[name='participants_ids']"
     );
     participants = Array.from(participantTags)
-      .filter(input => input.checked)
-      .map(input => input.value);
+      .filter((input) => input.checked)
+      .map((input) => input.value);
     if (!participants || participants.length === 0) {
       alert(
         "Choose specific participants or select the all participants option"
@@ -89,8 +87,8 @@ function createNotification() {
   ) {
     const groupTags = document.querySelectorAll("input[name='groups_ids']");
     groups = Array.from(groupTags)
-      .filter(input => input.checked)
-      .map(input => input.value);
+      .filter((input) => input.checked)
+      .map((input) => input.value);
   }
 
   if (selected.participants_groups === "groups" && !groups) {
@@ -106,7 +104,7 @@ function createNotification() {
   if (time === "specific") {
     timepoints = Array.from(
       document.querySelectorAll(".containerTimePicker")
-    ).map(container => {
+    ).map((container) => {
       if (
         container.querySelector(".timePickerHour").value == "" ||
         container.querySelector(".timePickerMinute").value == ""
@@ -116,13 +114,13 @@ function createNotification() {
       }
       return {
         hour: container.querySelector(".timePickerHour").value,
-        minute: container.querySelector(".timePickerMinute").value
+        minute: container.querySelector(".timePickerMinute").value,
       };
     });
   } else if (time === "interval") {
     timeintervals = Array.from(
       document.querySelectorAll(".containerTimeWindow")
-    ).map(container => {
+    ).map((container) => {
       if (
         container.querySelector(".windowPickerHourStart").value == "" ||
         container.querySelector(".windowPickerMinuteStart").value == "" ||
@@ -133,34 +131,51 @@ function createNotification() {
         throw new Error("Missing time values");
       }
       // calculate the minimum distance
-      const number = parseInt(container.querySelector(".timeWindowNumberOfPointsInput").value);
+      const number = parseInt(
+        container.querySelector(".timeWindowNumberOfPointsInput").value
+      );
 
-      const distanceHour = parseInt(container.querySelector(".windowPickerHourDistance").value);
-      const distanceMin = parseInt(container.querySelector(".windowPickerMinuteDistance").value);
+      const distanceHour = parseInt(
+        container.querySelector(".windowPickerHourDistance").value
+      );
+      const distanceMin = parseInt(
+        container.querySelector(".windowPickerMinuteDistance").value
+      );
       const distanceMinInMS = distanceMin * 60 * 1000 || 0;
       const distanceHourInMS = distanceHour * 60 * 60 * 1000 || 0;
       const distance = distanceHourInMS + distanceMinInMS;
 
-      const hourStart = parseInt(container.querySelector(".windowPickerHourStart").value);
-      const minuteStart = parseInt(container.querySelector(".windowPickerMinuteStart").value);
-      const hourEnd = parseInt(container.querySelector(".windowPickerHourEnd").value);
-      const minuteEnd = parseInt(container.querySelector(".windowPickerMinuteEnd").value);
+      const hourStart = parseInt(
+        container.querySelector(".windowPickerHourStart").value
+      );
+      const minuteStart = parseInt(
+        container.querySelector(".windowPickerMinuteStart").value
+      );
+      const hourEnd = parseInt(
+        container.querySelector(".windowPickerHourEnd").value
+      );
+      const minuteEnd = parseInt(
+        container.querySelector(".windowPickerMinuteEnd").value
+      );
 
-      const difference = ((hourEnd * 60) + minuteEnd - (hourStart * 60) - minuteStart) * 60 * 1000;
-      if(difference <= 0) {
+      const difference =
+        (hourEnd * 60 + minuteEnd - hourStart * 60 - minuteStart) * 60 * 1000;
+      if (difference <= 0) {
         alert(
           "The time window is set incorrectly. The end time should be after the start time."
         );
-        throw new Error("The time window is set incorrectly. The end time should be after the start time.")
+        throw new Error(
+          "The time window is set incorrectly. The end time should be after the start time."
+        );
       }
 
       const maxAmountNotifications = difference / distance;
 
-      if(number > maxAmountNotifications + 1) {
-        alert(
+      if (number > maxAmountNotifications + 1) {
+        alert("The minimum interval between notifications is too large");
+        throw new Error(
           "The minimum interval between notifications is too large"
         );
-        throw new Error("The minimum interval between notifications is too large")
       }
 
       return {
@@ -169,7 +184,7 @@ function createNotification() {
         hourEnd: hourEnd,
         minuteEnd: minuteEnd,
         distance: distance,
-        number: number
+        number: number,
       };
     });
   } else if (time === "repeat") {
@@ -189,7 +204,7 @@ function createNotification() {
   const date = selected.date;
   if (date === "specific") {
     dates = Array.from(document.querySelectorAll(".containerDatePicker")).map(
-      container => {
+      (container) => {
         if (
           container.querySelector(".datePickerDay").value == "" ||
           container.querySelector(".datePickerMonth").value == "" ||
@@ -201,14 +216,15 @@ function createNotification() {
         return {
           day: container.querySelector(".datePickerDay").value,
           month: container.querySelector(".datePickerMonth").value - 1,
-          year: container.querySelector(".datePickerYear").value
+          year: container.querySelector(".datePickerYear").value,
         };
       }
     );
   } else if (date === "every") {
     dayWeekCron = "*";
-    const everyday = document.querySelector("select[name='date-every-day']")
-      .value;
+    const everyday = document.querySelector(
+      "select[name='date-every-day']"
+    ).value;
 
     if (everyday == 1) {
       dayMonthCron = "*";
@@ -228,8 +244,8 @@ function createNotification() {
     dayMonthCron = "*";
     const days = document.querySelectorAll("input[name='date-spec-week-day']");
     const daysShorted = Array.from(days)
-      .filter(input => input.checked)
-      .map(input => input.value);
+      .filter((input) => input.checked)
+      .map((input) => input.value);
     if (!daysShorted || daysShorted.length === 0) {
       alert("Choose specific week days or select other options");
       return;
@@ -241,8 +257,8 @@ function createNotification() {
       "input[name='date-spec-week-month']"
     );
     const monthDaysShorted = Array.from(monthDays)
-      .filter(input => input.checked)
-      .map(input => input.value);
+      .filter((input) => input.checked)
+      .map((input) => input.value);
     if (!monthDaysShorted || monthDaysShorted.length === 0) {
       alert("Choose specific days of the month or select other options");
       return;
@@ -261,8 +277,8 @@ function createNotification() {
   } else if (month === "specific") {
     const months = document.querySelectorAll("input[name='month-spec-month']");
     const monthShorted = Array.from(months)
-      .filter(input => input.checked)
-      .map(input => input.value);
+      .filter((input) => input.checked)
+      .map((input) => input.value);
     if (!monthShorted || monthShorted.length === 0) {
       alert("Choose specific months or select other options");
       return;
@@ -287,7 +303,7 @@ function createNotification() {
       minute: selected["start-specific-minute"],
       day: selected["start-specific-day"],
       month: selected["start-specific-month"] - 1,
-      year: selected["start-specific-year"]
+      year: selected["start-specific-year"],
     };
     const stCon = moment.tz(
       {
@@ -295,7 +311,7 @@ function createNotification() {
         month: st.month,
         day: st.day,
         hour: st.hour,
-        minute: st.minute
+        minute: st.minute,
       },
       timezone
     );
@@ -312,14 +328,14 @@ function createNotification() {
     startAfter = {
       days: selected["start-event-days"],
       hours: selected["start-event-hours"],
-      minutes: selected["start-event-minutes"]
+      minutes: selected["start-event-minutes"],
     };
     startEvent = document.querySelector("select[name='start-event-at']").value;
     if (startEvent === "now") {
       const whenToStart = moment().add({
         days: startAfter.days,
         hours: startAfter.hours,
-        minutes: startAfter.minutes
+        minutes: startAfter.minutes,
       });
       startMoment = whenToStart.toISOString();
       if (dayMonthCron && dayMonthCron.includes("*/")) {
@@ -327,23 +343,20 @@ function createNotification() {
       }
     }
   } else if (start === "next") {
-    // option to start on the next day
-    startNextDay = parseInt(
-      document.querySelector("select[name='start-next-day']").value
-    );
+    startNextDay = parseInt(selected["start-next-day"]);
     startEvent = document.querySelector("select[name='start-next-at']").value;
     // if the starting event from now, calculate start moment
     if (startEvent === "now") {
       let whenToStart;
       if (startNextDay == 1) {
-        whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+        whenToStart = moment().add({ minutes: 1 }); // add 1 minute
       } else {
         whenToStart = moment()
           .add({ days: startNextDay - 1 })
           .startOf("day")
           .add({
             minutes: Math.floor(Math.random() * 10),
-            seconds: Math.floor(Math.random() * 60)
+            seconds: Math.floor(Math.random() * 60),
           });
       }
       startMoment = whenToStart.toISOString();
@@ -362,7 +375,7 @@ function createNotification() {
     startMoment,
     startAfter,
     startEvent,
-    startNextDay
+    startNextDay,
   };
 
   // stop moment
@@ -377,7 +390,7 @@ function createNotification() {
       minute: selected["stop-specific-minute"],
       day: selected["stop-specific-day"],
       month: selected["stop-specific-month"] - 1,
-      year: selected["stop-specific-year"]
+      year: selected["stop-specific-year"],
     };
     const stopCon = moment.tz(
       {
@@ -385,7 +398,7 @@ function createNotification() {
         month: stopMom.month,
         day: stopMom.day,
         hour: stopMom.hour,
-        minute: stopMom.minute
+        minute: stopMom.minute,
       },
       timezone
     );
@@ -398,22 +411,19 @@ function createNotification() {
     stopAfter = {
       days: selected["stop-event-days"],
       hours: selected["stop-event-hours"],
-      minutes: selected["stop-event-minutes"]
+      minutes: selected["stop-event-minutes"],
     };
     stopEvent = document.querySelector("select[name='stop-event-at']").value;
     if (stopEvent === "now") {
       const whenToStop = moment().add({
         days: stopAfter.days,
         hours: stopAfter.hours,
-        minutes: stopAfter.minutes
+        minutes: stopAfter.minutes,
       });
       stopMoment = whenToStop.toISOString();
     }
   } else if (stop === "next") {
-    // option to stop on the next day
-    stopNextDay = parseInt(
-      document.querySelector("select[name='stop-next-day']").value
-    );
+    stopNextDay = parseInt(selected["stop-next-day"]);
     stopEvent = document.querySelector("select[name='stop-next-at']").value;
     // if the starting event from now, calculate start moment
     if (stopEvent === "now") {
@@ -426,7 +436,7 @@ function createNotification() {
           .startOf("day")
           .add({
             minutes: Math.floor(Math.random() * 10),
-            seconds: Math.floor(Math.random() * 60)
+            seconds: Math.floor(Math.random() * 60),
           });
       }
       stopMoment = whenToStop.toISOString();
@@ -445,7 +455,7 @@ function createNotification() {
     stopMoment,
     stopAfter,
     stopEvent,
-    stopNextDay
+    stopNextDay,
   };
 
   // expiration time
@@ -466,8 +476,8 @@ function createNotification() {
 
   // constructed fixed dates and times
   let constructedDates = [];
-  timepoints.map(time => {
-    dates.map(date => {
+  timepoints.map((time) => {
+    dates.map((date) => {
       const sec = Math.floor(Math.random() * 60); //get the random value for the seconds
       const constructedDate = moment.tz(
         {
@@ -476,7 +486,7 @@ function createNotification() {
           day: date.day,
           hour: time.hour,
           minute: time.minute,
-          second: sec
+          second: sec,
         },
         timezone
       );
@@ -487,15 +497,15 @@ function createNotification() {
 
   // constructed intervals
   let constructedIntervals = [];
-  timeintervals.map(time => {
-    dates.map(date => {
+  timeintervals.map((time) => {
+    dates.map((date) => {
       const constructedDateFrom = moment.tz(
         {
           year: date.year,
           month: date.month,
           day: date.day,
           hour: time.hourStart,
-          minute: time.minuteStart
+          minute: time.minuteStart,
         },
         timezone
       );
@@ -506,7 +516,7 @@ function createNotification() {
           month: date.month,
           day: date.day,
           hour: time.hourEnd,
-          minute: time.minuteEnd
+          minute: time.minuteEnd,
         },
         timezone
       );
@@ -522,7 +532,7 @@ function createNotification() {
 
   // constructed cron schedules with fixed time
   let constructedCronSchedules = [];
-  timepoints.map(time => {
+  timepoints.map((time) => {
     const sec = Math.floor(Math.random() * 60); //get the random value for the seconds
     const cronFixedIntervalSchedule = `${sec} ${time.minute} ${time.hour} ${dayMonthCron} ${monthCron} ${dayWeekCron}`;
     constructedCronSchedules.push(cronFixedIntervalSchedule);
@@ -540,7 +550,7 @@ function createNotification() {
 
   // constructed cron intervals
   let constructedCronIntervals = [];
-  timeintervals.map(interval => {
+  timeintervals.map((interval) => {
     const secStart = Math.floor(Math.random() * 60); //get the random value for the seconds
     const startCron = `${secStart} ${interval.minuteStart} ${interval.hourStart} ${dayMonthCron} ${monthCron} ${dayWeekCron}`;
 
@@ -551,7 +561,7 @@ function createNotification() {
       from: startCron,
       to: stopCron,
       number: interval.number,
-      distance: interval.distance
+      distance: interval.distance,
     });
   });
 
@@ -693,7 +703,7 @@ function createFixedScheduledNotification(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     body: JSON.stringify({
       target: "fixed-times",
@@ -709,16 +719,16 @@ function createFixedScheduledNotification(
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
       expireIn: expireIn,
-      useParticipantTimezone: useParticipantTimezone
-    })
+      useParticipantTimezone: useParticipantTimezone,
+    }),
   })
-    .then(res => {
+    .then((res) => {
       if (res.url && res.ok) {
         window.location = res.url;
       }
       console.log("success");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 }
@@ -738,7 +748,7 @@ function createFixedIntervalNotification(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     body: JSON.stringify({
       target: "fixed-intervals",
@@ -756,16 +766,16 @@ function createFixedIntervalNotification(
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
       expireIn: expireIn,
-      useParticipantTimezone: useParticipantTimezone
-    })
+      useParticipantTimezone: useParticipantTimezone,
+    }),
   })
-    .then(res => {
+    .then((res) => {
       if (res.url && res.ok) {
         window.location = res.url;
       }
       console.log("success");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 }
@@ -785,7 +795,7 @@ function createIndividualSpecificNotification(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     body: JSON.stringify({
       target: "user-specific",
@@ -803,16 +813,16 @@ function createIndividualSpecificNotification(
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
       expireIn: expireIn,
-      useParticipantTimezone: useParticipantTimezone
-    })
+      useParticipantTimezone: useParticipantTimezone,
+    }),
   })
-    .then(res => {
+    .then((res) => {
       if (res.url && res.ok) {
         window.location = res.url;
       }
       console.log("success");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 }
@@ -830,7 +840,7 @@ function createRandomFixedNotification(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     body: JSON.stringify({
       target: "user-specific",
@@ -846,16 +856,16 @@ function createRandomFixedNotification(
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
       expireIn: expireIn,
-      useParticipantTimezone: useParticipantTimezone
-    })
+      useParticipantTimezone: useParticipantTimezone,
+    }),
   })
-    .then(res => {
+    .then((res) => {
       if (res.url && res.ok) {
         window.location = res.url;
       }
       console.log("success");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 }
@@ -875,7 +885,7 @@ function createRandomIntervalNotification(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json"
+      Accept: "application/json",
     },
     body: JSON.stringify({
       target: "user-specific",
@@ -893,16 +903,16 @@ function createRandomIntervalNotification(
       scheduleInFuture: scheduleInFuture,
       timezone: timezone,
       expireIn: expireIn,
-      useParticipantTimezone: useParticipantTimezone
-    })
+      useParticipantTimezone: useParticipantTimezone,
+    }),
   })
-    .then(res => {
+    .then((res) => {
       if (res.url && res.ok) {
         window.location = res.url;
       }
       console.log("success");
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
     });
 }

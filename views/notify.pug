@@ -251,16 +251,14 @@ block content
       
             input(type='radio', name='start', value='next')#start-next
             label(for='start-next')
-              span #{l.step_5_next}   
-              select(name="start-next-day")
-                - var nextstartdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
-                each day in nextstartdays
-                  option(value=day.value, selected=false)= day.text  
+              span #{l.step_5_next} 
+              input(name="start-next-day" type='number' min=1 max=10000 style="width: 60px;" value="1")   
               span #{l.step_day_after}  
               select(name="start-next-at")
                 - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events
                   option(value=event.value, selected=false)= event.text
+              div #{l.step_day_explained}  
                   
         #choose-stop  
           h2 #{l.step_6_header}     
@@ -301,15 +299,13 @@ block content
             input(type='radio', name='stop', value='next')#stop-next
             label(for='stop-next')
               span #{l.step_6_next}    
-              select(name="stop-next-day")
-                - var nextstopdays = [ { value: 1,  text: `1${l.step_st} (${l.step_same})` }, { value: 2,  text: `2${l.step_nd} (${l.step_next})` }, { value: 3,  text: `3${l.step_rd}` }, ...[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}), { value: 21,  text: `21${l.step_st}` }, { value: 22,  text: `22${l.step_nd}` }, { value: 23,  text: `23${l.step_rd}` }, ...[24,25,26,27,28,29,30].map(d => {return( { value: d, text: `${d}${l.step_th}`} )}) ]
-                each day in nextstopdays
-                  option(value=day.value, selected=false)= day.text        
+              input(name="stop-next-day" type='number' min=1 max=10000 style="width: 60px;" value="1")     
               span #{l.step_day_after_stop}     
               select(name="stop-next-at")
                 - var start_events = [{value: 'registration',  text: l.step_5_registration }, {value:'now', text: l.step_5_now }]
                 each event in start_events
-                  option(value=event.value, selected=false)= event.text        
+                  option(value=event.value, selected=false)= event.text    
+              div #{l.step_day_explained}    
         
         #choose-expire
           h2 #{l.step_7_header}  
