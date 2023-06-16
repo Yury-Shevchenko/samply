@@ -71,12 +71,12 @@ exports.sendQuestion = async (req, res) => {
     created: req.user.created,
     level: req.user.level || "",
     samplyId: req.user.samplyId || "",
-    code: (req.user.code && req.user.code.id) || ""
+    code: (req.user.code && req.user.code.id) || "",
   };
   await mail.sendQuestion({
     researcher,
     question,
-    filename: "question"
+    filename: "question",
   });
   req.flash("success", `${res.locals.layout.flash_question_sent}`);
   res.redirect("back");
@@ -98,7 +98,7 @@ const makeRandomCode = () => {
 
 exports.createMobileAccount = async (req, res) => {
   const userData = req.body;
-  User.findOne({ email: userData.email }, function(err, user) {
+  User.findOne({ email: userData.email }, function (err, user) {
     if (err) return done(err);
     if (user) {
       res.status(400).json({ message: "Account exists" });
@@ -111,10 +111,10 @@ exports.createMobileAccount = async (req, res) => {
       newUser.samplyId = userToken;
       if (userData.timezone) {
         newUser.information = {
-          timezone: userData.timezone
+          timezone: userData.timezone,
         };
       }
-      newUser.save(function(err) {
+      newUser.save(function (err) {
         if (err) throw err;
         res.status(200).json({ message: "OK", userToken: userToken });
       });
@@ -124,7 +124,7 @@ exports.createMobileAccount = async (req, res) => {
 
 exports.loginMobileAccount = async (req, res) => {
   const userData = req.body;
-  User.findOne({ email: userData.email }, function(err, user) {
+  User.findOne({ email: userData.email }, function (err, user) {
     if (err) return done(err);
     if (user) {
       if (user.validPassword(userData.password)) {
@@ -143,10 +143,13 @@ exports.getMyStudies = async (req, res) => {
   const user = await User.findOne(
     { samplyId: userData.token },
     {
-      participant_projects: 1
+      participant_projects: 1,
     }
   );
-  const studies = user.participant_projects;
+  let studies = [];
+  if (user) {
+    studies = user.participant_projects;
+  }
   res.status(200).json({ message: "OK", studies: studies });
 };
 
@@ -155,7 +158,7 @@ exports.updateAccount = async (req, res) => {
   const user = await User.findOne(
     { samplyId: userData.token },
     {
-      information: 1
+      information: 1,
     }
   );
   const data = userData.data;
@@ -183,7 +186,7 @@ exports.resetPassword = async (req, res) => {
     participant: user,
     subject,
     resetURL,
-    filename: "password-reset-" + language
+    filename: "password-reset-" + language,
   });
   res.status(200).json({ message: "OK" });
 };
@@ -194,7 +197,7 @@ exports.checkPayableAccount = async (req, res) => {
     { email: userData.email, samplyId: userData.id },
     {
       stripeInformation: 1,
-      information: 1
+      information: 1,
     }
   );
   res.send(user);

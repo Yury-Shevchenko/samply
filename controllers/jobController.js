@@ -1683,325 +1683,333 @@ async function sendMobileNotification(
 
 // participants join a study on mobile phone, a user id is created if there was no one before
 exports.joinStudy = async (req, res) => {
-  const id = req.params.id;
-  const project = await Project.findOne(
-    { _id: id },
-    {
-      notifications: 1,
-      mobileUsers: 1,
-      name: 1,
-      description: 1,
-      image: 1,
-      slug: 1,
-    }
-  );
-  if (!project.mobileUsers) {
-    project.mobileUsers = [];
-  }
-
-  let participantTimezone;
-  const participant = await User.findOne(
-    { samplyId: req.body.id },
-    { information: 1 }
-  );
-  if (
-    participant &&
-    participant.information &&
-    participant.information.timezone
-  ) {
-    participantTimezone = participant.information.timezone;
-  }
-
-  // record the group if there is one
-  let group;
-  if (req.body.group) {
-    // remove whitespace from both ends of the string
-    const newGroupName = req.body.group.trim();
-    // search for the group in the existing groups
-    const groups = project.mobileUsers.filter(
-      (user) => user.group && user.group.name === newGroupName
-    );
-    if (groups.length) {
-      // if group exists, add the group name and ID to a new user
-      group = { name: groups[0].group.name, id: groups[0].group.id };
-    } else {
-      // if group does not exist, create new ID
-      group = { name: newGroupName, id: nanoid(4) };
-    }
-  }
-
-  let username;
-  if (req.body.username) {
-    username = req.body.username.trim();
-  }
-
-  const newUser = {
-    id: req.body.id,
-    token: req.body.token,
-    username: username,
-    group: group,
-    information: req.body.information,
-  };
-  let isNew = true;
-  project.mobileUsers.map((user) => {
-    if (user.id === newUser.id) {
-      user.token = newUser.token;
-      user.deactivated = false;
-      isNew = false;
-    }
-    return user;
-  });
-  if (isNew) {
-    project.mobileUsers.push(newUser);
-  }
-  await project.save();
-
-  // if there are scheduled notifications, create them for the new user
-  if (project && project.notifications && project.notifications.length > 0) {
-    project.notifications.map(async (sub) => {
-      let timezone = sub.timezone;
-      // select timezone based on the user timezone
-      if (sub.useParticipantTimezone && participantTimezone) {
-        timezone = participantTimezone;
+  try {
+    const id = req.params.id;
+    const project = await Project.findOne(
+      { _id: id },
+      {
+        notifications: 1,
+        mobileUsers: 1,
+        name: 1,
+        description: 1,
+        image: 1,
+        slug: 1,
       }
+    );
+    if (!project.mobileUsers) {
+      project.mobileUsers = [];
+    }
 
-      if (sub.scheduleInFuture && sub.schedule === "repeat") {
-        let user_int_start = sub.int_start;
-        let user_int_end = sub.int_end;
-        if (sub.start_event === "registration") {
-          if (sub.start_next) {
-            const startNextDay = parseInt(sub.start_next);
-            let whenToStart;
-            if (startNextDay == 1) {
-              whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+    let participantTimezone;
+    const participant = await User.findOne(
+      { samplyId: req.body.id },
+      { information: 1 }
+    );
+    if (
+      participant &&
+      participant.information &&
+      participant.information.timezone
+    ) {
+      participantTimezone = participant.information.timezone;
+    }
+
+    // record the group if there is one
+    let group;
+    if (req.body.group) {
+      // remove whitespace from both ends of the string
+      const newGroupName = req.body.group.trim();
+      // search for the group in the existing groups
+      const groups = project.mobileUsers.filter(
+        (user) => user.group && user.group.name === newGroupName
+      );
+      if (groups.length) {
+        // if group exists, add the group name and ID to a new user
+        group = { name: groups[0].group.name, id: groups[0].group.id };
+      } else {
+        // if group does not exist, create new ID
+        group = { name: newGroupName, id: nanoid(4) };
+      }
+    }
+
+    let username;
+    if (req.body.username) {
+      username = req.body.username.trim();
+    }
+
+    const newUser = {
+      id: req.body.id,
+      token: req.body.token,
+      username: username,
+      group: group,
+      information: req.body.information,
+    };
+    let isNew = true;
+    project.mobileUsers.map((user) => {
+      if (user.id === newUser.id) {
+        user.token = newUser.token;
+        user.deactivated = false;
+        isNew = false;
+      }
+      return user;
+    });
+    if (isNew) {
+      project.mobileUsers.push(newUser);
+    }
+    await project.save();
+
+    // if there are scheduled notifications, create them for the new user
+    if (project && project.notifications && project.notifications.length > 0) {
+      project.notifications.map(async (sub) => {
+        let timezone = sub.timezone;
+        // select timezone based on the user timezone
+        if (sub.useParticipantTimezone && participantTimezone) {
+          timezone = participantTimezone;
+        }
+
+        if (sub.scheduleInFuture && sub.schedule === "repeat") {
+          let user_int_start = sub.int_start;
+          let user_int_end = sub.int_end;
+          if (sub.start_event === "registration") {
+            if (sub.start_next) {
+              const startNextDay = parseInt(sub.start_next);
+              let whenToStart;
+              if (startNextDay == 1) {
+                whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+              } else {
+                whenToStart = moment
+                  .tz(timezone)
+                  .add({ days: startNextDay - 1 })
+                  .startOf("day")
+                  .add({
+                    minutes: Math.floor(Math.random() * 10),
+                    seconds: Math.floor(Math.random() * 60),
+                  });
+              }
+              user_int_start = whenToStart.toISOString();
             } else {
-              whenToStart = moment
+              const start_event_ms = moment
+                .duration({
+                  days: sub.start_after.days,
+                  hours: sub.start_after.hours,
+                  minutes: sub.start_after.minutes,
+                })
+                .asMilliseconds();
+              user_int_start = new Date(Date.now() + start_event_ms);
+            }
+          }
+
+          if (sub.stop_event === "registration") {
+            if (sub.stop_next) {
+              const endNextDay = parseInt(sub.stop_next);
+              const whenToEnd = moment
                 .tz(timezone)
-                .add({ days: startNextDay - 1 })
+                .add({ days: endNextDay })
                 .startOf("day")
                 .add({
                   minutes: Math.floor(Math.random() * 10),
                   seconds: Math.floor(Math.random() * 60),
                 });
-            }
-            user_int_start = whenToStart.toISOString();
-          } else {
-            const start_event_ms = moment
-              .duration({
-                days: sub.start_after.days,
-                hours: sub.start_after.hours,
-                minutes: sub.start_after.minutes,
-              })
-              .asMilliseconds();
-            user_int_start = new Date(Date.now() + start_event_ms);
-          }
-        }
-
-        if (sub.stop_event === "registration") {
-          if (sub.stop_next) {
-            const endNextDay = parseInt(sub.stop_next);
-            const whenToEnd = moment
-              .tz(timezone)
-              .add({ days: endNextDay })
-              .startOf("day")
-              .add({
-                minutes: Math.floor(Math.random() * 10),
-                seconds: Math.floor(Math.random() * 60),
-              });
-            user_int_end = whenToEnd.toISOString();
-          } else {
-            const stop_event_ms = moment
-              .duration({
-                days: sub.stop_after.days,
-                hours: sub.stop_after.hours,
-                minutes: sub.stop_after.minutes,
-              })
-              .asMilliseconds();
-            user_int_end = new Date(Date.now() + stop_event_ms);
-          }
-        }
-
-        // if we need randomization, start random_person_manager
-        if (sub.randomize) {
-          let windowFrom = sub.windowInterval && sub.windowInterval.from;
-          let windowTo = sub.windowInterval && sub.windowInterval.to;
-          let distance =
-            (sub.windowInterval && sub.windowInterval.distance) || 0;
-
-          //update interval if there is missing information
-          if (windowFrom && windowFrom.includes("*/")) {
-            let parsedFrom = windowFrom.split(" ");
-            if (parsedFrom[3].includes("*/")) {
-              parsedFrom[3] = parsedFrom[3].replace(
-                "*",
-                new Date(user_int_start).getDate()
-              );
-              windowFrom = parsedFrom.join(" ");
-            }
-          }
-          if (windowTo && windowTo.includes("*/")) {
-            let parsedTo = windowTo.split(" ");
-            if (parsedTo[3].includes("*/")) {
-              parsedTo[3] = parsedTo[3].replace(
-                "*",
-                new Date(user_int_start).getDate()
-              );
-              windowTo = parsedTo.join(" ");
+              user_int_end = whenToEnd.toISOString();
+            } else {
+              const stop_event_ms = moment
+                .duration({
+                  days: sub.stop_after.days,
+                  hours: sub.stop_after.hours,
+                  minutes: sub.stop_after.minutes,
+                })
+                .asMilliseconds();
+              user_int_end = new Date(Date.now() + stop_event_ms);
             }
           }
 
-          agenda.schedule(user_int_start, "start_random_personal_manager", {
-            userid: [req.body.id],
-            projectid: project._id,
-            id: sub.id,
-            interval: windowFrom,
-            interval_max: windowTo,
-            distance: distance,
-            title: sub.title,
-            message: sub.message,
-            url: sub.url,
-            expireIn: sub.expireIn,
-            number: sub.windowInterval && sub.windowInterval.number,
-            timezone: timezone,
-          });
-          agenda.schedule(user_int_end, "end_random_personal_manager", {
-            userid: [req.body.id],
-            projectid: project._id,
-            id: sub.id,
-            interval: windowFrom,
-            interval_max: windowTo,
-            distance: distance,
-            title: sub.title,
-            message: sub.message,
-            url: sub.url,
-            expireIn: sub.expireIn,
-            number: sub.windowInterval && sub.windowInterval.number,
-            timezone: timezone,
-          });
-        } else {
-          let updatedInterval = sub.interval;
+          // if we need randomization, start random_person_manager
+          if (sub.randomize) {
+            let windowFrom = sub.windowInterval && sub.windowInterval.from;
+            let windowTo = sub.windowInterval && sub.windowInterval.to;
+            let distance =
+              (sub.windowInterval && sub.windowInterval.distance) || 0;
 
-          //update interval if there is missing information
-          if (updatedInterval && updatedInterval.includes("*/")) {
-            let parsedInterval = updatedInterval.split(" ");
-            if (parsedInterval[3].includes("*/")) {
-              parsedInterval[3] = parsedInterval[3].replace(
-                "*",
-                new Date(user_int_start).getDate()
-              );
-              updatedInterval = parsedInterval.join(" ");
+            //update interval if there is missing information
+            if (windowFrom && windowFrom.includes("*/")) {
+              let parsedFrom = windowFrom.split(" ");
+              if (parsedFrom[3].includes("*/")) {
+                parsedFrom[3] = parsedFrom[3].replace(
+                  "*",
+                  new Date(user_int_start).getDate()
+                );
+                windowFrom = parsedFrom.join(" ");
+              }
             }
-          }
+            if (windowTo && windowTo.includes("*/")) {
+              let parsedTo = windowTo.split(" ");
+              if (parsedTo[3].includes("*/")) {
+                parsedTo[3] = parsedTo[3].replace(
+                  "*",
+                  new Date(user_int_start).getDate()
+                );
+                windowTo = parsedTo.join(" ");
+              }
+            }
 
-          agenda.schedule(user_int_start, "start_personal_manager", {
-            userid: [req.body.id],
-            projectid: project._id,
-            id: sub.id,
-            interval: updatedInterval,
-            title: sub.title,
-            message: sub.message,
-            url: sub.url,
-            expireIn: sub.expireIn,
-            timezone: timezone,
-          });
-          agenda.schedule(user_int_end, "end_personal_manager", {
-            userid: [req.body.id],
-            projectid: project._id,
-            id: sub.id,
-            interval: updatedInterval,
-            title: sub.title,
-            message: sub.message,
-            url: sub.url,
-            expireIn: sub.expireIn,
-            timezone: timezone,
-          });
-        }
-      } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
-        if (sub.target === "fixed-times") {
-          const momentDate = moment.tz(sub.date, sub.timezone);
-          const dateForParticipant = momentDate
-            .tz(timezone, true)
-            .toISOString();
-          const dateConverted = new Date(dateForParticipant);
-          const timestampForParticipant = dateConverted.getTime();
-
-          // check whether the date is in the future
-          if (timestampForParticipant > Date.now()) {
-            agenda.schedule(dateForParticipant, "personal_notification", {
+            agenda.schedule(user_int_start, "start_random_personal_manager", {
               userid: [req.body.id],
               projectid: project._id,
               id: sub.id,
+              interval: windowFrom,
+              interval_max: windowTo,
+              distance: distance,
               title: sub.title,
               message: sub.message,
               url: sub.url,
               expireIn: sub.expireIn,
-              deleteself: true,
+              number: sub.windowInterval && sub.windowInterval.number,
+              timezone: timezone,
+            });
+            agenda.schedule(user_int_end, "end_random_personal_manager", {
+              userid: [req.body.id],
+              projectid: project._id,
+              id: sub.id,
+              interval: windowFrom,
+              interval_max: windowTo,
+              distance: distance,
+              title: sub.title,
+              message: sub.message,
+              url: sub.url,
+              expireIn: sub.expireIn,
+              number: sub.windowInterval && sub.windowInterval.number,
+              timezone: timezone,
+            });
+          } else {
+            let updatedInterval = sub.interval;
+
+            //update interval if there is missing information
+            if (updatedInterval && updatedInterval.includes("*/")) {
+              let parsedInterval = updatedInterval.split(" ");
+              if (parsedInterval[3].includes("*/")) {
+                parsedInterval[3] = parsedInterval[3].replace(
+                  "*",
+                  new Date(user_int_start).getDate()
+                );
+                updatedInterval = parsedInterval.join(" ");
+              }
+            }
+
+            agenda.schedule(user_int_start, "start_personal_manager", {
+              userid: [req.body.id],
+              projectid: project._id,
+              id: sub.id,
+              interval: updatedInterval,
+              title: sub.title,
+              message: sub.message,
+              url: sub.url,
+              expireIn: sub.expireIn,
+              timezone: timezone,
+            });
+            agenda.schedule(user_int_end, "end_personal_manager", {
+              userid: [req.body.id],
+              projectid: project._id,
+              id: sub.id,
+              interval: updatedInterval,
+              title: sub.title,
+              message: sub.message,
+              url: sub.url,
+              expireIn: sub.expireIn,
+              timezone: timezone,
             });
           }
-        }
-        if (sub.target === "user-specific") {
-          if (sub.window_from > sub.window_to) {
-            return;
-          }
+        } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
+          if (sub.target === "fixed-times") {
+            const momentDate = moment.tz(sub.date, sub.timezone);
+            const dateForParticipant = momentDate
+              .tz(timezone, true)
+              .toISOString();
+            const dateConverted = new Date(dateForParticipant);
+            const timestampForParticipant = dateConverted.getTime();
 
-          const { window_from, window_to, number } = sub;
-          const distance = sub.distance || 0;
-
-          const nums = getDatesInInterval(
-            Date.parse(window_from),
-            Date.parse(window_to),
-            number,
-            distance
-          );
-          const ds = nums.map((n) => new Date(n).toISOString());
-
-          // map over ds to schedule the notifications
-          ds.map((date) => {
-            const scheduleId = uniqid();
-            // schedule the notification
-            const res = schedulePersonalNotificationsForUsers({
-              date: date,
-              users: [req.body.id], // []
-              projectid: project._id, // String
-              notificationid: sub.id, // String - notification ID
-              body: {
+            // check whether the date is in the future
+            if (timestampForParticipant > Date.now()) {
+              agenda.schedule(dateForParticipant, "personal_notification", {
+                userid: [req.body.id],
+                projectid: project._id,
+                id: sub.id,
                 title: sub.title,
                 message: sub.message,
                 url: sub.url,
                 expireIn: sub.expireIn,
-                useParticipantTimezone: sub.useParticipantTimezone,
-                timezone: sub.timezone,
-              }, // {}
-              deleteself: true, // Boolean
-              scheduleid: scheduleId, // String
+                deleteself: true,
+              });
+            }
+          }
+          if (sub.target === "user-specific") {
+            if (sub.window_from > sub.window_to) {
+              return;
+            }
+
+            const { window_from, window_to, number } = sub;
+            const distance = sub.distance || 0;
+
+            const nums = getDatesInInterval(
+              Date.parse(window_from),
+              Date.parse(window_to),
+              number,
+              distance
+            );
+            const ds = nums.map((n) => new Date(n).toISOString());
+
+            // map over ds to schedule the notifications
+            ds.map((date) => {
+              const scheduleId = uniqid();
+              // schedule the notification
+              const res = schedulePersonalNotificationsForUsers({
+                date: date,
+                users: [req.body.id], // []
+                projectid: project._id, // String
+                notificationid: sub.id, // String - notification ID
+                body: {
+                  title: sub.title,
+                  message: sub.message,
+                  url: sub.url,
+                  expireIn: sub.expireIn,
+                  useParticipantTimezone: sub.useParticipantTimezone,
+                  timezone: sub.timezone,
+                }, // {}
+                deleteself: true, // Boolean
+                scheduleid: scheduleId, // String
+              });
             });
-          });
+          }
         }
-      }
-    });
-  }
-  const updatedUser = await User.findOneAndUpdate(
-    { samplyId: req.body.id },
-    {
-      ["$addToSet"]: {
-        participant_projects: {
-          _id: project._id,
-          name: project.name,
-          description: project.description,
-          image: project.image,
-          slug: project.slug,
+      });
+    }
+    const updatedUser = await User.findOneAndUpdate(
+      { samplyId: req.body.id },
+      {
+        ["$addToSet"]: {
+          participant_projects: {
+            _id: project._id,
+            name: project.name,
+            description: project.description,
+            image: project.image,
+            slug: project.slug,
+          },
         },
       },
-    },
-    { upsert: true, new: true }
-  );
-  if (updatedUser) {
+      { upsert: true, new: true }
+    );
+
     res.status(200).json({ message: "OK" });
-  } else {
-    res
-      .status(400)
-      .json({ message: "There was an error during the user update" });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: error });
   }
+
+  // if (updatedUser) {
+  //   res.status(200).json({ message: "OK" });
+  // } else {
+  //   res
+  //     .status(400)
+  //     .json({ message: "There was an error during the user update" });
+  // }
 };
 
 async function removeParticipantFromProject({
