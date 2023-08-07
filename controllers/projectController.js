@@ -3,7 +3,11 @@ const multer = require("multer");
 const jimp = require("jimp");
 const uuid = require("uuid"); // make unique identifier
 const uniqid = require("uniqid");
-const { nanoid } = require("nanoid");
+const { customAlphabet } = require("nanoid");
+const nanoid = customAlphabet(
+  "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+  10
+);
 const fs = require("fs");
 
 const mail = require("../handlers/mail");

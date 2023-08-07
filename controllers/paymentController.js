@@ -14,7 +14,11 @@ const DOMAIN =
     ? "https://samply.uni-konstanz.de"
     : "http://localhost";
 
-const { nanoid } = require("nanoid");
+const { customAlphabet } = require("nanoid");
+const nanoid = customAlphabet(
+  "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+  10
+);
 
 // create a stripe account link
 exports.createAccountLink = async (req, res) => {
@@ -24,14 +28,14 @@ exports.createAccountLink = async (req, res) => {
   } else {
     const account = await stripe.accounts.create({
       type: "express",
-      email: req.body.email
+      email: req.body.email,
     });
     // update user
     accountId = account.id;
     await User.findOneAndUpdate(
       { _id: req.body.userId },
       {
-        stripeAccountId: accountId
+        stripeAccountId: accountId,
       },
       {}
     ).exec();
@@ -41,7 +45,7 @@ exports.createAccountLink = async (req, res) => {
     account: accountId,
     refresh_url: `${DOMAIN}/account`,
     return_url: `${DOMAIN}/account`,
-    type: "account_onboarding"
+    type: "account_onboarding",
   });
 
   res.redirect(accountLinks.url);
@@ -74,8 +78,8 @@ exports.webhook = async (req, res) => {
             charges_enabled: event.data.object.charges_enabled,
             details_submitted: event.data.object.details_submitted,
             payouts_enabled: event.data.object.payouts_enabled,
-            country: event.data.object.country
-          }
+            country: event.data.object.country,
+          },
         },
         {}
       ).exec();
@@ -106,8 +110,8 @@ exports.webhook = async (req, res) => {
           currency: session.currency,
           amount: session.amount,
           fee: session.application_fee_amount,
-          url: session.receipt_url
-        }
+          url: session.receipt_url,
+        },
       }).save();
       break;
 
@@ -124,7 +128,7 @@ exports.payoutToParticipant = async (req, res) => {
       name: 1,
       email: 1,
       stripeAccountId: 1,
-      stripeInformation: 1
+      stripeInformation: 1,
     }
   );
   res.render("payout", { participant: participant, samplyid: req.params.id });
@@ -138,7 +142,7 @@ exports.receiptsToParticipant = async (req, res) => {
       name: 1,
       email: 1,
       stripeAccountId: 1,
-      stripeInformation: 1
+      stripeInformation: 1,
     }
   );
   const receipts = await Receipt.find(
@@ -148,7 +152,7 @@ exports.receiptsToParticipant = async (req, res) => {
   res.render("receipts", {
     participant: participant,
     receipts: receipts,
-    samplyid: req.params.id
+    samplyid: req.params.id,
   });
 };
 
@@ -171,18 +175,18 @@ exports.createcheckoutsession = async (req, res) => {
         name: "Samply",
         amount,
         currency: req.body.currency,
-        quantity: 1
-      }
+        quantity: 1,
+      },
     ],
     payment_intent_data: {
       application_fee_amount: platformCommission,
       transfer_data: {
-        destination: req.body.stripeAccountId
-      }
+        destination: req.body.stripeAccountId,
+      },
     },
     mode: "payment",
     success_url: `${DOMAIN}/payout/${req.body.samplyid}/`,
-    cancel_url: `${DOMAIN}/payout/${req.body.samplyid}/`
+    cancel_url: `${DOMAIN}/payout/${req.body.samplyid}/`,
   });
   res.redirect(303, session.url);
 };
@@ -192,7 +196,7 @@ exports.downloadReceipts = async (req, res) => {
   const participant = await User.findOne(
     { samplyId: req.params.id },
     {
-      _id: 1
+      _id: 1,
     }
   );
   let keys = [];
@@ -205,7 +209,7 @@ exports.downloadReceipts = async (req, res) => {
     { created: 1, receiptId: 1, status: 1, paymentInfo: 1 }
   )
     .cursor()
-    .on("data", obj => {
+    .on("data", (obj) => {
       if (obj) {
         let data = {};
         const line = [
@@ -216,14 +220,14 @@ exports.downloadReceipts = async (req, res) => {
             currency: obj.paymentInfo.currency,
             amount: obj.paymentInfo.amount,
             fee: obj.paymentInfo.fee,
-            url: obj.paymentInfo.url
-          }
+            url: obj.paymentInfo.url,
+          },
         ];
-        const preKeys = flatMap(line, function(e) {
+        const preKeys = flatMap(line, function (e) {
           return Object.keys(e);
         });
         const tempkeys = Array.from(new Set(preKeys));
-        const new_items = tempkeys.filter(x => !keys.includes(x));
+        const new_items = tempkeys.filter((x) => !keys.includes(x));
         let parsed;
         if (new_items.length > 0) {
           keys = keys.concat(new_items);
@@ -236,10 +240,10 @@ exports.downloadReceipts = async (req, res) => {
         input.push(parsed);
       }
     })
-    .on("end", function() {
+    .on("end", function () {
       input.push(null);
     })
-    .on("error", function(err) {
+    .on("error", function (err) {
       console.log(err);
     });
   const processor = input.pipe(res);

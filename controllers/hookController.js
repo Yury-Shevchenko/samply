@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 const Project = mongoose.model("Project");
 const Result = mongoose.model("Result");
-const { nanoid } = require("nanoid");
+const { customAlphabet } = require("nanoid");
+const nanoid = customAlphabet(
+  "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+  10
+);
 const crypto = require("crypto");
 
 const { Expo } = require("expo-server-sdk");
@@ -20,7 +24,7 @@ exports.deletegroup = async (req, res) => {
     { creator: 1, mobileUsers: 1 }
   );
   confirmOwner(project, req.user);
-  const mobileUsers = [...project.mobileUsers].map(user => {
+  const mobileUsers = [...project.mobileUsers].map((user) => {
     if (user.group && user.group.id == groupId) {
       const updatedUser = { ...user._doc };
       delete updatedUser.group;
@@ -50,7 +54,7 @@ exports.creategroup = async (req, res) => {
   let id;
   // check that there is no group with the same name
   const sameName = project.mobileUsers.filter(
-    user => user && user.group && user.group.name === groupName
+    (user) => user && user.group && user.group.name === groupName
   );
   if (sameName.length) {
     id = sameName[0].group.id;
@@ -58,14 +62,14 @@ exports.creategroup = async (req, res) => {
     id = nanoid(4);
   }
 
-  const mobileUsers = [...project.mobileUsers].map(user => {
+  const mobileUsers = [...project.mobileUsers].map((user) => {
     if (participants.includes(user.id)) {
       return {
         ...user._doc,
         group: {
           id,
-          name: groupName
-        }
+          name: groupName,
+        },
       };
     } else {
       return user;
@@ -102,7 +106,7 @@ exports.notify = async (req, res) => {
     {
       _id: projectID,
       notifyToken: token,
-      notifyExpires: { $gt: Date.now() }
+      notifyExpires: { $gt: Date.now() },
     },
     { mobileUsers: 1, name: 1, notifyInformation: 1 }
   );
@@ -116,13 +120,13 @@ exports.notify = async (req, res) => {
 
   //4. Extract the IDs of other people in the group
   const tokens = users
-    .filter(user => user && user.group && user.group.id === groupID)
-    .filter(user => user && user.id !== participantID)
-    .map(user => ({
+    .filter((user) => user && user.group && user.group.id === groupID)
+    .filter((user) => user && user.id !== participantID)
+    .map((user) => ({
       id: user.id,
       token: user.token,
       group: user.group,
-      username: user.username
+      username: user.username,
     }));
 
   // Send a notification to the other people in the group (immediately)
@@ -130,7 +134,7 @@ exports.notify = async (req, res) => {
   const content = {
     title: req.body.title,
     message: req.body.message,
-    url: req.body.url
+    url: req.body.url,
   };
 
   let messages = [];
@@ -159,12 +163,12 @@ exports.notify = async (req, res) => {
         title: content.title,
         message: content.message,
         url: customizedUrl,
-        messageId
+        messageId,
       },
       id: pushToken.id,
       priority: "high",
       channelId: "default",
-      _displayInForeground: true
+      _displayInForeground: true,
     });
   }
 
@@ -178,7 +182,7 @@ exports.notify = async (req, res) => {
   // let tickets = [];
 
   await Promise.all(
-    chunks.map(async chunk => {
+    chunks.map(async (chunk) => {
       let ticketChunk = await expo.sendPushNotificationsAsync(chunk);
       ticketChunk.map(async (ticket, i) => {
         const result = new Result({
@@ -188,7 +192,7 @@ exports.notify = async (req, res) => {
           data: chunk[i].data,
           ticket: ticket,
           messageId: chunk[i].data.messageId,
-          events: [{ status: "sent", created: Date.now() }]
+          events: [{ status: "sent", created: Date.now() }],
         });
         await result.save();
       });
@@ -199,7 +203,7 @@ exports.notify = async (req, res) => {
 };
 
 const makeRandomCodeForMessageID = () => {
-  return "mes-xxx-xxx-xxx-xxx".replace(/[xy]/g, function(c) {
+  return "mes-xxx-xxx-xxx-xxx".replace(/[xy]/g, function (c) {
     var r = (Math.random() * 16) | 0,
       v = c == "x" ? r : (r & 0x3) | 0x8;
     return v.toString(16);

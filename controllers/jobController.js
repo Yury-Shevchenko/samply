@@ -9,7 +9,11 @@ const uniqid = require("uniqid");
 const moment = require("moment");
 const Cron = require("cron-converter");
 const cronstrue = require("cronstrue");
-const { nanoid } = require("nanoid");
+const { customAlphabet } = require("nanoid");
+const nanoid = customAlphabet(
+  "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+  10
+);
 
 const { Expo } = require("expo-server-sdk");
 let expo = new Expo();

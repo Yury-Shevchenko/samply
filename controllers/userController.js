@@ -15,7 +15,11 @@ const webpush = require("web-push");
 const formidable = require("formidable");
 const fs = require("fs");
 const schedule = require("node-schedule");
-const { nanoid } = require("nanoid");
+const { customAlphabet } = require("nanoid");
+const nanoid = customAlphabet(
+  "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
+  10
+);
 
 exports.account = async (req, res) => {
   res.render("account", { title: "Edit Your Account" });
