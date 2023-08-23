@@ -58,7 +58,7 @@ exports.request = async (options) => {
   const text = htmlToText.fromString(html);
   // postmark sending
   client.sendEmail({
-    From: "no-reply@samply.uni-konstanz.de",
+    From: `Samply <no-reply@samply.uni-konstanz.de>`,
     To: email_address,
     Subject: "New task request",
     TextBody: text,
@@ -68,11 +68,12 @@ exports.request = async (options) => {
 
 // send question
 exports.sendQuestion = async (options) => {
+  console.log({ options });
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
   // postmark sending
   client.sendEmail({
-    From: "no-reply@samply.uni-konstanz.de",
+    From: `Samply <no-reply@samply.uni-konstanz.de>`,
     To: email_address,
     Subject: "New question",
     TextBody: text,
