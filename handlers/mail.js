@@ -42,7 +42,7 @@ exports.invite = async (options) => {
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
   const mailOptions = {
-    from: `Samply <no-reply@samply.uni-konstanz.de>`,
+    from: `Samply <yury.shevchenko@uni.kn>`,
     to: options.participant.email,
     subject: options.subject,
     html,
@@ -58,7 +58,7 @@ exports.request = async (options) => {
   const text = htmlToText.fromString(html);
   // postmark sending
   client.sendEmail({
-    From: `Samply <no-reply@samply.uni-konstanz.de>`,
+    From: `Samply <yury.shevchenko@uni.kn>`,
     To: email_address,
     Subject: "New task request",
     TextBody: text,
@@ -68,12 +68,11 @@ exports.request = async (options) => {
 
 // send question
 exports.sendQuestion = async (options) => {
-  console.log({ options });
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
   // postmark sending
   client.sendEmail({
-    From: `Samply <no-reply@samply.uni-konstanz.de>`,
+    From: `Samply <yury.shevchenko@uni.kn>`,
     To: email_address,
     Subject: "New question",
     TextBody: text,
