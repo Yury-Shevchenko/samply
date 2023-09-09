@@ -8,58 +8,58 @@ const randomBits = customAlphabet(lowercase, 8);
 const projectSchema = new mongoose.Schema({
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   creator: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
-    required: "You must supply a user!"
+    required: "You must supply a user!",
   },
   members: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   name: {
-    type: String
+    type: String,
   },
   slug: {
     type: String,
-    default: () => randomBits()
+    default: () => randomBits(),
   },
   samplycode: {
-    type: String
+    type: String,
   },
   image: String,
   description: {
     type: String,
-    trim: true
+    trim: true,
   },
   welcomeMessage: {
     type: String,
-    default: ""
+    default: "",
   },
   codeMessage: {
-    type: String
+    type: String,
   },
   groupMessage: {
-    type: String
+    type: String,
   },
   messageAfterJoin: {
     type: String,
-    default: ""
+    default: "",
   },
   geofencingInstruction: {
-    type: String
+    type: String,
   },
   useNotifications: {
     type: Boolean,
-    default: true
+    default: true,
   },
   currentlyActive: Boolean,
   public: {
     type: Boolean,
-    default: false
+    default: false,
   },
   requestedForApproval: {
     type: Boolean,
-    default: false
+    default: false,
   },
   invitations: [{ email: String, token: String }],
   notifications: [
@@ -98,43 +98,45 @@ const projectSchema = new mongoose.Schema({
       allCurrentGroups: Boolean,
       timezone: String,
       expireIn: Number, // number of milliseconds
-      useParticipantTimezone: Boolean
-    }
+      useParticipantTimezone: Boolean,
+      reminders: JSON,
+    },
   ],
   mobileUsers: [
     {
       id: String,
-      token: String, 
+      token: String,
       created: {
         type: Date,
-        default: Date.now
+        default: Date.now,
       },
       username: String,
       information: JSON,
       group: JSON,
       stripe: JSON,
-      deactivated: Boolean
-    }
+      deactivated: Boolean,
+    },
   ],
   settings: JSON,
   notifyToken: String,
-  notifyExpires: Date
+  notifyExpires: Date,
+  completionMessage: String,
 });
 
-projectSchema.statics.getCurrentProjects = function() {
+projectSchema.statics.getCurrentProjects = function () {
   return this.aggregate([
     { $match: { currentlyActive: true } },
     {
       $project: {
         name: "$$ROOT.name",
-        description: "$$ROOT.description"
-      }
+        description: "$$ROOT.description",
+      },
     },
-    { $sort: { name: 1 } }
+    { $sort: { name: 1 } },
   ]);
 };
 
-projectSchema.statics.findAllPublic = function() {
+projectSchema.statics.findAllPublic = function () {
   return this.aggregate([
     { $match: { currentlyActive: true, public: true } },
     {
@@ -142,8 +144,8 @@ projectSchema.statics.findAllPublic = function() {
         from: "users",
         localField: "creator",
         foreignField: "_id",
-        as: "author"
-      }
+        as: "author",
+      },
     },
     {
       $project: {
@@ -154,30 +156,30 @@ projectSchema.statics.findAllPublic = function() {
         messageAfterJoin: "$$ROOT.messageAfterJoin",
         created: "$$ROOT.created",
         author_name: "$author.name",
-        author_institute: "$author.institute"
-      }
+        author_institute: "$author.institute",
+      },
     },
-    { $sort: { name: 1 } }
+    { $sort: { name: 1 } },
   ]);
 };
 
-projectSchema.statics.debugProjects = function() {
+projectSchema.statics.debugProjects = function () {
   return this.aggregate([
     {
       $lookup: {
         from: "users",
         localField: "creator",
         foreignField: "_id",
-        as: "author"
-      }
+        as: "author",
+      },
     },
     {
       $lookup: {
         from: "users",
         localField: "members",
         foreignField: "_id",
-        as: "members"
-      }
+        as: "members",
+      },
     },
     {
       $project: {
@@ -195,10 +197,10 @@ projectSchema.statics.debugProjects = function() {
         currentlyActive: "$$ROOT.currentlyActive",
         requestedForApproval: "$$ROOT.requestedForApproval",
         public: "$$ROOT.public",
-        settings: "$$ROOT.settings"
-      }
+        settings: "$$ROOT.settings",
+      },
     },
-    { $sort: { created: 1 } }
+    { $sort: { created: 1 } },
   ]);
 };
 
@@ -240,7 +242,7 @@ projectSchema.virtual("participants", {
   ref: "User", //what model to link
   localField: "_id", //which field in the current model
   foreignField: "participant_projects", //should match field in the other model
-  justOne: false
+  justOne: false,
 });
 
 function autopopulate(next) {

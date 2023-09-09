@@ -37,9 +37,10 @@ block content
             td #{l.expire} 
             td #{l.receivedInOpenApp} 
             td #{l.tappedNotificationBar} 
-            td #{l.openInApp} 
+            td #{l.openInApp}  
             td #{l.deletedByUser} 
             td #{l.geofenceEventTriggered} 
+            td #{l.completed} 
             td #{l.messageID} 
             td #{l.status} 
             td #{l.receipt} 
@@ -62,6 +63,7 @@ block content
               td= notification.events.filter(e => e.status === 'opened-in-app').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'archived').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.events.filter(e => e.status === 'geofencing-event').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
+              td= notification.events.filter(e => e.status === 'completed').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.messageId  
               td= notification.ticket && notification.ticket.status  
               td

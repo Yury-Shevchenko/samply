@@ -269,6 +269,7 @@ exports.createProject = async (req, res) => {
         codeMessage: req.body.codeMessage,
         groupMessage: req.body.groupMessage,
         messageAfterJoin: req.body.messageAfterJoin,
+        completionMessage: req.body.completionMessage,
         geofencingInstruction: req.body.geofencingInstruction,
         creator: req.user._id,
         members: membersData,
@@ -358,6 +359,7 @@ exports.updateProject = async (req, res) => {
       project.codeMessage = req.body.codeMessage;
       project.groupMessage = req.body.groupMessage;
       project.messageAfterJoin = req.body.messageAfterJoin;
+      project.completionMessage = req.body.completionMessage;
       project.geofencingInstruction = req.body.geofencingInstruction;
       project.members = membersData;
       if (!project.settings) project.settings = {};

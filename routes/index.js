@@ -131,6 +131,17 @@ router.get(
   "/studies/:study",
   catchErrors(projectController.showProjectDescription)
 );
+
+// register completion with the project code and schedule id
+router.get(
+  "/studies/:study/done/:messageid",
+  jobController.registerCompletionWithGet
+);
+router.post(
+  "/studies/:study/done/:messageid",
+  jobController.registerCompletionWithPost
+);
+
 router.get(
   "/participantprojects/:id",
   authController.isLoggedIn,
@@ -396,5 +407,8 @@ router.get(
   authController.isAdminLoggedIn,
   resultController.checkNotificationReceipt
 );
+
+// see scheduled notifications
+router.get("/scheduled", authController.isLoggedIn, jobController.displayJobs);
 
 module.exports = router;

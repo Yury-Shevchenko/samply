@@ -324,7 +324,37 @@ block content
               span #{l.step_5_hours} 
               input(name="expire-in-minutes" type='number' min=0 style="width: 60px;" value=0)
               span #{l.step_7_minutes}  
-                  
+
+        #choose-reminders
+          h2 #{l.step_8_header}   
+
+          .options
+            input(type='radio', name='reminders', value='no')#reminders-no
+            label(for='reminders-no')
+              span #{l.step_8_no}  
+
+            input(type='radio', name='reminders', value='yes')#reminders-yes
+            label(for='reminders-yes')
+              span #{l.step_8_yes} 
+         
+        #reminders-planner(style="display:none")  
+          p !{l.step_8_reminder_warning}  
+          .reminderPlanner
+            label #{l.step_8_reminder_title}  
+            label #{l.step_8_reminder_message}  
+            label #{l.step_8_reminder_days} 
+            label #{l.step_8_reminder_hours} 
+            label #{l.step_8_reminder_minutes} 
+            .div
+              button(type="button" value="Add new reminder" id="addReminder") #{l.step_8_reminder_add} 
+
+            input(name="reminder-title" class='reminderTitle' type='text' value='') 
+            input(name="reminder-message" class='reminderMessage' type='text' value='') 
+            input(name="reminder-days" class="reminderDays" type='number' min=0 value=0)
+            input(name="reminder-hours" class="reminderHours" type='number' min=0 value=0)
+            input(name="reminder-minutes" class="reminderMinutes" type='number' min=0 value=0)
+            div
+         
         p
         p          
         #send-button 
@@ -453,6 +483,17 @@ block content
                   document.querySelector('#choose-month').style.display = 'block';
                   document.querySelector('#choose-start').style.display = 'block';
                   document.querySelector('#choose-stop').style.display = 'block';
+                }
+              }
+
+              // show the calendar or all other options 
+              if(name === 'reminders'){
+                if(value  === 'yes') {
+                  // show reminders planner
+                  document.querySelector('#reminders-planner').style.display = 'block';
+                }  else {
+                  // hide reminders planner
+                  document.querySelector('#reminders-planner').style.display = 'none';
                 }
               }
               

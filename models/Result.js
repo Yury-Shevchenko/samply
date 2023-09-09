@@ -5,29 +5,30 @@ const resultSchema = new mongoose.Schema({
   messageId: String,
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   project: {
     type: mongoose.Schema.ObjectId,
-    ref: "Project"
+    ref: "Project",
   },
   samplyid: String,
   data: {
     title: String,
     message: String,
     url: String,
-    expireAt: Number // timestamp
+    expireAt: Number, // timestamp
   },
   ticket: JSON,
   events: [
     {
       status: String,
       created: Date,
-      data: JSON
-    }
+      data: JSON,
+    },
   ], // sent, tapped
   project_name: String,
-  batch: Number
+  batch: Number,
+  finid: String, // id that is connected to reminder jobs
 });
 
 function autopopulate(next) {

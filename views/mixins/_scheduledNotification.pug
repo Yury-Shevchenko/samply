@@ -65,6 +65,10 @@ mixin scheduledNotification(notification, i)
         span= `${l.table_randomized}` 
       if(notification.scheduleInFuture)  
         span= `${l.table_future_participants}` 
+      if(notification.reminders && notification.reminders.length) 
+        span= `${l.table_reminders}`  
+        each reminder, i in notification.reminders 
+          span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after}: ${h.moment.utc(reminder.time).format('HH:mm:ss')}`
 
   else 
     
@@ -112,3 +116,8 @@ mixin scheduledNotification(notification, i)
         span= `${l.table_randomized}` 
       if(notification.scheduleInFuture)  
         span= `${l.table_future_participants}` 
+      if(notification.reminders && notification.reminders.length) 
+        span= `${l.table_reminders}`  
+        each reminder, i in notification.reminders 
+          span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after}: ${h.moment.utc(reminder.time).format('HH:mm:ss')}`
+

@@ -1,13 +1,12 @@
 .notifications_scheduler {
-
   button {
     background: #fcf4b6;
     -webkit-box-shadow: 0 8px 6px -6px #d9cfcf;
-  	-moz-box-shadow: 0 8px 6px -6px #d9cfcf;
-  	box-shadow: 0 8px 6px -6px #d9cfcf;
+    -moz-box-shadow: 0 8px 6px -6px #d9cfcf;
+    box-shadow: 0 8px 6px -6px #d9cfcf;
     cursor: pointer;
   }
-  button.removePickerButton{
+  button.removePickerButton {
     background: #ed6700;
     color: white;
   }
@@ -18,11 +17,13 @@
   grid-template-columns: 1fr 15fr;
   // grid-template-rows: 1fr 1fr;
   align-items: center;
-  input { display:inline-block; }
+  input {
+    display: inline-block;
+  }
   label {
     cursor: pointer;
     display: block;
-    position:relative;
+    position: relative;
     margin: 0.67rem;
     padding: 0.67rem;
     background-color: white;
@@ -46,30 +47,28 @@
       color: white;
     }
   }
-
 }
 
-.containerTimePicker{
+.containerTimePicker {
   display: grid;
   grid-template-columns: auto auto 2fr;
   grid-column-gap: 10px;
   padding-top: 10px;
   justify-items: start;
   justify-content: start;
-  .timePickerHour{
+  .timePickerHour {
     width: 100px;
     border-radius: 10px;
   }
-  .timePickerMinute{
+  .timePickerMinute {
     width: 100px;
     border-radius: 10px;
   }
-  .removePickerButton{
+  .removePickerButton {
     width: 45px;
     border-radius: 25px;
     text-align: center;
   }
-
 }
 
 .containerTimeWindow {
@@ -79,16 +78,16 @@
   padding-top: 10px;
   justify-items: start;
   justify-content: start;
-  .timeWindowInput{
+  .timeWindowInput {
     width: 100px;
     border-radius: 10px;
   }
-  .removePickerButton{
+  .removePickerButton {
     width: 45px;
     border-radius: 25px;
     text-align: center;
   }
-  .timeWindowNumberOfPointsInput{
+  .timeWindowNumberOfPointsInput {
     width: 80px;
   }
   .fromContainer {
@@ -109,18 +108,18 @@
   }
 }
 
-.containerDatePicker{
+.containerDatePicker {
   display: grid;
   grid-template-columns: auto auto auto 2fr;
   grid-column-gap: 10px;
   padding-top: 10px;
   justify-items: start;
   justify-content: start;
-  .datePickerInput{
+  .datePickerInput {
     width: 100px;
     border-radius: 10px;
   }
-  .removePickerButton{
+  .removePickerButton {
     width: 45px;
     border-radius: 25px;
     text-align: center;

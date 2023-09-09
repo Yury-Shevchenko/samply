@@ -30,6 +30,9 @@ mixin projectForm(project = {})
         
     label(for='messageAfterJoin') #{l.messageAfterJoin}
     textarea(type='text' name='messageAfterJoin')= project.messageAfterJoin
+
+    label(for='completionMessage') #{l.completionMessage} 
+    textarea(type='text' name='completionMessage')= project.completionMessage
     
     p !{l.permanentLink}
     input(type='text' name='permanentLink' value=project.settings && project.settings.permanentLink)

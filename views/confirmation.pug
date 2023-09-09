@@ -1,0 +1,29 @@
+extends layout
+
+block content
+
+  .inner
+
+    if numJobsRemoved === 0
+      .flash(class=`flash--error`) #{l.completionCodeInvalid}
+
+    else 
+      .flash(class=`flash--success`)
+        if(project.completionMessage)
+          div= project.completionMessage
+        else 
+          div #{l.completionMessage} 
+
+    .card     
+      .studyDescription
+        .header
+          h4= project.name
+          div= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
+          p(style="color: #3b4051") !{project.description}
+        if project.image
+          .div
+            img(src=`${project.image}`, alt=project.name width=200)
+        
+    //- pre= h.dump(numJobsRemoved)
+    //- pre=h.dump(project)
+      

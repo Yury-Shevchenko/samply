@@ -472,6 +472,36 @@ function createNotification() {
       60000 * selected["expire-in-minutes"];
   }
 
+  // reminders
+  if (!selected["reminders"]) {
+    alert("Choose whether reminders should be sent");
+    return;
+  }
+  let reminders = [];
+  if (selected["reminders"] === "yes") {
+    reminders = Array.from(document.querySelectorAll(".reminderPlanner")).map(
+      (container) => {
+        const time =
+          24 * 60 * 60000 * container.querySelector(".reminderDays").value +
+          60 * 60000 * container.querySelector(".reminderHours").value * 60 +
+          60000 * container.querySelector(".reminderMinutes").value;
+        if (
+          container.querySelector(".reminderTitle").value == "" ||
+          container.querySelector(".reminderMessage").value == "" ||
+          time <= 0
+        ) {
+          alert("Enter reminder information");
+          throw new Error("Missing reminder information");
+        }
+        return {
+          title: container.querySelector(".reminderTitle").value,
+          message: container.querySelector(".reminderMessage").value,
+          time,
+        };
+      }
+    );
+  }
+
   // 2. transform this information into the object with notification schedule
 
   // constructed fixed dates and times
@@ -596,7 +626,8 @@ function createNotification() {
           scheduleInFuture,
           timezone,
           expireIn,
-          useParticipantTimezone
+          useParticipantTimezone,
+          reminders
         );
       } else {
         createFixedIntervalNotification(
@@ -608,7 +639,8 @@ function createNotification() {
           scheduleInFuture,
           timezone,
           expireIn,
-          useParticipantTimezone
+          useParticipantTimezone,
+          reminders
         );
       }
     }
@@ -624,7 +656,8 @@ function createNotification() {
         scheduleInFuture,
         timezone,
         expireIn,
-        useParticipantTimezone
+        useParticipantTimezone,
+        reminders
       );
     } else {
       // create fixed interval schedule
@@ -641,7 +674,8 @@ function createNotification() {
           scheduleInFuture,
           timezone,
           expireIn,
-          useParticipantTimezone
+          useParticipantTimezone,
+          reminders
         );
       } else {
         createFixedIntervalNotification(
@@ -653,7 +687,8 @@ function createNotification() {
           scheduleInFuture,
           timezone,
           expireIn,
-          useParticipantTimezone
+          useParticipantTimezone,
+          reminders
         );
       }
     }
@@ -669,7 +704,8 @@ function createNotification() {
         scheduleInFuture,
         timezone,
         expireIn,
-        useParticipantTimezone
+        useParticipantTimezone,
+        reminders
       );
     } else {
       // create randomized interval notifications
@@ -682,7 +718,8 @@ function createNotification() {
         scheduleInFuture,
         timezone,
         expireIn,
-        useParticipantTimezone
+        useParticipantTimezone,
+        reminders
       );
     }
   }
@@ -697,7 +734,8 @@ function createFixedScheduledNotification(
   scheduleInFuture,
   timezone,
   expireIn,
-  useParticipantTimezone
+  useParticipantTimezone,
+  reminders
 ) {
   fetch("/createschedulenotification", {
     method: "POST",
@@ -720,6 +758,7 @@ function createFixedScheduledNotification(
       timezone: timezone,
       expireIn: expireIn,
       useParticipantTimezone: useParticipantTimezone,
+      reminders: reminders,
     }),
   })
     .then((res) => {
@@ -742,7 +781,8 @@ function createFixedIntervalNotification(
   scheduleInFuture,
   timezone,
   expireIn,
-  useParticipantTimezone
+  useParticipantTimezone,
+  reminders
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -767,6 +807,7 @@ function createFixedIntervalNotification(
       timezone: timezone,
       expireIn: expireIn,
       useParticipantTimezone: useParticipantTimezone,
+      reminders: reminders,
     }),
   })
     .then((res) => {
@@ -789,7 +830,8 @@ function createIndividualSpecificNotification(
   scheduleInFuture,
   timezone,
   expireIn,
-  useParticipantTimezone
+  useParticipantTimezone,
+  reminders
 ) {
   fetch("/createindividualnotification", {
     method: "POST",
@@ -814,6 +856,7 @@ function createIndividualSpecificNotification(
       timezone: timezone,
       expireIn: expireIn,
       useParticipantTimezone: useParticipantTimezone,
+      reminders: reminders,
     }),
   })
     .then((res) => {
@@ -834,7 +877,8 @@ function createRandomFixedNotification(
   scheduleInFuture,
   timezone,
   expireIn,
-  useParticipantTimezone
+  useParticipantTimezone,
+  reminders
 ) {
   fetch("/createfixedindividualnotification", {
     method: "POST",
@@ -857,6 +901,7 @@ function createRandomFixedNotification(
       timezone: timezone,
       expireIn: expireIn,
       useParticipantTimezone: useParticipantTimezone,
+      reminders: reminders,
     }),
   })
     .then((res) => {
@@ -879,7 +924,8 @@ function createRandomIntervalNotification(
   scheduleInFuture,
   timezone,
   expireIn,
-  useParticipantTimezone
+  useParticipantTimezone,
+  reminders
 ) {
   fetch("/createintervalnotification", {
     method: "POST",
@@ -904,6 +950,7 @@ function createRandomIntervalNotification(
       timezone: timezone,
       expireIn: expireIn,
       useParticipantTimezone: useParticipantTimezone,
+      reminders: reminders,
     }),
   })
     .then((res) => {

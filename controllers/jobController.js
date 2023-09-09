@@ -52,6 +52,7 @@ agenda.on("ready", function () {
         message: job.attrs.data.message,
         url: job.attrs.data.url,
         expireIn: job.attrs.data.expireIn,
+        reminders: job.attrs.data.reminders,
       });
     } else {
       sendToAllProjectUsers({
@@ -61,6 +62,7 @@ agenda.on("ready", function () {
         message: job.attrs.data.message,
         url: job.attrs.data.url,
         expireIn: job.attrs.data.expireIn,
+        reminders: job.attrs.data.reminders,
       });
     }
   });
@@ -75,6 +77,7 @@ agenda.on("ready", function () {
       url: job.attrs.data.url,
       expireIn: job.attrs.data.expireIn,
       groupid: job.attrs.data.groupid,
+      reminders: job.attrs.data.reminders,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
@@ -108,6 +111,8 @@ agenda.on("ready", function () {
       notification_id: job.attrs.data.id,
       deleteself: job.attrs.data.deleteself,
       schedule_id: job.attrs.data.scheduleid,
+      reminders: job.attrs.data.reminders, // the list of reminders from the original schedule
+      finid: job.attrs.data.finid, // id for reminders job
     });
     done();
   });
@@ -123,6 +128,7 @@ agenda.on("ready", function () {
       url: job.attrs.data.url,
       expireIn: job.attrs.data.expireIn,
       deleteself: false,
+      reminders: job.attrs.data.reminders,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
@@ -163,6 +169,7 @@ agenda.on("ready", function () {
       distance: job.attrs.data.distance,
       number: job.attrs.data.number,
       timezone: job.attrs.data.timezone,
+      reminders: job.attrs.data.reminders,
     });
     done();
   });
@@ -183,6 +190,7 @@ agenda.on("ready", function () {
       distance: job.attrs.data.distance,
       number: job.attrs.data.number,
       timezone: job.attrs.data.timezone,
+      reminders: job.attrs.data.reminders,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
@@ -220,6 +228,7 @@ agenda.on("ready", function () {
       distance: job.attrs.data.distance,
       number: job.attrs.data.number,
       timezone: job.attrs.data.timezone,
+      reminders: job.attrs.data.reminders,
     });
     newjob.repeatEvery(job.attrs.data.interval, {
       skipImmediate: true,
@@ -297,6 +306,7 @@ exports.createScheduleNotification = async (req, res) => {
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
         useParticipantTimezone: req.body.useParticipantTimezone,
+        reminders: req.body.reminders,
       });
 
       let groups;
@@ -319,6 +329,7 @@ exports.createScheduleNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           deleteself: true,
+          reminders: req.body.reminders,
         });
       }
 
@@ -444,6 +455,7 @@ exports.createIntervalNotification = async (req, res) => {
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
         useParticipantTimezone: req.body.useParticipantTimezone,
+        reminders: req.body.reminders,
       });
     });
 
@@ -523,7 +535,7 @@ exports.createIntervalNotification = async (req, res) => {
               if (parsedFrom[3].includes("*/")) {
                 parsedFrom[3] = parsedFrom[3].replace(
                   "*",
-                  new Date(int_start.getDate())
+                  new Date(int_start).getDate()
                 );
                 windowFrom = parsedFrom.join(" ");
               }
@@ -533,7 +545,7 @@ exports.createIntervalNotification = async (req, res) => {
               if (parsedTo[3].includes("*/")) {
                 parsedTo[3] = parsedTo[3].replace(
                   "*",
-                  new Date(int_start.getDate())
+                  new Date(int_start).getDate()
                 );
                 windowTo = parsedTo.join(" ");
               }
@@ -551,6 +563,7 @@ exports.createIntervalNotification = async (req, res) => {
               expireIn: req.body.expireIn,
               number: window.number,
               timezone: req.body.timezone,
+              reminders: req.body.reminders,
             });
             agenda.schedule(int_end, "end_random_group_manager", {
               groupid: [group],
@@ -565,6 +578,7 @@ exports.createIntervalNotification = async (req, res) => {
               expireIn: req.body.expireIn,
               number: window.number,
               timezone: req.body.timezone,
+              reminders: req.body.reminders,
             });
           });
         }
@@ -635,7 +649,7 @@ exports.createIntervalNotification = async (req, res) => {
             if (parsedFrom[3].includes("*/")) {
               parsedFrom[3] = parsedFrom[3].replace(
                 "*",
-                new Date(int_start.getDate())
+                new Date(int_start).getDate()
               );
               windowFrom = parsedFrom.join(" ");
             }
@@ -645,7 +659,7 @@ exports.createIntervalNotification = async (req, res) => {
             if (parsedTo[3].includes("*/")) {
               parsedTo[3] = parsedTo[3].replace(
                 "*",
-                new Date(int_start.getDate())
+                new Date(int_start).getDate()
               );
               windowTo = parsedTo.join(" ");
             }
@@ -680,6 +694,7 @@ exports.createIntervalNotification = async (req, res) => {
             expireIn: req.body.expireIn,
             number: window.number,
             timezone,
+            reminders: req.body.reminders,
           });
           agenda.schedule(int_end, "end_random_personal_manager", {
             userid: [user.id],
@@ -694,6 +709,7 @@ exports.createIntervalNotification = async (req, res) => {
             expireIn: req.body.expireIn,
             number: window.number,
             timezone,
+            reminders: req.body.reminders,
           });
         });
       });
@@ -725,6 +741,7 @@ exports.createIntervalNotification = async (req, res) => {
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
         useParticipantTimezone: req.body.useParticipantTimezone,
+        reminders: req.body.reminders,
       });
 
       if (users && users.length) {
@@ -754,6 +771,7 @@ exports.createIntervalNotification = async (req, res) => {
               expireIn: req.body.expireIn,
               groupid: req.body.groups,
               timezone,
+              reminders: req.body.reminders,
             });
             agenda.schedule(int_end, "end_manager", {
               id: id,
@@ -766,6 +784,7 @@ exports.createIntervalNotification = async (req, res) => {
               expireIn: req.body.expireIn,
               groupid: req.body.groups,
               timezone,
+              reminders: req.body.reminders,
             });
           });
         } else {
@@ -782,6 +801,7 @@ exports.createIntervalNotification = async (req, res) => {
             expireIn: req.body.expireIn,
             groupid: req.body.groups,
             timezone: req.body.timezone,
+            reminders: req.body.reminders,
           });
           agenda.schedule(int_end, "end_manager", {
             id: id,
@@ -794,6 +814,7 @@ exports.createIntervalNotification = async (req, res) => {
             expireIn: req.body.expireIn,
             groupid: req.body.groups,
             timezone: req.body.timezone,
+            reminders: req.body.reminders,
           });
         }
       }
@@ -809,6 +830,7 @@ exports.createIntervalNotification = async (req, res) => {
           expireIn: req.body.expireIn,
           groupid: groups,
           timezone: req.body.timezone,
+          reminders: req.body.reminders,
         });
         agenda.schedule(int_end, "end_manager", {
           id: id,
@@ -820,6 +842,7 @@ exports.createIntervalNotification = async (req, res) => {
           expireIn: req.body.expireIn,
           groupid: groups,
           timezone: req.body.timezone,
+          reminders: req.body.reminders,
         });
       }
     });
@@ -923,6 +946,7 @@ exports.createIndividualNotification = async (req, res) => {
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
       useParticipantTimezone: req.body.useParticipantTimezone,
+      reminders: req.body.reminders,
     });
   });
 
@@ -998,7 +1022,7 @@ exports.createIndividualNotification = async (req, res) => {
           if (parsedInterval[3].includes("*/")) {
             parsedInterval[3] = parsedInterval[3].replace(
               "*",
-              new Date(int_start.getDate())
+              new Date(int_start).getDate()
             );
             updatedInterval = parsedInterval.join(" ");
           }
@@ -1014,6 +1038,7 @@ exports.createIndividualNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           timezone: req.body.timezone,
+          reminders: req.body.reminders,
         });
         agenda.schedule(int_end, "end_personal_manager", {
           groupid: [group],
@@ -1025,6 +1050,7 @@ exports.createIndividualNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           timezone: req.body.timezone,
+          reminders: req.body.reminders,
         });
       });
     });
@@ -1096,7 +1122,7 @@ exports.createIndividualNotification = async (req, res) => {
           if (parsedInterval[3].includes("*/")) {
             parsedInterval[3] = parsedInterval[3].replace(
               "*",
-              new Date(int_start.getDate())
+              new Date(int_start).getDate()
             );
             updatedInterval = parsedInterval.join(" ");
           }
@@ -1128,6 +1154,7 @@ exports.createIndividualNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           timezone,
+          reminders: req.body.reminders,
         });
         agenda.schedule(int_end, "end_personal_manager", {
           userid: [user.id],
@@ -1139,6 +1166,7 @@ exports.createIndividualNotification = async (req, res) => {
           url: req.body.url,
           expireIn: req.body.expireIn,
           timezone,
+          reminders: req.body.reminders,
         });
       });
     });
@@ -1221,6 +1249,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
       useParticipantTimezone: req.body.useParticipantTimezone,
+      reminders: req.body.reminders,
     });
   });
 
@@ -1252,6 +1281,7 @@ exports.createFixedIndividualNotification = async (req, res) => {
             expireIn: req.body.expireIn,
             deleteself: true,
             scheduleid: scheduleId,
+            reminders: req.body.reminders,
           });
         });
       });
@@ -1378,6 +1408,7 @@ async function pickUpRandomTimeFromInterval({
   distance,
   number,
   timezone,
+  reminders,
 }) {
   // get the next execution time
   const cronInstance = new Cron({
@@ -1415,6 +1446,7 @@ async function pickUpRandomTimeFromInterval({
       url: url,
       expireIn: expireIn,
       deleteself: deleteself,
+      reminders,
     });
   });
 
@@ -1433,6 +1465,8 @@ async function sendToSomeProjectUsers({
   notification_id,
   deleteself,
   schedule_id,
+  reminders,
+  finid,
 }) {
   const content = {
     title,
@@ -1501,7 +1535,15 @@ async function sendToSomeProjectUsers({
     );
   }
 
-  await sendMobileNotification(done, content, tokens, project_id, project.name);
+  await sendMobileNotification({
+    done,
+    content,
+    tokens,
+    project_id: project_id,
+    project_name: project.name,
+    reminders,
+    finishid: finid,
+  });
 }
 
 // send the notificaiton to all users who are members of the project (mobileUsers)
@@ -1515,6 +1557,7 @@ async function sendToAllProjectUsers({
   notification_id,
   deleteself,
   excludeUntil,
+  reminders,
 }) {
   const content = {
     title,
@@ -1566,17 +1609,26 @@ async function sendToAllProjectUsers({
     );
   }
 
-  await sendMobileNotification(done, content, tokens, project_id, project.name);
+  await sendMobileNotification({
+    done,
+    content,
+    tokens,
+    project_id,
+    project_name: project.name,
+    reminders,
+  });
 }
 
 // the most simple function to send mobile notification with content to the list of tokens
-async function sendMobileNotification(
+async function sendMobileNotification({
   done,
   content,
   tokens,
   project_id,
-  project_name
-) {
+  project_name,
+  reminders,
+  finishid,
+}) {
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
 
@@ -1628,6 +1680,30 @@ async function sendMobileNotification(
         }
       }
 
+      // schedule reminder notification
+      let finid = finishid;
+      if (reminders && reminders.length) {
+        finid = nanoid(15); // completion id
+
+        reminders.forEach((reminder) => {
+          const timeToComplete = reminder.time; // time to complete before the deadline
+          const deadline = new Date(Date.now() + timeToComplete);
+
+          agenda.schedule(deadline, "personal_notification", {
+            userid: [pushToken.id],
+            projectid: project_id,
+            id: uniqid(),
+            title: reminder.title, // parameter from the user
+            message: reminder.message, // parameter from the user
+            url: updatedUrl, // parameter from the user
+            expireIn: content.expireIn,
+            deleteself: true, // remove not to clutter database
+            scheduleid: finid, // all reminders have the same schedule id to remove it alltogether later
+            finid: finid, // the id to pass further to all reminders
+          });
+        });
+      }
+
       const expireAt = expireIn ? timestampSent + parseInt(expireIn) : null;
 
       return {
@@ -1647,6 +1723,7 @@ async function sendMobileNotification(
         channelId: "default",
         _displayInForeground: true,
         batch: batch,
+        finid: finid,
       };
     })
   );
@@ -1668,6 +1745,7 @@ async function sendMobileNotification(
             messageId: chunk[i].data.messageId,
             events: [{ status: "sent", created: timestampSent }],
             batch: chunk[i].batch,
+            finid: chunk[i].finid, // the schedule id of all job reminders
           });
           await result.save();
         });
@@ -1684,6 +1762,8 @@ async function sendMobileNotification(
   );
   done();
 }
+
+// TODO finish reminders here
 
 // participants join a study on mobile phone, a user id is created if there was no one before
 exports.joinStudy = async (req, res) => {
@@ -1868,6 +1948,7 @@ exports.joinStudy = async (req, res) => {
               expireIn: sub.expireIn,
               number: sub.windowInterval && sub.windowInterval.number,
               timezone: timezone,
+              reminders: sub.reminders,
             });
             agenda.schedule(user_int_end, "end_random_personal_manager", {
               userid: [req.body.id],
@@ -1882,6 +1963,7 @@ exports.joinStudy = async (req, res) => {
               expireIn: sub.expireIn,
               number: sub.windowInterval && sub.windowInterval.number,
               timezone: timezone,
+              reminders: sub.reminders,
             });
           } else {
             let updatedInterval = sub.interval;
@@ -1908,6 +1990,7 @@ exports.joinStudy = async (req, res) => {
               url: sub.url,
               expireIn: sub.expireIn,
               timezone: timezone,
+              reminders: sub.reminders,
             });
             agenda.schedule(user_int_end, "end_personal_manager", {
               userid: [req.body.id],
@@ -1919,6 +2002,7 @@ exports.joinStudy = async (req, res) => {
               url: sub.url,
               expireIn: sub.expireIn,
               timezone: timezone,
+              reminders: sub.reminders,
             });
           }
         } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
@@ -1941,6 +2025,7 @@ exports.joinStudy = async (req, res) => {
                 url: sub.url,
                 expireIn: sub.expireIn,
                 deleteself: true,
+                reminders: sub.reminders,
               });
             }
           }
@@ -1976,6 +2061,7 @@ exports.joinStudy = async (req, res) => {
                   expireIn: sub.expireIn,
                   useParticipantTimezone: sub.useParticipantTimezone,
                   timezone: sub.timezone,
+                  reminders: sub.reminders,
                 }, // {}
                 deleteself: true, // Boolean
                 scheduleid: scheduleId, // String
@@ -2147,7 +2233,7 @@ exports.removeUser = async (req, res) => {
 };
 
 const makeRandomCodeForMessageID = () => {
-  return nanoid(10);
+  return nanoid(15);
 };
 
 const rescheduleRepeatJobs = async () => {
@@ -2278,6 +2364,72 @@ exports.updateTokenInStudy = async (req, res) => {
   res.status(200).json({ message: "OK" });
 };
 
+// record completion of a survey/task and cancel scheduled reminders
+async function registerCompletion({ study, messageid }) {
+  const project = await Project.findOne(
+    { slug: study },
+    {
+      _id: 1,
+      name: 1,
+      description: 1,
+      created: 1,
+      image: 1,
+      completionMessage: 1,
+    }
+  );
+  const result = await Result.findOne({ messageId: messageid }, { finid: 1 });
+
+  let numJobsRemoved = 0;
+
+  if (project && result) {
+    const { finid } = result;
+
+    // cancel the job
+    numJobsRemoved = await agenda.cancel(
+      {
+        "data.projectid": project._id,
+        "data.scheduleid": finid,
+      },
+      (err, numRemoved) => {
+        console.log({ err });
+      }
+    );
+
+    // log the completion of the survey
+    // update the record with completion event (using messageId which is data.id)
+    await Result.findOneAndUpdate(
+      { messageId: messageid },
+      {
+        ["$addToSet"]: {
+          events: { status: "completed", created: Date.now() },
+        },
+      },
+      { upsert: true, new: true }
+    );
+  }
+  return { numJobsRemoved, project };
+}
+
+exports.registerCompletionWithGet = async (req, res) => {
+  const { numJobsRemoved, project } = await registerCompletion({
+    study: req.params.study,
+    messageid: req.params.messageid,
+  });
+  res.render("confirmation", { numJobsRemoved, project });
+};
+
+exports.registerCompletionWithPost = async (req, res) => {
+  const numJobsRemoved = await registerCompletion({
+    study: req.params.study,
+    messageid: req.params.messageid,
+  });
+  if (numJobsRemoved < 1) {
+    res.status(400).send();
+  } else {
+    res.status(200).send();
+  }
+};
+
 async function schedulePersonalNotificationsForUsers({
   date, // String
   users, // Array
@@ -2304,6 +2456,7 @@ async function schedulePersonalNotificationsForUsers({
         expireIn: body.expireIn,
         deleteself: deleteself,
         scheduleid: scheduleid,
+        reminders: body.reminders,
       });
     }
   } else {
@@ -2341,6 +2494,7 @@ async function schedulePersonalNotificationsForUsers({
           expireIn: body.expireIn,
           deleteself: deleteself,
           scheduleid: scheduleid,
+          reminders: body.reminders,
         });
       }
     });
@@ -2402,3 +2556,11 @@ function getDatesInInterval(min, max, number, distance) {
   } while (checkTheMinimalDistance(numbers, adjDistance) && i < 1000);
   return numbers;
 }
+
+// display scheduled jobs
+exports.displayJobs = async (req, res) => {
+  const jobs = await agenda.jobs({
+    "data.projectid": req.user.project._id,
+  });
+  res.render("jobs", { jobs });
+};
