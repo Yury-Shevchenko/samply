@@ -587,7 +587,7 @@ exports.createIntervalNotification = async (req, res) => {
     }
 
     if (users) {
-      users.map(async (user) => {
+      await users.map(async (user) => {
         await intervalWindows.map(async (window) => {
           if (req.body.int_start.startEvent === "registration") {
             if (req.body.int_start.startNextDay) {
@@ -687,8 +687,6 @@ exports.createIntervalNotification = async (req, res) => {
             }
           }
 
-          console.log("timezone", timezone);
-
           agenda.schedule(int_start, "start_random_personal_manager", {
             userid: [user.id],
             projectid: req.user.project._id,
@@ -719,6 +717,8 @@ exports.createIntervalNotification = async (req, res) => {
             timezone,
             reminders: req.body.reminders,
           });
+
+          console.log("scheduled for timezone", timezone);
         });
       });
     }
