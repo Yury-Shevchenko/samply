@@ -687,6 +687,8 @@ exports.createIntervalNotification = async (req, res) => {
             }
           }
 
+          console.log("timezone", timezone);
+
           agenda.schedule(int_start, "start_random_personal_manager", {
             userid: [user.id],
             projectid: req.user.project._id,
