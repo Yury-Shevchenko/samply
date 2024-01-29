@@ -22,6 +22,7 @@ const agenda = new Agenda({
   name: "samply-notifications",
   db: { address: process.env.DATABASE, collection: "Job" },
 });
+exports.agenda = agenda;
 
 agenda.on("ready", function () {
   agenda.define("one_time_notification", (job, done) => {

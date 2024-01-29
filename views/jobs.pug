@@ -3,6 +3,59 @@ extends layout
 block content
   
   .inner
+    .userTable  
 
-    //- pre= h.dump(user)      
-    pre= h.dump(jobs)        
+      h2 Scheduled jobs
+      
+      table.table
+        thead
+          td N.
+          td Name 
+          td lockedAt
+          td lastRunAt
+          td nextRunAt 
+          td repeatInterval 
+          td userid
+          td groupid
+          td interval
+          td interval_max
+          td distance
+          td title
+          td message
+          td url
+          td expireIn
+          td timezone
+          td reminders
+
+        each job, i in jobs
+          tr 
+            td #{i + 1}
+            td= JSON.parse(JSON.stringify(job)).name
+            if (JSON.parse(JSON.stringify(job)).lockedAt)
+              td= h.moment.utc(JSON.parse(JSON.stringify(job)).lockedAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
+            else 
+              td
+            if (JSON.parse(JSON.stringify(job)).lastRunAt)
+              td= h.moment.utc(JSON.parse(JSON.stringify(job)).lastRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss') 
+            else 
+              td
+            if (JSON.parse(JSON.stringify(job)).nextRunAt)
+              td= h.moment.utc(JSON.parse(JSON.stringify(job)).nextRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
+            else 
+              td
+            td= JSON.parse(JSON.stringify(job)).repeatInterval
+            td= JSON.parse(JSON.stringify(job)).data.userid
+            td= JSON.parse(JSON.stringify(job)).data.groupid
+            td= JSON.parse(JSON.stringify(job)).data.interval
+            td= JSON.parse(JSON.stringify(job)).data.interval_max
+            td= JSON.parse(JSON.stringify(job)).data.distance
+            td= JSON.parse(JSON.stringify(job)).data.title
+            td= JSON.parse(JSON.stringify(job)).data.message
+            td
+                a(style="border-bottom: 2px solid #FFC40E;" href=JSON.parse(JSON.stringify(job)).data.url target="blank_") Link  
+            td= JSON.parse(JSON.stringify(job)).data.expireIn 
+            td= JSON.parse(JSON.stringify(job)).data.timezone
+            td= JSON.stringify(JSON.parse(JSON.stringify(job)).data.reminders)
+
+
+    pre= h.dump(jobs)

@@ -14,10 +14,12 @@ const helpers = require("./helpers");
 const errorHandlers = require("./handlers/errorHandlers");
 require("./handlers/passport");
 const language = require("./config/lang");
+const authController = require("./controllers/authController");
 const userController = require("./controllers/userController");
 const paymentController = require("./controllers/paymentController");
+const jobController = require("./controllers/jobController");
 const crypto = require("crypto");
-const Agenda = require("agenda");
+
 const Agendash = require("agendash");
 
 const app = express();
@@ -122,6 +124,12 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+app.use(
+  "/dash",
+  authController.isSuperAdminLoggedIn,
+  Agendash(jobController.agenda)
+);
 
 app.use((req, res, next) => {
   req.login = promisify(req.login, req);
