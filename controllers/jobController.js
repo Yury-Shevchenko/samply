@@ -679,6 +679,10 @@ exports.createIntervalNotification = async (req, res) => {
               participant.information &&
               participant.information.timezone
             ) {
+              console.log(
+                "participant.information.timezone",
+                participant.information.timezone
+              );
               timezone = participant.information.timezone;
             }
           }
