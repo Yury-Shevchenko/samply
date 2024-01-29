@@ -408,6 +408,8 @@ exports.createIntervalNotification = async (req, res) => {
     }
   }
 
+  console.log({ users });
+
   // check groups
   let groups;
   if (req.body.groups) {
@@ -588,6 +590,7 @@ exports.createIntervalNotification = async (req, res) => {
 
     if (users) {
       users.map(async (user) => {
+        console.log({ user });
         intervalWindows.map(async (window) => {
           if (req.body.int_start.startEvent === "registration") {
             if (req.body.int_start.startNextDay) {
