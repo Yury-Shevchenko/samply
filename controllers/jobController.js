@@ -605,6 +605,7 @@ exports.createIntervalNotification = async (req, res) => {
                   });
               }
               int_start = whenToStart.toISOString();
+              console.log("608 ", user.created, int_start);
             } else {
               const start_event_ms = moment
                 .duration({
