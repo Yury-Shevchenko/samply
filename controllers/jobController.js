@@ -587,140 +587,142 @@ exports.createIntervalNotification = async (req, res) => {
     }
 
     if (users) {
-      await users.map(async (user) => {
-        await intervalWindows.map(async (window) => {
-          if (req.body.int_start.startEvent === "registration") {
-            if (req.body.int_start.startNextDay) {
-              const startNextDay = parseInt(req.body.int_start.startNextDay);
-              let whenToStart;
-              if (startNextDay == 1) {
-                whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-              } else {
-                whenToStart = moment(user.created)
-                  .add({ days: startNextDay - 1 })
-                  .startOf("day")
-                  .add({
-                    minutes: Math.floor(Math.random() * 10),
-                    seconds: Math.floor(Math.random() * 60),
-                  });
+      await Promise.all(
+        users.map(async (user) => {
+          const participant = await User.findOne(
+            { samplyId: user.id },
+            { information: 1 }
+          );
+
+          await Promise.all(
+            intervalWindows.map(async (window) => {
+              if (req.body.int_start.startEvent === "registration") {
+                if (req.body.int_start.startNextDay) {
+                  const startNextDay = parseInt(
+                    req.body.int_start.startNextDay
+                  );
+                  let whenToStart;
+                  if (startNextDay == 1) {
+                    whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+                  } else {
+                    whenToStart = moment(user.created)
+                      .add({ days: startNextDay - 1 })
+                      .startOf("day")
+                      .add({
+                        minutes: Math.floor(Math.random() * 10),
+                        seconds: Math.floor(Math.random() * 60),
+                      });
+                  }
+                  int_start = whenToStart.toISOString();
+                } else {
+                  const start_event_ms = moment
+                    .duration({
+                      days: req.body.int_start.startAfter.days,
+                      hours: req.body.int_start.startAfter.hours,
+                      minutes: req.body.int_start.startAfter.minutes,
+                    })
+                    .asMilliseconds();
+                  int_start = new Date(
+                    Date.parse(user.created) + start_event_ms
+                  );
+                }
               }
-              int_start = whenToStart.toISOString();
-              console.log("608 ", user.created, int_start);
-            } else {
-              const start_event_ms = moment
-                .duration({
-                  days: req.body.int_start.startAfter.days,
-                  hours: req.body.int_start.startAfter.hours,
-                  minutes: req.body.int_start.startAfter.minutes,
-                })
-                .asMilliseconds();
-              int_start = new Date(Date.parse(user.created) + start_event_ms);
-            }
-          }
 
-          if (req.body.int_end.stopEvent === "registration") {
-            if (req.body.int_end.stopNextDay) {
-              const endNextDay = parseInt(req.body.int_end.stopNextDay);
-              const whenToEnd = moment(user.created)
-                .add({ days: endNextDay })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60),
-                });
-              int_end = whenToEnd.toISOString();
-            } else {
-              const stop_event_ms = moment
-                .duration({
-                  days: req.body.int_end.stopAfter.days,
-                  hours: req.body.int_end.stopAfter.hours,
-                  minutes: req.body.int_end.stopAfter.minutes,
-                })
-                .asMilliseconds();
-              int_end = new Date(Date.parse(user.created) + stop_event_ms);
-            }
-          }
+              if (req.body.int_end.stopEvent === "registration") {
+                if (req.body.int_end.stopNextDay) {
+                  const endNextDay = parseInt(req.body.int_end.stopNextDay);
+                  const whenToEnd = moment(user.created)
+                    .add({ days: endNextDay })
+                    .startOf("day")
+                    .add({
+                      minutes: Math.floor(Math.random() * 10),
+                      seconds: Math.floor(Math.random() * 60),
+                    });
+                  int_end = whenToEnd.toISOString();
+                } else {
+                  const stop_event_ms = moment
+                    .duration({
+                      days: req.body.int_end.stopAfter.days,
+                      hours: req.body.int_end.stopAfter.hours,
+                      minutes: req.body.int_end.stopAfter.minutes,
+                    })
+                    .asMilliseconds();
+                  int_end = new Date(Date.parse(user.created) + stop_event_ms);
+                }
+              }
 
-          let windowFrom = window.from;
-          let windowTo = window.to;
-          let distance = window.distance || 0;
+              let windowFrom = window.from;
+              let windowTo = window.to;
+              let distance = window.distance || 0;
 
-          // update interval if there is missing information
-          if (windowFrom && windowFrom.includes("*/")) {
-            let parsedFrom = windowFrom.split(" ");
-            if (parsedFrom[3].includes("*/")) {
-              parsedFrom[3] = parsedFrom[3].replace(
-                "*",
-                new Date(int_start).getDate()
-              );
-              windowFrom = parsedFrom.join(" ");
-            }
-          }
-          if (windowTo && windowTo.includes("*/")) {
-            let parsedTo = windowTo.split(" ");
-            if (parsedTo[3].includes("*/")) {
-              parsedTo[3] = parsedTo[3].replace(
-                "*",
-                new Date(int_start).getDate()
-              );
-              windowTo = parsedTo.join(" ");
-            }
-          }
+              // update interval if there is missing information
+              if (windowFrom && windowFrom.includes("*/")) {
+                let parsedFrom = windowFrom.split(" ");
+                if (parsedFrom[3].includes("*/")) {
+                  parsedFrom[3] = parsedFrom[3].replace(
+                    "*",
+                    new Date(int_start).getDate()
+                  );
+                  windowFrom = parsedFrom.join(" ");
+                }
+              }
+              if (windowTo && windowTo.includes("*/")) {
+                let parsedTo = windowTo.split(" ");
+                if (parsedTo[3].includes("*/")) {
+                  parsedTo[3] = parsedTo[3].replace(
+                    "*",
+                    new Date(int_start).getDate()
+                  );
+                  windowTo = parsedTo.join(" ");
+                }
+              }
 
-          let timezone = req.body.timezone;
-          // select timezone based on the user timezone
-          if (req.body.useParticipantTimezone) {
-            const participant = await User.findOne(
-              { samplyId: user.id },
-              { information: 1 }
-            );
-            if (
-              participant &&
-              participant.information &&
-              participant.information.timezone
-            ) {
-              console.log(
-                "participant.information.timezone",
-                participant.information.timezone
-              );
-              timezone = participant.information.timezone;
-            }
-          }
+              let timezone = req.body.timezone;
+              // select timezone based on the user timezone
+              if (req.body.useParticipantTimezone) {
+                if (
+                  participant &&
+                  participant.information &&
+                  participant.information.timezone
+                ) {
+                  timezone = participant.information.timezone;
+                }
+              }
 
-          agenda.schedule(int_start, "start_random_personal_manager", {
-            userid: [user.id],
-            projectid: req.user.project._id,
-            id: id,
-            interval: windowFrom,
-            interval_max: windowTo,
-            distance: distance,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            number: window.number,
-            timezone,
-            reminders: req.body.reminders,
-          });
-          agenda.schedule(int_end, "end_random_personal_manager", {
-            userid: [user.id],
-            projectid: req.user.project._id,
-            id: id,
-            interval: windowFrom,
-            interval_max: windowTo,
-            distance: distance,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            number: window.number,
-            timezone,
-            reminders: req.body.reminders,
-          });
-
-          console.log("scheduled for timezone", timezone);
-        });
-      });
+              agenda.schedule(int_start, "start_random_personal_manager", {
+                userid: [user.id],
+                projectid: req.user.project._id,
+                id: id,
+                interval: windowFrom,
+                interval_max: windowTo,
+                distance: distance,
+                title: req.body.title,
+                message: req.body.message,
+                url: req.body.url,
+                expireIn: req.body.expireIn,
+                number: window.number,
+                timezone,
+                reminders: req.body.reminders,
+              });
+              agenda.schedule(int_end, "end_random_personal_manager", {
+                userid: [user.id],
+                projectid: req.user.project._id,
+                id: id,
+                interval: windowFrom,
+                interval_max: windowTo,
+                distance: distance,
+                title: req.body.title,
+                message: req.body.message,
+                url: req.body.url,
+                expireIn: req.body.expireIn,
+                number: window.number,
+                timezone,
+                reminders: req.body.reminders,
+              });
+            })
+          );
+        })
+      );
     }
   } else {
     const intervals = req.body.interval;
