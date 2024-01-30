@@ -1068,6 +1068,11 @@ exports.createIndividualNotification = async (req, res) => {
 
   if (users) {
     users.map(async (user) => {
+      const participant = await User.findOne(
+        { samplyId: user.id },
+        { information: 1 }
+      );
+
       intervals.map(async (interval) => {
         let updatedInterval = interval;
 
@@ -1141,10 +1146,6 @@ exports.createIndividualNotification = async (req, res) => {
         let timezone = req.body.timezone;
         // select timezone based on the user timezone
         if (req.body.useParticipantTimezone) {
-          const participant = await User.findOne(
-            { samplyId: user.id },
-            { information: 1 }
-          );
           if (
             participant &&
             participant.information &&
