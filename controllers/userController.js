@@ -151,8 +151,15 @@ exports.getMyStudies = async (req, res) => {
     }
   );
   let studies = [];
+  let userStudyIds = [];
   if (user) {
-    studies = user.participant_projects;
+    userStudyIds = user.participant_projects.map((study) => study.id);
+    if (userStudyIds.length) {
+      studies = await Project.find(
+        { _id: userStudyIds },
+        { name: 1, description: 1, image: 1 }
+      );
+    }
   }
   res.status(200).json({ message: "OK", studies: studies });
 };
