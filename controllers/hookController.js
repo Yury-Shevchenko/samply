@@ -98,10 +98,10 @@ exports.resetNotifyToken = async (req, res) => {
 };
 
 exports.notify = async (req, res) => {
-  // 1. Parse request and get all information
-  const { token, projectID, groupID, participantID } = req.body;
+  // Parse request and get all information
+  const { token, projectID, groupID, participantID, expireIn } = req.body;
 
-  // 2. Go to the database and find the project and the participant group (project ID, group ID, participant ID)
+  // Find the project and the participant group (project ID, group ID, participant ID)
   const project = await Project.findOne(
     {
       _id: projectID,
@@ -111,14 +111,14 @@ exports.notify = async (req, res) => {
     { mobileUsers: 1, name: 1, notifyInformation: 1 }
   );
 
-  // if there is no project, return non-authorized response
+  // If there is no project, return non-authorized response
   if (!project) {
     return res.send("401");
   }
 
   let users = project.mobileUsers;
 
-  //4. Extract the IDs of other people in the group
+  // Extract the IDs of other people in the group
   const tokens = users
     .filter((user) => user && user.group && user.group.id === groupID)
     .filter((user) => user && user.id !== participantID)
@@ -164,6 +164,7 @@ exports.notify = async (req, res) => {
         message: content.message,
         url: customizedUrl,
         messageId,
+        expireAt: expireIn ? Date.now() + parseInt(expireIn) : null,
       },
       id: pushToken.id,
       priority: "high",
