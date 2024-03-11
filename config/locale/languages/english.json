@@ -798,6 +798,7 @@
 		"how_to_participate": "How to participate in the study",
 		"info": "Information about the study",
 		"no_tests_in_study": "There are no publicly available tasks in this study.",
+		"projectCodeInvalid": "The project code is invalid",
 		"scanQRcode": "Scan this QR code to join the study in the mobile app"
 	},
 	"testing": {

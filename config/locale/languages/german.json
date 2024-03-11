@@ -798,6 +798,7 @@
 		"how_to_participate": "Teilnahme an der Studie",
 		"info": "Information über die Studie",
 		"no_tests_in_study": "Es gibt keine öffentlich verfügbaren Tests in dieser Studie.",
+		"projectCodeInvalid": "Der Projektcode ist ungültig",
 		"scanQRcode": "Scannen Sie diesen QR-Code, um an der Studie in der mobilen App teilzunehmen"
 	},
 	"testing": {

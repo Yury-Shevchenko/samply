@@ -798,6 +798,7 @@
 		"how_to_participate": "Hoe deel te nemen aan het onderzoek",
 		"info": "Informatie over het onderzoek",
 		"no_tests_in_study": "Er zijn geen openbaar beschikbare taken in dit onderzoek.",
+		"projectCodeInvalid": "De projectcode is ongeldig",
 		"scanQRcode": "Scan deze QR-code om deel te nemen aan het onderzoek in de app"
 	},
 	"testing": {

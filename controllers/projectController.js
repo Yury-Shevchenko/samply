@@ -156,6 +156,7 @@ exports.showProjectDescription = async (req, res) => {
       {
         name: 1,
         institute: 1,
+        // email: 1,
       }
     );
     res.render("study", { project, author });

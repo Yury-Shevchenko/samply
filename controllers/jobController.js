@@ -2388,7 +2388,10 @@ async function registerCompletion({ study, messageid }) {
       completionMessage: 1,
     }
   );
-  const result = await Result.findOne({ messageId: messageid }, { finid: 1 });
+  const result = await Result.findOne(
+    { messageId: messageid, project: project?._id },
+    { finid: 1 }
+  );
 
   let numJobsRemoved = 0;
 
@@ -2418,15 +2421,15 @@ async function registerCompletion({ study, messageid }) {
       { upsert: true, new: true }
     );
   }
-  return { numJobsRemoved, project };
+  return { project, result, numJobsRemoved };
 }
 
 exports.registerCompletionWithGet = async (req, res) => {
-  const { numJobsRemoved, project } = await registerCompletion({
+  const { project, result, numJobsRemoved } = await registerCompletion({
     study: req.params.study,
     messageid: req.params.messageid,
   });
-  res.render("confirmation", { numJobsRemoved, project });
+  res.render("confirmation", { project, result, numJobsRemoved });
 };
 
 exports.registerCompletionWithPost = async (req, res) => {

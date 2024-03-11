@@ -4,26 +4,31 @@ block content
 
   .inner
 
-    if numJobsRemoved === 0
+    if !project
+      .flash(class=`flash--error`) #{l.projectCodeInvalid} 
+
+    if !result
       .flash(class=`flash--error`) #{l.completionCodeInvalid}
 
-    else 
+    if project && result
       .flash(class=`flash--success`)
-        if(project.completionMessage)
+        if(project && project.completionMessage)
           div= project.completionMessage
         else 
           div #{l.completionMessage} 
-
-    .card     
-      .studyDescription
-        .header
-          h4= project.name
-          div= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
-          p(style="color: #3b4051") !{project.description}
-        if project.image
-          .div
-            img(src=`${project.image}`, alt=project.name width=200)
+    
+    if project
+      .card     
+        .studyDescription
+          .header
+            h4= project.name
+            div= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
+            p(style="color: #3b4051") !{project.description}
+          if project.image
+            .div
+              img(src=`${project.image}`, alt=project.name width=200)
         
     //- pre= h.dump(numJobsRemoved)
     //- pre=h.dump(project)
+    //- pre=h.dump(result)
       

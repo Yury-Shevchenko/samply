@@ -9,6 +9,7 @@ block content
           div= `${l.created} ${h.moment(project.created).locale(language).fromNow()}`
           if(author && (author.name || author.institute))  
             div= author.name
+            //- div= author.email
             div= author.institute
           p(style="color: #3b4051") !{project.description}
         if project.image
@@ -46,3 +47,4 @@ block content
           button.button= l.goToStudy
 
       //- pre=h.dump(project)
+      pre=h.dump(author)
