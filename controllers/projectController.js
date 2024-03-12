@@ -621,6 +621,7 @@ exports.getPublicStudy = async (req, res) => {
         settings: 1,
         samplycode: 1,
         mobileUsers: 1,
+        creator: 1,
       }
     );
   } else {
@@ -636,9 +637,19 @@ exports.getPublicStudy = async (req, res) => {
         settings: 1,
         samplycode: 1,
         mobileUsers: 1,
+        creator: 1,
       }
     );
   }
+  const author = await User.findOne(
+    { _id: study.creator },
+    {
+      name: 1,
+      institute: 1,
+      email: 1,
+    }
+  );
+
   if (!study) {
     return res.send({ error: "No study found" });
   }
@@ -649,6 +660,7 @@ exports.getPublicStudy = async (req, res) => {
   const studyUser = {
     ...study._doc,
     participant,
+    author,
   };
 
   delete studyUser.mobileUsers;
