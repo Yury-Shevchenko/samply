@@ -54,7 +54,7 @@ router.post(
 router.post(
   "/auth/researcher/email/register",
   passport.authenticate("website-signup-researcher", {
-    successRedirect: "/projects",
+    successRedirect: "/newproject",
     failureRedirect: "/researcher/register",
     failureFlash: true,
   })
@@ -72,7 +72,7 @@ router.post(
 router.post(
   "/auth/participant/email/login",
   passport.authenticate("website-login", {
-    successRedirect: "/account",
+    successRedirect: "/",
     failureRedirect: "/researcher/login",
     failureFlash: true,
   })
@@ -121,6 +121,7 @@ router.get(
 
 // project controller
 router.get("/", catchErrors(projectController.welcomePage));
+router.get("/about", catchErrors(projectController.welcomePage));
 router.get("/participants", catchErrors(projectController.welcomePage));
 router.get("/studies", catchErrors(projectController.listPublicProjects));
 router.get(
@@ -148,6 +149,11 @@ router.get(
   catchErrors(projectController.activateParticipantProject)
 );
 
+router.get(
+  "/newproject",
+  authController.isAdminLoggedIn,
+  catchErrors(projectController.createNewProject)
+);
 router.get(
   "/projects",
   authController.isAdminLoggedIn,
@@ -409,6 +415,30 @@ router.get(
 );
 
 // see scheduled notifications
-router.get("/scheduled", authController.isLoggedIn, jobController.displayJobs);
+router.get(
+  "/scheduled",
+  authController.isLoggedIn,
+  jobController.displayScheduled
+);
+router.get(
+  "/scheduled/view/:id",
+  authController.isLoggedIn,
+  jobController.displayJobs
+);
+router.get(
+  "/scheduled/view/:id/:jobid",
+  authController.isLoggedIn,
+  jobController.getSpecificJob
+);
+router.get(
+  "/scheduled/delete/:id/:jobid",
+  authController.isLoggedIn,
+  jobController.removeJob
+);
+router.post(
+  "/scheduled/update/",
+  authController.isLoggedIn,
+  jobController.editJob
+);
 
 module.exports = router;

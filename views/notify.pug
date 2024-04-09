@@ -499,20 +499,22 @@ block content
               
             }
           })
-        
+    
+    p 
+      a(href=`/scheduled` target="_blank") #{l.scheduledLink}
   
-    if (project && project.notifications && project.notifications.length > 0)
-      .card
-        h2 #{l.scheduled_notifications} 
+    //- if (project && project.notifications && project.notifications.length > 0)
+    //-   .card
+    //-     h2 #{l.scheduled_notifications} 
         
-        .reviews
-          each notification, i in project.notifications
-            .review
-              +scheduledNotification(notification, i)  
+    //-     .reviews
+    //-       each notification, i in project.notifications
+    //-         .review
+    //-           +scheduledNotification(notification, i)  
 
-        p  
-        button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
-        script(type='text/javascript', src='/notifications/scheduled.js' nonce=`${noncevalue}`)
+    //-     p  
+    //-     button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
+    //-     script(type='text/javascript', src='/notifications/scheduled.js' nonce=`${noncevalue}`)
 
 
     //- pre=h.dump(project)

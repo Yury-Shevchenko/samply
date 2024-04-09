@@ -1,0 +1,96 @@
+extends layout
+
+include mixins/_scheduledNotification
+
+block content
+
+  script(src='/javascripts/modules/moment.js' nonce=`${noncevalue}`)
+  
+  .inner
+
+    .userTable  
+    
+      if !job 
+        h2 #{l.noScheduledJob} 
+
+      else
+
+        h2 #{l.scheduledJob} 
+
+        table.table
+          tr
+            td #{l.job_type}  
+            td= `${l[types[JSON.parse(JSON.stringify(job)).name]]}`
+
+          tr
+            td #{l.participants}  
+            td= JSON.parse(JSON.stringify(job)).data.userid
+
+          tr
+            td #{l.groups}  
+            td= JSON.parse(JSON.stringify(job)).data.groupid
+
+          tr
+            td #{l.timezone} 
+            td= JSON.parse(JSON.stringify(job)).data.timezone
+
+          tr
+            td= `${l.table_expireIn}`
+            if JSON.parse(JSON.stringify(job)).data.expireIn
+              td= `${Math.floor(h.moment.duration(JSON.parse(JSON.stringify(job)).data.expireIn).asHours())}:${h.moment.utc(JSON.parse(JSON.stringify(job)).data.expireIn).format("mm:ss")}` 
+            else 
+              td
+          
+          tr
+            td= `${l.table_reminders}` 
+            if(JSON.parse(JSON.stringify(job)).data.reminders && JSON.parse(JSON.stringify(job)).data.reminders.length)
+              td
+                each reminder, i in JSON.parse(JSON.stringify(job)).data.reminders
+                  span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after} ${Math.floor(h.moment.duration(reminder.time).asHours())}:${h.moment.utc(reminder.time).format("mm:ss")}`
+            else 
+              td
+
+        input(type="text" name="jobid" value= JSON.parse(JSON.stringify(job))._id hidden)
+        input(type="text" name="timezone" value= JSON.parse(JSON.stringify(job)).timezone hidden)
+
+        p #{l.job_canEdit}  
+
+        label(for="title") #{l.title}  
+        input(type="text" name="title" value= JSON.parse(JSON.stringify(job)).data.title ||'')
+
+        label(for="message") #{l.message} 
+        input(type="text" name="message" value= JSON.parse(JSON.stringify(job)).data.message ||'')
+
+        label(for="url") #{layout.web_link} 
+        input(type="text" name="url" value= JSON.parse(JSON.stringify(job)).data.url ||'')
+
+        label(for="expireIn") #{l.table_expireIn} (milliseconds)
+        input(type="number" name="expireIn"  value= JSON.parse(JSON.stringify(job)).data.expireIn ||'')
+
+        label(for="nextRunAt") #{l.job_nextRun} 
+        div= h.moment.utc(JSON.parse(JSON.stringify(job)).nextRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
+        
+        .timeTableFull
+
+          span #{l.step_5_day} 
+          span #{l.step_5_month} 
+          span #{l.step_5_year} 
+          span #{l.step_5_hour} 
+          span #{l.step_5_minute} 
+          span #{l.step_5_second}
+
+          input(name="nextRunDay" class='datePickerInput datePickerDay' type='number' min=1 max=31 value=h.moment(JSON.parse(JSON.stringify(job)).nextRunAt).date()) 
+          input(name="nextRunMonth" class='datePickerInput datePickerMonth' type='number' min=1 max=12 value=h.moment(JSON.parse(JSON.stringify(job)).nextRunAt).month() + 1)  
+          input(name="nextRunYear" class='datePickerInput datePickerYear' type='number' value=h.moment(JSON.parse(JSON.stringify(job)).nextRunAt).year()) 
+          input(name="nextRunHour" class='timePickerHour' type='number' min=0 max=23 value=h.moment(JSON.parse(JSON.stringify(job)).nextRunAt).hour()) 
+          input(name="nextRunMinute" class='timePickerMinute' type='number' min=0 max=59 value=h.moment(JSON.parse(JSON.stringify(job)).nextRunAt).minute()) 
+          input(name="nextRunSecond" class='datePickerInput datePickerYear' type='number' min=0 max=59 value=h.moment(JSON.parse(JSON.stringify(job)).nextRunAt).second()) 
+        
+        p
+        
+        button(id="updateJobBtn" class="button") #{l.save} 
+
+        script(type='text/javascript', src='/notifications/updateJob.js' nonce=`${noncevalue}`)
+        
+
+    //- pre= h.dump(job)

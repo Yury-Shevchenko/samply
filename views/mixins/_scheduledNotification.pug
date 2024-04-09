@@ -1,4 +1,4 @@
-mixin scheduledNotification(notification, i)
+mixin scheduledNotification(notification, i, showLinkToJobs)
   .review__header
     .review__author
       p= `${l.table_created_at} ${h.moment.utc(notification.created).local().locale(language).format('MMMM Do YYYY, H:mm')}`
@@ -11,15 +11,14 @@ mixin scheduledNotification(notification, i)
     .review__author
       a(style="border-bottom: 2px solid #FFC40E;" href=notification.url target="_blank") Link
     .review__author
-      a(href=`/removenotification/${notification.id}`)
-        != h.icon('remove')
+      a(style="border-bottom: 2px solid #FFC40E;" href=`/removenotification/${notification.id}`) Delete
         
   
   if(notification.timezone)
     
     .review__body
     
-      span= `Timezone: ${h.moment.tz.zone(notification.timezone).name}`
+      span= `${l.timezone} ${h.moment.tz.zone(notification.timezone).name}`
       if(notification.useParticipantTimezone)  
         span= l.table_adjusting_timezone
           
@@ -65,10 +64,13 @@ mixin scheduledNotification(notification, i)
         span= `${l.table_randomized}` 
       if(notification.scheduleInFuture)  
         span= `${l.table_future_participants}` 
+      if(notification.expireIn)  
+        span= `${l.table_expireIn} ${Math.floor(h.moment.duration(notification.expireIn).asHours())}:${h.moment.utc(notification.expireIn).format("mm:ss")}` 
       if(notification.reminders && notification.reminders.length) 
         span= `${l.table_reminders}`  
         each reminder, i in notification.reminders 
-          span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after}: ${h.moment.utc(reminder.time).format('HH:mm:ss')}`
+          span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after} ${Math.floor(h.moment.duration(reminder.time).asHours())}:${h.moment.utc(reminder.time).format("mm:ss")}`
+
 
   else 
     
@@ -116,8 +118,14 @@ mixin scheduledNotification(notification, i)
         span= `${l.table_randomized}` 
       if(notification.scheduleInFuture)  
         span= `${l.table_future_participants}` 
+      if(notification.expireIn)  
+        span= `${l.table_expireIn} ${Math.floor(h.moment.duration(notification.expireIn).asHours())}:${h.moment.utc(notification.expireIn).format("mm:ss")}` 
       if(notification.reminders && notification.reminders.length) 
         span= `${l.table_reminders}`  
         each reminder, i in notification.reminders 
-          span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after}: ${h.moment.utc(reminder.time).format('HH:mm:ss')}`
+          span= `${l.table_reminder} ${i+1} ${l.table_reminder_title}: ${reminder.title}; ${l.table_reminder_message}: ${reminder.message}; ${l.table_reminder_sent_after} ${Math.floor(h.moment.duration(reminder.time).asHours())}:${h.moment.utc(reminder.time).format("mm:ss")}`
 
+  if showLinkToJobs
+    .review__header
+      p
+        a(href=`/scheduled/view/${notification.id}`) #{l.seeAllJobs}

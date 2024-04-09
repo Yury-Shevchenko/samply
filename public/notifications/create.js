@@ -483,7 +483,7 @@ function createNotification() {
       (container) => {
         const time =
           24 * 60 * 60000 * container.querySelector(".reminderDays").value +
-          60 * 60000 * container.querySelector(".reminderHours").value * 60 +
+          60 * 60000 * container.querySelector(".reminderHours").value +
           60000 * container.querySelector(".reminderMinutes").value;
         if (
           container.querySelector(".reminderTitle").value == "" ||

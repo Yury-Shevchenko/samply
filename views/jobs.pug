@@ -1,61 +1,76 @@
 extends layout
 
+include mixins/_scheduledNotification
+
 block content
   
   .inner
+
+    if !project
+      .card 
+        p !{l.message_create_project}
+
+    if (project && project.notifications && project.notifications.length > 0)
+      .card
+
+        p 
+          a(href=`/scheduled`) #{l.scheduledLink}
+        h2 #{l.scheduled_notification} 
+        
+        .reviews
+          each notification, i in project.notifications
+            .review
+              +scheduledNotification(notification, i, false)  
+
     .userTable  
 
-      h2 Scheduled jobs
-      
+      h2 #{l.scheduledJobs}
+
+      div #{l.job_description_1} 
+        ul
+          li #{l.job_description_2}  
+          li #{l.job_description_3}  
+          li #{l.job_description_4}  
+          li #{l.job_description_5}  
+          li #{l.job_description_6}  
+      div 
+        p !{l.job_description_7} 
+      div
+        p #{l.job_description_8}  
+      p 
+
       table.table
         thead
+          td #{l.job_edit}
           td N.
-          td Name 
-          td lockedAt
-          td lastRunAt
-          td nextRunAt 
-          td repeatInterval 
-          td userid
-          td groupid
-          td interval
-          td interval_max
-          td distance
-          td title
-          td message
-          td url
-          td expireIn
-          td timezone
-          td reminders
+          td #{l.job_type}  
+          td #{l.job_nextRun} 
+          td #{l.job_lastRun} 
+          td #{l.job_interval}  
+          td #{l.job_userID} 
+          td #{l.job_groupID} 
+          td #{l.job_delete} 
 
         each job, i in jobs
           tr 
+            td 
+              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_edit}
+
             td #{i + 1}
-            td= JSON.parse(JSON.stringify(job)).name
-            if (JSON.parse(JSON.stringify(job)).lockedAt)
-              td= h.moment.utc(JSON.parse(JSON.stringify(job)).lockedAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
+            td= `${l[types[JSON.parse(JSON.stringify(job)).name]]}`
+            if (JSON.parse(JSON.stringify(job)).nextRunAt)
+              td= h.moment.utc(JSON.parse(JSON.stringify(job)).nextRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
             else 
               td
             if (JSON.parse(JSON.stringify(job)).lastRunAt)
               td= h.moment.utc(JSON.parse(JSON.stringify(job)).lastRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss') 
             else 
               td
-            if (JSON.parse(JSON.stringify(job)).nextRunAt)
-              td= h.moment.utc(JSON.parse(JSON.stringify(job)).nextRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
-            else 
-              td
             td= JSON.parse(JSON.stringify(job)).repeatInterval
             td= JSON.parse(JSON.stringify(job)).data.userid
             td= JSON.parse(JSON.stringify(job)).data.groupid
-            td= JSON.parse(JSON.stringify(job)).data.interval
-            td= JSON.parse(JSON.stringify(job)).data.interval_max
-            td= JSON.parse(JSON.stringify(job)).data.distance
-            td= JSON.parse(JSON.stringify(job)).data.title
-            td= JSON.parse(JSON.stringify(job)).data.message
-            td
-                a(style="border-bottom: 2px solid #FFC40E;" href=JSON.parse(JSON.stringify(job)).data.url target="blank_") Link  
-            td= JSON.parse(JSON.stringify(job)).data.expireIn 
-            td= JSON.parse(JSON.stringify(job)).data.timezone
-            td= JSON.stringify(JSON.parse(JSON.stringify(job)).data.reminders)
+            td 
+              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/delete/${id}/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_delete} 
 
-
-    pre= h.dump(jobs)
+    //- pre= h.dump(jobs)
+    

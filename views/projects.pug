@@ -1,7 +1,7 @@
 extends layout
 
 include mixins/_projectCard
-include mixins/_projectForm
+//- include mixins/_projectForm
 
 block content
   .inner
@@ -18,8 +18,8 @@ block content
         each invitedproject in invitedprojects
           +projectCard(invitedproject)
 
-    .card
-      h5 #{l.title_new}
+    //- .card
+    //-   h5 #{l.title_new}
       
-      +projectForm()
+    //-   +projectForm()
       

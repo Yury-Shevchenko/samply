@@ -1,0 +1,31 @@
+extends layout
+
+include mixins/_scheduledNotification
+
+block content
+
+  .inner
+
+    if !project
+      .card 
+        p !{l.message_create_project}
+
+    else 
+
+      if (project && project.notifications && project.notifications.length > 0)
+        .card
+          h2 #{l.scheduled_notifications} 
+          
+          .reviews
+            each notification, i in project.notifications
+              .review
+                +scheduledNotification(notification, i, true)  
+
+          p  
+          button(id="delete_all_notifications" class="button" style="background-color:red; color:white; max-width:300px;") #{l.delete_notifications} 
+          script(type='text/javascript', src='/notifications/scheduled.js' nonce=`${noncevalue}`)
+      
+      else 
+        p !{l.noScheduled} 
+
+    //- pre=h.dump(project)

@@ -180,6 +180,11 @@ exports.activateParticipantProject = async (req, res) => {
   res.redirect("/testing");
 };
 
+// show the form to create new project
+exports.createNewProject = async (req, res) => {
+  res.render("newproject", {});
+};
+
 // show user projects
 exports.getUserProjects = async (req, res) => {
   const projects = await Project.find(

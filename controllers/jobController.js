@@ -15,6 +15,21 @@ const nanoid = customAlphabet(
   10
 );
 
+const types = {
+  personal_notification: "job_type_oneTime",
+  regular_notification: "job_type_regular",
+  start_manager: "job_type_start_manager",
+  end_manager: "job_type_end_manager",
+  start_random_personal_manager: "job_type_start_randomizer_manager",
+  end_random_personal_manager: "job_type_end_randomizer_manager",
+  random_personal_notification: "job_type_randomizer",
+  one_time_notification: "job_type_oneTime",
+  start_personal_manager: "job_type_start_manager",
+  end_personal_manager: "job_type_end_manager",
+  start_random_group_manager: "job_type_start_manager",
+  end_random_group_manager: "job_type_end_manager",
+};
+
 const { Expo } = require("expo-server-sdk");
 let expo = new Expo();
 
@@ -2571,10 +2586,75 @@ function getDatesInInterval(min, max, number, distance) {
   return numbers;
 }
 
-// display scheduled jobs
+// display project scheduled jobs
+exports.displayScheduled = async (req, res) => {
+  const project = await Project.findOne(
+    { _id: req.user.project._id },
+    {
+      name: 1,
+      notifications: 1,
+    }
+  );
+  res.render("scheduled", { project });
+};
+
+// display project ID-specific scheduled jobs
 exports.displayJobs = async (req, res) => {
+  const project = await Project.findOne(
+    { _id: req.user.project._id },
+    {
+      name: 1,
+      notifications: 1,
+    }
+  );
+  if (project) {
+    project.notifications = project.notifications.filter(
+      (notification) => notification?.id == req.params.id
+    );
+  }
   const jobs = await agenda.jobs({
     "data.projectid": req.user.project._id,
+    "data.id": req.params.id,
   });
-  res.render("jobs", { jobs });
+  res.render("jobs", { id: req.params.id, project, jobs, types });
+};
+
+// display specific scheduled jobs
+exports.getSpecificJob = async (req, res) => {
+  const jobs = await agenda.jobs({
+    _id: mongoose.Types.ObjectId(req.params.jobid),
+  });
+  let job;
+  if (jobs && jobs.length) {
+    job = jobs[0];
+  }
+  res.render("editJob", { job, types });
+};
+
+// delete specific scheduled jobs
+exports.removeJob = async (req, res) => {
+  const numRemoved = await agenda.cancel({
+    _id: mongoose.Types.ObjectId(req.params.jobid),
+  });
+  if (numRemoved === 1) {
+    res.status(201);
+    req.flash("success", `The job was deleted`);
+  } else {
+    res.status(400);
+  }
+  res.redirect(`back`);
+};
+
+// update the scheduled job
+exports.editJob = async (req, res) => {
+  const { jobid, nextRunAt, data } = req.body;
+  const jobs = await agenda.jobs({
+    _id: mongoose.Types.ObjectId(jobid),
+  });
+  if (jobs && jobs.length) {
+    Object.assign(jobs[0].attrs, { nextRunAt });
+    Object.assign(jobs[0].attrs.data, { ...data });
+    await jobs[0].save();
+  }
+  res.redirect("back");
 };

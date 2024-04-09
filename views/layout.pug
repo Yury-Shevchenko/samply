@@ -28,37 +28,58 @@ html
                   a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))
                     h6 #{layout && layout.studies}
                 li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
-                  h6 Docs
+                  h6 #{layout.docs} 
                 li.nav__item: a.nav__main_link(href="/news/intro", class=(currentPath.startsWith('/news/intro') ? 'nav__main_link--active' : ''))
-                  h6 News
+                  h6 #{layout.news} 
                 li.nav__item: a.nav__main_link(href="/", class=(currentPath === '/' ? 'nav__main_link--active' : ''))
-                  h6 Samply
+                  h6 #{layout.samply} 
             if user
-              li.nav__item: a.nav__main_link(href="/", class=(currentPath === '/' ? 'nav__main_link--active' : ''))
-                h6 Samply
+
+              .navigation 
+                nav
+                  ul
+                    li
+                      a.nav__link(href="/") #{layout.samply} 
+                      ul
+                        li
+                          a.nav__link(href="/news/intro", class=(currentPath.startsWith('/news') ? 'nav__main_link--active' : '')) #{layout.news} 
+                        li
+                          a.nav__link(href='/docs/intro', class=(currentPath.startsWith('/docs') ? 'nav__main_link--active' : '')) #{layout.docs} 
+                        li
+                          a.nav__link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : '')) #{layout.help}
+                        li
+                          a.nav__link(href="/about", class=(currentPath.startsWith('/about') ? 'nav__main_link--active' : '')) #{layout.about} 
+
               if user.level < 10
-                li.nav__item
-                  a.nav__main_link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.studies}
-                li.nav__item
-                  a.nav__main_link(href='/help', class=(currentPath.startsWith('/help') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.help}
-              if user.level > 10
-                li.nav__item: a.nav__main_link(href="/docs/intro", class=(currentPath.startsWith('/docs/intro') ? 'nav__main_link--active' : ''))
-                  h6 Docs  
-                li.nav__item: a.nav__main_link(href="/news/intro", class=(currentPath.startsWith('/news/intro') ? 'nav__main_link--active' : ''))
-                  h6 News
+                .navigation
+                  nav 
+                    ul
+                      li
+                        a.nav__link(href='/studies', class=(currentPath.startsWith('/studies') ? 'nav__main_link--active' : '')) #{layout.publicStudies}
+                
               if user.level > 100
-                li.nav__item: a.nav__main_link(href="/admin/studies", class=(currentPath.startsWith('/admin/studies') ? 'nav__main_link--active' : ''))
-                  h6 All studies
-              if user.level > 100
-                li.nav__item: a.nav__main_link(href="/admin/users", class=(currentPath.startsWith('/admin/users') ? 'nav__main_link--active' : ''))
-                  h6 All users
+                .navigation 
+                  nav
+                    ul
+                      li
+                        a.nav__link(href="/admin/studies") Admin
+                        ul
+                          li
+                            a.nav__link(href="/admin/studies", class=(currentPath.startsWith('/admin/studies') ? 'nav__main_link--active' : '')) Studies 
+                          li
+                            a.nav__link(href='/admin/users', class=(currentPath.startsWith('/admin/users') ? 'nav__main_link--active' : '')) Users
+
 
           .nav__section.nav__section--user
             
             if user
-            
+              if user.level < 10
+                .navigation
+                  nav 
+                    ul
+                      li
+                        a.nav__link(href='/messages', class=(currentPath.startsWith('/messages') ? 'nav__main_link--active' : '')) #{layout.messages}
+
               if user.level > 10 
                 script(nonce=`${noncevalue}`).
                   document.addEventListener('DOMContentLoaded', function () {
@@ -82,34 +103,55 @@ html
                             option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= project.name
                           else
                             option(value=project._id selected=(user.project && user.project._id && (user.project._id.toString() == project._id.toString()) ))= `${project.name.substring(0,20)}...`
-        
-                li.nav__item
-                  a.nav__link(href='/projects', class=(currentPath.startsWith('/projects')  ? 'nav__main_link--active' : ''))
-                    h6 #{layout.projects}
-                li.nav__item
-                  a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__main_link--active' : '')) 
-                    h6 #{layout.notifications} 
-                li.nav__item
-                  a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__main_link--active' : '')) 
-                    h6 #{layout.invitations}
-                li.nav__item
-                  a.nav__link(href='/users', class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.participants}
-                li.nav__item
-                  a.nav__link(href='/groups', class=(currentPath.startsWith('/groups') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.groups}
-                li.nav__item
-                  a.nav__link(href="/history", class= currentPath.startsWith('/history') ? 'nav__main_link--active' : '')
-                    h6 #{layout.notigications_log} 
-              li.nav__item
-                a.nav__link(href="/account", class= currentPath.startsWith('/account') ? 'nav__main_link--active' : '')
-                  h6 #{layout.profile}
-              if user.level < 10
-                li.nav__item
-                  a.nav__main_link(href='/messages', class=(currentPath.startsWith('/messages') ? 'nav__main_link--active' : ''))
-                    h6 #{layout.messages} 
-              li.nav__item: a.nav__main_link(href="/logout", class=(currentPath.startsWith('/logout') ? 'nav__main_link--active' : ''))
-                  h6 #{layout.logout}
+
+                .navigation 
+                  nav
+                    ul
+                      li
+                        a.nav__link(href="/projects") #{layout.studies} 
+                        ul
+                          li
+                            a.nav__link(href="/newproject", class=(currentPath.startsWith('/newproject') ? 'nav__main_link--active' : '')) #{layout.newStudy} 
+                          li
+                            a.nav__link(href="/projects", class=(currentPath.startsWith('/projects') ? 'nav__main_link--active' : '')) #{layout.myStudies}
+
+                .navigation 
+                  nav
+                    ul
+                      li
+                        a.nav__link(href="/notifications") #{layout.notifications} 
+                        ul
+                          li
+                            a.nav__link(href="/notifications", class=(currentPath.startsWith('/notifications') ? 'nav__main_link--active' : '')) #{layout.new}  
+                          li
+                            a.nav__link(href="/scheduled", class=(currentPath.startsWith('/scheduled') ? 'nav__main_link--active' : '')) #{layout.scheduled} 
+                          li
+                            a.nav__link(href="/history", class=(currentPath.startsWith('/history') ? 'nav__main_link--active' : '')) #{layout.sent} 
+
+                .navigation 
+                  nav
+                    ul
+                      li
+                        a.nav__link(href="/users") #{layout.participants} 
+                        ul
+                          li
+                            a.nav__link(href="/users", class=(currentPath.startsWith('/users') ? 'nav__main_link--active' : '')) #{layout.overview} 
+                          li
+                            a.nav__link(href="/groups", class=(currentPath.startsWith('/groups') ? 'nav__main_link--active' : '')) #{layout.groups} 
+                          li
+                            a.nav__link(href="/invitations", class=(currentPath.startsWith('/invitations') ? 'nav__main_link--active' : '')) #{layout.invitations} 
+
+              .navigation 
+                nav
+                  ul
+                    li
+                      a.nav__link(href="/account") #{layout.account}
+                      ul
+                        li
+                          a.nav__link(href='/account', class=(currentPath.startsWith('/account') ? 'nav__main_link--active' : '')) #{layout.edit}
+                        li
+                          a.nav__link(href="/logout") #{layout.logout}
+
             else
               li.nav__item: a.nav__main_link(href="/researcher/login", class=(currentPath.startsWith('/researcher/login') ? 'nav__main_link--active' : ''))
                 h6 #{layout && layout.login}

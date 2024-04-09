@@ -1191,15 +1191,17 @@ input[type="range"]:focus::-ms-fill-upper {
 }
 .nav__main_link:hover,
 .nav__main_link--active {
-  background: #fcfcff9c;
+  /* background: #fcfcff9c;
   border-bottom: 3px solid deepskyblue;
+  border-radius: 3px; */
+  background: rgb(225, 225, 230);
   border-radius: 3px;
 }
 .nav__main_link:hover h6,
 .nav__main_link--active h6 {
-  -ms-transform: scale(1.1);
+  /* -ms-transform: scale(1.1);
   transform: scale(1.1);
-  color: midnightblue;
+  color: midnightblue; */
 }
 .nav__main_link--passive h6 {
   color: #a6a6a6a6;
@@ -1224,6 +1226,7 @@ input[type="range"]:focus::-ms-fill-upper {
   -ms-flex-pack: center;
   justify-content: center;
   transition: transform 0.2s;
+  width: 100%;
 }
 .nav__link svg {
   width: 30px;
@@ -1232,7 +1235,9 @@ input[type="range"]:focus::-ms-fill-upper {
 }
 .nav__link:hover,
 .nav__link--active {
-  border-bottom: 3px solid orange;
+  /* border-bottom: 3px solid orange; */
+  background: rgb(225, 225, 230);
+  border-radius: 3px;
 }
 .nav__link:hover svg,
 .nav__link--active svg {
@@ -1313,6 +1318,61 @@ input[type="range"]:focus::-ms-fill-upper {
   .heart-count:before {
     margin-right: 1rem;
   }
+}
+
+.navigation {
+  nav {
+    margin: 0 auto;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  ul li a {
+    text-decoration: none;
+    background: white;
+    display: inline-block;
+    padding: 10px 20px;
+    width: 100%;
+  }
+
+  nav > ul > li {
+    float: left;
+  }
+
+  nav > ul:after {
+    display: block;
+    content: "";
+    clear: both;
+  }
+
+  nav > ul ul {
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  nav ul li:hover > ul {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  nav ul ul li {
+    position: relative;
+  }
+
+  nav ul ul ul {
+    position: absolute;
+    top: 0;
+    left: 100%;
+  }
+}
+
+.navigation ::marker {
+  font-size: 0;
 }
 
 .dashboardHeader {
@@ -3021,6 +3081,15 @@ i.yes:after {
   -ms-grid-column-align: start;
   justify-items: start;
   -ms-flex-pack: start;
+  justify-content: start;
+}
+
+.timeTableFull {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(150px, auto));
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  justify-items: start;
   justify-content: start;
 }
 

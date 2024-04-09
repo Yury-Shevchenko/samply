@@ -152,3 +152,12 @@
   justify-items: start;
   justify-content: start;
 }
+
+.timeTableFull {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(150px, auto));
+  grid-column-gap: 10px;
+  padding-top: 10px;
+  justify-items: start;
+  justify-content: start;
+}
