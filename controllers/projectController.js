@@ -91,13 +91,21 @@ exports.resize = async (req, res, next) => {
       typeof req.body.lucky !== "undefined" &&
       req.body.lucky == "on"
     ) {
-      const image = await jimp.read("https://source.unsplash.com/random"); // https://source.unsplash.com/featured/?moon
-      if (image) {
-        const extension = image._originalMime.split("/")[1];
-        const fileName = `${uuid.v4()}.${extension}`;
-        req.body.image = `${DOMAIN}/uploads/${fileName}`;
-        await image.resize(800, jimp.AUTO);
-        await image.write(`./public/uploads/${fileName}`);
+      const endpoint = `https://api.unsplash.com/photos/random?client_id=${process.env.UNSPLASH_KEY}`;
+      const response = await fetch(endpoint);
+      if (response && response.ok) {
+        const json = await response.json();
+        const url = json && json.urls && json.urls.regular;
+        if (url) {
+          const image = await jimp.read(url);
+          if (image) {
+            const extension = image._originalMime.split("/")[1];
+            const fileName = `${uuid.v4()}.${extension}`;
+            req.body.image = `${DOMAIN}/uploads/${fileName}`;
+            await image.resize(800, jimp.AUTO);
+            await image.write(`./public/uploads/${fileName}`);
+          }
+        }
       }
     }
     next();
