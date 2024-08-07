@@ -86,12 +86,13 @@ mixin projectForm(project = {})
     
     button(type="button" value="Add a field" id="addFieldButton") #{l.add_field}
     p
-    
+
     div.inputCheckBox
       input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
       label(for='enableGeofencing')
         span.
           #{l.enableGeofencingToggle} 
+    
     #geofencing_editor
     
       h2 #{l.geoTitle}   
@@ -171,8 +172,38 @@ mixin projectForm(project = {})
       input(type="text" name= "locationName" id="locationName" placeholder="Location name")
       button.button(type="button" value="Add new location" id="addLocationButton") #{l.geoAddLocation}  
     
-    
-    
+    div.inputCheckBox
+      input(type='checkbox' id= 'enableActions' name= 'enableActions' checked = project.settings && project.settings.enableActions)
+      label(for='enableActions')
+        span.
+          #{l.enableActionsToggle} 
+
+    #actions_editor 
+      h2 #{l.actionsTitle}   
+
+      p #{l.actionsDescription}
+
+      .actionsPlanner
+        label #{l.actionsTitleOption} 
+        label #{l.actionsTitleIdentifier} 
+        label #{l.actionsTitleButton} 
+
+        label 1
+        input(name="identifier-1" class='identifier' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 1).map(a => a.identifier)[0]) 
+        input(name="buttonTitle-1" class='buttonTitle' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 1).map(a => a.buttonTitle)[0]) 
+
+        label 2
+        input(name="identifier-2" class='identifier' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 2).map(a => a.identifier)[0]) 
+        input(name="buttonTitle-2" class='buttonTitle' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 2).map(a => a.buttonTitle)[0]) 
+
+        label 3
+        input(name="identifier-3" class='identifier' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 3).map(a => a.identifier)[0]) 
+        input(name="buttonTitle-3" class='buttonTitle' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 3).map(a => a.buttonTitle)[0]) 
+
+        label 4
+        input(name="identifier-4" class='identifier' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 4).map(a => a.identifier)[0]) 
+        input(name="buttonTitle-4" class='buttonTitle' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 4).map(a => a.buttonTitle)[0]) 
+
     script(nonce=`${noncevalue}`).
       document.addEventListener('DOMContentLoaded', function (){
         
@@ -354,9 +385,22 @@ mixin projectForm(project = {})
           }
         })
       }
+
+      if(project?.settings?.enableActions) {
+        document.getElementById('actions_editor').style.display = "block";
+      } else {
+        document.getElementById('actions_editor').style.display = "none";
+        document.getElementById('enableActions').addEventListener('change', function shownActionsEditor(){
+          if (this.checked) {
+            document.getElementById('actions_editor').style.display = "block";
+          } else {
+            document.getElementById('actions_editor').style.display = "none";
+          }
+        })
+      }
       
       window.onload = () => {
-        if(locations.length) {
+        if(locations.length) {
 
           const mapDiv = document.getElementById("geofenced_map");
           

@@ -85,8 +85,27 @@ block content
             if page < pages
               a(href=`/history/page/${parseFloat(page) + 1}${typeof(participant) === 'string' ? '?id=' + participant : ''}`) #{layout.pagination_next}
 
+        button(id="deleteButton") #{l.deleteAll} 
+
     else 
       h2= `${layout.history_notifications}`
       p !{layout.message_history_create_project}
-      
+    
+    input(type='hidden' id='projectId' value=user.project._id)
+    input(type='hidden' id='confirmDelete' value=l.confirmDelete)
+
+    script(defer type='text/javascript' nonce=`${noncevalue}`).
+      document.getElementById('deleteButton').addEventListener('click', async function(event) {
+        if (confirm(document.getElementById('confirmDelete').value)) {
+          const projectId = document.getElementById('projectId').value;
+          await fetch(`/deletehistory/${projectId}`, {
+            method: "GET",
+          })
+          // Reload the current page
+          window.location.reload();
+        } else {
+          event.preventDefault();
+        }
+      });
+
     //- pre= h.dump(history)        

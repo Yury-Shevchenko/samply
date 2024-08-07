@@ -313,6 +313,11 @@ router.get(
   catchErrors(resultController.downloadHistory)
 );
 router.get(
+  "/deletehistory/:id",
+  authController.isLoggedIn,
+  catchErrors(resultController.deleteHistory)
+);
+router.get(
   "/downloadreceipts/:id",
   authController.isLoggedIn,
   catchErrors(paymentController.downloadReceipts)
@@ -375,7 +380,7 @@ router.post("/api/updateaccount", userController.updateAccount);
 router.post("/api/updatestatus", resultController.updateStatus);
 router.post("/api/history", resultController.getHistory);
 router.post("/api/reset", userController.resetPassword);
-router.post("/api/update", jobController.updateTokenInStudy);
+router.post("/api/updatetoken", jobController.updateTokenInStudy);
 router.post("/api/checkpayableaccount", userController.checkPayableAccount);
 router.post("/api/updatelocation", resultController.updatelocation);
 router.post(
@@ -426,7 +431,12 @@ router.get(
   jobController.displayJobs
 );
 router.get(
-  "/scheduled/view/:id/:jobid",
+  "/scheduled/view/:id/:type",
+  authController.isLoggedIn,
+  jobController.displayJobs
+);
+router.get(
+  "/scheduled/view/:id/edit/:jobid",
   authController.isLoggedIn,
   jobController.getSpecificJob
 );

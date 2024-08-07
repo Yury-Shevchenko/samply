@@ -20,7 +20,7 @@ const confirmOwner = (project, user) => {
 const confirmOwnerOrMember = (project, user) => {
   const isCreator = project.creator.equals(user._id);
   const isMember = project.members
-    .map(id => id.toString())
+    .map((id) => id.toString())
     .includes(user._id.toString());
   const isParticipant = user.level <= 10;
   if (!(isCreator || isMember) || isParticipant) {
@@ -37,8 +37,8 @@ exports.updateStatus = async (req, res) => {
     { messageId: messageId },
     {
       ["$addToSet"]: {
-        events: { status: req.body.status, created: Date.now() }
-      }
+        events: { status: req.body.status, created: Date.now() },
+      },
     },
     { upsert: true, new: true }
   );
@@ -67,14 +67,14 @@ exports.updatelocation = async (req, res) => {
     data: {
       title: req.body.title,
       message: req.body.message,
-      url: req.body.link
+      url: req.body.link,
     },
     events: [
       {
         status: "geofencing-event",
-        created: Date.now()
-      }
-    ]
+        created: Date.now(),
+      },
+    ],
   });
   await result.save();
   res.status(200).json({ message: "OK" });
@@ -89,13 +89,13 @@ exports.showHistory = async (req, res) => {
     const skip = page * limit - limit;
     const historyPromise = Result.find({
       project: req.user.project,
-      samplyid: participant
+      samplyid: participant,
     })
       .skip(skip)
       .limit(limit);
     const countPromise = Result.where({
       project: req.user.project,
-      samplyid: participant
+      samplyid: participant,
     }).countDocuments();
     const [history, count] = await Promise.all([historyPromise, countPromise]);
     const pages = Math.ceil(count / limit);
@@ -118,7 +118,7 @@ exports.showHistory = async (req, res) => {
       count,
       skip,
       participant,
-      study: true
+      study: true,
     });
   } else {
     res.render("history", { study: false });
@@ -129,7 +129,7 @@ exports.getHistory = async (req, res) => {
   const { samplyid } = req.body;
   const notifications = await Result.find({ samplyid });
   const filtered = notifications.filter(
-    e => !e.events.map(e => e.status).includes("archived")
+    (e) => !e.events.map((e) => e.status).includes("archived")
   );
   res.send(filtered);
 };
@@ -143,7 +143,7 @@ exports.saveIncrementalResults = async (req, res) => {
     name: req.body.name,
     data: req.body.data,
     usertimestamp: req.body.timestamp,
-    appVersion: req.body.appVersion
+    appVersion: req.body.appVersion,
   });
   await result.save();
   res.send("Saved");
@@ -163,7 +163,7 @@ exports.getData_old = async (req, res) => {
     { _id: req.user.project._id },
     {
       invitations: 1,
-      showCompletionCode: 1
+      showCompletionCode: 1,
     }
   );
   const page = parseInt(req.params.page) || 1;
@@ -176,13 +176,13 @@ exports.getData_old = async (req, res) => {
   const countPromise = User.countDocuments({
     $or: [
       { participantInProject: req.user.project._id },
-      { participant_projects: req.user.project._id }
-    ]
+      { participant_projects: req.user.project._id },
+    ],
   });
   const [users, count, project] = await Promise.all([
     usersPromise,
     countPromise,
-    activeProjectPromise
+    activeProjectPromise,
   ]);
   const pages = Math.ceil(count / limit);
   if (!users.length && skip) {
@@ -201,7 +201,7 @@ exports.getData = async (req, res) => {
     { _id: req.user.project._id },
     {
       invitations: 1,
-      showCompletionCode: 1
+      showCompletionCode: 1,
     }
   );
   const page = parseInt(req.params.page) || 1;
@@ -214,13 +214,13 @@ exports.getData = async (req, res) => {
   const countPromise = User.countDocuments({
     $or: [
       { participantInProject: req.user.project._id },
-      { participant_projects: req.user.project._id }
-    ]
+      { participant_projects: req.user.project._id },
+    ],
   });
   const [users, count, project] = await Promise.all([
     usersPromise,
     countPromise,
-    activeProjectPromise
+    activeProjectPromise,
   ]);
   const pages = Math.ceil(count / limit);
   if (!users.length && skip) {
@@ -242,7 +242,7 @@ exports.getMessages = async (req, res) => {
     .skip(skip)
     .limit(limit);
   const countPromise = Result.where({
-    samplyid: req.user.samplyId
+    samplyid: req.user.samplyId,
   }).countDocuments();
   const [history, count] = await Promise.all([historyPromise, countPromise]);
   const pages = Math.ceil(count / limit);
@@ -261,25 +261,23 @@ exports.getMessages = async (req, res) => {
   res.render("messages", { history, page, pages, count, skip, limit });
 };
 
-// download history log for the project
-exports.downloadHistory = async (req, res) => {
-  const projectId = req.params.id;
-  const project = await Project.findOne({ _id: projectId });
+const download = async ({ project, res }) => {
   const participants = project.mobileUsers;
-  confirmOwnerOrMember(project, req.user);
   let keys = [];
-  const name = req.user.project.name;
-  res.setHeader("Content-disposition", "attachment; filename=" + name + ".csv");
+  res.setHeader(
+    "Content-disposition",
+    "attachment; filename=" + project.name + ".csv"
+  );
   const input = new stream.Readable({ objectMode: true });
   input._read = () => {};
-  var cursor = await Result.find({ project: projectId }, {})
+  var cursor = await Result.find({ project: project.id }, {})
     .cursor()
-    .on("data", obj => {
+    .on("data", (obj) => {
       if (obj && obj.data) {
         let data = {};
         const coordinates = obj.events
-          .filter(e => e.status === "geofencing-event")
-          .map(e => {
+          .filter((e) => e.status === "geofencing-event")
+          .map((e) => {
             if (e.data && e.data.coords) {
               return e.data.coords;
             }
@@ -294,35 +292,35 @@ exports.downloadHistory = async (req, res) => {
             message: obj.data.message,
             url: obj.data.url,
             sent: obj.events
-              .filter(e => e.status === "sent")
-              .map(e => e.created.getTime()),
+              .filter((e) => e.status === "sent")
+              .map((e) => e.created.getTime()),
             tapped: obj.events
-              .filter(e => e.status === "tapped")
-              .map(e => e.created.getTime()),
+              .filter((e) => e.status === "tapped")
+              .map((e) => e.created.getTime()),
             opened_in_app: obj.events
-              .filter(e => e.status === "opened-in-app")
-              .map(e => e.created.getTime()),
+              .filter((e) => e.status === "opened-in-app")
+              .map((e) => e.created.getTime()),
             deleted_by_user: obj.events
-              .filter(e => e.status === "archived")
-              .map(e => e.created.getTime()),
+              .filter((e) => e.status === "archived")
+              .map((e) => e.created.getTime()),
             received_in_app: obj.events
-              .filter(e => e.status === "received-in-app")
-              .map(e => e.created.getTime()),
+              .filter((e) => e.status === "received-in-app")
+              .map((e) => e.created.getTime()),
             geofencing_event: obj.events
-              .filter(e => e.status === "geofencing-event")
-              .map(e => e.created.getTime()),
+              .filter((e) => e.status === "geofencing-event")
+              .map((e) => e.created.getTime()),
             message_id: obj.messageId,
             participant_code: participants
-              .filter(participant => participant.id === obj.samplyid)
-              .map(participant => participant.username)[0],
-            ...data
-          }
+              .filter((participant) => participant.id === obj.samplyid)
+              .map((participant) => participant.username)[0],
+            ...data,
+          },
         ];
-        const preKeys = flatMap(line, function(e) {
+        const preKeys = flatMap(line, function (e) {
           return Object.keys(e);
         });
         const tempkeys = Array.from(new Set(preKeys));
-        const new_items = tempkeys.filter(x => !keys.includes(x));
+        const new_items = tempkeys.filter((x) => !keys.includes(x));
         let parsed;
         if (new_items.length > 0) {
           keys = keys.concat(new_items);
@@ -335,13 +333,31 @@ exports.downloadHistory = async (req, res) => {
         input.push(parsed);
       }
     })
-    .on("end", function() {
+    .on("end", function () {
       input.push(null);
     })
-    .on("error", function(err) {
+    .on("error", function (err) {
       console.log(err);
     });
   const processor = input.pipe(res);
+};
+
+// download history log for the project
+exports.downloadHistory = async (req, res) => {
+  const project = await Project.findOne({ _id: req.params.id });
+  confirmOwnerOrMember(project, req.user);
+  await download({ project, res });
+};
+
+// delete history log for the project
+exports.deleteHistory = async (req, res) => {
+  const project = await Project.findOne({ _id: req.params.id });
+  confirmOwnerOrMember(project, req.user);
+  const deletedRecords = await Result.deleteMany({ project: project.id });
+  if (deletedRecords && deletedRecords.deletedCount) {
+    req.flash("success", `${deletedRecords.deletedCount} records deleted`);
+  }
+  res.redirect("/history");
 };
 
 // check notificaiton receipt from EXPO
@@ -349,15 +365,15 @@ exports.checkNotificationReceipt = async (req, res) => {
   const { id } = req.params;
   const url = "https://exp.host/--/api/v2/push/getReceipts";
   const data = {
-    ids: [id]
+    ids: [id],
   };
 
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   });
   const json = await response.json();
   const receipts = json && json.data;

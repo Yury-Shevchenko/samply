@@ -78,7 +78,8 @@ block content
           .one   token: "#{project.notifyToken}",  
           .one   title: "your-title",
           .one   message: "your-message",
-          .one   url: "https://your-survey-link/?samplyid=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_CODE%&message=%MESSAGE_ID%"
+          .one   url: "https://your-survey-link/?samplyid=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_CODE%&message=%MESSAGE_ID%",
+          .one   expireIn: 60, // in minutes
           .div   }
           p
           .comment #{l.apiCommentFunction} 

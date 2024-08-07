@@ -118,16 +118,37 @@ exports.notify = async (req, res) => {
 
   let users = project.mobileUsers;
 
-  // Extract the IDs of other people in the group
-  const tokens = users
-    .filter((user) => user && user.group && user.group.id === groupID)
-    .filter((user) => user && user.id !== participantID)
-    .map((user) => ({
-      id: user.id,
-      token: user.token,
-      group: user.group,
-      username: user.username,
-    }));
+  let tokens;
+  if (groupID) {
+    // extract the IDs of other people in the group
+    tokens = users
+      .filter((user) => user && user.group && user.group.id === groupID)
+      .filter((user) => user && user.id !== participantID)
+      .map((user) => ({
+        id: user.id,
+        token: user.token,
+        group: user.group,
+        username: user.username,
+      }));
+  } else {
+    if (participantID) {
+      // extract the ID of only one participant
+      tokens = users
+        .filter((user) => user && user.id === participantID)
+        .map((user) => ({
+          id: user.id,
+          token: user.token,
+          group: user.group,
+          username: user.username,
+        }));
+    } else {
+      return res.send("401");
+    }
+  }
+
+  if (!tokens || tokens.length === 0) {
+    return res.send("401");
+  }
 
   // Send a notification to the other people in the group (immediately)
   // Define the content of the notification
@@ -136,6 +157,7 @@ exports.notify = async (req, res) => {
     message: req.body.message,
     url: req.body.url,
   };
+  const timestampSent = Date.now();
 
   let messages = [];
   for (let pushToken of tokens) {
@@ -147,12 +169,22 @@ exports.notify = async (req, res) => {
       );
       continue;
     }
+
+    // calculate what is the batch number by looking at how many notifications were sent for the project
+    const countRecords = await Result.where({
+      project: projectID,
+      samplyid: pushToken.id,
+    }).countDocuments();
+    const batch = countRecords + 1;
+
     const messageId = makeRandomCodeForMessageID();
     const customizedUrl = content.url
       .replace("%SAMPLY_ID%", pushToken.id)
       .replace("%PARTICIPANT_CODE%", pushToken.username)
       .replace("%GROUP_CODE%", groupID)
-      .replace("%MESSAGE_ID%", messageId);
+      .replace("%MESSAGE_ID%", messageId)
+      .replace("%TIMESTAMP_SENT%", timestampSent)
+      .replace("%BATCH%", batch);
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     messages.push({
       to: pushToken.token,
@@ -164,12 +196,14 @@ exports.notify = async (req, res) => {
         message: content.message,
         url: customizedUrl,
         messageId,
-        expireAt: expireIn ? Date.now() + parseInt(expireIn) : null,
+        expireAt: expireIn ? Date.now() + parseInt(expireIn * 1000 * 60) : null,
       },
       id: pushToken.id,
       priority: "high",
       channelId: "default",
       _displayInForeground: true,
+      batch: batch,
+      categoryId: projectID, // Use the study ID as the category ID
     });
   }
 
@@ -194,6 +228,7 @@ exports.notify = async (req, res) => {
           ticket: ticket,
           messageId: chunk[i].data.messageId,
           events: [{ status: "sent", created: Date.now() }],
+          batch: chunk[i].batch,
         });
         await result.save();
       });
@@ -203,10 +238,14 @@ exports.notify = async (req, res) => {
   res.send();
 };
 
+// const makeRandomCodeForMessageID = () => {
+//   return "mes-xxx-xxx-xxx-xxx".replace(/[xy]/g, function (c) {
+//     var r = (Math.random() * 16) | 0,
+//       v = c == "x" ? r : (r & 0x3) | 0x8;
+//     return v.toString(16);
+//   });
+// };
+
 const makeRandomCodeForMessageID = () => {
-  return "mes-xxx-xxx-xxx-xxx".replace(/[xy]/g, function (c) {
-    var r = (Math.random() * 16) | 0,
-      v = c == "x" ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
+  return nanoid(15);
 };

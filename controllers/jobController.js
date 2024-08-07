@@ -16,18 +16,36 @@ const nanoid = customAlphabet(
 );
 
 const types = {
-  personal_notification: "job_type_oneTime",
+  personal_notification: "job_type_one_time",
   regular_notification: "job_type_regular",
   start_manager: "job_type_start_manager",
   end_manager: "job_type_end_manager",
   start_random_personal_manager: "job_type_start_randomizer_manager",
   end_random_personal_manager: "job_type_end_randomizer_manager",
   random_personal_notification: "job_type_randomizer",
-  one_time_notification: "job_type_oneTime",
+  one_time_notification: "job_type_one_time",
   start_personal_manager: "job_type_start_manager",
   end_personal_manager: "job_type_end_manager",
   start_random_group_manager: "job_type_start_manager",
   end_random_group_manager: "job_type_end_manager",
+};
+
+const typesReversed = {
+  job_type_one_time: ["personal_notification", "one_time_notification"],
+  job_type_regular: ["regular_notification"],
+  job_type_start_manager: [
+    "start_manager",
+    "start_personal_manager",
+    "start_random_group_manager",
+  ],
+  job_type_end_manager: [
+    "end_manager",
+    "end_personal_manager",
+    "end_random_group_manager",
+  ],
+  job_type_start_randomizer_manager: ["start_random_personal_manager"],
+  job_type_end_randomizer_manager: ["end_random_personal_manager"],
+  job_type_randomizer: ["random_personal_notification"],
 };
 
 const { Expo } = require("expo-server-sdk");
@@ -1750,6 +1768,7 @@ async function sendMobileNotification({
         _displayInForeground: true,
         batch: batch,
         finid: finid,
+        categoryId: project_id, // Use the study ID as the category ID
       };
     })
   );
@@ -2387,6 +2406,7 @@ exports.scheduleAdminJob = async (req, res) => {
 };
 
 exports.updateTokenInStudy = async (req, res) => {
+  console.log(req.body);
   res.status(200).json({ message: "OK" });
 };
 
@@ -2612,11 +2632,26 @@ exports.displayJobs = async (req, res) => {
       (notification) => notification?.id == req.params.id
     );
   }
-  const jobs = await agenda.jobs({
-    "data.projectid": req.user.project._id,
-    "data.id": req.params.id,
+  let jobs;
+  if (req.params.type) {
+    jobs = await agenda.jobs({
+      name: { $in: typesReversed[req.params.type] },
+      "data.projectid": req.user.project._id,
+      "data.id": req.params.id,
+    });
+  } else {
+    jobs = await agenda.jobs({
+      "data.projectid": req.user.project._id,
+      "data.id": req.params.id,
+    });
+  }
+  res.render("jobs", {
+    id: req.params.id,
+    project,
+    jobs,
+    types,
+    typesReversed,
   });
-  res.render("jobs", { id: req.params.id, project, jobs, types });
 };
 
 // display specific scheduled jobs

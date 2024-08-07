@@ -275,6 +275,11 @@ exports.createProject = async (req, res) => {
           invisible: req.body[`invisible-${slug}`] === "on" ? 1 : 0,
         };
       });
+      const actions = [1, 2, 3, 4].map((num) => ({
+        num,
+        identifier: req.body[`identifier-${num}`],
+        buttonTitle: req.body[`buttonTitle-${num}`],
+      }));
       const project = await new Project({
         name: req.body.name.trim(),
         image: req.body.image,
@@ -315,6 +320,9 @@ exports.createProject = async (req, res) => {
             mintimewindow: parseInt(req.body.userLocationMintimewindow),
           },
           permanentLink: req.body.permanentLink.trim(),
+          enableActions:
+            req.body.enableActions && req.body.enableActions === "on",
+          actions: actions,
         },
         samplycode: nanoid(6),
       }).save();
@@ -404,6 +412,11 @@ exports.updateProject = async (req, res) => {
           mintimewindow: parseInt(req.body[`mintimewindow-${slug}`]),
         };
       });
+      const actions = [1, 2, 3, 4].map((num) => ({
+        num,
+        identifier: req.body[`identifier-${num}`],
+        buttonTitle: req.body[`buttonTitle-${num}`],
+      }));
       project.settings = {
         askParticipantCode:
           req.body.askParticipantCode && req.body.askParticipantCode === "on"
@@ -432,6 +445,11 @@ exports.updateProject = async (req, res) => {
           invisible: req.body[`invisible`] === "on" ? 1 : 0,
         },
         permanentLink: req.body.permanentLink.trim(),
+        enableActions:
+          req.body.enableActions && req.body.enableActions === "on"
+            ? true
+            : false,
+        actions: actions,
       };
 
       await project.save();

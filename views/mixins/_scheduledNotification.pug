@@ -31,6 +31,8 @@ mixin scheduledNotification(notification, i, showLinkToJobs)
           span= `${l.step_2_to} ${h.moment.tz(notification.window_to, notification.timezone).locale(language).format('MMMM Do YYYY, H:mm')}`
         if(notification.number)
           span= `${l.table_number_timepoints}: ${notification.number}`
+        if(notification.distance)
+          span= `${l.table_minimum_distance} ${notification.distance / (1000*60)} ${l.table_minutes}`
         
       if(notification.name === 'Repeat')
         if(notification.int_start)
@@ -49,6 +51,8 @@ mixin scheduledNotification(notification, i, showLinkToJobs)
             span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
         if(notification.readable && notification.readable.from && notification.readable.to)
           span= `${l.table_repeat_window} ${notification.readable.from}, ${l.table_to} ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
+        if(notification.windowInterval && notification.windowInterval.distance)
+          span= `${l.table_minimum_distance} ${notification.windowInterval.distance / (1000*60)} ${l.table_minutes}`
         if(notification.readable && notification.readable.interval)
           span= `${l.table_repeat} ${notification.readable.interval}`
         
@@ -85,6 +89,8 @@ mixin scheduledNotification(notification, i, showLinkToJobs)
           span= `${l.step_2_to} ${h.moment.utc(notification.window_to).local().locale(language).format('MMMM Do YYYY, H:mm')}`
         if(notification.number)
           span= `${l.table_number_timepoints}: ${notification.number}`
+        if(notification.distance)
+          span= `${l.table_minimum_distance} ${notification.distance / (1000*60)} ${l.table_minutes}`
         
       if(notification.name === 'Repeat')
         if(notification.int_start)
@@ -103,6 +109,8 @@ mixin scheduledNotification(notification, i, showLinkToJobs)
             span= `${l.table_stop_after} ${notification.stop_after.days} ${l.step_5_days}, ${notification.stop_after.hours} ${l.step_5_hours} ${l.table_and} ${notification.stop_after.minutes} ${l.step_5_minutes} ${l.table_participant_registration}`
         if(notification.readable && notification.readable.from && notification.readable.to)
           span= `${l.table_repeat_window} ${notification.readable.from}, ${l.table_to} ${notification.readable.to}, ${l.table_number_notifications} ${notification.windowInterval.number}`
+        if(notification.windowInterval && notification.windowInterval.distance)
+          span= `${l.table_minimum_distance} ${notification.windowInterval.distance / (1000*60)} ${l.table_minutes}`
         if(notification.readable && notification.readable.interval)
           span= `${l.table_repeat} ${notification.readable.interval}`
         

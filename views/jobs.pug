@@ -39,6 +39,14 @@ block content
         p #{l.job_description_8}  
       p 
 
+      p(style="font-weight: bold") #{l.jobs_filter_by}  
+      div.filterHeader
+        span 
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}`) All
+        each type in Object.keys(typesReversed) 
+          span 
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/${type}`)= `${l[type]}`
+
       table.table
         thead
           td #{l.job_edit}
@@ -54,7 +62,7 @@ block content
         each job, i in jobs
           tr 
             td 
-              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_edit}
+              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/edit/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_edit}
 
             td #{i + 1}
             td= `${l[types[JSON.parse(JSON.stringify(job)).name]]}`
