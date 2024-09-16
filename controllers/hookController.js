@@ -203,7 +203,7 @@ exports.notify = async (req, res) => {
       channelId: "default",
       _displayInForeground: true,
       batch: batch,
-      categoryId: projectID, // Use the study ID as the category ID
+      categoryIdentifier: projectID, // Use the study ID as the category ID
     });
   }
 
