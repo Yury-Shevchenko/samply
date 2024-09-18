@@ -184,7 +184,7 @@
 		"apiCode": "JavaScript code to use Samply API to send a notification",
 		"apiCommentData": "// defining data",
 		"apiCommentFunction": "// function to send the POST request to activate the notification",
-		"apiExplained_1": "If you specify the group ID and the participant ID, the notification will be sent to all members of this group except the participant. If you specify the group ID but omit the participant ID, the notification will be sent to all members of this group. If you omit the group ID but specify the participant ID, the notification will be sent to the specific participant.",
+		"apiExplained_1": "If you specify the group ID and the participant ID, the notification will be sent to all members of this group except the participant. If you specify the group ID but omit the participant ID, the notification will be sent to all members of this group. If you omit the group ID but specify the participant ID, the notification will be sent to the specific participant. If you omit the group ID and the participant ID, the notification will be sent to all participants in the study.",
 		"apiExplained_2": "Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.",
 		"apiNewTokenExpires": "New token should expire on",
 		"apiResetToken": "Reset notification token",

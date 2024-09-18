@@ -142,7 +142,13 @@ exports.notify = async (req, res) => {
           username: user.username,
         }));
     } else {
-      return res.send("401");
+      // send to all study participants
+      tokens = users.map((user) => ({
+        id: user.id,
+        token: user.token,
+        group: user.group,
+        username: user.username,
+      }));
     }
   }
 

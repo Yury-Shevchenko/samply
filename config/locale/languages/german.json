@@ -184,7 +184,7 @@
 		"apiCode": "JavaScript-Code um anhand der Samply-API  eine Benachrichtigung zu schicken",
 		"apiCommentData": "// Daten definieren",
 		"apiCommentFunction": "// Funktion um den POST request zu senden und damit die Benachrichtigungen zu aktivieren",
-		"apiExplained_1": "Wenn Sie die Gruppen-ID und die Teilnehmer-ID angeben, wird die Benachrichtigung an alle Mitglieder dieser Gruppe mit Ausnahme des Teilnehmers gesendet. Wenn Sie die Gruppen-ID angeben, aber die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Mitglieder dieser Gruppe gesendet. Wenn Sie die Gruppen-ID weglassen, aber die Teilnehmer-ID angeben, wird die Benachrichtigung an den jeweiligen Teilnehmer gesendet.",
+		"apiExplained_1": "Wenn Sie die Gruppen-ID und die Teilnehmer-ID angeben, wird die Benachrichtigung an alle Mitglieder dieser Gruppe mit Ausnahme des Teilnehmers gesendet. Wenn Sie die Gruppen-ID angeben, aber die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Mitglieder dieser Gruppe gesendet. Wenn Sie die Gruppen-ID weglassen, aber die Teilnehmer-ID angeben, wird die Benachrichtigung an den jeweiligen Teilnehmer gesendet. Wenn Sie die Gruppen-ID und die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Teilnehmer der Studie gesendet.",
 		"apiExplained_2": "Parameter <code>title</code>, <code>message</code>, und <code>url</code> definieren den Inhalt der Benachrichtigung, welche angezeigt wird in der Benachrichtigung",
 		"apiNewTokenExpires": "Das neue Token verfällt am",
 		"apiResetToken": "Das Benachrichtigungs-Token zurücksetzten",

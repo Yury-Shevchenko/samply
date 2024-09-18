@@ -184,7 +184,7 @@
 		"apiCode": "JavaScript code om Samply API te gebruiken om een melding te versturen",
 		"apiCommentData": "// gegevens definiëren",
 		"apiCommentFunction": "// functie om het POST-verzoek te versturen om de melding te activeren",
-		"apiExplained_1": "Als je de groeps-ID en de deelnemer-ID opgeeft, wordt de notificatie verstuurd naar alle leden van deze groep, behalve de deelnemer. Als u de groeps-ID opgeeft maar de deelnemer-ID weglaat, wordt de notificatie naar alle leden van deze groep gestuurd. Als u de groeps-ID weglaat maar de deelnemer-ID opgeeft, wordt de notificatie naar de specifieke deelnemer gestuurd.",
+		"apiExplained_1": "Als je de groeps-ID en de deelnemer-ID opgeeft, wordt de notificatie verstuurd naar alle leden van deze groep, behalve de deelnemer. Als u de groeps-ID opgeeft maar de deelnemer-ID weglaat, wordt de notificatie naar alle leden van deze groep gestuurd. Als u de groeps-ID weglaat maar de deelnemer-ID opgeeft, wordt de notificatie naar de specifieke deelnemer gestuurd. Als u de groeps-ID en de deelnemer-ID weglaat, wordt de notificatie naar alle deelnemers aan het onderzoek gestuurd.",
 		"apiExplained_2": "Parameters <code>titel</code>, <code>bericht</code>, en <code>url</code> bepalen de inhoud van de melding die in de melding wordt weergegeven.",
 		"apiNewTokenExpires": "Nieuw token moet vervallen op",
 		"apiResetToken": "Meldings-token opnieuw instellen",
