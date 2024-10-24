@@ -10,6 +10,10 @@ const promisify = require("es6-promisify");
 const flash = require("connect-flash");
 const expressValidator = require("express-validator");
 const routes = require("./routes/index");
+const apiRoutesAuthRouter = require("./routes/api/auth");
+const apiRoutesParticipants = require("./routes/api/participants");
+const apiRoutesNotifications = require("./routes/api/notifications");
+const apiRoutesJobs = require("./routes/api/jobs");
 const helpers = require("./helpers");
 const errorHandlers = require("./handlers/errorHandlers");
 require("./handlers/passport");
@@ -136,6 +140,12 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/", routes);
+
+app.use("/webapi/v1/auth", apiRoutesAuthRouter.router);
+app.use("/webapi/v1/participants", apiRoutesParticipants);
+app.use("/webapi/v1/notifications", apiRoutesNotifications);
+app.use("/webapi/v1/jobs", apiRoutesJobs);
+
 app.use(errorHandlers.notFound);
 app.use(errorHandlers.flashValidationErrors);
 if (app.get("env") === "development") {

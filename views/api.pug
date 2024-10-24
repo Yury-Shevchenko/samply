@@ -1,0 +1,65 @@
+extends layout
+
+include mixins/_groupCard
+
+block content
+  .inner
+    .userTable
+      h2 #{l.apiTitle}  
+      
+      if(project && user.project && user.project.name)
+        
+        if (project.notifyExpires)
+          h6 #{l.apiToken} 
+          p= project.notifyToken
+          div  
+            span #{l.apiValidUntil} 
+            span= h.moment(project.notifyExpires).locale(language).format("MMMM Do, YYYY")
+          p 
+
+        h6 #{l.apiResetToken} 
+
+        form(action="/api/resetnotifytoken" method="POST" id="token")
+          p #{l.apiNewTokenExpires} 
+          input(type='date' name="notifyExpires" required)
+          input.button(type="submit" value="Reset token" form="token")
+        
+        p
+        p
+        p
+        
+        h6 #{l.apiCode} 
+        p !{l.apiExplained_1} 
+        p !{l.apiExplained_2} 
+                
+        .code
+          .comment #{l.apiCommentData} 
+          .div const url = "https://samply.uni-konstanz.de/api/notify";
+          .div const data = {
+          .one   projectID: "#{project.id}",
+          .one   groupID: "${placeholder-for-groupID}",
+          .one   participantID: "${placeholder-for-participantID}",
+          .one   token: "#{project.notifyToken}",  
+          .one   title: "your-title",
+          .one   message: "your-message",
+          .one   url: "https://your-survey-link/?samplyid=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_CODE%&message=%MESSAGE_ID%",
+          .one   expireIn: 60, // in minutes
+          .div   }
+          p
+          .comment #{l.apiCommentFunction} 
+          .div async function postData(url, data) {
+          .one   const response = await fetch(url, {
+          .two     method: 'POST', 
+          .two     headers: {
+          .three       'Content-Type': 'application/json'
+          .two     },
+          .two     body: JSON.stringify(data) 
+          .one   });
+          .one   return response;
+          .div }
+                        
+      else
+        p Create a new study first
+
+    //- pre=h.dump(groups)
+    //- pre=h.dump(project)

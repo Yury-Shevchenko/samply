@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
-const Job = mongoose.model("Job");
 const User = mongoose.model("User");
 const Result = mongoose.model("Result");
 const Project = mongoose.model("Project");
-const webpush = require("web-push");
 const Agenda = require("agenda");
 const uniqid = require("uniqid");
 const moment = require("moment");
@@ -14,6 +12,7 @@ const nanoid = customAlphabet(
   "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
   10
 );
+const webhookController = require("./webhookController");
 
 const types = {
   personal_notification: "job_type_one_time",
@@ -51,9 +50,13 @@ const typesReversed = {
 const { Expo } = require("expo-server-sdk");
 let expo = new Expo();
 
+const databaseUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.DATABASE_DEV
+    : process.env.DATABASE;
 const agenda = new Agenda({
   name: "samply-notifications",
-  db: { address: process.env.DATABASE, collection: "Job" },
+  db: { address: databaseUrl, collection: "Job" },
 });
 exports.agenda = agenda;
 
@@ -400,6 +403,7 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
+  console.log("createIntervalNotification", req.body);
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -901,6 +905,7 @@ exports.createIntervalNotification = async (req, res) => {
 };
 
 exports.createIndividualNotification = async (req, res) => {
+  console.log("createIndividualNotification", req.body);
   if (req.body.interval.length === 0) {
     res.status(400).send();
     return;
@@ -2132,19 +2137,21 @@ exports.joinStudy = async (req, res) => {
       { upsert: true, new: true }
     );
 
+    // trigger webhook
+    webhookController.triggerWebhook({
+      projectId: id,
+      event: "study_joined",
+      data: {
+        projectId: project.id,
+        ...newUser,
+      },
+    });
+
     res.status(200).json({ message: "OK" });
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: error });
   }
-
-  // if (updatedUser) {
-  //   res.status(200).json({ message: "OK" });
-  // } else {
-  //   res
-  //     .status(400)
-  //     .json({ message: "There was an error during the user update" });
-  // }
 };
 
 async function removeParticipantFromProject({
@@ -2224,6 +2231,16 @@ exports.leaveStudy = async (req, res) => {
     { upsert: true, new: true }
   );
   if (updatedUser) {
+    // trigger webhook
+    webhookController.triggerWebhook({
+      projectId: req.params.id,
+      event: "study_left",
+      data: {
+        projectId: req.params.id,
+        id: req.body.id, // samply id of the participant
+      },
+    });
+
     res.status(200).json({ message: "OK" });
   } else {
     res
@@ -2666,6 +2683,20 @@ exports.getSpecificJob = async (req, res) => {
   res.render("editJob", { job, types });
 };
 
+// update the scheduled job
+exports.editJob = async (req, res) => {
+  const { jobid, nextRunAt, data } = req.body;
+  const jobs = await agenda.jobs({
+    _id: mongoose.Types.ObjectId(jobid),
+  });
+  if (jobs && jobs.length) {
+    Object.assign(jobs[0].attrs, { nextRunAt });
+    Object.assign(jobs[0].attrs.data, { ...data });
+    await jobs[0].save();
+  }
+  res.redirect("back");
+};
+
 // delete specific scheduled jobs
 exports.removeJob = async (req, res) => {
   const numRemoved = await agenda.cancel({
@@ -2680,16 +2711,56 @@ exports.removeJob = async (req, res) => {
   res.redirect(`back`);
 };
 
-// update the scheduled job
-exports.editJob = async (req, res) => {
-  const { jobid, nextRunAt, data } = req.body;
+// API FUNCTIONS
+exports.findAllProjectJobsAPI = async ({ projectId }) => {
   const jobs = await agenda.jobs({
-    _id: mongoose.Types.ObjectId(jobid),
+    "data.projectid": projectId,
   });
+  return jobs;
+};
+
+// find jobs via API
+exports.findJobsAPI = async ({ projectId, notificationId }) => {
+  const jobs = await agenda.jobs({
+    "data.projectid": projectId,
+    "data.id": notificationId,
+  });
+  return jobs;
+};
+
+// find a specific job via API
+exports.findJobAPI = async ({ projectId, notificationId, jobId }) => {
+  const job = await agenda.jobs({
+    "data.projectid": projectId,
+    "data.id": notificationId,
+    _id: mongoose.Types.ObjectId(jobId),
+  });
+  return job;
+};
+
+// update a job via API
+exports.updateJobAPI = async ({ projectId, notificationId, jobId, data }) => {
+  const jobs = await agenda.jobs({
+    "data.projectid": projectId,
+    "data.id": notificationId,
+    _id: mongoose.Types.ObjectId(jobId),
+  });
+  let job;
   if (jobs && jobs.length) {
-    Object.assign(jobs[0].attrs, { nextRunAt });
-    Object.assign(jobs[0].attrs.data, { ...data });
-    await jobs[0].save();
+    job = jobs[0];
+    const updatedData = { ...data, data: { ...job.attrs.data, ...data.data } };
+    Object.assign(job.attrs, { ...updatedData });
+    await job.save();
   }
-  res.redirect("back");
+  return job;
+};
+
+// delete a job via API
+exports.deleteJobAPI = async ({ projectId, notificationId, jobId }) => {
+  const numRemoved = await agenda.cancel({
+    "data.projectid": projectId,
+    "data.id": notificationId,
+    _id: mongoose.Types.ObjectId(jobId),
+  });
+  return numRemoved;
 };

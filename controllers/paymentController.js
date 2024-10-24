@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const papaparse = require("papaparse");
-const fs = require("fs");
 const stream = require("stream");
 const flatMap = require("flatmap");
 

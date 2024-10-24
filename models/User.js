@@ -6,14 +6,14 @@ mongoose.Promise = global.Promise;
 const userSchema = new Schema(
   {
     local: {
-      password: String
+      password: String,
     },
     name: String,
     email: String,
     samplyId: String, // id for mobile participants / goes inside mobileUsers: id in Projects
     created: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
@@ -21,16 +21,16 @@ const userSchema = new Schema(
     confirmEmailExpires: Date,
     emailIsConfirmed: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    level: Number, //The normal user is 1, the admin is 11, the Superadmin is 101
+    level: Number, // participant is 1,  researcher is 11,  admin is 101
     language: {
       type: String,
-      default: "english"
+      default: "english",
     },
     participantInProject: {
       type: mongoose.Schema.ObjectId,
-      ref: "Project"
+      ref: "Project",
     },
     participant_projects: [
       {
@@ -38,12 +38,12 @@ const userSchema = new Schema(
         name: String,
         description: String,
         image: String,
-        slug: String
-      }
+        slug: String,
+      },
     ],
     project: {
       _id: { type: mongoose.Schema.ObjectId, ref: "Project" },
-      name: String
+      name: String,
     },
     institute: String,
     notifications: [
@@ -51,45 +51,45 @@ const userSchema = new Schema(
         endpoint: String,
         keys: {
           auth: String,
-          p256dh: String
+          p256dh: String,
         },
-        date: { type: Date, default: Date.now }
-      }
+        date: { type: Date, default: Date.now },
+      },
     ],
     useragent: String,
     information: JSON,
     stripeAccountId: String,
-    stripeInformation: JSON
+    stripeInformation: JSON,
   },
   { toJSON: { virtuals: true } }
 );
 
 // methods
 // generating a hash
-userSchema.methods.generateHash = function(password) {
+userSchema.methods.generateHash = function (password) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
 // checking if password is valid
-userSchema.methods.validPassword = function(password) {
+userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.local.password);
 };
 
 // checking if code is valid
-userSchema.methods.validCode = function(password) {
+userSchema.methods.validCode = function (password) {
   return bcrypt.compareSync(password, this.code.password);
 };
 
 //get users of a particular project (for /data)
-userSchema.statics.getUsersOfProject = function(project) {
+userSchema.statics.getUsersOfProject = function (project) {
   return this.aggregate([
     {
       $match: {
         $or: [
           { participant_projects: { $eq: project } }, // filter users in the past
-          { participantInProject: { $eq: project } }
-        ]
-      }
+          { participantInProject: { $eq: project } },
+        ],
+      },
     },
     { $match: { level: { $lt: 10 } } }, // filter only users
     {
@@ -102,22 +102,22 @@ userSchema.statics.getUsersOfProject = function(project) {
               $expr: {
                 $and: [
                   { $eq: ["$project", "$$current_project"] },
-                  { $eq: ["$author", "$$current_author"] }
-                ]
-              }
-            }
+                  { $eq: ["$author", "$$current_author"] },
+                ],
+              },
+            },
           },
           {
             $project: {
               project: 1,
               test: 1,
               deleteRequests: { $cond: ["$deleteRequest", 1, 0] },
-              dataRequests: { $cond: ["$dataRequest", 1, 0] }
-            }
-          }
+              dataRequests: { $cond: ["$dataRequest", 1, 0] },
+            },
+          },
         ],
-        as: "results"
-      }
+        as: "results",
+      },
     },
     {
       $project: {
@@ -132,25 +132,25 @@ userSchema.statics.getUsersOfProject = function(project) {
         numberTests: { $size: { $setUnion: "$results.test" } },
         numberDeleteRequests: { $sum: "$results.deleteRequests" },
         numberDataRequests: { $sum: "$results.dataRequests" },
-        notifications: "$$ROOT.notifications"
-      }
+        notifications: "$$ROOT.notifications",
+      },
     },
-    { $sort: { identity: 1 } } //from highest to lowest
+    { $sort: { identity: 1 } }, //from highest to lowest
   ]);
 };
 
 //define indexes for the faster search
 userSchema.index({
-  samplyId: 1
+  samplyId: 1,
 });
 
 //pre-save validation to make sure that the email does not already exist
-userSchema.pre("save", function(next) {
+userSchema.pre("save", function (next) {
   if (!this.isModified("email") || this.email === "") {
     next(); //skip it
   }
   var self = this;
-  mongoose.models["User"].findOne({ email: self.email }, function(err, user) {
+  mongoose.models["User"].findOne({ email: self.email }, function (err, user) {
     if (err) {
       next(err);
     } else if (user) {
@@ -167,14 +167,14 @@ userSchema.virtual("projects", {
   ref: "Project", //what model to link
   localField: "_id", //which field in the current model
   foreignField: "creator", //should match field in the other model
-  justOne: false
+  justOne: false,
 });
 
 userSchema.virtual("invitedprojects", {
   ref: "Project", //what model to link
   localField: "_id", //which field in the current model
   foreignField: "members", //should match field in the other model
-  justOne: false
+  justOne: false,
 });
 
 function autopopulate(next) {

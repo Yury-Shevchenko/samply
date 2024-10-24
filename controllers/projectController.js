@@ -323,6 +323,22 @@ exports.createProject = async (req, res) => {
           enableActions:
             req.body.enableActions && req.body.enableActions === "on",
           actions: actions,
+          enableWebhooks:
+            req.body.enableWebhooks && req.body.enableWebhooks === "on"
+              ? true
+              : false,
+          webhookEndpoint: req.body.webhookEndpoint,
+          webhookEvents: [
+            req.body[`webhookEvents-study_joined`] === "on"
+              ? "study_joined"
+              : undefined,
+            req.body[`webhookEvents-study_left`] === "on"
+              ? "study_left"
+              : undefined,
+            req.body[`webhookEvents-participant_info_updated`] === "on"
+              ? "participant_info_updated"
+              : undefined,
+          ].filter((e) => !!e),
         },
         samplycode: nanoid(6),
       }).save();
@@ -450,6 +466,22 @@ exports.updateProject = async (req, res) => {
             ? true
             : false,
         actions: actions,
+        enableWebhooks:
+          req.body.enableWebhooks && req.body.enableWebhooks === "on"
+            ? true
+            : false,
+        webhookEndpoint: req.body.webhookEndpoint,
+        webhookEvents: [
+          req.body[`webhookEvents-study_joined`] === "on"
+            ? "study_joined"
+            : undefined,
+          req.body[`webhookEvents-study_left`] === "on"
+            ? "study_left"
+            : undefined,
+          req.body[`webhookEvents-participant_info_updated`] === "on"
+            ? "participant_info_updated"
+            : undefined,
+        ].filter((e) => !!e),
       };
 
       await project.save();
@@ -766,8 +798,6 @@ exports.getMobileGroups = async (req, res) => {
     { _id: req.user.project._id },
     {
       mobileUsers: 1,
-      notifyToken: 1,
-      notifyExpires: 1,
     }
   );
   if (!project) {
@@ -862,4 +892,19 @@ exports.changeStatusParticipant = async (req, res) => {
   });
   await project.save();
   res.redirect("back");
+};
+
+exports.getAPI = async (req, res) => {
+  const project = await Project.findOne(
+    { _id: req.user.project._id },
+    {
+      mobileUsers: 1,
+      notifyToken: 1,
+      notifyExpires: 1,
+    }
+  );
+  if (!project) {
+    return res.render("api", {});
+  }
+  res.render("api", { project });
 };

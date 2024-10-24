@@ -1,21 +1,11 @@
 const mongoose = require("mongoose");
 const papaparse = require("papaparse");
-const axios = require("axios");
 const fetch = require("node-fetch");
-const fs = require("fs");
 const stream = require("stream");
 const flatMap = require("flatmap");
 const Result = mongoose.model("Result");
 const User = mongoose.model("User");
 const Project = mongoose.model("Project");
-
-const confirmOwner = (project, user) => {
-  const isCreator = project.creator.equals(user._id);
-  const isAdministrator = user.level > 100;
-  if (!isCreator && !isAdministrator) {
-    throw Error("You must be a creator a project in order to do it!");
-  }
-};
 
 const confirmOwnerOrMember = (project, user) => {
   const isCreator = project.creator.equals(user._id);

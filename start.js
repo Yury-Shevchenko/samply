@@ -15,7 +15,11 @@ if (major <= 7 && minor <= 5) {
 require("dotenv").config({ path: "variables.env" });
 
 // Connect to Database and handle bad connections
-mongoose.connect(process.env.DATABASE, {
+const databaseUrl =
+  process.env.NODE_ENV === "development"
+    ? process.env.DATABASE_DEV
+    : process.env.DATABASE;
+mongoose.connect(databaseUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

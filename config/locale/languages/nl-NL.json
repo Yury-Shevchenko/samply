@@ -74,6 +74,18 @@
 		"submit": "Mijn account bijwerken",
 		"title": "Account bewerken"
 	},
+	"api": {
+		"apiCode": "JavaScript code om Samply API te gebruiken om een melding te versturen",
+		"apiCommentData": "// gegevens definiëren",
+		"apiCommentFunction": "// functie om het POST-verzoek te versturen om de melding te activeren",
+		"apiExplained_1": "Als je de groeps-ID en de deelnemer-ID opgeeft, wordt de notificatie verstuurd naar alle leden van deze groep, behalve de deelnemer. Als u de groeps-ID opgeeft maar de deelnemer-ID weglaat, wordt de notificatie naar alle leden van deze groep gestuurd. Als u de groeps-ID weglaat maar de deelnemer-ID opgeeft, wordt de notificatie naar de specifieke deelnemer gestuurd. Als u de groeps-ID en de deelnemer-ID weglaat, wordt de notificatie naar alle deelnemers aan het onderzoek gestuurd.",
+		"apiExplained_2": "Parameters <code>titel</code>, <code>bericht</code>, en <code>url</code> bepalen de inhoud van de melding die in de melding wordt weergegeven.",
+		"apiNewTokenExpires": "Nieuw token moet vervallen op",
+		"apiResetToken": "Meldings-token opnieuw instellen",
+		"apiTitle": "Samply Stream API",
+		"apiToken": "Meldings-token",
+		"apiValidUntil": "Het token is geldig tot"
+	},
 	"docs": {
 		"ask_question_header": "Heeft u een vraag?",
 		"data_1": "Er zijn twee manieren om de deelname te volgen: via de lijst van deelnemers (\"Deelnemers\" menu) en de geschiedenis van de verzonden meldingen (\"Geschiedenis\" menu).",
@@ -181,16 +193,6 @@
 		"upload_title": ""
 	},
 	"groups": {
-		"apiCode": "JavaScript code om Samply API te gebruiken om een melding te versturen",
-		"apiCommentData": "// gegevens definiëren",
-		"apiCommentFunction": "// functie om het POST-verzoek te versturen om de melding te activeren",
-		"apiExplained_1": "Als je de groeps-ID en de deelnemer-ID opgeeft, wordt de notificatie verstuurd naar alle leden van deze groep, behalve de deelnemer. Als u de groeps-ID opgeeft maar de deelnemer-ID weglaat, wordt de notificatie naar alle leden van deze groep gestuurd. Als u de groeps-ID weglaat maar de deelnemer-ID opgeeft, wordt de notificatie naar de specifieke deelnemer gestuurd. Als u de groeps-ID en de deelnemer-ID weglaat, wordt de notificatie naar alle deelnemers aan het onderzoek gestuurd.",
-		"apiExplained_2": "Parameters <code>titel</code>, <code>bericht</code>, en <code>url</code> bepalen de inhoud van de melding die in de melding wordt weergegeven.",
-		"apiNewTokenExpires": "Nieuw token moet vervallen op",
-		"apiResetToken": "Meldings-token opnieuw instellen",
-		"apiTitle": "Meldings-API",
-		"apiToken": "Meldings-token",
-		"apiValidUntil": "Het token is geldig tot",
 		"groupAdd": "Een nieuwe groep toevoegen",
 		"groupCreate": "Groep aanmaken",
 		"groupDelete": "Verwijderen",
@@ -299,6 +301,7 @@
 		"allTasks": "Alle taken",
 		"already_have_code": "Als u uw deelnemerscode al kent, log dan in ",
 		"annual": "Jaarlijks",
+		"api": "API",
 		"auth_login": "Inloggen met",
 		"auth_sign": "Aanmelden met",
 		"billedAsOnePayment": "Gefactureerd als één betaling van ",
@@ -842,6 +845,7 @@
 		"development_header": "In ontwikkeling",
 		"enableActionsToggle": "Actieknoppen inschakelen (hiermee kunt u snelle acties instellen die deelnemers kunnen uitvoeren bij interactieve meldingen; deelnemers moeten opnieuw deelnemen aan uw onderzoek als u de actieknoppen hebt gewijzigd)",
 		"enableGeofencingToggle": "Geofencing inschakelen (met geofencing kunt u uw deelnemers waarschuwen en enquêtes sturen wanneer zij bepaalde gebieden betreden of verlaten, bijv. thuis, supermarkt, werkplek).",
+		"enableWebhooksToggle": "Webhooks inschakelen",
 		"feelingLucky": "Ik voel me gelukkig; ik kies een willekeurige foto.",
 		"geoAddLocation": "Locatie toevoegen",
 		"geoAlertEnterLocationName": "Naam locatie",
@@ -896,6 +900,9 @@
 		"title_invited": "U bent uitgenodigd voor onderzoeken",
 		"title_new": "Nieuw onderzoek",
 		"title_proejcts": "Mijn onderzoeken",
+		"webhooksDescription": "Met webhooks kunt u POST-verzoeken naar uw eindpunt (URL) ontvangen wanneer bepaalde gebeurtenissen plaatsvinden. Selecteer hieronder de gebeurtenissen en voer de URL van uw eindpunt in.",
+		"webhooksEndpoint": "Uw eindpunt (URL) om POST-verzoeken met updates te ontvangen",
+		"webhooksTitle": "Webhooks",
 		"welcomeMessage": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. "
 	},
 	"receipts": {

@@ -1,0 +1,196 @@
+GET http://localhost:80/webapi/v1/notifications
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+
+
+### 
+
+GET http://localhost:80/webapi/v1/notifications/1lmpet7m2dcq812
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+
+
+### 
+
+POST http://localhost:80/webapi/v1/notifications
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+    "schedule": "one-time",
+    "target": "fixed-times",
+    "randomize": false,
+    "participants": [],
+    "date": [ "2025-10-19T10:00:18.000Z" ],
+    "message": "Message",
+    "title": "Ttile",
+    "url": "https://google.de",
+    "name": "One-time",
+    "scheduleInFuture": true,
+    "timezone": "Europe/Berlin",
+    "expireIn": null,
+    "useParticipantTimezone": false,
+    "reminders": []
+}
+
+### 
+
+POST http://localhost:80/webapi/v1/notifications
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+   "schedule": "one-time",
+   "target": "user-specific",
+   "randomize": true,
+   "intervals": [
+     {
+       "from": "2024-10-16T07:00:00.000Z",
+       "to": "2024-10-16T16:00:00.000Z",
+       "number": 1,
+       "distance": 0
+     }
+   ],
+   "message": "Test message",
+   "title": "Test",
+   "url": "https://google.de",
+   "name": "One-time",
+   "scheduleInFuture": true,
+   "timezone": "Europe/Berlin",
+   "expireIn": null,
+   "useParticipantTimezone": false,
+   "reminders": []
+}
+
+
+### 
+
+POST http://localhost:80/webapi/v1/notifications
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+   "schedule": "repeat",
+   "target": "fixed-intervals",
+   "randomize": false,
+   "interval": [ "4 00 12 * * *" ],
+   "int_start": {
+    "start": "event",
+    "startMoment": "2024-10-16T09:10:35.902Z",
+    "startAfter": { "days": "1", "hours": "0", "minutes": "0" },
+    "startEvent": "now",
+    "startNextDay": ""
+   },
+   "int_end": {
+    "stop": "event",
+    "stopMoment": "2024-10-25T09:10:35.903Z",
+    "stopAfter": { "days": "10", "hours": "0", "minutes": "0" },
+    "stopEvent": "now",
+    "stopNextDay": ""
+   },
+   "message": "Test message",
+   "title": "Test",
+   "url": "https://google.de",
+   "name": "Repeat",
+   "scheduleInFuture": true,
+   "timezone": "Europe/Berlin",
+   "expireIn": null,
+   "useParticipantTimezone": false,
+   "reminders": []
+}
+
+### 
+
+POST http://localhost:80/webapi/v1/notifications
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+   "schedule": "repeat",
+   "target": "user-specific",
+   "randomize": true,
+   "intervalWindows": [
+    {
+      "from": "57 0 9 * * *",
+      "to": "42 0 18 * * *",
+      "number": 1,
+      "distance": 0
+    }
+  ],
+  "int_start": {
+    "start": "next",
+    "startMoment": "",
+    "startAfter": "",
+    "startEvent": "registration",
+    "startNextDay": 1
+  },
+  "int_end": {
+    "stop": "next",
+    "stopMoment": "",
+    "stopAfter": "",
+    "stopEvent": "registration",
+    "stopNextDay": 14
+  },
+  "message": "Test message",
+  "title": "Test",
+  "url": "https://google.de",
+  "name": "Repeat",
+  "scheduleInFuture": true,
+  "timezone": "Europe/Berlin",
+  "expireIn": null,
+  "useParticipantTimezone": false,
+  "reminders": []
+}
+
+### 
+
+POST http://localhost:80/webapi/v1/notifications
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+   "schedule": "repeat",
+   "target": "user-specific",
+   "randomize": false,
+   "interval": [ "59 00 12 * * *" ],
+   "int_start": {
+        "start": "next",
+        "startMoment": "",
+        "startAfter": "",
+        "startEvent": "registration",
+        "startNextDay": 1
+    },
+    "int_end": {
+        "stop": "next",
+        "stopMoment": "",
+        "stopAfter": "",
+        "stopEvent": "registration",
+        "stopNextDay": 14
+    },
+    "message": "Test message",
+    "title": "Test",
+    "url": "https://google.de",
+    "name": "Repeat",
+    "scheduleInFuture": true,
+    "timezone": "Europe/Berlin",
+    "expireIn": null,
+    "useParticipantTimezone": false,
+    "reminders": []
+}
+
+###
+
+PATCH http://localhost:80/webapi/v1/notifications/1lmp79dm2a9ucsw
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+  "title": "Updated title 2",
+  "message": "Updated test message 2",
+  "url": "https://example.com"
+}
+
+### 
+
+DELETE http://localhost:80/webapi/v1/notifications/1lmpet7m2dcq812
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+
+

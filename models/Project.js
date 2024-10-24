@@ -115,6 +115,10 @@ const projectSchema = new mongoose.Schema({
       group: JSON,
       stripe: JSON,
       deactivated: Boolean,
+      invitation: {
+        token: String,
+        expiresIn: String,
+      },
     },
   ],
   settings: JSON,

@@ -74,6 +74,18 @@
 		"submit": "Mein Profil aktualisieren",
 		"title": "Profil bearbeiten"
 	},
+	"api": {
+		"apiCode": "JavaScript-Code um anhand der Samply-API  eine Benachrichtigung zu schicken",
+		"apiCommentData": "// Daten definieren",
+		"apiCommentFunction": "// Funktion um den POST request zu senden und damit die Benachrichtigungen zu aktivieren",
+		"apiExplained_1": "Wenn Sie die Gruppen-ID und die Teilnehmer-ID angeben, wird die Benachrichtigung an alle Mitglieder dieser Gruppe mit Ausnahme des Teilnehmers gesendet. Wenn Sie die Gruppen-ID angeben, aber die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Mitglieder dieser Gruppe gesendet. Wenn Sie die Gruppen-ID weglassen, aber die Teilnehmer-ID angeben, wird die Benachrichtigung an den jeweiligen Teilnehmer gesendet. Wenn Sie die Gruppen-ID und die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Teilnehmer der Studie gesendet.",
+		"apiExplained_2": "Parameter <code>title</code>, <code>message</code>, und <code>url</code> definieren den Inhalt der Benachrichtigung, welche angezeigt wird in der Benachrichtigung",
+		"apiNewTokenExpires": "Das neue Token verfällt am",
+		"apiResetToken": "Das Benachrichtigungs-Token zurücksetzten",
+		"apiTitle": "Samply Stream API",
+		"apiToken": "Benachrichtigungs-Token",
+		"apiValidUntil": "Das Token ist gültig bis"
+	},
 	"docs": {
 		"ask_question_header": "Haben Sie eine Frage?",
 		"data_1": "Es gibt zwei Möglichkeiten, die Teilnahme zu überwachen: über die Teilnehmerliste (Menü \"Teilnehmer\") und über die Geschichte der gesendeten Benachrichtigungen (Menü \"Geschichte\").",
@@ -181,16 +193,6 @@
 		"upload_title": "Hochladen der Studie"
 	},
 	"groups": {
-		"apiCode": "JavaScript-Code um anhand der Samply-API  eine Benachrichtigung zu schicken",
-		"apiCommentData": "// Daten definieren",
-		"apiCommentFunction": "// Funktion um den POST request zu senden und damit die Benachrichtigungen zu aktivieren",
-		"apiExplained_1": "Wenn Sie die Gruppen-ID und die Teilnehmer-ID angeben, wird die Benachrichtigung an alle Mitglieder dieser Gruppe mit Ausnahme des Teilnehmers gesendet. Wenn Sie die Gruppen-ID angeben, aber die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Mitglieder dieser Gruppe gesendet. Wenn Sie die Gruppen-ID weglassen, aber die Teilnehmer-ID angeben, wird die Benachrichtigung an den jeweiligen Teilnehmer gesendet. Wenn Sie die Gruppen-ID und die Teilnehmer-ID weglassen, wird die Benachrichtigung an alle Teilnehmer der Studie gesendet.",
-		"apiExplained_2": "Parameter <code>title</code>, <code>message</code>, und <code>url</code> definieren den Inhalt der Benachrichtigung, welche angezeigt wird in der Benachrichtigung",
-		"apiNewTokenExpires": "Das neue Token verfällt am",
-		"apiResetToken": "Das Benachrichtigungs-Token zurücksetzten",
-		"apiTitle": "Benachrichtigungs API",
-		"apiToken": "Benachrichtigungs-Token",
-		"apiValidUntil": "Das Token ist gültig bis",
 		"groupAdd": "Neue Gruppe hinzufügen",
 		"groupCreate": "Gruppe erstellen",
 		"groupDelete": "Löschen",
@@ -299,6 +301,7 @@
 		"allTasks": "Alle Augaben",
 		"already_have_code": "Wenn Sie Ihren Teilnehmercode bereits kennen, melden Sie sich ",
 		"annual": "Jährlicher",
+		"api": "API",
 		"auth_login": "Einloggen mit",
 		"auth_sign": "Anmelden mit",
 		"billedAsOnePayment": "Die Rechnung wird als eine Zahlung von ",
@@ -842,6 +845,7 @@
 		"development_header": "In Entwicklung",
 		"enableActionsToggle": "Aktivieren Sie Aktionsschaltflächen (damit können Sie schnelle Aktionen festlegen, die die Teilnehmer mit interaktiven Benachrichtigungen durchführen können; die Teilnehmer müssen erneut an Ihrer Studie teilnehmen, wenn Sie die Aktionsschaltflächen geändert haben)",
 		"enableGeofencingToggle": "Geofencing aktivieren (Geofencing ermöglicht es Ihnen Benachrichtigungen und Fragebögen an Ihre Teilnehmer zu schicken, wenn sie eine spezifisches Gebiet betreten oder verlassen, z.B. ihr Zuhause, den Supermarkt, Arbeitsplatz)",
+		"enableWebhooksToggle": "Webhooks aktivieren",
 		"feelingLucky": "Ich habe Glück und werde ein zufälliges Bild auswählen.",
 		"geoAddLocation": "Standort hinzufügen",
 		"geoAlertEnterLocationName": "Name des Ortes",
@@ -896,6 +900,9 @@
 		"title_invited": "Sie sind zu Studien eingeladen",
 		"title_new": "Neue Studie",
 		"title_proejcts": "Meine Studien",
+		"webhooksDescription": "Mit Webhooks können Sie POST-Anfragen an Ihren Endpunkt (URL) erhalten, wenn bestimmte Ereignisse eintreten. Bitte wählen Sie unten die Ereignisse aus und geben Sie die URL Ihres Endpunkts ein.",
+		"webhooksEndpoint": "Ihr Endpunkt (URL) zum Empfangen von POST-Anfragen mit Aktualisierungen",
+		"webhooksTitle": "Webhooks",
 		"welcomeMessage": "Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf \"An der Studie teilnehmen\" klicken. Sie können die Einverständniserklärung hier bereitstellen. "
 	},
 	"receipts": {

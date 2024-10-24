@@ -4,7 +4,7 @@ include mixins/_projectForm
 
 block content
   
-  script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.MAP_KEY}&libraries=places` nonce=`${noncevalue}`)
+  script(src=`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAP_KEY}&libraries=places` nonce=`${noncevalue}`)
 
   .inner
     h2 #{l.title_edit}

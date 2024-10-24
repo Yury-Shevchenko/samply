@@ -74,6 +74,18 @@
 		"submit": "Update my account",
 		"title": "Edit account"
 	},
+	"api": {
+		"apiCode": "JavaScript code to use Samply API to send a notification",
+		"apiCommentData": "// defining data",
+		"apiCommentFunction": "// function to send the POST request to activate the notification",
+		"apiExplained_1": "If you specify the group ID and the participant ID, the notification will be sent to all members of this group except the participant. If you specify the group ID but omit the participant ID, the notification will be sent to all members of this group. If you omit the group ID but specify the participant ID, the notification will be sent to the specific participant. If you omit the group ID and the participant ID, the notification will be sent to all participants in the study.",
+		"apiExplained_2": "Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.",
+		"apiNewTokenExpires": "New token should expire on",
+		"apiResetToken": "Reset notification token",
+		"apiTitle": "Samply Stream API",
+		"apiToken": "Notification token",
+		"apiValidUntil": "Token is valid until"
+	},
 	"docs": {
 		"ask_question_header": "Do you have a question?",
 		"data_1": "There are two ways to monitor participation: via the list of participants (“Participants” menu) and the history of notifications sent (“History” menu).",
@@ -181,16 +193,6 @@
 		"upload_title": ""
 	},
 	"groups": {
-		"apiCode": "JavaScript code to use Samply API to send a notification",
-		"apiCommentData": "// defining data",
-		"apiCommentFunction": "// function to send the POST request to activate the notification",
-		"apiExplained_1": "If you specify the group ID and the participant ID, the notification will be sent to all members of this group except the participant. If you specify the group ID but omit the participant ID, the notification will be sent to all members of this group. If you omit the group ID but specify the participant ID, the notification will be sent to the specific participant. If you omit the group ID and the participant ID, the notification will be sent to all participants in the study.",
-		"apiExplained_2": "Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.",
-		"apiNewTokenExpires": "New token should expire on",
-		"apiResetToken": "Reset notification token",
-		"apiTitle": "Notify API",
-		"apiToken": "Notification token",
-		"apiValidUntil": "Token is valid until",
 		"groupAdd": "Add a new group",
 		"groupCreate": "Create group",
 		"groupDelete": "Delete",
@@ -299,6 +301,7 @@
 		"allTasks": "All tasks",
 		"already_have_code": "If you already know your participant code, login ",
 		"annual": "Annual",
+		"api": "API",
 		"auth_login": "Login with",
 		"auth_sign": "Sign up with",
 		"billedAsOnePayment": "Billed as one payment of ",
@@ -842,6 +845,7 @@
 		"development_header": "In developement",
 		"enableActionsToggle": "Enable action buttons (this allows you to set quick actions that participants can perform with interactive notifications; participants will need to rejoin your study if you have changed the action buttons)",
 		"enableGeofencingToggle": "Enable Geofencing (geofencing allows you to notify and send surveys to your participants when they enter or leave specific areas, e.g. home, supermarket, workplace)",
+		"enableWebhooksToggle": "Enable webhooks",
 		"feelingLucky": "I'm feeling lucky; I'll choose a random picture.",
 		"geoAddLocation": "Add location",
 		"geoAlertEnterLocationName": "Location name",
@@ -896,6 +900,9 @@
 		"title_invited": "You are invited to studies",
 		"title_new": "New study",
 		"title_proejcts": "My studies",
+		"webhooksDescription": "Webhooks allow you to receive POST requests to your endpoint (URL) when certain events occur. Please select the events below and enter the URL of your endpoint.",
+		"webhooksEndpoint": "Your endpoint (URL) to receive post requests with updates",
+		"webhooksTitle": "Webhooks",
 		"welcomeMessage": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. "
 	},
 	"receipts": {

@@ -1,20 +1,12 @@
 const mongoose = require("mongoose");
-const promisify = require("es6-promisify");
 const createDOMPurify = require("dompurify");
 const { JSDOM } = require("jsdom");
-const multer = require("multer");
-const moment = require("moment");
-const uniqid = require("uniqid");
 const crypto = require("crypto");
 const User = mongoose.model("User");
-const Result = mongoose.model("Result");
 const Project = mongoose.model("Project");
-
 const mail = require("../handlers/mail");
-const webpush = require("web-push");
-const formidable = require("formidable");
-const fs = require("fs");
-const schedule = require("node-schedule");
+const webhookController = require("./webhookController");
+
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet(
   "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
@@ -170,11 +162,26 @@ exports.updateAccount = async (req, res) => {
     { samplyId: userData.token },
     {
       information: 1,
+      participant_projects: 1,
     }
   );
   const data = userData.data;
   user.information = { ...user.information, ...data };
   await user.save();
+
+  // trigger webhooks
+  for (const project of user.participant_projects) {
+    webhookController.triggerWebhook({
+      projectId: project.id,
+      event: "participant_info_updated",
+      data: {
+        projectId: project.id,
+        id: userData.token, // samply id of the participant
+        information: data,
+      },
+    });
+  }
+
   res.status(200).json({ message: "OK", information: user.information });
 };
 

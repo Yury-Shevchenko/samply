@@ -1,0 +1,36 @@
+POST http://localhost:80/webapi/v1/auth
+Content-Type: application/json
+
+{
+    "email": "shevchenko_yury@mail.ru",
+    "password": "123"
+}
+
+### 
+
+GET http://localhost:80/webapi/v1/auth/studies
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+
+### 
+
+GET http://localhost:80/webapi/v1/auth/studies/selected
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+
+
+###
+POST http://localhost:80/webapi/v1/auth/select/study/
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+    "id": "6273a8dc81aa982c51348c6f"
+}
+
+###
+PATCH http://localhost:80/webapi/v1/auth/study/632442334e5aed1772c70a15
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+Content-Type: application/json
+
+{
+    "name": "Time management study",
+}

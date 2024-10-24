@@ -204,6 +204,30 @@ mixin projectForm(project = {})
         input(name="identifier-4" class='identifier' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 4).map(a => a.identifier)[0]) 
         input(name="buttonTitle-4" class='buttonTitle' type='text' value=project.settings && project.settings.actions && project.settings.actions.filter(a => a.num == 4).map(a => a.buttonTitle)[0]) 
 
+
+    div.inputCheckBox
+      input(type='checkbox' id= 'enableWebhooks' name= 'enableWebhooks' checked = project.settings && project.settings.enableWebhooks)
+      label(for='enableWebhooks')
+        span.
+          #{l.enableWebhooksToggle} 
+
+    #webhooks_editor 
+      h2 #{l.webhooksTitle}   
+
+      p #{l.webhooksDescription}
+
+      .webhooksPlanner
+
+        each event in ["study_joined", "study_left", "participant_info_updated"]
+          div.inputCheckBox
+            input(type='checkbox' id= `webhookEvents-${event}` name=`webhookEvents-${event}` checked = project.settings && project.settings.webhookEvents && project.settings.webhookEvents.includes(event))
+            label(for=`webhookEvents-${event}`)
+              span.
+                #{event} 
+
+        label #{l.webhooksEndpoint} 
+        input(name="webhookEndpoint" type='text' value=project.settings && project.settings.webhookEndpoint) 
+     
     script(nonce=`${noncevalue}`).
       document.addEventListener('DOMContentLoaded', function (){
         
@@ -395,6 +419,19 @@ mixin projectForm(project = {})
             document.getElementById('actions_editor').style.display = "block";
           } else {
             document.getElementById('actions_editor').style.display = "none";
+          }
+        })
+      }
+
+      if(project?.settings?.enableWebhooks) {
+        document.getElementById('webhooks_editor').style.display = "block";
+      } else {
+        document.getElementById('webhooks_editor').style.display = "none";
+        document.getElementById('enableWebhooks').addEventListener('change', function shownWebhooksEditor(){
+          if (this.checked) {
+            document.getElementById('webhooks_editor').style.display = "block";
+          } else {
+            document.getElementById('webhooks_editor').style.display = "none";
           }
         })
       }
