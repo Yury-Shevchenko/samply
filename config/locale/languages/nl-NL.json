@@ -589,6 +589,7 @@
 		"development_header": "In ontwikkeling",
 		"enableActionsToggle": "Actieknoppen inschakelen (hiermee kunt u snelle acties instellen die deelnemers kunnen uitvoeren bij interactieve meldingen; deelnemers moeten opnieuw deelnemen aan uw onderzoek als u de actieknoppen hebt gewijzigd)",
 		"enableGeofencingToggle": "Geofencing inschakelen (met geofencing kunt u uw deelnemers waarschuwen en enquêtes sturen wanneer zij bepaalde gebieden betreden of verlaten, bijv. thuis, supermarkt, werkplek).",
+		"enableWebhooksToggle": "Webhooks inschakelen",
 		"feelingLucky": "Ik voel me gelukkig; ik kies een willekeurige foto.",
 		"geoAddLocation": "Locatie toevoegen",
 		"geoAlertEnterLocationName": "Naam locatie",
@@ -643,7 +644,11 @@
 		"title_invited": "U bent uitgenodigd voor onderzoeken",
 		"title_new": "Nieuw onderzoek",
 		"title_proejcts": "Uw onderzoeken",
-		"welcomeMessage": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. "
+		"webhooksDescription": "Met webhooks kunt u POST-verzoeken naar uw eindpunt (URL) ontvangen wanneer bepaalde gebeurtenissen plaatsvinden. Selecteer hieronder de gebeurtenissen en voer de URL van uw eindpunt in.",
+		"webhooksEndpoint": "Uw eindpunt (URL) om POST-verzoeken met updates te ontvangen",
+		"webhooksTitle": "Webhooks",
+		"welcomeMessage": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. ",
+		"welcomeMessage (2)": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. "
 	},
 	"notifications": {
 		"Friday": "Vrijdag",

@@ -589,6 +589,7 @@
 		"development_header": "In developement",
 		"enableActionsToggle": "Enable action buttons (this allows you to set quick actions that participants can perform with interactive notifications; participants will need to rejoin your study if you have changed the action buttons)",
 		"enableGeofencingToggle": "Enable Geofencing (geofencing allows you to notify and send surveys to your participants when they enter or leave specific areas, e.g. home, supermarket, workplace)",
+		"enableWebhooksToggle": "Enable webhooks",
 		"feelingLucky": "I'm feeling lucky; I'll choose a random picture.",
 		"geoAddLocation": "Add location",
 		"geoAlertEnterLocationName": "Location name",
@@ -643,7 +644,11 @@
 		"title_invited": "You are invited to studies",
 		"title_new": "New study",
 		"title_proejcts": "Your studies",
-		"welcomeMessage": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. "
+		"webhooksDescription": "Webhooks allow you to receive POST requests to your endpoint (URL) when certain events occur. Please select the events below and enter the URL of your endpoint.",
+		"webhooksEndpoint": "Your endpoint (URL) to receive post requests with updates",
+		"webhooksTitle": "Webhooks",
+		"welcomeMessage": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. ",
+		"welcomeMessage (2)": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. "
 	},
 	"notifications": {
 		"Friday": "Friday",

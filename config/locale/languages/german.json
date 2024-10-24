@@ -589,6 +589,7 @@
 		"development_header": "In Entwicklung",
 		"enableActionsToggle": "Aktivieren Sie Aktionsschaltflächen (damit können Sie schnelle Aktionen festlegen, die die Teilnehmer mit interaktiven Benachrichtigungen durchführen können; die Teilnehmer müssen erneut an Ihrer Studie teilnehmen, wenn Sie die Aktionsschaltflächen geändert haben)",
 		"enableGeofencingToggle": "Geofencing aktivieren (Geofencing ermöglicht es Ihnen Benachrichtigungen und Fragebögen an Ihre Teilnehmer zu schicken, wenn sie eine spezifisches Gebiet betreten oder verlassen, z.B. ihr Zuhause, den Supermarkt, Arbeitsplatz)",
+		"enableWebhooksToggle": "Webhooks aktivieren",
 		"feelingLucky": "Ich habe Glück und werde ein zufälliges Bild auswählen.",
 		"geoAddLocation": "Standort hinzufügen",
 		"geoAlertEnterLocationName": "Name des Ortes",
@@ -643,7 +644,11 @@
 		"title_invited": "Sie sind zu Studien eingeladen",
 		"title_new": "Neue Studie",
 		"title_proejcts": "Ihre Studien",
-		"welcomeMessage": "Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf \"An der Studie teilnehmen\" klicken. Sie können die Einverständniserklärung hier bereitstellen. "
+		"webhooksDescription": "Mit Webhooks können Sie POST-Anfragen an Ihren Endpunkt (URL) erhalten, wenn bestimmte Ereignisse eintreten. Bitte wählen Sie unten die Ereignisse aus und geben Sie die URL Ihres Endpunkts ein.",
+		"webhooksEndpoint": "Ihr Endpunkt (URL) zum Empfangen von POST-Anfragen mit Aktualisierungen",
+		"webhooksTitle": "Webhooks",
+		"welcomeMessage": "Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf \"An der Studie teilnehmen\" klicken. Sie können die Einverständniserklärung hier bereitstellen. ",
+		"welcomeMessage (2)": "Der Text für die Einverständniserklärung in der mobilen Anwendung. Dieser wird angezeigt, wenn die Teilnehmer auf \"An der Studie teilnehmen\" klicken. Sie können die Einverständniserklärung hier bereitstellen. "
 	},
 	"notifications": {
 		"Friday": "Freitag",
