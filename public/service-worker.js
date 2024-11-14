@@ -1,50 +1,51 @@
-importScripts('workbox-sw.prod.v2.1.3.js');
-importScripts('/javascripts/indexeddb/idb.js');
-importScripts('/javascripts/indexeddb/utility.js');
+importScripts("workbox-sw.prod.v2.1.3.js");
+importScripts("/javascripts/indexeddb/idb.js");
+importScripts("/javascripts/indexeddb/utility.js");
 
 const workboxSW = new self.WorkboxSW();
 
 // activating
-self.addEventListener('activate', function(event){
+self.addEventListener("activate", function (event) {
   return self.clients.claim();
 });
 
 workboxSW.precache([
   {
-    "url": "images/photos/balloons.jpg",
-    "revision": "6cc34bff3bddca21e93f88c04d9a75dd"
+    url: "images/photos/balloons.jpg",
+    revision: "6cc34bff3bddca21e93f88c04d9a75dd",
   },
   {
-    "url": "images/photos/mobile_phone.jpg",
-    "revision": "6567c173913b92cbe80543d127031673"
-  }
+    url: "images/photos/mobile_phone.jpg",
+    revision: "6567c173913b92cbe80543d127031673",
+  },
 ]);
 
 //handle notifications
 function isClientFocused() {
-  return clients.matchAll({
-    type: 'window',
-    includeUncontrolled: true
-  })
-  .then((windowClients) => {
-    let clientIsFocused = false;
-    for (let i = 0; i < windowClients.length; i++) {
-      const windowClient = windowClients[i];
-      if (windowClient.focused) {
-        clientIsFocused = true;
-        break;
+  return clients
+    .matchAll({
+      type: "window",
+      includeUncontrolled: true,
+    })
+    .then((windowClients) => {
+      let clientIsFocused = false;
+      for (let i = 0; i < windowClients.length; i++) {
+        const windowClient = windowClients[i];
+        if (windowClient.focused) {
+          clientIsFocused = true;
+          break;
+        }
       }
-    }
-    return clientIsFocused;
-  });
+      return clientIsFocused;
+    });
 }
 
-function saveResults(data, name){
-  fetch('/save', {
-    method:'POST',
+function saveResults(data, name) {
+  fetch("/save", {
+    method: "POST",
     headers: {
-      'Content-Type':'application/json',
-      'Accept':'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
     },
     body: JSON.stringify({
       author: data.author,
@@ -58,48 +59,47 @@ function saveResults(data, name){
       },
       timestamp: Date.now(),
       appVersion: this && this.navigator && this.navigator.appVersion,
-    })
-  })
+    }),
+  });
 }
 
 let that = this;
 
-self.addEventListener('push', event => {
+self.addEventListener("push", (event) => {
   var data = {
-    title: 'Samply study',
-    content: 'Please check the new test',
-    openUrl: 'https://samply.uni-konstanz.de',
-    author: '5d108c051e7ed9050a283989',
-    project: '5d1091b3ea5dc1052dd171b3',
-    samplyid: '1234567890',
+    title: "Samply study",
+    content: "Please check the new test",
+    openUrl: "https://samply.uni-konstanz.de",
+    author: "5d108c051e7ed9050a283989",
+    project: "5d1091b3ea5dc1052dd171b3",
+    samplyid: "1234567890",
   };
 
-  if(event.data) {
-    try{
+  if (event.data) {
+    try {
       data = event.data.json();
-    }
-    catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
   }
 
-  saveResults(data, 'received');
+  saveResults(data, "received");
 
   var options = {
     body: data.content,
-    icon: '/images/icons/samply.png',
-    badge: '/images/icons/samply.png',
-    vibrate: [300,110,300],
+    icon: "/images/icons/samply.png",
+    badge: "/images/icons/samply.png",
+    vibrate: [300, 110, 300],
     tag: data.title,
     actions: [
       {
-        action: 'go',
-        title: 'Go to the test',
+        action: "go",
+        title: "Go to the test",
       },
       {
-        action: 'no',
-        title: 'Not now',
-      }
+        action: "no",
+        title: "Not now",
+      },
     ],
     data: {
       title: data.title,
@@ -108,28 +108,29 @@ self.addEventListener('push', event => {
       author: data.author,
       project: data.project,
       samplyid: data.samplyid,
-    }
+    },
   };
 
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
-
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener("notificationclick", function (event) {
   var notification = event.notification;
-  if (event.action === 'no') {
-    if(notification && notification.data) saveResults(notification.data, 'not now');
+  if (event.action === "no") {
+    if (notification && notification.data)
+      saveResults(notification.data, "not now");
     notification.close();
   } else {
-    if(notification && notification.data){
-      saveResults(notification.data, 'go to test');
+    if (notification && notification.data) {
+      saveResults(notification.data, "go to test");
       const urlToOpen = notification.data.openUrl;
       event.waitUntil(
-        clients.matchAll({
-          type: 'window',
-          includeUncontrolled: true
-        })
-          .then(function(clis) {
+        clients
+          .matchAll({
+            type: "window",
+            includeUncontrolled: true,
+          })
+          .then(function (clis) {
             let client = null;
             let matchingClient = null;
             for (let i = 0; i < clis.length; i++) {
@@ -139,7 +140,7 @@ self.addEventListener('notificationclick', function(event) {
                 break;
               }
             }
-            if(matchingClient){
+            if (matchingClient) {
               matchingClient.focus();
             } else {
               clients.openWindow(urlToOpen);
@@ -152,10 +153,7 @@ self.addEventListener('notificationclick', function(event) {
 });
 
 //if a user closed the notification
-self.addEventListener('notificationclose', (event) => {
-  if(event.notification && event.notification.data) saveResults(event.notification.data, 'closed');
-})
-
-// self.addEventListener('message', function(event){
-//   console.log("SW Received Message: " + event.data);
-// });
+self.addEventListener("notificationclose", (event) => {
+  if (event.notification && event.notification.data)
+    saveResults(event.notification.data, "closed");
+});

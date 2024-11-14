@@ -403,7 +403,6 @@ exports.createScheduleNotification = async (req, res) => {
 };
 
 exports.createIntervalNotification = async (req, res) => {
-  console.log("createIntervalNotification", req.body);
   if (req.body.int_start === "" || req.body.int_end === "") {
     res.status(400).send();
     return;
@@ -905,7 +904,6 @@ exports.createIntervalNotification = async (req, res) => {
 };
 
 exports.createIndividualNotification = async (req, res) => {
-  console.log("createIndividualNotification", req.body);
   if (req.body.interval.length === 0) {
     res.status(400).send();
     return;
@@ -2143,7 +2141,7 @@ exports.joinStudy = async (req, res) => {
       event: "study_joined",
       data: {
         projectId: project.id,
-        ...newUser,
+        samplyId: newUser?.id,
       },
     });
 
@@ -2423,7 +2421,6 @@ exports.scheduleAdminJob = async (req, res) => {
 };
 
 exports.updateTokenInStudy = async (req, res) => {
-  console.log(req.body);
   res.status(200).json({ message: "OK" });
 };
 

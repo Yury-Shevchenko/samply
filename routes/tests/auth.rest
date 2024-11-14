@@ -34,3 +34,13 @@ Content-Type: application/json
 {
     "name": "Time management study",
 }
+
+###
+
+POST https://samply.uni-konstanz.de/webapi/v1/auth
+Content-Type: application/json
+
+{
+    "email": "yury.shevchenko@uni.kn",
+    "password": ""
+}

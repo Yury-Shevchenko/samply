@@ -26,7 +26,7 @@ exports.triggerWebhook = async ({ projectId, event, data }) => {
 
     try {
       await axios.post(webhookEndpoint, payload);
-      console.log(`Webhook sent successfully to ${webhookEndpoint}`);
+      // console.log(`Webhook sent successfully to ${webhookEndpoint}`);
     } catch (error) {
       console.error(
         `Failed to send webhook to ${webhookEndpoint}:`,
