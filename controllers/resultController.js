@@ -299,6 +299,9 @@ const download = async ({ project, res }) => {
             geofencing_event: obj.events
               .filter((e) => e.status === "geofencing-event")
               .map((e) => e.created.getTime()),
+            completed: obj.events
+              .filter((e) => e.status === "completed")
+              .map((e) => e.created.getTime()),
             message_id: obj.messageId,
             participant_code: participants
               .filter((participant) => participant.id === obj.samplyid)
