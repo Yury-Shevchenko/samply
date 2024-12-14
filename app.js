@@ -76,7 +76,7 @@ app.use((req, res, next) => {
   res.locals.flashes = req.flash();
   res.locals.user = req.user || null;
   res.locals.currentPath = req.path;
-  res.locals.visitor_language = req.session.visitor_language;
+  res.locals.visitor_language = req.session && req.session.visitor_language;
   const path = String(req.path).split("/")[1] || "index";
 
   if (
