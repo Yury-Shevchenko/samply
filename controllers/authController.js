@@ -99,14 +99,14 @@ exports.confirmEmail = async (req, res) => {
   });
   if (!user) {
     req.flash("error", `${res.locals.layout.flash_confirm_email_invalid}`);
-    res.redirect("/account");
+    res.redirect("/");
   } else {
     user.emailIsConfirmed = true;
     user.confirmEmailToken = undefined;
     user.confirmEmailExpires = undefined;
     await user.save();
     req.flash("success", `${res.locals.layout.flash_email_confrimed}`);
-    res.redirect("/account");
+    res.redirect("/");
   }
 };
 

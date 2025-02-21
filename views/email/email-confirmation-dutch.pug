@@ -2,7 +2,7 @@ extends email-layout
 
 block content
   h2 E-mail bevestiging
-  p Hallo #{participant.name}. Je hebt een account aangemaakt in Samply. Klik op de volgende knop om uw e-mailadres te bevestigen. 
+  p Hallo#{participant.name && ` ${participant.name}`}. Je hebt een account aangemaakt in Samply. Klik op de volgende knop om uw e-mailadres te bevestigen. 
   +button(resetURL, 'Bevestig mijn e-mail →')
   p Als u niet op de bovenstaande knop kunt klikken, bezoek dan #{resetURL}
   br

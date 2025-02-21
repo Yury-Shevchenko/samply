@@ -88,6 +88,45 @@ mixin projectForm(project = {})
     p
 
     div.inputCheckBox
+      input(type='checkbox' id= 'enableEvents' name= 'enableEvents' checked = project.settings && project.settings.enableEvents)
+      label(for='enableEvents')
+        span.
+          Enable event-contingent design
+
+    #events_editor 
+      h2 Events editor
+
+      p !{l.permanentLink}
+
+      textarea(type='text' name='eventDescription')= project.settings && project.settings.eventDescription
+
+      .actionsPlanner
+        label Event
+        label Button caption
+        label URL  
+
+        label 1
+        input(name="event-caption-1" class='identifier' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 1).map(a => a.caption)[0]) 
+        input(name="event-url-1" class='buttonTitle' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 1).map(a => a.url)[0]) 
+
+        label 2
+        input(name="event-caption-2" class='identifier' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 2).map(a => a.caption)[0]) 
+        input(name="event-url-2" class='buttonTitle' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 2).map(a => a.url)[0]) 
+
+        label 3
+        input(name="event-caption-3" class='identifier' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 3).map(a => a.caption)[0]) 
+        input(name="event-url-3" class='buttonTitle' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 3).map(a => a.url)[0]) 
+
+        label 4
+        input(name="event-caption-4" class='identifier' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 4).map(a => a.caption)[0]) 
+        input(name="event-url-4" class='buttonTitle' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 4).map(a => a.url)[0]) 
+
+        label 5
+        input(name="event-caption-5" class='identifier' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 5).map(a => a.caption)[0]) 
+        input(name="event-url-5" class='buttonTitle' type='text' value=project.settings && project.settings.events && project.settings.events.filter(a => a.num == 5).map(a => a.url)[0]) 
+
+
+    div.inputCheckBox
       input(type='checkbox' id= 'enableGeofencing' name= 'enableGeofencing' checked = project.settings && project.settings.enableGeofencing)
       label(for='enableGeofencing')
         span.
@@ -393,6 +432,19 @@ mixin projectForm(project = {})
             document.getElementById('askParticipantGroupInputField').style.display = "block";
           } else {
             document.getElementById('askParticipantGroupInputField').style.display = "none";
+          }
+        })
+      }
+
+      if(project?.settings?.enableEvents) {
+        document.getElementById('events_editor').style.display = "block";
+      } else {
+        document.getElementById('events_editor').style.display = "none";
+        document.getElementById('enableEvents').addEventListener('change', function shownEventsEditor(){
+          if (this.checked) {
+            document.getElementById('events_editor').style.display = "block";
+          } else {
+            document.getElementById('events_editor').style.display = "none";
           }
         })
       }

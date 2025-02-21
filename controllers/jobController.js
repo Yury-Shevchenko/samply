@@ -2142,6 +2142,8 @@ exports.joinStudy = async (req, res) => {
       data: {
         projectId: project.id,
         samplyId: newUser?.id,
+        code: username,
+        group: group,
       },
     });
 
@@ -2228,6 +2230,21 @@ exports.leaveStudy = async (req, res) => {
     },
     { upsert: true, new: true }
   );
+
+  const study = await Project.findOne(
+    { _id: req.params.id },
+    { mobileUsers: 1 }
+  );
+  let participant = {};
+  if (
+    study &&
+    study.mobileUsers.filter((user) => user.id === req.body.id).length
+  ) {
+    participant = study.mobileUsers.filter(
+      (user) => user.id === req.body.id
+    )[0];
+  }
+
   if (updatedUser) {
     // trigger webhook
     webhookController.triggerWebhook({
@@ -2236,6 +2253,8 @@ exports.leaveStudy = async (req, res) => {
       data: {
         projectId: req.params.id,
         id: req.body.id, // samply id of the participant
+        code: participant?.username,
+        group: participant?.group,
       },
     });
 

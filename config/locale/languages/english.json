@@ -211,6 +211,7 @@
 	"history": {
 		"completed": "Completed",
 		"confirmDelete": "Are you sure you want to delete all the records?",
+		"confirmOpenLink": "Open the study link?",
 		"deleteAll": "Delete all records",
 		"deletedByUser": "Deleted by user",
 		"download": "Download",
@@ -960,6 +961,8 @@
 		"Wednesday": "Wednesday",
 		"april": "April",
 		"august": "August",
+		"confirmDeletion": "Delete scheduled notification? This action cannot be undone.",
+		"confirmOpenLink": "Open the study link?",
 		"december": "December",
 		"delete_notifications": "Delete all notifications",
 		"february": "February",
@@ -1178,6 +1181,7 @@
 	},
 	"users": {
 		"button_invite": "Invite",
+		"confirmDeletion": "Delete participant? This action cannot be undone.",
 		"download_all_data": "Download all data",
 		"download_all_meta_data": "Download all metadata",
 		"invite": "Invite more participants with the following links:",

@@ -280,6 +280,11 @@ exports.createProject = async (req, res) => {
         identifier: req.body[`identifier-${num}`],
         buttonTitle: req.body[`buttonTitle-${num}`],
       }));
+      const events = [1, 2, 3, 4, 5].map((num) => ({
+        num,
+        caption: req.body[`event-caption-${num}`],
+        url: req.body[`event-url-${num}`],
+      }));
       const project = await new Project({
         name: req.body.name.trim(),
         image: req.body.image,
@@ -299,6 +304,12 @@ exports.createProject = async (req, res) => {
           askParticipantGroup:
             req.body.askParticipantGroup &&
             req.body.askParticipantGroup === "on",
+          enableEvents:
+            req.body.enableEvents && req.body.enableEvents === "on"
+              ? true
+              : false,
+          eventDescription: req.body.eventDescription,
+          events: events,
           enableGeofencing:
             req.body.enableGeofencing && req.body.enableGeofencing === "on",
           geofencing: {
@@ -433,6 +444,11 @@ exports.updateProject = async (req, res) => {
         identifier: req.body[`identifier-${num}`],
         buttonTitle: req.body[`buttonTitle-${num}`],
       }));
+      const events = [1, 2, 3, 4, 5].map((num) => ({
+        num,
+        caption: req.body[`event-caption-${num}`],
+        url: req.body[`event-url-${num}`],
+      }));
       project.settings = {
         askParticipantCode:
           req.body.askParticipantCode && req.body.askParticipantCode === "on"
@@ -442,6 +458,12 @@ exports.updateProject = async (req, res) => {
           req.body.askParticipantGroup && req.body.askParticipantGroup === "on"
             ? true
             : false,
+        enableEvents:
+          req.body.enableEvents && req.body.enableEvents === "on"
+            ? true
+            : false,
+        eventDescription: req.body.eventDescription,
+        events: events,
         enableGeofencing:
           req.body.enableGeofencing && req.body.enableGeofencing === "on"
             ? true
@@ -704,6 +726,10 @@ exports.getPublicStudy = async (req, res) => {
       }
     );
   }
+  if (!study) {
+    return res.send({ error: "No study found" });
+  }
+
   const author = await User.findOne(
     { _id: study.creator },
     {
@@ -713,9 +739,6 @@ exports.getPublicStudy = async (req, res) => {
     }
   );
 
-  if (!study) {
-    return res.send({ error: "No study found" });
-  }
   let participant = {};
   if (study && study.mobileUsers.filter((user) => user.id === token).length) {
     participant = study.mobileUsers.filter((user) => user.id === token)[0];

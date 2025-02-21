@@ -9,9 +9,9 @@ mixin scheduledNotification(notification, i, showLinkToJobs)
     .review__author
       p= `${notification.message}`
     .review__author
-      a(style="border-bottom: 2px solid #FFC40E;" href=notification.url target="_blank") Link
+      a(style="border-bottom: 2px solid #FFC40E;" href=notification.url target="_blank" class="confirmOpen") Link
     .review__author
-      a(style="border-bottom: 2px solid #FFC40E;" href=`/removenotification/${notification.id}`) Delete
+      a(style="border-bottom: 2px solid #FFC40E;" href=`/removenotification/${notification.id}` class="confirmDelete") Delete
         
   
   if(notification.timezone)
@@ -137,3 +137,28 @@ mixin scheduledNotification(notification, i, showLinkToJobs)
     .review__header
       p
         a(href=`/scheduled/view/${notification.id}`) #{l.seeAllJobs}
+
+
+  script(defer type='text/javascript' nonce=`${noncevalue}`).
+    const linksOpen = document.getElementsByClassName('confirmOpen');
+    const confirmOpen = function(e) {
+      if (!confirm('#{l.confirmOpenLink}')) {
+        e.preventDefault();
+      }
+    };
+    for (var i = 0; i < linksOpen.length; i++) {
+      linksOpen[i].addEventListener('click', confirmOpen, false);
+    }
+
+    const linksDelete = document.getElementsByClassName('confirmDelete');
+    const confirmDelete = function(e) {
+      if (!confirm('#{l.confirmDeletion}')) {
+        e.preventDefault();
+      }
+    };
+    for (var i = 0; i < linksDelete.length; i++) {
+      linksDelete[i].addEventListener('click', confirmDelete, false);
+    }
+
+
+      

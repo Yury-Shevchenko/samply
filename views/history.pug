@@ -55,7 +55,7 @@ block content
               td= notification.data.title 
               td= notification.data.message
               td
-                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url target="blank_") Link
+                a(style="border-bottom: 2px solid #FFC40E;" href=notification.data.url target="blank_" class="confirm") Link
               td= notification.events.filter(e => e.status === 'sent').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss')) 
               td= notification.data.expireAt && h.moment.utc(notification.data.expireAt).local().locale(language).format('DD.MM.YY, H:mm:ss') 
               td= notification.events.filter(e => e.status === 'received-in-app').map(e => h.moment.utc(e.created).local().locale(language).format('DD.MM.YY, H:mm:ss'))               
@@ -108,4 +108,15 @@ block content
         }
       });
 
-    //- pre= h.dump(history)        
+    script(defer type='text/javascript' nonce=`${noncevalue}`).
+      var links = document.getElementsByClassName('confirm');
+      var confirmAction = function(e) {
+        if (!confirm('#{l.confirmOpenLink}')) {
+          e.preventDefault();
+        }
+      };
+
+      for (var i = 0; i < links.length; i++) {
+        links[i].addEventListener('click', confirmAction, false);
+      }
+      

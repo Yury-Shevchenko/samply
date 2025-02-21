@@ -2,7 +2,7 @@ extends email-layout
 
 block content
   h2 E-Mail-Bestätigung
-  p Herzlich Willkommen #{participant.name}. Sie haben ein Konto in Samply erstellt. Bitte klicken Sie auf die folgende Schaltfläche, um Ihre E-Mail Adresse zu bestätigen. 
+  p Herzlich Willkommen#{participant.name && ` ${participant.name}`}. Sie haben ein Konto in Samply erstellt. Bitte klicken Sie auf die folgende Schaltfläche, um Ihre E-Mail Adresse zu bestätigen. 
   +button(resetURL, 'Meine E-Mail bestätigen →')
   p Wenn Sie die obige Schaltfläche nicht anklicken können, besuchen Sie bitte #{resetURL}
   br

@@ -97,7 +97,21 @@ exports.createMobileAccount = async (req, res) => {
   User.findOne({ email: userData.email }, function (err, user) {
     if (err) return done(err);
     if (user) {
-      res.status(400).json({ message: "Account exists" });
+      if (user.validPassword(userData?.password)) {
+        user.information = {};
+        if (userData.timezone) {
+          user.information.timezone = userData.timezone;
+        }
+        if (userData.settings) {
+          user.information.settings = userData.settings;
+        }
+        user.save(function (err) {
+          if (err) throw err;
+          res.status(200).json({ message: "OK", userToken: user?.samplyId });
+        });
+      } else {
+        res.status(400).json({ message: "Account exists" });
+      }
     } else {
       var newUser = new User();
       newUser.level = 1;
@@ -105,11 +119,26 @@ exports.createMobileAccount = async (req, res) => {
       newUser.local.password = newUser.generateHash(userData.password);
       const userToken = makeRandomCode();
       newUser.samplyId = userToken;
+      newUser.information = {};
       if (userData.timezone) {
-        newUser.information = {
-          timezone: userData.timezone,
-        };
+        newUser.information.timezone = userData.timezone;
       }
+      if (userData.settings) {
+        newUser.information.settings = userData.settings;
+      }
+
+      // send a confirmation email
+      const user_lang = req.res.locals.locale_language;
+      newUser.language = user_lang;
+      newUser.confirmEmailToken = crypto.randomBytes(20).toString("hex");
+      newUser.confirmEmailExpires = Date.now() + 3600000;
+      mail.send({
+        participant: newUser,
+        subject: "Email confirmation",
+        resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+        filename: "email-confirmation-" + newUser.language,
+      });
+
       newUser.save(function (err) {
         if (err) throw err;
         res.status(200).json({ message: "OK", userToken: userToken });
@@ -165,12 +194,27 @@ exports.updateAccount = async (req, res) => {
       participant_projects: 1,
     }
   );
+
   const data = userData.data;
   user.information = { ...user.information, ...data };
   await user.save();
 
   // trigger webhooks
   for (const project of user.participant_projects) {
+    const study = await Project.findOne(
+      { _id: project?._id },
+      { mobileUsers: 1 }
+    );
+    let participant = {};
+    if (
+      study &&
+      study.mobileUsers.filter((user) => user.id === userData.token).length
+    ) {
+      participant = study.mobileUsers.filter(
+        (user) => user.id === userData.token
+      )[0];
+    }
+
     webhookController.triggerWebhook({
       projectId: project.id,
       event: "participant_info_updated",
@@ -178,6 +222,8 @@ exports.updateAccount = async (req, res) => {
         projectId: project.id,
         id: userData.token, // samply id of the participant
         information: data,
+        code: participant?.username,
+        group: participant?.group,
       },
     });
   }

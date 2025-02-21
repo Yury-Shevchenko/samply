@@ -211,6 +211,7 @@
 	"history": {
 		"completed": "Abgeschlossen",
 		"confirmDelete": "Sind Sie sicher, dass Sie alle Einträge löschen wollen?",
+		"confirmOpenLink": "Den Link zur Studie öffnen?",
 		"deleteAll": "Alle Einträge löschen",
 		"deletedByUser": "Gelöscht vom Benutzer",
 		"download": "Herunterladen",
@@ -960,6 +961,8 @@
 		"Wednesday": "Mittwoch",
 		"april": "April",
 		"august": "August",
+		"confirmDeletion": "Geplante Benachrichtigung löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+		"confirmOpenLink": "Den Link zur Studie öffnen?",
 		"december": "Dezember",
 		"delete_notifications": "Alle Benachrichtigungen löschen",
 		"february": "Februar",
@@ -1178,6 +1181,7 @@
 	},
 	"users": {
 		"button_invite": "Einladen",
+		"confirmDeletion": "Teilnehmer löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
 		"download_all_data": "Alle Daten herunterladen",
 		"download_all_meta_data": "Alle Metadaten herunterladen",
 		"invite": "Mehr Teilnehmer mit den folgenden Links einladen:",

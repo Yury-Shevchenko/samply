@@ -33,6 +33,18 @@ mixin userCard(person = {}, i, project)
         a(style="border-bottom: 2px solid #FFC40E;" href=`/notifications/${person.id}`) #{l.table_schedule}
       if user.level > 10
         td
-          a(href=`/removeuser/${person.id}`) 
+          a(href=`/removeuser/${person.id}` class="confirm") 
             <i class="far fa-trash-alt"></i>
+
+  script(defer type='text/javascript' nonce=`${noncevalue}`).
+    var links = document.getElementsByClassName('confirm');
+    var confirmAction = function(e) {
+      if (!confirm('#{l.confirmDeletion}')) {
+        e.preventDefault();
+      }
+    };
+
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', confirmAction, false);
+    }
       

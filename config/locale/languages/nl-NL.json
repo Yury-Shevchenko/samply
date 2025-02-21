@@ -211,6 +211,7 @@
 	"history": {
 		"completed": "Voltooid",
 		"confirmDelete": "Weet je zeker dat je alle records wilt verwijderen?",
+		"confirmOpenLink": "De studielink openen?",
 		"deleteAll": "Alle records verwijderen",
 		"deletedByUser": "Verwijderd door gebruiker",
 		"download": "Download",
@@ -960,6 +961,8 @@
 		"Wednesday": "Woensdag",
 		"april": "April",
 		"august": "Augustus",
+		"confirmDeletion": "Geplande melding verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+		"confirmOpenLink": "De studielink openen?",
 		"december": "December",
 		"delete_notifications": "Alle meldingen verwijderen",
 		"february": "Februari",
@@ -1178,6 +1181,7 @@
 	},
 	"users": {
 		"button_invite": "Uitnodigen",
+		"confirmDeletion": "Deelnemer verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
 		"download_all_data": "Download alle gegevens",
 		"download_all_meta_data": "Download alle metadata",
 		"invite": "Nodig meer deelnemers uit met de volgende links:",
