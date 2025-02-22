@@ -92,6 +92,12 @@ const makeRandomCode = () => {
   return nanoid(6);
 };
 
+const languageCodes = {
+  en: "english",
+  de: "german",
+  nl: "dutch",
+};
+
 exports.createMobileAccount = async (req, res) => {
   const userData = req.body;
   User.findOne({ email: userData.email }, function (err, user) {
@@ -128,16 +134,28 @@ exports.createMobileAccount = async (req, res) => {
       }
 
       // send a confirmation email
+      let user_app_language;
+      if (req.body.defaultLanguageCode) {
+        user_app_language = languageCodes[req.body.defaultLanguageCode];
+      }
       const user_lang = req.res.locals.locale_language;
-      newUser.language = user_lang;
+      newUser.language = user_app_language || user_lang || "english";
       newUser.confirmEmailToken = crypto.randomBytes(20).toString("hex");
       newUser.confirmEmailExpires = Date.now() + 3600000;
-      mail.send({
-        participant: newUser,
-        subject: "Email confirmation",
-        resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
-        filename: "email-confirmation-" + newUser.language,
-      });
+      try {
+        mail.send({
+          participant: newUser,
+          subject: "Email confirmation",
+          resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+          filename: "email-confirmation-" + newUser.language,
+        });
+      } catch (err) {
+        console.error(
+          "Error with sending a confirmation email to study participant ",
+          newUser,
+          err
+        );
+      }
 
       newUser.save(function (err) {
         if (err) throw err;
