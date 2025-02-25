@@ -2,37 +2,108 @@ POST http://localhost:80/webapi/v1/auth
 Content-Type: application/json
 
 {
-    "email": "shevchenko_yury@mail.ru",
+    "email": "your-email@example.com",
     "password": "123"
 }
 
 ### 
 
 GET http://localhost:80/webapi/v1/auth/studies
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 ### 
 
 GET http://localhost:80/webapi/v1/auth/studies/selected
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 
 ###
 POST http://localhost:80/webapi/v1/auth/select/study/
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 Content-Type: application/json
 
 {
-    "id": "6273a8dc81aa982c51348c6f"
+    "id": "675c26a4d7f785b8fc6d5fbf"
 }
 
 ###
-PATCH http://localhost:80/webapi/v1/auth/study/632442334e5aed1772c70a15
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+PATCH http://localhost:80/webapi/v1/auth/study/679108132efd88822887026b
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 Content-Type: application/json
 
 {
-    "name": "Time management study",
+    "settings": {
+        "askParticipantCode": false,
+        "askParticipantGroup": false,
+        "enableEvents": true,
+        "eventDescription": "Hier können Sie eigeninitiativ Abfragen starten",
+        "events": [
+            {
+            "num": 1,
+            "caption": "Treffen wurde abgesagt",
+            "url": "https://survey.com/?event=CANCELLATION&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%"
+            },
+            {
+            "num": 2,
+            "caption": "Stimmungseinbruch",
+            "url": "https://survey.com/?event=MOOD_DECLINE&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%"
+            },
+            {
+            "num": 3,
+            "caption": "",
+            "url": ""
+            },
+            {
+            "num": 4,
+            "caption": "",
+            "url": ""
+            },
+            {
+            "num": 5,
+            "caption": "",
+            "url": ""
+            }
+        ],
+        "enableGeofencing": false,
+        "geofencing": {
+            "locations": [],
+            "link": "",
+            "radius": "",
+            "header": "",
+            "message": "",
+            "exitzone": null,
+            "mintimewindow": null,
+            "events": [],
+            "invisible": 0
+        },
+        "permanentLink": "",
+        "enableActions": true,
+        "actions": [
+            {
+            "num": 1,
+            "identifier": "1",
+            "buttonTitle": "yes"
+            },
+            {
+            "num": 2,
+            "identifier": "2",
+            "buttonTitle": "no"
+            },
+            {
+            "num": 3,
+            "identifier": "3",
+            "buttonTitle": "may be"
+            },
+            {
+            "num": 4,
+            "identifier": "4",
+            "buttonTitle": "ok"
+            }
+        ],
+        "enableWebhooks": false,
+        "webhookEndpoint": "",
+        "webhookEvents": []
+    }
 }
 
 ###

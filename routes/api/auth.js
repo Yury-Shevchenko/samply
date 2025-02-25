@@ -110,6 +110,7 @@ router.get("/studies/selected", authenticate, async (req, res) => {
         creator: 1,
         slug: 1,
         public: 1,
+        settings: 1,
       }
     );
     res.status(200).json({ study });
@@ -139,7 +140,6 @@ router.patch("/study/:id", authenticate, async (req, res) => {
     const project = await Project.findOne({ _id: req.params.id });
     confirmOwnerOrMember({ user: req.user, project });
     Object.keys(req.body).map((key) => (project[key] = req.body[key]));
-    console.log({ project });
     await project.save();
     res.json({ message: "Updated study" });
   } catch (error) {

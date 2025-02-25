@@ -104,11 +104,23 @@ router.delete("/:id", authenticate, async (req, res) => {
     if (!project.notifications) {
       project.notifications = [];
     }
-    project.notifications = project.notifications.filter(
-      (user) => user.id !== req.params.id
+    // check whether the notification is in the project
+    const isNotificationPresent = project.notifications.filter(
+      (notification) => notification.id === req.params.id
     );
-    await project.save();
-    res.json({ message: "Deleted notification" });
+    if (isNotificationPresent.length === 0) {
+      res.json({
+        message: `The notification with the ID ${req.params.id} was not found`,
+      });
+    } else {
+      project.notifications = project.notifications.filter(
+        (notification) => notification.id !== req.params.id
+      );
+      await project.save();
+      res.json({
+        message: `The notification with the ID ${req.params.id} was deleted`,
+      });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

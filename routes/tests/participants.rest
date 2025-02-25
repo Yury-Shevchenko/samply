@@ -1,39 +1,47 @@
 GET http://localhost:80/webapi/v1/participants
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 
 ### 
 
 GET http://localhost:80/webapi/v1/participants/V_1rLR
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 
 ### 
 
 POST http://localhost:80/webapi/v1/participants
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 Content-Type: application/json
 
 {
-    "name": "Stefan Westermann",
+    "name": "Max Musterman",
     "email": "mail@example.com",
     "code": "asdfasdf434r",
-    "expiresIn": "14d"
+    "expiresIn": "14d",
+    "information": {
+        "timezone": "Europe/Paris",
+        "timeWindow": {
+            "startTime": "2020-04-29T08:00:00.000Z",
+            "endTime": "2020-04-29T22:00:00.000Z"
+            }
+        }
 }
 
 ###
 
-PATCH http://localhost:80/webapi/v1/participants/7wGYEw
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+PATCH http://localhost:80/webapi/v1/participants/9LJ3ik
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 Content-Type: application/json
 
 {
-    "code": "qwerty-block-1"
+    "username": "asdfasdf434r",
+    "deactivated": false
 }
 
 ### 
 
-DELETE http://localhost:80/webapi/v1/participants/7wGYEw
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+DELETE http://localhost:80/webapi/v1/participants/9LJ3ik
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 

@@ -1,30 +1,32 @@
 GET http://localhost:80/webapi/v1/jobs
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 ### 
 
-GET http://localhost:80/webapi/v1/jobs/1lmpf6sm2dcx4ax
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+GET http://localhost:80/webapi/v1/jobs/1lmpbfmm7kb9bk3
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 ### 
 
-GET http://localhost:80/webapi/v1/jobs/1lmpf6sm2dcx4ax/671115c7ed1ab6e5cbe9e659
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+GET http://localhost:80/webapi/v1/jobs/1lmpbfmm7kb9bk3/67bd93886573718f43eedd16
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 
 ### 
 
-PATCH http://localhost:80/webapi/v1/jobs/1lmpf6sm2dcx4ax/671115c7ed1ab6e5cbe9e659
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+PATCH http://localhost:80/webapi/v1/jobs/1lmpbfmm7kb9bk3/67bd93886573718f43eedd16
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8
 Content-Type: application/json
 
 {
   "data": {
     "title": "Test title 3",
     "message": "Test test message 3"
-  }
+  },
+  "nextRunAt": "2026-10-19T10:00:18.000Z",
+  "malicious": "will not pass"
 }
 
 ### 
 
-DELETE http://localhost:80/webapi/v1/jobs/1lmpf6sm2dcx4ax/671115c7ed1ab6e5cbe9e659
-x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxNmQ4YWRjMTkxZTFmNGU3M2YwMzYwOSIsImlhdCI6MTcyODk5MDQ4NCwiZXhwIjoxNzMwMjAwMDg0fQ.KlsREehThkXMl_qnTKB6TuMFcpcHr-a7lHacPhe9OTE
+DELETE http://localhost:80/webapi/v1/jobs/1lmpbfmm7kb9bk3/67bd93886573718f43eedd16
+x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NWMyNjMzZDdmNzg1YjhmYzZkNWU0NyIsImlhdCI6MTc0MDQ3MDUzMiwiZXhwIjoxNzQxNjgwMTMyfQ.4HuHI48ENwXQDzEBcKKTX5M4fC4jFXCJLBmhzeZWsi8

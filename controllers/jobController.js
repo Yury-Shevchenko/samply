@@ -2754,6 +2754,9 @@ exports.findJobAPI = async ({ projectId, notificationId, jobId }) => {
   return job;
 };
 
+const pick = (obj, arr) =>
+  Object.fromEntries(Object.entries(obj).filter(([k]) => arr.includes(k)));
+
 // update a job via API
 exports.updateJobAPI = async ({ projectId, notificationId, jobId, data }) => {
   const jobs = await agenda.jobs({
@@ -2764,7 +2767,11 @@ exports.updateJobAPI = async ({ projectId, notificationId, jobId, data }) => {
   let job;
   if (jobs && jobs.length) {
     job = jobs[0];
-    const updatedData = { ...data, data: { ...job.attrs.data, ...data.data } };
+    const filteredData = pick(data, ["data", "nextRunAt"]);
+    const updatedData = {
+      ...filteredData,
+      data: { ...job.attrs.data, ...filteredData.data },
+    };
     Object.assign(job.attrs, { ...updatedData });
     await job.save();
   }

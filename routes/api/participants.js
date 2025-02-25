@@ -61,6 +61,11 @@ router.post("/", authenticate, async (req, res) => {
       newUser.email = req.body.email;
       samplyid = makeRandomCode();
       newUser.samplyId = samplyid;
+      newUser.information = {};
+
+      if (req.body.information) {
+        newUser.information = req.body.information;
+      }
       await newUser.save();
     } else {
       samplyid = existingUserWithEmail.samplyId;
@@ -123,7 +128,7 @@ router.patch("/:id", authenticate, async (req, res) => {
     }
     project.mobileUsers = project.mobileUsers.map((user) => {
       if (user.id === req.params.id) {
-        user.username = req.body.code;
+        Object.keys(req.body).map((key) => (user[key] = req.body[key]));
       }
       return user;
     });
