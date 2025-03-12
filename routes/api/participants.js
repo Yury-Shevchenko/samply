@@ -128,11 +128,25 @@ router.patch("/:id", authenticate, async (req, res) => {
     }
     project.mobileUsers = project.mobileUsers.map((user) => {
       if (user.id === req.params.id) {
-        Object.keys(req.body).map((key) => (user[key] = req.body[key]));
+        Object.keys(req.body)
+          .filter((key) => key !== "information")
+          .map((key) => (user[key] = req.body[key]));
       }
       return user;
     });
     await project.save();
+
+    // update user information
+    if (req.body.information && Object.keys(req.body.information).length) {
+      const { information } = req.body;
+      const participant = await User.findOne(
+        { samplyId: req.params.id },
+        { information: 1 }
+      );
+      participant.information = { ...participant.information, ...information };
+      await participant.save();
+    }
+
     res.json({ message: "Updated participant" });
   } catch (error) {
     res.status(500).json({ message: error.message });

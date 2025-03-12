@@ -395,7 +395,12 @@ exports.createScheduleNotification = async (req, res) => {
       } else {
         res.status(201);
       }
-      res.redirect(`back`);
+      const isApiCall = !!req.headers["x-auth-token"];
+      if (isApiCall) {
+        return res.status(200).json({ message: "Notification was scheduled" });
+      } else {
+        return res.redirect("back");
+      }
     });
   } else {
     res.status(400).send();
@@ -899,7 +904,12 @@ exports.createIntervalNotification = async (req, res) => {
     } else {
       res.status(201);
     }
-    res.redirect(`back`);
+    const isApiCall = !!req.headers["x-auth-token"];
+    if (isApiCall) {
+      return res.status(200).json({ message: "Notification was scheduled" });
+    } else {
+      return res.redirect("back");
+    }
   });
 };
 
@@ -1226,7 +1236,12 @@ exports.createIndividualNotification = async (req, res) => {
     } else {
       res.status(201);
     }
-    res.redirect(`back`);
+    const isApiCall = !!req.headers["x-auth-token"];
+    if (isApiCall) {
+      return res.status(200).json({ message: "Notification was scheduled" });
+    } else {
+      return res.redirect("back");
+    }
   });
 };
 
@@ -1374,7 +1389,12 @@ exports.createFixedIndividualNotification = async (req, res) => {
     } else {
       res.status(201);
     }
-    res.redirect(`back`);
+    const isApiCall = !!req.headers["x-auth-token"];
+    if (isApiCall) {
+      return res.status(200).json({ message: "Notification was scheduled" });
+    } else {
+      return res.redirect("back");
+    }
   });
 };
 
