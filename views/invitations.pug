@@ -1,8 +1,5 @@
 extends layout
 
-include mixins/_userCard
-include mixins/_invitationForm
-
 block content
   .inner
 
@@ -25,12 +22,12 @@ block content
             else 
               td 
                 p !{l.activate_study_1} <strong>#{project.name}</strong>!{l.activate_study_2}
-        
+
         p !{l.web_link_1}  
             
         h5 
           .headerLink !{l.way_1_header} 
-        
+
         table.table
           tr
             td !{l.direct_link}
@@ -38,11 +35,11 @@ block content
               input(type="text" value=`samply://--/study?id=${project.id}` id="direct" readonly)
               button(class="copyButton" id="directButton") #{l.copy_link}
               
-        
+
         p !{l.direct_link_1}
         p !{l.direct_link_2}
         p !{l.direct_link_3}
-        
+
         p !{l.custom_link_1}
         table.table
           tr
@@ -50,27 +47,155 @@ block content
             td
               input(type="text" value=`samply://--/study?id=${project.id}&code=123` id="custom")
               button(class="copyButton" id="customButton") #{l.copy_link}
-        
+
         h5 
           .headerLink !{l.way_2_header} 
-        
+
         p !{l.finding_study}
-        
+
+        h5 
+          .headerLink Way 4: Generate Secure Invitation Link
+
+        p Fill in the parameters to generate a secure invitation link for your study.
+        p <strong>Note:</strong> Participants must install the app first. They can open the link on their phone or copy/paste it into the "Create a new participant account" screen in the app. If they have an existing account, they should log out, use the link, and then enter their login details on the next page.
+
+        style.
+          .table input, .table select {
+            min-width: 300px;
+            padding: 8px;
+            margin-bottom: 5px;
+          }
+          .table .explanation {
+            font-size: 0.9em;
+            color: #555;
+            margin: 0 0 10px 0;
+          }
+
+        table.table
+          tr
+            td Protocol
+            td
+              select(id="protocol")
+                option(value="https" selected) https
+                option(value="http") http
+              p.explanation The communication protocol for the server (https is secure and recommended).
+          tr
+            td Server
+            td
+              input(type="text" id="server" value="samply.uni-konstanz.de" placeholder="e.g., samply.uni-konstanz.de")
+              p.explanation The server address for the study (default is samply.uni-konstanz.de).
+          tr
+            td Study ID
+            td
+              input(type="text" id="study" value=`${project.id}` readonly)
+              p.explanation The unique ID of your study. This cannot be changed as it is specific to your study.
+          tr
+            td Mode
+            td
+              select(id="mode")
+                option(value="multi" selected) Multi
+                option(value="single") Single
+              p.explanation Multi: App supports participating in multiple studies. Single: App focuses on this study only.
+          tr
+            td Allow Timezone
+            td
+              input(type="checkbox" id="allowtz")
+              p.explanation If checked, participants can update their timezone in the app.
+          tr
+            td Allow Payment
+            td
+              input(type="checkbox" id="allowpayment")
+              p.explanation If checked, participants see a link to set up a payment account in the app for receiving payments.
+          tr
+            td Valid For (hours)
+            td
+              input(type="number" id="validfor" value="168" min="1" placeholder="e.g., 168")
+              p.explanation How long the link is valid (in hours, e.g., 168 hours = 7 days).
+          tr
+            td Code
+            td
+              input(type="text" id="code" placeholder="e.g., TEST")
+              p.explanation Optional participant code. Empty: Link can be shared with many. Filled: Link is for one participant.
+          tr
+            td
+            td
+              button(id="generateLink") Generate Link
+
+        table.table
+          tr
+            td Generated Link
+            td
+              input(type="text" id="generatedLink" readonly)
+              button(class="copyButton" id="generatedLinkButton") #{l.copy_link}
+              p.explanation Copy and share this link with participants. It includes a checksum to prevent tampering; any changes will invalidate it.
+
+        script(src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/src/md5.min.js" nonce=`${noncevalue}`)
         script(nonce=`${noncevalue}`).
-          document.addEventListener('DOMContentLoaded', function (){
+          // Ensure md5 is loaded
+          if (typeof window.md5 !== 'function') {
+            console.error('MD5 library failed to load. Please check the CDN or network connection.');
+            alert('Error: MD5 library not loaded. Please try refreshing the page or contact support.');
+          }
+
+          function generateSecureLink(params) {
+            // Create a sorted string of parameters for consistent hashing
+            const paramString = Object.entries(params)
+              .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+              .map(([key, value]) => `${key}=${value}`)
+              .join("&");
+
+            // Generate checksum using js-md5
+            const checksum = window.md5(paramString);
+
+            // Create the final URL with parameters and checksum
+            const queryParams = new URLSearchParams({
+              ...params,
+              checksum,
+            });
+            return `samply://register?${queryParams.toString()}`;
+          }
+
+          document.addEventListener('DOMContentLoaded', function () {
+            // Existing copy button logic
             const btns = document.getElementsByClassName('copyButton');
-            for(let i = 0; i < btns.length; i++) {
-              btns[i].addEventListener("click", function(e) {
-                const textId = e.currentTarget.id.split("Button")[0]
+            for (let i = 0; i < btns.length; i++) {
+              btns[i].addEventListener("click", function (e) {
+                const textId = e.currentTarget.id.split("Button")[0];
                 const copyText = document.getElementById(textId);
                 copyText.select();
                 document.execCommand("copy");
                 document.getElementById(e.currentTarget.id).style.background = "#f3e9e9";
-              })
+              });
             }
+
+            // Generate link button logic
+            document.getElementById('generateLink').addEventListener('click', function () {
+              if (typeof window.md5 !== 'function') {
+                alert('Error: MD5 library not loaded. Cannot generate link.');
+                return;
+              }
+
+               // Create params object, conditionally including code if non-empty
+              const codeValue = document.getElementById('code').value;
+              const params = {
+                protocol: document.getElementById('protocol').value,
+                server: document.getElementById('server').value,
+                study: document.getElementById('study').value,
+                mode: document.getElementById('mode').value,
+                allowtz: document.getElementById('allowtz').checked,
+                allowpayment: document.getElementById('allowpayment').checked,
+                timestamp: Date.now(),
+                validfor: parseInt(document.getElementById('validfor').value) * 3600, // Convert hours to seconds
+              };
+              if (codeValue) {
+                params.code = codeValue;
+              }
+
+              const link = generateSecureLink(params);
+              const generatedLinkInput = document.getElementById('generatedLink');
+              generatedLinkInput.value = link;
+            });
           });
-              
+                      
       else
         p !{l.message_create_project}
-
-    

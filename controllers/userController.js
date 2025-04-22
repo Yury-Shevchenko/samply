@@ -6,6 +6,7 @@ const User = mongoose.model("User");
 const Project = mongoose.model("Project");
 const mail = require("../handlers/mail");
 const webhookController = require("./webhookController");
+const validator = require("validator"); // For email validation
 
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet(
@@ -100,8 +101,12 @@ const languageCodes = {
 
 exports.createMobileAccount = async (req, res) => {
   const userData = req.body;
+
   User.findOne({ email: userData.email }, function (err, user) {
-    if (err) return done(err);
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Database error" });
+    }
     if (user) {
       if (user.validPassword(userData?.password)) {
         user.information = {};
@@ -112,16 +117,19 @@ exports.createMobileAccount = async (req, res) => {
           user.information.settings = userData.settings;
         }
         user.save(function (err) {
-          if (err) throw err;
+          if (err) {
+            console.error("Error saving user:", err);
+            return res.status(500).json({ message: "Error saving user" });
+          }
           res.status(200).json({ message: "OK", userToken: user?.samplyId });
         });
       } else {
         res.status(400).json({ message: "Account exists" });
       }
     } else {
-      var newUser = new User();
+      const newUser = new User();
       newUser.level = 1;
-      newUser.email = userData.email;
+      newUser.email = userData.email || ""; // Store email even if invalid, or empty string
       newUser.local.password = newUser.generateHash(userData.password);
       const userToken = makeRandomCode();
       newUser.samplyId = userToken;
@@ -133,7 +141,7 @@ exports.createMobileAccount = async (req, res) => {
         newUser.information.settings = userData.settings;
       }
 
-      // send a confirmation email
+      // Set user language
       let user_app_language;
       if (req.body.defaultLanguageCode) {
         user_app_language = languageCodes[req.body.defaultLanguageCode];
@@ -142,23 +150,36 @@ exports.createMobileAccount = async (req, res) => {
       newUser.language = user_app_language || user_lang || "english";
       newUser.confirmEmailToken = crypto.randomBytes(20).toString("hex");
       newUser.confirmEmailExpires = Date.now() + 3600000;
-      try {
-        mail.send({
-          participant: newUser,
-          subject: "Email confirmation",
-          resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
-          filename: "email-confirmation-" + newUser.language,
-        });
-      } catch (err) {
-        console.error(
-          "Error with sending a confirmation email to study participant ",
-          newUser,
-          err
+
+      // Send confirmation email only if email is valid
+      if (userData.email && validator.isEmail(userData.email)) {
+        try {
+          mail.send({
+            participant: newUser,
+            subject: "Email confirmation",
+            resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+            filename: "email-confirmation-" + newUser.language,
+          });
+        } catch (err) {
+          console.error(
+            "Failed to send confirmation email to:",
+            userData.email,
+            err
+          );
+          // Continue with user creation despite email failure
+        }
+      } else {
+        console.warn(
+          "Skipping email send due to invalid or missing email:",
+          userData.email || "undefined"
         );
       }
 
       newUser.save(function (err) {
-        if (err) throw err;
+        if (err) {
+          console.error("Error saving new user:", err);
+          return res.status(500).json({ message: "Error saving user" });
+        }
         res.status(200).json({ message: "OK", userToken: userToken });
       });
     }

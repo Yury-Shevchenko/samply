@@ -1,20 +1,10 @@
-// const nodemailer = require("nodemailer");
 const pug = require("pug");
 const juice = require("juice");
 const htmlToText = require("html-to-text");
-// const promisify = require("es6-promisify");
 const postmark = require("postmark");
 const client = new postmark.Client(process.env.MAIL_POSTMARK_CLIENT);
 const email_address = process.env.MAIL_ADDRESS;
-
-// const transport = nodemailer.createTransport({
-//   host: process.env.MAIL_HOST,
-//   port: process.env.MAIL_PORT,
-//   auth: {
-//     user: process.env.MAIL_USER,
-//     pass: process.env.MAIL_PASS,
-//   },
-// });
+const validator = require("validator"); // For email validation
 
 const generateHTML = (filename, options = {}) => {
   const html = pug.renderFile(
@@ -26,31 +16,46 @@ const generateHTML = (filename, options = {}) => {
 };
 
 exports.send = async (options) => {
+  // Validate email address as a secondary check
+  if (
+    !options.participant?.email ||
+    !validator.isEmail(options.participant.email)
+  ) {
+    console.warn(
+      "Invalid email address in mail.send:",
+      options.participant?.email || "undefined"
+    );
+    throw new Error(
+      `Invalid email address: ${options.participant?.email || "undefined"}`
+    );
+  }
+
   const html = generateHTML(options.filename, options);
   const text = htmlToText.fromString(html);
-  // postmark sending
-  client.sendEmail({
-    To: options.participant.email,
-    From: `Samply <yury.shevchenko@uni.kn>`,
-    Subject: options.subject,
-    TextBody: text,
-    HtmlBody: html,
-  });
-};
 
-// exports.invite = async (options) => {
-//   const html = generateHTML(options.filename, options);
-//   const text = htmlToText.fromString(html);
-//   const mailOptions = {
-//     from: `Samply <yury.shevchenko@uni.kn>`,
-//     to: options.participant.email,
-//     subject: options.subject,
-//     html,
-//     text,
-//   };
-//   const sendMail = promisify(transport.sendMail, transport);
-//   return sendMail(mailOptions);
-// };
+  try {
+    await client.sendEmail({
+      To: options.participant.email,
+      From: `Samply <yury.shevchenko@uni.kn>`,
+      Subject: options.subject,
+      TextBody: text,
+      HtmlBody: html,
+    });
+  } catch (err) {
+    // Log specific Postmark errors
+    if (err.name === "InactiveRecipientsError") {
+      console.error("Postmark InactiveRecipientsError:", {
+        email: options.participant.email,
+        statusCode: err.statusCode,
+        code: err.code,
+        recipients: err.recipients,
+      });
+    } else {
+      console.error("Postmark error sending email:", err);
+    }
+    throw err; // Re-throw to be caught by caller
+  }
+};
 
 // send test request
 exports.request = async (options) => {
