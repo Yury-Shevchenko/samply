@@ -1544,7 +1544,7 @@ async function sendToSomeProjectUsers({
   // find the project
   const project = await Project.findOne(
     { _id: project_id },
-    { mobileUsers: 1, name: 1 }
+    { mobileUsers: 1, name: 1, settings: 1 }
   );
 
   if (!project) {
@@ -1610,6 +1610,7 @@ async function sendToSomeProjectUsers({
     project_name: project.name,
     reminders,
     finishid: finid,
+    openStudyScreenFallback: project.settings && project.settings.enableActions,
   });
 }
 
@@ -1635,7 +1636,7 @@ async function sendToAllProjectUsers({
   // find the project
   const project = await Project.findOne(
     { _id: project_id },
-    { mobileUsers: 1, name: 1 }
+    { mobileUsers: 1, name: 1, settings: 1 }
   );
 
   if (!project) {
@@ -1683,6 +1684,7 @@ async function sendToAllProjectUsers({
     project_id,
     project_name: project.name,
     reminders,
+    openStudyScreenFallback: project.settings && project.settings.enableActions,
   });
 }
 
@@ -1695,6 +1697,7 @@ async function sendMobileNotification({
   project_name,
   reminders,
   finishid,
+  openStudyScreenFallback,
 }) {
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
@@ -1784,6 +1787,7 @@ async function sendMobileNotification({
           url: updatedUrl,
           messageId,
           expireAt,
+          openStudyScreenFallback: openStudyScreenFallback,
         },
         id: pushToken.id,
         priority: "high",

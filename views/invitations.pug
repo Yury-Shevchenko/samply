@@ -128,8 +128,11 @@ block content
               input(type="text" id="generatedLink" readonly)
               button(class="copyButton" id="generatedLinkButton") #{l.copy_link}
               p.explanation Copy and share this link with participants. It includes a checksum to prevent tampering; any changes will invalidate it.
+              canvas#generatedLinkQR
+              p.explanation Scan this QR code to access the secure invitation link.
 
         script(src="https://cdn.jsdelivr.net/npm/js-md5@0.8.3/src/md5.min.js" nonce=`${noncevalue}`)
+        script(src="../javascripts/qrcode.min.js" defer nonce=`${noncevalue}`)
         script(nonce=`${noncevalue}`).
           // Ensure md5 is loaded
           if (typeof window.md5 !== 'function') {
@@ -175,7 +178,7 @@ block content
                 return;
               }
 
-               // Create params object, conditionally including code if non-empty
+              // Create params object, conditionally including code if non-empty
               const codeValue = document.getElementById('code').value;
               const params = {
                 protocol: document.getElementById('protocol').value,
@@ -194,8 +197,22 @@ block content
               const link = generateSecureLink(params);
               const generatedLinkInput = document.getElementById('generatedLink');
               generatedLinkInput.value = link;
+
+              // Generate QR code for the secure link
+              if (typeof QRCode === 'object' && typeof QRCode.toCanvas === 'function') {
+                const canvas = document.getElementById('generatedLinkQR');
+                canvas.innerHTML = ''; // Clear previous QR code
+                QRCode.toCanvas(canvas, link, function (error) {
+                  if (error) {
+                    console.error('QR code generation failed:', error);
+                    alert('Error: Failed to generate QR code.');
+                  }
+                });
+              } else {
+                console.error('QRCode library not loaded or toCanvas method unavailable.');
+                alert('Error: QRCode library not loaded. Please try refreshing the page.');
+              }
             });
           });
-                      
       else
         p !{l.message_create_project}
