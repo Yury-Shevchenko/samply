@@ -1788,6 +1788,7 @@ async function sendMobileNotification({
           messageId,
           expireAt,
           openStudyScreenFallback: openStudyScreenFallback,
+          timeoutAfter: expireIn ? parseInt(expireIn) : undefined,
         },
         id: pushToken.id,
         priority: "high",
@@ -1796,7 +1797,6 @@ async function sendMobileNotification({
         batch: batch,
         finid: finid,
         categoryId: project_id, // Use the study ID as the category ID
-        timeoutAfter: expireIn ? parseInt(expireIn) : undefined,
       };
     })
   );
