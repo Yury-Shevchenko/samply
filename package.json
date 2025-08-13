@@ -35,7 +35,7 @@
     "es6-promisify": "5.0.0",
     "expo-server-sdk": "^3.5.0",
     "express": "4.15.2",
-    "express-fileupload": "^0.4.0",
+    "express-fileupload": "^1.1.9",
     "express-session": "1.15.1",
     "express-validator": "3.1.2",
     "faker": "4.1.0",
