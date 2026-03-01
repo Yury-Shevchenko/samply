@@ -6,7 +6,7 @@ const uniqid = require("uniqid");
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet(
   "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
-  10
+  10,
 );
 const fs = require("fs");
 
@@ -35,7 +35,7 @@ const confirmOwnerOrMember = (project, user) => {
   const isParticipant = user.level <= 10;
   if (!(isCreator || isMember) || isParticipant) {
     throw Error(
-      "You must be a creator or a member of a project in order to do it!"
+      "You must be a creator or a member of a project in order to do it!",
     );
   }
 };
@@ -132,7 +132,7 @@ exports.listPublicProjects = async (req, res) => {
   if (!projects.length && skip) {
     req.flash(
       "info",
-      `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`
+      `${res.locals.layout.flash_page_not_exist_1} ${page}. ${res.locals.layout.flash_page_not_exist_2} ${pages}`,
     );
     res.redirect(`/studies/page/${pages}`);
     return;
@@ -155,7 +155,7 @@ exports.showProjectDescription = async (req, res) => {
       created: 1,
       slug: 1,
       image: 1,
-    }
+    },
   );
   let author;
   if (project) {
@@ -165,7 +165,7 @@ exports.showProjectDescription = async (req, res) => {
         name: 1,
         institute: 1,
         // email: 1,
-      }
+      },
     );
     res.render("study", { project, author });
   } else {
@@ -183,7 +183,7 @@ exports.activateParticipantProject = async (req, res) => {
     {
       new: true,
       upsert: true,
-    }
+    },
   ).exec();
   res.redirect("/testing");
 };
@@ -206,7 +206,7 @@ exports.getUserProjects = async (req, res) => {
       creator: 1,
       slug: 1,
       public: 1,
-    }
+    },
   );
   const invitedprojects = await Project.find(
     { members: req.user._id },
@@ -219,7 +219,7 @@ exports.getUserProjects = async (req, res) => {
       creator: 1,
       slug: 1,
       public: 1,
-    }
+    },
   );
   res.render("projects", { projects, invitedprojects });
 };
@@ -235,11 +235,11 @@ exports.activateProject = async (req, res) => {
     {
       new: true,
       upsert: true,
-    }
+    },
   ).exec();
   req.flash(
     "success",
-    `${activeProject.name} ${res.locals.layout.flash_activate_project}`
+    `${activeProject.name} ${res.locals.layout.flash_activate_project}`,
   );
   res.redirect("back");
 };
@@ -362,12 +362,12 @@ exports.createProject = async (req, res) => {
           {
             new: true,
             upsert: true,
-          }
+          },
         ).exec();
       }
       req.flash(
         "success",
-        `${res.locals.layout.flash_project_created} <strong>${req.body.name}</strong>.`
+        `${res.locals.layout.flash_project_created} <strong>${req.body.name}</strong>.`,
       );
       res.redirect(`/projects`);
     } catch (err) {
@@ -584,13 +584,13 @@ exports.changeStatusProject = async (req, res) => {
         req.params.action == "on"
           ? res.locals.layout.flash_program_open
           : res.locals.layout.flash_program_closed
-      }`
+      }`,
     );
     res.redirect("/projects");
   } else {
     req.flash(
       "error",
-      `${res.locals.layout.flash_limit_of_participants_reached_1} ${project.name} ${res.locals.layout.flash_limit_of_participants_reached_2}`
+      `${res.locals.layout.flash_limit_of_participants_reached_1} ${project.name} ${res.locals.layout.flash_limit_of_participants_reached_2}`,
     );
     res.redirect("back");
   }
@@ -604,7 +604,7 @@ exports.inviteParticipants = async (req, res) => {
       .split(/\r\n|,|;/);
     if (emailsRaw) {
       emails = emails.concat(
-        emailsRaw.filter((e) => e && e != null && e != "")
+        emailsRaw.filter((e) => e && e != null && e != ""),
       );
     }
   }
@@ -616,7 +616,7 @@ exports.inviteParticipants = async (req, res) => {
       .map((e) => e.email);
   }
   const newInvitationEmails = emails.filter(
-    (e) => e != null && e != "" && sentEmails.indexOf(e) == -1
+    (e) => e != null && e != "" && sentEmails.indexOf(e) == -1,
   );
   if (sentEmails.length > 100) {
     req.flash("error", `${res.locals.layout.flash_invitation_overlimit}`);
@@ -643,7 +643,7 @@ exports.inviteParticipants = async (req, res) => {
           });
           return { email: email, token: token };
         }
-      })
+      }),
     );
   } catch (err) {
     req.flash("error", err.message);
@@ -666,7 +666,7 @@ exports.invitations = async (req, res) => {
       invitations: 1,
       slug: 1,
       currentlyActive: 1,
-    }
+    },
   );
   res.render("invitations", { project });
 };
@@ -707,7 +707,7 @@ exports.getPublicStudy = async (req, res) => {
         samplycode: 1,
         mobileUsers: 1,
         creator: 1,
-      }
+      },
     );
   } else {
     study = await Project.findOne(
@@ -723,7 +723,7 @@ exports.getPublicStudy = async (req, res) => {
         samplycode: 1,
         mobileUsers: 1,
         creator: 1,
-      }
+      },
     );
   }
   if (!study) {
@@ -736,7 +736,7 @@ exports.getPublicStudy = async (req, res) => {
       name: 1,
       institute: 1,
       email: 1,
-    }
+    },
   );
 
   let participant = {};
@@ -758,7 +758,7 @@ exports.getMobileUsers = async (req, res) => {
     { _id: req.user.project._id },
     {
       mobileUsers: 1,
-    }
+    },
   );
   if (!project) {
     return res.render("data", {});
@@ -767,7 +767,7 @@ exports.getMobileUsers = async (req, res) => {
     project.mobileUsers.map(async (user) => {
       const participant = await User.findOne(
         { samplyId: user.id },
-        { information: 1, stripeAccountId: 1, stripeInformation: 1 }
+        { information: 1, stripeAccountId: 1, stripeInformation: 1 },
       );
 
       if (
@@ -776,14 +776,14 @@ exports.getMobileUsers = async (req, res) => {
         participant.information.timeWindow
       ) {
         const startTime = `${new Date(
-          participant.information.timeWindow.startTime
+          participant.information.timeWindow.startTime,
         ).getHours()}:${new Date(
-          participant.information.timeWindow.startTime
+          participant.information.timeWindow.startTime,
         ).getMinutes()}`;
         const endTime = `${new Date(
-          participant.information.timeWindow.endTime
+          participant.information.timeWindow.endTime,
         ).getHours()}:${new Date(
-          participant.information.timeWindow.endTime
+          participant.information.timeWindow.endTime,
         ).getMinutes()}`;
         user.information = {
           ...user.information,
@@ -811,7 +811,7 @@ exports.getMobileUsers = async (req, res) => {
       }
 
       return user;
-    })
+    }),
   );
   res.render("data", { project, users });
 };
@@ -821,7 +821,7 @@ exports.getMobileGroups = async (req, res) => {
     { _id: req.user.project._id },
     {
       mobileUsers: 1,
-    }
+    },
   );
   if (!project) {
     return res.render("groups", {});
@@ -883,7 +883,7 @@ exports.changeStatusParticipant = async (req, res) => {
       mobileUsers: 1,
       creator: 1,
       members: 1,
-    }
+    },
   );
   confirmOwnerOrMember(project, req.user);
   const userId = req.params.id;
@@ -900,12 +900,12 @@ exports.changeStatusParticipant = async (req, res) => {
       if (req.params.action === "off") {
         req.flash(
           "error",
-          `Sending notifications for the participant ${req.params.id} is disabled. The participant will not receive notifications.`
+          `Sending notifications for the participant ${req.params.id} is disabled. The participant will not receive notifications.`,
         );
       } else {
         req.flash(
           "success",
-          `Sending notifications for the participant ${req.params.id} is enabled. The participant will receive notifications.`
+          `Sending notifications for the participant ${req.params.id} is enabled. The participant will receive notifications.`,
         );
       }
       return updatedUser;
@@ -917,17 +917,47 @@ exports.changeStatusParticipant = async (req, res) => {
   res.redirect("back");
 };
 
-exports.getAPI = async (req, res) => {
-  const project = await Project.findOne(
-    { _id: req.user.project._id },
-    {
-      mobileUsers: 1,
-      notifyToken: 1,
-      notifyExpires: 1,
+exports.getAPI = async (req, res, next) => {
+  try {
+    // Not authenticated
+    if (!req.user) {
+      return res.status(401).json({
+        error: "unauthenticated",
+        message: "You must be logged in to access this API.",
+      });
     }
-  );
-  if (!project) {
-    return res.render("api", {});
+
+    // No project attached to user
+    if (!req.user.project || !req.user.project._id) {
+      return res.status(400).json({
+        error: "no_project",
+        message: "No project is selected for the current user.",
+      });
+    }
+
+    const project = await Project.findOne(
+      { _id: req.user.project._id },
+      {
+        mobileUsers: 1,
+        notifyToken: 1,
+        notifyExpires: 1,
+      },
+    );
+
+    if (!project) {
+      return res.status(404).json({
+        error: "project_not_found",
+        message: "Project with the given id was not found.",
+      });
+    }
+
+    // Success: return project info
+    return res.json({ project });
+  } catch (err) {
+    console.error("Error in getAPI:", err);
+    return res.status(500).json({
+      error: "server_error",
+      message: "Unexpected error while fetching project API data.",
+    });
   }
-  res.render("api", { project });
 };
