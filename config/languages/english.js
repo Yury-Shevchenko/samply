@@ -285,7 +285,7 @@ module.exports = {
       `,
     flash_confirm_email_invalid:
       "Email confirmation link is invalid or has expired",
-    flash_email_confrimed: "Your email address has been confirmed!"
+    flash_email_confrimed: "Your email address has been confirmed!",
   },
 
   passport: {
@@ -298,7 +298,7 @@ module.exports = {
     wrong_credentials: "Oops! Wrong credentials.",
     welcome_back: "Welcome back!",
     flash_confirm_email:
-      "We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link."
+      "We have sent an email with a confirmation link to your email address. In order to complete the sign-up process, please click the confirmation link.",
   },
 
   account: {
@@ -332,7 +332,7 @@ module.exports = {
     payableConfirmEmail:
       "First confirm your email address to register a payable account",
     payableEdit: "Edit payable account",
-    payableCreate: "Create payable account"
+    payableCreate: "Create payable account",
   },
 
   index: {
@@ -402,7 +402,7 @@ module.exports = {
     part_3_text: "Receive notifications using your mobile phone",
     cite_us_header: "Citation",
     citation: `Shevchenko, Y., Kuhlmann, T., & Reips, U. D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. Behavior Research Methods, 1-21.`,
-    citation_read: `<a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">Read online 👀</a>`
+    citation_read: `<a target='_blank' href="https://link.springer.com/article/10.3758/s13428-020-01527-9">Read online 👀</a>`,
   },
 
   projects: {
@@ -533,7 +533,7 @@ module.exports = {
     geoNotifyEnter: "Notify on enter",
     geoNotifyExit: "Notify on exit",
     geoNotifyHide:
-      "Invisible mode (do not show notifications but record the events)"
+      "Invisible mode (do not show notifications but record the events)",
   },
 
   testing: {
@@ -600,7 +600,7 @@ module.exports = {
     sign_out: `
           To unsubscribe from the study, please use the mobile application Samply Research.
           Go to the study page within the application and click on the button "Leave the study".
-        `
+        `,
   },
 
   users: {
@@ -663,7 +663,7 @@ module.exports = {
     table_history: "Log",
     table_new_notification: "New notification",
     table_open: "Open",
-    table_schedule: "Schedule"
+    table_schedule: "Schedule",
   },
 
   researcher: {
@@ -694,7 +694,7 @@ module.exports = {
             It frees time to focus on more important methodological and data analysis work.
             The experiments are automatically documented and stored so that cooperation with colleagues and meta-analyses of previous studies are possible.
             The HTTPS protocol ensures that participants' data is encrypted during transmission.
-            User access to experiments can be protected by various authentication strategies such as participant codes, e-mails, passwords or accounts on social networks.`
+            User access to experiments can be protected by various authentication strategies such as participant codes, e-mails, passwords or accounts on social networks.`,
   },
 
   invitations: {
@@ -763,7 +763,7 @@ module.exports = {
             When the participants tap on your study in the list of studies, they will be taken to the study page.
           `,
     message_create_project: `To invite new participants to your study, activate or create a study <a href="/projects">here</a>.`,
-    copy_link: "Copy link"
+    copy_link: "Copy link",
   },
 
   docs: {
@@ -956,7 +956,7 @@ module.exports = {
             The title, message, and study URL for each notification are shown.
             If the user dismisses a notification, no event is triggered or recorded. Clicking on the user ID reveals the notification events filtered for that user.
             To further inspect and analyze their interactions with notifications, the history of all the participant’s events can be downloaded in the CSV format.
-          `
+          `,
   },
 
   listing: {
@@ -964,7 +964,7 @@ module.exports = {
     pagination_next: "Next",
     pagination_page_1: "Page ",
     pagination_page_2: " of ",
-    pagination_page_3: " total results"
+    pagination_page_3: " total results",
   },
 
   studies: {
@@ -990,13 +990,13 @@ module.exports = {
     firstTimeStep_3:
       '3. Inside the app, click the button "Find a study", then "Scan QR code" and scan the following QR code. Alternatively, use the Camera app of your smartphone to scan the QR code. After that, follow the instructions of the study.',
     scanQRcode: "Scan this QR code to join the study in the mobile app",
-    goToStudy: "Open the study in the app"
+    goToStudy: "Open the study in the app",
   },
 
   help: {
     ask_question_header: "Do you have a problem?",
     type_in_your_question: "Ask your question here",
-    send_question_btn: "Send"
+    send_question_btn: "Send",
   },
 
   notifications: {
@@ -1072,7 +1072,8 @@ module.exports = {
     step_rd: "rd",
     step_same: "same",
     step_next: "next",
-    step_6_next: "Stop sending notification for each participant at the end of the ",
+    step_6_next:
+      "Stop sending notification for each participant at the end of the ",
     step_5_registration: "the moment of the participant registration",
     step_5_now: "now",
     step_6_header: "7. Choose when to stop ",
@@ -1135,7 +1136,7 @@ module.exports = {
   },
 
   messages: {
-    open: "Open the link"
+    open: "Open the link",
   },
 
   payout: {
@@ -1156,7 +1157,7 @@ module.exports = {
     paymentInfoNotRegistered: `
       To receive payments, the participant should register a payable account.
       To do that, the participant should log in to the website and navigate to the <a target='blank' href='/account'>profile page</a>.
-    `
+    `,
   },
 
   receipts: {
@@ -1176,7 +1177,7 @@ module.exports = {
     receiptsAmount: "Amount",
     receiptsFee: "Fee",
     receiptsURL: "Receipt URL",
-    receiptsLink: "Link"
+    receiptsLink: "Link",
   },
 
   groups: {
@@ -1199,7 +1200,7 @@ module.exports = {
     apiExplained_2: `Parameters <code>title</code>, <code>message</code>, and <code>url</code> define the content of the notification that will be displayed in the notification.`,
     apiCommentData: "// defining data",
     apiCommentFunction:
-      "// function to send the POST request to activate the notification"
+      "// function to send the POST request to activate the notification",
   },
 
   history: {
@@ -1217,6 +1218,6 @@ module.exports = {
     geofenceEventTriggered: "Geofencing event triggered",
     messageID: "Message ID",
     status: "Status",
-    receipt: "Receipt"
-  }
+    receipt: "Receipt",
+  },
 };
