@@ -1783,12 +1783,12 @@ async function sendMobileNotification({
         body: message,
         data: {
           title,
+          body: message,
           message,
           url: updatedUrl,
           messageId,
           expireAt,
           openStudyScreenFallback: openStudyScreenFallback,
-          timeoutAfter: expireIn ? parseInt(expireIn) : undefined,
         },
         id: pushToken.id,
         priority: "high",
@@ -2465,7 +2465,21 @@ exports.scheduleAdminJob = async (req, res) => {
 };
 
 exports.updateTokenInStudy = async (req, res) => {
-  res.status(200).json({ message: "OK" });
+  try {
+    const { id, token } = req.body;
+    if (!id || !token) {
+      return res.status(400).json({ message: "Missing id or token" });
+    }
+    await Project.updateMany(
+      { "mobileUsers.id": id },
+      { $set: { "mobileUsers.$[user].token": token } },
+      { arrayFilters: [{ "user.id": id }] }
+    );
+    res.status(200).json({ message: "OK" });
+  } catch (e) {
+    console.error("updateTokenInStudy error:", e);
+    res.status(500).json({ message: "Error updating token" });
+  }
 };
 
 // record completion of a survey/task and cancel scheduled reminders

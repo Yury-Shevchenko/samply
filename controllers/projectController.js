@@ -698,6 +698,7 @@ exports.getPublicStudy = async (req, res) => {
       {
         name: 1,
         description: 1,
+        image: 1,
         welcomeMessage: 1,
         codeMessage: 1,
         groupMessage: 1,
@@ -715,8 +716,10 @@ exports.getPublicStudy = async (req, res) => {
       {
         name: 1,
         description: 1,
+        image: 1,
         welcomeMessage: 1,
         codeMessage: 1,
+        groupMessage: 1,
         messageAfterJoin: 1,
         geofencingInstruction: 1,
         settings: 1,
