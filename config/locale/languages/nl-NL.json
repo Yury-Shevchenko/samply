@@ -657,8 +657,7 @@
     "webhooksDescription": "Met webhooks kunt u POST-verzoeken naar uw eindpunt (URL) ontvangen wanneer bepaalde gebeurtenissen plaatsvinden. Selecteer hieronder de gebeurtenissen en voer de URL van uw eindpunt in.",
     "webhooksEndpoint": "Uw eindpunt (URL) om POST-verzoeken met updates te ontvangen",
     "webhooksTitle": "Webhooks",
-    "welcomeMessage": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. ",
-    "welcomeMessage (2)": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. "
+    "welcomeMessage": "Voer de volledige toestemmings­tekst voor deelnemers in die in de mobiele app wordt getoond wanneer iemand op „Aan het onderzoek deelnemen“ tikt. Bij gezondheidsgerelateerd onderzoek met menselijke deelnemers moet deze toestemmings­tekst het volgende bevatten: (1) de aard, het doel en de duur van het onderzoek, (2) de procedures en de mogelijke risico’s en verwachte voordelen voor de deelnemers, (3) hoe gegevens worden verwerkt, vertrouwelijk worden behandeld en eventueel met derden worden gedeeld, (4) een contactpunt voor vragen van deelnemers en (5) informatie over hoe deelnemers hun deelname aan het onderzoek kunnen beëindigen of hun toestemming kunnen intrekken. Publiceer onderzoeken pas wanneer deze informatie volledig is en is gecontroleerd. Wanneer de toestemming buiten de app wordt verkregen, mogen alleen personen voor het onderzoek worden uitgenodigd die dit externe toestemmingsproces al hebben doorlopen. Gebruik in dat geval individuele uitnodigings­links of uitnodigings­codes, zodat alleen reeds ingestemde deelnemers aan het onderzoek kunnen deelnemen."
   },
   "notifications": {
     "Friday": "Vrijdag",
@@ -918,7 +917,7 @@
     "webhooksDescription": "Met webhooks kunt u POST-verzoeken naar uw eindpunt (URL) ontvangen wanneer bepaalde gebeurtenissen plaatsvinden. Selecteer hieronder de gebeurtenissen en voer de URL van uw eindpunt in.",
     "webhooksEndpoint": "Uw eindpunt (URL) om POST-verzoeken met updates te ontvangen",
     "webhooksTitle": "Webhooks",
-    "welcomeMessage": "De tekst voor het toestemmingsformulier in de app. Dit wordt weergegeven wanneer de deelnemers op \"Deelnemen aan het onderzoek\" klikken. U kunt hier het toestemmingsformulier aanleveren. "
+    "welcomeMessage": "Voer de volledige toestemmings­tekst voor deelnemers in die in de mobiele app wordt getoond wanneer iemand op „Aan het onderzoek deelnemen“ tikt. Bij gezondheidsgerelateerd onderzoek met menselijke deelnemers moet deze toestemmings­tekst het volgende bevatten: (1) de aard, het doel en de duur van het onderzoek, (2) de procedures en de mogelijke risico’s en verwachte voordelen voor de deelnemers, (3) hoe gegevens worden verwerkt, vertrouwelijk worden behandeld en eventueel met derden worden gedeeld, (4) een contactpunt voor vragen van deelnemers en (5) informatie over hoe deelnemers hun deelname aan het onderzoek kunnen beëindigen of hun toestemming kunnen intrekken. Publiceer onderzoeken pas wanneer deze informatie volledig is en is gecontroleerd. Wanneer de toestemming buiten de app wordt verkregen, mogen alleen personen voor het onderzoek worden uitgenodigd die dit externe toestemmingsproces al hebben doorlopen. Gebruik in dat geval individuele uitnodigings­links of uitnodigings­codes, zodat alleen reeds ingestemde deelnemers aan het onderzoek kunnen deelnemen."
   },
   "receipts": {
     "info": "Deelnemersinformatie",

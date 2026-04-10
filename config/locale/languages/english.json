@@ -658,8 +658,7 @@
     "webhooksDescription": "Webhooks allow you to receive POST requests to your endpoint (URL) when certain events occur. Please select the events below and enter the URL of your endpoint.",
     "webhooksEndpoint": "Your endpoint (URL) to receive post requests with updates",
     "webhooksTitle": "Webhooks",
-    "welcomeMessage": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. ",
-    "welcomeMessage (2)": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. "
+    "welcomeMessage": "Enter the full participant consent text shown when a participant taps \"Join the study\" in the mobile app. For health-related human subject research, this consent text must include: (1) the nature, purpose, and duration of the research; (2) the procedures, risks, and expected benefits to participants; (3) how data will be handled, kept confidential, and whether it will be shared with third parties; (4) a contact point for participant questions; and (5) how participants can withdraw from the study. Only publish studies once this information is complete and reviewed. If consent is obtained outside the app, only participants who have already completed that external consent process may be invited to the study. In such cases, use individual invitation links or invitation codes so that only previously consented participants can join."
   },
   "notifications": {
     "Friday": "Friday",
@@ -919,7 +918,7 @@
     "webhooksDescription": "Webhooks allow you to receive POST requests to your endpoint (URL) when certain events occur. Please select the events below and enter the URL of your endpoint.",
     "webhooksEndpoint": "Your endpoint (URL) to receive post requests with updates",
     "webhooksTitle": "Webhooks",
-    "welcomeMessage": "The text for the consent form in the mobile application. This is displayed when the participants click on \"Join the study\". You can provide the consent form here. "
+    "welcomeMessage": "Enter the full participant consent text shown when a participant taps \"Join the study\" in the mobile app. For health-related human subject research, this consent text must include: (1) the nature, purpose, and duration of the research; (2) the procedures, risks, and expected benefits to participants; (3) how data will be handled, kept confidential, and whether it will be shared with third parties; (4) a contact point for participant questions; and (5) how participants can withdraw from the study. Only publish studies once this information is complete and reviewed. If consent is obtained outside the app, only participants who have already completed that external consent process may be invited to the study. In such cases, use individual invitation links or invitation codes so that only previously consented participants can join."
   },
   "receipts": {
     "info": "Participant information",
