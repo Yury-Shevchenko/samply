@@ -22,63 +22,125 @@ block content
             .review
               +scheduledNotification(notification, i, false)  
 
-    .userTable  
+    if jobs && jobs.length > 0
+      .userTable
 
-      h2 #{l.scheduledJobs}
+        h2 #{l.scheduledJobs}
 
-      div #{l.job_description_1} 
-        ul
-          li #{l.job_description_2}  
-          li #{l.job_description_3}  
-          li #{l.job_description_4}  
-          li #{l.job_description_5}  
-          li #{l.job_description_6}  
-      div 
-        p !{l.job_description_7} 
-      div
-        p #{l.job_description_8}  
-      p 
+        div #{l.job_description_1}
+          ul
+            li #{l.job_description_2}
+            li #{l.job_description_3}
+            li #{l.job_description_4}
+            li #{l.job_description_5}
+            li #{l.job_description_6}
+        div
+          p !{l.job_description_7}
+        div
+          p #{l.job_description_8}
+        p
 
-      p(style="font-weight: bold") #{l.jobs_filter_by}  
-      div.filterHeader
-        span 
-            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}`) All
-        each type in Object.keys(typesReversed) 
-          span 
-            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/${type}`)= `${l[type]}`
+        p(style="font-weight: bold") #{l.jobs_filter_by}
+        div.filterHeader
+          span
+              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}`) All
+          each type in Object.keys(typesReversed)
+            span
+              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/${type}`)= `${l[type]}`
 
-      table.table
-        thead
-          td #{l.job_edit}
-          td N.
-          td #{l.job_type}  
-          td #{l.job_nextRun} 
-          td #{l.job_lastRun} 
-          td #{l.job_interval}  
-          td #{l.job_userID} 
-          td #{l.job_groupID} 
-          td #{l.job_delete} 
+        table.table
+          thead
+            td #{l.job_edit}
+            td N.
+            td #{l.job_type}
+            td #{l.job_nextRun}
+            td #{l.job_lastRun}
+            td #{l.job_interval}
+            td #{l.job_userID}
+            td #{l.job_groupID}
+            td #{l.job_delete}
 
-        each job, i in jobs
-          tr 
-            td 
-              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/edit/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_edit}
-
-            td #{i + 1}
-            td= `${l[types[JSON.parse(JSON.stringify(job)).name]]}`
-            if (JSON.parse(JSON.stringify(job)).nextRunAt)
-              td= h.moment.utc(JSON.parse(JSON.stringify(job)).nextRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')  
-            else 
+          each job, i in jobs
+            tr
               td
-            if (JSON.parse(JSON.stringify(job)).lastRunAt)
-              td= h.moment.utc(JSON.parse(JSON.stringify(job)).lastRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss') 
-            else 
+                a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}/edit/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_edit}
+
+              td #{i + 1}
+              td= `${l[types[JSON.parse(JSON.stringify(job)).name]]}`
+              if (JSON.parse(JSON.stringify(job)).nextRunAt)
+                td= h.moment.utc(JSON.parse(JSON.stringify(job)).nextRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')
+              else
+                td
+              if (JSON.parse(JSON.stringify(job)).lastRunAt)
+                td= h.moment.utc(JSON.parse(JSON.stringify(job)).lastRunAt).local().locale(language).format('DD.MM.YY, H:mm:ss')
+              else
+                td
+              td= JSON.parse(JSON.stringify(job)).repeatInterval
+              td= JSON.parse(JSON.stringify(job)).data.userid
+              td= JSON.parse(JSON.stringify(job)).data.groupid
               td
-            td= JSON.parse(JSON.stringify(job)).repeatInterval
-            td= JSON.parse(JSON.stringify(job)).data.userid
-            td= JSON.parse(JSON.stringify(job)).data.groupid
-            td 
-              a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/delete/${id}/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_delete} 
+                a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/delete/${id}/${JSON.parse(JSON.stringify(job))._id}`) #{l.job_delete}
+
+    if hasPendingSystem
+      .userTable
+        h2 Scheduled queue
+
+        p(style="font-weight: bold") Filter by status:
+        div.filterHeader
+          span
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}${pnUser ? '?pnUser=' + pnUser : ''}`) Active (pending / failed)
+          span
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}?pnStatus=pending${pnUser ? '&pnUser=' + pnUser : ''}`) Pending
+          span
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}?pnStatus=sent${pnUser ? '&pnUser=' + pnUser : ''}`) Sent
+          span
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}?pnStatus=cancelled${pnUser ? '&pnUser=' + pnUser : ''}`) Cancelled
+          span
+            a(style="border-bottom: 2px solid #FFC40E;" href=`/scheduled/view/${id}?pnStatus=failed${pnUser ? '&pnUser=' + pnUser : ''}`) Failed
+
+        form(method="get" action=`/scheduled/view/${id}` style="margin-top: 12px;")
+          if pnStatus
+            input(type="hidden" name="pnStatus" value=pnStatus)
+          label(style="font-weight: bold") Filter by participant:&nbsp;
+          select(name="pnUser")
+            if !pnUser
+              option(value="" selected) All participants
+            else
+              option(value="") All participants
+            each participant in participants
+              if pnUser === participant.id
+                option(value=participant.id selected)= participant.username ? participant.username + ' (' + participant.id + ')' : participant.id
+              else
+                option(value=participant.id)= participant.username ? participant.username + ' (' + participant.id + ')' : participant.id
+          button(type="submit") Apply
+
+        if pendingCount === 0
+          p No notifications match this filter.
+        else
+          p
+            | Showing #{pendingNotifications.length} of #{pendingCount} notifications
+            if pendingCount > pnLimit
+              |  (first #{pnLimit} shown — use status filters to narrow results)
+
+          table.table
+            thead
+              td N.
+              td Status
+              td Scheduled For
+              td Title
+              td Recipients (users)
+              td Recipients (groups)
+              td Reminder
+
+            each n, i in pendingNotifications
+              tr
+                td #{i + 1}
+                td= n.status
+                td= h.moment(n.scheduledFor).format('DD.MM.YY, H:mm')
+                td= n.title
+                td= n.recipientUserIds.length ? n.recipientUserIds.join(', ') : 'all'
+                td= n.recipientGroupIds.length ? n.recipientGroupIds.join(', ') : '—'
+                td= n.isReminder ? 'yes' : ''
 
     //- pre= h.dump(jobs)
-    
+

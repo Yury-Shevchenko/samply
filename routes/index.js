@@ -272,6 +272,21 @@ router.get(
   authController.isSuperAdminLoggedIn,
   catchErrors(adminController.removeUser)
 );
+router.get(
+  "/admin/notifications",
+  authController.isSuperAdminLoggedIn,
+  catchErrors(adminController.getPendingNotifications)
+);
+router.get(
+  "/admin/notifications/page/:page",
+  authController.isSuperAdminLoggedIn,
+  catchErrors(adminController.getPendingNotifications)
+);
+router.post(
+  "/admin/notifications/delete-by-status",
+  authController.isSuperAdminLoggedIn,
+  catchErrors(adminController.deleteNotificationsByStatus)
+);
 
 router.get(
   "/users",

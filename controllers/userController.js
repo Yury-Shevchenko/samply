@@ -153,21 +153,14 @@ exports.createMobileAccount = async (req, res) => {
 
       // Send confirmation email only if email is valid
       if (userData.email && validator.isEmail(userData.email)) {
-        try {
-          mail.send({
-            participant: newUser,
-            subject: "Email confirmation",
-            resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
-            filename: "email-confirmation-" + newUser.language,
-          });
-        } catch (err) {
-          console.error(
-            "Failed to send confirmation email to:",
-            userData.email,
-            err
-          );
-          // Continue with user creation despite email failure
-        }
+        mail.send({
+          participant: newUser,
+          subject: "Email confirmation",
+          resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+          filename: "email-confirmation-" + newUser.language,
+        }).catch(err => {
+          console.error("Failed to send confirmation email to:", userData.email, err.message);
+        });
       } else {
         console.warn(
           "Skipping email send due to invalid or missing email:",

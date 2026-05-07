@@ -9,6 +9,37 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min); // The maximum is inclusive and the minimum is inclusive
 }
 
+function preflightConfirm(time, date, constructedDates, constructedIntervals, scheduleInFuture, participants) {
+  const WARN_THRESHOLD = 500;
+  const messages = [];
+
+  let perParticipantCount = null;
+  if (time === "specific" && date === "specific") {
+    perParticipantCount = constructedDates.length;
+  } else if (time === "interval" && date === "specific") {
+    perParticipantCount = constructedIntervals.reduce((s, i) => s + i.number, 0);
+  }
+
+  if (perParticipantCount !== null) {
+    const participantCount = participants && participants.length > 0 ? participants.length : null;
+    const total = participantCount ? perParticipantCount * participantCount : null;
+    if (total !== null && total > WARN_THRESHOLD) {
+      messages.push(
+        `This will create approximately ${total.toLocaleString()} notifications (${perParticipantCount} time(s) × ${participantCount} participant(s)).`
+      );
+    }
+  }
+
+  if (scheduleInFuture) {
+    messages.push(
+      "Future participants will also receive these notifications when they join the study, which will increase the total count."
+    );
+  }
+
+  if (messages.length === 0) return true;
+  return confirm(messages.join("\n\n") + "\n\nContinue?");
+}
+
 function createNotification() {
   if (!titleContent.value || titleContent.value.trim() === "") {
     alert("Enter a title");
@@ -596,6 +627,7 @@ function createNotification() {
   });
 
   // 3. send this object to the server API
+  if (!preflightConfirm(time, date, constructedDates, constructedIntervals, scheduleInFuture, participants)) return;
 
   if (time === "repeat") {
     if (date === "specific") {
@@ -761,10 +793,14 @@ function createFixedScheduledNotification(
       reminders: reminders,
     }),
   })
-    .then((res) => {
-      if (res.url && res.ok) {
+    .then(async (res) => {
+      if (res.redirected) {
         window.location = res.url;
+        return;
       }
+      const data = await res.json();
+      if (data.warning) alert(data.warning);
+      if (data.redirect) window.location = data.redirect;
       console.log("success");
     })
     .catch((err) => {
@@ -810,10 +846,14 @@ function createFixedIntervalNotification(
       reminders: reminders,
     }),
   })
-    .then((res) => {
-      if (res.url && res.ok) {
+    .then(async (res) => {
+      if (res.redirected) {
         window.location = res.url;
+        return;
       }
+      const data = await res.json();
+      if (data.warning) alert(data.warning);
+      if (data.redirect) window.location = data.redirect;
       console.log("success");
     })
     .catch((err) => {
@@ -859,10 +899,14 @@ function createIndividualSpecificNotification(
       reminders: reminders,
     }),
   })
-    .then((res) => {
-      if (res.url && res.ok) {
+    .then(async (res) => {
+      if (res.redirected) {
         window.location = res.url;
+        return;
       }
+      const data = await res.json();
+      if (data.warning) alert(data.warning);
+      if (data.redirect) window.location = data.redirect;
       console.log("success");
     })
     .catch((err) => {
@@ -904,10 +948,14 @@ function createRandomFixedNotification(
       reminders: reminders,
     }),
   })
-    .then((res) => {
-      if (res.url && res.ok) {
+    .then(async (res) => {
+      if (res.redirected) {
         window.location = res.url;
+        return;
       }
+      const data = await res.json();
+      if (data.warning) alert(data.warning);
+      if (data.redirect) window.location = data.redirect;
       console.log("success");
     })
     .catch((err) => {
@@ -953,10 +1001,14 @@ function createRandomIntervalNotification(
       reminders: reminders,
     }),
   })
-    .then((res) => {
-      if (res.url && res.ok) {
+    .then(async (res) => {
+      if (res.redirected) {
         window.location = res.url;
+        return;
       }
+      const data = await res.json();
+      if (data.warning) alert(data.warning);
+      if (data.redirect) window.location = data.redirect;
       console.log("success");
     })
     .catch((err) => {

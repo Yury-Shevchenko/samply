@@ -68,12 +68,13 @@ function createRandomIndividualNotification(){
       participantId: participantId,
     })
   })
-    .then(res => {
-      if(res.url && res.ok){
-        window.location = res.url;
-      }
+    .then(async res => {
       createIndividualNotificationBtn.disabled = false;
       document.getElementById('notification_status_schedule').style.visibility = 'hidden';
+      if (res.redirected) { window.location = res.url; return; }
+      const data = await res.json();
+      if (data.warning) alert(data.warning);
+      if (data.redirect) window.location = data.redirect;
     })
     .catch(err => {
       console.log(err);

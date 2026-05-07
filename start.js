@@ -34,6 +34,10 @@ require("./models/Result");
 require("./models/Project");
 require("./models/Job");
 require("./models/Receipt");
+require("./models/PendingNotification");
+
+// Start the notification cron
+require("./services/notificationCron").start();
 
 // Start the app
 const app = require("./app");

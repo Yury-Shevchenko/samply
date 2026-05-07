@@ -82,12 +82,16 @@ exports.sendEmailConfirmationLink = async (req, res) => {
   user.confirmEmailExpires = Date.now() + 3600000;
   await user.save();
   const subject = res.locals.layout.flash_emailConfirmation;
-  mail.send({
-    participant: user,
-    subject,
-    resetURL: `https://${req.headers.host}/account/confirm/${user.confirmEmailToken}`,
-    filename: "email-confirmation-" + user.language,
-  });
+  try {
+    await mail.send({
+      participant: user,
+      subject,
+      resetURL: `https://${req.headers.host}/account/confirm/${user.confirmEmailToken}`,
+      filename: "email-confirmation-" + user.language,
+    });
+  } catch (err) {
+    console.error("Failed to send confirmation email to:", user.email, err.message);
+  }
   req.flash("success", `${res.locals.layout.flash_sent_confirm_email_ink}`);
   res.redirect("/account");
 };

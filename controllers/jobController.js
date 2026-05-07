@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model("User");
 const Result = mongoose.model("Result");
 const Project = mongoose.model("Project");
+const PendingNotification = mongoose.model("PendingNotification");
 const Agenda = require("agenda");
 const uniqid = require("uniqid");
 const moment = require("moment");
@@ -13,6 +14,20 @@ const nanoid = customAlphabet(
   10
 );
 const webhookController = require("./webhookController");
+const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByFinid, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
+
+const MAX_PROJECT_PENDING = 50_000;
+
+function limitErrorResponse(req, res, message) {
+  return res.json({ warning: message, redirect: req.get("Referer") || "/scheduled" });
+}
+
+// Wrapper that accumulates inserted/skipped counts into a shared counter object.
+async function scheduleBatchTracked(docs, counter) {
+  const result = await scheduleBatch(docs);
+  counter.inserted += result.inserted;
+  counter.skipped += result.skipped;
+}
 
 const types = {
   personal_notification: "job_type_one_time",
@@ -304,32 +319,36 @@ agenda.on("ready", function () {
 });
 
 exports.createScheduleNotification = async (req, res) => {
-  // check whether the request body contains required information
   if (!req.body || !req.body.target || !req.body.schedule) {
     return res.status(400).end();
   }
-  // update the information inside the project
+  if (!req.body.date || req.body.date.length === 0) {
+    return res.status(400).send();
+  }
+
   let project = await Project.findOne(
     { _id: req.user.project._id },
-    {
-      name: 1,
-      notifications: 1,
-      mobileUsers: 1,
-    }
+    { name: 1, notifications: 1, mobileUsers: 1 }
   );
 
-  // when "All future participants" are selected, we save information
-  // in the project, and when a new user joins, schedule a new notification
+  const existingPending = await PendingNotification.countDocuments({ projectId: req.user.project._id, status: "pending" });
+  if (existingPending >= MAX_PROJECT_PENDING) {
+    return limitErrorResponse(req, res, `This project already has ${existingPending.toLocaleString()} pending notifications (limit: ${MAX_PROJECT_PENDING.toLocaleString()}). Delete old notifications before scheduling more.`);
+  }
 
-  if (req.body.date && req.body.date.length > 0) {
-    await req.body.date.map((date) => {
+  const counter = { inserted: 0, skipped: 0 };
+
+  try {
+  await Promise.all(
+    req.body.date.map(async (date) => {
       const id = uniqid();
+
       project.notifications.push({
-        id: id,
+        id,
         target: req.body.target,
         schedule: req.body.schedule,
         randomize: req.body.randomize,
-        date: date,
+        date,
         title: req.body.title,
         message: req.body.message,
         url: req.body.url,
@@ -346,65 +365,93 @@ exports.createScheduleNotification = async (req, res) => {
         reminders: req.body.reminders,
       });
 
-      let groups;
+      const baseDoc = {
+        projectId: req.user.project._id,
+        notificationConfigId: id,
+        title: req.body.title,
+        message: req.body.message,
+        url: req.body.url || "",
+        expireIn: req.body.expireIn,
+        timezone: req.body.timezone,
+        useParticipantTimezone: !!req.body.useParticipantTimezone,
+      };
+
       if (req.body.groups) {
-        if (req.body.groups.length > 0) {
-          groups = req.body.groups;
-        } else {
-          const allGroups = project.mobileUsers
-            .map((user) => user.group)
-            .filter((item) => typeof item !== "undefined");
-          const allGroupsIds = allGroups.map((group) => group.id);
-          groups = [...new Set(allGroupsIds)];
-        }
-        agenda.schedule(date, "personal_notification", {
-          groupid: groups,
-          projectid: req.user.project._id,
-          id: id,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          deleteself: true,
-          reminders: req.body.reminders,
-        });
+        const groups =
+          req.body.groups.length > 0
+            ? req.body.groups
+            : [
+                ...new Set(
+                  project.mobileUsers
+                    .map((u) => u.group)
+                    .filter(Boolean)
+                    .map((g) => g.id)
+                ),
+              ];
+        const scheduledFor = new Date(date);
+        await scheduleBatchTracked([
+          { ...baseDoc, scheduledFor, recipientGroupIds: groups, recipientUserIds: [] },
+        ], counter);
       }
 
-      let users;
       if (req.body.participants) {
-        if (req.body.participants.length > 0) {
-          users = req.body.participants;
+        const users =
+          req.body.participants.length > 0
+            ? req.body.participants
+            : project.mobileUsers.filter((u) => !u.deactivated).map((u) => u.id);
+
+        if (!req.body.useParticipantTimezone) {
+          const scheduledFor = new Date(date);
+          await scheduleBatchTracked([
+            { ...baseDoc, scheduledFor, recipientUserIds: users, recipientGroupIds: [] },
+          ], counter);
         } else {
-          users = project.mobileUsers
-            .filter((user) => !user.deactivated)
-            .map((user) => user.id);
+          const docs = await Promise.all(
+            users.map(async (userId) => {
+              const participant = await User.findOne(
+                { samplyId: userId },
+                { information: 1 }
+              );
+              let dateForParticipant = date;
+              if (participant && participant.information && participant.information.timezone) {
+                dateForParticipant = moment
+                  .tz(date, req.body.timezone)
+                  .tz(participant.information.timezone, true)
+                  .toISOString();
+              }
+              return {
+                ...baseDoc,
+                scheduledFor: new Date(dateForParticipant),
+                recipientUserIds: [userId],
+                recipientGroupIds: [],
+              };
+            })
+          );
+          await scheduleBatchTracked(docs, counter);
         }
-        const res = schedulePersonalNotificationsForUsers({
-          date: date,
-          users: users, // []
-          projectid: req.user.project._id, // String
-          notificationid: id, // String - notification ID
-          body: req.body, // {}
-          deleteself: true, // Boolean
-        });
       }
-    });
-    await project.save((saveErr, updatedproject) => {
-      if (saveErr) {
-        res.status(400);
-      } else {
-        res.status(201);
-      }
-      const isApiCall = !!req.headers["x-auth-token"];
-      if (isApiCall) {
-        return res.status(200).json({ message: "Notification was scheduled" });
-      } else {
-        return res.redirect("back");
-      }
-    });
-  } else {
-    res.status(400).send();
+    })
+  );
+  } catch (err) {
+    if (err instanceof BatchLimitError) return limitErrorResponse(req, res, err.message);
+    throw err;
   }
+
+  project.save((saveErr) => {
+    if (saveErr) res.status(400);
+    else res.status(201);
+    const isApiCall = !!req.headers["x-auth-token"];
+    if (isApiCall) {
+      return res.status(200).json({ message: "Notification was scheduled" });
+    }
+    if (counter.skipped > 0) {
+      const warning = counter.inserted === 0
+        ? "All selected dates were in the past — no notifications were queued."
+        : `${counter.skipped} date(s) were in the past and skipped; ${counter.inserted} notification(s) were queued.`;
+      return res.json({ warning, redirect: req.get("Referer") || "/scheduled" });
+    }
+    return res.redirect("back");
+  });
 };
 
 exports.createIntervalNotification = async (req, res) => {
@@ -414,15 +461,10 @@ exports.createIntervalNotification = async (req, res) => {
   }
   let project = await Project.findOne(
     { _id: req.user.project._id },
-    {
-      name: 1,
-      notifications: 1,
-      mobileUsers: 1,
-    }
+    { name: 1, notifications: 1, mobileUsers: 1 }
   );
-  const id = uniqid(); // notification id
+  const id = uniqid();
 
-  // dependent on the strategy
   let int_start, int_end;
   if (
     req.body.int_start.start === "specific" ||
@@ -437,7 +479,6 @@ exports.createIntervalNotification = async (req, res) => {
     int_end = req.body.int_end.stopMoment;
   }
 
-  // check whether there are current participants to schedule the notifications
   let users;
   if (req.body.participantId) {
     if (req.body.participantId.length > 0) {
@@ -449,7 +490,6 @@ exports.createIntervalNotification = async (req, res) => {
     }
   }
 
-  // check groups
   let groups;
   if (req.body.groups) {
     if (req.body.groups.length > 0) {
@@ -463,21 +503,40 @@ exports.createIntervalNotification = async (req, res) => {
     }
   }
 
+  const baseDoc = {
+    projectId: req.user.project._id,
+    notificationConfigId: id,
+    title: req.body.title,
+    message: req.body.message,
+    url: req.body.url || "",
+    expireIn: req.body.expireIn,
+    timezone: req.body.timezone,
+    useParticipantTimezone: !!req.body.useParticipantTimezone,
+  };
+
+  const existingPending2 = await PendingNotification.countDocuments({ projectId: req.user.project._id, status: "pending" });
+  if (existingPending2 >= MAX_PROJECT_PENDING) {
+    return limitErrorResponse(req, res, `This project already has ${existingPending2.toLocaleString()} pending notifications (limit: ${MAX_PROJECT_PENDING.toLocaleString()}). Delete old notifications before scheduling more.`);
+  }
+
+  const counter = { inserted: 0, skipped: 0 };
+
+  try {
   if (req.body.randomize) {
     const intervalWindows = req.body.intervalWindows;
-    intervalWindows.map((window) => {
+    intervalWindows.forEach((window) => {
       project.notifications.push({
-        id: id,
+        id,
         target: req.body.target,
         schedule: req.body.schedule,
         randomize: req.body.randomize,
-        int_start: int_start,
-        int_end: int_end,
+        int_start,
+        int_end,
         title: req.body.title,
         message: req.body.message,
         url: req.body.url,
         participantId: req.body.participantId,
-        groups: groups,
+        groups,
         allCurrentParticipants:
           req.body.participantId && req.body.participantId.length === 0,
         allCurrentGroups: req.body.groups && req.body.groups.length === 0,
@@ -501,130 +560,82 @@ exports.createIntervalNotification = async (req, res) => {
       });
     });
 
-    // new jobs should be created or modified to account for the situations where the notifications are yoked
     if (groups) {
-      groups.map((group) => {
-        const sortedUsers = project.mobileUsers
-          .filter((user) => user.group && user.group.id === group)
-          .sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
-        // use the latest user as a benchmark
-        const latestUser = sortedUsers.length ? sortedUsers[0] : undefined;
+      await Promise.all(
+        groups.map(async (group) => {
+          const sortedUsers = project.mobileUsers
+            .filter((user) => user.group && user.group.id === group)
+            .sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
+          const latestUser = sortedUsers.length ? sortedUsers[0] : undefined;
+          if (!latestUser) return;
 
-        if (latestUser) {
-          intervalWindows.map((window) => {
-            if (req.body.int_start.startEvent === "registration") {
-              if (req.body.int_start.startNextDay) {
-                const startNextDay = parseInt(req.body.int_start.startNextDay);
-                let whenToStart;
-                if (startNextDay == 1) {
-                  whenToStart = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+          await Promise.all(
+            intervalWindows.map(async (window) => {
+              let groupStart = int_start;
+              let groupEnd = int_end;
+
+              if (req.body.int_start.startEvent === "registration") {
+                if (req.body.int_start.startNextDay) {
+                  const startNextDay = parseInt(req.body.int_start.startNextDay);
+                  groupStart =
+                    startNextDay == 1
+                      ? moment(latestUser.created).add({ minutes: 1 }).toISOString()
+                      : moment(latestUser.created)
+                          .add({ days: startNextDay - 1 })
+                          .startOf("day")
+                          .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                          .toISOString();
                 } else {
-                  whenToStart = moment(latestUser.created)
-                    .add({ days: startNextDay - 1 })
-                    .startOf("day")
-                    .add({
-                      minutes: Math.floor(Math.random() * 10),
-                      seconds: Math.floor(Math.random() * 60),
-                    });
+                  const ms = moment.duration(req.body.int_start.startAfter).asMilliseconds();
+                  groupStart = new Date(Date.parse(latestUser.created) + ms);
                 }
-                int_start = whenToStart.toISOString();
-              } else {
-                const start_event_ms = moment
-                  .duration({
-                    days: req.body.int_start.startAfter.days,
-                    hours: req.body.int_start.startAfter.hours,
-                    minutes: req.body.int_start.startAfter.minutes,
-                  })
-                  .asMilliseconds();
-                int_start = new Date(
-                  Date.parse(latestUser.created) + start_event_ms
-                );
               }
-            }
+              if (req.body.int_end.stopEvent === "registration") {
+                if (req.body.int_end.stopNextDay) {
+                  const endNextDay = parseInt(req.body.int_end.stopNextDay);
+                  groupEnd = moment(latestUser.created)
+                    .add({ days: endNextDay })
+                    .startOf("day")
+                    .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                    .toISOString();
+                } else {
+                  const ms = moment.duration(req.body.int_end.stopAfter).asMilliseconds();
+                  groupEnd = new Date(Date.parse(latestUser.created) + ms);
+                }
+              }
 
-            if (req.body.int_end.stopEvent === "registration") {
-              if (req.body.int_end.stopNextDay) {
-                const endNextDay = parseInt(req.body.int_end.stopNextDay);
-                const whenToEnd = moment(latestUser.created)
-                  .add({ days: endNextDay })
-                  .startOf("day")
-                  .add({
-                    minutes: Math.floor(Math.random() * 10),
-                    seconds: Math.floor(Math.random() * 60),
-                  });
-                int_end = whenToEnd.toISOString();
-              } else {
-                const stop_event_ms = moment
-                  .duration({
-                    days: req.body.int_end.stopAfter.days,
-                    hours: req.body.int_end.stopAfter.hours,
-                    minutes: req.body.int_end.stopAfter.minutes,
-                  })
-                  .asMilliseconds();
-                int_end = new Date(
-                  Date.parse(latestUser.created) + stop_event_ms
-                );
+              let windowFrom = window.from;
+              let windowTo = window.to;
+              if (windowFrom && windowFrom.includes("*/")) {
+                const p = windowFrom.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(groupStart).getDate());
+                windowFrom = p.join(" ");
               }
-            }
+              if (windowTo && windowTo.includes("*/")) {
+                const p = windowTo.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(groupStart).getDate());
+                windowTo = p.join(" ");
+              }
 
-            let windowFrom = window.from;
-            let windowTo = window.to;
-            let distance = window.distance || 0;
-
-            // update interval if there is missing information
-            if (windowFrom && windowFrom.includes("*/")) {
-              let parsedFrom = windowFrom.split(" ");
-              if (parsedFrom[3].includes("*/")) {
-                parsedFrom[3] = parsedFrom[3].replace(
-                  "*",
-                  new Date(int_start).getDate()
-                );
-                windowFrom = parsedFrom.join(" ");
-              }
-            }
-            if (windowTo && windowTo.includes("*/")) {
-              let parsedTo = windowTo.split(" ");
-              if (parsedTo[3].includes("*/")) {
-                parsedTo[3] = parsedTo[3].replace(
-                  "*",
-                  new Date(int_start).getDate()
-                );
-                windowTo = parsedTo.join(" ");
-              }
-            }
-            agenda.schedule(int_start, "start_random_group_manager", {
-              groupid: [group],
-              projectid: req.user.project._id,
-              id: id,
-              interval: windowFrom,
-              interval_max: windowTo,
-              distance: distance,
-              title: req.body.title,
-              message: req.body.message,
-              url: req.body.url,
-              expireIn: req.body.expireIn,
-              number: window.number,
-              timezone: req.body.timezone,
-              reminders: req.body.reminders,
-            });
-            agenda.schedule(int_end, "end_random_group_manager", {
-              groupid: [group],
-              projectid: req.user.project._id,
-              id: id,
-              interval: windowFrom,
-              interval_max: windowTo,
-              distance: distance,
-              title: req.body.title,
-              message: req.body.message,
-              url: req.body.url,
-              expireIn: req.body.expireIn,
-              number: window.number,
-              timezone: req.body.timezone,
-              reminders: req.body.reminders,
-            });
-          });
-        }
-      });
+              const docs = computeRandomWindowDocs({
+                ...baseDoc,
+                windowFrom,
+                windowTo,
+                int_start: groupStart,
+                int_end: groupEnd,
+                number: window.number,
+                distance: window.distance || 0,
+                timezone: req.body.timezone,
+                recipientGroupIds: [group],
+                recipientUserIds: [],
+              });
+              await scheduleBatchTracked(docs, counter);
+            })
+          );
+        })
+      );
     }
 
     if (users) {
@@ -634,132 +645,77 @@ exports.createIntervalNotification = async (req, res) => {
             { samplyId: user.id },
             { information: 1 }
           );
+          const timezone =
+            req.body.useParticipantTimezone &&
+            participant &&
+            participant.information &&
+            participant.information.timezone
+              ? participant.information.timezone
+              : req.body.timezone;
 
           await Promise.all(
             intervalWindows.map(async (window) => {
+              let userStart = int_start;
+              let userEnd = int_end;
+
               if (req.body.int_start.startEvent === "registration") {
                 if (req.body.int_start.startNextDay) {
-                  const startNextDay = parseInt(
-                    req.body.int_start.startNextDay
-                  );
-                  let whenToStart;
-                  if (startNextDay == 1) {
-                    whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-                  } else {
-                    whenToStart = moment(user.created)
-                      .add({ days: startNextDay - 1 })
-                      .startOf("day")
-                      .add({
-                        minutes: Math.floor(Math.random() * 10),
-                        seconds: Math.floor(Math.random() * 60),
-                      });
-                  }
-                  int_start = whenToStart.toISOString();
+                  const startNextDay = parseInt(req.body.int_start.startNextDay);
+                  userStart =
+                    startNextDay == 1
+                      ? moment(user.created).add({ minutes: 1 }).toISOString()
+                      : moment(user.created)
+                          .add({ days: startNextDay - 1 })
+                          .startOf("day")
+                          .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                          .toISOString();
                 } else {
-                  const start_event_ms = moment
-                    .duration({
-                      days: req.body.int_start.startAfter.days,
-                      hours: req.body.int_start.startAfter.hours,
-                      minutes: req.body.int_start.startAfter.minutes,
-                    })
-                    .asMilliseconds();
-                  int_start = new Date(
-                    Date.parse(user.created) + start_event_ms
-                  );
+                  const ms = moment.duration(req.body.int_start.startAfter).asMilliseconds();
+                  userStart = new Date(Date.parse(user.created) + ms);
                 }
               }
-
               if (req.body.int_end.stopEvent === "registration") {
                 if (req.body.int_end.stopNextDay) {
                   const endNextDay = parseInt(req.body.int_end.stopNextDay);
-                  const whenToEnd = moment(user.created)
+                  userEnd = moment(user.created)
                     .add({ days: endNextDay })
                     .startOf("day")
-                    .add({
-                      minutes: Math.floor(Math.random() * 10),
-                      seconds: Math.floor(Math.random() * 60),
-                    });
-                  int_end = whenToEnd.toISOString();
+                    .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                    .toISOString();
                 } else {
-                  const stop_event_ms = moment
-                    .duration({
-                      days: req.body.int_end.stopAfter.days,
-                      hours: req.body.int_end.stopAfter.hours,
-                      minutes: req.body.int_end.stopAfter.minutes,
-                    })
-                    .asMilliseconds();
-                  int_end = new Date(Date.parse(user.created) + stop_event_ms);
+                  const ms = moment.duration(req.body.int_end.stopAfter).asMilliseconds();
+                  userEnd = new Date(Date.parse(user.created) + ms);
                 }
               }
 
               let windowFrom = window.from;
               let windowTo = window.to;
-              let distance = window.distance || 0;
-
-              // update interval if there is missing information
               if (windowFrom && windowFrom.includes("*/")) {
-                let parsedFrom = windowFrom.split(" ");
-                if (parsedFrom[3].includes("*/")) {
-                  parsedFrom[3] = parsedFrom[3].replace(
-                    "*",
-                    new Date(int_start).getDate()
-                  );
-                  windowFrom = parsedFrom.join(" ");
-                }
+                const p = windowFrom.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(userStart).getDate());
+                windowFrom = p.join(" ");
               }
               if (windowTo && windowTo.includes("*/")) {
-                let parsedTo = windowTo.split(" ");
-                if (parsedTo[3].includes("*/")) {
-                  parsedTo[3] = parsedTo[3].replace(
-                    "*",
-                    new Date(int_start).getDate()
-                  );
-                  windowTo = parsedTo.join(" ");
-                }
+                const p = windowTo.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(userStart).getDate());
+                windowTo = p.join(" ");
               }
 
-              let timezone = req.body.timezone;
-              // select timezone based on the user timezone
-              if (req.body.useParticipantTimezone) {
-                if (
-                  participant &&
-                  participant.information &&
-                  participant.information.timezone
-                ) {
-                  timezone = participant.information.timezone;
-                }
-              }
-
-              agenda.schedule(int_start, "start_random_personal_manager", {
-                userid: [user.id],
-                projectid: req.user.project._id,
-                id: id,
-                interval: windowFrom,
-                interval_max: windowTo,
-                distance: distance,
-                title: req.body.title,
-                message: req.body.message,
-                url: req.body.url,
-                expireIn: req.body.expireIn,
+              const docs = computeRandomWindowDocs({
+                ...baseDoc,
+                windowFrom,
+                windowTo,
+                int_start: userStart,
+                int_end: userEnd,
                 number: window.number,
+                distance: window.distance || 0,
                 timezone,
-                reminders: req.body.reminders,
+                recipientUserIds: [user.id],
+                recipientGroupIds: [],
               });
-              agenda.schedule(int_end, "end_random_personal_manager", {
-                userid: [user.id],
-                projectid: req.user.project._id,
-                id: id,
-                interval: windowFrom,
-                interval_max: windowTo,
-                distance: distance,
-                title: req.body.title,
-                message: req.body.message,
-                url: req.body.url,
-                expireIn: req.body.expireIn,
-                number: window.number,
-                timezone,
-                reminders: req.body.reminders,
-              });
+              await scheduleBatchTracked(docs, counter);
             })
           );
         })
@@ -767,149 +723,109 @@ exports.createIntervalNotification = async (req, res) => {
     }
   } else {
     const intervals = req.body.interval;
-    intervals.map((interval) => {
+    intervals.forEach((interval) => {
       project.notifications.push({
-        id: id,
+        id,
         target: req.body.target,
         schedule: req.body.schedule,
         randomize: req.body.randomize,
-        interval: interval,
-        int_start: int_start,
-        int_end: int_end,
+        interval,
+        int_start,
+        int_end,
         title: req.body.title,
         message: req.body.message,
         url: req.body.url,
         participantId: req.body.participantId,
-        groups: groups,
+        groups,
         allCurrentParticipants:
           req.body.participantId && req.body.participantId.length === 0,
         allCurrentGroups: req.body.groups && req.body.groups.length === 0,
         name: req.body.name,
         scheduleInFuture: req.body.scheduleInFuture,
-        readable: {
-          interval: cronstrue.toString(interval),
-        },
+        readable: { interval: cronstrue.toString(interval) },
         timezone: req.body.timezone,
         expireIn: req.body.expireIn,
         useParticipantTimezone: req.body.useParticipantTimezone,
         reminders: req.body.reminders,
       });
-
-      if (users && users.length) {
-        // select timezone for each participant based on the user timezone
-        if (req.body.useParticipantTimezone) {
-          users.map(async (user) => {
-            const participant = await User.findOne(
-              { samplyId: user.id },
-              { information: 1 }
-            );
-            let timezone = req.body.timezone;
-            if (
-              participant &&
-              participant.information &&
-              participant.information.timezone
-            ) {
-              timezone = participant.information.timezone;
-            }
-            agenda.schedule(int_start, "start_manager", {
-              id: id,
-              projectid: req.user.project._id,
-              userid: [user.id],
-              interval: interval,
-              title: req.body.title,
-              message: req.body.message,
-              url: req.body.url,
-              expireIn: req.body.expireIn,
-              groupid: req.body.groups,
-              timezone,
-              reminders: req.body.reminders,
-            });
-            agenda.schedule(int_end, "end_manager", {
-              id: id,
-              projectid: req.user.project._id,
-              userid: [user.id],
-              interval: interval,
-              title: req.body.title,
-              message: req.body.message,
-              url: req.body.url,
-              expireIn: req.body.expireIn,
-              groupid: req.body.groups,
-              timezone,
-              reminders: req.body.reminders,
-            });
-          });
-        } else {
-          const user_ids = users.map((user) => user.id);
-          // make general scheduler for all participants
-          agenda.schedule(int_start, "start_manager", {
-            id: id,
-            projectid: req.user.project._id,
-            userid: user_ids,
-            interval: interval,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            groupid: req.body.groups,
-            timezone: req.body.timezone,
-            reminders: req.body.reminders,
-          });
-          agenda.schedule(int_end, "end_manager", {
-            id: id,
-            projectid: req.user.project._id,
-            userid: user_ids,
-            interval: interval,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            groupid: req.body.groups,
-            timezone: req.body.timezone,
-            reminders: req.body.reminders,
-          });
-        }
-      }
-
-      if (groups && groups.length) {
-        agenda.schedule(int_start, "start_manager", {
-          id: id,
-          projectid: req.user.project._id,
-          interval: interval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          groupid: groups,
-          timezone: req.body.timezone,
-          reminders: req.body.reminders,
-        });
-        agenda.schedule(int_end, "end_manager", {
-          id: id,
-          projectid: req.user.project._id,
-          interval: interval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          groupid: groups,
-          timezone: req.body.timezone,
-          reminders: req.body.reminders,
-        });
-      }
     });
+
+    await Promise.all(
+      intervals.map(async (interval) => {
+        if (users && users.length) {
+          if (req.body.useParticipantTimezone) {
+            await Promise.all(
+              users.map(async (user) => {
+                const participant = await User.findOne(
+                  { samplyId: user.id },
+                  { information: 1 }
+                );
+                const timezone =
+                  participant && participant.information && participant.information.timezone
+                    ? participant.information.timezone
+                    : req.body.timezone;
+                const dates = expandCronBetween(interval, int_start, int_end, timezone);
+                await scheduleBatchTracked(
+                  dates.map((d) => ({
+                    ...baseDoc,
+                    scheduledFor: new Date(d),
+                    timezone,
+                    recipientUserIds: [user.id],
+                    recipientGroupIds: [],
+                  })),
+                  counter
+                );
+              })
+            );
+          } else {
+            const userIds = users.map((u) => u.id);
+            const dates = expandCronBetween(interval, int_start, int_end, req.body.timezone);
+            await scheduleBatchTracked(
+              dates.map((d) => ({
+                ...baseDoc,
+                scheduledFor: new Date(d),
+                recipientUserIds: userIds,
+                recipientGroupIds: [],
+              })),
+              counter
+            );
+          }
+        }
+
+        if (groups && groups.length) {
+          const dates = expandCronBetween(interval, int_start, int_end, req.body.timezone);
+          await scheduleBatchTracked(
+            dates.map((d) => ({
+              ...baseDoc,
+              scheduledFor: new Date(d),
+              recipientGroupIds: groups,
+              recipientUserIds: [],
+            })),
+            counter
+          );
+        }
+      })
+    );
   }
-  await project.save((saveErr, updatedproject) => {
-    if (saveErr) {
-      res.status(400);
-    } else {
-      res.status(201);
-    }
+  } catch (err) {
+    if (err instanceof BatchLimitError) return limitErrorResponse(req, res, err.message);
+    throw err;
+  }
+
+  project.save((saveErr) => {
+    if (saveErr) res.status(400);
+    else res.status(201);
     const isApiCall = !!req.headers["x-auth-token"];
     if (isApiCall) {
       return res.status(200).json({ message: "Notification was scheduled" });
-    } else {
-      return res.redirect("back");
     }
+    if (counter.skipped > 0) {
+      const warning = counter.inserted === 0
+        ? "All scheduled times were in the past — no notifications were queued."
+        : `${counter.skipped} notification(s) were in the past and skipped; ${counter.inserted} were queued.`;
+      return res.json({ warning, redirect: req.get("Referer") || "/scheduled" });
+    }
+    return res.redirect("back");
   });
 };
 
@@ -921,15 +837,10 @@ exports.createIndividualNotification = async (req, res) => {
 
   let project = await Project.findOne(
     { _id: req.user.project._id },
-    {
-      name: 1,
-      notifications: 1,
-      mobileUsers: 1,
-    }
+    { name: 1, notifications: 1, mobileUsers: 1 }
   );
   const id = uniqid();
 
-  // dependent on the strategy
   let int_start, int_end;
   if (
     req.body.int_start.start === "specific" ||
@@ -944,7 +855,6 @@ exports.createIndividualNotification = async (req, res) => {
     int_end = req.body.int_end.stopMoment;
   }
 
-  // check whether there are current participants to schedule the notifications
   let users;
   if (req.body.participantId) {
     if (req.body.participantId.length > 0) {
@@ -956,7 +866,6 @@ exports.createIndividualNotification = async (req, res) => {
     }
   }
 
-  // check groups
   let groups;
   if (req.body.groups) {
     if (req.body.groups.length > 0) {
@@ -971,21 +880,21 @@ exports.createIndividualNotification = async (req, res) => {
   }
 
   const intervals = req.body.interval;
-  intervals.map((interval) => {
+  intervals.forEach((interval) => {
     project.notifications.push({
-      id: id,
+      id,
       target: req.body.target,
       schedule: req.body.schedule,
       randomize: req.body.randomize,
-      int_start: int_start,
-      int_end: int_end,
-      interval: interval,
+      int_start,
+      int_end,
+      interval,
       title: req.body.title,
       message: req.body.message,
       url: req.body.url,
       name: req.body.name,
       participantId: req.body.participantId,
-      groups: groups,
+      groups,
       allCurrentParticipants:
         req.body.participantId && req.body.participantId.length === 0,
       allCurrentGroups: req.body.groups && req.body.groups.length === 0,
@@ -996,9 +905,7 @@ exports.createIndividualNotification = async (req, res) => {
       start_event: req.body.int_start.startEvent,
       stop_event: req.body.int_end.stopEvent,
       scheduleInFuture: req.body.scheduleInFuture,
-      readable: {
-        interval: cronstrue.toString(interval),
-      },
+      readable: { interval: cronstrue.toString(interval) },
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
       useParticipantTimezone: req.body.useParticipantTimezone,
@@ -1006,242 +913,176 @@ exports.createIndividualNotification = async (req, res) => {
     });
   });
 
+  const baseDoc = {
+    projectId: req.user.project._id,
+    notificationConfigId: id,
+    title: req.body.title,
+    message: req.body.message,
+    url: req.body.url || "",
+    expireIn: req.body.expireIn,
+    timezone: req.body.timezone,
+    useParticipantTimezone: !!req.body.useParticipantTimezone,
+  };
+
+  const existingPending3 = await PendingNotification.countDocuments({ projectId: req.user.project._id, status: "pending" });
+  if (existingPending3 >= MAX_PROJECT_PENDING) {
+    return limitErrorResponse(req, res, `This project already has ${existingPending3.toLocaleString()} pending notifications (limit: ${MAX_PROJECT_PENDING.toLocaleString()}). Delete old notifications before scheduling more.`);
+  }
+  const counter = { inserted: 0, skipped: 0 };
+
+  try {
   if (groups) {
-    groups.map((group) => {
-      const sortedUsers = project.mobileUsers
-        .filter((user) => user.group && user.group.id === group)
-        .sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
-      // use the latest user as a benchmark
-      const latestUser = sortedUsers.length ? sortedUsers[0] : undefined;
+    await Promise.all(
+      groups.map(async (group) => {
+        const sortedUsers = project.mobileUsers
+          .filter((user) => user.group && user.group.id === group)
+          .sort((a, b) => Date.parse(b.created) - Date.parse(a.created));
+        const latestUser = sortedUsers.length ? sortedUsers[0] : undefined;
+        if (!latestUser) return;
 
-      intervals.map((interval) => {
-        let updatedInterval = interval;
+        await Promise.all(
+          intervals.map(async (interval) => {
+            let groupStart = int_start;
+            let groupEnd = int_end;
 
-        if (req.body.int_start.startEvent === "registration") {
-          if (req.body.int_start.startNextDay) {
-            const startNextDay = parseInt(req.body.int_start.startNextDay);
-            let whenToStart;
-            if (startNextDay == 1) {
-              whenToStart = moment(latestUser.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-            } else {
-              whenToStart = moment
-                .tz(latestUser.created, req.body.timezone)
-                .add({ days: startNextDay - 1 })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60),
-                });
+            if (req.body.int_start.startEvent === "registration") {
+              if (req.body.int_start.startNextDay) {
+                const n = parseInt(req.body.int_start.startNextDay);
+                groupStart =
+                  n == 1
+                    ? moment(latestUser.created).add({ minutes: 1 }).toISOString()
+                    : moment.tz(latestUser.created, req.body.timezone)
+                        .add({ days: n - 1 }).startOf("day")
+                        .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                        .toISOString();
+              } else {
+                const ms = moment.duration(req.body.int_start.startAfter).asMilliseconds();
+                groupStart = new Date(Date.parse(latestUser.created) + ms);
+              }
             }
-            int_start = whenToStart.toISOString();
-          } else {
-            const start_event_ms = moment
-              .duration({
-                days: req.body.int_start.startAfter.days,
-                hours: req.body.int_start.startAfter.hours,
-                minutes: req.body.int_start.startAfter.minutes,
-              })
-              .asMilliseconds();
-            int_start = new Date(
-              Date.parse(latestUser.created) + start_event_ms
+            if (req.body.int_end.stopEvent === "registration") {
+              if (req.body.int_end.stopNextDay) {
+                const n = parseInt(req.body.int_end.stopNextDay);
+                groupEnd = moment.tz(latestUser.created, req.body.timezone)
+                  .add({ days: n }).startOf("day")
+                  .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                  .toISOString();
+              } else {
+                const ms = moment.duration(req.body.int_end.stopAfter).asMilliseconds();
+                groupEnd = new Date(Date.parse(latestUser.created) + ms);
+              }
+            }
+
+            let updatedInterval = interval;
+            if (updatedInterval && updatedInterval.includes("*/")) {
+              const p = updatedInterval.split(" ");
+              if (p[3] && p[3].includes("*/"))
+                p[3] = p[3].replace("*", new Date(groupStart).getDate());
+              updatedInterval = p.join(" ");
+            }
+
+            const dates = expandCronBetween(updatedInterval, groupStart, groupEnd, req.body.timezone);
+            await scheduleBatchTracked(
+              dates.map((d) => ({
+                ...baseDoc,
+                scheduledFor: new Date(d),
+                recipientGroupIds: [group],
+                recipientUserIds: [],
+              })),
+              counter
             );
-          }
-        }
-
-        if (req.body.int_end.stopEvent === "registration") {
-          if (req.body.int_end.stopNextDay) {
-            const endNextDay = parseInt(req.body.int_end.stopNextDay);
-            const whenToEnd = moment
-              .tz(latestUser.created, req.body.timezone)
-              .add({ days: endNextDay })
-              .startOf("day")
-              .add({
-                minutes: Math.floor(Math.random() * 10),
-                seconds: Math.floor(Math.random() * 60),
-              });
-            int_end = whenToEnd.toISOString();
-          } else {
-            const stop_event_ms = moment
-              .duration({
-                days: req.body.int_end.stopAfter.days,
-                hours: req.body.int_end.stopAfter.hours,
-                minutes: req.body.int_end.stopAfter.minutes,
-              })
-              .asMilliseconds();
-            int_end = new Date(Date.parse(latestUser.created) + stop_event_ms);
-          }
-        }
-
-        // update interval if there is missing information
-        if (updatedInterval && updatedInterval.includes("*/")) {
-          let parsedInterval = updatedInterval.split(" ");
-          if (parsedInterval[3].includes("*/")) {
-            parsedInterval[3] = parsedInterval[3].replace(
-              "*",
-              new Date(int_start).getDate()
-            );
-            updatedInterval = parsedInterval.join(" ");
-          }
-        }
-
-        agenda.schedule(int_start, "start_personal_manager", {
-          groupid: [group],
-          projectid: req.user.project._id,
-          id: id,
-          interval: updatedInterval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          timezone: req.body.timezone,
-          reminders: req.body.reminders,
-        });
-        agenda.schedule(int_end, "end_personal_manager", {
-          groupid: [group],
-          projectid: req.user.project._id,
-          id: id,
-          interval: updatedInterval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          timezone: req.body.timezone,
-          reminders: req.body.reminders,
-        });
-      });
-    });
+          })
+        );
+      })
+    );
   }
 
   if (users) {
-    users.map(async (user) => {
-      const participant = await User.findOne(
-        { samplyId: user.id },
-        { information: 1 }
-      );
+    await Promise.all(
+      users.map(async (user) => {
+        const participant = await User.findOne({ samplyId: user.id }, { information: 1 });
+        const timezone =
+          req.body.useParticipantTimezone &&
+          participant && participant.information && participant.information.timezone
+            ? participant.information.timezone
+            : req.body.timezone;
 
-      intervals.map(async (interval) => {
-        let updatedInterval = interval;
+        await Promise.all(
+          intervals.map(async (interval) => {
+            let userStart = int_start;
+            let userEnd = int_end;
 
-        if (req.body.int_start.startEvent === "registration") {
-          // TO DO: adjust here based on the timezone
-          if (req.body.int_start.startNextDay) {
-            const startNextDay = parseInt(req.body.int_start.startNextDay);
-            let whenToStart;
-            if (startNextDay == 1) {
-              whenToStart = moment(user.created).add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
-            } else {
-              // here should be local timezone
-              whenToStart = moment
-                .tz(user.created, req.body.timezone)
-                .add({ days: startNextDay - 1 })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60),
-                });
+            if (req.body.int_start.startEvent === "registration") {
+              if (req.body.int_start.startNextDay) {
+                const n = parseInt(req.body.int_start.startNextDay);
+                userStart =
+                  n == 1
+                    ? moment(user.created).add({ minutes: 1 }).toISOString()
+                    : moment.tz(user.created, req.body.timezone)
+                        .add({ days: n - 1 }).startOf("day")
+                        .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                        .toISOString();
+              } else {
+                const ms = moment.duration(req.body.int_start.startAfter).asMilliseconds();
+                userStart = new Date(Date.parse(user.created) + ms);
+              }
             }
-            int_start = whenToStart.toISOString();
-          } else {
-            const start_event_ms = moment
-              .duration({
-                days: req.body.int_start.startAfter.days,
-                hours: req.body.int_start.startAfter.hours,
-                minutes: req.body.int_start.startAfter.minutes,
-              })
-              .asMilliseconds();
-            int_start = new Date(Date.parse(user.created) + start_event_ms);
-          }
-        }
+            if (req.body.int_end.stopEvent === "registration") {
+              if (req.body.int_end.stopNextDay) {
+                const n = parseInt(req.body.int_end.stopNextDay);
+                userEnd = moment.tz(user.created, req.body.timezone)
+                  .add({ days: n }).startOf("day")
+                  .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                  .toISOString();
+              } else {
+                const ms = moment.duration(req.body.int_end.stopAfter).asMilliseconds();
+                userEnd = new Date(Date.parse(user.created) + ms);
+              }
+            }
 
-        if (req.body.int_end.stopEvent === "registration") {
-          if (req.body.int_end.stopNextDay) {
-            const endNextDay = parseInt(req.body.int_end.stopNextDay);
-            const whenToEnd = moment
-              .tz(user.created, req.body.timezone)
-              .add({ days: endNextDay })
-              .startOf("day")
-              .add({
-                minutes: Math.floor(Math.random() * 10),
-                seconds: Math.floor(Math.random() * 60),
-              });
-            int_end = whenToEnd.toISOString();
-          } else {
-            const stop_event_ms = moment
-              .duration({
-                days: req.body.int_end.stopAfter.days,
-                hours: req.body.int_end.stopAfter.hours,
-                minutes: req.body.int_end.stopAfter.minutes,
-              })
-              .asMilliseconds();
-            int_end = new Date(Date.parse(user.created) + stop_event_ms);
-          }
-        }
+            let updatedInterval = interval;
+            if (updatedInterval && updatedInterval.includes("*/")) {
+              const p = updatedInterval.split(" ");
+              if (p[3] && p[3].includes("*/"))
+                p[3] = p[3].replace("*", new Date(userStart).getDate());
+              updatedInterval = p.join(" ");
+            }
 
-        // update interval if there is missing information
-        if (updatedInterval && updatedInterval.includes("*/")) {
-          let parsedInterval = updatedInterval.split(" ");
-          if (parsedInterval[3].includes("*/")) {
-            parsedInterval[3] = parsedInterval[3].replace(
-              "*",
-              new Date(int_start).getDate()
+            const dates = expandCronBetween(updatedInterval, userStart, userEnd, timezone);
+            await scheduleBatchTracked(
+              dates.map((d) => ({
+                ...baseDoc,
+                scheduledFor: new Date(d),
+                timezone,
+                recipientUserIds: [user.id],
+                recipientGroupIds: [],
+              })),
+              counter
             );
-            updatedInterval = parsedInterval.join(" ");
-          }
-        }
-
-        let timezone = req.body.timezone;
-        // select timezone based on the user timezone
-        if (req.body.useParticipantTimezone) {
-          if (
-            participant &&
-            participant.information &&
-            participant.information.timezone
-          ) {
-            timezone = participant.information.timezone;
-          }
-        }
-
-        agenda.schedule(int_start, "start_personal_manager", {
-          userid: [user.id],
-          projectid: req.user.project._id,
-          id: id,
-          interval: updatedInterval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          timezone,
-          reminders: req.body.reminders,
-        });
-        agenda.schedule(int_end, "end_personal_manager", {
-          userid: [user.id],
-          projectid: req.user.project._id,
-          id: id,
-          interval: updatedInterval,
-          title: req.body.title,
-          message: req.body.message,
-          url: req.body.url,
-          expireIn: req.body.expireIn,
-          timezone,
-          reminders: req.body.reminders,
-        });
-      });
-    });
+          })
+        );
+      })
+    );
+  }
+  } catch (err) {
+    if (err instanceof BatchLimitError) return limitErrorResponse(req, res, err.message);
+    throw err;
   }
 
-  //save the project
-  await project.save((saveErr, updatedproject) => {
-    if (saveErr) {
-      res.status(400);
-    } else {
-      res.status(201);
-    }
+  project.save((saveErr) => {
+    if (saveErr) res.status(400);
+    else res.status(201);
     const isApiCall = !!req.headers["x-auth-token"];
     if (isApiCall) {
       return res.status(200).json({ message: "Notification was scheduled" });
-    } else {
-      return res.redirect("back");
     }
+    if (counter.skipped > 0) {
+      const warning = counter.inserted === 0
+        ? "All scheduled times were in the past — no notifications were queued."
+        : `${counter.skipped} notification(s) were in the past and skipped; ${counter.inserted} were queued.`;
+      return res.json({ warning, redirect: req.get("Referer") || "/scheduled" });
+    }
+    return res.redirect("back");
   });
 };
 
@@ -1253,15 +1094,10 @@ exports.createFixedIndividualNotification = async (req, res) => {
 
   let project = await Project.findOne(
     { _id: req.user.project._id },
-    {
-      name: 1,
-      notifications: 1,
-      mobileUsers: 1,
-    }
+    { name: 1, notifications: 1, mobileUsers: 1 }
   );
-  const id = uniqid(); // notification id
+  const id = uniqid();
 
-  // check whether there are current participants to schedule the notifications
   let users;
   if (req.body.participantId) {
     if (req.body.participantId.length > 0) {
@@ -1273,7 +1109,6 @@ exports.createFixedIndividualNotification = async (req, res) => {
     }
   }
 
-  // check groups
   let groups;
   if (req.body.groups) {
     if (req.body.groups.length > 0) {
@@ -1288,9 +1123,9 @@ exports.createFixedIndividualNotification = async (req, res) => {
   }
 
   const intervals = req.body.intervals;
-  intervals.map((interval) => {
+  intervals.forEach((interval) => {
     project.notifications.push({
-      id: id,
+      id,
       target: req.body.target,
       schedule: req.body.schedule,
       randomize: req.body.randomize,
@@ -1299,14 +1134,14 @@ exports.createFixedIndividualNotification = async (req, res) => {
       url: req.body.url,
       name: req.body.name,
       participantId: req.body.participantId,
-      groups: groups,
+      groups,
       allCurrentParticipants:
         req.body.participantId && req.body.participantId.length === 0,
       allCurrentGroups: req.body.groups && req.body.groups.length === 0,
       window_from: interval.from,
       window_to: interval.to,
       number: parseInt(interval.number),
-      distance: parseInt(interval.distance), // min distance in milliseconds
+      distance: parseInt(interval.distance),
       scheduleInFuture: req.body.scheduleInFuture,
       timezone: req.body.timezone,
       expireIn: req.body.expireIn,
@@ -1315,86 +1150,101 @@ exports.createFixedIndividualNotification = async (req, res) => {
     });
   });
 
+  const baseDoc = {
+    projectId: req.user.project._id,
+    notificationConfigId: id,
+    title: req.body.title,
+    message: req.body.message,
+    url: req.body.url || "",
+    expireIn: req.body.expireIn,
+    timezone: req.body.timezone,
+    useParticipantTimezone: !!req.body.useParticipantTimezone,
+  };
+
+  const existingPending4 = await PendingNotification.countDocuments({ projectId: req.user.project._id, status: "pending" });
+  if (existingPending4 >= MAX_PROJECT_PENDING) {
+    return limitErrorResponse(req, res, `This project already has ${existingPending4.toLocaleString()} pending notifications (limit: ${MAX_PROJECT_PENDING.toLocaleString()}). Delete old notifications before scheduling more.`);
+  }
+  const counter = { inserted: 0, skipped: 0 };
+
+  try {
   if (groups) {
-    groups.map((group) => {
-      intervals.map((interval) => {
+    const groupDocs = [];
+    groups.forEach((group) => {
+      intervals.forEach((interval) => {
         const { from, to, number, distance } = interval;
-        if (from > to) {
-          return;
-        }
-        const nums = getDatesInInterval(
-          Date.parse(from),
-          Date.parse(to),
-          number,
-          distance
-        );
-        const ds = nums.map((n) => new Date(n).toISOString());
-        // map over ds to schedule the notifications
-        ds.map((date) => {
-          const scheduleId = uniqid();
-          // schedule the notification
-          agenda.schedule(date, "personal_notification", {
-            groupid: [group],
-            projectid: req.user.project._id,
-            id: id,
-            title: req.body.title,
-            message: req.body.message,
-            url: req.body.url,
-            expireIn: req.body.expireIn,
-            deleteself: true,
-            scheduleid: scheduleId,
-            reminders: req.body.reminders,
+        if (from > to) return;
+        getDatesInInterval(Date.parse(from), Date.parse(to), number, distance)
+          .forEach((ts) => {
+            groupDocs.push({
+              ...baseDoc,
+              scheduledFor: new Date(ts),
+              recipientGroupIds: [group],
+              recipientUserIds: [],
+            });
           });
-        });
       });
     });
+    await scheduleBatchTracked(groupDocs, counter);
   }
 
   if (users) {
-    users.map((user) => {
-      intervals.map((interval) => {
-        const { from, to, number, distance } = interval;
-        if (from > to) {
-          return;
+    await Promise.all(
+      users.map(async (user) => {
+        let timezone = req.body.timezone;
+        if (req.body.useParticipantTimezone) {
+          const participant = await User.findOne({ samplyId: user.id }, { information: 1 });
+          if (participant && participant.information && participant.information.timezone) {
+            timezone = participant.information.timezone;
+          }
         }
-        const nums = getDatesInInterval(
-          Date.parse(from),
-          Date.parse(to),
-          number,
-          distance
-        );
-        const ds = nums.map((n) => new Date(n).toISOString());
-        // map over ds to schedule the notifications
-        ds.map((date) => {
-          const scheduleId = uniqid();
-          // schedule the notification
-          const res = schedulePersonalNotificationsForUsers({
-            date: date,
-            users: [user.id], // []
-            projectid: req.user.project._id, // String
-            notificationid: id, // String - notification ID
-            body: req.body, // {}
-            deleteself: true, // Boolean
-            scheduleid: scheduleId, // String
-          });
+
+        const userDocs = [];
+        intervals.forEach((interval) => {
+          const { from, to, number, distance } = interval;
+          if (from > to) return;
+
+          let adjustedFrom = from;
+          let adjustedTo = to;
+          if (req.body.useParticipantTimezone && timezone !== req.body.timezone) {
+            adjustedFrom = moment.tz(from, req.body.timezone).tz(timezone, true).toISOString();
+            adjustedTo = moment.tz(to, req.body.timezone).tz(timezone, true).toISOString();
+          }
+
+          getDatesInInterval(Date.parse(adjustedFrom), Date.parse(adjustedTo), number, distance)
+            .forEach((ts) => {
+              userDocs.push({
+                ...baseDoc,
+                scheduledFor: new Date(ts),
+                timezone,
+                recipientUserIds: [user.id],
+                recipientGroupIds: [],
+              });
+            });
         });
-      });
-    });
+        await scheduleBatchTracked(userDocs, counter);
+      })
+    );
+  }
+  } catch (err) {
+    if (err instanceof BatchLimitError) return limitErrorResponse(req, res, err.message);
+    throw err;
   }
 
-  //save the project
-  await project.save((saveErr, updatedproject) => {
-    if (saveErr) {
-      res.status(400);
-    } else {
-      res.status(201);
-    }
+  project.save((saveErr) => {
+    if (saveErr) res.status(400);
+    else res.status(201);
     const isApiCall = !!req.headers["x-auth-token"];
     if (isApiCall) {
       return res.status(200).json({ message: "Notification was scheduled" });
-    } else {
-      return res.redirect("back");
     }
+    if (counter.skipped > 0) {
+      const warning = counter.inserted === 0
+        ? "All scheduled times were in the past — no notifications were queued."
+        : `${counter.skipped} notification(s) were in the past and skipped; ${counter.inserted} were queued.`;
+      return res.json({ warning, redirect: req.get("Referer") || "/scheduled" });
+    }
+    return res.redirect("back");
   });
 };
 
@@ -1417,6 +1267,7 @@ exports.deleteProjectNotifications = async (req, res) => {
       console.log("Error", err);
     }
   );
+  await cancelByProjectId(projectID);
   await project.save((saveErr, updatedproject) => {
     if (saveErr) {
       res.status(400);
@@ -1448,6 +1299,7 @@ exports.removeNotificationByID = async (req, res) => {
     },
     (err, numRemoved) => {}
   );
+  await deleteByNotificationId(projectID, notificationID);
   await project.save((saveErr, updatedproject) => {
     if (saveErr) {
       res.status(400);
@@ -1916,233 +1768,118 @@ exports.joinStudy = async (req, res) => {
 
     // if there are scheduled notifications, create them for the new user
     if (project && project.notifications && project.notifications.length > 0) {
-      project.notifications.map(async (sub) => {
-        let timezone = sub.timezone;
-        // select timezone based on the user timezone
-        if (sub.useParticipantTimezone && participantTimezone) {
-          timezone = participantTimezone;
-        }
+      await Promise.all(
+        project.notifications.map(async (sub) => {
+          const timezone =
+            sub.useParticipantTimezone && participantTimezone
+              ? participantTimezone
+              : sub.timezone;
 
-        if (sub.scheduleInFuture && sub.schedule === "repeat") {
-          let user_int_start = sub.int_start;
-          let user_int_end = sub.int_end;
-          if (sub.start_event === "registration") {
-            if (sub.start_next) {
-              const startNextDay = parseInt(sub.start_next);
-              let whenToStart;
-              if (startNextDay == 1) {
-                whenToStart = moment().add({ minutes: 1 }); // add 1 minute (in case the connection takes st)
+          const baseDoc = {
+            projectId: project._id,
+            notificationConfigId: sub.id,
+            title: sub.title,
+            message: sub.message,
+            url: sub.url || "",
+            expireIn: sub.expireIn,
+            timezone,
+            useParticipantTimezone: !!sub.useParticipantTimezone,
+            recipientUserIds: [req.body.id],
+            recipientGroupIds: [],
+          };
+
+          if (sub.scheduleInFuture && sub.schedule === "repeat") {
+            let user_int_start = sub.int_start;
+            let user_int_end = sub.int_end;
+
+            if (sub.start_event === "registration") {
+              if (sub.start_next) {
+                const n = parseInt(sub.start_next);
+                user_int_start =
+                  n == 1
+                    ? moment().add({ minutes: 1 }).toISOString()
+                    : moment.tz(timezone)
+                        .add({ days: n - 1 }).startOf("day")
+                        .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                        .toISOString();
               } else {
-                whenToStart = moment
-                  .tz(timezone)
-                  .add({ days: startNextDay - 1 })
-                  .startOf("day")
-                  .add({
-                    minutes: Math.floor(Math.random() * 10),
-                    seconds: Math.floor(Math.random() * 60),
-                  });
-              }
-              user_int_start = whenToStart.toISOString();
-            } else {
-              const start_event_ms = moment
-                .duration({
-                  days: sub.start_after.days,
-                  hours: sub.start_after.hours,
-                  minutes: sub.start_after.minutes,
-                })
-                .asMilliseconds();
-              user_int_start = new Date(Date.now() + start_event_ms);
-            }
-          }
-
-          if (sub.stop_event === "registration") {
-            if (sub.stop_next) {
-              const endNextDay = parseInt(sub.stop_next);
-              const whenToEnd = moment
-                .tz(timezone)
-                .add({ days: endNextDay })
-                .startOf("day")
-                .add({
-                  minutes: Math.floor(Math.random() * 10),
-                  seconds: Math.floor(Math.random() * 60),
-                });
-              user_int_end = whenToEnd.toISOString();
-            } else {
-              const stop_event_ms = moment
-                .duration({
-                  days: sub.stop_after.days,
-                  hours: sub.stop_after.hours,
-                  minutes: sub.stop_after.minutes,
-                })
-                .asMilliseconds();
-              user_int_end = new Date(Date.now() + stop_event_ms);
-            }
-          }
-
-          // if we need randomization, start random_person_manager
-          if (sub.randomize) {
-            let windowFrom = sub.windowInterval && sub.windowInterval.from;
-            let windowTo = sub.windowInterval && sub.windowInterval.to;
-            let distance =
-              (sub.windowInterval && sub.windowInterval.distance) || 0;
-
-            //update interval if there is missing information
-            if (windowFrom && windowFrom.includes("*/")) {
-              let parsedFrom = windowFrom.split(" ");
-              if (parsedFrom[3].includes("*/")) {
-                parsedFrom[3] = parsedFrom[3].replace(
-                  "*",
-                  new Date(user_int_start).getDate()
-                );
-                windowFrom = parsedFrom.join(" ");
-              }
-            }
-            if (windowTo && windowTo.includes("*/")) {
-              let parsedTo = windowTo.split(" ");
-              if (parsedTo[3].includes("*/")) {
-                parsedTo[3] = parsedTo[3].replace(
-                  "*",
-                  new Date(user_int_start).getDate()
-                );
-                windowTo = parsedTo.join(" ");
+                const ms = moment.duration(sub.start_after).asMilliseconds();
+                user_int_start = new Date(Date.now() + ms);
               }
             }
 
-            agenda.schedule(user_int_start, "start_random_personal_manager", {
-              userid: [req.body.id],
-              projectid: project._id,
-              id: sub.id,
-              interval: windowFrom,
-              interval_max: windowTo,
-              distance: distance,
-              title: sub.title,
-              message: sub.message,
-              url: sub.url,
-              expireIn: sub.expireIn,
-              number: sub.windowInterval && sub.windowInterval.number,
-              timezone: timezone,
-              reminders: sub.reminders,
-            });
-            agenda.schedule(user_int_end, "end_random_personal_manager", {
-              userid: [req.body.id],
-              projectid: project._id,
-              id: sub.id,
-              interval: windowFrom,
-              interval_max: windowTo,
-              distance: distance,
-              title: sub.title,
-              message: sub.message,
-              url: sub.url,
-              expireIn: sub.expireIn,
-              number: sub.windowInterval && sub.windowInterval.number,
-              timezone: timezone,
-              reminders: sub.reminders,
-            });
-          } else {
-            let updatedInterval = sub.interval;
-
-            //update interval if there is missing information
-            if (updatedInterval && updatedInterval.includes("*/")) {
-              let parsedInterval = updatedInterval.split(" ");
-              if (parsedInterval[3].includes("*/")) {
-                parsedInterval[3] = parsedInterval[3].replace(
-                  "*",
-                  new Date(user_int_start).getDate()
-                );
-                updatedInterval = parsedInterval.join(" ");
+            if (sub.stop_event === "registration") {
+              if (sub.stop_next) {
+                const n = parseInt(sub.stop_next);
+                user_int_end = moment.tz(timezone)
+                  .add({ days: n }).startOf("day")
+                  .add({ minutes: Math.floor(Math.random() * 10), seconds: Math.floor(Math.random() * 60) })
+                  .toISOString();
+              } else {
+                const ms = moment.duration(sub.stop_after).asMilliseconds();
+                user_int_end = new Date(Date.now() + ms);
               }
             }
 
-            agenda.schedule(user_int_start, "start_personal_manager", {
-              userid: [req.body.id],
-              projectid: project._id,
-              id: sub.id,
-              interval: updatedInterval,
-              title: sub.title,
-              message: sub.message,
-              url: sub.url,
-              expireIn: sub.expireIn,
-              timezone: timezone,
-              reminders: sub.reminders,
-            });
-            agenda.schedule(user_int_end, "end_personal_manager", {
-              userid: [req.body.id],
-              projectid: project._id,
-              id: sub.id,
-              interval: updatedInterval,
-              title: sub.title,
-              message: sub.message,
-              url: sub.url,
-              expireIn: sub.expireIn,
-              timezone: timezone,
-              reminders: sub.reminders,
-            });
-          }
-        } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
-          if (sub.target === "fixed-times") {
-            const momentDate = moment.tz(sub.date, sub.timezone);
-            const dateForParticipant = momentDate
-              .tz(timezone, true)
-              .toISOString();
-            const dateConverted = new Date(dateForParticipant);
-            const timestampForParticipant = dateConverted.getTime();
+            if (sub.randomize) {
+              let windowFrom = sub.windowInterval && sub.windowInterval.from;
+              let windowTo = sub.windowInterval && sub.windowInterval.to;
+              const distance = (sub.windowInterval && sub.windowInterval.distance) || 0;
 
-            // check whether the date is in the future
-            if (timestampForParticipant > Date.now()) {
-              agenda.schedule(dateForParticipant, "personal_notification", {
-                userid: [req.body.id],
-                projectid: project._id,
-                id: sub.id,
-                title: sub.title,
-                message: sub.message,
-                url: sub.url,
-                expireIn: sub.expireIn,
-                deleteself: true,
-                reminders: sub.reminders,
+              if (windowFrom && windowFrom.includes("*/")) {
+                const p = windowFrom.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(user_int_start).getDate());
+                windowFrom = p.join(" ");
+              }
+              if (windowTo && windowTo.includes("*/")) {
+                const p = windowTo.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(user_int_start).getDate());
+                windowTo = p.join(" ");
+              }
+
+              const docs = computeRandomWindowDocs({
+                ...baseDoc,
+                windowFrom,
+                windowTo,
+                int_start: user_int_start,
+                int_end: user_int_end,
+                number: sub.windowInterval && sub.windowInterval.number,
+                distance,
+                timezone,
               });
+              await scheduleBatch(docs);
+            } else {
+              let updatedInterval = sub.interval;
+              if (updatedInterval && updatedInterval.includes("*/")) {
+                const p = updatedInterval.split(" ");
+                if (p[3] && p[3].includes("*/"))
+                  p[3] = p[3].replace("*", new Date(user_int_start).getDate());
+                updatedInterval = p.join(" ");
+              }
+              const dates = expandCronBetween(updatedInterval, user_int_start, user_int_end, timezone);
+              await scheduleBatch(dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) })));
+            }
+          } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
+            if (sub.target === "fixed-times") {
+              const dateForParticipant = moment.tz(sub.date, sub.timezone).tz(timezone, true).toISOString();
+              if (new Date(dateForParticipant) > new Date()) {
+                await scheduleBatch([{ ...baseDoc, scheduledFor: new Date(dateForParticipant) }]);
+              }
+            } else if (sub.target === "user-specific") {
+              if (sub.window_from > sub.window_to) return;
+              const nums = getDatesInInterval(
+                Date.parse(sub.window_from),
+                Date.parse(sub.window_to),
+                sub.number,
+                sub.distance || 0
+              );
+              await scheduleBatch(nums.map((ts) => ({ ...baseDoc, scheduledFor: new Date(ts) })));
             }
           }
-          if (sub.target === "user-specific") {
-            if (sub.window_from > sub.window_to) {
-              return;
-            }
-
-            const { window_from, window_to, number } = sub;
-            const distance = sub.distance || 0;
-
-            const nums = getDatesInInterval(
-              Date.parse(window_from),
-              Date.parse(window_to),
-              number,
-              distance
-            );
-            const ds = nums.map((n) => new Date(n).toISOString());
-
-            // map over ds to schedule the notifications
-            ds.map((date) => {
-              const scheduleId = uniqid();
-              // schedule the notification
-              const res = schedulePersonalNotificationsForUsers({
-                date: date,
-                users: [req.body.id], // []
-                projectid: project._id, // String
-                notificationid: sub.id, // String - notification ID
-                body: {
-                  title: sub.title,
-                  message: sub.message,
-                  url: sub.url,
-                  expireIn: sub.expireIn,
-                  useParticipantTimezone: sub.useParticipantTimezone,
-                  timezone: sub.timezone,
-                  reminders: sub.reminders,
-                }, // {}
-                deleteself: true, // Boolean
-                scheduleid: scheduleId, // String
-              });
-            });
-          }
-        }
-      });
+        })
+      );
     }
     const updatedUser = await User.findOneAndUpdate(
       { samplyId: req.body.id },
@@ -2197,6 +1934,7 @@ async function removeParticipantFromProject({
     },
     (err, numRemoved) => {}
   );
+  await cancelByParticipantId(project._id, participantId);
   if (!project.mobileUsers) {
     project.mobileUsers = [];
   }
@@ -2310,6 +2048,7 @@ exports.removeUser = async (req, res) => {
     },
     (err, numRemoved) => {}
   );
+  await cancelByParticipantId(project._id, userId);
   // update the project
   if (!project.mobileUsers) {
     project.mobileUsers = [];
@@ -2505,7 +2244,7 @@ async function registerCompletion({ study, messageid }) {
   if (project && result) {
     const { finid } = result;
 
-    // cancel the job
+    // cancel the job (legacy Agenda jobs + new PendingNotification reminders)
     numJobsRemoved = await agenda.cancel(
       {
         "data.projectid": project._id,
@@ -2515,6 +2254,7 @@ async function registerCompletion({ study, messageid }) {
         console.log({ err });
       }
     );
+    await cancelByFinid(project._id, finid);
 
     // log the completion of the survey
     // update the record with completion event (using messageId which is data.id)
@@ -2624,6 +2364,71 @@ async function schedulePersonalNotificationsForUsers({
   return { message: "Success" };
 }
 
+// Expand a cron expression into all timestamps between from and to (inclusive).
+// Handles both 5-part and 6-part cron strings (strips leading seconds field if 6-part).
+function expandCronBetween(cronExpr, from, to, timezone) {
+  const parts = cronExpr.trim().split(/\s+/);
+  const fivePart = parts.length >= 6 ? parts.slice(1).join(" ") : cronExpr;
+  const cronInstance = new Cron({ timezone: timezone || "UTC" });
+  try {
+    cronInstance.fromString(fivePart);
+  } catch (e) {
+    console.error("expandCronBetween: invalid cron expression", cronExpr, e.message);
+    return [];
+  }
+  const endMs = new Date(to).getTime();
+  // Subtract 1ms so that a cron time exactly equal to `from` is included.
+  const schedule = cronInstance.schedule(new Date(new Date(from).getTime() - 1));
+  const dates = [];
+  let next = schedule.next();
+  while (next && next.valueOf() <= endMs) {
+    dates.push(next.toISOString());
+    next = schedule.next();
+  }
+  return dates;
+}
+
+// For a randomized window schedule: enumerate all window periods between int_start and int_end,
+// compute random send times within each window, and return PendingNotification-shaped objects.
+function computeRandomWindowDocs({
+  windowFrom, windowTo, int_start, int_end,
+  number, distance, timezone,
+  ...docFields
+}) {
+  const windowStarts = expandCronBetween(windowFrom, int_start, int_end, timezone);
+  const docs = [];
+
+  for (const windowStart of windowStarts) {
+    const parts = windowTo.trim().split(/\s+/);
+    const fivePart = parts.length >= 6 ? parts.slice(1).join(" ") : windowTo;
+    const endCron = new Cron({ timezone: timezone || "UTC" });
+    try {
+      endCron.fromString(fivePart);
+    } catch (e) {
+      continue;
+    }
+    const endSchedule = endCron.schedule(new Date(windowStart));
+    const windowEndMoment = endSchedule.next();
+    if (!windowEndMoment) continue;
+
+    const windowStartMs = new Date(windowStart).getTime();
+    const windowEndMs = windowEndMoment.valueOf();
+    if (windowStartMs >= windowEndMs) continue;
+
+    let timestamps;
+    try {
+      timestamps = getDatesInInterval(windowStartMs, windowEndMs, number, distance || 0);
+    } catch (e) {
+      continue;
+    }
+    for (const ts of timestamps) {
+      docs.push({ ...docFields, scheduledFor: new Date(ts) });
+    }
+  }
+
+  return docs;
+}
+
 function getNumberBetween(min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
@@ -2697,6 +2502,7 @@ exports.displayJobs = async (req, res) => {
     {
       name: 1,
       notifications: 1,
+      mobileUsers: 1,
     }
   );
   if (project) {
@@ -2717,12 +2523,54 @@ exports.displayJobs = async (req, res) => {
       "data.id": req.params.id,
     });
   }
+
+  const pnStatus = req.query.pnStatus;
+  const pnUser = req.query.pnUser;
+  const pnFilter = {
+    projectId: req.user.project._id,
+    notificationConfigId: req.params.id,
+  };
+  if (pnStatus) {
+    pnFilter.status = pnStatus;
+  } else {
+    pnFilter.status = { $in: ["pending", "processing", "failed"] };
+  }
+  if (pnUser) {
+    // match docs explicitly for this user OR "all participants" docs (empty recipientUserIds)
+    pnFilter.$or = [
+      { recipientUserIds: pnUser },
+      { recipientUserIds: { $size: 0 } },
+    ];
+  }
+  const pnLimit = 200;
+  const [pendingNotifications, pendingCount, hasPendingSystem] = await Promise.all([
+    PendingNotification.find(pnFilter).sort({ scheduledFor: 1 }).limit(pnLimit),
+    PendingNotification.countDocuments(pnFilter),
+    PendingNotification.exists({
+      projectId: req.user.project._id,
+      notificationConfigId: req.params.id,
+    }),
+  ]);
+
+  const participants = (project && project.mobileUsers || []).map((u) => ({
+    id: u.id,
+    username: u.username,
+    deactivated: u.deactivated,
+  }));
+
   res.render("jobs", {
     id: req.params.id,
     project,
     jobs,
     types,
     typesReversed,
+    pendingNotifications,
+    pendingCount,
+    pnLimit,
+    pnStatus: pnStatus || "",
+    pnUser: pnUser || "",
+    participants,
+    hasPendingSystem: !!hasPendingSystem,
   });
 };
 
