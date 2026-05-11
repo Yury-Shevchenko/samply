@@ -1,0 +1,248 @@
+@import "tailwindcss";
+
+/* ── Postcards design tokens ─────────────────────────────────────────────── */
+@theme {
+  --color-paper: #faf1de;
+  --color-surface: #ffffff;
+  --color-ink: #23201a;
+  --color-ink-60: rgba(35, 32, 26, 0.62);
+  --color-ink-40: rgba(35, 32, 26, 0.42);
+  --color-ink-20: rgba(35, 32, 26, 0.20);
+  --color-ink-10: rgba(35, 32, 26, 0.10);
+  --color-coral: #d65a30;
+  --color-coral-soft: rgba(214, 90, 48, 0.12);
+  --color-sage: #3d736b;
+  --color-sage-soft: rgba(61, 115, 107, 0.12);
+
+  --font-display: var(--font-space-grotesk), "Inter", sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-hand: var(--font-caveat), cursive;
+  --font-mono: var(--font-ibm-plex-mono), monospace;
+}
+
+/* ── CSS custom properties (for use in inline styles / non-Tailwind code) ── */
+:root {
+  --paper: #faf1de;
+  --surface: #ffffff;
+  --ink: #23201a;
+  --ink-60: rgba(35, 32, 26, 0.62);
+  --ink-40: rgba(35, 32, 26, 0.42);
+  --ink-20: rgba(35, 32, 26, 0.20);
+  --ink-10: rgba(35, 32, 26, 0.10);
+  --coral: #d65a30;
+  --coral-soft: rgba(214, 90, 48, 0.12);
+  --sage: #3d736b;
+  --sage-soft: rgba(61, 115, 107, 0.12);
+}
+
+/* ── Base reset ──────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /*
+   * Global scale control — change this ONE value to resize the entire UI.
+   * The design reference is 1rem = 10px, so all rem values in the codebase
+   * are simply the original pixel size divided by 10.
+   *
+   *   10px → 100% (compact)
+   *   12px → 120%
+   *   14px → 140%
+   *   15px → 150%
+   *   16px → 160%
+   *   13px → 130% (current)
+   */
+  font-size: 13px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography helpers ──────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-hand    { font-family: var(--font-hand); }
+.font-mono    { font-family: var(--font-mono); }
+
+/* ── Scrollbar suppression (inside artboard-like containers) ─────────────── */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ── Docs prose ──────────────────────────────────────────────────────────── */
+.docs-prose {
+  color: var(--ink);
+  font-size: 1.45rem;
+  line-height: 1.7;
+}
+
+.docs-prose h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.8rem;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+  margin: 0 0 1rem;
+}
+
+.docs-prose h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.7rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 3.6rem 0 0.8rem;
+  padding-top: 2.8rem;
+  border-top: 1px solid var(--ink-10);
+}
+
+.docs-prose h3:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.docs-prose h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.2rem;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  margin: 0 0 1.8rem;
+}
+
+.docs-prose p {
+  margin: 0 0 1.4rem;
+  color: var(--ink-60);
+}
+
+.docs-prose p:last-child { margin-bottom: 0; }
+
+.docs-prose a {
+  color: var(--coral);
+  text-decoration: underline;
+  text-underline-offset: 0.2rem;
+}
+
+.docs-prose a:hover { opacity: 0.75; }
+
+.docs-prose ul,
+.docs-prose ol {
+  margin: 0 0 1.6rem;
+  padding-left: 2.2rem;
+  color: var(--ink-60);
+}
+
+.docs-prose li { margin-bottom: 0.6rem; }
+
+.docs-prose li p { margin: 0; }
+
+.docs-prose strong { color: var(--ink); font-weight: 600; }
+
+.docs-prose em { font-style: italic; }
+
+/* Numbered steps inside ol */
+.docs-prose ol > li::marker { color: var(--coral); font-weight: 600; }
+
+/* Tables */
+.docs-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.3rem;
+  margin: 1.8rem 0 2.4rem;
+  background: var(--surface);
+  border: 1px solid var(--ink-10);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.docs-prose th {
+  padding: 0.9rem 1.4rem;
+  text-align: left;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink-40);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border-bottom: 1px solid var(--ink-10);
+}
+
+.docs-prose td {
+  padding: 0.9rem 1.4rem;
+  color: var(--ink-60);
+  border-bottom: 1px solid var(--ink-10);
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+}
+
+.docs-prose tr:last-child td { border-bottom: none; }
+
+/* FAQ definition list */
+.docs-prose dl { margin: 0 0 2.4rem; }
+
+.docs-prose dt {
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin: 2rem 0 0.6rem;
+}
+
+.docs-prose dd {
+  margin: 0 0 0.4rem;
+  color: var(--ink-60);
+  padding-left: 1.6rem;
+  border-left: 2px solid var(--ink-10);
+}
+
+/* Video embed */
+.docs-prose .video-embed {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  background: var(--ink-10);
+}
+
+.docs-prose .video-embed iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+
+/* Inline code */
+.docs-prose code {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  background: var(--ink-10);
+  color: var(--coral);
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.4rem;
+}
+
+/* Forum markdown prose */
+.forum-prose p { margin: 0 0 1rem; }
+.forum-prose p:last-child { margin-bottom: 0; }
+.forum-prose h1, .forum-prose h2, .forum-prose h3 { font-family: var(--font-display); font-weight: 700; margin: 1.6rem 0 0.6rem; letter-spacing: -0.02em; }
+.forum-prose ul, .forum-prose ol { padding-left: 1.8rem; margin: 0.6rem 0 1rem; }
+.forum-prose li { margin-bottom: 0.3rem; }
+.forum-prose code { font-family: var(--font-mono); font-size: 1.15rem; background: var(--ink-10); color: var(--coral); padding: 0.1rem 0.5rem; border-radius: 0.4rem; }
+.forum-prose pre { background: var(--ink-10); border-radius: 0.6rem; padding: 1.2rem 1.4rem; overflow-x: auto; margin: 1rem 0; }
+.forum-prose pre code { background: none; color: var(--ink); padding: 0; font-size: 1.1rem; }
+.forum-prose blockquote { border-left: 3px solid var(--ink-20); margin: 1rem 0; padding: 0.2rem 1.2rem; color: var(--ink-60); }
+.forum-prose a { color: var(--coral); }
+.forum-prose strong { font-weight: 600; }
+.forum-prose hr { border: none; border-top: 1px solid var(--ink-10); margin: 1.6rem 0; }

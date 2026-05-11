@@ -10,6 +10,8 @@ exports.triggerWebhook = async ({ projectId, event, data }) => {
     }
   );
 
+  if (!project || !project.settings) return;
+
   const { enableWebhooks, webhookEndpoint, webhookEvents } = project.settings;
 
   if (

@@ -922,45 +922,18 @@ exports.changeStatusParticipant = async (req, res) => {
 
 exports.getAPI = async (req, res, next) => {
   try {
-    // Not authenticated
-    if (!req.user) {
-      return res.status(401).json({
-        error: "unauthenticated",
-        message: "You must be logged in to access this API.",
-      });
+    if (!req.user) return res.redirect("/researcher/login");
+
+    let project = null;
+    if (req.user.project && req.user.project._id) {
+      project = await Project.findOne(
+        { _id: req.user.project._id },
+        { mobileUsers: 1, notifyToken: 1, notifyExpires: 1 },
+      );
     }
 
-    // No project attached to user
-    if (!req.user.project || !req.user.project._id) {
-      return res.status(400).json({
-        error: "no_project",
-        message: "No project is selected for the current user.",
-      });
-    }
-
-    const project = await Project.findOne(
-      { _id: req.user.project._id },
-      {
-        mobileUsers: 1,
-        notifyToken: 1,
-        notifyExpires: 1,
-      },
-    );
-
-    if (!project) {
-      return res.status(404).json({
-        error: "project_not_found",
-        message: "Project with the given id was not found.",
-      });
-    }
-
-    // Success: return project info
-    return res.json({ project });
+    return res.render("api", { project });
   } catch (err) {
-    console.error("Error in getAPI:", err);
-    return res.status(500).json({
-      error: "server_error",
-      message: "Unexpected error while fetching project API data.",
-    });
+    next(err);
   }
 };

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <rect width="1200" height="630" fill="#faf1de"/>
+  <filter id="n"><feTurbulence baseFrequency="0.9" numOctaves="2"/></filter>
+  <rect width="1200" height="630" filter="url(#n)" opacity="0.04"/>
+  <line x1="120" y1="280" x2="1080" y2="280" stroke="#23201a" stroke-width="1.4" stroke-dasharray="2 6" opacity="0.4"/>
+  <g fill="#d65a30">
+    <circle cx="178" cy="280" r="14"/>
+    <circle cx="362" cy="280" r="14"/>
+    <circle cx="588" cy="280" r="14"/>
+    <circle cx="828" cy="280" r="14"/>
+    <circle cx="1022" cy="280" r="14"/>
+  </g>
+  <text x="120" y="248" font-family="IBM Plex Mono, monospace" font-size="18" fill="#23201a" opacity="0.55" letter-spacing="0.18em">09:00</text>
+  <text x="1080" y="248" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="18" fill="#23201a" opacity="0.55" letter-spacing="0.18em">21:00</text>
+  <text x="120" y="430" font-family="Space Grotesk, Inter, sans-serif" font-weight="700" font-size="156" fill="#23201a" letter-spacing="-0.05em">samply</text>
+  <text x="120" y="490" font-family="Inter, sans-serif" font-weight="500" font-size="28" fill="#23201a" opacity="0.62">The schedule, not the survey.</text>
+  <text x="120" y="572" font-family="IBM Plex Mono, monospace" font-size="14" fill="#23201a" opacity="0.55" letter-spacing="0.14em">SAMPLY.APP · ESM · EMA · DIARY</text>
+</svg>

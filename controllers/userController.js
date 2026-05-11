@@ -218,49 +218,60 @@ exports.getMyStudies = async (req, res) => {
 };
 
 exports.updateAccount = async (req, res) => {
-  const userData = req.body;
-  const user = await User.findOne(
-    { samplyId: userData.token },
-    {
-      information: 1,
-      participant_projects: 1,
-    }
-  );
-
-  const data = userData.data;
-  user.information = { ...user.information, ...data };
-  await user.save();
-
-  // trigger webhooks
-  for (const project of user.participant_projects) {
-    const study = await Project.findOne(
-      { _id: project?._id },
-      { mobileUsers: 1 }
+  try {
+    const userData = req.body;
+    const user = await User.findOne(
+      { samplyId: userData.token },
+      { email: 1, information: 1, participant_projects: 1 }
     );
-    let participant = {};
-    if (
-      study &&
-      study.mobileUsers.filter((user) => user.id === userData.token).length
-    ) {
-      participant = study.mobileUsers.filter(
-        (user) => user.id === userData.token
-      )[0];
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    webhookController.triggerWebhook({
-      projectId: project.id,
-      event: "participant_info_updated",
-      data: {
-        projectId: project.id,
-        id: userData.token, // samply id of the participant
-        information: data,
-        code: participant?.username,
-        group: participant?.group,
-      },
-    });
-  }
+    const data = userData.data;
 
-  res.status(200).json({ message: "OK", information: user.information });
+    // Update top-level email separately so login credentials stay in sync
+    if (data.email) {
+      user.email = data.email;
+    }
+
+    user.information = { ...user.information, ...data };
+    await user.save();
+
+    // trigger webhooks
+    for (const project of user.participant_projects) {
+      const study = await Project.findOne(
+        { _id: project?._id },
+        { mobileUsers: 1 }
+      );
+      let participant = {};
+      if (
+        study &&
+        study.mobileUsers.filter((u) => u.id === userData.token).length
+      ) {
+        participant = study.mobileUsers.filter(
+          (u) => u.id === userData.token
+        )[0];
+      }
+
+      webhookController.triggerWebhook({
+        projectId: project.id,
+        event: "participant_info_updated",
+        data: {
+          projectId: project.id,
+          id: userData.token,
+          information: data,
+          code: participant?.username,
+          group: participant?.group,
+        },
+      });
+    }
+
+    res.status(200).json({ message: "OK", information: user.information });
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Server error" });
+  }
 };
 
 exports.resetPassword = async (req, res) => {
@@ -296,5 +307,5 @@ exports.checkPayableAccount = async (req, res) => {
       information: 1,
     }
   );
-  res.send(user);
+  res.json(user || {});
 };
