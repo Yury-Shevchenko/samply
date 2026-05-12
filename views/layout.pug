@@ -165,8 +165,8 @@ html
                 
     block background-image
 
-    //- Migration announcement — change `if false` to `if user && user.level > 10` to re-enable
-    if false
+    //- Migration announcement — change `if user && user.level > 10` to `if false` to disable
+    if user && user.level > 10
       #migration-banner(style="background:#1a1714;color:#f5f0e8;padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.6rem;font-family:sans-serif;font-size:1.35rem;line-height:1.5;")
         span(style="flex:1")
           strong(style="color:#d65a30") Samply is getting a new dashboard.&ensp;

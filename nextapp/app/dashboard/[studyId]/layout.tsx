@@ -64,7 +64,7 @@ export default async function StudyLayout({ children, params }: Props) {
                 {project.name}
               </h1>
               {project.description && (
-                <p style={{ margin: "0.6rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)", maxWidth: 540, lineHeight: 1.5 }}>
+                <p style={{ margin: "0.6rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.5 }}>
                   {project.description}
                 </p>
               )}
