@@ -228,7 +228,7 @@ export default async function ConfirmEmailPage({
             style={{ fontSize: "1.25rem", color: "var(--ink-40)", textDecoration: "none" }}
             className="hover:opacity-70 transition-opacity"
           >
-            samply.org
+            samply.uni-konstanz.de
           </a>
         </div>
       </div>

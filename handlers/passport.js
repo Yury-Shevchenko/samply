@@ -128,7 +128,7 @@ passport.use('website-signup-researcher', new LocalStrategy({
           mail.send({
             participant: newUser,
             subject: 'Email confirmation',
-            resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+            resetURL: `${process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${newUser.confirmEmailToken}`,
             filename: 'email-confirmation-' + newUser.language
           }).catch(err => {
             console.error('Failed to send confirmation email to researcher:', newUser.email, err.message);

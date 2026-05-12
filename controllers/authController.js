@@ -45,7 +45,7 @@ exports.forgot = async (req, res) => {
   user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
   user.resetPasswordExpires = Date.now() + 3600000; //1 hour to reset the password
   await user.save();
-  const resetURL = `https://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
+  const resetURL = `${process.env.APP_URL || `https://${req.headers.host}`}/account/reset/${user.resetPasswordToken}`;
   const subject = res.locals.layout.flash_password_reset;
   await mail.send({
     participant: user,
@@ -86,7 +86,7 @@ exports.sendEmailConfirmationLink = async (req, res) => {
     await mail.send({
       participant: user,
       subject,
-      resetURL: `https://${req.headers.host}/account/confirm/${user.confirmEmailToken}`,
+      resetURL: `${process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${user.confirmEmailToken}`,
       filename: "email-confirmation-" + user.language,
     });
   } catch (err) {

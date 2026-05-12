@@ -156,7 +156,7 @@ exports.createMobileAccount = async (req, res) => {
         mail.send({
           participant: newUser,
           subject: "Email confirmation",
-          resetURL: `https://${req.headers.host}/account/confirm/${newUser.confirmEmailToken}`,
+          resetURL: `${process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${newUser.confirmEmailToken}`,
           filename: "email-confirmation-" + newUser.language,
         }).catch(err => {
           console.error("Failed to send confirmation email to:", userData.email, err.message);
@@ -283,7 +283,7 @@ exports.resetPassword = async (req, res) => {
   user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
   user.resetPasswordExpires = Date.now() + 3600000; //1 hour to reset the password
   await user.save();
-  const resetURL = `https://${req.headers.host}/account/reset/${user.resetPasswordToken}`;
+  const resetURL = `${process.env.APP_URL || `https://${req.headers.host}`}/account/reset/${user.resetPasswordToken}`;
   const subject =
     (res.locals.layout && res.locals.layout.flash_password_reset) ||
     "Password Reset";
