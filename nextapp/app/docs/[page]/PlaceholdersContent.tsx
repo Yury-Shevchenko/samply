@@ -94,7 +94,7 @@ export default function PlaceholdersContent() {
       </p>
 
       {/* ── Token reference ───────────────────────────────────────────────── */}
-      <h2>Token reference</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Token reference</h2>
 
       <table>
         <thead>
@@ -116,7 +116,7 @@ export default function PlaceholdersContent() {
       </table>
 
       {/* ── How it works ──────────────────────────────────────────────────── */}
-      <h2>How substitution works</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>How substitution works</h2>
       <p>
         Substitution happens at send time, inside the notification dispatcher, immediately
         before the push is enqueued for delivery. The original URL stored in the schedule
@@ -131,7 +131,7 @@ export default function PlaceholdersContent() {
       </p>
 
       {/* ── Constructing the URL ──────────────────────────────────────────── */}
-      <h2>Constructing the URL</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Constructing the URL</h2>
       <p>
         Append placeholders as standard query string parameters. You can combine as many as
         you need. A typical URL for a study that tracks participants, waves, and completions
@@ -145,7 +145,7 @@ export default function PlaceholdersContent() {
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
       {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2>Tool-specific setup</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Tool-specific setup</h2>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
         {TOOLS.map((tool) => (
@@ -165,7 +165,7 @@ export default function PlaceholdersContent() {
       </div>
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
-      <h2>MESSAGE_ID and completion tracking</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID and completion tracking</h2>
       <p>
         <Code>%MESSAGE_ID%</Code> is the key that connects a survey response back to the
         notification that triggered it. When a participant completes your survey, your survey
@@ -182,12 +182,15 @@ export default function PlaceholdersContent() {
       </p>
 
       {/* ── Permanent link ────────────────────────────────────────────────── */}
-      <h2>Placeholders in the permanent study link</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Placeholders in the permanent study link</h2>
       <p>
-        The same tokens work in the study permanent link — the always-available link
-        participants can tap inside the Samply Research app at any time, independent of
-        scheduled notifications. The permanent link is set in Edit study. Use it for
-        event-contingent designs where participants self-initiate a report.
+        The same tokens work in the permanent study link — the URL participants can tap in
+        the Samply app at any time, outside of scheduled notifications. This is the
+        foundation of <strong>event-contingent designs</strong>: instead of pushing a
+        notification at a fixed time, you let participants self-initiate a report whenever a
+        relevant event occurs in their day. Configure the permanent link in the{' '}
+        <strong>Settings</strong> tab of your study dashboard, under{' '}
+        <em>Event-contingent design</em>.
       </p>
       <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP_SENT%' />
 

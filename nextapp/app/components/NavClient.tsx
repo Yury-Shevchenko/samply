@@ -35,6 +35,8 @@ export default function NavClient({ isLoggedIn, isAdmin, userName, signOutAction
   const path = usePathname();
   const active = (prefix: string) => path.startsWith(prefix);
 
+  if (/^\/studies\/[^/]+\/done\//.test(path)) return null;
+
   return (
     <header
       className="sticky top-0 z-50 bg-[var(--paper)] border-b border-[var(--ink-10)]"
@@ -52,7 +54,6 @@ export default function NavClient({ isLoggedIn, isAdmin, userName, signOutAction
           {isLoggedIn ? (
             <>
               <NavLink href="/dashboard" isActive={active("/dashboard")}>Dashboard</NavLink>
-              <NavLink href="/studies" isActive={active("/studies")}>Studies</NavLink>
               <NavLink href="/forum" isActive={active("/forum")}>Forum</NavLink>
               <NavLink href="/docs/intro" isActive={active("/docs")}>Docs</NavLink>
               {isAdmin && (

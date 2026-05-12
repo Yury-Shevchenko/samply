@@ -247,9 +247,42 @@ export default async function StudyDetailPage({
                 />
               </div>
 
-              <p style={{ margin: "1.4rem 0 0", fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
+              <p style={{ margin: "1.4rem 0 0.8rem", fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
                 Open with the Samply app<br />on iOS or Android
               </p>
+
+              {/* Or enter code divider */}
+              <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", margin: "1.2rem 0" }}>
+                <div style={{ flex: 1, height: "1px", borderTop: "1px dashed var(--ink-20)" }} />
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}>
+                  or type this code
+                </span>
+                <div style={{ flex: 1, height: "1px", borderTop: "1px dashed var(--ink-20)" }} />
+              </div>
+
+              {/* Study code */}
+              <div style={{
+                background: "var(--paper)",
+                border: "1px solid var(--ink-10)",
+                borderRadius: "0.8rem",
+                padding: "0.9rem 1.2rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: "0.8rem",
+              }}>
+                <div style={{ textAlign: "left" }}>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.3rem" }}>
+                    study code
+                  </div>
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.6rem", fontWeight: 700, letterSpacing: ".14em", color: "var(--ink)" }}>
+                    {project.slug?.toUpperCase()}
+                  </div>
+                </div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", lineHeight: 1.4, textAlign: "right", maxWidth: "9rem" }}>
+                  in Find a Study → Enter code
+                </div>
+              </div>
 
               {/* Perforation bottom */}
               <div

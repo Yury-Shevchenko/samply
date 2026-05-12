@@ -2,23 +2,21 @@ import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import { fetchParticipants, fetchHistory, fetchReceipts, fetchParticipantUserInfo } from "@/lib/data/participants";
-import type { HistorySortBy, HistorySortOrder } from "@/lib/data/participants";
 import type { IResult } from "@/lib/models/result";
 import type { IReceipt } from "@/lib/models/receipt";
-import { toggleParticipantAction, deleteParticipantAction } from "./actions";
+import { toggleParticipantAction, deleteParticipantAction, updateParticipantCodeAction } from "./actions";
 import { DeleteForm } from "./DeleteForm";
+import CodeEditor from "./CodeEditor";
+import { fetchPendingNotifications } from "@/lib/data/scheduled";
 
 interface Props {
   params: Promise<{ studyId: string; participantId: string }>;
-  searchParams: Promise<{ page?: string; sort?: string; order?: string }>;
 }
 
 const STATUS_PRIORITY: Record<string, number> = {
   completed: 6, "opened-in-app": 5, tapped: 4,
   archived: 3, "received-in-app": 2, sent: 1,
 };
-
-const VALID_SORTS = new Set<HistorySortBy>(["title", "created", "status"]);
 
 function bestStatus(r: IResult): string {
   return (r.events ?? []).reduce<{ status: string; priority: number }>(
@@ -83,56 +81,8 @@ const TH: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-function buildHref(
-  studyId: string,
-  participantId: string,
-  page: number,
-  sort: HistorySortBy,
-  order: HistorySortOrder,
-) {
-  const p = new URLSearchParams();
-  if (page > 1) p.set("page", String(page));
-  p.set("sort", sort);
-  p.set("order", order);
-  return `/dashboard/${studyId}/participants/${participantId}?${p.toString()}`;
-}
-
-function SortTh({
-  studyId, participantId, page, col, label, currentSort, currentOrder,
-}: {
-  studyId: string;
-  participantId: string;
-  page: number;
-  col: HistorySortBy;
-  label: string;
-  currentSort: HistorySortBy;
-  currentOrder: HistorySortOrder;
-}) {
-  const isActive = currentSort === col;
-  const nextOrder: HistorySortOrder = isActive && currentOrder === "desc" ? "asc" : "desc";
-  const indicator = isActive ? (currentOrder === "desc" ? " ↓" : " ↑") : "";
-  return (
-    <th style={{ ...TH, color: undefined }}>
-      <a
-        href={buildHref(studyId, participantId, 1, col, nextOrder)}
-        style={{ color: isActive ? "var(--ink)" : "var(--ink-40)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.3rem" }}
-        className="hover:text-[var(--ink)] transition-colors"
-      >
-        {label}{indicator}
-      </a>
-    </th>
-  );
-}
-
-export default async function ParticipantDetailPage({ params, searchParams }: Props) {
+export default async function ParticipantDetailPage({ params }: Props) {
   const { studyId, participantId } = await params;
-  const { page: pageParam, sort: sortParam, order: orderParam } = await searchParams;
-
-  const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
-  const sort: HistorySortBy = VALID_SORTS.has(sortParam as HistorySortBy)
-    ? (sortParam as HistorySortBy)
-    : "created";
-  const order: HistorySortOrder = orderParam === "asc" ? "asc" : "desc";
 
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
@@ -147,20 +97,19 @@ export default async function ParticipantDetailPage({ params, searchParams }: Pr
   const participant = allParticipants.find((p) => p.id === participantId);
   if (!participant) notFound();
 
-  const [{ history, count, pages }, receipts, userInfo] = await Promise.all([
-    fetchHistory(studyId, page, participantId, sort, order),
+  const [{ history: recentSent, count: sentCount }, receipts, userInfo, { items: upcomingRaw }] = await Promise.all([
+    fetchHistory(studyId, 1, participantId, "created", "desc", 5),
     fetchReceipts(participantId, session.user.id),
     fetchParticipantUserInfo(participantId),
+    fetchPendingNotifications(studyId, undefined, ["pending"], participantId, 1, "scheduledFor", "asc"),
   ]);
+  const upcoming = upcomingRaw.slice(0, 5);
 
   const isDeactivated = participant.deactivated ?? false;
 
   const toggleAction = toggleParticipantAction.bind(null, studyId, participantId);
   const deleteAction = deleteParticipantAction.bind(null, studyId, participantId);
-
-  function pageHref(p: number) {
-    return buildHref(studyId, participantId, p, sort, order);
-  }
+  const updateCodeAction = updateParticipantCodeAction.bind(null, studyId, participantId);
 
   return (
     <div className="flex flex-col gap-[2.8rem]">
@@ -205,9 +154,7 @@ export default async function ParticipantDetailPage({ params, searchParams }: Pr
         </div>
 
         <div style={{ padding: "0.4rem 2.4rem 1.2rem" }}>
-          {participant.username && (
-            <MetaRow label="Code">{participant.username}</MetaRow>
-          )}
+          <CodeEditor current={participant.username} action={updateCodeAction} />
           {participant.group?.name && (
             <MetaRow label="Group">
               <span style={{ padding: "0.2rem 0.8rem", borderRadius: "9999px", background: "var(--ink-10)", color: "var(--ink-60)" }}>
@@ -267,80 +214,108 @@ export default async function ParticipantDetailPage({ params, searchParams }: Pr
         </form>
       </div>
 
-      {/* Perforated divider */}
-      <div style={{ height: "0.1rem", backgroundImage: "radial-gradient(circle, var(--ink-40) 1px, transparent 1.2px)", backgroundSize: "0.8rem 0.1rem", backgroundRepeat: "repeat-x", opacity: 0.2 }} />
-
-      {/* Notification history */}
+      {/* Upcoming notifications preview */}
       <section>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "1.2rem" }}>
-          <SectionLabel>
-            notifications sent · {count.toLocaleString()}
-          </SectionLabel>
+          <SectionLabel>upcoming notifications</SectionLabel>
+          <a
+            href={`/scheduled/${studyId}?pnUser=${participantId}`}
+            style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", letterSpacing: ".04em", color: "var(--ink-40)", textDecoration: "none" }}
+            className="hover:text-[var(--ink)] transition-colors"
+          >
+            see all →
+          </a>
         </div>
+        {upcoming.length === 0 ? (
+          <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "2.4rem 2rem", textAlign: "center" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink-40)", margin: 0 }}>
+              No upcoming notifications scheduled.
+            </p>
+          </div>
+        ) : (
+          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
+                  <th style={TH}>Scheduled for</th>
+                  <th style={TH}>Title</th>
+                  <th style={TH}>Rem.</th>
+                </tr>
+              </thead>
+              <tbody>
+                {upcoming.map((row, i) => (
+                  <tr key={String(row._id)} style={{ borderBottom: i < upcoming.length - 1 ? "1px solid var(--ink-10)" : "none" }}
+                    className="hover:bg-[var(--paper)] transition-colors">
+                    <td style={{ padding: "0.9rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }} suppressHydrationWarning>
+                      {new Date(row.scheduledFor).toLocaleString()}
+                    </td>
+                    <td style={{ padding: "0.9rem 1.6rem", fontSize: "1.2rem", color: "var(--ink-60)", maxWidth: 280 }}>
+                      <div className="truncate">{row.title || row.message || "—"}</div>
+                    </td>
+                    <td style={{ padding: "0.9rem 1.6rem" }}>
+                      {row.isReminder && (
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 700, background: "rgba(124,106,181,.12)", color: "#7c6ab5", padding: "0.15rem 0.5rem", borderRadius: "0.4rem", letterSpacing: ".06em" }}>
+                          R
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </section>
 
-        {history.length === 0 && page === 1 ? (
-          <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "3.2rem 2.4rem", textAlign: "center" }}>
+      {/* Sent notifications preview */}
+      <section>
+        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "1.2rem" }}>
+          <SectionLabel>notifications sent · {sentCount.toLocaleString()}</SectionLabel>
+          <a
+            href={`/dashboard/${studyId}/data?participant=${participantId}`}
+            style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", letterSpacing: ".04em", color: "var(--ink-40)", textDecoration: "none" }}
+            className="hover:text-[var(--ink)] transition-colors"
+          >
+            see all →
+          </a>
+        </div>
+        {recentSent.length === 0 ? (
+          <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "2.4rem 2rem", textAlign: "center" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink-40)", margin: 0 }}>
               No notifications sent yet.
             </p>
           </div>
         ) : (
-          <>
-            <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                    <SortTh studyId={studyId} participantId={participantId} page={page} col="title"   label="Notification" currentSort={sort} currentOrder={order} />
-                    <SortTh studyId={studyId} participantId={participantId} page={page} col="created" label="Sent"         currentSort={sort} currentOrder={order} />
-                    <SortTh studyId={studyId} participantId={participantId} page={page} col="status"  label="Status"       currentSort={sort} currentOrder={order} />
-                  </tr>
-                </thead>
-                <tbody>
-                  {history.map((r, i) => {
-                    const status = bestStatus(r);
-                    return (
-                      <tr key={String(r._id)}
-                        style={{ borderBottom: i < history.length - 1 ? "1px solid var(--ink-10)" : "none" }}
-                        className="hover:bg-[var(--paper)] transition-colors">
-                        <td style={{ padding: "1rem 1.6rem", fontSize: "1.25rem", color: "var(--ink-60)", maxWidth: 280 }}>
-                          <div className="truncate">{r.data?.title ?? r.data?.message ?? "—"}</div>
-                        </td>
-                        <td style={{ padding: "1rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
-                          {new Date(r.created).toLocaleString()}
-                        </td>
-                        <td style={{ padding: "1rem 1.6rem" }}>
-                          <StatusPill status={status} />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Pagination */}
-            {pages > 1 && (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "1.6rem", marginTop: "1.6rem" }}>
-                {page > 1 && (
-                  <a href={pageHref(page - 1)}
-                    style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
-                    className="hover:opacity-70 transition-opacity">
-                    ← prev
-                  </a>
-                )}
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", letterSpacing: ".08em" }}>
-                  {page} / {pages}
-                </span>
-                {page < pages && (
-                  <a href={pageHref(page + 1)}
-                    style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
-                    className="hover:opacity-70 transition-opacity">
-                    next →
-                  </a>
-                )}
-              </div>
-            )}
-          </>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
+                  <th style={TH}>Notification</th>
+                  <th style={TH}>Sent</th>
+                  <th style={TH}>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentSent.map((r, i) => {
+                  const status = bestStatus(r);
+                  return (
+                    <tr key={String(r._id)} style={{ borderBottom: i < recentSent.length - 1 ? "1px solid var(--ink-10)" : "none" }}
+                      className="hover:bg-[var(--paper)] transition-colors">
+                      <td style={{ padding: "0.9rem 1.6rem", fontSize: "1.2rem", color: "var(--ink-60)", maxWidth: 280 }}>
+                        <div className="truncate">{r.data?.title ?? r.data?.message ?? "—"}</div>
+                      </td>
+                      <td style={{ padding: "0.9rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }} suppressHydrationWarning>
+                        {new Date(r.created).toLocaleString()}
+                      </td>
+                      <td style={{ padding: "0.9rem 1.6rem" }}>
+                        <StatusPill status={status} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </section>
 

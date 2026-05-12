@@ -7,7 +7,7 @@ import { resetNotifyTokenAction } from "./actions";
 import { CopyButton } from "./CopyButton";
 
 const BASE_URL = process.env.EXPRESS_URL ?? "https://samply.uni-konstanz.de";
-const NOTIFY_ENDPOINT = `${BASE_URL}/api/notify`;
+const STREAM_ENDPOINT = `${BASE_URL}/api/notify`;
 
 function fmt(d: string | Date) {
   return new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
@@ -55,7 +55,7 @@ export default async function StudyApiPage({
 
   const resetAction = resetNotifyTokenAction.bind(null, studyId);
 
-  const codeSnippet = `const url = "${NOTIFY_ENDPOINT}";
+  const codeSnippet = `const url = "${STREAM_ENDPOINT}";
 const data = {
   projectID: "${studyId}",
   groupID: "\${placeholder-for-groupID}",      // optional
@@ -87,7 +87,7 @@ sendNotification(url, data);`;
           stream api
         </div>
         <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "2.6rem", letterSpacing: "-0.025em", margin: 0, lineHeight: 1.1 }}>
-          Notify API
+          Stream API
         </h2>
         <p style={{ margin: "0.8rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, maxWidth: "54rem" }}>
           Trigger notifications from an external system — your survey tool, a script, or any HTTP client — by posting to the Samply API. Useful for event-contingent designs where a notification should fire immediately after an event of interest.
@@ -192,7 +192,7 @@ sendNotification(url, data);`;
           </pre>
         </div>
         <div style={{ marginTop: "1.2rem", fontSize: "1.2rem", color: "var(--ink-40)" }}>
-          Endpoint: <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>{NOTIFY_ENDPOINT}</code>
+          Endpoint: <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>{STREAM_ENDPOINT}</code>
         </div>
       </Section>
 

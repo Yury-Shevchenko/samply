@@ -138,6 +138,13 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
             </a>
           )}
           <a
+            href={`/dashboard/${studyId}/groups`}
+            style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", color: "var(--ink-60)", textDecoration: "none", padding: "0.8rem 1.6rem", border: "1px solid var(--ink-20)", borderRadius: "9999px" }}
+            className="hover:opacity-70 transition-opacity"
+          >
+            Manage groups →
+          </a>
+          <a
             href={`/dashboard/${studyId}/invitations`}
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", color: "var(--ink-60)", textDecoration: "none", padding: "0.8rem 1.6rem", border: "1px solid var(--ink-20)", borderRadius: "9999px" }}
             className="hover:opacity-70 transition-opacity"

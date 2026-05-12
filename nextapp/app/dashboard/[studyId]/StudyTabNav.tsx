@@ -6,7 +6,7 @@ const TABS = [
   { label: "Overview",     suffix: "" },
   { label: "Participants", suffix: "/participants" },
   { label: "Schedule",     suffix: "/schedule" },
-  { label: "Data",         suffix: "/data" },
+  { label: "History",      suffix: "/data" },
   { label: "Invitations",  suffix: "/invitations" },
   { label: "Settings",     suffix: "/settings" },
   { label: "Approval",     suffix: "/approval" },

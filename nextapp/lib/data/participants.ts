@@ -10,7 +10,7 @@ export interface MobileUser {
   token?: string;
   created?: Date;
   username?: string;
-  group?: { name?: string };
+  group?: { id?: string; name?: string };
   information?: Record<string, unknown>;
   stripe?: { account?: string; information?: unknown };
   deactivated?: boolean;
@@ -34,13 +34,14 @@ export async function fetchHistory(
   participantId?: string,
   sortBy: HistorySortBy = "created",
   sortOrder: HistorySortOrder = "desc",
+  limit = HISTORY_LIMIT,
 ): Promise<{ history: IResult[]; count: number; pages: number; page: number; skip: number }> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
   const filter: Record<string, unknown> = { project: oid };
   if (participantId) filter.samplyid = participantId;
 
-  const skip = (page - 1) * HISTORY_LIMIT;
+  const skip = (page - 1) * limit;
   const dir = sortOrder === "asc" ? 1 : -1;
 
   if (sortBy === "status") {
@@ -64,7 +65,7 @@ export async function fetchHistory(
         { $addFields: { _sp: statusPriority } },
         { $sort: { _sp: dir, created: -1 } },
         { $skip: skip },
-        { $limit: HISTORY_LIMIT },
+        { $limit: limit },
       ]),
       Result.countDocuments(filter),
     ]);
@@ -73,7 +74,7 @@ export async function fetchHistory(
 
   const sortField = sortBy === "title" ? "data.title" : sortBy;
   const [history, count] = await Promise.all([
-    Result.find(filter).sort({ [sortField]: dir }).skip(skip).limit(HISTORY_LIMIT).lean(),
+    Result.find(filter).sort({ [sortField]: dir }).skip(skip).limit(limit).lean(),
     Result.countDocuments(filter),
   ]);
 

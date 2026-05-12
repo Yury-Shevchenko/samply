@@ -14,7 +14,7 @@ function UrlBox({ url }: { url: string }) {
   );
 }
 
-export default function RemindersContent() {
+export default function RemindersContent({ baseUrl }: { baseUrl: string }) {
   return (
     <>
       <p>
@@ -87,6 +87,11 @@ export default function RemindersContent() {
         tool must signal completion by calling the Samply completion endpoint. There are
         two ways to do this.
       </p>
+      <p>
+        The exact URLs for your study — with the correct slug already filled in — are
+        shown in the <strong>Settings</strong> tab of your study dashboard, under{' '}
+        <em>Reminders — completion URL</em>. You can copy them directly from there.
+      </p>
 
       <h3>Option 1 — redirect (Qualtrics, LimeSurvey, most survey tools)</h3>
       <p>
@@ -99,7 +104,7 @@ export default function RemindersContent() {
         your study URL slug and use the <Code>%MESSAGE_ID%</Code> placeholder so each
         participant&apos;s completion is recorded against their specific send:
       </p>
-      <UrlBox url='https://app.samply.science/studies/your-study-slug/done/%MESSAGE_ID%' />
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
       <p style={{ marginTop: '1.4rem' }}>
         In Qualtrics, set this as the survey end-of-survey redirect URL. In LimeSurvey,
         set it as the &quot;End URL&quot; on the survey settings panel. The survey tool
@@ -113,7 +118,7 @@ export default function RemindersContent() {
         Send an HTTP POST to the same endpoint. This is suited for survey tools that
         support end-of-survey webhooks, or for custom code running server-side.
       </p>
-      <UrlBox url='POST https://app.samply.science/studies/your-study-slug/done/:messageid' />
+      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
       <p style={{ marginTop: '1.4rem' }}>
         A <code>200</code> response confirms the completion was recorded and reminders
         were cancelled. A <code>400</code> response means Samply could not find a matching
@@ -168,7 +173,7 @@ export default function RemindersContent() {
           the redirect URL to:
         </li>
       </ol>
-      <UrlBox url='https://app.samply.science/studies/your-study-slug/done/${e://Field/messageid}' />
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
       <p style={{ marginTop: '1.4rem' }}>
         Qualtrics substitutes <code>{'{e://Field/messageid}'}</code> with the captured
         value, so participants are redirected to the correct completion URL.

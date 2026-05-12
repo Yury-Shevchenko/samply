@@ -73,6 +73,7 @@ async function processOneNotification() {
       tokens,
       project_id: notification.projectId,
       project_name: project.name,
+      notificationConfigId: notification.notificationConfigId,
       reminders,
       finishid: notification.finid,
       openStudyScreenFallback:

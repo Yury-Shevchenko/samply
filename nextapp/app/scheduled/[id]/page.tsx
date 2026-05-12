@@ -15,9 +15,10 @@ import {
   deletePendingNotificationAction,
   cancelPendingNotificationAction,
   reactivatePendingNotificationAction,
+  bulkDeletePendingNotificationsAction,
 } from "../actions";
-import { PendingActions } from "../PendingActions";
 import { DeleteScheduleButton } from "../DeleteScheduleButton";
+import { PendingTable } from "../PendingTable";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -43,14 +44,6 @@ const JOB_TYPE_LABELS: Record<string, string> = {
   start_random_personal_manager: "Random start",
   end_random_personal_manager:   "Random end",
   random_personal_notification:  "Random personal",
-};
-
-const PN_STATUS_META: Record<string, { label: string; bg: string; color: string }> = {
-  pending:    { label: "pending",    bg: "rgba(180,140,40,.1)",  color: "#b48c28" },
-  processing: { label: "processing", bg: "rgba(60,100,200,.1)",  color: "#3c64c8" },
-  sent:       { label: "sent",       bg: "rgba(61,115,107,.1)",  color: "var(--sage)" },
-  failed:     { label: "failed",     bg: "rgba(214,90,48,.1)",   color: "var(--coral)" },
-  cancelled:  { label: "cancelled",  bg: "var(--ink-10)",        color: "var(--ink-40)" },
 };
 
 function fmt(d?: Date | string | null) {
@@ -103,21 +96,21 @@ const TYPE_META: Record<string, { label: string; fg: string; bg: string; border:
 };
 
 const TH: React.CSSProperties = {
-  padding: "0.9rem 1.6rem",
+  padding: "0.7rem 1rem",
   textAlign: "left",
   fontFamily: "var(--font-mono)",
-  fontSize: "0.95rem",
+  fontSize: "0.9rem",
   fontWeight: 600,
-  letterSpacing: ".14em",
+  letterSpacing: ".12em",
   textTransform: "uppercase",
   color: "var(--ink-40)",
   whiteSpace: "nowrap",
 };
 
 const TD: React.CSSProperties = {
-  padding: "1rem 1.6rem",
+  padding: "0.75rem 1rem",
   fontFamily: "var(--font-mono)",
-  fontSize: "1.1rem",
+  fontSize: "1.05rem",
   color: "var(--ink-60)",
   whiteSpace: "nowrap",
 };
@@ -204,6 +197,14 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     ]),
   );
 
+  // group id → group name
+  const groupNameById = new Map<string, string>();
+  for (const p of participants) {
+    if (p.group?.id && !groupNameById.has(p.group.id)) {
+      groupNameById.set(p.group.id, p.group.name ?? p.group.id);
+    }
+  }
+
   const [jobs, { items: pendingItems, count: pendingCount, pages: pendingPages }] = await Promise.all([
     notification
       ? fetchJobsForNotification(studyId, notificationId!, type)
@@ -264,6 +265,35 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     ? Math.round(notification.expireIn / 3600000)
     : null;
 
+  const returnPath = (() => {
+    const p = new URLSearchParams();
+    if (notificationId) p.set("notificationId", notificationId);
+    if (pnStatusParam) p.set("pnStatus", pnStatusParam);
+    if (pnUser) p.set("pnUser", pnUser);
+    if (pnSort) p.set("pnSort", pnSort);
+    if (pnDir) p.set("pnDir", pnDir);
+    const qs = p.toString();
+    return `/scheduled/${studyId}${qs ? `?${qs}` : ""}`;
+  })();
+  const bulkDeleteBound = bulkDeletePendingNotificationsAction.bind(null, studyId, returnPath);
+
+  const pendingRows = (pendingItems as IPendingNotification[]).map((pn) => {
+    const pnId = String(pn._id);
+    const rowNotifId = notificationId ?? pn.notificationConfigId;
+    return {
+      id: pnId,
+      scheduledFor: pn.scheduledFor ? String(pn.scheduledFor) : null,
+      status: pn.status,
+      title: pn.title || pn.message || "",
+      isReminder: pn.isReminder ?? false,
+      recipientGroupIds: (pn.recipientGroupIds ?? []) as string[],
+      recipientUserIds: (pn.recipientUserIds ?? []) as string[],
+      deleteAction: deletePendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam),
+      cancelAction: cancelPendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam),
+      reactivateAction: reactivatePendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam),
+    };
+  });
+
   const deleteScheduleAction = notification
     ? deleteNotificationAction.bind(null, studyId, notificationId!, `/dashboard/${studyId}/schedule`)
     : null;
@@ -276,12 +306,6 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     ? (describeEvent(notification.stop_event, notification.stop_next, notification.stop_after)
         ?? (notification.int_end ? fmt(notification.int_end) : null))
     : null;
-
-  // Sort arrow helper
-  function sortArrow(field: string) {
-    if (pnSort !== field) return <span style={{ opacity: 0.25, marginLeft: "0.3rem" }}>↕</span>;
-    return <span style={{ marginLeft: "0.3rem" }}>{pnDir === "asc" ? "↑" : "↓"}</span>;
-  }
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--paper)", padding: "4rem 2.4rem" }}>
@@ -398,6 +422,28 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               <MetaRow label="Min. distance">{Math.round(notification.distance / 60000)} min</MetaRow>
             )}
             {/* Audience */}
+            {notification.reminders && notification.reminders.length > 0 && (
+              <MetaRow label={`Reminder${notification.reminders.length > 1 ? "s" : ""}`}>
+                <span style={{ display: "inline-flex", flexDirection: "column", gap: "0.4rem" }}>
+                  {notification.reminders.map((r, i) => (
+                    <span key={i} style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>
+                      {Math.round(r.time / 60000)} min — {r.title || r.message || "—"}
+                    </span>
+                  ))}
+                </span>
+              </MetaRow>
+            )}
+            {notification.groups && notification.groups.length > 0 && (
+              <MetaRow label="Groups">
+                <span style={{ display: "inline-flex", flexWrap: "wrap", gap: "0.4rem" }}>
+                  {notification.groups.map((gid) => (
+                    <span key={gid} style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", padding: "0.2rem 0.8rem", borderRadius: "9999px", background: "var(--ink-10)", color: "var(--ink-60)" }}>
+                      {groupNameById.get(gid) ?? gid}
+                    </span>
+                  ))}
+                </span>
+              </MetaRow>
+            )}
             {notification.participantId && notification.participantId.length > 0 && (
               <MetaRow label="Participants">{notification.participantId.join(", ")}</MetaRow>
             )}
@@ -565,70 +611,15 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               </div>
             ) : (
               <>
-                <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
-                  <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                    <thead>
-                      <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                        <th style={TH}>
-                          <a href={sortHref("scheduledFor")} style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center" }}>
-                            Scheduled for{sortArrow("scheduledFor")}
-                          </a>
-                        </th>
-                        <th style={TH}>
-                          <a href={sortHref("status")} style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center" }}>
-                            Status{sortArrow("status")}
-                          </a>
-                        </th>
-                        <th style={TH}>Title</th>
-                        <th style={TH}>Recipients</th>
-                        <th style={{ ...TH, width: "1%", whiteSpace: "nowrap" }}></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(pendingItems as IPendingNotification[]).map((pn, i) => {
-                        const sm = PN_STATUS_META[pn.status] ?? PN_STATUS_META.cancelled;
-                        const pnId = String(pn._id);
-                        const rowNotifId = notificationId ?? pn.notificationConfigId;
-                        const deleteAction = deletePendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam);
-                        const cancelAction = cancelPendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam);
-                        const reactivateAction = reactivatePendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam);
-                        return (
-                          <tr key={pnId}
-                            style={{ borderBottom: i < pendingItems.length - 1 ? "1px solid var(--ink-10)" : "none" }}
-                            className="hover:bg-[var(--paper)] transition-colors">
-                            <td style={TD}>{fmt(pn.scheduledFor)}</td>
-                            <td style={{ padding: "1rem 1.6rem" }}>
-                              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.8rem", borderRadius: "9999px", background: sm.bg, color: sm.color }}>
-                                {sm.label}
-                              </span>
-                            </td>
-                            <td style={{ ...TD, maxWidth: "22rem" }}>
-                              <div className="truncate">{pn.title || pn.message || "—"}</div>
-                            </td>
-                            <td style={{ ...TD, color: "var(--ink-40)", maxWidth: "18rem" }}>
-                              <div className="truncate">
-                                {pn.recipientUserIds.length
-                                  ? pn.recipientUserIds
-                                      .map((id) => participantCodeById.get(id) ?? id)
-                                      .join(", ")
-                                  : "all"}
-                              </div>
-                            </td>
-                            <td style={{ padding: "0.6rem 1.6rem", whiteSpace: "nowrap" }}>
-                              <PendingActions
-                                status={pn.status}
-                                scheduledFor={pn.scheduledFor}
-                                deleteAction={deleteAction}
-                                cancelAction={cancelAction}
-                                reactivateAction={reactivateAction}
-                              />
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <PendingTable
+                  rows={pendingRows}
+                  participantCodeById={Object.fromEntries(participantCodeById)}
+                  groupNameById={Object.fromEntries(groupNameById)}
+                  bulkDeleteAction={bulkDeleteBound}
+                  sortHrefs={{ scheduledFor: sortHref("scheduledFor"), status: sortHref("status") }}
+                  pnSort={pnSort}
+                  pnDir={pnDir}
+                />
 
                 {/* Pagination */}
                 {pendingPages > 1 && (

@@ -129,3 +129,19 @@ export async function reactivatePendingNotificationAction(
   );
   redirect(returnUrl(studyId, notificationId, pnStatus));
 }
+
+export async function bulkDeletePendingNotificationsAction(
+  studyId: string,
+  returnPath: string,
+  ids: string[],
+) {
+  await requireProjectAccess(studyId);
+  if (ids.length > 0) {
+    const oid = new mongoose.Types.ObjectId(studyId);
+    await PendingNotification.deleteMany({
+      _id: { $in: ids.map((id) => new mongoose.Types.ObjectId(id)) },
+      projectId: oid,
+    });
+  }
+  redirect(returnPath);
+}

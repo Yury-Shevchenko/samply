@@ -147,7 +147,7 @@ export default function HomeContent() {
       <p>
         If you have an existing study and want to do more: jump to{" "}
         <a href="/docs/placeholders">URL personalisation</a>,{" "}
-        <a href="/docs/groups">Groups & cohorts</a>, or{" "}
+        <a href="/docs/groups">Groups</a>, or{" "}
         <a href="/docs/reminders">Reminders</a> in the Power features section.
       </p>
     </>

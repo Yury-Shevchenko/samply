@@ -2,112 +2,78 @@ export default function GroupsContent() {
   return (
     <>
       <p>
-        A group is a named subset of participants within a study. Each participant can belong
-        to at most one group at a time. Groups let you send different notification schedules
-        to different cohorts — an intervention arm, a control arm, a pilot cohort — without
-        creating separate studies.
-      </p>
-
-      {/* ── Group anatomy ─────────────────────────────────────────────────── */}
-      <h2>What a group contains</h2>
-      <p>
-        Every group has two fields: a <strong>name</strong> (researcher-defined, not shown to
-        participants) and an <strong>ID</strong> (a four-character code generated automatically
-        by Samply, used in the <code>%GROUP_ID%</code> URL placeholder and in the scheduled
-        queue). The name is for your reference in the dashboard; the ID is what gets embedded
-        in survey links.
-      </p>
-      <p>
-        Group IDs are stable: if you delete a group and recreate it with the same name, Samply
-        reuses the original ID. This means old survey responses that captured the ID via
-        <code>%GROUP_ID%</code> will still match the new group in analysis.
+        A group is a named subset of participants who receive notifications in lockstep.
+        When a schedule targets a group, Samply fires the notification to every member at the
+        same moment — a <strong>yoked design</strong>. This makes groups suitable for dyadic
+        studies (couples, peers), team research, or any protocol where within-group
+        synchronisation is essential. Each participant belongs to at most one group.
       </p>
 
       {/* ── Creating groups ───────────────────────────────────────────────── */}
-      <h2>Creating a group</h2>
-      <p>There are two ways to create a group and assign participants to it.</p>
-
-      <h3>Researcher assignment (dashboard)</h3>
+      <h2 style={{ marginTop: '3.6rem' }}>Creating a group</h2>
       <p>
-        Go to your study and open the <strong>Groups</strong> tab. Enter a group name and
-        select participants from the list. Only participants who are not already in a group
-        appear in the list — Samply enforces one group per participant.
+        Groups must be created by the researcher before scheduling. Go to your study, open
+        the <strong>Participants</strong> tab, and click <strong>Manage groups</strong>. Enter
+        a group name and select participants from the list — only participants not already in
+        a group appear. Click <strong>Create group</strong> to assign all selected participants
+        at once.
       </p>
       <p>
-        Click <strong>Create group</strong>. Samply assigns all selected participants to the
-        new group simultaneously. The group appears in the table with its auto-generated ID
-        and the member list.
-      </p>
-
-      <h3>Participant self-assignment (at enrolment)</h3>
-      <p>
-        Enable <strong>Ask for group at enrolment</strong> in <em>Edit study</em>. When this
-        is on, the Samply Research app prompts the participant to enter a group name after
-        scanning the QR code or following the invite link. If the name matches an existing
-        group, they are added to it. If it does not match, Samply creates a new group with
-        that name and assigns them as its first member.
-      </p>
-      <p>
-        This is useful for self-sorted cohorts — for example, when participants self-identify
-        as belonging to a condition or site — but it requires participants to enter the name
-        exactly as intended. For controlled assignment, use the dashboard instead.
+        Samply generates a short <strong>ID</strong> for each group automatically. This ID
+        is used in the <code>%GROUP_ID%</code> URL placeholder and in the scheduled queue.
+        The name is visible only to researchers in the dashboard; participants never see it.
       </p>
 
-      {/* ── Deleting groups ───────────────────────────────────────────────── */}
-      <h2>Deleting a group</h2>
+      {/* ── Yoked timing ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Yoked timing</h2>
       <p>
-        Click <strong>Delete</strong> on the group card in the Groups tab. This removes the
-        group assignment from every member — the participants remain in the study and continue
-        receiving any non-group-targeted notifications. Their group field is simply cleared,
-        making them eligible to be added to a new group.
+        All members of a group receive the same notification at the same fire time. Samply
+        writes one queue row per group at a shared <em>Scheduled for</em> timestamp and
+        delivers it to every member simultaneously. There is no per-member offset within a
+        group send.
       </p>
       <p>
-        Deleting a group does not cancel pending notifications that were already scheduled
-        for that group. Cancel those from the <a href='/docs/queue'>queue</a> if needed.
+        For personal schedules (Day N after registration), Samply uses the join date of the{' '}
+        <em>most recently enrolled</em> group member as the shared anchor. This means every
+        member shares the same Day 1 regardless of when they individually joined —
+        intentional for cohort designs where you want the group to move through the protocol
+        together from a single reference date. If you need each participant on their own
+        personal timeline, target them individually rather than as a group.
       </p>
 
       {/* ── Targeting groups in schedules ─────────────────────────────────── */}
-      <h2>Targeting groups in a schedule</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Targeting groups in a schedule</h2>
       <p>
         In Step 2 (Participants) of the schedule form, choose <strong>Groups</strong> as the
-        audience. You can target all groups or select specific ones. Only participants assigned
-        to the chosen group(s) at the moment you click <strong>Schedule notifications</strong>
-        receive sends from that schedule.
-      </p>
-      <p>
-        Participants added to a group after a schedule is submitted are not automatically
-        enrolled in it. To include late-assigned participants, delete and recreate the schedule
-        after updating group membership — or use a separate one-time schedule targeting those
-        individuals directly.
+        audience and select which group or groups to target. Only participants assigned to
+        the chosen group(s) at the moment you click <strong>Schedule notifications</strong>{' '}
+        receive sends from that schedule. Participants who join the group later are included
+        in subsequent sends — the group membership is re-evaluated at each fire time.
       </p>
 
-      {/* ── Groups and personal schedules ─────────────────────────────────── */}
-      <h2>Groups and personal schedules</h2>
+      {/* ── Deleting groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Deleting a group</h2>
       <p>
-        Personal schedules (Day N after registration) use each participant&apos;s own join
-        date as the anchor. When a personal schedule targets a group, Samply uses the
-        join date of the <em>most recently enrolled</em> member of the group as the anchor
-        for all group members. This means every member of the group shares the same Day 1,
-        even if they joined at different times.
+        Click <strong>Delete</strong> on the group row in the Groups tab. This clears the
+        group assignment from every member — participants remain in the study and continue
+        receiving any non-group-targeted notifications. They become eligible to be added to
+        a new group.
       </p>
       <p>
-        This behaviour is intentional for cohort studies where all members of a group should
-        move through the protocol in lockstep from a single reference date (such as when the
-        last member joined). If you need each member on their own personal timeline, target
-        them individually rather than as a group.
+        Deleting a group removes the group assignment from every member. Pending notifications
+        targeted at that group will not be delivered — at fire time, participants are no longer
+        members of the group, so they are skipped.
       </p>
 
       {/* ── GROUP_ID placeholder ──────────────────────────────────────────── */}
-      <h2>Passing the group to your survey tool</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Passing the group to your survey tool</h2>
       <p>
-        Add <code>%GROUP_ID%</code> to your notification Web Link to include the participant
-        group in every survey URL automatically. Samply substitutes the four-character group
-        ID at send time.
-      </p>
-      <p>
-        If the participant has no group assigned, <code>%GROUP_ID%</code> is left unreplaced
-        — your survey tool receives the literal string. Handle this gracefully in your survey
-        logic if group membership is not guaranteed for all participants.
+        Add <code>%GROUP_ID%</code> to your notification Web Link to include each
+        participant's group in the survey URL automatically. Samply substitutes the
+        four-character group ID at send time. If a participant has no group,{' '}
+        <code>%GROUP_ID%</code> is left unreplaced — your survey tool receives the literal
+        string, so handle this in your survey logic if group membership is not guaranteed
+        for all participants.
       </p>
       <p>
         See <a href='/docs/placeholders'>URL placeholders</a> for the full list of available
@@ -115,13 +81,13 @@ export default function GroupsContent() {
       </p>
 
       {/* ── Groups vs participant codes ────────────────────────────────────── */}
-      <h2>Groups vs participant codes</h2>
+      <h2 style={{ marginTop: '3.6rem' }}>Groups vs participant codes</h2>
       <dl>
         <dt>Use groups when</dt>
         <dd>
-          You want to send different schedules to different subsets, or route participants
-          to different survey conditions. Groups are first-class citizens in the schedule
-          form and affect which notifications each participant receives.
+          You want yoked, synchronised sends to a cohort, or need to route different subsets
+          to different notification schedules. Groups are first-class citizens in the schedule
+          form and determine who receives which notifications.
         </dd>
         <dt>Use participant codes when</dt>
         <dd>

@@ -151,7 +151,7 @@ export default function InviteContent() {
       <p>
         Groups collected at enrolment are typically used for condition assignment in designs where
         participants self-select. For researcher-controlled assignment, assign groups from the
-        Participants table instead. Full details are in <a href="/docs/groups">Groups & cohorts</a>.
+        Participants table instead. Full details are in <a href="/docs/groups">Groups</a>.
       </p>
 
       {/* ── What you see ──────────────────────────────────────────────────── */}

@@ -24,6 +24,7 @@ async function sendMobileNotification({
   tokens,
   project_id,
   project_name,
+  notificationConfigId,
   reminders,
   finishid,
   openStudyScreenFallback,
@@ -72,7 +73,7 @@ async function sendMobileNotification({
 
         const reminderDocs = reminders.map((reminder) => ({
           projectId: project_id,
-          notificationConfigId: uniqid(),
+          notificationConfigId: notificationConfigId || uniqid(),
           scheduledFor: new Date(Date.now() + reminder.time),
           status: "pending",
           recipientUserIds: [pushToken.id],

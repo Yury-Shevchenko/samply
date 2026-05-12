@@ -97,7 +97,7 @@ export default function FormContent() {
         <dt>Groups</dt>
         <dd>
           Target one or more named groups. You can choose all groups or pick specific ones.
-          See <a href='/docs/groups'>Groups and cohorts</a> for how groups are created.
+          See <a href='/docs/groups'>Groups</a> for how groups are created.
         </dd>
       </dl>
 

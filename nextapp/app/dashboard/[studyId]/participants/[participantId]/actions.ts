@@ -41,6 +41,19 @@ export async function toggleParticipantAction(studyId: string, participantId: st
   redirect(`/dashboard/${studyId}/participants/${participantId}`);
 }
 
+export async function updateParticipantCodeAction(studyId: string, participantId: string, formData: FormData) {
+  await requireOwner(studyId);
+
+  const code = (formData.get("code") as string ?? "").trim();
+
+  await Project.updateOne(
+    { _id: studyId, "mobileUsers.id": participantId },
+    { $set: { "mobileUsers.$.username": code || null } },
+  );
+
+  redirect(`/dashboard/${studyId}/participants/${participantId}`);
+}
+
 export async function deleteParticipantAction(studyId: string, participantId: string) {
   await requireOwner(studyId);
 

@@ -11,6 +11,7 @@ interface Props {
   action: (formData: FormData) => Promise<void>;
   notice?: string;
   warning?: string;
+  baseUrl: string;
 }
 
 /* ── Shared styles ───────────────────────────────────────────────────────── */
@@ -299,20 +300,20 @@ function LocationRow({
         )}
       </div>
 
-      <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
-        <div>
-          <label style={labelStyle}>Notification header</label>
-          <input name={`loc-header-${loc.slug}`} type="text" defaultValue={loc.header ?? ""} placeholder="You arrived at…" style={fieldStyle} />
-        </div>
-        <div>
-          <label style={labelStyle}>Notification message</label>
-          <input name={`loc-message-${loc.slug}`} type="text" defaultValue={loc.message ?? ""} placeholder="Please fill out the survey" style={fieldStyle} />
-        </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
         <div>
           <label style={labelStyle}>Survey link</label>
-          <input name={`loc-link-${loc.slug}`} type="text" defaultValue={loc.link ?? ""} placeholder="https://…" style={fieldStyle} />
+          <input name={`loc-link-${loc.slug}`} type="text" defaultValue={loc.link ?? ""} placeholder="https://…" style={{ ...fieldStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+        <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+          <div>
+            <label style={labelStyle}>Notification header</label>
+            <input name={`loc-header-${loc.slug}`} type="text" defaultValue={loc.header ?? ""} placeholder="You arrived at…" style={fieldStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Notification message</label>
+            <input name={`loc-message-${loc.slug}`} type="text" defaultValue={loc.message ?? ""} placeholder="Please fill out the survey" style={fieldStyle} />
+          </div>
           <div>
             <label style={labelStyle}>Exit zone (m)</label>
             <input name={`loc-exitzone-${loc.slug}`} type="number" defaultValue={loc.exitzone ?? ""} placeholder="0" style={fieldStyle} />
@@ -360,8 +361,40 @@ function LocationRow({
   );
 }
 
+/* ── Copyable URL ────────────────────────────────────────────────────────── */
+function CopyableUrl({ label, url }: { label: string; url: string }) {
+  const [copied, setCopied] = useState(false);
+
+  function copy() {
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  return (
+    <div>
+      <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: "0.5rem", fontFamily: "var(--font-mono)" }}>
+        {label}
+      </div>
+      <div style={{ display: "flex", alignItems: "stretch", gap: "0", border: "1px solid var(--ink-20)", borderRadius: "0.8rem", overflow: "hidden" }}>
+        <div style={{ flex: 1, padding: "0.9rem 1.2rem", fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "rgba(214,90,48,.04)", wordBreak: "break-all", lineHeight: 1.5 }}>
+          {url}
+        </div>
+        <button
+          type="button"
+          onClick={copy}
+          style={{ flexShrink: 0, padding: "0 1.4rem", background: copied ? "rgba(61,115,107,.1)" : "var(--ink-10)", border: "none", borderLeft: "1px solid var(--ink-20)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "1.05rem", fontWeight: 600, color: copied ? "var(--sage)" : "var(--ink-40)", letterSpacing: ".06em", whiteSpace: "nowrap", transition: "all 150ms" }}
+        >
+          {copied ? "Copied ✓" : "Copy"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ── Main component ──────────────────────────────────────────────────────── */
-export default function SettingsClient({ project, memberEmails, action, notice, warning }: Props) {
+export default function SettingsClient({ project, memberEmails, action, notice, warning, baseUrl }: Props) {
   const s = project.settings ?? {};
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -497,7 +530,27 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         </div>
       </Section>
 
-      {/* ── 2 · Event-contingent design ───────────────────────────────────── */}
+      {/* ── 2 · Reminders ────────────────────────────────────────────────── */}
+      <Section title="Reminders — completion URL">
+        <p style={{ ...hintStyle, margin: 0 }}>
+          To cancel pending reminders when a participant completes a survey, your survey tool
+          must call the completion endpoint below with the{" "}
+          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%MESSAGE_ID%</code>{" "}
+          placeholder that was passed in the notification link. See{" "}
+          <a href="/docs/reminders" target="_blank" rel="noreferrer" style={{ color: "var(--coral)" }}>Reminders</a>{" "}
+          for setup instructions per survey tool.
+        </p>
+        <CopyableUrl
+          label="GET — redirect at end of survey"
+          url={`${baseUrl}/studies/${project.slug}/done/%MESSAGE_ID%`}
+        />
+        <CopyableUrl
+          label="POST — webhook / server-side"
+          url={`${baseUrl}/studies/${project.slug}/done/:messageid`}
+        />
+      </Section>
+
+      {/* ── 3 · Event-contingent design ───────────────────────────────────── */}
       <Section title="Event-contingent design">
         <Toggle
           id="enableEvents"
@@ -531,33 +584,33 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
             <div style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden" }}>
               <div
                 className="grid"
-                style={{ gridTemplateColumns: "3.2rem 1fr 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
+                style={{ gridTemplateColumns: "3.2rem 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
               >
                 <span>#</span>
-                <span>Caption (shown in app)</span>
-                <span>URL</span>
+                <span>Caption (shown in app) / URL</span>
               </div>
               {[1, 2, 3, 4, 5].map((n) => (
                 <div
                   key={n}
-                  className="grid"
-                  style={{ gridTemplateColumns: "3.2rem 1fr 1fr", padding: "0.8rem 1.2rem", gap: "0.8rem", borderTop: "1px solid var(--ink-10)", alignItems: "center" }}
+                  style={{ display: "grid", gridTemplateColumns: "3.2rem 1fr", padding: "0.8rem 1.2rem", gap: "0.6rem", borderTop: "1px solid var(--ink-10)", alignItems: "start" }}
                 >
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>{n}</span>
-                  <input
-                    type="text"
-                    name={`event-caption-${n}`}
-                    defaultValue={getEventValue(n, "caption")}
-                    placeholder="e.g. Stressful event"
-                    style={inputStyle}
-                  />
-                  <input
-                    type="text"
-                    name={`event-url-${n}`}
-                    defaultValue={getEventValue(n, "url")}
-                    placeholder="https://…"
-                    style={inputStyle}
-                  />
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", paddingTop: "0.9rem" }}>{n}</span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                    <input
+                      type="text"
+                      name={`event-caption-${n}`}
+                      defaultValue={getEventValue(n, "caption")}
+                      placeholder="e.g. Stressful event"
+                      style={inputStyle}
+                    />
+                    <input
+                      type="text"
+                      name={`event-url-${n}`}
+                      defaultValue={getEventValue(n, "url")}
+                      placeholder="https://…"
+                      style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }}
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -731,30 +784,32 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                   An optional single zone defined by the participant (e.g. their home or workplace).
                   The link below is opened in the browser to let them select it.
                 </p>
-                <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                   <div>
                     <label style={labelStyle}>Zone selection link</label>
-                    <input name="geofencingURL" type="text" defaultValue={s.geofencing?.link ?? ""} placeholder="https://maps.yourapp.com/select" style={inputStyle} />
+                    <input name="geofencingURL" type="text" defaultValue={s.geofencing?.link ?? ""} placeholder="https://maps.yourapp.com/select" style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
                   </div>
-                  <div>
-                    <label style={labelStyle}>Default radius (m)</label>
-                    <input name="userLocationRadius" type="number" defaultValue={s.geofencing?.radius ?? ""} placeholder="100" style={inputStyle} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Notification header</label>
-                    <input name="userLocationHeader" type="text" defaultValue={s.geofencing?.header ?? ""} placeholder="You arrived!" style={inputStyle} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Notification message</label>
-                    <input name="userLocationMessage" type="text" defaultValue={s.geofencing?.message ?? ""} placeholder="Please fill out the survey" style={inputStyle} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Exit zone (m)</label>
-                    <input name="userLocationExitzone" type="number" defaultValue={s.geofencing?.exitzone ?? ""} placeholder="0" style={inputStyle} />
-                  </div>
-                  <div>
-                    <label style={labelStyle}>Min time between pings (min)</label>
-                    <input name="userLocationMintimewindow" type="number" defaultValue={s.geofencing?.mintimewindow ?? ""} placeholder="0" style={inputStyle} />
+                  <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+                    <div>
+                      <label style={labelStyle}>Default radius (m)</label>
+                      <input name="userLocationRadius" type="number" defaultValue={s.geofencing?.radius ?? ""} placeholder="100" style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Exit zone (m)</label>
+                      <input name="userLocationExitzone" type="number" defaultValue={s.geofencing?.exitzone ?? ""} placeholder="0" style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Notification header</label>
+                      <input name="userLocationHeader" type="text" defaultValue={s.geofencing?.header ?? ""} placeholder="You arrived!" style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Notification message</label>
+                      <input name="userLocationMessage" type="text" defaultValue={s.geofencing?.message ?? ""} placeholder="Please fill out the survey" style={inputStyle} />
+                    </div>
+                    <div>
+                      <label style={labelStyle}>Min time between pings (min)</label>
+                      <input name="userLocationMintimewindow" type="number" defaultValue={s.geofencing?.mintimewindow ?? ""} placeholder="0" style={inputStyle} />
+                    </div>
                   </div>
                 </div>
                 <div style={{ display: "flex", gap: "1.6rem", flexWrap: "wrap" }}>

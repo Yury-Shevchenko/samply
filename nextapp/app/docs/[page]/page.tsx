@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import DocsSearch from "./DocsSearch";
 import HomeContent from "./HomeContent";
 import FirstStudyContent from "./FirstStudyContent";
@@ -42,7 +43,7 @@ const NAV_LABELS: Record<DocsPage, string> = {
   form:                "Creating a schedule",
   queue:               "The scheduled queue",
   placeholders:        "URL placeholders",
-  groups:              "Groups & cohorts",
+  groups:              "Groups",
   reminders:           "Reminders",
   "event-contingent":  "Event-contingent design",
   geofencing:          "Geofencing",
@@ -65,7 +66,7 @@ const PAGE_TITLES: Record<DocsPage, string> = {
   form:                "Creating a schedule, one section at a time",
   queue:               "The scheduled queue",
   placeholders:        "URL placeholders",
-  groups:              "Groups & cohorts",
+  groups:              "Groups",
   reminders:           "Reminders",
   "event-contingent":  "Event-contingent design",
   geofencing:          "Geofencing",
@@ -188,6 +189,10 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
   const { page } = await params;
   if (!ALL_PAGES.includes(page as DocsPage)) notFound();
 
+  const hdrs = await headers();
+  const host = hdrs.get("host") ?? "localhost:3000";
+  const baseUrl = host.startsWith("localhost") ? `http://${host}` : `https://${host}`;
+
   const currentPage = page as DocsPage;
   const isLegal = !SIDEBAR_PAGES.includes(currentPage as (typeof SIDEBAR_PAGES)[number]);
 
@@ -235,7 +240,7 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
                 ) : currentPage === "groups" ? (
                   <GroupsContent />
                 ) : currentPage === "reminders" ? (
-                  <RemindersContent />
+                  <RemindersContent baseUrl={baseUrl} />
                 ) : currentPage === "glossary" ? (
                   <GlossaryContent />
                 ) : currentPage === "api" ? (

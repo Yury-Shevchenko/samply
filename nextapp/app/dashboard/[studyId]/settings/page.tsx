@@ -1,4 +1,5 @@
 import { redirect, notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { fetchProjectById, fetchMemberEmails } from "@/lib/data/projects";
 import { updateSettingsAction } from "./actions";
@@ -34,6 +35,10 @@ export default async function SettingsPage({
 
   const boundAction = updateSettingsAction.bind(null, studyId);
 
+  const hdrs = await headers();
+  const host = hdrs.get("host") ?? "localhost:3000";
+  const baseUrl = host.startsWith("localhost") ? `http://${host}` : `https://${host}`;
+
   return (
     <div style={{ maxWidth: "72rem" }}>
       <div style={{ marginBottom: "3.2rem" }}>
@@ -54,6 +59,7 @@ export default async function SettingsPage({
         action={boundAction}
         notice={notice}
         warning={warning}
+        baseUrl={baseUrl}
       />
     </div>
   );

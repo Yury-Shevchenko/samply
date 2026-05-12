@@ -27,17 +27,16 @@ const STATUSES = [
     status: 'cancelled',
     color: 'var(--ink-40)',
     label: 'Cancelled',
-    desc: 'Removed before it could fire. This happens when you delete a schedule, when a completion event triggers reminder cancellation, or when you cancel manually.',
+    desc: 'Removed before it could fire. This happens when a completion event triggers reminder cancellation, or when you cancel manually.',
   },
 ];
 
 const COLUMNS = [
-  { col: 'Status',             desc: 'Current lifecycle state of this send (see table above).' },
-  { col: 'Scheduled For',      desc: 'The exact date and time the notification is set to fire, shown in your browser local time.' },
-  { col: 'Title',              desc: 'The notification title as it will appear on the participant device.' },
-  { col: 'Recipients (users)', desc: 'Samply IDs of the individual participants targeted, or "all" if the schedule targets all current participants.' },
-  { col: 'Recipients (groups)',desc: 'Group IDs targeted by this send, or — if the schedule targets individuals rather than groups.' },
-  { col: 'Reminder',           desc: 'Marked "yes" if this row is a reminder send rather than the original notification.' },
+  { col: 'Scheduled for', desc: 'The exact date and time the notification is set to fire, shown in your browser local time.' },
+  { col: 'Status',        desc: 'Current lifecycle state of this send (see table above).' },
+  { col: 'Title',         desc: 'The notification title as it will appear on the participant device.' },
+  { col: 'Rem.',          desc: 'Marked R if this row is a reminder send rather than the original notification.' },
+  { col: 'To',            desc: 'Who this send targets. Shows group name pills when the schedule targets groups, or individual participant codes when targeting specific participants, or "all" when targeting all current participants.' },
 ];
 
 export default function QueueContent() {
@@ -150,12 +149,6 @@ export default function QueueContent() {
         are not affected — they remain visible with status <em>sent</em> and are included
         in the response history.
       </p>
-      <p>
-        There is no partial cancellation from the UI: you cannot cancel sends for one
-        participant while keeping them for others. If you need to stop notifications for a
-        specific participant, deactivate that participant from the Participants tab instead.
-        Their rows will be skipped at fire time.
-      </p>
 
       {/* ── Sent history ──────────────────────────────────────────────────── */}
       <h2>After a send: the history</h2>
@@ -176,8 +169,8 @@ export default function QueueContent() {
       <h2>Reminders in the queue</h2>
       <p>
         When a schedule has reminders configured, each original send spawns one or more
-        reminder rows at the offsets you defined. These appear in the queue with{' '}
-        <strong>Reminder: yes</strong> and the same schedule title. A reminder row is
+        reminder rows at the offsets you defined. These rows are marked with an{' '}
+        <strong>R</strong> badge in the <em>Rem.</em> column and share the same schedule title. A reminder row is
         automatically cancelled as soon as Samply detects a completion event for the
         original send — so participants who complete the survey on time never see the
         reminder. Uncompleted reminders fire normally. See{' '}
