@@ -31,6 +31,7 @@ declare module "@auth/core/jwt" {
 }
 
 const config: NextAuthConfig = {
+  trustHost: true,
   providers: [
     Credentials({
       name: "Credentials",
