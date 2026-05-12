@@ -18,6 +18,15 @@ const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByFi
 
 const MAX_PROJECT_PENDING = 50_000;
 
+// Fetch timezones for a list of samplyIds in one query instead of one per user.
+async function buildTimezoneMap(samplyIds) {
+  const users = await User.find(
+    { samplyId: { $in: samplyIds } },
+    { samplyId: 1, information: 1 }
+  ).lean();
+  return new Map(users.map((u) => [u.samplyId, u.information?.timezone]));
+}
+
 function limitErrorResponse(req, res, message) {
   return res.json({ warning: message, redirect: req.get("Referer") || "/scheduled" });
 }
@@ -406,27 +415,19 @@ exports.createScheduleNotification = async (req, res) => {
             { ...baseDoc, scheduledFor, recipientUserIds: users, recipientGroupIds: [] },
           ], counter);
         } else {
-          const docs = await Promise.all(
-            users.map(async (userId) => {
-              const participant = await User.findOne(
-                { samplyId: userId },
-                { information: 1 }
-              );
-              let dateForParticipant = date;
-              if (participant && participant.information && participant.information.timezone) {
-                dateForParticipant = moment
-                  .tz(date, req.body.timezone)
-                  .tz(participant.information.timezone, true)
-                  .toISOString();
-              }
-              return {
-                ...baseDoc,
-                scheduledFor: new Date(dateForParticipant),
-                recipientUserIds: [userId],
-                recipientGroupIds: [],
-              };
-            })
-          );
+          const tzMap = await buildTimezoneMap(users);
+          const docs = users.map((userId) => {
+            const tz = tzMap.get(userId);
+            const dateForParticipant = tz
+              ? moment.tz(date, req.body.timezone).tz(tz, true).toISOString()
+              : date;
+            return {
+              ...baseDoc,
+              scheduledFor: new Date(dateForParticipant),
+              recipientUserIds: [userId],
+              recipientGroupIds: [],
+            };
+          });
           await scheduleBatchTracked(docs, counter);
         }
       }
@@ -639,18 +640,12 @@ exports.createIntervalNotification = async (req, res) => {
     }
 
     if (users) {
+      const tzMap = await buildTimezoneMap(users.map((u) => u.id));
       await Promise.all(
         users.map(async (user) => {
-          const participant = await User.findOne(
-            { samplyId: user.id },
-            { information: 1 }
-          );
           const timezone =
-            req.body.useParticipantTimezone &&
-            participant &&
-            participant.information &&
-            participant.information.timezone
-              ? participant.information.timezone
+            req.body.useParticipantTimezone && tzMap.get(user.id)
+              ? tzMap.get(user.id)
               : req.body.timezone;
 
           await Promise.all(
@@ -750,20 +745,16 @@ exports.createIntervalNotification = async (req, res) => {
       });
     });
 
+    const tzMap = users && users.length && req.body.useParticipantTimezone
+      ? await buildTimezoneMap(users.map((u) => u.id))
+      : new Map();
     await Promise.all(
       intervals.map(async (interval) => {
         if (users && users.length) {
           if (req.body.useParticipantTimezone) {
             await Promise.all(
               users.map(async (user) => {
-                const participant = await User.findOne(
-                  { samplyId: user.id },
-                  { information: 1 }
-                );
-                const timezone =
-                  participant && participant.information && participant.information.timezone
-                    ? participant.information.timezone
-                    : req.body.timezone;
+                const timezone = tzMap.get(user.id) || req.body.timezone;
                 const dates = expandCronBetween(interval, int_start, int_end, timezone);
                 await scheduleBatchTracked(
                   dates.map((d) => ({
@@ -998,13 +989,14 @@ exports.createIndividualNotification = async (req, res) => {
   }
 
   if (users) {
+    const tzMap = req.body.useParticipantTimezone
+      ? await buildTimezoneMap(users.map((u) => u.id))
+      : new Map();
     await Promise.all(
       users.map(async (user) => {
-        const participant = await User.findOne({ samplyId: user.id }, { information: 1 });
         const timezone =
-          req.body.useParticipantTimezone &&
-          participant && participant.information && participant.information.timezone
-            ? participant.information.timezone
+          req.body.useParticipantTimezone && tzMap.get(user.id)
+            ? tzMap.get(user.id)
             : req.body.timezone;
 
         await Promise.all(
@@ -1189,15 +1181,13 @@ exports.createFixedIndividualNotification = async (req, res) => {
   }
 
   if (users) {
+    const tzMap = req.body.useParticipantTimezone
+      ? await buildTimezoneMap(users.map((u) => u.id))
+      : new Map();
     await Promise.all(
       users.map(async (user) => {
-        let timezone = req.body.timezone;
-        if (req.body.useParticipantTimezone) {
-          const participant = await User.findOne({ samplyId: user.id }, { information: 1 });
-          if (participant && participant.information && participant.information.timezone) {
-            timezone = participant.information.timezone;
-          }
-        }
+        const tz = req.body.useParticipantTimezone ? tzMap.get(user.id) : undefined;
+        const timezone = tz || req.body.timezone;
 
         const userDocs = [];
         intervals.forEach((interval) => {
@@ -2322,43 +2312,32 @@ async function schedulePersonalNotificationsForUsers({
     }
   } else {
     // schedule dependent on timezone of participant
-    users.map(async (user) => {
-      // find the user settings in the database
-      const participant = await User.findOne(
-        { samplyId: user },
-        { information: 1 }
-      );
-      let dateForParticipant = date;
+    const tzMap = await buildTimezoneMap(users);
+    await Promise.all(
+      users.map(async (user) => {
+        let dateForParticipant = date;
+        const tz = tzMap.get(user);
+        if (tz) {
+          dateForParticipant = moment.tz(date, body.timezone).tz(tz, true).toISOString();
+        }
 
-      if (
-        participant &&
-        participant.information &&
-        participant.information.timezone
-      ) {
-        const timezone = participant.information.timezone;
-        const momentDate = moment.tz(date, body.timezone);
-        dateForParticipant = momentDate.tz(timezone, true).toISOString();
-      }
-
-      const dateForParticipantConverted = new Date(dateForParticipant);
-      const timestampForParticipant = dateForParticipantConverted.getTime();
-      // check whether the date is in the future
-      if (timestampForParticipant > Date.now()) {
-        // schedule notification dependend on the user local timezone
-        agenda.schedule(dateForParticipant, "personal_notification", {
-          userid: [user],
-          projectid: projectid,
-          id: notificationid,
-          title: body.title,
-          message: body.message,
-          url: body.url,
-          expireIn: body.expireIn,
-          deleteself: deleteself,
-          scheduleid: scheduleid,
-          reminders: body.reminders,
-        });
-      }
-    });
+        const timestampForParticipant = new Date(dateForParticipant).getTime();
+        if (timestampForParticipant > Date.now()) {
+          agenda.schedule(dateForParticipant, "personal_notification", {
+            userid: [user],
+            projectid: projectid,
+            id: notificationid,
+            title: body.title,
+            message: body.message,
+            url: body.url,
+            expireIn: body.expireIn,
+            deleteself: deleteself,
+            scheduleid: scheduleid,
+            reminders: body.reminders,
+          });
+        }
+      })
+    );
   }
 
   return { message: "Success" };

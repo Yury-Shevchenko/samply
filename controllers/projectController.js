@@ -574,7 +574,6 @@ exports.removeProject = async (req, res) => {
 
 exports.changeStatusProject = async (req, res) => {
   const project = await Project.findOne({ _id: req.params.id });
-  const participantsNumber = project.participants.length;
   if (project) {
     project.currentlyActive = !project.currentlyActive;
     await project.save();

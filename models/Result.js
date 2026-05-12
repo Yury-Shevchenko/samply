@@ -35,6 +35,8 @@ const resultSchema = new mongoose.Schema({
 resultSchema.index({ project: 1 });
 resultSchema.index({ samplyid: 1 });
 resultSchema.index({ project: 1, samplyid: 1 });
+resultSchema.index({ project: 1, created: -1 });
 resultSchema.index({ created: -1 });
+resultSchema.index({ messageId: 1 });
 
 module.exports = mongoose.model("Result", resultSchema);

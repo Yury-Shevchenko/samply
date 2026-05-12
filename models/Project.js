@@ -255,12 +255,4 @@ projectSchema.index({ slug: 1 });
 projectSchema.index({ samplycode: 1 });
 projectSchema.index({ currentlyActive: 1, public: 1 });
 
-function autopopulate(next) {
-  this.populate({ path: "participants", select: "participantInProject" });
-  next();
-}
-
-projectSchema.pre("findOne", autopopulate);
-projectSchema.pre("find", autopopulate);
-
 module.exports = mongoose.model("Project", projectSchema);

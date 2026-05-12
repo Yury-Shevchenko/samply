@@ -144,6 +144,8 @@ userSchema.index({ samplyId: 1 });
 userSchema.index({ email: 1 });
 userSchema.index({ level: 1 });
 userSchema.index({ participantInProject: 1 });
+userSchema.index({ resetPasswordToken: 1, resetPasswordExpires: 1 });
+userSchema.index({ confirmEmailToken: 1, confirmEmailExpires: 1 });
 
 //pre-save validation to make sure that the email does not already exist
 userSchema.pre("save", function (next) {
@@ -177,14 +179,5 @@ userSchema.virtual("invitedprojects", {
   foreignField: "members", //should match field in the other model
   justOne: false,
 });
-
-function autopopulate(next) {
-  this.populate({ path: "projects", select: "creator name" });
-  this.populate({ path: "invitedprojects", select: "members creator name" });
-  next();
-}
-
-userSchema.pre("find", autopopulate);
-userSchema.pre("findOne", autopopulate);
 
 module.exports = mongoose.model("User", userSchema);
