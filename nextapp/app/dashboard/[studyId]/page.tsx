@@ -140,7 +140,7 @@ export default async function StudyOverviewPage({ params }: Props) {
     <div className="flex flex-col gap-[3.2rem]">
 
       {/* Stats row */}
-      <div className="grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: "1.4rem" }}>
+      <div className="stats-grid">
         <StatBox label="Participants" value={activeParticipants.length} sub={`${participants.length} total enrolled`} />
         <StatBox label="Schedules" value={notifications.length} sub="notification configs" />
         <StatBox
@@ -297,7 +297,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                     )}
                   </span>
                   {total !== null && (
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", flexShrink: 0, textAlign: "right", lineHeight: 1.4 }}>
+                    <span className="mob-hide" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", flexShrink: 0, textAlign: "right", lineHeight: 1.4 }}>
                       <span style={{ display: "block" }}>{total} total</span>
                       <span style={{ color: counts!.pending > 0 ? "var(--coral)" : "var(--ink-20)" }}>
                         {counts!.sent} sent · {counts!.pending} pending
@@ -374,7 +374,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                     </span>
                   )}
                   {joinDate && (
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-20)", flexShrink: 0 }}>
+                    <span className="mob-hide" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-20)", flexShrink: 0 }}>
                       joined {joinDate}
                     </span>
                   )}

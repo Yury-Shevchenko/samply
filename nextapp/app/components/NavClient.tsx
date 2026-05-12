@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 interface NavClientProps {
@@ -34,23 +35,26 @@ const Logo = ({ isLoggedIn }: { isLoggedIn: boolean }) => (
 export default function NavClient({ isLoggedIn, isAdmin, userName, signOutAction, showDonation }: NavClientProps) {
   const path = usePathname();
   const active = (prefix: string) => path.startsWith(prefix);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   if (/^\/studies\/[^/]+\/done\//.test(path)) return null;
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header
       className="sticky top-0 z-50 bg-[var(--paper)] border-b border-[var(--ink-10)]"
-      style={{ backdropFilter: "blur(8px)" }}
+      style={{ backdropFilter: "blur(8px)", position: "relative" }}
     >
       <nav
         className="flex items-center justify-between"
-        style={{ padding: "0 4rem", height: "6rem" }}
+        style={{ padding: "0 var(--nav-px)", height: "6rem" }}
       >
         {/* Left: logo */}
         <Logo isLoggedIn={isLoggedIn} />
 
-        {/* Right: links + action */}
-        <div className="flex items-center gap-[2.4rem]">
+        {/* Right: desktop links */}
+        <div className="nav-desktop-links">
           {isLoggedIn ? (
             <>
               <NavLink href="/dashboard" isActive={active("/dashboard")}>Dashboard</NavLink>
@@ -59,15 +63,7 @@ export default function NavClient({ isLoggedIn, isAdmin, userName, signOutAction
               {isAdmin && (
                 <NavLink href="/admin/studies" isActive={active("/admin")}>Admin</NavLink>
               )}
-              {showDonation && (
-                <a
-                  href="/donate"
-                  className="inline-flex items-center gap-[0.4rem] px-[1.2rem] py-[0.5rem] rounded-[999rem] text-[1.2rem] font-medium font-[family-name:var(--font-body)] hover:opacity-80 transition-opacity"
-                  style={{ color: "var(--coral)", border: "1px solid rgba(214,90,48,.3)", background: "rgba(214,90,48,.06)" }}
-                >
-                  ♥ Donate
-                </a>
-              )}
+              {showDonation && <DonateLink />}
               <a
                 href="/account"
                 className="font-[family-name:var(--font-body)] font-medium text-[1.3rem] text-[var(--ink)] hover:opacity-70 transition-opacity"
@@ -87,15 +83,7 @@ export default function NavClient({ isLoggedIn, isAdmin, userName, signOutAction
             <>
               <NavLink href="/studies" isActive={active("/studies")}>Studies</NavLink>
               <NavLink href="/docs/intro" isActive={active("/docs")}>Docs</NavLink>
-              {showDonation && (
-                <a
-                  href="/donate"
-                  className="inline-flex items-center gap-[0.4rem] px-[1.2rem] py-[0.5rem] rounded-[999rem] text-[1.2rem] font-medium font-[family-name:var(--font-body)] hover:opacity-80 transition-opacity"
-                  style={{ color: "var(--coral)", border: "1px solid rgba(214,90,48,.3)", background: "rgba(214,90,48,.06)" }}
-                >
-                  ♥ Donate
-                </a>
-              )}
+              {showDonation && <DonateLink />}
               <a
                 href="/login"
                 className="inline-flex items-center justify-center px-[1.4rem] py-[0.8rem] rounded-[999rem] text-[1.2rem] font-medium font-[family-name:var(--font-body)] bg-[var(--ink)] text-[var(--paper)] hover:opacity-90 transition-opacity"
@@ -105,8 +93,63 @@ export default function NavClient({ isLoggedIn, isAdmin, userName, signOutAction
             </>
           )}
         </div>
+
+        {/* Hamburger button (mobile only) */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+        >
+          <span style={{ transform: menuOpen ? "rotate(45deg) translate(5px, 5px)" : undefined }} />
+          <span style={{ opacity: menuOpen ? 0 : 1 }} />
+          <span style={{ transform: menuOpen ? "rotate(-45deg) translate(5px, -5px)" : undefined }} />
+        </button>
       </nav>
+
+      {/* Mobile dropdown menu */}
+      <div className={`nav-mobile-menu${menuOpen ? " open" : ""}`}>
+        {isLoggedIn ? (
+          <>
+            <a href="/dashboard" className="nav-mobile-link" style={{ color: active("/dashboard") ? "var(--coral)" : undefined }} onClick={closeMenu}>Dashboard</a>
+            <a href="/forum"     className="nav-mobile-link" style={{ color: active("/forum")     ? "var(--coral)" : undefined }} onClick={closeMenu}>Forum</a>
+            <a href="/docs/intro" className="nav-mobile-link" style={{ color: active("/docs")    ? "var(--coral)" : undefined }} onClick={closeMenu}>Docs</a>
+            {isAdmin && (
+              <a href="/admin/studies" className="nav-mobile-link" style={{ color: active("/admin") ? "var(--coral)" : undefined }} onClick={closeMenu}>Admin</a>
+            )}
+            {showDonation && (
+              <a href="/donate" className="nav-mobile-link" style={{ color: "var(--coral)" }} onClick={closeMenu}>♥ Donate</a>
+            )}
+            <a href="/account" className="nav-mobile-link" onClick={closeMenu}>{userName || "Account"}</a>
+            <form action={signOutAction} style={{ borderBottom: "none" }}>
+              <button type="submit" className="nav-mobile-link" style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: "1.4rem 0", width: "100%", color: "var(--ink-60)", fontSize: "1.6rem", fontFamily: "var(--font-body)", fontWeight: 500 }}>Sign out</button>
+            </form>
+          </>
+        ) : (
+          <>
+            <a href="/studies"   className="nav-mobile-link" onClick={closeMenu}>Studies</a>
+            <a href="/docs/intro" className="nav-mobile-link" onClick={closeMenu}>Docs</a>
+            {showDonation && (
+              <a href="/donate" className="nav-mobile-link" style={{ color: "var(--coral)" }} onClick={closeMenu}>♥ Donate</a>
+            )}
+            <a href="/login" className="nav-mobile-link" style={{ color: "var(--coral)", fontWeight: 600 }} onClick={closeMenu}>Sign in</a>
+            <a href="/register" className="nav-mobile-link" onClick={closeMenu}>Create account</a>
+          </>
+        )}
+      </div>
     </header>
+  );
+}
+
+function DonateLink() {
+  return (
+    <a
+      href="/donate"
+      className="inline-flex items-center gap-[0.4rem] px-[1.2rem] py-[0.5rem] rounded-[999rem] text-[1.2rem] font-medium font-[family-name:var(--font-body)] hover:opacity-80 transition-opacity"
+      style={{ color: "var(--coral)", border: "1px solid rgba(214,90,48,.3)", background: "rgba(214,90,48,.06)" }}
+    >
+      ♥ Donate
+    </a>
   );
 }
 

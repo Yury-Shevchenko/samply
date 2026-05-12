@@ -21,6 +21,7 @@ import EventContingentContent from "./EventContingentContent";
 import GeofencingContent from "./GeofencingContent";
 import StreamContent from "./StreamContent";
 import AboutContent from "./AboutContent";
+import DocsMobileNav from "./DocsMobileNav";
 
 /* ── Route config ─────────────────────────────────────────────────────────── */
 
@@ -120,7 +121,7 @@ export async function generateMetadata({ params }: { params: Promise<{ page: str
 
 function DocsSidebar({ current }: { current: string }) {
   return (
-    <aside style={{ width: "22rem", flexShrink: 0, position: "sticky", top: "8rem", maxHeight: "calc(100vh - 10rem)", overflowY: "auto", scrollbarWidth: "none", paddingBottom: "4rem" }}>
+    <aside className="docs-sidebar" style={{ width: "22rem", flexShrink: 0, position: "sticky", top: "8rem", maxHeight: "calc(100vh - 10rem)", overflowY: "auto", scrollbarWidth: "none", paddingBottom: "4rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", marginBottom: "1.6rem" }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" style={{ width: "2.6rem", height: "2.6rem", flexShrink: 0 }}>
           <rect width="120" height="120" rx="22" fill="#23201a" />
@@ -177,7 +178,7 @@ function DocsPageHeader({ page, title }: { page: string; title: string }) {
         <span style={{ color: "var(--coral)" }}>{NAV_LABELS[page as DocsPage] ?? title}</span>
       </div>
       <div className="font-[family-name:var(--font-hand)]" style={{ fontSize: "1.7rem", color: "var(--coral)", marginBottom: "0.4rem", transform: "rotate(-0.5deg)", display: "inline-block" }}>{meta.eyebrow}</div>
-      <h1 className="font-[family-name:var(--font-display)]" style={{ fontSize: "3.8rem", lineHeight: 1.05, letterSpacing: "-0.03em", fontWeight: 700, margin: "0 0 1.2rem", color: "var(--ink)" }}>{title}.</h1>
+      <h1 className="docs-page-h1 font-[family-name:var(--font-display)]" style={{ fontSize: "3.8rem", lineHeight: 1.05, letterSpacing: "-0.03em", fontWeight: 700, margin: "0 0 1.2rem", color: "var(--ink)" }}>{title}.</h1>
       <p style={{ fontSize: "1.5rem", lineHeight: 1.55, color: "var(--ink-60)", margin: 0, maxWidth: "56rem" }}>{meta.lede}</p>
     </div>
   );
@@ -198,7 +199,7 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "108rem", margin: "0 auto", padding: "5.6rem 4rem 10rem" }}>
+      <div style={{ maxWidth: "108rem", margin: "0 auto", padding: "5.6rem var(--page-px) 10rem" }}>
         {isLegal ? (
           <div style={{ maxWidth: "68rem" }}>
             <a href="/docs/home" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase" }}>← docs</a>
@@ -216,9 +217,10 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
             </div>
           </div>
         ) : (
-          <div style={{ display: "flex", gap: "6rem", alignItems: "flex-start" }}>
+          <div className="docs-layout" style={{ display: "flex", gap: "6rem", alignItems: "flex-start" }}>
             <DocsSidebar current={currentPage} />
             <div style={{ flex: 1, minWidth: 0 }}>
+              <DocsMobileNav current={currentPage} />
               <DocsPageHeader page={currentPage} title={PAGE_TITLES[currentPage]} />
               <article className="docs-prose">
                 {currentPage === "home" ? (

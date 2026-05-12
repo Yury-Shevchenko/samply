@@ -85,7 +85,7 @@ export default async function StudiesPage({ page }: { page: number }) {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "4.8rem 4rem 8rem" }}>
+      <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "4.8rem var(--page-px) 8rem" }}>
 
         {/* Header */}
         <div style={{ marginBottom: "3.6rem" }}>

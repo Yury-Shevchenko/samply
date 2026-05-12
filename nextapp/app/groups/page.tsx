@@ -82,7 +82,7 @@ export default async function GroupsPage({
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "3.6rem 4rem 8rem" }}>
+      <div style={{ maxWidth: "80rem", margin: "0 auto", padding: "3.6rem var(--page-px) 8rem" }}>
 
         {/* Breadcrumb */}
         {selectedId && (

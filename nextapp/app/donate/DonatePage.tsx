@@ -34,7 +34,7 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "52rem", margin: "0 auto", padding: "6rem 4rem 8rem" }}>
+      <div style={{ maxWidth: "52rem", margin: "0 auto", padding: "6rem var(--page-px) 8rem" }}>
 
         {/* Header */}
         <div style={{ marginBottom: "4rem", textAlign: "center" }}>

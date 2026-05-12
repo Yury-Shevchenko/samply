@@ -80,7 +80,7 @@ function Section({
       >
         {title}
       </div>
-      <div style={{ padding: "2.4rem", display: "flex", flexDirection: "column", gap: "1.6rem" }}>
+      <div className="settings-section-body" style={{ padding: "2.4rem", display: "flex", flexDirection: "column", gap: "1.6rem" }}>
         {children}
       </div>
     </div>
@@ -143,9 +143,9 @@ function Toggle({
         </div>
         <span style={{ fontSize: "1.35rem", fontWeight: 500, color: "var(--ink)" }}>{label}</span>
       </label>
-      {hint && <p style={{ ...hintStyle, margin: "0.5rem 0 0 5rem" }}>{hint}</p>}
+      {hint && <p className="settings-hint-indent" style={{ ...hintStyle, margin: "0.5rem 0 0 5rem" }}>{hint}</p>}
       {checked && children && (
-        <div style={{ marginTop: "1.6rem", marginLeft: "5rem", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+        <div className="settings-toggle-indent" style={{ marginTop: "1.6rem", marginLeft: "5rem", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
           {children}
         </div>
       )}
@@ -223,7 +223,7 @@ function LocationRow({
 
       <input type="hidden" name={`loc-slug-${loc.slug}`} value={loc.slug} />
 
-      <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+      <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
         <div>
           <label style={labelStyle}>Title</label>
           <input name={`loc-title-${loc.slug}`} type="text" defaultValue={loc.title} placeholder="Location name" style={fieldStyle} />
@@ -305,7 +305,7 @@ function LocationRow({
           <label style={labelStyle}>Survey link</label>
           <input name={`loc-link-${loc.slug}`} type="text" defaultValue={loc.link ?? ""} placeholder="https://…" style={{ ...fieldStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
         </div>
-        <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+        <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
           <div>
             <label style={labelStyle}>Notification header</label>
             <input name={`loc-header-${loc.slug}`} type="text" defaultValue={loc.header ?? ""} placeholder="You arrived at…" style={fieldStyle} />
@@ -633,7 +633,8 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
               Define up to 4 action buttons. The <strong>identifier</strong> is sent as a query parameter when the participant taps the button.
               The <strong>button caption</strong> is the label shown on the notification.
             </p>
-            <div style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden" }}>
+            <div className="settings-actions-wrap" style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden" }}>
+            <div className="settings-actions-inner">
               <div
                 className="grid"
                 style={{ gridTemplateColumns: "3.2rem 1fr 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
@@ -665,6 +666,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                   />
                 </div>
               ))}
+            </div>
             </div>
           </div>
         </Toggle>
@@ -789,7 +791,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                     <label style={labelStyle}>Zone selection link</label>
                     <input name="geofencingURL" type="text" defaultValue={s.geofencing?.link ?? ""} placeholder="https://maps.yourapp.com/select" style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
                   </div>
-                  <div className="grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+                  <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
                     <div>
                       <label style={labelStyle}>Default radius (m)</label>
                       <input name="userLocationRadius" type="number" defaultValue={s.geofencing?.radius ?? ""} placeholder="100" style={inputStyle} />

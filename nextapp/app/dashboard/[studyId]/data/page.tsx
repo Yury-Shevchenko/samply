@@ -111,7 +111,7 @@ export default async function DataPage({ params, searchParams }: Props) {
     <div className="flex flex-col gap-[2.8rem]">
 
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
+      <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
             notifications sent{participant ? ` · ${participant}` : ""}
@@ -121,7 +121,7 @@ export default async function DataPage({ params, searchParams }: Props) {
             {count.toLocaleString()} notification{count !== 1 ? "s" : ""}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
           {participant && (
             <a
               href={`/dashboard/${studyId}/data`}
@@ -180,8 +180,8 @@ export default async function DataPage({ params, searchParams }: Props) {
           </p>
         </div>
       ) : (
-        <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
+          <table style={{ width: "100%", minWidth: "48rem", borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
                 {!participant && (

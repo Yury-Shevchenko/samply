@@ -46,20 +46,18 @@ function UserRow({ u, n }: { u: AdminUser; n: number }) {
 
 type FilterKey = "researchers" | "participants" | "admins" | "unconfirmed" | "";
 
-function buildUsersHref(params: { sort?: string; dir?: string; filter?: string; page?: number }) {
+function buildUsersHref(params: { sort?: string; dir?: string; filter?: string; q?: string; page?: number }) {
   const { page, ...rest } = params;
   const qs = Object.entries(rest)
     .filter(([, v]) => Boolean(v))
-    .map(([k, v]) => `${k}=${v}`)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
     .join("&");
-  if (page && page > 1) {
-    return `/admin/users/page/${page}${qs ? `?${qs}` : ""}`;
-  }
+  if (page && page > 1) return `/admin/users/page/${page}${qs ? `?${qs}` : ""}`;
   return `/admin/users${qs ? `?${qs}` : ""}`;
 }
 
 export function UsersView({
-  users, count, page, pages, skip, sort, dir, filter, totalCounts,
+  users, count, page, pages, skip, sort, dir, filter, q, totalCounts,
 }: {
   users: AdminUser[];
   count: number;
@@ -69,6 +67,7 @@ export function UsersView({
   sort: string;
   dir: string;
   filter: string;
+  q: string;
   totalCounts: { researchers: number; participants: number; unconfirmed: number; admins: number; total: number };
 }) {
   const f = filter as FilterKey;
@@ -83,6 +82,22 @@ export function UsersView({
 
   return (
     <AdminPage title="Users" count={count}>
+      {/* Search */}
+      <form method="get" style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        {sort !== "created" && <input type="hidden" name="sort" value={sort} />}
+        {dir !== "asc"      && <input type="hidden" name="dir"  value={dir} />}
+        {f                  && <input type="hidden" name="filter" value={f} />}
+        <input
+          name="q"
+          defaultValue={q}
+          placeholder="Search by name, email, institute, Samply ID…"
+          autoComplete="off"
+          style={{ flex: 1, maxWidth: 400, padding: "6px 12px", fontSize: 13, border: "1px solid var(--ink-20)", borderRadius: 8, background: "var(--surface)", color: "var(--ink)", outline: "none", fontFamily: "var(--font-mono)" }}
+        />
+        <button type="submit" style={{ padding: "6px 16px", fontSize: 13, border: "1px solid var(--ink-20)", borderRadius: 8, background: "var(--surface)", color: "var(--ink-60)", cursor: "pointer" }}>Search</button>
+        {q && <a href={buildUsersHref({ sort, dir, filter: f || undefined })} style={{ padding: "6px 12px", fontSize: 13, color: "var(--ink-40)", textDecoration: "none", display: "flex", alignItems: "center" }}>× clear</a>}
+      </form>
+
       {/* Tab bar */}
       <div style={{ display: "flex", borderBottom: "1px solid var(--ink-10)", marginBottom: 24, gap: 0 }}>
         {tabs.map(({ label, count: tabCount, key, color }) => {
@@ -90,7 +105,7 @@ export function UsersView({
           return (
             <a
               key={key || "all"}
-              href={buildUsersHref({ sort, dir, filter: key || undefined })}
+              href={buildUsersHref({ sort, dir, q: q || undefined, filter: key || undefined })}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -138,7 +153,7 @@ export function UsersView({
         ]}
         sort={sort}
         dir={dir}
-        buildSortHref={(field, nextDir) => buildUsersHref({ sort: field, dir: nextDir, filter: f || undefined })}
+        buildSortHref={(field, nextDir) => buildUsersHref({ sort: field, dir: nextDir, filter: f || undefined, q: q || undefined })}
       >
         {users.map((u, i) => (
           <UserRow key={u._id} u={u} n={i + 1 + skip} />
@@ -149,7 +164,7 @@ export function UsersView({
         page={page}
         pages={pages}
         count={count}
-        buildHref={(p) => buildUsersHref({ sort, dir, filter: f || undefined, page: p })}
+        buildHref={(p) => buildUsersHref({ sort, dir, filter: f || undefined, q: q || undefined, page: p })}
       />
     </AdminPage>
   );

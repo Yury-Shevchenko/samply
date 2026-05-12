@@ -13,7 +13,7 @@ export default async function NewCategoryPage() {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: 600, margin: "0 auto", padding: "5.2rem 4rem 9.6rem" }}>
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: "5.2rem var(--page-px) 9.6rem" }}>
         <a href="/admin/forum" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", display: "block", marginBottom: "2rem" }} className="hover:opacity-70">← Back</a>
         <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "3rem", letterSpacing: "-0.03em", margin: "0 0 3.2rem" }}>New category</h1>
 

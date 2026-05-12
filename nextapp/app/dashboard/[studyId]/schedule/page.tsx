@@ -79,7 +79,7 @@ function NotifCard({ n, studyId, index, deleteAction }: { n: NotificationConfig;
   const tilt = TILTS[index % TILTS.length];
 
   return (
-    <div style={{
+    <div className="notif-card" style={{
       background: "var(--surface)",
       border: "1px solid var(--ink-10)",
       borderRadius: "0.6rem",
@@ -187,7 +187,7 @@ export default async function SchedulePage({ params }: Props) {
     <div className="flex flex-col gap-[2.8rem]">
 
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
+      <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
             notification schedules
@@ -197,7 +197,7 @@ export default async function SchedulePage({ params }: Props) {
             {notifications.length} schedule{notifications.length !== 1 ? "s" : ""}
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
           <a href={`/scheduled/${studyId}`}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "transparent", color: "var(--ink-60)", border: "1px solid var(--ink-20)", borderRadius: "9999px", fontSize: "1.3rem", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-body)" }}
             className="hover:opacity-70 transition-opacity">

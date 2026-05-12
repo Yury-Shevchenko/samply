@@ -53,37 +53,53 @@ export default function InvitationsClient({ studyId, projectName, isPublic, isAc
   return (
     <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
 
-      {/* Sub-tab bar */}
-      <div style={{ display: "flex", borderBottom: "1px solid var(--ink-10)", background: "var(--paper)", overflowX: "auto" }}>
-        {TABS.map(({ id, label }) => {
-          const isOn = active === id;
-          return (
-            <button
-              key={id}
-              onClick={() => setActive(id)}
-              style={{
-                padding: "1.1rem 1.8rem",
-                background: isOn ? "var(--surface)" : "transparent",
-                border: "none",
-                borderBottom: isOn ? "2px solid var(--coral)" : "2px solid transparent",
-                fontFamily: "var(--font-mono)",
-                fontSize: "1.1rem",
-                fontWeight: isOn ? 600 : 400,
-                letterSpacing: ".06em",
-                color: isOn ? "var(--ink)" : "var(--ink-40)",
-                cursor: "pointer",
-                whiteSpace: "nowrap",
-                transition: "color .12s",
-              }}
-            >
-              {label}
-            </button>
-          );
-        })}
+      {/* Sub-tab bar — desktop */}
+      <div className="study-tab-nav-desktop" style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
+        <div style={{ display: "flex" }}>
+          {TABS.map(({ id, label }) => {
+            const isOn = active === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setActive(id)}
+                style={{
+                  padding: "1.1rem 1.8rem",
+                  background: isOn ? "var(--surface)" : "transparent",
+                  border: "none",
+                  borderBottom: isOn ? "2px solid var(--coral)" : "2px solid transparent",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1.1rem",
+                  fontWeight: isOn ? 600 : 400,
+                  letterSpacing: ".06em",
+                  color: isOn ? "var(--ink)" : "var(--ink-40)",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "color .12s",
+                  flexShrink: 0,
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Sub-tab bar — mobile */}
+      <div className="study-tab-nav-mobile" style={{ padding: "1rem 1.4rem", borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
+        <select
+          value={active}
+          onChange={(e) => setActive(e.target.value as TabId)}
+          style={{ width: "100%", fontFamily: "var(--font-mono)", fontSize: "1.3rem", padding: "0.7rem 1rem", borderRadius: "0.6rem", border: "1px solid var(--ink-20)", background: "var(--surface)", color: "var(--ink)", cursor: "pointer" }}
+        >
+          {TABS.map(({ id, label }) => (
+            <option key={id} value={id}>{label}</option>
+          ))}
+        </select>
       </div>
 
       {/* Tab content */}
-      <div style={{ padding: "2rem" }}>
+      <div className="invit-body" style={{ padding: "2rem" }}>
 
         {active === "web" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>

@@ -79,7 +79,7 @@ export function AdminTable({
 export function AdminPage({ title, count, children }: { title: string; count?: number; children: React.ReactNode }) {
   return (
     <main>
-      <div style={{ maxWidth: 1920, margin: "0 auto", padding: "36px 40px 80px" }}>
+      <div style={{ maxWidth: 1920, margin: "0 auto", padding: "36px var(--page-px) 80px" }}>
         <div style={{ marginBottom: "2.8rem" }}>
           <h1
             className="font-[family-name:var(--font-display)] font-bold m-0"

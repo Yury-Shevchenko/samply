@@ -136,13 +136,13 @@ export default async function RootPage() {
 
   return (
     <main className="min-h-screen" style={{ background: "var(--paper)", color: "var(--ink)", fontFamily: "var(--font-body)" }}>
-      <div style={{ maxWidth: "82rem", margin: "0 auto", padding: "5.6rem 4rem 8rem" }}>
+      <div style={{ maxWidth: "82rem", margin: "0 auto", padding: "5.6rem var(--page-px) 8rem" }}>
 
         {/* ── Hero ──────────────────────────────────────────────── */}
         <div style={{ marginTop: "4.8rem", position: "relative" }}>
           <Hand size={18} rotate={-1.5} className="mb-[1rem] block">hello, researcher ✉</Hand>
-          <h1 className="font-[family-name:var(--font-display)] font-bold"
-            style={{ fontSize: "7.2rem", lineHeight: 1.0, letterSpacing: "-0.035em", margin: 0, color: "var(--ink)" }}>
+          <h1 className="font-[family-name:var(--font-display)] font-bold hero-headline"
+            style={{ lineHeight: 1.0, letterSpacing: "-0.035em", margin: 0, color: "var(--ink)" }}>
             Send little<br />
             <span style={{ position: "relative", display: "inline-block" }}>
               postcards
@@ -157,11 +157,11 @@ export default async function RootPage() {
           </p>
           <div className="flex items-center gap-[1.8rem]" style={{ marginTop: "2.4rem" }}>
             <Button kind="primary" href="/register">Start a study →</Button>
-            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)" }}>Free for academic use · no card</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)" }}>Free for academic use</span>
           </div>
 
           {/* Postmark stamp */}
-          <div style={{ position: "absolute", right: 0, top: "-1rem" }}>
+          <div className="home-postmark" style={{ position: "absolute", right: 0, top: "-1rem" }}>
             <div className="relative rounded-full border-[1.5px] border-[var(--coral)] text-[var(--coral)] flex flex-col items-center justify-center font-[family-name:var(--font-display)] font-bold"
               style={{ width: "8.4rem", height: "8.4rem", transform: "rotate(-12deg)" }}>
               <div className="absolute rounded-full border border-dashed border-[var(--coral)] opacity-60" style={{ inset: "0.4rem" }} />
@@ -173,24 +173,22 @@ export default async function RootPage() {
 
         {/* ── How it works ──────────────────────────────────────── */}
         <div style={{ marginTop: "8rem" }}>
-          <div className="flex justify-between items-baseline" style={{ marginBottom: "0.6rem" }}>
-            <div>
-              <Hand size={18} rotate={-1.5} className="block" style={{ marginBottom: "0.8rem" }}>four moving parts</Hand>
-              <h2 className="font-[family-name:var(--font-display)] font-bold"
-                style={{ fontSize: "3.6rem", margin: 0, letterSpacing: "-0.025em", lineHeight: 1.05 }}>
-                From schedule to{" "}
-                <span style={{ position: "relative", display: "inline-block" }}>
-                  survey,
-                  <HandUnderline width={122} />
-                </span>
-                {" "}without lifting a finger.
-              </h2>
-            </div>
+          <div style={{ marginBottom: "0.6rem" }}>
+            <Hand size={18} rotate={-1.5} className="block" style={{ marginBottom: "0.8rem" }}>four moving parts</Hand>
+            <h2 className="font-[family-name:var(--font-display)] font-bold"
+              style={{ fontSize: "3.6rem", margin: 0, letterSpacing: "-0.025em", lineHeight: 1.05 }}>
+              From schedule to{" "}
+              <span style={{ position: "relative", display: "inline-block" }}>
+                survey,
+                <HandUnderline width={122} />
+              </span>
+              {" "}without lifting a finger.
+            </h2>
           </div>
           <p style={{ fontSize: "1.4rem", color: "var(--ink-60)", marginTop: "1.4rem", marginBottom: "2.8rem", maxWidth: "52rem", lineHeight: 1.55 }}>
             Samply is the bit between your study design and your survey tool. It runs the cron, lands the notification, and routes the tap.
           </p>
-          <div className="grid" style={{ gridTemplateColumns: "repeat(4, 1fr)", gap: "1.8rem" }}>
+          <div className="home-how-grid">
             {HOW_STEPS.map((s, i) => (
               <Card key={s.n} tilt={s.tilt} pad="1.8rem" className="flex flex-col gap-[1rem]" style={{ minHeight: "20rem" }}>
                 <Hand size={16}>{s.n}</Hand>
@@ -217,9 +215,9 @@ export default async function RootPage() {
                 You draw windows on the day. We fill them.
               </h2>
             </div>
-            <Hand size={18}>→ pick one, or mix</Hand>
+            <Hand size={18} className="home-section-deco">→ pick one, or mix</Hand>
           </div>
-          <div className="grid" style={{ marginTop: "2.2rem", gridTemplateColumns: "1fr 1fr 1fr", gap: "2rem" }}>
+          <div className="home-timing-grid" style={{ marginTop: "2.2rem" }}>
             {TIMING_CARDS.map((c) => (
               <Card key={c.eyebrow} tilt={c.tilt} pad="2rem" className="flex flex-col gap-[1rem]">
                 <Hand size={17}>{c.eyebrow}</Hand>
@@ -228,14 +226,14 @@ export default async function RootPage() {
                   {c.title}
                 </div>
                 <div style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.5 }}>{c.body}</div>
-                <div style={{ marginTop: "0.6rem", paddingTop: "1rem", borderTop: "1px dashed var(--ink-20)" }}>{c.vis}</div>
+                <div className="home-timing-vis" style={{ marginTop: "0.6rem", paddingTop: "1rem", borderTop: "1px dashed var(--ink-20)" }}>{c.vis}</div>
               </Card>
             ))}
           </div>
         </div>
 
         {/* ── Steps 02 + 03 in detail: phone ────────────────────── */}
-        <div className="grid items-center" style={{ marginTop: "6.4rem", gridTemplateColumns: "1fr 22rem", gap: "3.6rem" }}>
+        <div className="home-phone-grid" style={{ marginTop: "6.4rem" }}>
           <div>
             <SectionLabel>steps 02 + 03 · in detail</SectionLabel>
             <h2 className="font-[family-name:var(--font-display)] font-bold"
@@ -284,7 +282,7 @@ export default async function RootPage() {
               style={{ fontSize: "3rem", margin: 0, letterSpacing: "-0.02em" }}>
               Then we hand the tap to your survey.
             </h2>
-            <Hand size={18}>plays nicely with</Hand>
+            <Hand size={18} className="home-section-deco">plays nicely with</Hand>
           </div>
           <div className="flex gap-[1.2rem] flex-wrap">
             {INTEGRATIONS.map((t) => (
@@ -312,7 +310,7 @@ export default async function RootPage() {
               </span>
               {" "}we were built for.
             </h2>
-            <div style={{ position: "relative" }}>
+            <div className="home-section-deco" style={{ position: "relative" }}>
               <div style={{
                 width: "7.2rem", height: "7.2rem", borderRadius: "50%",
                 border: "1.5px solid var(--coral)", color: "var(--coral)",
@@ -331,7 +329,7 @@ export default async function RootPage() {
           </p>
 
           {/* Method cards grid */}
-          <div className="grid" style={{ gridTemplateColumns: "repeat(3, 1fr)", gap: "1.6rem" }}>
+          <div className="home-methods-grid">
             {METHODS.map((m) => (
               <Card key={m.code} tilt={m.tilt} pad="1.8rem" className="flex flex-col gap-[0.8rem]">
                 <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", color: "var(--ink-60)" }}>
@@ -347,7 +345,7 @@ export default async function RootPage() {
           </div>
 
           {/* Defaults table */}
-          <div className="grid items-start" style={{ marginTop: "4rem", gridTemplateColumns: "1fr 1.4fr", gap: "3.2rem" }}>
+          <div className="home-defaults-grid" style={{ marginTop: "4rem" }}>
             <div>
               <Hand size={17}>defaults · borrowed from the literature</Hand>
               <h3 className="font-[family-name:var(--font-display)] font-bold"
@@ -373,7 +371,7 @@ export default async function RootPage() {
           </div>
 
           {/* IRB strip */}
-          <div style={{ marginTop: "2.4rem", background: "rgba(61,115,107,.08)", border: "1px solid rgba(61,115,107,.25)", borderRadius: "1rem", padding: "1.8rem 2.2rem", display: "grid", gridTemplateColumns: "4.4rem 1fr auto", gap: "1.6rem", alignItems: "center" }}>
+          <div className="home-irb-grid" style={{ marginTop: "2.4rem", background: "rgba(61,115,107,.08)", border: "1px solid rgba(61,115,107,.25)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}>
             <div style={{ width: "4.4rem", height: "4.4rem", borderRadius: "50%", background: "var(--sage)", color: "var(--paper)", fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "1.6rem", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
               IRB
             </div>
@@ -381,7 +379,7 @@ export default async function RootPage() {
               <div className="font-[family-name:var(--font-display)] font-bold" style={{ fontSize: "1.6rem", letterSpacing: "-0.015em" }}>An IRB-friendly footprint.</div>
               <div style={{ fontSize: "1.3rem", color: "var(--ink-60)", marginTop: "0.2rem" }}>EU-hosted, GDPR DPIA on file, BAA available. Nothing leaves your survey tool. Plain-English data flow on request.</div>
             </div>
-            <a href="/docs/legal" style={{ fontSize: "1.25rem", color: "var(--sage)", textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap" }} className="hover:opacity-70 transition-opacity">
+            <a href="/docs/policy" style={{ fontSize: "1.25rem", color: "var(--sage)", textDecoration: "none", fontWeight: 500, whiteSpace: "nowrap" }} className="hover:opacity-70 transition-opacity">
               Read the brief →
             </a>
           </div>
@@ -419,7 +417,7 @@ export default async function RootPage() {
         )}
 
         {/* ── CTA band ──────────────────────────────────────────── */}
-        <div className="flex justify-between items-center relative overflow-hidden"
+        <div className="home-cta-band flex justify-between items-center relative overflow-hidden"
           style={{ marginTop: "6.4rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "1.4rem", padding: "3.2rem" }}>
           <div>
             <div className="font-[family-name:var(--font-display)] font-bold"
@@ -427,7 +425,7 @@ export default async function RootPage() {
               See it in your own protocol.
             </div>
             <div style={{ fontSize: "1.35rem", opacity: 0.75, marginTop: "0.6rem" }}>
-              Free for academic use · 14-day pilot, no card.
+              Free for academic use.
             </div>
           </div>
           <Button kind="primary" href="/register">Start a study →</Button>

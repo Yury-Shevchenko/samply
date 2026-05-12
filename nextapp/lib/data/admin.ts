@@ -3,7 +3,7 @@ import Project from "@/lib/models/project";
 import User from "@/lib/models/user";
 import PendingNotification from "@/lib/models/pendingNotification";
 import AgendaJob from "@/lib/models/agendaJob";
-import mongoose from "mongoose";
+import mongoose, { type PipelineStage } from "mongoose";
 
 export interface AdminProject {
   _id: string;
@@ -55,12 +55,17 @@ const STUDY_SORT_FIELDS: Record<string, string> = {
   participantCount: "participantCount", currentlyActive: "currentlyActive", public: "public",
 };
 
-export async function fetchAdminStudies(sort = "created", dir = "asc"): Promise<AdminProject[]> {
+const STUDIES_PAGE_SIZE = 100;
+
+export async function fetchAdminStudies(
+  sort = "created", dir = "asc", page = 1, q = ""
+): Promise<{ projects: AdminProject[]; count: number; pages: number; skip: number }> {
   await connectDB();
   const sortField = STUDY_SORT_FIELDS[sort] ?? "created";
   const sortOrder = dir === "desc" ? -1 : 1;
+  const skip = (page - 1) * STUDIES_PAGE_SIZE;
 
-  const results = await Project.aggregate([
+  const pipeline: PipelineStage[] = [
     {
       $lookup: {
         from: "users",
@@ -71,44 +76,66 @@ export async function fetchAdminStudies(sort = "created", dir = "asc"): Promise<
     },
     {
       $project: {
-        name: 1,
-        slug: 1,
-        description: 1,
-        codeMessage: 1,
-        geofencingInstruction: 1,
-        image: 1,
-        created: 1,
+        name: 1, slug: 1, description: 1, codeMessage: 1,
+        geofencingInstruction: 1, image: 1, created: 1,
         author_name: "$author.name",
         author_institute: "$author.institute",
         memberCount: { $size: { $ifNull: ["$members", []] } },
         participantCount: { $size: { $ifNull: ["$mobileUsers", []] } },
-        currentlyActive: 1,
-        requestedForApproval: 1,
-        public: 1,
+        currentlyActive: 1, requestedForApproval: 1, public: 1,
         enableGeofencing: "$settings.enableGeofencing",
       },
     },
+    ...(q.trim() ? [{
+      $match: {
+        $or: [
+          { name: { $regex: q.trim(), $options: "i" } },
+          { slug: { $regex: q.trim(), $options: "i" } },
+          { description: { $regex: q.trim(), $options: "i" } },
+          { author_name: { $elemMatch: { $regex: q.trim(), $options: "i" } } },
+          { author_institute: { $elemMatch: { $regex: q.trim(), $options: "i" } } },
+        ],
+      },
+    }] : []),
     { $sort: { [sortField]: sortOrder } },
-  ]);
+    {
+      $facet: {
+        data: [{ $skip: skip }, { $limit: STUDIES_PAGE_SIZE }],
+        total: [{ $count: "n" }],
+      },
+    },
+  ];
 
-  return results.map((r) => ({
-    _id: String(r._id),
-    name: r.name ?? "",
-    slug: r.slug,
-    description: r.description,
-    codeMessage: r.codeMessage,
-    geofencingInstruction: r.geofencingInstruction,
-    image: r.image,
-    created: r.created,
-    author_name: r.author_name ?? [],
-    author_institute: r.author_institute ?? [],
-    memberCount: r.memberCount ?? 0,
-    participantCount: r.participantCount ?? 0,
-    currentlyActive: r.currentlyActive,
-    requestedForApproval: r.requestedForApproval,
-    public: r.public,
-    enableGeofencing: r.enableGeofencing,
-  }));
+  const [facet] = await Project.aggregate(pipeline);
+  const count: number = facet?.total?.[0]?.n ?? 0;
+  const results: object[] = facet?.data ?? [];
+
+  return {
+    projects: results.map((r: object) => {
+      const d = r as Record<string, unknown>;
+      return {
+        _id: String(d._id),
+        name: (d.name as string) ?? "",
+        slug: d.slug as string | undefined,
+        description: d.description as string | undefined,
+        codeMessage: d.codeMessage as string | undefined,
+        geofencingInstruction: d.geofencingInstruction as string | undefined,
+        image: d.image as string | undefined,
+        created: d.created as Date | undefined,
+        author_name: (d.author_name as string[]) ?? [],
+        author_institute: (d.author_institute as string[]) ?? [],
+        memberCount: (d.memberCount as number) ?? 0,
+        participantCount: (d.participantCount as number) ?? 0,
+        currentlyActive: d.currentlyActive as boolean | undefined,
+        requestedForApproval: d.requestedForApproval as boolean | undefined,
+        public: d.public as boolean | undefined,
+        enableGeofencing: d.enableGeofencing as boolean | undefined,
+      };
+    }),
+    count,
+    pages: Math.ceil(count / STUDIES_PAGE_SIZE) || 1,
+    skip,
+  };
 }
 
 const USER_SORT_FIELDS: Record<string, string> = {
@@ -116,27 +143,43 @@ const USER_SORT_FIELDS: Record<string, string> = {
   emailIsConfirmed: "emailIsConfirmed", institute: "institute",
 };
 
-export async function fetchAdminUsers(page: number, sort = "created", dir = "asc", filter = ""): Promise<{
+const USERS_PAGE_SIZE = 100;
+
+export async function fetchAdminUsers(page: number, sort = "created", dir = "asc", filter = "", q = ""): Promise<{
   users: AdminUser[]; count: number; pages: number; skip: number;
 }> {
   await connectDB();
-  const limit = 500;
-  const skip = (page - 1) * limit;
+  const skip = (page - 1) * USERS_PAGE_SIZE;
   const sortField = USER_SORT_FIELDS[sort] ?? "created";
   const sortOrder = dir === "desc" ? -1 : 1;
 
-  const query: Record<string, unknown> =
+  const filterQuery: Record<string, unknown> =
     filter === "researchers"  ? { level: { $gt: 10, $lte: 100 } } :
     filter === "participants" ? { $or: [{ level: { $lte: 10 } }, { level: { $exists: false } }] } :
     filter === "admins"       ? { level: { $gt: 100 } } :
     filter === "unconfirmed"  ? { emailIsConfirmed: { $ne: true } } :
     {};
 
+  const searchQuery: Record<string, unknown> = q.trim() ? {
+    $or: [
+      { name: { $regex: q.trim(), $options: "i" } },
+      { email: { $regex: q.trim(), $options: "i" } },
+      { institute: { $regex: q.trim(), $options: "i" } },
+      { samplyId: { $regex: q.trim(), $options: "i" } },
+    ],
+  } : {};
+
+  const query = Object.keys(filterQuery).length && Object.keys(searchQuery).length
+    ? { $and: [filterQuery, searchQuery] }
+    : Object.keys(filterQuery).length ? filterQuery
+    : Object.keys(searchQuery).length ? searchQuery
+    : {};
+
   const [users, count] = await Promise.all([
-    User.find(query).sort({ [sortField]: sortOrder }).skip(skip).limit(limit).lean(),
+    User.find(query).sort({ [sortField]: sortOrder }).skip(skip).limit(USERS_PAGE_SIZE).lean(),
     User.countDocuments(query),
   ]);
-  const pages = Math.ceil(count / limit);
+  const pages = Math.ceil(count / USERS_PAGE_SIZE) || 1;
   return {
     users: users.map((u) => ({
       _id: String((u as { _id: unknown })._id),

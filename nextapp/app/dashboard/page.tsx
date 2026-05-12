@@ -209,7 +209,7 @@ function StudyCard({
         {[
           { label: "schedule", href: `/dashboard/${id}/schedule` },
           { label: "participants", href: `/dashboard/${id}/participants` },
-          { label: "data", href: `/dashboard/${id}/data` },
+          { label: "history", href: `/dashboard/${id}/data` },
         ].map(({ label, href }) => (
           <a
             key={label}
@@ -340,10 +340,10 @@ export default async function DashboardPage() {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "5.2rem 4rem 9.6rem" }}>
+      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "5.2rem var(--page-px) 9.6rem" }}>
 
         {/* Page header */}
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: emailIsConfirmed ? "4rem" : "2rem" }}>
+        <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: emailIsConfirmed ? "4rem" : "2rem" }}>
           <div>
             <span
               style={{
@@ -384,14 +384,13 @@ export default async function DashboardPage() {
                   padding: "1rem 2.2rem",
                   background: "var(--ink)",
                   color: "var(--paper)",
-                  borderRadius: "9999px",
                   fontSize: "1.3rem",
                   fontWeight: 500,
                   fontFamily: "var(--font-body)",
                   textDecoration: "none",
                   letterSpacing: "-0.01em",
                 }}
-                className="hover:opacity-80 transition-opacity"
+                className="btn-pill hover:opacity-80 transition-opacity"
               >
                 + New study
               </a>
@@ -405,13 +404,13 @@ export default async function DashboardPage() {
                   padding: "1rem 2.2rem",
                   background: "var(--ink-20)",
                   color: "var(--ink-40)",
-                  borderRadius: "9999px",
                   fontSize: "1.3rem",
                   fontWeight: 500,
                   fontFamily: "var(--font-body)",
                   cursor: "not-allowed",
                   letterSpacing: "-0.01em",
                 }}
+                className="btn-pill"
               >
                 + New study
               </span>
@@ -609,26 +608,48 @@ export default async function DashboardPage() {
             >
               Create your first study to start scheduling experience sampling notifications.
             </p>
-            <a
-              href="/projects/new"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.6rem",
-                padding: "1.1rem 2.8rem",
-                background: "var(--coral)",
-                color: "#fff",
-                borderRadius: "9999px",
-                fontSize: "1.4rem",
-                fontWeight: 500,
-                fontFamily: "var(--font-body)",
-                textDecoration: "none",
-                letterSpacing: "-0.01em",
-              }}
-              className="hover:opacity-90 transition-opacity"
-            >
-              Create a study →
-            </a>
+            {emailIsConfirmed ? (
+              <a
+                href="/projects/new"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.6rem",
+                  padding: "1.1rem 2.8rem",
+                  background: "var(--coral)",
+                  color: "#fff",
+                  borderRadius: "9999px",
+                  fontSize: "1.4rem",
+                  fontWeight: 500,
+                  fontFamily: "var(--font-body)",
+                  textDecoration: "none",
+                  letterSpacing: "-0.01em",
+                }}
+                className="hover:opacity-90 transition-opacity"
+              >
+                Create a study →
+              </a>
+            ) : (
+              <span
+                title="Confirm your email to create studies"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.6rem",
+                  padding: "1.1rem 2.8rem",
+                  background: "var(--ink-20)",
+                  color: "var(--ink-40)",
+                  borderRadius: "9999px",
+                  fontSize: "1.4rem",
+                  fontWeight: 500,
+                  fontFamily: "var(--font-body)",
+                  cursor: "not-allowed",
+                  letterSpacing: "-0.01em",
+                }}
+              >
+                Create a study →
+              </span>
+            )}
           </div>
         )}
       </div>

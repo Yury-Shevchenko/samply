@@ -59,5 +59,7 @@ const pendingNotificationSchema = new mongoose.Schema({
 });
 
 pendingNotificationSchema.index({ scheduledFor: 1, status: 1 });
+pendingNotificationSchema.index({ projectId: 1, status: 1 });
+pendingNotificationSchema.index({ notificationConfigId: 1 });
 
 module.exports = mongoose.model("PendingNotification", pendingNotificationSchema);

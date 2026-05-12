@@ -165,10 +165,18 @@ export default async function ParticipantDetailPage({ params }: Props) {
           <MetaRow label="Enrolled">
             {participant.created ? new Date(participant.created).toLocaleString() : "—"}
           </MetaRow>
-          {participant.token && (
+          {participant.token ? (
             <MetaRow label="Push token">
               <span style={{ color: "var(--ink-40)", fontSize: "1.1rem" }}>
                 {participant.token.slice(0, 32)}…
+              </span>
+            </MetaRow>
+          ) : (
+            <MetaRow label="Push token">
+              <span style={{ color: "var(--coral)", fontSize: "1.2rem", fontWeight: 500 }}>No token</span>
+              <span style={{ display: "block", fontSize: "1.15rem", color: "var(--ink-60)", marginTop: "0.3rem", lineHeight: 1.5 }}>
+                This participant has not granted notification permission, so their Expo push token was never registered.
+                Ask them to allow notifications in their device settings and then re-join the study by scanning the QR code or opening the invitation link again.
               </span>
             </MetaRow>
           )}

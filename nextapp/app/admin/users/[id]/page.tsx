@@ -81,7 +81,7 @@ export default async function AdminUserDetailPage({
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: 1300, margin: "0 auto", padding: "3.6rem 4rem 8rem" }}>
+      <div style={{ maxWidth: 1300, margin: "0 auto", padding: "3.6rem var(--page-px) 8rem" }}>
 
         {/* Breadcrumb */}
         <div style={{ marginBottom: "2.4rem" }}>

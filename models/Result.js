@@ -31,12 +31,10 @@ const resultSchema = new mongoose.Schema({
   finid: String, // id that is connected to reminder jobs
 });
 
-function autopopulate(next) {
-  this.populate("author");
-  next();
-}
-
-resultSchema.pre("find", autopopulate);
-resultSchema.pre("findOne", autopopulate);
+// Indexes for the most common query patterns
+resultSchema.index({ project: 1 });
+resultSchema.index({ samplyid: 1 });
+resultSchema.index({ project: 1, samplyid: 1 });
+resultSchema.index({ created: -1 });
 
 module.exports = mongoose.model("Result", resultSchema);

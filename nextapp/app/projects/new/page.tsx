@@ -17,7 +17,7 @@ export default async function NewProjectPage() {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "68rem", margin: "0 auto", padding: "4.8rem 4rem 8rem" }}>
+      <div style={{ maxWidth: "68rem", margin: "0 auto", padding: "4.8rem var(--page-px) 8rem" }}>
 
         {/* Breadcrumb */}
         <div style={{ marginBottom: "2.8rem" }}>

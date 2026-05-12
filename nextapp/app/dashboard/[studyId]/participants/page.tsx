@@ -114,7 +114,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
     <div className="flex flex-col gap-[2.8rem]">
 
       {/* Header */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
+      <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
             enrolled
@@ -127,7 +127,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
             </span>
           </div>
         </div>
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center", flexShrink: 0 }}>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center", flexShrink: 0, flexWrap: "wrap" }}>
           {participants.length > 0 && (
             <a
               href={`/dashboard/${studyId}/participants/export`}
@@ -157,8 +157,8 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
       {/* Active table */}
       {allActive.length > 0 ? (
         <>
-          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
+            <table style={{ width: "100%", minWidth: "52rem", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
                   <SortTh studyId={studyId} page={page} col="id"       label="Participant ID"  currentSort={sort} currentOrder={order} />
@@ -190,7 +190,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
                       ) : "—"}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>
-                      {p.token ? p.token.slice(0, 12) + "…" : "—"}
+                      {p.token ? p.token.slice(0, 12) + "…" : <span style={{ color: "var(--coral)", fontWeight: 500 }} title="No push token — participant has not allowed notifications">no token</span>}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
                       {p.created ? new Date(p.created).toLocaleString(undefined, { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"}
@@ -243,8 +243,8 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "1.2rem" }}>
             deactivated · {allInactive.length}
           </div>
-          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", opacity: 0.65 }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], opacity: 0.65 }}>
+            <table style={{ width: "100%", minWidth: "32rem", borderCollapse: "collapse" }}>
               <tbody>
                 {sortedInactive.map((p, i) => (
                   <ParticipantRow

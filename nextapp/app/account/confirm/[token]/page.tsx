@@ -1,5 +1,6 @@
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
+import { auth } from "@/lib/auth";
 
 export const metadata = { title: "Email confirmation — Samply" };
 
@@ -9,6 +10,7 @@ export default async function ConfirmEmailPage({
   params: Promise<{ token: string }>;
 }) {
   const { token } = await params;
+  const session = await auth();
 
   await connectDB();
   const user = await User.findOne({
@@ -123,11 +125,11 @@ export default async function ConfirmEmailPage({
 
               <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem", lineHeight: 1.65 }}>
                 {name ? `Welcome, ${name}. ` : ""}
-                Your account is ready — log in to get started.
+                {session ? "Your email is confirmed. Head to your dashboard." : "Your account is ready — log in to get started."}
               </p>
 
               <a
-                href="/login"
+                href={session ? "/dashboard" : "/login"}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -142,7 +144,7 @@ export default async function ConfirmEmailPage({
                   letterSpacing: "-0.01em",
                 }}
               >
-                Log in →
+                {session ? "Go to dashboard →" : "Log in →"}
               </a>
             </>
           ) : (

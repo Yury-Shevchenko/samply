@@ -22,16 +22,16 @@ async function fetchTotalCounts() {
 export default async function AdminUsersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string; dir?: string; filter?: string }>;
+  searchParams: Promise<{ sort?: string; dir?: string; filter?: string; q?: string }>;
 }) {
   const session = await auth();
   if (!session || session.user.level <= 100) redirect("/login");
 
-  const { sort = "created", dir = "asc", filter = "" } = await searchParams;
+  const { sort = "created", dir = "asc", filter = "", q = "" } = await searchParams;
   const [{ users, count, pages, skip }, totalCounts] = await Promise.all([
-    fetchAdminUsers(1, sort, dir, filter),
+    fetchAdminUsers(1, sort, dir, filter, q),
     fetchTotalCounts(),
   ]);
 
-  return <UsersView users={users} count={count} page={1} pages={pages} skip={skip} sort={sort} dir={dir} filter={filter} totalCounts={totalCounts} />;
+  return <UsersView users={users} count={count} page={1} pages={pages} skip={skip} sort={sort} dir={dir} filter={filter} q={q} totalCounts={totalCounts} />;
 }

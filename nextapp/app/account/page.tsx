@@ -27,11 +27,18 @@ async function updateAccountAction(formData: FormData) {
 async function resendConfirmationAction(formData: FormData) {
   "use server";
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
+  const expressPublicHost =
+    process.env.EXPRESS_PUBLIC_HOST ??
+    (() => { try { return new URL(process.env.NEXTAUTH_URL ?? "").hostname; } catch { return "localhost"; } })();
   const email = formData.get("email") as string;
 
   await fetch(`${expressUrl}/account/confirm`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept-Language": "en",
+      "Host": expressPublicHost,
+    },
     body: new URLSearchParams({ email }).toString(),
     redirect: "manual",
   });
@@ -75,7 +82,7 @@ export default async function AccountPage({
   return (
     <main
       className="min-h-screen"
-      style={{ background: "var(--paper)", color: "var(--ink)", padding: "4.8rem 4rem 8rem" }}
+      style={{ background: "var(--paper)", color: "var(--ink)", padding: "4.8rem var(--page-px) 8rem" }}
     >
       <div style={{ maxWidth: "52rem", margin: "0 auto" }}>
 

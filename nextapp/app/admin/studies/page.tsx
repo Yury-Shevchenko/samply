@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { fetchAdminStudies } from "@/lib/data/admin";
 import { deleteStudyAction, toggleStudyPublicAction } from "./actions";
 import type { AdminProject } from "@/lib/data/admin";
-import { AdminPage, AdminTable, TD_STYLE, TD_MONO, fmt, truncate } from "../shared";
+import { AdminPage, AdminTable, AdminPagination, TD_STYLE, TD_MONO, fmt, truncate } from "../shared";
 import { ConfirmDeleteButton } from "../ConfirmDeleteButton";
 
 export const metadata = { title: "Admin: Studies — Samply" };
@@ -105,34 +105,36 @@ function StudyRow({ p, i }: { p: AdminProject; i: number }) {
 
 type FilterKey = "active" | "public" | "pending" | "";
 
-function buildStudiesHref(params: { sort?: string; dir?: string; filter?: string }) {
-  const qs = Object.entries(params)
+function buildStudiesHref(params: { sort?: string; dir?: string; filter?: string; q?: string; page?: number }) {
+  const { page, ...rest } = params;
+  const qs = Object.entries(rest)
     .filter(([, v]) => Boolean(v))
-    .map(([k, v]) => `${k}=${v}`)
+    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
     .join("&");
+  if (page && page > 1) return `/admin/studies/page/${page}${qs ? `?${qs}` : ""}`;
   return `/admin/studies${qs ? `?${qs}` : ""}`;
 }
 
 export default async function AdminStudiesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string; dir?: string; filter?: string }>;
+  searchParams: Promise<{ sort?: string; dir?: string; filter?: string; q?: string }>;
 }) {
   const session = await auth();
   if (!session || session.user.level <= 100) redirect("/login");
 
-  const { sort = "created", dir = "asc", filter = "" } = await searchParams;
-  const allProjects = await fetchAdminStudies(sort, dir);
-
-  const active = allProjects.filter((p) => p.currentlyActive).length;
-  const publicCount = allProjects.filter((p) => p.public).length;
-  const pendingApproval = allProjects.filter((p) => p.requestedForApproval && !p.public).length;
+  const { sort = "created", dir = "asc", filter = "", q = "" } = await searchParams;
+  const { projects, count, pages } = await fetchAdminStudies(sort, dir, 1, q);
 
   const f = filter as FilterKey;
-  const projects = f === "active"  ? allProjects.filter((p) => p.currentlyActive)
-    : f === "public"               ? allProjects.filter((p) => p.public)
-    : f === "pending"              ? allProjects.filter((p) => p.requestedForApproval && !p.public)
-    : allProjects;
+  const filtered = f === "active"  ? projects.filter((p) => p.currentlyActive)
+    : f === "public"               ? projects.filter((p) => p.public)
+    : f === "pending"              ? projects.filter((p) => p.requestedForApproval && !p.public)
+    : projects;
+
+  const active = projects.filter((p) => p.currentlyActive).length;
+  const publicCount = projects.filter((p) => p.public).length;
+  const pendingApproval = projects.filter((p) => p.requestedForApproval && !p.public).length;
 
   const chips: { label: string; value: number; color: string; key: FilterKey }[] = [
     { label: "active",          value: active,         color: "var(--sage)",   key: "active" },
@@ -141,7 +143,23 @@ export default async function AdminStudiesPage({
   ];
 
   return (
-    <AdminPage title="Studies" count={projects.length}>
+    <AdminPage title="Studies" count={count}>
+
+      {/* Search */}
+      <form method="get" style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        {sort !== "created" && <input type="hidden" name="sort" value={sort} />}
+        {dir !== "asc"      && <input type="hidden" name="dir"  value={dir} />}
+        {f                  && <input type="hidden" name="filter" value={f} />}
+        <input
+          name="q"
+          defaultValue={q}
+          placeholder="Search by name, slug, description, author…"
+          autoComplete="off"
+          style={{ flex: 1, maxWidth: 400, padding: "6px 12px", fontSize: 13, border: "1px solid var(--ink-20)", borderRadius: 8, background: "var(--surface)", color: "var(--ink)", outline: "none", fontFamily: "var(--font-mono)" }}
+        />
+        <button type="submit" style={{ padding: "6px 16px", fontSize: 13, border: "1px solid var(--ink-20)", borderRadius: 8, background: "var(--surface)", color: "var(--ink-60)", cursor: "pointer" }}>Search</button>
+        {q && <a href={buildStudiesHref({ sort, dir, filter: f || undefined })} style={{ padding: "6px 12px", fontSize: 13, color: "var(--ink-40)", textDecoration: "none", display: "flex", alignItems: "center" }}>× clear</a>}
+      </form>
 
       {/* Summary stat chips — clickable filters */}
       <div style={{ display: "flex", gap: 10, marginBottom: 20, flexWrap: "wrap" }}>
@@ -150,7 +168,7 @@ export default async function AdminStudiesPage({
           return (
             <a
               key={key}
-              href={buildStudiesHref({ sort, dir, filter: isActive ? "" : key })}
+              href={buildStudiesHref({ sort, dir, q: q || undefined, filter: isActive ? "" : key })}
               style={{
                 fontSize: 12,
                 padding: "5px 12px",
@@ -169,7 +187,7 @@ export default async function AdminStudiesPage({
         })}
         {f && (
           <a
-            href={buildStudiesHref({ sort, dir })}
+            href={buildStudiesHref({ sort, dir, q: q || undefined })}
             style={{ fontSize: 12, padding: "5px 12px", borderRadius: 999, textDecoration: "none", color: "var(--ink-40)", border: "1px solid var(--ink-10)" }}
           >
             × clear filter
@@ -177,7 +195,7 @@ export default async function AdminStudiesPage({
         )}
       </div>
 
-      {pendingApproval > 0 && !f && (
+      {pendingApproval > 0 && !f && !q && (
         <div
           style={{
             background: "rgba(214,90,48,.08)",
@@ -209,12 +227,19 @@ export default async function AdminStudiesPage({
         ]}
         sort={sort}
         dir={dir}
-        buildSortHref={(field, nextDir) => buildStudiesHref({ sort: field, dir: nextDir, filter: f || undefined })}
+        buildSortHref={(field, nextDir) => buildStudiesHref({ sort: field, dir: nextDir, filter: f || undefined, q: q || undefined })}
       >
-        {projects.map((p, i) => (
+        {filtered.map((p, i) => (
           <StudyRow key={p._id} p={p} i={i} />
         ))}
       </AdminTable>
+
+      <AdminPagination
+        page={1}
+        pages={pages}
+        count={count}
+        buildHref={(p) => buildStudiesHref({ sort, dir, filter: f || undefined, q: q || undefined, page: p })}
+      />
     </AdminPage>
   );
 }

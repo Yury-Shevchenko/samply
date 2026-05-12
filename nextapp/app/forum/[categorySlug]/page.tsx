@@ -42,7 +42,7 @@ export default async function CategoryPage({
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "5.2rem 4rem 9.6rem" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "5.2rem var(--page-px) 9.6rem" }}>
 
         {/* Breadcrumb + header */}
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", marginBottom: "1.2rem", letterSpacing: ".06em" }}>

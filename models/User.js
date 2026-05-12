@@ -140,9 +140,10 @@ userSchema.statics.getUsersOfProject = function (project) {
 };
 
 //define indexes for the faster search
-userSchema.index({
-  samplyId: 1,
-});
+userSchema.index({ samplyId: 1 });
+userSchema.index({ email: 1 });
+userSchema.index({ level: 1 });
+userSchema.index({ participantInProject: 1 });
 
 //pre-save validation to make sure that the email does not already exist
 userSchema.pre("save", function (next) {

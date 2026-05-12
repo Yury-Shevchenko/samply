@@ -249,6 +249,12 @@ projectSchema.virtual("participants", {
   justOne: false,
 });
 
+// Indexes for the most common query patterns
+projectSchema.index({ creator: 1 });
+projectSchema.index({ slug: 1 });
+projectSchema.index({ samplycode: 1 });
+projectSchema.index({ currentlyActive: 1, public: 1 });
+
 function autopopulate(next) {
   this.populate({ path: "participants", select: "participantInProject" });
   next();

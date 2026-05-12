@@ -70,7 +70,7 @@ export default async function SmaatPage() {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto", padding: "5.6rem 4rem 10rem" }}>
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "5.6rem var(--page-px) 10rem" }}>
 
         {/* Header */}
         <div style={{ marginBottom: "4.8rem" }}>

@@ -36,4 +36,7 @@ const jobSchema = new mongoose.Schema({
   lastFinishedAt: Date
 });
 
+// Index for filtering jobs by project (used in scheduled notification lookups)
+jobSchema.index({ "data.projectid": 1 });
+
 module.exports = mongoose.model('Job', jobSchema);

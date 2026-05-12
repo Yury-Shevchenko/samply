@@ -33,6 +33,29 @@
   --coral-soft: rgba(214, 90, 48, 0.12);
   --sage: #3d736b;
   --sage-soft: rgba(61, 115, 107, 0.12);
+
+  /* Responsive horizontal page padding — use in inline styles via var(--page-px) */
+  --page-px: 4rem;
+  /* Vertical padding top for main content sections */
+  --page-pt: 5.2rem;
+  /* Nav horizontal padding — matches page-px */
+  --nav-px: 4rem;
+}
+
+@media (max-width: 900px) {
+  :root {
+    --page-px: 2.4rem;
+    --page-pt: 3.6rem;
+    --nav-px: 2.4rem;
+  }
+}
+
+@media (max-width: 540px) {
+  :root {
+    --page-px: 1.6rem;
+    --page-pt: 2.8rem;
+    --nav-px: 1.6rem;
+  }
 }
 
 /* ── Base reset ──────────────────────────────────────────────────────────── */
@@ -246,3 +269,177 @@ body {
 .forum-prose a { color: var(--coral); }
 .forum-prose strong { font-weight: 600; }
 .forum-prose hr { border: none; border-top: 1px solid var(--ink-10); margin: 1.6rem 0; }
+
+/* ── Mobile nav ──────────────────────────────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.4rem;
+  color: var(--ink);
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.nav-desktop-links { display: flex; align-items: center; gap: 2.4rem; }
+.nav-mobile-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  min-height: calc(100svh - 6rem);
+  background: var(--paper);
+  border-top: 1px solid var(--ink-10);
+  z-index: 49;
+  flex-direction: column;
+  padding: 2rem var(--nav-px) 4rem;
+  gap: 0;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(35,32,26,.12);
+}
+.nav-mobile-menu.open { display: flex; }
+.nav-mobile-link {
+  display: block;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--ink-10);
+  font-family: var(--font-body);
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+}
+.nav-mobile-link:last-child { border-bottom: none; }
+
+@media (max-width: 768px) {
+  .nav-hamburger { display: flex; }
+  .nav-desktop-links { display: none; }
+}
+
+/* ── Study tab nav: tab bar on desktop, select on mobile ─────────────────── */
+.study-tab-nav-desktop { display: block; }
+.study-tab-nav-mobile  { display: none; }
+@media (max-width: 640px) {
+  .study-tab-nav-desktop { display: none; }
+  .study-tab-nav-mobile  { display: block; }
+}
+
+/* ── Responsive two-column grids ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .mob-col { flex-direction: column !important; gap: 1.6rem !important; }
+  .mob-col-start { align-items: flex-start !important; }
+  .mob-full { width: 100% !important; max-width: 100% !important; }
+  .mob-hide { display: none !important; }
+  .mob-font-sm { font-size: 2.8rem !important; }
+}
+
+/* ── Pill buttons: less round on mobile ──────────────────────────────────── */
+.btn-pill { border-radius: 9999px; }
+@media (max-width: 540px) {
+  .btn-pill {
+    border-radius: 0.8rem !important;
+    padding-left: 1.4rem !important;
+    padding-right: 1.4rem !important;
+    font-size: 1.2rem !important;
+  }
+}
+
+/* ── Hero headline scaling ───────────────────────────────────────────────── */
+.hero-headline { font-size: 7.2rem; }
+@media (max-width: 900px)  { .hero-headline { font-size: 5.6rem; } }
+@media (max-width: 640px)  { .hero-headline { font-size: 4rem; } }
+@media (max-width: 400px)  { .hero-headline { font-size: 3.4rem; } }
+
+/* ── Docs layout: sidebar on desktop, select on mobile ───────────────────── */
+.docs-mobile-nav { display: none; }
+.docs-sidebar    { display: block; }
+@media (max-width: 768px) {
+  .docs-mobile-nav { display: block; }
+  .docs-sidebar    { display: none !important; }
+  .docs-layout     { gap: 0 !important; }
+  .docs-page-h1    { font-size: 2.8rem !important; }
+}
+
+/* ── Docs prose: scrollable tables on mobile ─────────────────────────────── */
+.docs-prose table {
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Study cards: single column on small screens ─────────────────────────── */
+@media (max-width: 600px) {
+  .study-cards-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── Home page responsive grids ──────────────────────────────────────────── */
+.home-how-grid     { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.8rem; }
+.home-timing-grid  { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.home-methods-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; }
+.home-defaults-grid{ display: grid; grid-template-columns: 1fr 1.4fr;      gap: 3.2rem; }
+.home-phone-grid   { display: grid; grid-template-columns: 1fr 22rem;      gap: 3.6rem; align-items: center; }
+.home-irb-grid     { display: grid; grid-template-columns: 4.4rem 1fr auto; gap: 1.6rem; align-items: center; }
+
+@media (max-width: 800px) {
+  .home-how-grid    { grid-template-columns: repeat(2, 1fr) !important; }
+  .home-timing-grid { grid-template-columns: 1fr !important; }
+  .home-timing-grid > * { transform: none !important; min-width: 0; }
+  .home-timing-vis  { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .home-methods-grid{ grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+  .home-how-grid     { grid-template-columns: 1fr !important; }
+  .home-how-grid > * { transform: none !important; }
+  .home-methods-grid { grid-template-columns: 1fr !important; }
+  .home-methods-grid > * { transform: none !important; }
+  .home-defaults-grid{ grid-template-columns: 1fr !important; }
+  .home-phone-grid   { grid-template-columns: 1fr !important; }
+  .home-irb-grid     { grid-template-columns: 1fr !important; }
+  .home-postmark     { display: none !important; }
+  .home-section-deco { display: none !important; }
+  .home-cta-band     { flex-direction: column !important; align-items: flex-start !important; gap: 2rem !important; }
+}
+
+/* ── Study overview stats grid: 4 → 2 columns on mobile ─────────────────── */
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; }
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ── Scrollable tables (participants, schedule lists) ────────────────────── */
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.table-scroll::-webkit-scrollbar { display: none; }
+.table-scroll table { min-width: 56rem; width: 100%; }
+
+/* ── Invitations page ────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .invit-body { padding: 1.4rem !important; }
+}
+
+/* ── Settings page ───────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .settings-section-body   { padding: 1.6rem !important; }
+  .settings-toggle-indent  { margin-left: 0 !important; }
+  .settings-hint-indent    { margin-left: 0 !important; }
+  .settings-2col           { grid-template-columns: 1fr !important; }
+  .settings-actions-wrap   { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .settings-actions-inner  { min-width: 38rem; }
+}
+
+/* ── Wrap flex rows to column on mobile ──────────────────────────────────── */
+@media (max-width: 640px) {
+  .mob-wrap { flex-wrap: wrap !important; }
+  .mob-row-gap { gap: 0.8rem !important; }
+  /* Kill postcard tilts — rotated cards bleed off-screen on mobile */
+  .notif-card { transform: none !important; }
+}

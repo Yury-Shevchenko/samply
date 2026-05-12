@@ -74,7 +74,7 @@ export default async function TestimonialPage({
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "60rem", margin: "0 auto", padding: "6rem 4rem 10rem" }}>
+      <div style={{ maxWidth: "60rem", margin: "0 auto", padding: "6rem var(--page-px) 10rem" }}>
 
         <a href="/dashboard" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase" }}>
           ← dashboard

@@ -163,8 +163,47 @@ html
                 h6 #{layout && layout.signup}
               
                 
-    block background-image 
-    
+    block background-image
+
+    //- Migration announcement — change `if false` to `if user && user.level > 10` to re-enable
+    if false
+      #migration-banner(style="background:#1a1714;color:#f5f0e8;padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.6rem;font-family:sans-serif;font-size:1.35rem;line-height:1.5;")
+        span(style="flex:1")
+          strong(style="color:#d65a30") Samply is getting a new dashboard.&ensp;
+          | We are migrating to a faster, redesigned platform.
+          | You can preview it now at&nbsp;
+          a(href="https://samply.uni-konstanz.de:4001" target="_blank" style="color:#d65a30;text-decoration:underline") samply.uni-konstanz.de:4001
+          | .&ensp;
+          strong Timeline:&ensp;
+          | Preview open until&nbsp;
+          strong May 26
+          | , then the new dashboard becomes the default.
+          | &ensp;Your data and studies carry over automatically.
+          | &ensp;
+          strong What to expect:&ensp;
+          | You will need to&nbsp;
+          strong log in again
+          |  on the new platform.
+          if !user.emailIsConfirmed
+            | &ensp;You also need to&nbsp;
+            strong confirm your email address
+            |  before you can sign in — check your inbox or&nbsp;
+            a(href="/account" style="color:#d65a30;text-decoration:underline") resend from your account page
+            | .
+          else
+            | &ensp;Your email is already confirmed, so you are all set.
+        button#migration-banner-close(type="button" aria-label="Dismiss" style="background:none;border:none;color:#f5f0e8;font-size:2rem;cursor:pointer;line-height:1;padding:0 0.4rem;opacity:0.6;flex-shrink:0") &times;
+      script(nonce=`${noncevalue}`).
+        (function () {
+          if (localStorage.getItem('migration-banner-v2') === 'closed') {
+            document.getElementById('migration-banner').style.display = 'none';
+          }
+          document.getElementById('migration-banner-close').addEventListener('click', function () {
+            document.getElementById('migration-banner').style.display = 'none';
+            localStorage.setItem('migration-banner-v2', 'closed');
+          });
+        })();
+
     block messages
       if locals.flashes
         .inner

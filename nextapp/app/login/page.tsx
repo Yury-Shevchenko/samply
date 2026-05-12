@@ -43,7 +43,7 @@ export default async function LoginPage({
           background: "var(--surface)",
           border: "1px solid var(--ink-10)",
           borderRadius: "1.6rem",
-          padding: "4rem 4rem 3.6rem",
+          padding: "4rem var(--page-px) 3.6rem",
           boxShadow: "0 0.2rem 1.6rem rgba(35,32,26,.06)",
         }}
       >

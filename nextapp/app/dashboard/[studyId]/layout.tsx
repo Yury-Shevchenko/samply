@@ -11,6 +11,8 @@ interface Props {
 export default async function StudyLayout({ children, params }: Props) {
   const { studyId } = await params;
 
+  if (!/^[0-9a-f]{24}$/i.test(studyId)) notFound();
+
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -19,7 +21,7 @@ export default async function StudyLayout({ children, params }: Props) {
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "3.6rem 4rem 0" }}>
+      <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "3.6rem var(--page-px) 0" }}>
 
         {/* Breadcrumb */}
         <div style={{ marginBottom: "2rem" }}>
@@ -53,7 +55,7 @@ export default async function StudyLayout({ children, params }: Props) {
             {project.currentlyActive ? "● collecting" : "draft"}
           </div>
 
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-4 mob-wrap mob-row-gap">
             <div style={{ flex: 1, minWidth: 0 }}>
               <h1
                 className="font-[family-name:var(--font-display)] font-bold m-0"
@@ -94,7 +96,7 @@ export default async function StudyLayout({ children, params }: Props) {
       </div>
 
       {/* Tab content */}
-      <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "3.2rem 4rem 8rem" }}>
+      <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "3.2rem var(--page-px) 8rem" }}>
         {children}
       </div>
     </div>

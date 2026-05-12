@@ -31,7 +31,7 @@ export default async function ForumPage() {
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "5.2rem 4rem 9.6rem" }}>
+      <div style={{ maxWidth: 800, margin: "0 auto", padding: "5.2rem var(--page-px) 9.6rem" }}>
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "3.6rem" }}>
