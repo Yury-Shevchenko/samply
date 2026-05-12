@@ -3,9 +3,6 @@ import stripe from "@/lib/stripe";
 import connectDB from "@/lib/db";
 import Donation from "@/lib/models/donation";
 
-// Stripe sends the raw body — Next.js must not parse it
-export const config = { api: { bodyParser: false } };
-
 export async function POST(req: NextRequest) {
   const body = await req.text();
   const sig = req.headers.get("stripe-signature");

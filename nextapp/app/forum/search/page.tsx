@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
-import ForumThread from "@/lib/models/forumThread";
+import ForumThread, { type IForumThread } from "@/lib/models/forumThread";
+import type { Types } from "mongoose";
 
 export const metadata = { title: "Forum Search — Samply" };
 
@@ -20,7 +21,7 @@ export default async function ForumSearchPage({
   const { q = "" } = await searchParams;
   const query = q.trim();
 
-  let results: Awaited<ReturnType<typeof ForumThread.find>> = [];
+  let results: (IForumThread & { _id: Types.ObjectId })[] = [];
   if (query.length >= 2) {
     await connectDB();
     results = await ForumThread.find(
@@ -29,7 +30,7 @@ export default async function ForumSearchPage({
     )
       .sort({ score: { $meta: "textScore" } })
       .limit(40)
-      .lean();
+      .lean() as (IForumThread & { _id: Types.ObjectId })[];
   }
 
   return (

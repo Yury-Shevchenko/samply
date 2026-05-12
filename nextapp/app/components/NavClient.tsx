@@ -6,7 +6,7 @@ interface NavClientProps {
   isLoggedIn: boolean;
   isAdmin: boolean;
   userName: string;
-  signOutAction: () => Promise<never>;
+  signOutAction: () => Promise<void>;
   showDonation: boolean;
 }
 

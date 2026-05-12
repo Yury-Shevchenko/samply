@@ -24,7 +24,7 @@ function fmt(d: Date) {
 
 const DIVIDER = <div style={{ height: "1px", background: "var(--ink-10)", margin: "0" }} />;
 
-function VoteForm({ action, votes, voted, label = "▲" }: { action: () => Promise<never>; votes: number; voted: boolean; label?: string }) {
+function VoteForm({ action, votes, voted, label = "▲" }: { action: () => Promise<void>; votes: number; voted: boolean; label?: string }) {
   return (
     <form action={action} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.2rem", minWidth: "3.2rem" }}>
       <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.2rem", color: voted ? "var(--coral)" : "var(--ink-40)", padding: "0.2rem" }} className="hover:opacity-70 transition-opacity">

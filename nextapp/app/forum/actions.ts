@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import type { Session } from "next-auth";
 import connectDB from "@/lib/db";
 import ForumThread from "@/lib/models/forumThread";
 import ForumPost from "@/lib/models/forumPost";
@@ -14,7 +15,7 @@ async function requireUser() {
   return session;
 }
 
-function requireAdmin(session: Awaited<ReturnType<typeof auth>>) {
+function requireAdmin(session: Session | null) {
   if (!session || session.user.level <= 100) redirect("/forum");
 }
 

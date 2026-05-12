@@ -12,7 +12,7 @@ module.exports = {
       script: "node_modules/.bin/next",
       args: "start",
       // Set this to the absolute path of Website/nextapp on the server:
-      cwd: "/var/www/samply/Website/nextapp",
+      cwd: "/home/yshevchenko/notify/nextapp",
       instances: 1,
       autorestart: true,
       watch: false,

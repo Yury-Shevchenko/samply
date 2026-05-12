@@ -276,9 +276,9 @@ export default async function AccountPage({
                   ID: {user.code?.id || user.samplyId}
                 </div>
               )}
-              {user.participant_projects?.length > 0 ? (
+              {(user.participant_projects?.length ?? 0) > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  {user.participant_projects.map((p: { _id: unknown; slug?: string; name?: string }) => (
+                  {(user.participant_projects ?? []).map((p: { _id: unknown; slug?: string; name?: string }) => (
                     <a
                       key={String(p._id)}
                       href={`/studies/${p.slug}`}
