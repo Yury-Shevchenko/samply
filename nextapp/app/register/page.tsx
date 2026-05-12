@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Create account — Samply" };
 
@@ -176,8 +177,8 @@ export default async function RegisterPage({
             />
           </label>
 
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Creating account…"
             className="font-[family-name:var(--font-body)] font-medium transition-opacity hover:opacity-90"
             style={{
               marginTop: "0.8rem",
@@ -188,11 +189,10 @@ export default async function RegisterPage({
               border: "none",
               borderRadius: "9999px",
               fontSize: "1.4rem",
-              cursor: "pointer",
             }}
           >
             Create account →
-          </button>
+          </SubmitButton>
         </form>
 
         {/* Footer */}

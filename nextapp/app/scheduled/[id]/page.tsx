@@ -125,11 +125,11 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function MetaRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <div style={{ display: "flex", gap: "1.6rem", alignItems: "baseline", padding: "0.9rem 0", borderBottom: "1px solid var(--ink-10)" }}>
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: "var(--ink-40)", flexShrink: 0, width: "13rem" }}>
+    <div className="sched-meta-row" style={{ display: "flex", gap: "1rem", alignItems: "baseline", padding: "0.9rem 0", borderBottom: "1px solid var(--ink-10)" }}>
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", color: "var(--ink-40)", flexShrink: 0, minWidth: "8rem", width: "13rem", maxWidth: "13rem" }}>
         {label}
       </span>
-      <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink-60)" }}>
+      <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--ink-60)", wordBreak: "break-word", minWidth: 0 }}>
         {children}
       </span>
     </div>
@@ -308,7 +308,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     : null;
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--paper)", padding: "4rem 2.4rem" }}>
+    <div style={{ minHeight: "100vh", background: "var(--paper)" }} className="px-[1.2rem] sm:px-[2.4rem] pt-[2.4rem] sm:pt-[4rem] pb-[4rem]">
       <div style={{ maxWidth: 960, margin: "0 auto", display: "flex", flexDirection: "column", gap: "3.2rem" }}>
 
         {/* Breadcrumb */}
@@ -347,29 +347,29 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
 
         {/* Config card — only in single-schedule view */}
         {notification && <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
-          <div style={{ padding: "1.8rem 2.4rem 1.6rem", borderBottom: "1px solid var(--ink-10)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
-            <div>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
+          <div style={{ borderBottom: "1px solid var(--ink-10)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }} className="px-[1.2rem] py-[1.2rem] sm:px-[2.4rem] sm:pt-[1.8rem] sm:pb-[1.6rem]">
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.5rem" }}>
                 notification schedule
               </div>
               <div className="font-[family-name:var(--font-display)] font-bold"
-                style={{ fontSize: "2.2rem", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--ink)" }}>
+                style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--ink)", wordBreak: "break-word" }}>
                 {notification.name || notification.title}
               </div>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.8rem", flexShrink: 0 }}>
-              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", padding: "0.3rem 1rem", borderRadius: "9999px", color: tm.fg, background: tm.bg, border: `1px solid ${tm.border}` }}>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.6rem", flexShrink: 0 }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", padding: "0.25rem 0.9rem", borderRadius: "9999px", color: tm.fg, background: tm.bg, border: `1px solid ${tm.border}` }}>
                 {tm.label}
               </span>
               {notification.created && (
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "var(--ink-40)" }}>
                   created {fmt(notification.created)}
                 </span>
               )}
             </div>
           </div>
 
-          <div style={{ padding: "0.4rem 2.4rem 1.2rem" }}>
+          <div className="px-[1.2rem] sm:px-[2.4rem] pt-[0.2rem] pb-[1.2rem]">
             {notification.name && notification.title && notification.name !== notification.title && (
               <MetaRow label="Title">{notification.title}</MetaRow>
             )}
@@ -465,9 +465,9 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
         {/* Agenda jobs — only in single-schedule view */}
         {notification && jobs.length > 0 && (
           <section>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.2rem" }}>
+            <div style={{ marginBottom: "1.2rem" }}>
               <SectionLabel>agenda jobs · {jobs.length}</SectionLabel>
-              <div style={{ display: "flex", gap: "0.6rem" }}>
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                 {JOB_TYPE_FILTERS.map(({ key, label }) => (
                   <FilterPill
                     key={label}
@@ -479,7 +479,8 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               </div>
             </div>
             <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <div style={{ overflowX: "auto", WebkitOverflowScrolling: "touch" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "56rem" }}>
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
                     <th style={TH}>Type</th>
@@ -528,6 +529,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           </section>
         )}
@@ -535,11 +537,11 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
         {/* Pending queue */}
         <section>
             {/* Header row */}
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "0.8rem", flexWrap: "wrap", gap: "1rem" }}>
+            <div style={{ marginBottom: "0.8rem" }}>
               <SectionLabel>
                 scheduled queue · {pendingCount.toLocaleString()} notification{pendingCount !== 1 ? "s" : ""}
               </SectionLabel>
-              <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
                 {PN_STATUS_TOGGLES.map(({ key, label, title }) => (
                   <FilterPill
                     key={key}
@@ -551,7 +553,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                 ))}
                 {pnStatuses.length > 0 && (
                   <a href={filterHref({ pnStatus: "", pnPage: "1" })}
-                    style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: ".04em", padding: "0.3rem 0.8rem", alignSelf: "center" }}
+                    style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: ".04em", padding: "0.3rem 0.6rem", alignSelf: "center" }}
                     className="hover:text-[var(--ink)] transition-colors">
                     clear ×
                   </a>
@@ -562,17 +564,17 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
             {/* Participant filter */}
             {participants.length > 0 && (
               <form method="get" action={`/scheduled/${studyId}`}
-                style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.4rem", flexWrap: "wrap" }}>
+                style={{ display: "flex", alignItems: "center", gap: "0.8rem", marginBottom: "1.4rem", flexWrap: "wrap" }}>
                 {notificationId && <input type="hidden" name="notificationId" value={notificationId} />}
                 {pnStatusParam && <input type="hidden" name="pnStatus" value={pnStatusParam} />}
                 {pnSort && <input type="hidden" name="pnSort" value={pnSort} />}
                 {pnDir && <input type="hidden" name="pnDir" value={pnDir} />}
-                <label style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", flexShrink: 0 }}>
+                <label style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 600, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", flexShrink: 0 }}>
                   Participant
                 </label>
                 <select name="pnUser" defaultValue={pnUser ?? ""}
-                  style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink)", background: "var(--surface)", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", padding: "0.5rem 1rem", outline: "none" }}>
-                  <option value="">All</option>
+                  style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink)", background: "var(--surface)", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", padding: "0.45rem 0.9rem", outline: "none", flex: "1 1 14rem", minWidth: 0 }}>
+                  <option value="">All participants</option>
                   {participants.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.username ? `${p.username} (${p.id})` : p.id}
@@ -580,7 +582,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                   ))}
                 </select>
                 <button type="submit"
-                  style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.5rem 1.4rem", borderRadius: "9999px", border: "1px solid var(--ink-20)", background: "transparent", color: "var(--ink-60)", cursor: "pointer" }}
+                  style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.45rem 1.2rem", borderRadius: "9999px", border: "1px solid var(--ink-20)", background: "transparent", color: "var(--ink-60)", cursor: "pointer", flexShrink: 0 }}
                   className="hover:opacity-70 transition-opacity">
                   Apply
                 </button>
@@ -623,7 +625,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
 
                 {/* Pagination */}
                 {pendingPages > 1 && (
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "1.2rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "1.2rem", flexWrap: "wrap", gap: "0.8rem" }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", letterSpacing: ".04em" }}>
                       Page {pnPage} of {pendingPages} · {pendingCount.toLocaleString()} total
                     </span>

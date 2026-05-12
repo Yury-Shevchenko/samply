@@ -6,6 +6,7 @@ import type { IResult } from "@/lib/models/result";
 import type { IReceipt } from "@/lib/models/receipt";
 import { toggleParticipantAction, deleteParticipantAction, updateParticipantCodeAction } from "./actions";
 import { DeleteForm } from "./DeleteForm";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 import CodeEditor from "./CodeEditor";
 import { fetchPendingNotifications } from "@/lib/data/scheduled";
 
@@ -214,11 +215,12 @@ export default async function ParticipantDetailPage({ params }: Props) {
         </a>
 
         <form action={toggleAction}>
-          <button type="submit"
-            style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 1.8rem", border: isDeactivated ? "1px solid rgba(61,115,107,.3)" : "1px solid var(--ink-20)", borderRadius: "9999px", background: isDeactivated ? "rgba(61,115,107,.06)" : "transparent", color: isDeactivated ? "var(--sage)" : "var(--ink-60)", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", cursor: "pointer" }}
+          <SubmitButton
+            pendingLabel={isDeactivated ? "Enabling…" : "Disabling…"}
+            style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 1.8rem", border: isDeactivated ? "1px solid rgba(61,115,107,.3)" : "1px solid var(--ink-20)", borderRadius: "9999px", background: isDeactivated ? "rgba(61,115,107,.06)" : "transparent", color: isDeactivated ? "var(--sage)" : "var(--ink-60)", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em" }}
             className="hover:opacity-70 transition-opacity">
             {isDeactivated ? "⏵ Enable notifications" : "⏸ Disable notifications"}
-          </button>
+          </SubmitButton>
         </form>
       </div>
 

@@ -5,6 +5,7 @@ import Project from "@/lib/models/project";
 import mongoose from "mongoose";
 import { resetNotifyTokenAction } from "./actions";
 import { CopyButton } from "./CopyButton";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 const BASE_URL = process.env.EXPRESS_URL ?? "https://samply.uni-konstanz.de";
 const STREAM_ENDPOINT = `${BASE_URL}/api/notify`;
@@ -20,7 +21,7 @@ function isExpired(d?: string | null) {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1.2rem", padding: "2.4rem 2.6rem" }}>
+    <div className="api-section" style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1.2rem", padding: "2.4rem 2.6rem" }}>
       <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "1.8rem" }}>
         {title}
       </div>
@@ -86,7 +87,7 @@ sendNotification(url, data);`;
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
           stream api
         </div>
-        <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "2.6rem", letterSpacing: "-0.025em", margin: 0, lineHeight: 1.1 }}>
+        <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.8rem, 5vw, 2.6rem)", letterSpacing: "-0.025em", margin: 0, lineHeight: 1.1 }}>
           Stream API
         </h2>
         <p style={{ margin: "0.8rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, maxWidth: "54rem" }}>
@@ -126,7 +127,7 @@ sendNotification(url, data);`;
               : "Set an expiry date and generate your first token."}
           </p>
           <form action={resetAction} style={{ display: "flex", alignItems: "flex-end", gap: "1.2rem", flexWrap: "wrap" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <div className="mob-full" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <label style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".08em", textTransform: "uppercase", color: "var(--ink-60)" }}>
                 Token expires on
               </label>
@@ -135,16 +136,17 @@ sendNotification(url, data);`;
                 name="notifyExpires"
                 required
                 min={new Date().toISOString().split("T")[0]}
+                className="mob-full"
                 style={{ padding: "0.8rem 1.2rem", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", fontSize: "1.3rem", fontFamily: "var(--font-body)", background: "var(--paper)", color: "var(--ink)", outline: "none" }}
               />
             </div>
-            <button
-              type="submit"
-              style={{ padding: "0.85rem 2rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "9999px", fontSize: "1.2rem", fontWeight: 500, fontFamily: "var(--font-body)", border: "none", cursor: "pointer" }}
-              className="hover:opacity-80 transition-opacity"
+            <SubmitButton
+              pendingLabel={token ? "Regenerating…" : "Generating…"}
+              style={{ padding: "0.85rem 2rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "9999px", fontSize: "1.2rem", fontWeight: 500, fontFamily: "var(--font-body)", border: "none" }}
+              className="mob-full hover:opacity-80 transition-opacity"
             >
               {token ? "Regenerate" : "Generate token"}
-            </button>
+            </SubmitButton>
           </form>
         </Section>
       )}
@@ -187,7 +189,7 @@ sendNotification(url, data);`;
           <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
             <CopyButton text={codeSnippet} label="Copy code" />
           </div>
-          <pre style={{ margin: 0, padding: "1.6rem", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", fontFamily: "var(--font-mono)", fontSize: "1.15rem", lineHeight: 1.7, color: "var(--ink)" }}>
+          <pre className="api-pre" style={{ margin: 0, padding: "1.6rem", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", fontFamily: "var(--font-mono)", fontSize: "1.15rem", lineHeight: 1.7, color: "var(--ink)" }}>
             <code>{codeSnippet}</code>
           </pre>
         </div>

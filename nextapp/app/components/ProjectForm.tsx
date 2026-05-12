@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { ProjectFull } from "@/lib/data/projects";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 interface ProjectFormProps {
   project?: Partial<ProjectFull>;
@@ -35,6 +36,7 @@ const textareaStyle: React.CSSProperties = {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div
+      className="proj-section"
       style={{
         background: "var(--surface)",
         border: "1px solid var(--ink-10)",
@@ -108,6 +110,7 @@ function Toggle({
     <div>
       <label
         htmlFor={id}
+        className="toggle-label"
         style={{ display: "flex", alignItems: "center", gap: "1.2rem", cursor: "pointer" }}
       >
         <input
@@ -119,6 +122,7 @@ function Toggle({
           style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
         />
         <div
+          className="toggle-switch"
           style={{
             width: "3.8rem",
             height: "2.2rem",
@@ -146,12 +150,12 @@ function Toggle({
         <span style={{ fontSize: "1.35rem", fontWeight: 500, color: "var(--ink)" }}>{label}</span>
       </label>
       {hint && (
-        <p style={{ margin: "0.5rem 0 0 5rem", fontSize: "1.2rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
+        <p className="toggle-hint" style={{ margin: "0.5rem 0 0 5rem", fontSize: "1.2rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
           {hint}
         </p>
       )}
       {checked && children && (
-        <div style={{ marginTop: "1.4rem", marginLeft: "5rem" }}>{children}</div>
+        <div className="toggle-children" style={{ marginTop: "1.4rem", marginLeft: "5rem" }}>{children}</div>
       )}
     </div>
   );
@@ -187,10 +191,10 @@ function ImagePicker({
         style={{
           display: "flex",
           alignItems: "center",
-          gap: "1.6rem",
+          gap: "1.4rem",
           cursor: "pointer",
-          padding: "1.2rem 1.6rem",
-          border: `1.5px dashed ${displayUrl ? "var(--ink-20)" : "var(--ink-20)"}`,
+          padding: "1.2rem 1.4rem",
+          border: "1.5px dashed var(--ink-20)",
           borderRadius: "1rem",
           background: "var(--paper)",
           transition: "border-color 150ms",
@@ -199,6 +203,7 @@ function ImagePicker({
       >
         {/* Thumbnail or placeholder */}
         <div
+          className="image-picker-thumb"
           style={{
             width: "7.2rem",
             height: "5.4rem",
@@ -219,7 +224,7 @@ function ImagePicker({
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           ) : (
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ink-40)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink-40)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
@@ -228,16 +233,10 @@ function ImagePicker({
         </div>
 
         {/* Text + hidden input */}
-        <div style={{ flex: 1 }}>
-          {displayUrl ? (
-            <div style={{ fontSize: "1.3rem", color: "var(--ink)", fontWeight: 500 }}>
-              {previewUrl ? "Image selected" : "Current image"}
-            </div>
-          ) : (
-            <div style={{ fontSize: "1.3rem", color: "var(--ink)", fontWeight: 500 }}>
-              Choose image
-            </div>
-          )}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: "1.3rem", color: "var(--ink)", fontWeight: 500 }}>
+            {displayUrl ? (previewUrl ? "Image selected" : "Current image") : "Choose image"}
+          </div>
           <div style={{ fontSize: "1.1rem", color: "var(--ink-40)", marginTop: "0.2rem" }}>
             JPG, PNG or GIF
           </div>
@@ -252,8 +251,9 @@ function ImagePicker({
           style={{ position: "absolute", opacity: 0, width: 0, height: 0 }}
         />
 
-        {/* Right-side action chip */}
+        {/* Right-side action chip — hidden on narrow screens */}
         <div
+          className="image-picker-chip"
           style={{
             flexShrink: 0,
             padding: "0.5rem 1.2rem",
@@ -424,49 +424,55 @@ export default function ProjectForm({
 
       {/* 3 · Enrollment options */}
       <Section title="Enrollment options">
-        <Toggle
-          id="askParticipantCode"
-          name="askParticipantCode"
-          label="Ask participants to enter an individual participant code"
-          hint="Useful for linking app participants to external datasets or counterbalancing conditions."
-          checked={showCode}
-          onChange={setShowCode}
-        >
-          <Field label="Code prompt message" htmlFor="codeMessage">
-            <textarea
-              id="codeMessage"
-              name="codeMessage"
-              defaultValue={project.codeMessage ?? ""}
-              placeholder="Please enter the code provided by the researcher."
-              style={{ ...textareaStyle, minHeight: "6.4rem" }}
-            />
-          </Field>
-        </Toggle>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          <div style={{ paddingBottom: "1.6rem" }}>
+            <Toggle
+              id="askParticipantCode"
+              name="askParticipantCode"
+              label="Ask for individual participant code"
+              hint="Useful for linking app participants to external datasets or counterbalancing conditions."
+              checked={showCode}
+              onChange={setShowCode}
+            >
+              <Field label="Code prompt message" htmlFor="codeMessage">
+                <textarea
+                  id="codeMessage"
+                  name="codeMessage"
+                  defaultValue={project.codeMessage ?? ""}
+                  placeholder="Please enter the code provided by the researcher."
+                  style={{ ...textareaStyle, minHeight: "6.4rem" }}
+                />
+              </Field>
+            </Toggle>
+          </div>
 
-        <Toggle
-          id="askParticipantGroup"
-          name="askParticipantGroup"
-          label="Ask participants to select a group code"
-          hint="Useful for between-subjects designs where participants are assigned to different conditions."
-          checked={showGroup}
-          onChange={setShowGroup}
-        >
-          <Field label="Group prompt message" htmlFor="groupMessage">
-            <textarea
-              id="groupMessage"
-              name="groupMessage"
-              defaultValue={project.groupMessage ?? ""}
-              placeholder="Please enter the group code assigned to you by the researcher."
-              style={{ ...textareaStyle, minHeight: "6.4rem" }}
-            />
-          </Field>
-        </Toggle>
+          <div style={{ height: "1px", background: "var(--ink-10)", marginBottom: "1.6rem" }} />
+
+          <Toggle
+            id="askParticipantGroup"
+            name="askParticipantGroup"
+            label="Ask participants to select a group"
+            hint="Useful for between-subjects designs where participants are assigned to different conditions."
+            checked={showGroup}
+            onChange={setShowGroup}
+          >
+            <Field label="Group prompt message" htmlFor="groupMessage">
+              <textarea
+                id="groupMessage"
+                name="groupMessage"
+                defaultValue={project.groupMessage ?? ""}
+                placeholder="Please enter the group code assigned to you by the researcher."
+                style={{ ...textareaStyle, minHeight: "6.4rem" }}
+              />
+            </Field>
+          </Toggle>
+        </div>
       </Section>
 
       {/* Submit */}
       <div className="flex items-center gap-[1.6rem]" style={{ paddingTop: "0.4rem" }}>
-        <button
-          type="submit"
+        <SubmitButton
+          pendingLabel="Saving…"
           style={{
             padding: "1.2rem 2.8rem",
             background: "var(--coral)",
@@ -475,12 +481,11 @@ export default function ProjectForm({
             borderRadius: "9999px",
             fontSize: "1.4rem",
             fontWeight: 500,
-            cursor: "pointer",
             fontFamily: "var(--font-body)",
           }}
         >
           {submitLabel}
-        </button>
+        </SubmitButton>
         <a
           href={cancelHref}
           style={{ fontSize: "1.35rem", color: "var(--ink-60)", textDecoration: "none" }}

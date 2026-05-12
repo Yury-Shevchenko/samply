@@ -3,6 +3,7 @@ import { auth, signOut } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import Project from "@/lib/models/project";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Delete Account — Samply" };
 
@@ -171,8 +172,8 @@ export default async function DeleteAccountPage({
                 </label>
 
                 <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", marginTop: "0.4rem" }}>
-                  <button
-                    type="submit"
+                  <SubmitButton
+                    pendingLabel="Deleting…"
                     style={{
                       padding: "1rem 2.4rem",
                       background: "var(--coral)",
@@ -181,12 +182,11 @@ export default async function DeleteAccountPage({
                       borderRadius: "9999px",
                       fontSize: "1.35rem",
                       fontWeight: 500,
-                      cursor: "pointer",
                       fontFamily: "var(--font-body)",
                     }}
                   >
                     Delete my account
-                  </button>
+                  </SubmitButton>
                   <a
                     href="/account"
                     style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}

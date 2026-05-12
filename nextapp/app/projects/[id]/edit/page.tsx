@@ -26,10 +26,10 @@ export default async function EditProjectPage({
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
-      <div style={{ maxWidth: "68rem", margin: "0 auto", padding: "4.8rem var(--page-px) 8rem" }}>
+      <div style={{ maxWidth: "68rem", margin: "0 auto", padding: "var(--page-pt) var(--page-px) 8rem" }}>
 
         {/* Breadcrumb */}
-        <div style={{ marginBottom: "2.8rem" }}>
+        <div style={{ marginBottom: "2rem" }}>
           <a
             href={`/dashboard/${id}`}
             style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}
@@ -40,14 +40,14 @@ export default async function EditProjectPage({
         </div>
 
         {/* Header */}
-        <div style={{ marginBottom: "3.2rem" }}>
+        <div style={{ marginBottom: "2.4rem" }}>
           <h1
             className="font-[family-name:var(--font-display)] font-bold m-0"
-            style={{ fontSize: "3.2rem", letterSpacing: "-0.025em" }}
+            style={{ fontSize: "clamp(2.2rem, 5vw, 3.2rem)", letterSpacing: "-0.025em" }}
           >
             Edit study
           </h1>
-          <p style={{ margin: "0.6rem 0 0", fontSize: "1.4rem", color: "var(--ink-60)" }}>
+          <p style={{ margin: "0.5rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)" }}>
             {project.name}
           </p>
         </div>

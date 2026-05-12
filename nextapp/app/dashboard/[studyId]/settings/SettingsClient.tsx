@@ -2,6 +2,7 @@
 
 import { useState, useRef, lazy, Suspense } from "react";
 import type { ProjectFull, GeoLocation } from "@/lib/data/projects";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 const MapPicker = lazy(() => import("@/app/components/MapPicker"));
 
@@ -889,12 +890,12 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
 
       {/* Submit */}
       <div style={{ paddingTop: "0.4rem" }}>
-        <button
-          type="submit"
-          style={{ padding: "1.2rem 2.8rem", background: "var(--coral)", color: "#fff", border: "none", borderRadius: "9999px", fontSize: "1.4rem", fontWeight: 500, cursor: "pointer", fontFamily: "var(--font-body)" }}
+        <SubmitButton
+          pendingLabel="Saving…"
+          style={{ padding: "1.2rem 2.8rem", background: "var(--coral)", color: "#fff", border: "none", borderRadius: "9999px", fontSize: "1.4rem", fontWeight: 500, fontFamily: "var(--font-body)" }}
         >
           Save settings
-        </button>
+        </SubmitButton>
       </div>
     </form>
   );

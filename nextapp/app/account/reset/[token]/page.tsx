@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Set new password — Samply" };
 
@@ -173,8 +174,8 @@ export default async function ResetPage({
                   />
                 </label>
 
-                <button
-                  type="submit"
+                <SubmitButton
+                  pendingLabel="Resetting…"
                   style={{
                     marginTop: "0.4rem",
                     padding: "1rem 2.4rem",
@@ -184,13 +185,12 @@ export default async function ResetPage({
                     borderRadius: "9999px",
                     fontSize: "1.35rem",
                     fontWeight: 500,
-                    cursor: "pointer",
                     fontFamily: "var(--font-body)",
                     alignSelf: "flex-start",
                   }}
                 >
                   Reset password
-                </button>
+                </SubmitButton>
               </form>
             </>
           )}

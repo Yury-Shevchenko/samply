@@ -4,6 +4,7 @@ import { fetchProjectById } from "@/lib/data/projects";
 import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import { createGroupAction, deleteGroupAction } from "./actions";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Groups — Samply" };
 
@@ -152,13 +153,13 @@ export default async function GroupsPage({ params }: Props) {
                         <form action={deleteGroupAction}>
                           <input type="hidden" name="projectId" value={studyId} />
                           <input type="hidden" name="groupId" value={group.id} />
-                          <button
-                            type="submit"
-                            style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".06em", color: "var(--coral)", background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.2)", borderRadius: "9999px", padding: "0.5rem 1.2rem", cursor: "pointer" }}
+                          <SubmitButton
+                            pendingLabel="Deleting…"
+                            style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".06em", color: "var(--coral)", background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.2)", borderRadius: "9999px", padding: "0.5rem 1.2rem" }}
                             className="hover:opacity-70 transition-opacity"
                           >
                             Delete
-                          </button>
+                          </SubmitButton>
                         </form>
                       </td>
                     </tr>
@@ -236,13 +237,13 @@ export default async function GroupsPage({ params }: Props) {
               </div>
 
               <div style={{ padding: "1.6rem 2.4rem" }}>
-                <button
-                  type="submit"
-                  style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", border: "none", cursor: "pointer" }}
+                <SubmitButton
+                  pendingLabel="Creating…"
+                  style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", border: "none" }}
                   className="hover:opacity-90 transition-opacity"
                 >
                   Create group →
-                </button>
+                </SubmitButton>
               </div>
             </form>
           </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import SubmitButton from "@/app/components/ui/SubmitButton";
+
 type ServerAction = (formData?: FormData) => void | Promise<void>;
 
 interface ActionButtonProps {
@@ -13,13 +15,12 @@ function ActionButton({ action, label, confirmMessage, color = "var(--ink-60)" }
   const isDestructive = color === "var(--coral)";
   return (
     <form action={action} style={{ display: "inline" }}>
-      <button
-        type="submit"
+      <SubmitButton
+        pendingLabel="…"
         style={{
           fontFamily: "var(--font-mono)",
           fontSize: "0.9rem",
           letterSpacing: ".04em",
-          cursor: "pointer",
           padding: "0.25rem 0.75rem",
           borderRadius: "9999px",
           color,
@@ -32,7 +33,7 @@ function ActionButton({ action, label, confirmMessage, color = "var(--ink-60)" }
         }}
       >
         {label}
-      </button>
+      </SubmitButton>
     </form>
   );
 }

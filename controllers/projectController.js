@@ -711,7 +711,7 @@ exports.getPublicStudy = async (req, res) => {
     );
   } else {
     study = await Project.findOne(
-      { slug: id },
+      { $or: [{ slug: id }, { samplycode: { $regex: new RegExp(`^${id}$`, "i") } }] },
       {
         name: 1,
         description: 1,

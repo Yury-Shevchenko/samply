@@ -1,5 +1,7 @@
 "use client";
 
+import SubmitButton from "@/app/components/ui/SubmitButton";
+
 type ServerAction = (formData?: FormData) => void | Promise<void>;
 
 export function DeleteScheduleButton({
@@ -15,15 +17,15 @@ export function DeleteScheduleButton({
 }) {
   return (
     <form action={action} style={{ display: "inline" }}>
-      <button
-        type="submit"
+      <SubmitButton
+        pendingLabel="Deleting…"
         style={style}
         onClick={(e) => {
           if (!window.confirm(confirmMessage)) e.preventDefault();
         }}
       >
         {label}
-      </button>
+      </SubmitButton>
     </form>
   );
 }

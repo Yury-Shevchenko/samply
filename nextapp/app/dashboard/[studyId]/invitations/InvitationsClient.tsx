@@ -120,11 +120,15 @@ export default function InvitationsClient({ studyId, projectName, isPublic, isAc
 
         {active === "app" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+            <Note>
+              Participants must have the Samply app installed and be <strong style={{ color: "var(--ink)" }}>signed in or registered</strong> before opening these links — the link will open the app and enroll them directly into the study.
+            </Note>
+            <div style={{ height: "0.1rem", background: "var(--ink-10)" }} />
             <LinkRow label="Open study directly in the app" value={deepLink} />
             <div style={{ height: "0.1rem", background: "var(--ink-10)" }} />
             <LinkRow label="Custom link with participant code" value={customLink} />
             <Note>
-              Replace <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.5rem", borderRadius: "0.3rem" }}>123</code> with any value — it will be recorded as the participant&apos;s code variable. Works whether or not the study is publicly listed.
+              Replace <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.5rem", borderRadius: "0.3rem" }}>123</code>{" "}with any value — it will be recorded as the participant&apos;s code variable. Works whether or not the study is publicly listed.
             </Note>
           </div>
         )}
@@ -132,7 +136,7 @@ export default function InvitationsClient({ studyId, projectName, isPublic, isAc
         {active === "search" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.65 }}>
-              If your study is public, participants can search for it by name in the <strong style={{ color: "var(--ink)" }}>Studies</strong> tab of the Samply app.
+              If your study is public, participants can search for it by name under <strong style={{ color: "var(--ink)" }}>More → Public studies</strong> in the Samply app.
               Share the exact study name:{" "}
               <strong style={{ color: "var(--ink)" }}>{projectName}</strong>
             </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 interface Props {
   current: string | null | undefined;
@@ -41,13 +42,13 @@ export default function CodeEditor({ current, action }: Props) {
             placeholder="e.g. P001"
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink)", background: "var(--paper)", border: "1px solid var(--coral)", borderRadius: "0.5rem", padding: "0.4rem 0.8rem", outline: "none", width: "14rem", boxShadow: "0 0 0 3px rgba(214,90,48,.12)" }}
           />
-          <button
-            type="submit"
-            style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".06em", color: "#fff", background: "var(--coral)", border: "none", borderRadius: "9999px", padding: "0.4rem 1.2rem", cursor: "pointer" }}
+          <SubmitButton
+            pendingLabel="Saving…"
+            style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".06em", color: "#fff", background: "var(--coral)", border: "none", borderRadius: "9999px", padding: "0.4rem 1.2rem" }}
             className="hover:opacity-90 transition-opacity"
           >
             Save
-          </button>
+          </SubmitButton>
           <button
             type="button"
             onClick={cancel}

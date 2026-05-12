@@ -55,39 +55,18 @@ export default async function StudyLayout({ children, params }: Props) {
             {project.currentlyActive ? "● collecting" : "draft"}
           </div>
 
-          <div className="flex items-start justify-between gap-4 mob-wrap mob-row-gap">
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <h1
-                className="font-[family-name:var(--font-display)] font-bold m-0"
-                style={{ fontSize: "3.4rem", letterSpacing: "-0.025em", lineHeight: 1.05 }}
-              >
-                {project.name}
-              </h1>
-              {project.description && (
-                <p style={{ margin: "0.6rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.5 }}>
-                  {project.description}
-                </p>
-              )}
-            </div>
-
-            {/* Edit action */}
-            <a
-              href={`/projects/${studyId}/edit`}
-              style={{
-                flexShrink: 0,
-                fontFamily: "var(--font-mono)",
-                fontSize: "1.1rem",
-                letterSpacing: ".06em",
-                color: "var(--ink-60)",
-                textDecoration: "none",
-                padding: "0.7rem 1.4rem",
-                border: "1px solid var(--ink-20)",
-                borderRadius: "9999px",
-              }}
-              className="hover:opacity-70 transition-opacity"
+          <div style={{ minWidth: 0 }}>
+            <h1
+              className="font-[family-name:var(--font-display)] font-bold m-0"
+              style={{ fontSize: "clamp(2.2rem, 5vw, 3.4rem)", letterSpacing: "-0.025em", lineHeight: 1.05 }}
             >
-              Edit →
-            </a>
+              {project.name}
+            </h1>
+            {project.description && (
+              <p style={{ margin: "0.6rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.5 }}>
+                {project.description}
+              </p>
+            )}
           </div>
         </div>
 

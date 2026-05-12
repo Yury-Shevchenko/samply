@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import { toggleApprovalRequestAction } from "../actions";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export async function generateMetadata({ params }: { params: Promise<{ studyId: string }> }) {
   const { studyId } = await params;
@@ -57,8 +58,8 @@ export default async function ApprovalPage({
             Note that this action cannot be undone — if you want to make your study public again later, you would need to reapply for approval.
           </p>
           <form action={toggleAction}>
-            <button
-              type="submit"
+            <SubmitButton
+              pendingLabel="Removing…"
               style={{
                 padding: "0.9rem 2.2rem",
                 background: "rgba(214,90,48,.08)",
@@ -67,12 +68,11 @@ export default async function ApprovalPage({
                 color: "var(--coral)",
                 fontSize: "1.3rem",
                 fontWeight: 500,
-                cursor: "pointer",
                 fontFamily: "var(--font-body)",
               }}
             >
               Remove from public list
-            </button>
+            </SubmitButton>
           </form>
         </div>
       </div>
@@ -98,8 +98,8 @@ export default async function ApprovalPage({
             </a>.
           </p>
           <form action={toggleAction} style={{ marginTop: "2rem" }}>
-            <button
-              type="submit"
+            <SubmitButton
+              pendingLabel="Withdrawing…"
               style={{
                 padding: "0.7rem 1.8rem",
                 background: "none",
@@ -108,12 +108,11 @@ export default async function ApprovalPage({
                 color: "var(--ink-60)",
                 fontSize: "1.25rem",
                 fontWeight: 500,
-                cursor: "pointer",
                 fontFamily: "var(--font-body)",
               }}
             >
               Withdraw request
-            </button>
+            </SubmitButton>
           </form>
         </div>
       </div>
@@ -154,8 +153,8 @@ export default async function ApprovalPage({
         </div>
 
         <form action={toggleAction}>
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Submitting…"
             style={{
               padding: "0.9rem 2.4rem",
               background: "var(--ink)",
@@ -164,12 +163,11 @@ export default async function ApprovalPage({
               color: "var(--paper)",
               fontSize: "1.3rem",
               fontWeight: 500,
-              cursor: "pointer",
               fontFamily: "var(--font-body)",
             }}
           >
             Submit approval request →
-          </button>
+          </SubmitButton>
         </form>
       </div>
     </div>

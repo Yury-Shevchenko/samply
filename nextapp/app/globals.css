@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* ── Postcards design tokens ─────────────────────────────────────────────── */
 @theme {
   --color-paper: #faf1de;
@@ -55,6 +57,70 @@
     --page-px: 1.6rem;
     --page-pt: 2.8rem;
     --nav-px: 1.6rem;
+  }
+}
+
+/* ── ProjectForm — responsive card padding & image picker ────────────────── */
+@media (max-width: 540px) {
+  .proj-section {
+    padding: 1.6rem 1.2rem !important;
+    border-radius: 1rem !important;
+  }
+
+  /* Hide the "Browse / Replace" chip — the whole label area is the tap target */
+  .image-picker-chip {
+    display: none !important;
+  }
+
+  /* Slightly smaller thumbnail so text has room */
+  .image-picker-thumb {
+    width: 5.6rem !important;
+    height: 4.2rem !important;
+  }
+
+  /* Toggle hint & expanded content: remove left indent on mobile */
+  .toggle-hint {
+    margin-left: 0 !important;
+  }
+
+  .toggle-children {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+  }
+
+  /* Align toggle switch to top of multi-line label text */
+  .toggle-label {
+    align-items: flex-start !important;
+  }
+
+  /* Nudge toggle switch down to align with first text baseline */
+  .toggle-switch {
+    margin-top: 0.15rem;
+  }
+}
+
+/* ── Stream API page — responsive section padding & code block ───────────── */
+@media (max-width: 540px) {
+  .api-section {
+    padding: 1.4rem 1.4rem !important;
+    border-radius: 1rem !important;
+  }
+  .api-pre {
+    font-size: 1rem !important;
+    padding: 1.2rem !important;
+  }
+}
+
+/* ── Scheduled queue — MetaRow stacks on very narrow screens ─────────────── */
+@media (max-width: 440px) {
+  .sched-meta-row {
+    flex-direction: column;
+    gap: 0.25rem !important;
+  }
+  .sched-meta-row span:first-child {
+    width: auto !important;
+    min-width: unset !important;
+    max-width: unset !important;
   }
 }
 

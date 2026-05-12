@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { signIn, auth } from "@/lib/auth";
 import { AuthError } from "next-auth";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Log in — Samply" };
 
@@ -141,8 +142,8 @@ export default async function LoginPage({
             />
           </label>
 
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel="Signing in…"
             className="font-[family-name:var(--font-body)] font-medium transition-opacity hover:opacity-90"
             style={{
               marginTop: "0.8rem",
@@ -153,11 +154,10 @@ export default async function LoginPage({
               border: "none",
               borderRadius: "9999px",
               fontSize: "1.4rem",
-              cursor: "pointer",
             }}
           >
             Sign in →
-          </button>
+          </SubmitButton>
         </form>
 
         {/* Footer */}

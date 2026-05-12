@@ -1,20 +1,19 @@
 import { redirect } from "next/navigation";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Reset password — Samply" };
 
 async function forgotAction(formData: FormData) {
   "use server";
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
-  const expressPublicHost =
-    process.env.EXPRESS_PUBLIC_HOST ??
-    (() => { try { return new URL(process.env.NEXTAUTH_URL ?? "").hostname; } catch { return "localhost"; } })();
+  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
   await fetch(`${expressUrl}/account/forgot`, {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Accept-Language": "en",
-      "Host": expressPublicHost,
+      "X-App-Url": appBaseUrl,
     },
     body: new URLSearchParams({ email: formData.get("email") as string }).toString(),
     redirect: "manual",
@@ -129,8 +128,8 @@ export default async function ForgotPage({
                 />
               </label>
 
-              <button
-                type="submit"
+              <SubmitButton
+                pendingLabel="Sending…"
                 className="font-[family-name:var(--font-body)] font-medium transition-opacity hover:opacity-90"
                 style={{
                   marginTop: "0.8rem",
@@ -141,11 +140,10 @@ export default async function ForgotPage({
                   border: "none",
                   borderRadius: "9999px",
                   fontSize: "1.4rem",
-                  cursor: "pointer",
                 }}
               >
                 Send reset link →
-              </button>
+              </SubmitButton>
             </form>
 
             <p style={{ margin: "2.2rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", textAlign: "center" }}>

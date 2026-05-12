@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Account — Samply" };
 
@@ -197,21 +198,20 @@ export default async function AccountPage({
                 </div>
                 <form action={resendConfirmationAction}>
                   <input type="hidden" name="email" value={user.email} />
-                  <button
-                    type="submit"
+                  <SubmitButton
+                    pendingLabel="Sending…"
                     style={{
                       fontSize: "1.25rem",
                       padding: "0.7rem 1.4rem",
                       background: "none",
                       border: "1px solid var(--ink-20)",
                       borderRadius: "9999px",
-                      cursor: "pointer",
                       color: "var(--ink-60)",
                       fontFamily: "var(--font-body)",
                     }}
                   >
                     Resend confirmation email
-                  </button>
+                  </SubmitButton>
                 </form>
               </div>
             )}
@@ -251,8 +251,8 @@ export default async function AccountPage({
             </div>
 
             <div style={{ padding: "0 3.2rem 2.4rem" }}>
-              <button
-                type="submit"
+              <SubmitButton
+                pendingLabel="Saving…"
                 style={{
                   padding: "1rem 2.4rem",
                   background: "var(--coral)",
@@ -261,12 +261,11 @@ export default async function AccountPage({
                   borderRadius: "9999px",
                   fontSize: "1.35rem",
                   fontWeight: 500,
-                  cursor: "pointer",
                   fontFamily: "var(--font-body)",
                 }}
               >
                 Save changes
-              </button>
+              </SubmitButton>
             </div>
           </form>
 

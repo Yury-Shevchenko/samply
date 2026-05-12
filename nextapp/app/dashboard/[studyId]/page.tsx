@@ -5,6 +5,7 @@ import { fetchParticipants } from "@/lib/data/participants";
 import { fetchScheduledNotifications, type NotificationConfig } from "@/lib/data/scheduled";
 import { fetchComplianceForProject } from "@/lib/data/compliance";
 import Hand from "@/app/components/ui/Hand";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 import { toggleStudyActiveAction } from "./actions";
 import connectDB from "@/lib/db";
 import PendingNotification from "@/lib/models/pendingNotification";
@@ -159,8 +160,8 @@ export default async function StudyOverviewPage({ params }: Props) {
       {/* Activate toggle + approval */}
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
         <form action={toggleActive}>
-          <button
-            type="submit"
+          <SubmitButton
+            pendingLabel={project.currentlyActive ? "Pausing…" : "Activating…"}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -169,7 +170,6 @@ export default async function StudyOverviewPage({ params }: Props) {
               borderRadius: "9999px",
               fontSize: "1.3rem",
               fontWeight: 600,
-              cursor: "pointer",
               fontFamily: "var(--font-body)",
               border: "none",
               background: project.currentlyActive ? "rgba(61,115,107,.12)" : "var(--ink)",
@@ -182,7 +182,7 @@ export default async function StudyOverviewPage({ params }: Props) {
             ) : (
               <>Activate study</>
             )}
-          </button>
+          </SubmitButton>
         </form>
 
         {!project.public && (
@@ -399,7 +399,7 @@ export default async function StudyOverviewPage({ params }: Props) {
         <Perf />
         <div style={{ paddingTop: "1.6rem", display: "flex", flexWrap: "wrap", gap: "0.8rem" }}>
           {[
-            { label: "Edit",             href: `/projects/${studyId}/edit` },
+            { label: "Edit study",       href: `/projects/${studyId}/edit` },
             { label: "Invitation links", href: `/dashboard/${studyId}/invitations` },
             { label: "Export CSV",       href: `/dashboard/${studyId}/data/export` },
             { label: "Delete study",     href: `/projects/${studyId}/delete`, coral: true },

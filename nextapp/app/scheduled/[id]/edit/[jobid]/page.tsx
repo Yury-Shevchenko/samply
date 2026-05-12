@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchAgendaJobById } from "@/lib/data/scheduled";
 import { updateAgendaJobAction } from "@/app/scheduled/actions";
+import SubmitButton from "@/app/components/ui/SubmitButton";
 
 export const metadata = { title: "Edit Job — Samply" };
 
@@ -81,9 +82,9 @@ export default async function EditJobPage({
             />
           </div>
 
-          <button type="submit" className="button">
+          <SubmitButton pendingLabel="Saving…" className="button">
             Save
-          </button>
+          </SubmitButton>
           {" "}
           <a href={backHref}>Cancel</a>
         </form>
