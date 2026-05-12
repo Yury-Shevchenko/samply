@@ -53,9 +53,12 @@ passport.serializeUser((user, done) => {
 
 //cookie -> id
 passport.deserializeUser((id, done) => {
-  User.findById(id).then( (user) => {
-    done(null, user);
-  });
+  User.findById(id)
+    .populate({ path: "projects", select: "creator name" })
+    .populate({ path: "invitedprojects", select: "members creator name" })
+    .then((user) => {
+      done(null, user);
+    });
 });
 
 //local strategy with email

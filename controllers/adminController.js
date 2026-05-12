@@ -46,7 +46,8 @@ exports.getAllUsers = async (req, res) => {
   const limit = 500;
   const skip = page * limit - limit;
 
-  const usersPromise = User.find().skip(skip).limit(limit);
+  const usersPromise = User.find().skip(skip).limit(limit)
+    .populate({ path: "projects", select: "_id" });
   const countPromise = User.where().countDocuments();
   const [users, count] = await Promise.all([usersPromise, countPromise]);
 
