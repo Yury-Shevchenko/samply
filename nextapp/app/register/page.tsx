@@ -6,11 +6,7 @@ export const metadata = { title: "Create account — Samply" };
 async function registerAction(formData: FormData) {
   "use server";
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
-  // EXPRESS_PUBLIC_HOST is the public hostname Express uses for email links (no port).
-  // Falls back to extracting the hostname from NEXTAUTH_URL.
-  const expressPublicHost =
-    process.env.EXPRESS_PUBLIC_HOST ??
-    (() => { try { return new URL(process.env.NEXTAUTH_URL ?? "").hostname; } catch { return "localhost"; } })();
+  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -26,10 +22,8 @@ async function registerAction(formData: FormData) {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      // Ensures Express's language middleware sets locale_language (defaults to "english").
       "Accept-Language": "en",
-      // Ensures the confirmation email link uses the real public domain, not localhost.
-      "Host": expressPublicHost,
+      "X-App-Url": appBaseUrl,
     },
     body: body.toString(),
     redirect: "manual",

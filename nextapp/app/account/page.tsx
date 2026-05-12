@@ -27,9 +27,7 @@ async function updateAccountAction(formData: FormData) {
 async function resendConfirmationAction(formData: FormData) {
   "use server";
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
-  const expressPublicHost =
-    process.env.EXPRESS_PUBLIC_HOST ??
-    (() => { try { return new URL(process.env.NEXTAUTH_URL ?? "").hostname; } catch { return "localhost"; } })();
+  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
   const email = formData.get("email") as string;
 
   await fetch(`${expressUrl}/account/confirm`, {
@@ -37,7 +35,7 @@ async function resendConfirmationAction(formData: FormData) {
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "Accept-Language": "en",
-      "Host": expressPublicHost,
+      "X-App-Url": appBaseUrl,
     },
     body: new URLSearchParams({ email }).toString(),
     redirect: "manual",

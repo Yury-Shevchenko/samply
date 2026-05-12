@@ -86,7 +86,7 @@ exports.sendEmailConfirmationLink = async (req, res) => {
     await mail.send({
       participant: user,
       subject,
-      resetURL: `${process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${user.confirmEmailToken}`,
+      resetURL: `${req.headers['x-app-url'] || process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${user.confirmEmailToken}`,
       filename: "email-confirmation-" + user.language,
     });
   } catch (err) {
