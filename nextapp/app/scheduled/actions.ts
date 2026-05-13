@@ -36,6 +36,11 @@ export async function deleteAllNotificationsAction(projectId: string) {
   redirect(`/scheduled?project=${projectId}`);
 }
 
+function safeReturnUrl(url: string | undefined, fallback: string): string {
+  if (url && url.startsWith("/") && !url.startsWith("//")) return url;
+  return fallback;
+}
+
 export async function deleteNotificationAction(projectId: string, notificationId: string, returnTo?: string) {
   const session = await requireResearcher();
   await connectDB();
@@ -54,17 +59,33 @@ export async function deleteNotificationAction(projectId: string, notificationId
     PendingNotification.deleteMany({ projectId: oid, notificationConfigId: notificationId }),
   ]);
 
-  redirect(returnTo ?? `/scheduled?project=${projectId}`);
+  redirect(safeReturnUrl(returnTo, `/scheduled?project=${projectId}`));
 }
 
 export async function updateAgendaJobAction(jobId: string, formData: FormData) {
-  await requireResearcher();
+  const session = await requireResearcher();
   await connectDB();
 
   const nextRunAt = formData.get("nextRunAt") as string;
   if (!nextRunAt) redirect("/scheduled");
 
-  await AgendaJob.findByIdAndUpdate(jobId, { $set: { nextRunAt: new Date(nextRunAt) } });
+  const nextDate = new Date(nextRunAt);
+  if (isNaN(nextDate.getTime()) || nextDate.getTime() < Date.now()) redirect("/scheduled");
+
+  // IDOR guard: verify this job belongs to a project owned or shared with the current user
+  const job = await AgendaJob.findById(jobId, { "data.projectid": 1 }).lean() as { data?: { projectid?: string } } | null;
+  if (!job?.data?.projectid) redirect("/scheduled");
+
+  const project = await Project.findById(job.data.projectid, { creator: 1, members: 1 }).lean() as { creator: unknown; members: unknown[] } | null;
+  if (!project) redirect("/scheduled");
+
+  const creatorStr = String(project.creator);
+  const memberStrs = (project.members ?? []).map(String);
+  if (creatorStr !== session.user.id && !memberStrs.includes(session.user.id)) {
+    redirect("/scheduled");
+  }
+
+  await AgendaJob.findByIdAndUpdate(jobId, { $set: { nextRunAt: nextDate } });
 
   redirect("/scheduled");
 }
@@ -143,5 +164,5 @@ export async function bulkDeletePendingNotificationsAction(
       projectId: oid,
     });
   }
-  redirect(returnPath);
+  redirect(safeReturnUrl(returnPath, `/scheduled/${studyId}`));
 }

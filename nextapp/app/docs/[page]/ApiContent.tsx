@@ -79,6 +79,21 @@ export default function ApiContent() {
         </tbody>
       </table>
 
+      {/* ── Rate limits ───────────────────────────────────────────────────── */}
+      <h2>Rate limits</h2>
+      <p>
+        All API paths are subject to rate limiting. Requests that exceed a limit receive a{' '}
+        <Code>429 Too Many Requests</Code> response. The three tiers are:
+      </p>
+      <table>
+        <thead><tr><th>Limit</th><th>Paths</th></tr></thead>
+        <tbody>
+          <tr><td>20 requests / 15 min</td><td><Code>/webapi/v1/auth</Code>, login, account-creation, and password-reset endpoints</td></tr>
+          <tr><td>30 requests / 1 min</td><td><Code>/api/notify</Code></td></tr>
+          <tr><td>100 requests / 15 min</td><td>All other <Code>/api/*</Code> and <Code>/webapi/*</Code> paths</td></tr>
+        </tbody>
+      </table>
+
       {/* ── Active study concept ──────────────────────────────────────────── */}
       <h2>The active study</h2>
       <p>
@@ -99,6 +114,13 @@ export default function ApiContent() {
         <Code>POST /webapi/v1/auth/select/study</Code> expects <Code>{'{ "id": "<study_id>" }'}</Code>{' '}
         in the request body. The selection is stored on your researcher account and persists
         across requests until changed.
+      </p>
+
+      <p><strong>PATCH body</strong> (update study)</p>
+      <p>Only the following fields are accepted; all others are ignored:</p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        name, description, currentlyActive, public, welcomeMessage, codeMessage,
+        groupMessage, messageAfterJoin, completionMessage, geofencingInstruction, settings
       </p>
 
       {/* ── Participants ──────────────────────────────────────────────────── */}
@@ -124,7 +146,7 @@ export default function ApiContent() {
           <tr><td><Code>name</Code></td><td>yes</td><td>Display name — not shown to other participants.</td></tr>
           <tr><td><Code>email</Code></td><td>yes</td><td>Email used to create the Samply account.</td></tr>
           <tr><td><Code>code</Code></td><td>no</td><td>Participant code stored as <Code>username</Code> and available via <Code>%PARTICIPANT_CODE%</Code>.</td></tr>
-          <tr><td><Code>expiresIn</Code></td><td>no</td><td>How long the invitation JWT remains valid (e.g. <Code>"7d"</Code>).</td></tr>
+          <tr><td><Code>expiresIn</Code></td><td>no</td><td>How long the invitation JWT remains valid (e.g. <Code>"7d"</Code>). Maximum 30 days — larger values are silently capped.</td></tr>
           <tr><td><Code>information</Code></td><td>no</td><td>Freeform JSON object for arbitrary participant metadata.</td></tr>
         </tbody>
       </table>
@@ -137,6 +159,17 @@ export default function ApiContent() {
           <tr><td><Code>token</Code></td><td>JWT invitation token. Send this to the participant; the app uses it to activate their account.</td></tr>
         </tbody>
       </table>
+
+      <p><strong>PATCH body</strong> (update participant)</p>
+      <table>
+        <thead><tr><th>Field</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><Code>username</Code></td><td>Participant code / display name.</td></tr>
+          <tr><td><Code>deactivated</Code></td><td>Boolean — set to <Code>true</Code> to stop notifications for this participant.</td></tr>
+          <tr><td><Code>group</Code></td><td>Group assignment string.</td></tr>
+        </tbody>
+      </table>
+      <p>All other fields sent in the body are ignored.</p>
 
       {/* ── Notifications ─────────────────────────────────────────────────── */}
       <h2>Schedules (notifications)</h2>
@@ -160,6 +193,15 @@ export default function ApiContent() {
         <Code>repeat</Code>) and <Code>target</Code> (<Code>fixed-times</Code>,{' '}
         <Code>fixed-intervals</Code>, or <Code>user-specific</Code>), which maps to the
         same internal handlers used by the dashboard form.
+      </p>
+
+      <p><strong>PATCH body</strong> (update schedule)</p>
+      <p>
+        Only the following fields are accepted; all others are ignored:
+      </p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        title, message, url, schedule, target, randomize, startDate, endDate, startTime,
+        endTime, interval, intervalMax, timezone, expireIn, reminders, userid, groupid
       </p>
 
       {/* ── Jobs ──────────────────────────────────────────────────────────── */}
@@ -250,7 +292,8 @@ export default function ApiContent() {
           <tr><td><Code>200</Code></td><td>Success.</td></tr>
           <tr><td><Code>400</Code></td><td>Bad request — missing or invalid fields, or no active study set on the account.</td></tr>
           <tr><td><Code>401</Code></td><td>Missing or expired <Code>x-auth-token</Code> header.</td></tr>
-          <tr><td><Code>500</Code></td><td>Server error — check the response body for details.</td></tr>
+          <tr><td><Code>429</Code></td><td>Rate limit exceeded. Back off and retry after a short delay.</td></tr>
+          <tr><td><Code>500</Code></td><td>Internal server error. The response body contains the fixed string <Code>"Internal server error"</Code>; detailed diagnostics are logged server-side only.</td></tr>
         </tbody>
       </table>
     </>

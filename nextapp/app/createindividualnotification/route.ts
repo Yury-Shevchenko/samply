@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 import momentTz from "moment-timezone";
 import { scheduleBatch, expandCronBetween, BatchLimitError, type PendingNotificationDoc } from "@/lib/scheduling";
+import { sanitizeSurveyUrl } from "@/lib/urlValidation";
 
 const MAX_PROJECT_PENDING = 50_000;
 
@@ -83,8 +84,9 @@ export async function POST(req: NextRequest) {
   let body: IndividualBody;
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
 
-  const { projectId, title, message, url, timezone, useParticipantTimezone, expireIn, reminders,
+  const { projectId, title, message, url: rawUrl, timezone, useParticipantTimezone, expireIn, reminders,
     scheduleInFuture, participantId, groups, interval, int_start, int_end } = body;
+  const url = sanitizeSurveyUrl(rawUrl);
 
   if (!projectId || !title || !message || !timezone || !interval?.length) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 });

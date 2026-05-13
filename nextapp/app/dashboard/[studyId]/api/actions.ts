@@ -19,15 +19,20 @@ async function requireOwner(studyId: string) {
 
 export async function resetNotifyTokenAction(studyId: string, formData: FormData) {
   await requireOwner(studyId);
-  const notifyExpires = String(formData.get("notifyExpires") ?? "").trim();
-  if (!notifyExpires) return;
+  const notifyExpiresRaw = String(formData.get("notifyExpires") ?? "").trim();
+  if (!notifyExpiresRaw) return;
+
+  const expiresDate = new Date(notifyExpiresRaw);
+  if (isNaN(expiresDate.getTime()) || expiresDate.getTime() <= Date.now()) {
+    redirect(`/dashboard/${studyId}/api?error=` + encodeURIComponent("Expiry must be a valid future date."));
+  }
 
   await Project.updateOne(
     { _id: studyId },
     {
       $set: {
         notifyToken: crypto.randomBytes(20).toString("hex"),
-        notifyExpires: new Date(notifyExpires),
+        notifyExpires: expiresDate,
       },
     },
   );

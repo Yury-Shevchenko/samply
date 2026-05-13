@@ -16,7 +16,8 @@ export async function createDonationSession(formData: FormData) {
     ? parseFloat(String(customRaw))
     : parseFloat(String(amountRaw));
 
-  if (!amountEur || isNaN(amountEur) || amountEur < 1) {
+  const MAX_DONATION_EUR = 10_000;
+  if (!amountEur || isNaN(amountEur) || amountEur < 1 || amountEur > MAX_DONATION_EUR) {
     redirect("/donate?error=invalid_amount");
   }
 

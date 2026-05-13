@@ -27,9 +27,13 @@ async function updateAccountAction(formData: FormData) {
 
 async function resendConfirmationAction(formData: FormData) {
   "use server";
+  const session = await auth();
+  if (!session) redirect("/login");
+
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
   const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
   const email = formData.get("email") as string;
+  if (!email || email !== session.user.email) redirect("/account");
 
   await fetch(`${expressUrl}/account/confirm`, {
     method: "POST",

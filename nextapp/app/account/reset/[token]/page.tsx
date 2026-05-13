@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import SubmitButton from "@/app/components/ui/SubmitButton";
@@ -47,6 +47,9 @@ export default async function ResetPage({
 }) {
   const { token } = await params;
   const { error } = await searchParams;
+
+  // Reject tokens that don't look like hex(randomBytes(20)) — 40 hex chars.
+  if (!/^[0-9a-f]{40}$/i.test(token)) return notFound();
 
   await connectDB();
   const user = await User.findOne({

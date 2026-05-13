@@ -104,12 +104,12 @@ export async function GET(
   ];
 
   const csv = buildCsv(rows, keys);
-  const filename = (project.name ?? "export").replace(/[^\w\s-]/g, "").trim() || "export";
+  const safeFilename = encodeURIComponent(`${project.name ?? "export"}.csv`);
 
   return new NextResponse(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${filename}.csv"`,
+      "Content-Disposition": `attachment; filename*=UTF-8''${safeFilename}`,
     },
   });
 }

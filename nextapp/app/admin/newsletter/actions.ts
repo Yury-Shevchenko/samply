@@ -59,10 +59,13 @@ export async function sendNewsletter(formData: FormData): Promise<SendResult> {
   let failed = 0;
   const errors: string[] = [];
 
+  const escapeHtml = (s: string): string =>
+    s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+
   const textBody = body;
   const htmlBody = body
     .split(/\n{2,}/)
-    .map((p) => `<p style="font-family:sans-serif;font-size:15px;line-height:1.6;color:#333;">${p.replace(/\n/g, "<br/>")}</p>`)
+    .map((p) => `<p style="font-family:sans-serif;font-size:15px;line-height:1.6;color:#333;">${escapeHtml(p).replace(/\n/g, "<br/>")}</p>`)
     .join("\n");
 
   for (let i = 0; i < researchers.length; i += BATCH) {

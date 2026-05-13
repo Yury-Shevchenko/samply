@@ -7,6 +7,7 @@ import Project from "@/lib/models/project";
 import User from "@/lib/models/user";
 import mongoose from "mongoose";
 import type { Session } from "next-auth";
+import { isSafeWebhookUrl, sanitizeSurveyUrl } from "@/lib/urlValidation";
 
 async function requireResearcher(): Promise<Session> {
   const session = await auth();
@@ -84,7 +85,23 @@ export async function updateSettingsAction(studyId: string, formData: FormData) 
   const locationsJson = (formData.get("locationsJson") as string) ?? "[]";
   let parsedLocations: unknown[] = [];
   try {
-    parsedLocations = JSON.parse(locationsJson);
+    const raw = JSON.parse(locationsJson);
+    if (Array.isArray(raw)) {
+      // Sanitize each location: only allow plain objects with known primitive-value keys
+      const ALLOWED_GEO_KEYS = new Set(["lat", "lng", "latitude", "longitude", "radius", "name", "identifier"]);
+      parsedLocations = raw
+        .filter((item) => item !== null && typeof item === "object" && !Array.isArray(item))
+        .map((item) => {
+          const safe: Record<string, unknown> = {};
+          for (const [k, v] of Object.entries(item as Record<string, unknown>)) {
+            if (ALLOWED_GEO_KEYS.has(k) && (typeof v === "string" || typeof v === "number")) {
+              safe[k] = v;
+            }
+          }
+          return safe;
+        })
+        .slice(0, 200);
+    }
   } catch {
     parsedLocations = [];
   }
@@ -101,12 +118,14 @@ export async function updateSettingsAction(studyId: string, formData: FormData) 
       "settings.actions": actions,
 
       "settings.enableWebhooks": formData.get("enableWebhooks") === "on",
-      "settings.webhookEndpoint": (formData.get("webhookEndpoint") as string) ?? "",
+      "settings.webhookEndpoint": isSafeWebhookUrl((formData.get("webhookEndpoint") as string) ?? "")
+        ? (formData.get("webhookEndpoint") as string)
+        : "",
       "settings.webhookEvents": webhookEvents,
 
       "settings.enableGeofencing": formData.get("enableGeofencing") === "on",
-      geofencingInstruction: (formData.get("geofencingInstruction") as string) ?? "",
-      "settings.geofencing.link": (formData.get("geofencingURL") as string) ?? "",
+      geofencingInstruction: ((formData.get("geofencingInstruction") as string) ?? "").slice(0, 2000),
+      "settings.geofencing.link": sanitizeSurveyUrl((formData.get("geofencingURL") as string) ?? ""),
       "settings.geofencing.radius": formData.get("userLocationRadius")
         ? Number(formData.get("userLocationRadius"))
         : undefined,

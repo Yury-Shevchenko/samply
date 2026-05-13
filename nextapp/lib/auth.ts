@@ -68,11 +68,30 @@ const config: NextAuthConfig = {
   session: { strategy: "jwt" },
 
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
+        // Initial sign-in: bake fields from the authorize() return value.
         token.level = user.level;
         token.samplyId = user.samplyId;
         token.emailIsConfirmed = user.emailIsConfirmed;
+      } else if (token.sub) {
+        // Subsequent requests: re-read critical permission fields from DB so that
+        // admin level changes and email confirmations take effect without logout.
+        try {
+          await connectDB();
+          const fresh = await User.findById(token.sub, {
+            level: 1,
+            emailIsConfirmed: 1,
+            samplyId: 1,
+          }).lean() as { level?: number; emailIsConfirmed?: boolean; samplyId?: string } | null;
+          if (fresh) {
+            token.level = fresh.level ?? token.level;
+            token.emailIsConfirmed = fresh.emailIsConfirmed ?? token.emailIsConfirmed;
+            token.samplyId = fresh.samplyId ?? token.samplyId;
+          }
+        } catch {
+          // DB unavailable — keep stale token values rather than crashing.
+        }
       }
       return token;
     },

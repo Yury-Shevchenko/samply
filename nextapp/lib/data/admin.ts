@@ -5,6 +5,12 @@ import PendingNotification from "@/lib/models/pendingNotification";
 import AgendaJob from "@/lib/models/agendaJob";
 import mongoose, { type PipelineStage } from "mongoose";
 
+const MAX_SEARCH_LEN = 200;
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 export interface AdminProject {
   _id: string;
   name: string;
@@ -89,11 +95,11 @@ export async function fetchAdminStudies(
     ...(q.trim() ? [{
       $match: {
         $or: [
-          { name: { $regex: q.trim(), $options: "i" } },
-          { slug: { $regex: q.trim(), $options: "i" } },
-          { description: { $regex: q.trim(), $options: "i" } },
-          { author_name: { $elemMatch: { $regex: q.trim(), $options: "i" } } },
-          { author_institute: { $elemMatch: { $regex: q.trim(), $options: "i" } } },
+          { name: { $regex: escapeRegex(q.trim().slice(0, MAX_SEARCH_LEN)), $options: "i" } },
+          { slug: { $regex: escapeRegex(q.trim().slice(0, MAX_SEARCH_LEN)), $options: "i" } },
+          { description: { $regex: escapeRegex(q.trim().slice(0, MAX_SEARCH_LEN)), $options: "i" } },
+          { author_name: { $elemMatch: { $regex: escapeRegex(q.trim().slice(0, MAX_SEARCH_LEN)), $options: "i" } } },
+          { author_institute: { $elemMatch: { $regex: escapeRegex(q.trim().slice(0, MAX_SEARCH_LEN)), $options: "i" } } },
         ],
       },
     }] : []),
@@ -160,12 +166,13 @@ export async function fetchAdminUsers(page: number, sort = "created", dir = "asc
     filter === "unconfirmed"  ? { emailIsConfirmed: { $ne: true } } :
     {};
 
+  const safeQ = escapeRegex(q.trim().slice(0, MAX_SEARCH_LEN));
   const searchQuery: Record<string, unknown> = q.trim() ? {
     $or: [
-      { name: { $regex: q.trim(), $options: "i" } },
-      { email: { $regex: q.trim(), $options: "i" } },
-      { institute: { $regex: q.trim(), $options: "i" } },
-      { samplyId: { $regex: q.trim(), $options: "i" } },
+      { name: { $regex: safeQ, $options: "i" } },
+      { email: { $regex: safeQ, $options: "i" } },
+      { institute: { $regex: safeQ, $options: "i" } },
+      { samplyId: { $regex: safeQ, $options: "i" } },
     ],
   } : {};
 

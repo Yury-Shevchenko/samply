@@ -438,7 +438,6 @@ body {
 
 /* ── Docs prose: scrollable tables on mobile ─────────────────────────────── */
 .docs-prose table {
-  display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }

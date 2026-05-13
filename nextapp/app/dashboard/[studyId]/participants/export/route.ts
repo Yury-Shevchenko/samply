@@ -64,12 +64,12 @@ export async function GET(
 
   const csv = buildCsv([header, ...rows]);
   const projectName = (project as unknown as { name?: string }).name ?? "participants";
-  const filename = `${projectName} - participants.csv`;
+  const safeFilename = encodeURIComponent(`${projectName} - participants.csv`);
 
   return new NextResponse(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${filename.replace(/"/g, "")}"`,
+      "Content-Disposition": `attachment; filename*=UTF-8''${safeFilename}`,
     },
   });
 }

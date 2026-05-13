@@ -21,10 +21,13 @@ function requireAdmin(session: Session | null) {
 
 // ── Thread ────────────────────────────────────────────────────────────────────
 
+const MAX_TITLE_LEN = 300;
+const MAX_BODY_LEN = 20_000;
+
 export async function createThreadAction(formData: FormData) {
   const session = await requireUser();
-  const title = String(formData.get("title") ?? "").trim();
-  const body  = String(formData.get("body")  ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim().slice(0, MAX_TITLE_LEN);
+  const body  = String(formData.get("body")  ?? "").trim().slice(0, MAX_BODY_LEN);
   const categorySlug = String(formData.get("categorySlug") ?? "").trim();
   if (!title || !body || !categorySlug) return;
 
@@ -99,7 +102,7 @@ export async function voteThreadAction(threadId: string, categorySlug: string) {
 
 export async function createPostAction(formData: FormData) {
   const session = await requireUser();
-  const body     = String(formData.get("body")     ?? "").trim();
+  const body     = String(formData.get("body")     ?? "").trim().slice(0, MAX_BODY_LEN);
   const threadId = String(formData.get("threadId") ?? "").trim();
   const categorySlug = String(formData.get("categorySlug") ?? "").trim();
   if (!body || !threadId) return;
