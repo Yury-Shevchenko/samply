@@ -187,21 +187,21 @@ projectSchema.statics.debugProjects = function () {
     },
     {
       $project: {
-        name: "$$ROOT.name",
-        slug: "$$ROOT.slug",
-        description: "$$ROOT.description",
-        codeMessage: "$$ROOT.codeMessage",
-        geofencingInstruction: "$$ROOT.geofencingInstruction",
-        image: "$$ROOT.image",
-        created: "$$ROOT.created",
+        name: 1,
+        slug: 1,
+        description: 1,
+        codeMessage: 1,
+        geofencingInstruction: 1,
+        image: 1,
+        created: 1,
         author_name: "$author.name",
         author_institute: "$author.institute",
         members: "$members",
-        participants: "$$ROOT.mobileUsers",
-        currentlyActive: "$$ROOT.currentlyActive",
-        requestedForApproval: "$$ROOT.requestedForApproval",
-        public: "$$ROOT.public",
-        settings: "$$ROOT.settings",
+        participants: "$mobileUsers",
+        currentlyActive: 1,
+        requestedForApproval: 1,
+        public: 1,
+        settings: 1,
       },
     },
     { $sort: { created: 1 } },
@@ -247,6 +247,11 @@ projectSchema.virtual("participants", {
   localField: "_id", //which field in the current model
   foreignField: "participant_projects", //should match field in the other model
   justOne: false,
+});
+
+projectSchema.pre("save", function (next) {
+  if (this.slug) this.slug = this.slug.toLowerCase();
+  next();
 });
 
 // Indexes for the most common query patterns

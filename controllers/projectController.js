@@ -286,6 +286,7 @@ exports.createProject = async (req, res) => {
         url: req.body[`event-url-${num}`],
       }));
       const project = await new Project({
+        created: new Date(),
         name: req.body.name.trim(),
         image: req.body.image,
         description: req.body.description,
@@ -353,6 +354,7 @@ exports.createProject = async (req, res) => {
         },
         samplycode: nanoid(6),
       }).save();
+      console.log({ project });
       if (typeof req.user.project._id == "undefined") {
         const updatedUser = await User.findOneAndUpdate(
           {
@@ -711,7 +713,12 @@ exports.getPublicStudy = async (req, res) => {
     );
   } else {
     study = await Project.findOne(
-      { $or: [{ slug: id }, { samplycode: { $regex: new RegExp(`^${id}$`, "i") } }] },
+      {
+        $or: [
+          { slug: { $regex: new RegExp(`^${id}$`, "i") } },
+          { samplycode: { $regex: new RegExp(`^${id}$`, "i") } },
+        ],
+      },
       {
         name: 1,
         description: 1,

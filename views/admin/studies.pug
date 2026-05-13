@@ -36,12 +36,12 @@ block content
             td #{i + 1}
             td= project.name
             td= project.slug
-            td= project.description.split(' ').slice(0, 10).join(' ') 
+            td= (project.description || '').split(' ').slice(0, 10).join(' ')
             td= project.codeMessage && project.codeMessage.split(' ').slice(0, 10).join(' ') 
             td= project.geofencingInstruction && project.geofencingInstruction.split(' ').slice(0, 10).join(' ') 
             td 
               a(href=`${project.image}`) Link
-            td= h.moment(project.created).locale(language).format("MMM Do YY HH:mm") 
+            td= project.created ? h.moment(project.created).format("D MMM YYYY HH:mm") : '-'
             td= project.author_name[0]
             td= project.author_institute[0]
             td= project.members.length

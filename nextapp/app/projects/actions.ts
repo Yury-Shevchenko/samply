@@ -46,7 +46,11 @@ export async function createProjectAction(formData: FormData) {
 
   const imageUrl = await handleImageUpload(formData);
 
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+  const slug = Array.from({ length: 8 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+
   const project = new (Project as mongoose.Model<mongoose.Document>)({
+    created: new Date(),
     name: (formData.get("name") as string).trim(),
     description: formData.get("description") as string,
     welcomeMessage: formData.get("welcomeMessage") as string,
@@ -57,7 +61,7 @@ export async function createProjectAction(formData: FormData) {
     ...(imageUrl ? { image: imageUrl } : {}),
     creator: new mongoose.Types.ObjectId(session.user.id),
     members: [],
-    slug: nanoid(8),
+    slug,
     currentlyActive: false,
     public: false,
     settings: {

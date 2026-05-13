@@ -26,5 +26,10 @@ export interface ProjectDetail {
 
 const projectSchema = new mongoose.Schema({}, { strict: false });
 
+projectSchema.index({ creator: 1 });
+projectSchema.index({ slug: 1 });
+projectSchema.index({ samplycode: 1 });
+projectSchema.index({ currentlyActive: 1, public: 1 });
+
 export default (mongoose.models.Project as mongoose.Model<mongoose.Document>) ||
   mongoose.model("Project", projectSchema, "projects");

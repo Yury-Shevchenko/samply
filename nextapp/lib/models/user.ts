@@ -53,6 +53,13 @@ userSchema.methods.validPassword = function (password: string): boolean {
   return bcrypt.compareSync(password, this.local.password);
 };
 
+userSchema.index({ samplyId: 1 });
+userSchema.index({ email: 1 });
+userSchema.index({ level: 1 });
+userSchema.index({ participantInProject: 1 });
+userSchema.index({ resetPasswordToken: 1, resetPasswordExpires: 1 });
+userSchema.index({ confirmEmailToken: 1, confirmEmailExpires: 1 });
+
 // Guard against model re-registration during hot-reload.
 const User: Model<IUser> =
   (mongoose.models.User as Model<IUser>) ||
