@@ -152,8 +152,7 @@ passport.use('website-login', new LocalStrategy({
       User.findOne({ email :  email }, function(err, user) {
           const user_lang = req.res.locals.locale_language;
           if (err) return done(err);
-          if (!user) return done(null, false, req.flash('loginMessage', `${language[user_lang]['passport'].no_user_found}`));
-          if (!user.validPassword(password)) return done(null, false, req.flash('loginMessage', `${language[user_lang]['passport'].wrong_password}`));
+          if (!user || !user.validPassword(password)) return done(null, false, req.flash('loginMessage', `${language[user_lang]['passport'].wrong_credentials}`));
           return done(null, user);
       });
 }));

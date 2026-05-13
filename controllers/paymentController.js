@@ -163,6 +163,19 @@ exports.createcheckoutsession = async (req, res) => {
     res.redirect("back");
     return;
   }
+
+  // Verify stripeAccountId belongs to the named participant — never trust client
+  const { samplyid } = req.body;
+  const participant = await User.findOne(
+    { samplyId: samplyid },
+    { stripeAccountId: 1 }
+  );
+  if (!participant || !participant.stripeAccountId) {
+    req.flash("error", `Participant does not have a valid payment account.`);
+    return res.redirect("back");
+  }
+  const stripeAccountId = participant.stripeAccountId;
+
   // calculate the platform fee (5% including Stripe fees)
   const platformCommission = parseInt(amount / 20);
 
@@ -180,12 +193,12 @@ exports.createcheckoutsession = async (req, res) => {
     payment_intent_data: {
       application_fee_amount: platformCommission,
       transfer_data: {
-        destination: req.body.stripeAccountId,
+        destination: stripeAccountId,
       },
     },
     mode: "payment",
-    success_url: `${DOMAIN}/payout/${req.body.samplyid}/`,
-    cancel_url: `${DOMAIN}/payout/${req.body.samplyid}/`,
+    success_url: `${DOMAIN}/payout/${samplyid}/`,
+    cancel_url: `${DOMAIN}/payout/${samplyid}/`,
   });
   res.redirect(303, session.url);
 };

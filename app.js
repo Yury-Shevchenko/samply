@@ -9,6 +9,7 @@ const passport = require("passport");
 const promisify = require("es6-promisify");
 const flash = require("connect-flash");
 const expressValidator = require("express-validator");
+const rateLimit = require("express-rate-limit");
 const routes = require("./routes/index");
 const apiRoutesAuthRouter = require("./routes/api/auth");
 const apiRoutesParticipants = require("./routes/api/participants");
@@ -23,6 +24,31 @@ const userController = require("./controllers/userController");
 const paymentController = require("./controllers/paymentController");
 const jobController = require("./controllers/jobController");
 const crypto = require("crypto");
+
+// Rate limiters
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests, please try again later." },
+});
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests, please try again later." },
+});
+
+const hookLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { message: "Too many requests, please try again later." },
+});
 
 const Agendash = require("agendash");
 
@@ -39,8 +65,8 @@ app.post(
 );
 
 app.use(cookieParser());
-app.use(bodyParser.json({ limit: "500mb" }));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: "2mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "2mb" }));
 app.use(expressValidator());
 
 app.use(
@@ -50,7 +76,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 }, // 1 year
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true, sameSite: "lax" }, // 7 days
   })
 );
 
@@ -63,14 +89,17 @@ app.use((req, res, next) => {
   const noncevalue = crypto.randomBytes(20).toString("hex");
   res.setHeader(
     "Content-Security-Policy",
-    `worker-src http://localhost https://samply.uni-konstanz.de; script-src https://samply.uni-konstanz.de 'nonce-${noncevalue}' 'unsafe-eval' `
+    `worker-src http://localhost https://samply.uni-konstanz.de; script-src https://samply.uni-konstanz.de 'nonce-${noncevalue}'`
   );
-  // had to enable for API to work
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  // CORS is needed only for the mobile app API routes — not for web pages
+  if (req.path.startsWith("/api/") || req.path.startsWith("/webapi/")) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, x-auth-token"
+    );
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+  }
   res.locals.noncevalue = noncevalue;
   res.locals.h = helpers;
   res.locals.flashes = req.flash();
@@ -139,6 +168,17 @@ app.use((req, res, next) => {
   req.login = promisify(req.login, req);
   next();
 });
+// Apply rate limiting before routes
+app.use("/auth/", authLimiter);
+app.use("/account/forgot", authLimiter);
+app.use("/account/reset", authLimiter);
+app.use("/api/login", authLimiter);
+app.use("/api/createaccount", authLimiter);
+app.use("/api/reset", authLimiter);
+app.use("/api/notify", hookLimiter);
+app.use("/api/", apiLimiter);
+app.use("/webapi/", apiLimiter);
+
 app.use("/", routes);
 
 app.use("/webapi/v1/auth", apiRoutesAuthRouter.router);

@@ -91,7 +91,11 @@ router.get(
   authController.isLoggedIn,
   catchErrors(userController.account)
 );
-router.post("/account", catchErrors(userController.updateWebsiteAccount));
+router.post(
+  "/account",
+  authController.isLoggedIn,
+  catchErrors(userController.updateWebsiteAccount)
+);
 router.get(
   "/removeuser/:id",
   authController.isAdminLoggedIn,
@@ -391,14 +395,14 @@ router.post("/api/join/:id", jobController.joinStudy);
 router.post("/api/leave/:id", jobController.leaveStudy);
 router.post("/api/createaccount", userController.createMobileAccount);
 router.post("/api/login", userController.loginMobileAccount);
-router.post("/api/mystudies", userController.getMyStudies);
-router.post("/api/updateaccount", userController.updateAccount);
+router.post("/api/mystudies", userController.requireParticipantToken, userController.getMyStudies);
+router.post("/api/updateaccount", userController.requireParticipantToken, userController.updateAccount);
 router.post("/api/updatestatus", resultController.updateStatus);
-router.post("/api/history", resultController.getHistory);
+router.post("/api/history", userController.requireParticipantToken, resultController.getHistory);
 router.post("/api/reset", userController.resetPassword);
-router.post("/api/updatetoken", jobController.updateTokenInStudy);
-router.post("/api/checkpayableaccount", userController.checkPayableAccount);
-router.post("/api/updatelocation", resultController.updatelocation);
+router.post("/api/updatetoken", userController.requireParticipantToken, jobController.updateTokenInStudy);
+router.post("/api/checkpayableaccount", userController.requireParticipantToken, userController.checkPayableAccount);
+router.post("/api/updatelocation", userController.requireParticipantToken, resultController.updatelocation);
 router.post(
   "/api/deleteparticipantaccount",
   jobController.deleteAccountFromMobileApp
@@ -411,9 +415,14 @@ router.post("/api/notify", hookController.notify);
 router.post("/api/resetnotifytoken", hookController.resetNotifyToken);
 
 // stripe API
-router.post("/create-account-link", paymentController.createAccountLink);
+router.post(
+  "/create-account-link",
+  authController.isAdminLoggedIn,
+  catchErrors(paymentController.createAccountLink)
+);
 router.post(
   "/create-checkout-session",
+  authController.isAdminLoggedIn,
   catchErrors(paymentController.createcheckoutsession)
 );
 // payout page

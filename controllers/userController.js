@@ -14,16 +14,40 @@ const nanoid = customAlphabet(
   10
 );
 
+// Middleware: verifies that req.body.token is a known samplyId before
+// granting access to mobile-participant endpoints that have no session auth.
+exports.requireParticipantToken = async (req, res, next) => {
+  const token = req.body.token || req.body.samplyid || req.body.userToken;
+  if (!token || typeof token !== "string") {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const user = await User.findOne({ samplyId: token }, { _id: 1 });
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  next();
+};
+
 exports.account = async (req, res) => {
   res.render("account", { title: "Edit Your Account" });
 };
 
+const ACCOUNT_ALLOWED_FIELDS = ["name", "email", "institute", "language", "participantInProject"];
+
 exports.updateWebsiteAccount = async (req, res) => {
   User.findById(req.user._id, (err, user) => {
+    if (err || !user) {
+      req.flash("error", `${res.locals.layout.flash_profile_error_update}`);
+      return res.redirect("back");
+    }
     if (req.body.participantInProject == "") {
       req.body.participantInProject = user.participantInProject;
     }
-    user.set(req.body);
+    ACCOUNT_ALLOWED_FIELDS.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        user[field] = req.body[field];
+      }
+    });
     user.save((saveErr, updatedUser) => {
       if (saveErr) {
         req.flash("error", `${res.locals.layout.flash_profile_error_update}`);
@@ -277,11 +301,11 @@ exports.updateAccount = async (req, res) => {
 exports.resetPassword = async (req, res) => {
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    res.status(400).json({ message: "No user" });
-    return;
+    // Generic response — do not reveal whether the email is registered
+    return res.status(200).json({ message: "OK" });
   }
   user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
-  user.resetPasswordExpires = Date.now() + 3600000; //1 hour to reset the password
+  user.resetPasswordExpires = Date.now() + 3600000;
   await user.save();
   const resetURL = `${process.env.APP_URL || `https://${req.headers.host}`}/account/reset/${user.resetPasswordToken}`;
   const subject =

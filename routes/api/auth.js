@@ -7,12 +7,14 @@ const User = mongoose.model("User");
 const Project = mongoose.model("Project");
 
 const confirmOwnerOrMember = ({ user, project }) => {
+  if (user.level <= 10) {
+    throw Error("You must be a researcher in order to do it!");
+  }
   const isCreator = project.creator.equals(user._id);
   const isMember = project.members
     .map((id) => id.toString())
     .includes(user._id.toString());
-  const isParticipant = user.level <= 10;
-  if (!(isCreator || isMember) || isParticipant) {
+  if (!(isCreator || isMember)) {
     throw Error(
       "You must be a creator or a member of a project in order to do it!"
     );
@@ -30,7 +32,7 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, "jwtPrivateKey");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
     req.user = user;
   } catch (error) {
@@ -50,7 +52,7 @@ router.post("/", async (req, res) => {
         {
           id: user._id,
         },
-        "jwtPrivateKey",
+        process.env.JWT_SECRET,
         { expiresIn: "14d" }
       );
       res.status(200).json({ token: token });
@@ -115,7 +117,8 @@ router.get("/studies/selected", authenticate, async (req, res) => {
     );
     res.status(200).json({ study });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("GET /studies/selected error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -130,7 +133,8 @@ router.post("/select/study", authenticate, async (req, res) => {
     await user.save();
     res.json({ message: "Selected project" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("POST /select/study error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -139,11 +143,21 @@ router.patch("/study/:id", authenticate, async (req, res) => {
   try {
     const project = await Project.findOne({ _id: req.params.id });
     confirmOwnerOrMember({ user: req.user, project });
-    Object.keys(req.body).map((key) => (project[key] = req.body[key]));
+    const STUDY_ALLOWED_FIELDS = [
+      "name", "description", "currentlyActive", "public", "welcomeMessage",
+      "codeMessage", "groupMessage", "messageAfterJoin", "completionMessage",
+      "geofencingInstruction", "settings",
+    ];
+    STUDY_ALLOWED_FIELDS.forEach((key) => {
+      if (req.body[key] !== undefined) {
+        project[key] = req.body[key];
+      }
+    });
     await project.save();
     res.json({ message: "Updated study" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("PATCH /study/:id error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

@@ -8,12 +8,14 @@ const User = mongoose.model("User");
 const Project = mongoose.model("Project");
 
 const confirmOwnerOrMember = (project, user) => {
+  if (user.level <= 10) {
+    throw Error("You must be a researcher in order to do it!");
+  }
   const isCreator = project.creator.equals(user._id);
   const isMember = project.members
     .map((id) => id.toString())
     .includes(user._id.toString());
-  const isParticipant = user.level <= 10;
-  if (!(isCreator || isMember) || isParticipant) {
+  if (!(isCreator || isMember)) {
     throw Error(
       "You must be a creator or a member of a project in order to do it!"
     );
@@ -73,7 +75,9 @@ exports.updatelocation = async (req, res) => {
 //show the history of sent notifications
 exports.showHistory = async (req, res) => {
   if (req.user && req.user.project && req.user.project.name) {
-    const participant = req.query.id || { $exists: true };
+    const rawId = req.query.id;
+    const participant =
+      rawId && typeof rawId === "string" ? rawId : { $exists: true };
     const page = req.params.page || 1;
     const limit = 100;
     const skip = page * limit - limit;
@@ -126,14 +130,29 @@ exports.getHistory = async (req, res) => {
 
 //save results during the task
 exports.saveIncrementalResults = async (req, res) => {
+  const { samplyid, project, name, data, timestamp, appVersion } = req.body;
+
+  if (
+    typeof samplyid !== "string" ||
+    !samplyid ||
+    typeof project !== "string" ||
+    !mongoose.Types.ObjectId.isValid(project)
+  ) {
+    return res.status(400).send("Invalid request");
+  }
+
+  const participantExists = await User.exists({ samplyId: samplyid });
+  if (!participantExists) {
+    return res.status(403).send("Forbidden");
+  }
+
   const result = new Result({
-    author: req.body.author,
-    project: req.body.project,
-    samplyid: req.body.samplyid,
-    name: req.body.name,
-    data: req.body.data,
-    usertimestamp: req.body.timestamp,
-    appVersion: req.body.appVersion,
+    project,
+    samplyid,
+    name: typeof name === "string" ? name : undefined,
+    data,
+    usertimestamp: timestamp,
+    appVersion: typeof appVersion === "string" ? appVersion : undefined,
   });
   await result.save();
   res.send("Saved");

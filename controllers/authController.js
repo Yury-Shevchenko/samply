@@ -34,26 +34,22 @@ exports.isSuperAdminLoggedIn = (req, res, next) => {
 };
 
 exports.forgot = async (req, res) => {
+  const genericMessage = `${res.locals.layout.flash_email_recovery_link}`;
   const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    req.flash(
-      "error",
-      `${res.locals.layout.flash_no_account_with_email_exist}`
-    );
-    return res.redirect("back");
+  if (user) {
+    user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
+    user.resetPasswordExpires = Date.now() + 3600000;
+    await user.save();
+    const resetURL = `${process.env.APP_URL || `https://${req.headers.host}`}/account/reset/${user.resetPasswordToken}`;
+    const subject = res.locals.layout.flash_password_reset;
+    await mail.send({
+      participant: user,
+      subject,
+      resetURL,
+      filename: "password-reset-" + res.locals.locale_language,
+    }).catch(() => {});
   }
-  user.resetPasswordToken = crypto.randomBytes(20).toString("hex");
-  user.resetPasswordExpires = Date.now() + 3600000; //1 hour to reset the password
-  await user.save();
-  const resetURL = `${process.env.APP_URL || `https://${req.headers.host}`}/account/reset/${user.resetPasswordToken}`;
-  const subject = res.locals.layout.flash_password_reset;
-  await mail.send({
-    participant: user,
-    subject,
-    resetURL,
-    filename: "password-reset-" + res.locals.locale_language,
-  });
-  req.flash("success", `${res.locals.layout.flash_email_recovery_link}`);
+  req.flash("success", genericMessage);
   res.redirect("back");
 };
 

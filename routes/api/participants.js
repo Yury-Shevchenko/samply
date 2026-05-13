@@ -71,6 +71,14 @@ router.post("/", authenticate, async (req, res) => {
       samplyid = existingUserWithEmail.samplyId;
     }
 
+    const MAX_EXPIRY = "30d";
+    const requestedExpiry = req.body.expiresIn;
+    const expiresIn =
+      requestedExpiry &&
+      typeof requestedExpiry === "string" &&
+      /^\d+[smhd]$/.test(requestedExpiry)
+        ? requestedExpiry
+        : MAX_EXPIRY;
     const token = jwt.sign(
       {
         name: req.body.name,
@@ -79,8 +87,8 @@ router.post("/", authenticate, async (req, res) => {
         projectid: req.user.project._id,
         code: req.body.code,
       },
-      "jwtPrivateKey",
-      { expiresIn: req.body.expiresIn }
+      process.env.JWT_SECRET,
+      { expiresIn }
     );
 
     // add the user to the study
@@ -105,7 +113,8 @@ router.post("/", authenticate, async (req, res) => {
       token: token,
     });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("POST /participants error:", error);
+    res.status(400).json({ message: "Failed to create participant" });
   }
 });
 
@@ -126,11 +135,16 @@ router.patch("/:id", authenticate, async (req, res) => {
     if (!project.mobileUsers) {
       project.mobileUsers = [];
     }
+    const PARTICIPANT_ALLOWED_FIELDS = [
+      "username", "deactivated", "group",
+    ];
     project.mobileUsers = project.mobileUsers.map((user) => {
       if (user.id === req.params.id) {
-        Object.keys(req.body)
-          .filter((key) => key !== "information")
-          .map((key) => (user[key] = req.body[key]));
+        PARTICIPANT_ALLOWED_FIELDS.forEach((key) => {
+          if (req.body[key] !== undefined) {
+            user[key] = req.body[key];
+          }
+        });
       }
       return user;
     });
@@ -149,7 +163,8 @@ router.patch("/:id", authenticate, async (req, res) => {
 
     res.json({ message: "Updated participant" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("PATCH /participants/:id error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -176,7 +191,8 @@ router.delete("/:id", authenticate, async (req, res) => {
     await project.save();
     res.json({ message: "Deleted participant" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("DELETE /participants/:id error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

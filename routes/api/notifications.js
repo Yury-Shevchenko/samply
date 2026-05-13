@@ -53,7 +53,8 @@ router.post("/", authenticate, async (req, res) => {
       }
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("POST /notifications error:", error);
+    res.status(400).json({ message: "Failed to create notification" });
   }
 });
 
@@ -74,16 +75,26 @@ router.patch("/:id", authenticate, async (req, res) => {
     if (!project.notifications) {
       project.notifications = [];
     }
+    const NOTIFICATION_ALLOWED_FIELDS = [
+      "title", "message", "url", "schedule", "target", "randomize",
+      "startDate", "endDate", "startTime", "endTime", "interval",
+      "intervalMax", "timezone", "expireIn", "reminders", "userid", "groupid",
+    ];
     project.notifications = project.notifications.map((notification) => {
       if (notification.id === req.params.id) {
-        Object.keys(req.body).map((key) => (notification[key] = req.body[key]));
+        NOTIFICATION_ALLOWED_FIELDS.forEach((key) => {
+          if (req.body[key] !== undefined) {
+            notification[key] = req.body[key];
+          }
+        });
       }
       return notification;
     });
     await project.save();
     res.json({ message: "Updated notification" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("PATCH /notifications/:id error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
@@ -122,7 +133,8 @@ router.delete("/:id", authenticate, async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("DELETE /notifications/:id error:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

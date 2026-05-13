@@ -3,6 +3,7 @@ const multer = require("multer");
 const jimp = require("jimp");
 const uuid = require("uuid"); // make unique identifier
 const uniqid = require("uniqid");
+const escapeStringRegexp = require("escape-string-regexp");
 const { customAlphabet } = require("nanoid");
 const nanoid = customAlphabet(
   "346789ABCDEFGHJKLMNPQRTUVWXYabcdefghijkmnpqrtwxyz",
@@ -22,18 +23,22 @@ const DOMAIN =
     : "http://localhost";
 
 const confirmOwner = (project, user) => {
-  if (!project.creator.equals(user._id) || user.level <= 10) {
+  if (user.level <= 10 || !project.creator.equals(user._id)) {
     throw Error("You must own a project in order to do it!");
   }
 };
 
 const confirmOwnerOrMember = (project, user) => {
+  if (user.level <= 10) {
+    throw Error(
+      "You must be a researcher in order to do it!",
+    );
+  }
   const isCreator = project.creator.equals(user._id);
   const isMember = project.members
     .map((id) => id.toString())
     .includes(user._id.toString());
-  const isParticipant = user.level <= 10;
-  if (!(isCreator || isMember) || isParticipant) {
+  if (!(isCreator || isMember)) {
     throw Error(
       "You must be a creator or a member of a project in order to do it!",
     );
@@ -403,6 +408,7 @@ exports.updateProject = async (req, res) => {
           .filter((e) => typeof e != "undefined");
       }
       const project = await Project.findOne({ _id: req.params.id });
+      confirmOwner(project, req.user);
       project.name = req.body.name.trim();
       project.image = req.body.image;
       project.description = req.body.description;
@@ -712,11 +718,12 @@ exports.getPublicStudy = async (req, res) => {
       },
     );
   } else {
+    const safeId = escapeStringRegexp(id);
     study = await Project.findOne(
       {
         $or: [
-          { slug: { $regex: new RegExp(`^${id}$`, "i") } },
-          { samplycode: { $regex: new RegExp(`^${id}$`, "i") } },
+          { slug: { $regex: new RegExp(`^${safeId}$`, "i") } },
+          { samplycode: { $regex: new RegExp(`^${safeId}$`, "i") } },
         ],
       },
       {
@@ -744,7 +751,6 @@ exports.getPublicStudy = async (req, res) => {
     {
       name: 1,
       institute: 1,
-      email: 1,
     },
   );
 

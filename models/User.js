@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt-nodejs");
+const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
+const SALT_ROUNDS = 10;
 mongoose.Promise = global.Promise;
 
 const userSchema = new Schema(
@@ -67,11 +68,12 @@ const userSchema = new Schema(
 // methods
 // generating a hash
 userSchema.methods.generateHash = function (password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+  return bcrypt.hashSync(password, SALT_ROUNDS);
 };
 
 // checking if password is valid
 userSchema.methods.validPassword = function (password) {
+  if (!this.local.password) return false;
   return bcrypt.compareSync(password, this.local.password);
 };
 
