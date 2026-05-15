@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
+import { getT } from "@/lib/i18n.server";
 import StudyTabNav from "./StudyTabNav";
 
 interface Props {
@@ -19,6 +20,8 @@ export default async function StudyLayout({ children, params }: Props) {
   const project = await fetchProjectById(studyId, session.user.id);
   if (!project) notFound();
 
+  const { t } = await getT();
+
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
       <div style={{ maxWidth: "96rem", margin: "0 auto", padding: "3.6rem var(--page-px) 0" }}>
@@ -36,26 +39,26 @@ export default async function StudyLayout({ children, params }: Props) {
             }}
             className="hover:opacity-70 transition-opacity"
           >
-            ← Dashboard
+            {t("studyLayout.breadcrumb")}
           </a>
         </div>
 
         {/* Study header */}
-        <div style={{ marginBottom: "2.4rem" }}>
-          {/* Status label */}
-          <div
-            style={{
-              fontFamily: "var(--font-hand)",
-              fontSize: "1.7rem",
-              color: project.currentlyActive ? "var(--sage)" : "var(--ink-40)",
-              marginBottom: "0.4rem",
-              lineHeight: 1,
-            }}
-          >
-            {project.currentlyActive ? "● collecting" : "draft"}
-          </div>
-
+        <div style={{ marginBottom: "2.4rem", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
           <div style={{ minWidth: 0 }}>
+            {/* Status label */}
+            <div
+              style={{
+                fontFamily: "var(--font-hand)",
+                fontSize: "1.7rem",
+                color: project.currentlyActive ? "var(--sage)" : "var(--ink-40)",
+                marginBottom: "0.4rem",
+                lineHeight: 1,
+              }}
+            >
+              {project.currentlyActive ? t("studyLayout.statusLive") : t("studyLayout.statusDraft")}
+            </div>
+
             <h1
               className="font-[family-name:var(--font-display)] font-bold m-0"
               style={{ fontSize: "clamp(2.2rem, 5vw, 3.4rem)", letterSpacing: "-0.025em", lineHeight: 1.05 }}
@@ -68,6 +71,29 @@ export default async function StudyLayout({ children, params }: Props) {
               </p>
             )}
           </div>
+
+          <a
+            href={`/projects/${studyId}/edit`}
+            style={{
+              flexShrink: 0,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.4rem",
+              padding: "0.7rem 1.4rem",
+              fontFamily: "var(--font-mono)",
+              fontSize: "1.1rem",
+              letterSpacing: ".04em",
+              color: "var(--ink-60)",
+              textDecoration: "none",
+              border: "1px solid var(--ink-20)",
+              borderRadius: "9999px",
+              background: "transparent",
+              marginTop: "0.6rem",
+            }}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {t("studyLayout.editStudy")}
+          </a>
         </div>
 
         {/* Tab navigation */}

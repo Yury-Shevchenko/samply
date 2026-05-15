@@ -43,6 +43,7 @@ export interface ProjectFull extends ProjectListItem {
   settings?: {
     askParticipantCode?: boolean;
     askParticipantGroup?: boolean;
+    groupEntryMethod?: "code" | "list" | "random";
     enableEvents?: boolean;
     eventDescription?: string;
     events?: Array<{ num: number; caption: string; url: string }>;

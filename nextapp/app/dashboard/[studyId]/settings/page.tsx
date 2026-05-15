@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { fetchProjectById, fetchMemberEmails } from "@/lib/data/projects";
 import { updateSettingsAction } from "./actions";
 import SettingsClient from "./SettingsClient";
+import { getT } from "@/lib/i18n.server";
 
 export async function generateMetadata({ params }: { params: Promise<{ studyId: string }> }) {
   const { studyId } = await params;
@@ -39,6 +40,8 @@ export default async function SettingsPage({
   const host = hdrs.get("host") ?? "localhost:3000";
   const baseUrl = host.startsWith("localhost") ? `http://${host}` : `https://${host}`;
 
+  const { t } = await getT();
+
   return (
     <div style={{ maxWidth: "72rem" }}>
       <div style={{ marginBottom: "3.2rem" }}>
@@ -46,10 +49,10 @@ export default async function SettingsPage({
           className="font-[family-name:var(--font-display)] font-bold m-0"
           style={{ fontSize: "2.4rem", letterSpacing: "-0.02em" }}
         >
-          Study settings
+          {t("studySettings.title")}
         </h2>
         <p style={{ margin: "0.6rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)" }}>
-          Collaborators, event-contingent design, action buttons, webhooks, and geofencing.
+          {t("studySettings.subtitle")}
         </p>
       </div>
 

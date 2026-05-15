@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import ForumThread, { type IForumThread } from "@/lib/models/forumThread";
 import type { Types } from "mongoose";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Forum Search — Samply" };
 
@@ -15,6 +16,7 @@ export default async function ForumSearchPage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -38,13 +40,13 @@ export default async function ForumSearchPage({
       <div style={{ maxWidth: 800, margin: "0 auto", padding: "5.2rem var(--page-px) 9.6rem" }}>
 
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", marginBottom: "1.2rem", letterSpacing: ".06em" }}>
-          <a href="/forum" style={{ color: "var(--ink-40)", textDecoration: "none" }} className="hover:opacity-70">Forum</a>
+          <a href="/forum" style={{ color: "var(--ink-40)", textDecoration: "none" }} className="hover:opacity-70">{t("forum.breadcrumb")}</a>
           <span style={{ margin: "0 0.6rem" }}>›</span>
-          Search
+          {t("forum.searchBreadcrumb")}
         </div>
 
         <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "3.2rem", letterSpacing: "-0.03em", margin: "0 0 2.8rem" }}>
-          Search threads
+          {t("forum.searchTitle")}
         </h1>
 
         {/* Search form */}
@@ -53,7 +55,7 @@ export default async function ForumSearchPage({
             name="q"
             defaultValue={query}
             autoFocus
-            placeholder="Search for a topic, question, or keyword…"
+            placeholder={t("forum.searchPlaceholder")}
             style={{ flex: 1, padding: "1rem 1.4rem", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", fontSize: "1.4rem", fontFamily: "var(--font-body)", background: "var(--surface)", color: "var(--ink)", outline: "none" }}
           />
           <button
@@ -61,7 +63,7 @@ export default async function ForumSearchPage({
             style={{ padding: "1rem 2rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "9999px", fontSize: "1.3rem", fontWeight: 500, fontFamily: "var(--font-body)", border: "none", cursor: "pointer", whiteSpace: "nowrap" }}
             className="hover:opacity-80 transition-opacity"
           >
-            Search
+            {t("forum.searchButton")}
           </button>
         </form>
 
@@ -69,26 +71,26 @@ export default async function ForumSearchPage({
         {query.length >= 2 ? (
           results.length === 0 ? (
             <div style={{ textAlign: "center", padding: "4rem 0", color: "var(--ink-40)", fontFamily: "var(--font-mono)", fontSize: "1.2rem" }}>
-              No results for &ldquo;{query}&rdquo;
+              {t("forum.noResults", { query })}
             </div>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", marginBottom: "0.4rem" }}>
-                {results.length} result{results.length !== 1 ? "s" : ""} for &ldquo;{query}&rdquo;
+                {t(results.length === 1 ? "forum.resultsCount" : "forum.resultsCountPlural", { n: results.length })} for &ldquo;{query}&rdquo;
               </div>
-              {results.map((t) => (
+              {results.map((thread) => (
                 <a
-                  key={String(t._id)}
-                  href={`/forum/${t.categorySlug}/${t._id}`}
+                  key={String(thread._id)}
+                  href={`/forum/${thread.categorySlug}/${thread._id}`}
                   style={{ display: "block", padding: "1.4rem 1.8rem", background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", textDecoration: "none", color: "inherit" }}
                   className="hover:border-[var(--ink-40)] transition-colors"
                 >
                   <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "1.4rem", letterSpacing: "-0.01em", color: "var(--ink)", marginBottom: "0.3rem" }}>
-                    {t.title}
+                    {thread.title}
                   </div>
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)" }}>
-                    {t.authorName} · {fmt(t.createdAt)} · {t.replyCount} replies
-                    {t.solvedPostId && <span style={{ marginLeft: "0.8rem", color: "var(--sage)" }}>✓ solved</span>}
+                    {thread.authorName} · {fmt(thread.createdAt)} · {thread.replyCount} replies
+                    {thread.solvedPostId && <span style={{ marginLeft: "0.8rem", color: "var(--sage)" }}>{t("forum.solvedBadge")}</span>}
                   </div>
                 </a>
               ))}
@@ -96,7 +98,7 @@ export default async function ForumSearchPage({
           )
         ) : query.length > 0 ? (
           <div style={{ textAlign: "center", color: "var(--ink-40)", fontFamily: "var(--font-mono)", fontSize: "1.2rem" }}>
-            Enter at least 2 characters to search.
+            {t("forum.tooShort")}
           </div>
         ) : null}
       </div>

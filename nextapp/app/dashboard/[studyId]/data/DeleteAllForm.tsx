@@ -1,6 +1,7 @@
 "use client";
 
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { useT } from "@/app/components/TranslationProvider";
 
 export function DeleteAllForm({
   action,
@@ -9,16 +10,17 @@ export function DeleteAllForm({
   action: () => Promise<void>;
   count: number;
 }) {
+  const { t } = useT();
   return (
     <form
       action={action}
       onSubmit={(e) => {
-        if (!confirm(`Delete all ${count.toLocaleString()} records? This cannot be undone.`))
+        if (!confirm(t("data.deleteAllConfirm", { n: count.toLocaleString() })))
           e.preventDefault();
       }}
     >
       <SubmitButton
-        pendingLabel="Deleting…"
+        pendingLabel={t("data.deleteAllDeleting")}
         style={{
           fontFamily: "var(--font-mono)",
           fontSize: "1.1rem",
@@ -32,7 +34,7 @@ export function DeleteAllForm({
         }}
         className="hover:opacity-70 transition-opacity"
       >
-        Delete all records →
+        {t("data.deleteAllButton")}
       </SubmitButton>
     </form>
   );

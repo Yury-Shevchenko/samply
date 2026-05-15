@@ -3,6 +3,7 @@ import Project from "@/lib/models/project";
 import Result from "@/lib/models/result";
 import PendingNotification from "@/lib/models/pendingNotification";
 import mongoose from "mongoose";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ slug: string; messageId: string }>;
@@ -88,7 +89,7 @@ function Shell({ children }: { children: React.ReactNode }) {
           className="font-[family-name:var(--font-mono)]"
           style={{ fontSize: "1.1rem", color: "var(--ink-20)", letterSpacing: ".08em" }}
         >
-          Samply Research Platform
+          Samply Research Platform {/* studyDone.platformLabel — kept static in footer */}
         </span>
       </footer>
     </div>
@@ -97,6 +98,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 export default async function CompletionPage({ params }: Props) {
   const { slug, messageId } = await params;
+  const { t } = await getT();
 
   await connectDB();
 
@@ -113,10 +115,10 @@ export default async function CompletionPage({ params }: Props) {
           className="font-[family-name:var(--font-display)] font-bold"
           style={{ fontSize: "2.8rem", letterSpacing: "-0.02em", lineHeight: 1.1, margin: "2rem 0 1rem", color: "var(--ink)" }}
         >
-          Link not valid.
+          {t("studyDone.linkInvalid")}
         </h1>
         <p style={{ fontSize: "1.5rem", lineHeight: 1.6, color: "var(--ink-40)", fontFamily: "var(--font-body)", margin: 0 }}>
-          This study could not be found. The link may be incorrect or the study may no longer be active.
+          {t("studyDone.linkInvalidBody")}
         </p>
       </Shell>
     );
@@ -135,13 +137,13 @@ export default async function CompletionPage({ params }: Props) {
           className="font-[family-name:var(--font-display)] font-bold"
           style={{ fontSize: "2.8rem", letterSpacing: "-0.02em", lineHeight: 1.1, margin: "2rem 0 1rem", color: "var(--ink)" }}
         >
-          Response not found.
+          {t("studyDone.responseNotFound")}
         </h1>
         <p style={{ fontSize: "1.5rem", lineHeight: 1.6, color: "var(--ink-40)", fontFamily: "var(--font-body)", margin: "0 0 2rem" }}>
-          This completion link could not be matched to a notification. It may have already been recorded, or the link may be incorrect.
+          {t("studyDone.responseNotFoundBody")}
         </p>
         <p style={{ fontSize: "1.3rem", color: "var(--ink-20)", fontFamily: "var(--font-mono)", letterSpacing: ".04em", margin: 0 }}>
-          You can close this page.
+          {t("studyDone.canClose")}
         </p>
       </Shell>
     );
@@ -181,7 +183,7 @@ export default async function CompletionPage({ params }: Props) {
         className="font-[family-name:var(--font-display)] font-bold"
         style={{ fontSize: "3.2rem", letterSpacing: "-0.02em", lineHeight: 1.1, margin: "2rem 0 1.2rem", color: "var(--ink)" }}
       >
-        {alreadyCompleted ? "Already recorded." : "Thank you."}
+        {alreadyCompleted ? t("studyDone.alreadyRecorded") : t("studyDone.thankYou")}
       </h1>
 
       <p
@@ -194,7 +196,7 @@ export default async function CompletionPage({ params }: Props) {
         }}
       >
         {alreadyCompleted
-          ? "This response was already recorded. No action needed — you can close this page."
+          ? t("studyDone.alreadyRecordedBody")
           : completionMessage}
       </p>
 
@@ -226,7 +228,7 @@ export default async function CompletionPage({ params }: Props) {
           marginTop: "3.2rem",
         }}
       >
-        You can close this page and return to the app.
+        {t("studyDone.closeAndReturn")}
       </p>
     </Shell>
   );

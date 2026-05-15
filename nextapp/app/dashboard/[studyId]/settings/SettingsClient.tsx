@@ -3,6 +3,7 @@
 import { useState, useRef, lazy, Suspense } from "react";
 import type { ProjectFull, GeoLocation } from "@/lib/data/projects";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { useT } from "@/app/components/TranslationProvider";
 
 const MapPicker = lazy(() => import("@/app/components/MapPicker"));
 
@@ -186,9 +187,11 @@ function CheckRow({
 function LocationRow({
   loc,
   onDelete,
+  t,
 }: {
   loc: GeoLocation;
   onDelete: () => void;
+  t: (key: string, vars?: Record<string, string>) => string;
 }) {
   const [enterOn, setEnterOn] = useState(loc.events?.includes("enter") ?? false);
   const [exitOn, setExitOn] = useState(loc.events?.includes("exit") ?? false);
@@ -211,14 +214,14 @@ function LocationRow({
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
         <span style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ink)" }}>
-          {loc.title || "New location"}
+          {loc.title || t("studySettings.locTitlePlaceholder")}
         </span>
         <button
           type="button"
           onClick={onDelete}
           style={{ fontSize: "1.2rem", color: "var(--coral)", background: "none", border: "none", cursor: "pointer", padding: "0.2rem 0.6rem" }}
         >
-          Remove
+          {t("studySettings.locRemoveButton")}
         </button>
       </div>
 
@@ -226,11 +229,11 @@ function LocationRow({
 
       <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
         <div>
-          <label style={labelStyle}>Title</label>
-          <input name={`loc-title-${loc.slug}`} type="text" defaultValue={loc.title} placeholder="Location name" style={fieldStyle} />
+          <label style={labelStyle}>{t("studySettings.locTitleLabel")}</label>
+          <input name={`loc-title-${loc.slug}`} type="text" defaultValue={loc.title} placeholder={t("studySettings.locTitlePlaceholder")} style={fieldStyle} />
         </div>
         <div>
-          <label style={labelStyle}>Radius (m)</label>
+          <label style={labelStyle}>{t("studySettings.locRadiusLabel")}</label>
           <input
             name={`loc-radius-${loc.slug}`}
             type="number"
@@ -241,7 +244,7 @@ function LocationRow({
           />
         </div>
         <div>
-          <label style={labelStyle}>Latitude</label>
+          <label style={labelStyle}>{t("studySettings.locLatLabel")}</label>
           <input
             name={`loc-latitude-${loc.slug}`}
             type="text"
@@ -252,7 +255,7 @@ function LocationRow({
           />
         </div>
         <div>
-          <label style={labelStyle}>Longitude</label>
+          <label style={labelStyle}>{t("studySettings.locLngLabel")}</label>
           <input
             name={`loc-longitude-${loc.slug}`}
             type="text"
@@ -279,14 +282,14 @@ function LocationRow({
             fontFamily: "var(--font-body)",
           }}
         >
-          {showMap ? "Hide map" : "Pick location on map"}
+          {showMap ? t("studySettings.locHideMap") : t("studySettings.locShowMap")}
         </button>
         {showMap && (
           <div style={{ marginTop: "0.8rem" }}>
             <p style={{ ...hintStyle, marginBottom: "0.6rem" }}>
-              Click anywhere on the map to set the coordinates.
+              {t("studySettings.locMapHint")}
             </p>
-            <Suspense fallback={<div style={{ height: "280px", background: "var(--ink-10)", borderRadius: "0.8rem", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", color: "var(--ink-40)" }}>Loading map…</div>}>
+            <Suspense fallback={<div style={{ height: "280px", background: "var(--ink-10)", borderRadius: "0.8rem", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", color: "var(--ink-40)" }}>{t("studySettings.locLoadingMap")}</div>}>
               <MapPicker
                 lat={lat}
                 lng={lng}
@@ -303,24 +306,24 @@ function LocationRow({
 
       <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
         <div>
-          <label style={labelStyle}>Survey link</label>
+          <label style={labelStyle}>{t("studySettings.locSurveyLabel")}</label>
           <input name={`loc-link-${loc.slug}`} type="text" defaultValue={loc.link ?? ""} placeholder="https://…" style={{ ...fieldStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
         </div>
         <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
           <div>
-            <label style={labelStyle}>Notification header</label>
-            <input name={`loc-header-${loc.slug}`} type="text" defaultValue={loc.header ?? ""} placeholder="You arrived at…" style={fieldStyle} />
+            <label style={labelStyle}>{t("studySettings.locNotifHeaderLabel")}</label>
+            <input name={`loc-header-${loc.slug}`} type="text" defaultValue={loc.header ?? ""} placeholder={t("studySettings.locArrivedPlaceholder")} style={fieldStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Notification message</label>
-            <input name={`loc-message-${loc.slug}`} type="text" defaultValue={loc.message ?? ""} placeholder="Please fill out the survey" style={fieldStyle} />
+            <label style={labelStyle}>{t("studySettings.locNotifMessageLabel")}</label>
+            <input name={`loc-message-${loc.slug}`} type="text" defaultValue={loc.message ?? ""} placeholder={t("studySettings.locSurveyPlaceholder")} style={fieldStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Exit zone (m)</label>
+            <label style={labelStyle}>{t("studySettings.locExitZoneLabel")}</label>
             <input name={`loc-exitzone-${loc.slug}`} type="number" defaultValue={loc.exitzone ?? ""} placeholder="0" style={fieldStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Min time (min)</label>
+            <label style={labelStyle}>{t("studySettings.locMinTimeLabel")}</label>
             <input name={`loc-mintimewindow-${loc.slug}`} type="number" defaultValue={loc.mintimewindow ?? ""} placeholder="0" style={fieldStyle} />
           </div>
         </div>
@@ -335,7 +338,7 @@ function LocationRow({
             onChange={(e) => setEnterOn(e.target.checked)}
             style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
           />
-          Trigger on enter
+          {t("studySettings.locTriggerEnter")}
         </label>
         <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
           <input
@@ -345,7 +348,7 @@ function LocationRow({
             onChange={(e) => setExitOn(e.target.checked)}
             style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
           />
-          Trigger on exit
+          {t("studySettings.locTriggerExit")}
         </label>
         <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
           <input
@@ -355,7 +358,7 @@ function LocationRow({
             onChange={(e) => setInvisibleOn(e.target.checked)}
             style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
           />
-          Hide from participants
+          {t("studySettings.locInvisible")}
         </label>
       </div>
     </div>
@@ -363,7 +366,7 @@ function LocationRow({
 }
 
 /* ── Copyable URL ────────────────────────────────────────────────────────── */
-function CopyableUrl({ label, url }: { label: string; url: string }) {
+function CopyableUrl({ label, url, copyLabel, copiedLabel }: { label: string; url: string; copyLabel: string; copiedLabel: string }) {
   const [copied, setCopied] = useState(false);
 
   function copy() {
@@ -387,7 +390,7 @@ function CopyableUrl({ label, url }: { label: string; url: string }) {
           onClick={copy}
           style={{ flexShrink: 0, padding: "0 1.4rem", background: copied ? "rgba(61,115,107,.1)" : "var(--ink-10)", border: "none", borderLeft: "1px solid var(--ink-20)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "1.05rem", fontWeight: 600, color: copied ? "var(--sage)" : "var(--ink-40)", letterSpacing: ".06em", whiteSpace: "nowrap", transition: "all 150ms" }}
         >
-          {copied ? "Copied ✓" : "Copy"}
+          {copied ? copiedLabel : copyLabel}
         </button>
       </div>
     </div>
@@ -396,6 +399,7 @@ function CopyableUrl({ label, url }: { label: string; url: string }) {
 
 /* ── Main component ──────────────────────────────────────────────────────── */
 export default function SettingsClient({ project, memberEmails, action, notice, warning, baseUrl }: Props) {
+  const { t } = useT();
   const s = project.settings ?? {};
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -493,11 +497,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
       )}
 
       {/* ── 1 · Collaborators ─────────────────────────────────────────────── */}
-      <Section title="Collaborators">
+      <Section title={t("studySettings.secCollaborators")}>
         <p style={{ ...hintStyle, margin: 0 }}>
-          Enter the email addresses of colleagues you want to share this study with.
-          Each address must belong to an account already registered in Samply as a researcher.
-          Collaborators can view and edit the notification schedule and see the notification history.
+          {t("studySettings.collabHint")}
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
           {members.map((email, i) => (
@@ -506,7 +508,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 type="email"
                 name="members"
                 defaultValue={email}
-                placeholder="colleague@university.edu"
+                placeholder={t("studySettings.collabPlaceholder")}
                 style={{ ...inputStyle, flex: 1 }}
               />
               {members.length > 1 && (
@@ -514,7 +516,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                   type="button"
                   onClick={() => setMembers((prev) => prev.filter((_, j) => j !== i))}
                   style={{ padding: "0 1.4rem", background: "none", border: "1px solid var(--ink-20)", borderRadius: "0.8rem", color: "var(--ink-60)", cursor: "pointer", fontSize: "1.6rem", lineHeight: 1 }}
-                  aria-label="Remove"
+                  aria-label={t("studySettings.collabRemoveAriaLabel")}
                 >
                   ×
                 </button>
@@ -526,57 +528,59 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
             onClick={() => setMembers((prev) => [...prev, ""])}
             style={{ alignSelf: "flex-start", padding: "0.6rem 1.4rem", background: "none", border: "1px solid var(--ink-20)", borderRadius: "9999px", color: "var(--ink-60)", cursor: "pointer", fontSize: "1.25rem", fontFamily: "var(--font-body)" }}
           >
-            + Add collaborator
+            {t("studySettings.collabAdd")}
           </button>
         </div>
       </Section>
 
       {/* ── 2 · Reminders ────────────────────────────────────────────────── */}
-      <Section title="Reminders — completion URL">
+      <Section title={t("studySettings.secReminders")}>
         <p style={{ ...hintStyle, margin: 0 }}>
-          To cancel pending reminders when a participant completes a survey, your survey tool
-          must call the completion endpoint below with the{" "}
+          {t("studySettings.remindersHintPre")}{" "}
           <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%MESSAGE_ID%</code>{" "}
-          placeholder that was passed in the notification link. See{" "}
-          <a href="/docs/reminders" target="_blank" rel="noreferrer" style={{ color: "var(--coral)" }}>Reminders</a>{" "}
-          for setup instructions per survey tool.
+          {t("studySettings.remindersHintMid")}{" "}
+          <a href="/docs/reminders" target="_blank" rel="noreferrer" style={{ color: "var(--coral)" }}>{t("studySettings.remindersHintLink")}</a>{" "}
+          {t("studySettings.remindersHintPost")}
         </p>
         <CopyableUrl
-          label="GET — redirect at end of survey"
+          label={t("studySettings.remindersGetLabel")}
           url={`${baseUrl}/studies/${project.slug}/done/%MESSAGE_ID%`}
+          copyLabel={t("studySettings.copy")}
+          copiedLabel={t("studySettings.copied")}
         />
         <CopyableUrl
-          label="POST — webhook / server-side"
+          label={t("studySettings.remindersPostLabel")}
           url={`${baseUrl}/studies/${project.slug}/done/:messageid`}
+          copyLabel={t("studySettings.copy")}
+          copiedLabel={t("studySettings.copied")}
         />
       </Section>
 
       {/* ── 3 · Event-contingent design ───────────────────────────────────── */}
-      <Section title="Event-contingent design">
+      <Section title={t("studySettings.secEvents")}>
         <Toggle
           id="enableEvents"
           name="enableEvents"
-          label="Enable event-contingent design"
-          hint="Allow participants to self-initiate a report after a specific event occurs. A permanent link is shown in the app after they join the study."
+          label={t("studySettings.toggleEvents")}
+          hint={t("studySettings.toggleEventsHint")}
           checked={showEvents}
           onChange={setShowEvents}
         >
           <div>
-            <label style={labelStyle}>Participant-facing instructions</label>
-            <p style={hintStyle}>Explain to participants what event they should report and how to use the link in the app.</p>
+            <label style={labelStyle}>{t("studySettings.eventsInstructionLabel")}</label>
+            <p style={hintStyle}>{t("studySettings.eventsInstructionHint")}</p>
             <textarea
               name="eventDescription"
               defaultValue={s.eventDescription ?? ""}
-              placeholder="Tap the link below each time you experience a stressful event…"
+              placeholder={t("studySettings.eventsInstructionPlaceholder")}
               style={textareaStyle}
             />
           </div>
 
           <div>
-            <label style={labelStyle}>Event types (up to 5)</label>
+            <label style={labelStyle}>{t("studySettings.eventsTypesLabel")}</label>
             <p style={hintStyle}>
-              Define named events participants can report. Each event gets a caption shown in the app and a URL opened when the participant reports it.
-              You can use placeholders in the URL:{" "}
+              {t("studySettings.eventsTypesHintPre")}{" "}
               <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%SAMPLY_ID%</code>,{" "}
               <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%PARTICIPANT_CODE%</code>,{" "}
               <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%GROUP_ID%</code>,{" "}
@@ -587,8 +591,8 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 className="grid"
                 style={{ gridTemplateColumns: "3.2rem 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
               >
-                <span>#</span>
-                <span>Caption (shown in app) / URL</span>
+                <span>{t("studySettings.eventsColNum")}</span>
+                <span>{t("studySettings.eventsColHeader")}</span>
               </div>
               {[1, 2, 3, 4, 5].map((n) => (
                 <div
@@ -601,7 +605,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                       type="text"
                       name={`event-caption-${n}`}
                       defaultValue={getEventValue(n, "caption")}
-                      placeholder="e.g. Stressful event"
+                      placeholder={t("studySettings.eventCaptionPlaceholder")}
                       style={inputStyle}
                     />
                     <input
@@ -619,20 +623,19 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         </Toggle>
       </Section>
 
-      {/* ── 3 · Action buttons ────────────────────────────────────────────── */}
-      <Section title="Action buttons">
+      {/* ── 4 · Action buttons ────────────────────────────────────────────── */}
+      <Section title={t("studySettings.secActions")}>
         <Toggle
           id="enableActions"
           name="enableActions"
-          label="Enable action buttons on notifications"
-          hint="Show tappable buttons directly on push notifications in the Samply app. Each button sends a distinct identifier to your survey URL."
+          label={t("studySettings.toggleActions")}
+          hint={t("studySettings.toggleActionsHint")}
           checked={showActions}
           onChange={setShowActions}
         >
           <div>
             <p style={{ ...hintStyle, margin: "0 0 1rem" }}>
-              Define up to 4 action buttons. The <strong>identifier</strong> is sent as a query parameter when the participant taps the button.
-              The <strong>button caption</strong> is the label shown on the notification.
+              {t("studySettings.actionsHintPre")} <strong>{t("studySettings.actionsHintIdentifier")}</strong> {t("studySettings.actionsHintMid")} <strong>{t("studySettings.actionsHintCaption")}</strong> {t("studySettings.actionsHintPost")}
             </p>
             <div className="settings-actions-wrap" style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden" }}>
             <div className="settings-actions-inner">
@@ -640,9 +643,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 className="grid"
                 style={{ gridTemplateColumns: "3.2rem 1fr 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
               >
-                <span>#</span>
-                <span>Identifier (sent in URL)</span>
-                <span>Button caption (shown on notification)</span>
+                <span>{t("studySettings.actionsColNum")}</span>
+                <span>{t("studySettings.actionsColId")}</span>
+                <span>{t("studySettings.actionsColCaption")}</span>
               </div>
               {[1, 2, 3, 4].map((n) => (
                 <div
@@ -655,14 +658,14 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                     type="text"
                     name={`identifier-${n}`}
                     defaultValue={getActionValue(n, "identifier")}
-                    placeholder="e.g. button_yes"
+                    placeholder={t("studySettings.actionsIdPlaceholder")}
                     style={inputStyle}
                   />
                   <input
                     type="text"
                     name={`buttonTitle-${n}`}
                     defaultValue={getActionValue(n, "buttonTitle")}
-                    placeholder="e.g. Yes"
+                    placeholder={t("studySettings.actionsCaptionPlaceholder")}
                     style={inputStyle}
                   />
                 </div>
@@ -673,18 +676,18 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         </Toggle>
       </Section>
 
-      {/* ── 4 · Webhooks ──────────────────────────────────────────────────── */}
-      <Section title="Webhooks">
+      {/* ── 5 · Webhooks ──────────────────────────────────────────────────── */}
+      <Section title={t("studySettings.secWebhooks")}>
         <Toggle
           id="enableWebhooks"
           name="enableWebhooks"
-          label="Enable webhooks"
-          hint="Receive a POST request to your endpoint each time a participant event occurs in this study."
+          label={t("studySettings.toggleWebhooks")}
+          hint={t("studySettings.toggleWebhooksHint")}
           checked={showWebhooks}
           onChange={setShowWebhooks}
         >
           <div>
-            <label style={labelStyle}>Endpoint URL</label>
+            <label style={labelStyle}>{t("studySettings.webhookEndpointLabel")}</label>
             <input
               type="url"
               name="webhookEndpoint"
@@ -694,24 +697,24 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
             />
           </div>
           <div>
-            <label style={{ ...labelStyle, marginBottom: "0.8rem" }}>Events to send</label>
+            <label style={{ ...labelStyle, marginBottom: "0.8rem" }}>{t("studySettings.webhookEventsLabel")}</label>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
               <CheckRow
                 id="webhookEvents-study_joined"
                 name="webhookEvents-study_joined"
-                label="study_joined — participant enrols in the study"
+                label={t("studySettings.webhookStudyJoined")}
                 checked={s.webhookEvents?.includes("study_joined") ?? false}
               />
               <CheckRow
                 id="webhookEvents-study_left"
                 name="webhookEvents-study_left"
-                label="study_left — participant leaves the study"
+                label={t("studySettings.webhookStudyLeft")}
                 checked={s.webhookEvents?.includes("study_left") ?? false}
               />
               <CheckRow
                 id="webhookEvents-participant_info_updated"
                 name="webhookEvents-participant_info_updated"
-                label="participant_info_updated — participant code or group changes"
+                label={t("studySettings.webhookParticipantInfo")}
                 checked={s.webhookEvents?.includes("participant_info_updated") ?? false}
               />
             </div>
@@ -719,24 +722,24 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         </Toggle>
       </Section>
 
-      {/* ── 5 · Geofencing ────────────────────────────────────────────────── */}
-      <Section title="Geofencing">
+      {/* ── 6 · Geofencing ────────────────────────────────────────────────── */}
+      <Section title={t("studySettings.secGeofencing")}>
         <Toggle
           id="enableGeofencing"
           name="enableGeofencing"
-          label="Enable geofencing"
-          hint="Trigger notifications when participants enter or leave a defined physical location. Requires participants to grant background location access."
+          label={t("studySettings.toggleGeofencing")}
+          hint={t("studySettings.toggleGeofencingHint")}
           checked={showGeofencing}
           onChange={setShowGeofencing}
         >
           {/* Instruction */}
           <div>
-            <label style={labelStyle}>Instruction shown to participants</label>
-            <p style={hintStyle}>Explain why location access is needed and what participants should do.</p>
+            <label style={labelStyle}>{t("studySettings.geofencingInstLabel")}</label>
+            <p style={hintStyle}>{t("studySettings.geofencingInstHint")}</p>
             <textarea
               name="geofencingInstruction"
               defaultValue={project.geofencingInstruction ?? ""}
-              placeholder="This study uses your location to send a notification when you arrive at or leave a specific place. Please allow background location access…"
+              placeholder={t("studySettings.geofencingInstPlaceholder")}
               style={textareaStyle}
             />
           </div>
@@ -768,10 +771,10 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
               }}
             >
               <div>
-                <div style={{ ...labelStyle, margin: 0 }}>Participant-defined zone</div>
+                <div style={{ ...labelStyle, margin: 0 }}>{t("studySettings.participantZoneTitle")}</div>
                 {!showParticipantZone && (
                   <div style={{ ...hintStyle, margin: "0.2rem 0 0", fontSize: "1.1rem" }}>
-                    An optional zone defined by the participant (e.g. home or workplace).
+                    {t("studySettings.participantZoneHintCollapsed")}
                   </div>
                 )}
               </div>
@@ -784,33 +787,32 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
             {showParticipantZone && (
               <div style={{ padding: "1.6rem", borderTop: "1px solid var(--ink-10)", display: "flex", flexDirection: "column", gap: "1.2rem" }}>
                 <p style={{ ...hintStyle, margin: 0 }}>
-                  An optional single zone defined by the participant (e.g. their home or workplace).
-                  The link below is opened in the browser to let them select it.
+                  {t("studySettings.participantZoneHintExpanded")}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                   <div>
-                    <label style={labelStyle}>Zone selection link</label>
+                    <label style={labelStyle}>{t("studySettings.zoneLinkLabel")}</label>
                     <input name="geofencingURL" type="text" defaultValue={s.geofencing?.link ?? ""} placeholder="https://maps.yourapp.com/select" style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
                   </div>
                   <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
                     <div>
-                      <label style={labelStyle}>Default radius (m)</label>
+                      <label style={labelStyle}>{t("studySettings.zoneRadiusLabel")}</label>
                       <input name="userLocationRadius" type="number" defaultValue={s.geofencing?.radius ?? ""} placeholder="100" style={inputStyle} />
                     </div>
                     <div>
-                      <label style={labelStyle}>Exit zone (m)</label>
+                      <label style={labelStyle}>{t("studySettings.zoneExitLabel")}</label>
                       <input name="userLocationExitzone" type="number" defaultValue={s.geofencing?.exitzone ?? ""} placeholder="0" style={inputStyle} />
                     </div>
                     <div>
-                      <label style={labelStyle}>Notification header</label>
-                      <input name="userLocationHeader" type="text" defaultValue={s.geofencing?.header ?? ""} placeholder="You arrived!" style={inputStyle} />
+                      <label style={labelStyle}>{t("studySettings.zoneHeaderLabel")}</label>
+                      <input name="userLocationHeader" type="text" defaultValue={s.geofencing?.header ?? ""} placeholder={t("studySettings.locArrivedPlaceholder")} style={inputStyle} />
                     </div>
                     <div>
-                      <label style={labelStyle}>Notification message</label>
-                      <input name="userLocationMessage" type="text" defaultValue={s.geofencing?.message ?? ""} placeholder="Please fill out the survey" style={inputStyle} />
+                      <label style={labelStyle}>{t("studySettings.zoneMessageLabel")}</label>
+                      <input name="userLocationMessage" type="text" defaultValue={s.geofencing?.message ?? ""} placeholder={t("studySettings.locSurveyPlaceholder")} style={inputStyle} />
                     </div>
                     <div>
-                      <label style={labelStyle}>Min time between pings (min)</label>
+                      <label style={labelStyle}>{t("studySettings.zoneMintimeLabel")}</label>
                       <input name="userLocationMintimewindow" type="number" defaultValue={s.geofencing?.mintimewindow ?? ""} placeholder="0" style={inputStyle} />
                     </div>
                   </div>
@@ -823,7 +825,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                       defaultChecked={s.geofencing?.events?.includes("enter") ?? false}
                       style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
                     />
-                    Trigger on enter
+                    {t("studySettings.triggerEnter")}
                   </label>
                   <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
                     <input
@@ -832,7 +834,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                       defaultChecked={s.geofencing?.events?.includes("exit") ?? false}
                       style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
                     />
-                    Trigger on exit
+                    {t("studySettings.triggerExit")}
                   </label>
                   <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
                     <input
@@ -841,7 +843,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                       defaultChecked={s.geofencing?.invisible ?? false}
                       style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
                     />
-                    Hidden zone (invisible to participant)
+                    {t("studySettings.hiddenZone")}
                   </label>
                 </div>
               </div>
@@ -850,9 +852,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
 
           {/* Researcher-defined locations */}
           <div>
-            <label style={{ ...labelStyle, marginBottom: "0.6rem" }}>Researcher-defined locations</label>
+            <label style={{ ...labelStyle, marginBottom: "0.6rem" }}>{t("studySettings.researcherLocLabel")}</label>
             <p style={hintStyle}>
-              Fixed locations set by you. Participants will be notified when they enter or leave these zones, without needing to define them.
+              {t("studySettings.researcherLocHint")}
             </p>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -863,6 +865,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                   onDelete={() =>
                     setLocations((prev) => prev.filter((l) => l.slug !== loc.slug))
                   }
+                  t={t}
                 />
               ))}
             </div>
@@ -873,7 +876,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 value={newLocationName}
                 onChange={(e) => setNewLocationName(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addLocation())}
-                placeholder="Location name (e.g. Lab, Home)"
+                placeholder={t("studySettings.locNewPlaceholder")}
                 style={{ ...inputStyle, flex: 1 }}
               />
               <button
@@ -881,7 +884,7 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 onClick={addLocation}
                 style={{ padding: "0.9rem 1.6rem", background: "var(--ink)", color: "var(--paper)", border: "none", borderRadius: "0.8rem", fontSize: "1.25rem", fontWeight: 500, cursor: "pointer", fontFamily: "var(--font-body)", whiteSpace: "nowrap" }}
               >
-                + Add location
+                {t("studySettings.locAddButton")}
               </button>
             </div>
           </div>
@@ -891,10 +894,10 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
       {/* Submit */}
       <div style={{ paddingTop: "0.4rem" }}>
         <SubmitButton
-          pendingLabel="Saving…"
+          pendingLabel={t("studySettings.saving")}
           style={{ padding: "1.2rem 2.8rem", background: "var(--coral)", color: "#fff", border: "none", borderRadius: "9999px", fontSize: "1.4rem", fontWeight: 500, fontFamily: "var(--font-body)" }}
         >
-          Save settings
+          {t("studySettings.saveButton")}
         </SubmitButton>
       </div>
     </form>

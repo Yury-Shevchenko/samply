@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "News & Updates — Samply" };
 
 export default async function NewsSubPage({ params }: { params: Promise<{ page: string }> }) {
   const { page } = await params;
   if (page !== "intro") notFound();
+
+  const { t } = await getT();
 
   return (
     <div className="inner">
@@ -14,7 +17,7 @@ export default async function NewsSubPage({ params }: { params: Promise<{ page: 
           <div className="nav__section nav__section--pages">
             <li className="nav__item">
               <a className="nav__link nav__link--active" href="/news/intro">
-                News &amp; Updates
+                {t("news.navLabel")}
               </a>
             </li>
           </div>

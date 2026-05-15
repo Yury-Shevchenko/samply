@@ -3,6 +3,7 @@
 import { useState } from "react";
 import CopyButton from "./CopyButton";
 import SecureLinkGenerator from "./SecureLinkGenerator";
+import { useT } from "@/app/components/TranslationProvider";
 
 interface Props {
   studyId: string;
@@ -12,16 +13,11 @@ interface Props {
   webLink: string;
   deepLink: string;
   customLink: string;
+  studyCode: string;
 }
 
-const TABS = [
-  { id: "web",    label: "Web page" },
-  { id: "app",    label: "App link" },
-  { id: "search", label: "Search in app" },
-  { id: "secure", label: "Secure link" },
-] as const;
-
-type TabId = typeof TABS[number]["id"];
+const TAB_IDS = ["web", "code", "app", "search", "secure"] as const;
+type TabId = typeof TAB_IDS[number];
 
 function LinkRow({ label, value }: { label: string; value: string }) {
   return (
@@ -47,8 +43,17 @@ function Note({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function InvitationsClient({ studyId, projectName, isPublic, isActive, webLink, deepLink, customLink }: Props) {
+export default function InvitationsClient({ studyId, projectName, isPublic, isActive, webLink, deepLink, customLink, studyCode }: Props) {
+  const { t } = useT();
   const [active, setActive] = useState<TabId>("web");
+
+  const TABS: { id: TabId; label: string }[] = [
+    { id: "web",    label: t("invitations.tabWeb") },
+    { id: "code",   label: t("invitations.tabCode") },
+    { id: "app",    label: t("invitations.tabApp") },
+    { id: "search", label: t("invitations.tabSearch") },
+    { id: "secure", label: t("invitations.tabSecure") },
+  ];
 
   return (
     <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
@@ -104,31 +109,59 @@ export default function InvitationsClient({ studyId, projectName, isPublic, isAc
         {active === "web" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
             {isActive ? (
-              <LinkRow label="Study page URL" value={webLink} />
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--ink-40)", fontWeight: 600 }}>
+                  {t("invitations.webLinkLabel")}
+                </span>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                  <code style={{ flex: 1, fontFamily: "var(--font-mono)", fontSize: "1.15rem", padding: "0.8rem 1.2rem", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", color: "var(--ink)", wordBreak: "break-all", lineHeight: 1.5 }}>
+                    {webLink}
+                  </code>
+                  <CopyButton value={webLink} />
+                  <a
+                    href={webLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ flexShrink: 0, display: "inline-flex", alignItems: "center", padding: "0.65rem 1.1rem", borderRadius: "0.6rem", border: "1px solid var(--ink-20)", fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-60)", textDecoration: "none", whiteSpace: "nowrap" }}
+                    className="hover:opacity-70 transition-opacity"
+                  >
+                    {t("invitations.openInNewTab")}
+                  </a>
+                </div>
+              </div>
             ) : (
               <div style={{ background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.2)", borderRadius: "0.6rem", padding: "1.2rem 1.4rem" }}>
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", margin: 0, lineHeight: 1.6 }}>
-                  ▲ Your study is not active yet. Activate it to share the web page link.
+                  {t("invitations.webNotActive")}
                 </p>
               </div>
             )}
             <Note>
-              The study page shows a description, authors, and a unique QR code participants can scan to join directly.
+              {t("invitations.webNote")}
             </Note>
+          </div>
+        )}
+
+        {active === "code" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+            <Note>
+              {t("invitations.studyCodeNote")}
+            </Note>
+            <LinkRow label={t("invitations.studyCodeLabel")} value={studyCode} />
           </div>
         )}
 
         {active === "app" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
             <Note>
-              Participants must have the Samply app installed and be <strong style={{ color: "var(--ink)" }}>signed in or registered</strong> before opening these links — the link will open the app and enroll them directly into the study.
+              {t("invitations.appNotePre")} <strong style={{ color: "var(--ink)" }}>{t("invitations.appNoteHighlight")}</strong> {t("invitations.appNotePost")}
             </Note>
             <div style={{ height: "0.1rem", background: "var(--ink-10)" }} />
-            <LinkRow label="Open study directly in the app" value={deepLink} />
+            <LinkRow label={t("invitations.appDirectLabel")} value={deepLink} />
             <div style={{ height: "0.1rem", background: "var(--ink-10)" }} />
-            <LinkRow label="Custom link with participant code" value={customLink} />
+            <LinkRow label={t("invitations.appCustomLabel")} value={customLink} />
             <Note>
-              Replace <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.5rem", borderRadius: "0.3rem" }}>123</code>{" "}with any value — it will be recorded as the participant&apos;s code variable. Works whether or not the study is publicly listed.
+              {t("invitations.appCustomNotePre")} <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.5rem", borderRadius: "0.3rem" }}>123</code>{" "}{t("invitations.appCustomNotePost")}
             </Note>
           </div>
         )}
@@ -136,14 +169,13 @@ export default function InvitationsClient({ studyId, projectName, isPublic, isAc
         {active === "search" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.65 }}>
-              If your study is public, participants can search for it by name under <strong style={{ color: "var(--ink)" }}>More → Public studies</strong> in the Samply app.
-              Share the exact study name:{" "}
+              {t("invitations.searchNotePre")} <strong style={{ color: "var(--ink)" }}>{t("invitations.searchNoteHighlight")}</strong> {t("invitations.searchNotePost")}{" "}
               <strong style={{ color: "var(--ink)" }}>{projectName}</strong>
             </p>
             {!isPublic && (
               <div style={{ background: "var(--ink-10)", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", padding: "1rem 1.4rem" }}>
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-60)", margin: 0 }}>
-                  Your study is currently private. Use the Web page or App link tab instead.
+                  {t("invitations.searchPrivate")}
                 </p>
               </div>
             )}
@@ -153,7 +185,7 @@ export default function InvitationsClient({ studyId, projectName, isPublic, isAc
         {active === "secure" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.65 }}>
-              Generate a tamper-proof link with a checksum. Participants can open it on their phone or paste it into the registration screen. Per-participant codes make links single-use.
+              {t("invitations.secureNote")}
             </p>
             <SecureLinkGenerator projectId={studyId} />
           </div>

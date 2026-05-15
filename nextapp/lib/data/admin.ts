@@ -1,6 +1,7 @@
 import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import User from "@/lib/models/user";
+import Result from "@/lib/models/result";
 import PendingNotification from "@/lib/models/pendingNotification";
 import AgendaJob from "@/lib/models/agendaJob";
 import mongoose, { type PipelineStage } from "mongoose";
@@ -425,5 +426,196 @@ export async function fetchAdminNotifications(
     })),
     agendaByType,
     agendaTotal: agendaJobs.length,
+  };
+}
+
+// ── Platform-wide analytics ───────────────────────────────────────────────────
+
+export interface PlatformOverview {
+  totalStudies: number;
+  activeStudies: number;
+  totalResearchers: number;
+  totalParticipants: number;
+  notifications7d: number;
+  responded7d: number;
+  compliance7dPct: number;
+  newStudies7d: number;
+  newResearchers7d: number;
+}
+
+export interface PlatformTimeSeriesPoint {
+  date: string;
+  sent: number;
+  responded: number;
+  newStudies: number;
+  newResearchers: number;
+}
+
+export interface TopStudyRow {
+  id: string;
+  name: string;
+  participantCount: number;
+  currentlyActive: boolean;
+}
+
+export interface StudyComplianceBucket {
+  bucket: string;
+  count: number;
+}
+
+export interface PlatformAnalytics {
+  overview: PlatformOverview;
+  timeSeries: PlatformTimeSeriesPoint[];
+  topStudies: TopStudyRow[];
+  complianceDistribution: StudyComplianceBucket[];
+}
+
+export async function fetchPlatformAnalytics(days = 30): Promise<PlatformAnalytics> {
+  await connectDB();
+  const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
+  const since7d = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+
+  const [
+    totalStudies,
+    activeStudies,
+    totalResearchers,
+    participantAgg,
+    notifications7d,
+    responded7d,
+    newStudies7d,
+    newResearchers7d,
+    notifTimeSeries,
+    studyTimeSeries,
+    researcherTimeSeries,
+    topStudiesRaw,
+    complianceRaw,
+  ] = await Promise.all([
+    Project.countDocuments(),
+    Project.countDocuments({ currentlyActive: true }),
+    User.countDocuments({ level: { $gt: 10 } }),
+    Project.aggregate([
+      { $project: { count: { $size: { $ifNull: ["$mobileUsers", []] } } } },
+      { $group: { _id: null, total: { $sum: "$count" } } },
+    ]),
+    Result.countDocuments({ created: { $gte: since7d } }),
+    Result.countDocuments({ created: { $gte: since7d }, "events.status": "tapped" }),
+    Project.countDocuments({ created: { $gte: since7d } }),
+    User.countDocuments({ created: { $gte: since7d }, level: { $gt: 10 } }),
+
+    // Notifications sent/responded per day
+    Result.aggregate([
+      { $match: { created: { $gte: since } } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
+          sent: { $sum: 1 },
+          responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
+        },
+      },
+      { $sort: { _id: 1 } },
+    ]),
+
+    // New studies per day
+    Project.aggregate([
+      { $match: { created: { $gte: since } } },
+      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ]),
+
+    // New researchers per day
+    User.aggregate([
+      { $match: { created: { $gte: since }, level: { $gt: 10 } } },
+      { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } }, count: { $sum: 1 } } },
+      { $sort: { _id: 1 } },
+    ]),
+
+    // Top 10 studies by participant count
+    Project.aggregate([
+      { $project: { name: 1, currentlyActive: 1, participantCount: { $size: { $ifNull: ["$mobileUsers", []] } } } },
+      { $sort: { participantCount: -1 } },
+      { $limit: 10 },
+    ]),
+
+    // Per-study compliance in the last 7 days — bucketed into 5 bands
+    Result.aggregate([
+      { $match: { created: { $gte: since7d } } },
+      {
+        $group: {
+          _id: "$project",
+          sent: { $sum: 1 },
+          responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
+        },
+      },
+      { $project: { pct: { $multiply: [{ $divide: ["$responded", { $max: ["$sent", 1] }] }, 100] } } },
+      {
+        $bucket: {
+          groupBy: "$pct",
+          boundaries: [0, 20, 40, 60, 80, 100],
+          default: 100,
+          output: { count: { $sum: 1 } },
+        },
+      },
+    ]),
+  ]);
+
+  // Merge the three per-day series into one combined time-series, filling gaps
+  const notifMap = new Map<string, { sent: number; responded: number }>(
+    notifTimeSeries.map((r: { _id: string; sent: number; responded: number }) => [r._id, { sent: r.sent, responded: r.responded }]),
+  );
+  const studyMap = new Map<string, number>(
+    studyTimeSeries.map((r: { _id: string; count: number }) => [r._id, r.count]),
+  );
+  const researcherMap = new Map<string, number>(
+    researcherTimeSeries.map((r: { _id: string; count: number }) => [r._id, r.count]),
+  );
+
+  const timeSeries: PlatformTimeSeriesPoint[] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
+    const key = d.toISOString().slice(0, 10);
+    timeSeries.push({
+      date: key,
+      sent: notifMap.get(key)?.sent ?? 0,
+      responded: notifMap.get(key)?.responded ?? 0,
+      newStudies: studyMap.get(key) ?? 0,
+      newResearchers: researcherMap.get(key) ?? 0,
+    });
+  }
+
+  const COMPLIANCE_LABELS: Record<number, string> = {
+    0: "0–20%",
+    20: "20–40%",
+    40: "40–60%",
+    60: "60–80%",
+    80: "80–100%",
+    100: "100%",
+  };
+  const compMap = new Map<number, number>(
+    complianceRaw.map((r: { _id: number; count: number }) => [r._id, r.count]),
+  );
+  const complianceDistribution: StudyComplianceBucket[] = Object.entries(COMPLIANCE_LABELS).map(
+    ([boundary, label]) => ({ bucket: label, count: compMap.get(Number(boundary)) ?? 0 }),
+  );
+
+  return {
+    overview: {
+      totalStudies,
+      activeStudies,
+      totalResearchers,
+      totalParticipants: (participantAgg[0] as { total?: number } | undefined)?.total ?? 0,
+      notifications7d,
+      responded7d,
+      compliance7dPct: notifications7d > 0 ? Math.round((responded7d / notifications7d) * 100) : 0,
+      newStudies7d,
+      newResearchers7d,
+    },
+    timeSeries,
+    topStudies: topStudiesRaw.map((r: { _id: unknown; name?: string; participantCount: number; currentlyActive?: boolean }) => ({
+      id: String(r._id),
+      name: r.name ?? "—",
+      participantCount: r.participantCount,
+      currentlyActive: r.currentlyActive ?? false,
+    })),
+    complianceDistribution,
   };
 }

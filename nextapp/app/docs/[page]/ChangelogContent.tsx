@@ -1,10 +1,35 @@
+import type { Locale } from "@/lib/i18n";
 import connectDB from '@/lib/db';
 import ChangelogEntry, { type IChangelogEntry, type ChangeTag } from '@/lib/models/changelogEntry';
 
-const TAG_LABEL: Record<ChangeTag, string> = {
+const TAG_LABEL_EN: Record<ChangeTag, string> = {
   new:         'New',
   fix:         'Fix',
   improvement: 'Improved',
+};
+
+const TAG_LABEL_DE: Record<ChangeTag, string> = {
+  new:         'Hinzugefügt',
+  fix:         'Behoben',
+  improvement: 'Verbessert',
+};
+
+const TAG_LABEL_NL: Record<ChangeTag, string> = {
+  new:         'Functie',
+  fix:         'Oplossing',
+  improvement: 'Verbetering',
+};
+
+const TAG_LABEL_RU: Record<ChangeTag, string> = {
+  new:         'Новое',
+  fix:         'Исправлено',
+  improvement: 'Улучшено',
+};
+
+const TAG_LABEL_ZH: Record<ChangeTag, string> = {
+  new:         '新功能',
+  fix:         '修复',
+  improvement: '改进',
 };
 
 const TAG_COLOR: Record<ChangeTag, string> = {
@@ -19,19 +44,21 @@ const TAG_BG: Record<ChangeTag, string> = {
   improvement: 'var(--ink-10)',
 };
 
-function fmt(d: Date) {
-  return new Date(d).toLocaleDateString('en-US', {
+function fmt(d: Date, locale: Locale) {
+  const lang = locale === 'de' ? 'de-DE' : locale === 'nl' ? 'nl-NL' : locale === 'ru' ? 'ru-RU' : locale === 'zh' ? 'zh-CN' : 'en-US';
+  return new Date(d).toLocaleDateString(lang, {
     month: 'long', day: 'numeric', year: 'numeric',
   });
 }
 
-function EntryCard({ entry }: { entry: IChangelogEntry }) {
+function EntryCard({ entry, locale }: { entry: IChangelogEntry; locale: Locale }) {
+  const TAG_LABEL = locale === 'de' ? TAG_LABEL_DE : locale === 'nl' ? TAG_LABEL_NL : locale === 'ru' ? TAG_LABEL_RU : locale === 'zh' ? TAG_LABEL_ZH : TAG_LABEL_EN;
   return (
     <div style={{ display: 'flex', gap: '4rem', paddingBottom: '3.6rem', borderBottom: '1px solid var(--ink-10)', marginBottom: '3.6rem' }}>
       {/* left — version + date */}
       <div style={{ flexShrink: 0, width: '14rem', paddingTop: '0.2rem' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.5rem', fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em' }}>{entry.version}</div>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: 'var(--ink-40)', marginTop: '0.3rem' }}>{fmt(entry.date)}</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: 'var(--ink-40)', marginTop: '0.3rem' }}>{fmt(entry.date, locale)}</div>
       </div>
 
       {/* right — title + changes */}
@@ -66,14 +93,22 @@ function EntryCard({ entry }: { entry: IChangelogEntry }) {
   );
 }
 
-export default async function ChangelogContent() {
+export default async function ChangelogContent({ locale }: { locale: Locale }) {
   await connectDB();
   const entries = await ChangelogEntry.find({}).sort({ date: -1 }).lean<IChangelogEntry[]>();
 
   if (entries.length === 0) {
     return (
       <p style={{ fontSize: '1.4rem', color: 'var(--ink-40)' }}>
-        No releases logged yet. Check back soon.
+        {locale === 'de'
+          ? 'Noch keine Versionen protokolliert. Schauen Sie bald wieder vorbei.'
+          : locale === 'nl'
+          ? 'Nog geen versies geregistreerd. Kom binnenkort terug.'
+          : locale === 'ru'
+          ? 'Записей о версиях пока нет. Загляните позже.'
+          : locale === 'zh'
+          ? '暂无版本记录。请稍后再来。'
+          : 'No releases logged yet. Check back soon.'}
       </p>
     );
   }
@@ -81,7 +116,7 @@ export default async function ChangelogContent() {
   return (
     <div style={{ marginTop: '0.4rem' }}>
       {entries.map((e) => (
-        <EntryCard key={String(e._id)} entry={e} />
+        <EntryCard key={String(e._id)} entry={e} locale={locale} />
       ))}
     </div>
   );

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { resetNotifyTokenAction } from "./actions";
 import { CopyButton } from "./CopyButton";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 const BASE_URL = process.env.EXPRESS_URL ?? "https://samply.uni-konstanz.de";
 const STREAM_ENDPOINT = `${BASE_URL}/api/notify`;
@@ -35,6 +36,7 @@ export default async function StudyApiPage({
 }: {
   params: Promise<{ studyId: string }>;
 }) {
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -85,51 +87,49 @@ sendNotification(url, data);`;
       {/* Header */}
       <div>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-          stream api
+          {t("streamApi.label")}
         </div>
         <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "clamp(1.8rem, 5vw, 2.6rem)", letterSpacing: "-0.025em", margin: 0, lineHeight: 1.1 }}>
-          Stream API
+          {t("streamApi.title")}
         </h2>
         <p style={{ margin: "0.8rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, maxWidth: "54rem" }}>
-          Trigger notifications from an external system — your survey tool, a script, or any HTTP client — by posting to the Samply API. Useful for event-contingent designs where a notification should fire immediately after an event of interest.
+          {t("streamApi.subtitle")}
         </p>
       </div>
 
       {/* Token */}
-      <Section title="Notification token">
+      <Section title={t("streamApi.sectionToken")}>
         {token ? (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "1.2rem", flexWrap: "wrap" }}>
               <code style={{ flex: 1, fontFamily: "var(--font-mono)", fontSize: "1.2rem", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "0.8rem 1.2rem", wordBreak: "break-all", color: expired ? "var(--coral)" : "var(--ink)" }}>
                 {token}
               </code>
-              <CopyButton text={token} label="Copy token" />
+              <CopyButton text={token} label={t("streamApi.copyToken")} />
             </div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: expired ? "var(--coral)" : "var(--ink-60)" }}>
               {expired
-                ? `⚠ Token expired on ${fmt(expires!)}`
-                : `Valid until ${fmt(expires!)}`}
+                ? t("streamApi.tokenExpired", { date: fmt(expires!) })
+                : t("streamApi.tokenValid", { date: fmt(expires!) })}
             </div>
           </div>
         ) : (
           <p style={{ fontSize: "1.3rem", color: "var(--ink-40)", margin: 0 }}>
-            No token generated yet. {isOwner ? "Use the form below to create one." : "Ask the study owner to generate a token."}
+            {t("streamApi.noToken")} {isOwner ? t("streamApi.noTokenOwner") : t("streamApi.noTokenMember")}
           </p>
         )}
       </Section>
 
       {/* Reset token — owner only */}
       {isOwner && (
-        <Section title={token ? "Regenerate token" : "Generate token"}>
+        <Section title={token ? t("streamApi.sectionRegenerate") : t("streamApi.sectionGenerate")}>
           <p style={{ fontSize: "1.25rem", color: "var(--ink-60)", margin: "0 0 1.6rem", lineHeight: 1.6 }}>
-            {token
-              ? "Generating a new token immediately invalidates the old one — update any external scripts that use it."
-              : "Set an expiry date and generate your first token."}
+            {token ? t("streamApi.regenerateBody") : t("streamApi.generateBody")}
           </p>
           <form action={resetAction} style={{ display: "flex", alignItems: "flex-end", gap: "1.2rem", flexWrap: "wrap" }}>
             <div className="mob-full" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <label style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".08em", textTransform: "uppercase", color: "var(--ink-60)" }}>
-                Token expires on
+                {t("streamApi.expiresLabel")}
               </label>
               <input
                 type="date"
@@ -141,24 +141,24 @@ sendNotification(url, data);`;
               />
             </div>
             <SubmitButton
-              pendingLabel={token ? "Regenerating…" : "Generating…"}
+              pendingLabel={token ? t("streamApi.regeneratingLabel") : t("streamApi.generatingLabel")}
               style={{ padding: "0.85rem 2rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "9999px", fontSize: "1.2rem", fontWeight: 500, fontFamily: "var(--font-body)", border: "none" }}
               className="mob-full hover:opacity-80 transition-opacity"
             >
-              {token ? "Regenerate" : "Generate token"}
+              {token ? t("streamApi.regenerateButton") : t("streamApi.generateButton")}
             </SubmitButton>
           </form>
         </Section>
       )}
 
       {/* Targeting explanation */}
-      <Section title="Targeting">
+      <Section title={t("streamApi.sectionTargeting")}>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
           {[
-            { params: "groupID + participantID", effect: "All members of the group except the specified participant" },
-            { params: "groupID only", effect: "All members of the group" },
-            { params: "participantID only", effect: "That specific participant" },
-            { params: "neither", effect: "All participants in the study" },
+            { params: "groupID + participantID", effect: t("streamApi.targetGroupAndParticipant") },
+            { params: "groupID only", effect: t("streamApi.targetGroupOnly") },
+            { params: "participantID only", effect: t("streamApi.targetParticipantOnly") },
+            { params: "neither", effect: t("streamApi.targetNeither") },
           ].map(({ params: p, effect }) => (
             <div key={p} style={{ display: "flex", gap: "1.6rem", alignItems: "baseline", flexWrap: "wrap" }}>
               <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", background: "rgba(214,90,48,.06)", padding: "0.2rem 0.7rem", borderRadius: "0.4rem", flexShrink: 0 }}>
@@ -170,31 +170,31 @@ sendNotification(url, data);`;
         </div>
         <div style={{ marginTop: "1.4rem", fontSize: "1.2rem", color: "var(--ink-40)", lineHeight: 1.6 }}>
           <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>title</code>,{" "}
-          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>message</code>, and{" "}
-          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>url</code> define the notification content.{" "}
-          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>expireIn</code> is the number of minutes before an undelivered notification is discarded.
+          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>message</code>, {t("streamApi.targetingAnd")}{" "}
+          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>url</code> {t("streamApi.targetingDef")}{" "}
+          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)" }}>expireIn</code> {t("streamApi.targetingExpNote")}
         </div>
         <div style={{ marginTop: "1rem", fontSize: "1.2rem", color: "var(--ink-40)", lineHeight: 1.6 }}>
-          The <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>url</code> supports placeholders:{" "}
+          {t("streamApi.targetingPlPre")}{t("streamApi.targetingPlPre") ? " " : ""}<code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>url</code>{" "}{t("streamApi.targetingPlSupport")}{" "}
           <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>%SAMPLY_ID%</code>,{" "}
           <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>%PARTICIPANT_CODE%</code>,{" "}
           <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>%GROUP_CODE%</code>,{" "}
-          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>%MESSAGE_ID%</code> — Samply fills these in per-participant before forwarding the link.
+          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem" }}>%MESSAGE_ID%</code>{" "}{t("streamApi.targetingPlPost")}
         </div>
       </Section>
 
       {/* Code example */}
-      <Section title="Code example (JavaScript)">
+      <Section title={t("streamApi.sectionCode")}>
         <div style={{ position: "relative" }}>
           <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
-            <CopyButton text={codeSnippet} label="Copy code" />
+            <CopyButton text={codeSnippet} label={t("streamApi.copyCode")} />
           </div>
           <pre className="api-pre" style={{ margin: 0, padding: "1.6rem", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", fontFamily: "var(--font-mono)", fontSize: "1.15rem", lineHeight: 1.7, color: "var(--ink)" }}>
             <code>{codeSnippet}</code>
           </pre>
         </div>
         <div style={{ marginTop: "1.2rem", fontSize: "1.2rem", color: "var(--ink-40)" }}>
-          Endpoint: <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>{STREAM_ENDPOINT}</code>
+          {t("streamApi.endpoint")} <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>{STREAM_ENDPOINT}</code>
         </div>
       </Section>
 

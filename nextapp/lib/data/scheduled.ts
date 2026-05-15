@@ -33,7 +33,10 @@ export interface NotificationConfig {
   participantId?: string[];
   groups?: string[];
   randomize?: boolean;
+  yokedDesign?: boolean;
   scheduleInFuture?: boolean;
+  schedule?: string;
+  delay?: { days?: number; hours?: number; minutes?: number };
   expireIn?: number;
   reminders?: Array<{ title: string; message: string; time: number }>;
 }

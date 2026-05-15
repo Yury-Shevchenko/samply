@@ -1,3 +1,5 @@
+import type { Locale } from "@/lib/i18n";
+
 const JOIN_METHODS = [
   {
     id: "web",
@@ -6,7 +8,7 @@ const JOIN_METHODS = [
     format: "https://samply.uni-konstanz.de/studies/your-study-slug",
     notes: [
       "Opens a browser page. The participant taps a button to hand off to the Samply Research app.",
-      "Requires the study to be marked Currently active. Inactive studies show a “not available” message on this page.",
+      'Requires the study to be marked Currently active. Inactive studies show a “not available” message on this page.',
     ],
   },
   {
@@ -54,7 +56,244 @@ const PARTICIPANT_TABLE_COLUMNS = [
   { col: "History", desc: "A per-participant log of every notification send and whether a survey response was detected." },
 ];
 
-export default function InviteContent() {
+const JOIN_METHODS_DE = [
+  {
+    id: "web",
+    label: "Web-Link",
+    when: "Rekrutierungs-E-Mails, Landingpages, Poster mit einer URL",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "Öffnet eine Browserseite. Die teilnehmende Person tippt auf eine Schaltfläche, um zur Samply Research-App weitergeleitet zu werden.",
+      'Erfordert, dass die Studie als „Derzeit aktiv" markiert ist. Inaktive Studien zeigen auf dieser Seite die Meldung „Nicht verfügbar".',
+    ],
+  },
+  {
+    id: "deep",
+    label: "Direkter Deep-Link",
+    when: "SMS, Messaging-Apps, QR-Codes – alles, was direkt in der App öffnet",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "Umgeht die Browser-Landingpage und öffnet die App direkt.",
+      "Funktioniert unabhängig davon, ob die Studie derzeit aktiv ist oder nicht.",
+      "Hängen Sie &code=ABC an, um das Teilnehmenden-Code-Feld bei der Einschreibung vorauszufüllen.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "In der App suchen",
+    when: "Laborsitzungen, bei denen Teilnehmende ein gemeinsames Gerät mit geöffneter App verwenden",
+    format: "— kein Link erforderlich —",
+    notes: [
+      "Teilnehmende suchen in der Samply Research-App nach Ihrer Studie anhand von Name oder ID.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "Sicherer Einladungslink",
+    when: "Längsschnittstudien, bei denen jede teilnehmende Person einen einzigartigen, zeitlich begrenzten Link erhalten muss",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "Wird auf der Einladungsseite mit einem konfigurierbaren Gültigkeitsfenster generiert (Standard: 168 Stunden = 7 Tage).",
+      "Der Link ist kryptografisch signiert – jede Manipulation macht ihn ungültig.",
+      "Der Generator hat ein optionales Code-Feld. Lassen Sie es leer für einen Link, den jede teilnehmende Person verwenden kann; geben Sie einen Code ein, um die Kennung dieser Person bei der Einschreibung vorauszufüllen, wodurch der Link für diese Person effektiv zur Einmalnutzung wird.",
+      "Ein QR-Code für den generierten Link wird auf dem Bildschirm zum einfachen Scannen angezeigt.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_DE = [
+  { col: "Samply ID", desc: "Anonyme Kennung, die von der App generiert wird – nie mit einem echten Namen oder einer E-Mail-Adresse verknüpft." },
+  { col: "Token", desc: "Der Push-Benachrichtigungs-Token des Geräts. Samply verwendet diesen, um Benachrichtigungen zu übermitteln." },
+  { col: "Datum", desc: "Wann die teilnehmende Person eingeschrieben wurde." },
+  { col: "Code", desc: "Die benutzerdefinierte Kennung, die die teilnehmende Person eingegeben hat, wenn Ihre Studie danach fragt." },
+  { col: "Gruppe", desc: "Die Gruppe, der die teilnehmende Person zugewiesen wurde, wenn Ihre Studie Gruppen verwendet." },
+  { col: "Zeitzone", desc: "Wird vom Gerät der teilnehmenden Person erkannt. Wird verwendet, um persönliche Benachrichtigungen zur richtigen Ortszeit zu planen." },
+  { col: "Zeitfenster", desc: "Die Stunden, in denen die teilnehmende Person Benachrichtigungen erhalten möchte, wie in der App festgelegt. Dies beeinflusst die geplanten Sendezeiten nicht – wenn Sie individuelle Zeitpräferenzen berücksichtigen möchten, müssen Sie dies bei der Konfiguration Ihrer Benachrichtigungszeitpläne manuell einbeziehen." },
+  { col: "Verlauf", desc: "Ein teilnehmendenspezifisches Protokoll jeder Benachrichtigungsversendung und ob eine Umfrageantwort erkannt wurde." },
+];
+
+const JOIN_METHODS_NL = [
+  {
+    id: "web",
+    label: "Webpagina",
+    when: "Wervings-e-mails, landingspagina's, posters met een URL",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "Opent een browserpagina. De deelnemer tikt op een knop om door te gaan naar de Samply Research-app.",
+      "Vereist dat de studie is gemarkeerd als Momenteel actief. Inactieve studies tonen op deze pagina een bericht dat de studie niet beschikbaar is.",
+    ],
+  },
+  {
+    id: "deep",
+    label: "App-link",
+    when: "Sms, berichtenapps, QR-codes — alles wat de app direct opent",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "Omzeilt de browserlandingspagina en opent de app direct.",
+      "Werkt ongeacht of de studie momenteel actief is.",
+      "Voeg &code=ABC toe om het deelnemerscode-veld bij inschrijving vooraf in te vullen.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "Zoeken in app",
+    when: "Labosessies waarbij deelnemers een gedeeld apparaat gebruiken waarop de app al open is",
+    format: "— geen link nodig —",
+    notes: [
+      "Deelnemers zoeken uw studie op naam of ID vanuit de Samply Research-app.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "Beveiligde link",
+    when: "Longitudinale studies waarbij elke deelnemer een unieke, tijdgebonden deelnamelink moet ontvangen",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "Gegenereerd op de pagina Uitnodigingen met een instelbaar geldigheidsvenster (standaard 168 uur = 7 dagen).",
+      "De deelnamelink is cryptografisch ondertekend — elke manipulatie maakt hem ongeldig.",
+      "De generator heeft een optioneel Code-veld. Laat het leeg voor een link die elke deelnemer kan gebruiken; voer een code in om de identifier van die deelnemer bij inschrijving vooraf in te vullen, waardoor de link voor die persoon effectief eenmalig is.",
+      "Een QR-code voor de gegenereerde deelnamelink wordt op het scherm weergegeven voor eenvoudig scannen.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_NL = [
+  { col: "Samply ID", desc: "Anonieme identifier gegenereerd door de app — nooit gekoppeld aan een echte naam of e-mailadres." },
+  { col: "Token", desc: "Het push-meldingtoken van het apparaat. Samply gebruikt dit om meldingen te bezorgen." },
+  { col: "Datum", desc: "Wanneer de deelnemer zich heeft ingeschreven." },
+  { col: "Code", desc: "De aangepaste identifier die de deelnemer heeft ingevoerd, als uw studie daarom vraagt." },
+  { col: "Groep", desc: "De groep waaraan de deelnemer is toegewezen, als uw studie gebruik maakt van groepen." },
+  { col: "Tijdzone", desc: "Gedetecteerd van het apparaat van de deelnemer. Wordt gebruikt om persoonlijke meldingen op het juiste lokale tijdstip te plannen." },
+  { col: "Tijdvenster", desc: "De uren waarbinnen de deelnemer meldingen wenst te ontvangen, ingesteld door de deelnemer in de app. Dit heeft geen invloed op geplande verzendtijden — als u individuele tijdvoorkeuren wilt respecteren, dient u hier handmatig rekening mee te houden bij het configureren van uw meldingsschema's." },
+  { col: "Geschiedenis", desc: "Een per-deelnemer logboek van elke melding die is verzonden en of een enquêterespons is gedetecteerd." },
+];
+
+const JOIN_METHODS_RU = [
+  {
+    id: 'web',
+    label: 'Веб-ссылка',
+    when: 'Письма для рекрутирования, целевые страницы, плакаты с URL',
+    format: 'https://samply.uni-konstanz.de/studies/your-study-slug',
+    notes: [
+      'Открывает страницу в браузере. Участник нажимает кнопку для перехода в приложение Samply Research.',
+      'Требует, чтобы исследование было отмечено как «Активно». Для неактивных исследований на этой странице отображается сообщение «недоступно».',
+    ],
+  },
+  {
+    id: 'deep',
+    label: 'Прямая ссылка',
+    when: 'SMS, мессенджеры, QR-коды — всё, что открывает приложение напрямую',
+    format: 'samply://--/study?id=<study-id>',
+    notes: [
+      'Минует браузерную целевую страницу и открывает приложение напрямую.',
+      'Работает независимо от того, активно ли исследование в данный момент.',
+      'Добавьте &code=ABC, чтобы предварительно заполнить поле кода участника при регистрации.',
+    ],
+  },
+  {
+    id: 'browse',
+    label: 'Поиск в приложении',
+    when: 'Лабораторные сессии, где участники используют общее устройство с уже открытым приложением',
+    format: '— ссылка не нужна —',
+    notes: [
+      'Участники ищут ваше исследование по названию или ID непосредственно в приложении Samply Research.',
+    ],
+  },
+  {
+    id: 'secure',
+    label: 'Защищённая ссылка-приглашение',
+    when: 'Лонгитюдные исследования, где каждый участник должен получить уникальную ссылку с ограниченным сроком действия',
+    format: 'samply://register?study=…&validfor=…&checksum=…',
+    notes: [
+      'Генерируется на странице «Приглашения» с настраиваемым сроком действия (по умолчанию 168 часов = 7 дней).',
+      'Ссылка криптографически подписана — любое изменение делает её недействительной.',
+      'Генератор имеет необязательное поле «Код». Оставьте его пустым для ссылки, доступной любому участнику; введите код, чтобы предварительно заполнить идентификатор конкретного участника при регистрации, фактически сделав ссылку одноразовой для этого человека.',
+      'QR-код для сгенерированной ссылки отображается на экране для удобного сканирования.',
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_RU = [
+  { col: 'Samply ID', desc: 'Анонимный идентификатор, сгенерированный приложением — никогда не связанный с реальным именем или электронной почтой.' },
+  { col: 'Токен', desc: 'Токен push-уведомлений устройства. Samply использует его для доставки уведомлений.' },
+  { col: 'Дата', desc: 'Дата регистрации участника в исследовании.' },
+  { col: 'Код', desc: 'Пользовательский идентификатор, введённый участником, если ваше исследование запрашивает его.' },
+  { col: 'Группа', desc: 'Группа, в которую назначен участник, если ваше исследование использует группы.' },
+  { col: 'Часовой пояс', desc: 'Определяется по устройству участника. Используется для планирования персональных уведомлений в правильное местное время.' },
+  { col: 'Временное окно', desc: 'Часы, в течение которых участник предпочитает получать уведомления, — устанавливается участником в настройках приложения. Это не влияет на запланированное время отправки; если вы хотите учитывать индивидуальные предпочтения, вам нужно принимать их во внимание вручную при настройке расписаний уведомлений.' },
+  { col: 'История', desc: 'Журнал каждой отправки уведомления для данного участника с отметкой о том, был ли зафиксирован ответ на анкету.' },
+];
+
+const JOIN_METHODS_ZH = [
+  {
+    id: 'web',
+    label: '网页链接',
+    when: '招募邮件、落地页、带有 URL 的海报',
+    format: 'https://samply.uni-konstanz.de/studies/your-study-slug',
+    notes: [
+      '打开浏览器页面。参与者点击按钮跳转至 Samply Research 应用。',
+      '要求研究处于"当前激活"状态。非激活研究在此页面显示"不可用"提示。',
+    ],
+  },
+  {
+    id: 'deep',
+    label: '直接深链接',
+    when: 'SMS、即时通讯应用、QR 码——任何直接打开应用的方式',
+    format: 'samply://--/study?id=<study-id>',
+    notes: [
+      '绕过浏览器落地页，直接打开应用。',
+      '无论研究是否处于激活状态均可使用。',
+      '追加 &code=ABC 可在注册时预填参与者代码字段。',
+    ],
+  },
+  {
+    id: 'browse',
+    label: '应用内浏览',
+    when: '实验室课程中参与者使用已打开应用的共享设备',
+    format: '— 无需链接 —',
+    notes: [
+      '参与者在 Samply Research 应用中按名称或 ID 搜索您的研究。',
+    ],
+  },
+  {
+    id: 'secure',
+    label: '安全邀请链接',
+    when: '需要每位参与者收到唯一限时链接的纵向研究',
+    format: 'samply://register?study=…&validfor=…&checksum=…',
+    notes: [
+      '在邀请页面生成，可配置有效期窗口（默认 168 小时 = 7 天）。',
+      '链接经过加密签名——任何篡改都会使其失效。',
+      '生成器有一个可选的"代码"字段。留空则任何参与者均可使用；填入代码则在注册时预填该参与者的标识符，使链接对该用户实际上为一次性链接。',
+      '生成链接的 QR 码会显示在屏幕上，便于扫描。',
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_ZH = [
+  { col: 'Samply ID', desc: '由应用生成的匿名标识符——从不与真实姓名或电子邮件关联。' },
+  { col: 'Token', desc: '设备的推送通知令牌。Samply 使用它来发送通知。' },
+  { col: '日期', desc: '参与者注册的时间。' },
+  { col: '代码', desc: '参与者输入的自定义标识符（如果您的研究需要）。' },
+  { col: '组别', desc: '参与者被分配到的组别（如果您的研究使用组别）。' },
+  { col: '时区', desc: '从参与者设备检测。用于在正确的本地时间安排个人通知。' },
+  { col: '时间窗口', desc: '参与者在应用中设置的希望接收通知的时间段。这不影响计划的发送时间——如果您希望遵循个人时间偏好，需要在配置通知日程时手动考虑。' },
+  { col: '历史', desc: '每位参与者的通知发送记录，以及是否检测到问卷回答。' },
+];
+
+export default function InviteContent({ locale }: { locale: Locale }) {
+  if (locale === "de") return <InviteContentDe />;
+  if (locale === "nl") return <InviteContentNl />;
+  if (locale === "ru") return <InviteContentRu />;
+  if (locale === "zh") return <InviteContentZh />;
+  if (locale === "ko") return <InviteContentKo />;
+  if (locale === "it") return <InviteContentIt />;
+  if (locale === "fr") return <InviteContentFr />;
+  if (locale === "es") return <InviteContentEs />;
+  if (locale === "pt") return <InviteContentPt />;
+  return <InviteContentEn />;
+}
+
+function InviteContentEn() {
   return (
     <>
       <p>
@@ -191,6 +430,1554 @@ export default function InviteContent() {
         Participants can leave a study from within the Samply Research app. When they do, their row in
         the Participants table is marked <em>deactivated</em> and they stop receiving notifications.
         Their historical data — past notifications and responses — remains in the study for your records.
+      </p>
+    </>
+  );
+}
+
+function InviteContentRu() {
+  return (
+    <>
+      <p>
+        Участники присоединяются через приложение <strong>Samply Research</strong>, доступное для{' '}
+        <a href='https://apps.apple.com/us/app/samply-research/id1511062019' target='_blank' rel='noopener noreferrer'>iOS</a>{' '}
+        и{' '}
+        <a href='https://play.google.com/store/apps/details?id=org.js.samply' target='_blank' rel='noopener noreferrer'>Android</a>.
+        Участники должны установить приложение до того, как смогут вступить в какое-либо исследование.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Четыре способа вступления</h2>
+      <p>
+        Все четыре способа приводят к одному результату: участник зарегистрирован, а его токен push-уведомлений
+        занесён в систему. Выберите способ, подходящий для вашего канала рекрутирования.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2.4rem 0 4rem' }}>
+        {JOIN_METHODS_RU.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '2rem 2.2rem' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.2rem', marginBottom: '0.8rem', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)' }}>{m.label}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: 'var(--ink-40)', letterSpacing: '0.04em' }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', background: 'var(--coral-soft)', padding: '0.5rem 1rem', borderRadius: '0.5rem', marginBottom: '1rem', wordBreak: 'break-all' }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: '1.6rem' }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.3rem' }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>Что видит участник</h2>
+      <p>
+        Перед вступлением участники должны установить приложение Samply Research из{' '}
+        <a href='https://apps.apple.com/us/app/samply-research/id1511062019' target='_blank' rel='noopener noreferrer'>App Store</a>{' '}
+        или{' '}
+        <a href='https://play.google.com/store/apps/details?id=org.js.samply' target='_blank' rel='noopener noreferrer'>Google Play</a>.
+        После установки нажатие на ссылку для вступления проводит участника через короткую последовательность шагов:
+      </p>
+      <ol>
+        <li><strong>Создание аккаунта.</strong> Участники создают аккаунт с адресом электронной почты и паролем. Возвращающиеся участники входят с существующим аккаунтом.</li>
+        <li><strong>Форма согласия</strong> (если она настроена в исследовании). Текст, введённый в настройках исследования, отображается полностью. Участник должен подтвердить его, чтобы продолжить.</li>
+        <li><strong>Запрос кода участника</strong> (если включён в исследовании). Участник вводит пользовательский идентификатор — лабораторный код, номер участника или любое другое обозначение, которое вы присваиваете.</li>
+        <li><strong>Запрос группы</strong> (если включён в исследовании). Участник вводит название группы, к которой принадлежит.</li>
+      </ol>
+      <p>
+        После регистрации исследование появляется в приложении участника, и Samply немедленно
+        регистрирует все запланированные для него уведомления.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Аккаунты участников и адреса электронной почты</h2>
+      <p>
+        Для создания аккаунта участника требуется адрес электронной почты. Samply хранит этот адрес и использует
+        его исключительно для аутентификации — он никогда не передаётся исследователю и не используется в других целях.
+        Это требование обусловлено тремя причинами:
+      </p>
+      <ul>
+        <li><strong>Один аккаунт на человека.</strong> Требование аккаунта предотвращает многократную регистрацию одного человека с одного устройства.</li>
+        <li><strong>Непрерывность при смене устройства.</strong> Если участник приобрёл новый телефон, он может войти на новом устройстве и продолжить исследование без потери истории.</li>
+        <li><strong>Восстановление пароля.</strong> Если участник забыл пароль, он может сбросить его по электронной почте.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Коды участников</h2>
+      <p>
+        Включите <em>Запрашивать у участника код</em> в редактировании исследования, если вам нужно связать данные Samply с
+        внешней системой — лабораторным ID, номером записи в REDCap, идентификатором респондента в Qualtrics.
+      </p>
+      <p>
+        Участник вводит код при регистрации. Вы видите его в таблице участников и можете
+        использовать как <a href='/docs/placeholders'>подстановочный параметр URL</a>, чтобы код автоматически
+        передавался в ваш инструмент для анкетирования.
+      </p>
+      <p>
+        Вы также можете предварительно заполнить код, добавив <code>&amp;code=ABC</code> к прямой ссылке —
+        участник увидит поле уже заполненным и просто подтвердит его.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Группы при регистрации</h2>
+      <p>
+        Включите <em>Спрашивать участника, к какой группе он принадлежит</em> в редактировании исследования, чтобы
+        фиксировать распределение по группам в момент вступления. Участник вводит название группы; если такое название
+        уже существует в исследовании, участник добавляется в эту группу.
+      </p>
+      <p>
+        Группы, собранные при регистрации, как правило, используются для распределения по условиям в дизайнах с
+        самостоятельным выбором участников. Для распределения, контролируемого исследователем, назначайте группы
+        из таблицы участников. Подробности — в разделе <a href='/docs/groups'>Группы</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>Что вы видите после регистрации</h2>
+      <p>
+        Каждый зарегистрированный участник отображается во вкладке <strong>Участники</strong> вашего исследования. Столбцы таблицы:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Столбец</th>
+            <th>Содержимое</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_RU.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Повторное вступление и обновление токена</h3>
+      <p>
+        Если участник повторно нажимает на ссылку для вступления — после переустановки приложения или смены устройства —
+        Samply идентифицирует его по Samply ID и обновляет токен push-уведомлений. Дубликат не создаётся.
+        Группа, код и история ответов участника сохраняются.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Когда участник покидает исследование</h3>
+      <p>
+        Участники могут покинуть исследование из приложения Samply Research. При этом их строка в
+        таблице участников помечается как <em>деактивирована</em>, и они перестают получать уведомления.
+        Исторические данные — прошлые уведомления и ответы — остаются в исследовании для ваших записей.
+      </p>
+    </>
+  );
+}
+
+function InviteContentZh() {
+  return (
+    <>
+      <p>
+        参与者通过 <strong>Samply Research</strong> 应用加入，该应用适用于{' '}
+        <a href='https://apps.apple.com/us/app/samply-research/id1511062019' target='_blank' rel='noopener noreferrer'>iOS</a>{' '}
+        和{' '}
+        <a href='https://play.google.com/store/apps/details?id=org.js.samply' target='_blank' rel='noopener noreferrer'>Android</a>。
+        参与者必须先安装应用，才能注册任何研究。
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>四种邀请方式</h2>
+      <p>
+        四种方式最终结果相同：参与者已注册，其推送通知令牌已记录。请选择适合您招募渠道的方式。
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2.4rem 0 4rem' }}>
+        {JOIN_METHODS_ZH.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '2rem 2.2rem' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '1.2rem', marginBottom: '0.8rem', flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)' }}>{m.label}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: 'var(--ink-40)', letterSpacing: '0.04em' }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', background: 'var(--coral-soft)', padding: '0.5rem 1rem', borderRadius: '0.5rem', marginBottom: '1rem', wordBreak: 'break-all' }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: '1.6rem' }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.3rem' }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>参与者看到的内容</h2>
+      <p>
+        加入前，参与者必须从{' '}
+        <a href='https://apps.apple.com/us/app/samply-research/id1511062019' target='_blank' rel='noopener noreferrer'>App Store</a>{' '}
+        或{' '}
+        <a href='https://play.google.com/store/apps/details?id=org.js.samply' target='_blank' rel='noopener noreferrer'>Google Play</a>{' '}
+        安装 Samply Research 应用。
+        安装完成后，点击加入链接将引导参与者完成以下简短步骤：
+      </p>
+      <ol>
+        <li><strong>创建账户。</strong>参与者使用电子邮件地址和密码创建参与者账户。已有账户的参与者直接登录。</li>
+        <li><strong>知情同意书</strong>（如果您的研究包含）。您在研究设置中输入的文本将完整显示。参与者必须确认后才能继续。</li>
+        <li><strong>参与者代码提示</strong>（如果您的研究已启用）。参与者输入自定义标识符——实验室代码、参与者编号或您分配的任何标识。</li>
+        <li><strong>组别提示</strong>（如果您的研究已启用）。参与者输入所属组别的名称。</li>
+      </ol>
+      <p>
+        注册后，研究出现在参与者的应用中，Samply 立即为其注册所有计划通知。
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>参与者账户与电子邮件地址</h2>
+      <p>
+        创建参与者账户需要提供电子邮件地址。Samply 存储此地址，仅用于身份验证——不会向研究者展示，也不用于任何其他目的。
+        此要求有三个原因：
+      </p>
+      <ul>
+        <li><strong>每人一个账户。</strong>要求账户可防止同一人从同一设备多次注册。</li>
+        <li><strong>跨设备连续性。</strong>如果参与者换了新手机，可在新设备上登录并继续研究，不会丢失历史记录。</li>
+        <li><strong>密码重置。</strong>如果参与者忘记密码，可通过电子邮件重置。</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>参与者代码</h2>
+      <p>
+        如需将 Samply 数据与外部系统关联——实验室 ID、REDCap 记录编号、Qualtrics 受访者 ID——请在编辑研究中启用<em>要求参与者提供代码</em>。
+      </p>
+      <p>
+        参与者在注册时输入代码。您可在参与者表中看到该代码，并可将其用作 <a href='/docs/placeholders'>URL 占位符</a>，使代码自动传递至您的问卷工具。
+      </p>
+      <p>
+        您也可以通过在直接深链接后追加 <code>&amp;code=ABC</code> 来预填代码——参与者将看到字段已填写，只需确认即可。
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>注册时的组别</h2>
+      <p>
+        在编辑研究中启用<em>询问参与者所属组别</em>，可在加入时收集组别分配信息。参与者输入组别名称；若该名称在研究中已存在，参与者将被分配到同一组。
+      </p>
+      <p>
+        注册时收集的组别通常用于参与者自主选择的设计中的条件分配。如需研究者控制分配，请改从参与者表中分配组别。详情请参阅 <a href='/docs/groups'>组别</a>。
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>注册后您看到的内容</h2>
+      <p>
+        每位注册的参与者都会显示在研究的<strong>参与者</strong>标签页中。表格列如下：
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>列</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_ZH.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>重新加入与令牌刷新</h3>
+      <p>
+        如果参与者再次点击加入链接——重新安装应用或更换设备后——Samply 会通过 Samply ID 识别其身份并更新推送通知令牌。不会产生重复记录。其组别、代码和回答历史均予保留。
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>参与者退出研究时</h3>
+      <p>
+        参与者可在 Samply Research 应用内退出研究。退出后，其在参与者表中的行将被标记为<em>已停用</em>，并停止接收通知。其历史数据——过往通知和回答——将保留在研究中供您记录。
+      </p>
+    </>
+  );
+}
+
+function InviteContentDe() {
+  return (
+    <>
+      <p>
+        Teilnehmende treten über die <strong>Samply Research</strong>-App bei, verfügbar für{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        und{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>.
+        Teilnehmende müssen die App installieren, bevor sie sich in eine Studie einschreiben können.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Vier Möglichkeiten zur Einladung</h2>
+      <p>
+        Alle vier Methoden enden am gleichen Punkt: Die teilnehmende Person ist eingeschrieben und ihr Push-Benachrichtigungs-Token ist registriert.
+        Wählen Sie die Methode, die zu Ihrem Rekrutierungskanal passt.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_DE.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>Was die teilnehmende Person sieht</h2>
+      <p>
+        Vor dem Beitritt müssen Teilnehmende die Samply Research-App aus dem{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        oder{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a> installieren.
+        Sobald die App installiert ist, führt das Antippen eines Einladungslinks sie durch eine kurze Abfolge:
+      </p>
+      <ol>
+        <li><strong>Kontoerstellung.</strong> Teilnehmende erstellen ein Teilnehmendenkonto mit einer E-Mail-Adresse und einem Passwort. Zurückkehrende Teilnehmende melden sich mit ihrem bestehenden Konto an.</li>
+        <li><strong>Einwilligungserklärung</strong> (falls Ihre Studie eine hat). Der Text, den Sie in den Studieneinstellungen eingegeben haben, wird vollständig angezeigt. Die teilnehmende Person muss ihn bestätigen, bevor sie fortfahren kann.</li>
+        <li><strong>Code-Abfrage</strong> (falls in Ihrer Studie aktiviert). Sie geben eine benutzerdefinierte Kennung ein – einen Laborcode, eine Teilnehmendennummer, alles was Sie zuweisen.</li>
+        <li><strong>Gruppenabfrage</strong> (falls in Ihrer Studie aktiviert). Sie geben den Namen der Gruppe ein, der sie angehören.</li>
+      </ol>
+      <p>
+        Nach der Einschreibung erscheint die Studie in ihrer App, und Samply registriert sofort alle geplanten
+        Benachrichtigungen für sie.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Teilnehmendenkonten und E-Mail-Adressen</h2>
+      <p>
+        Für die Erstellung eines Teilnehmendenkontos ist eine E-Mail-Adresse erforderlich. Samply speichert diese Adresse und verwendet
+        sie ausschließlich zur Authentifizierung – sie wird der Forschenden-Person nie angezeigt und für keinen anderen Zweck verwendet.
+        Es gibt drei Gründe, warum dies erforderlich ist:
+      </p>
+      <ul>
+        <li><strong>Ein Konto pro Person.</strong> Das Erfordernis eines Kontos verhindert, dass eine einzelne Person sich mehrfach vom selben Gerät einschreibt.</li>
+        <li><strong>Kontinuität über Geräte hinweg.</strong> Wenn eine teilnehmende Person ein neues Telefon erhält, kann sie sich auf dem neuen Gerät anmelden und die Studie fortsetzen, ohne ihren Verlauf zu verlieren.</li>
+        <li><strong>Passwort-Wiederherstellung.</strong> Wenn eine teilnehmende Person ihr Passwort vergisst, kann sie es per E-Mail zurücksetzen.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Teilnehmenden-Codes</h2>
+      <p>
+        Aktivieren Sie <em>Teilnehmende nach einem Code fragen</em> in „Studie bearbeiten", wenn Sie Samply-Daten mit einem
+        externen System verknüpfen müssen – einer Labor-ID, einer REDCap-Datensatznummer, einer Qualtrics-Befragten-ID.
+      </p>
+      <p>
+        Die teilnehmende Person gibt ihren Code während der Einschreibung ein. Sie sehen ihn in der Teilnehmenden-Tabelle und können
+        ihn als <a href="/docs/placeholders">URL-Platzhalter</a> verwenden, sodass der Code automatisch an Ihr
+        Umfragetool weitergeleitet wird.
+      </p>
+      <p>
+        Sie können den Code auch vorab ausfüllen, indem Sie <code>&amp;code=ABC</code> an den direkten Deep-Link anhängen –
+        die teilnehmende Person sieht das Feld bereits ausgefüllt und muss es nur noch bestätigen.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Gruppen bei der Einschreibung</h2>
+      <p>
+        Aktivieren Sie <em>Teilnehmende fragen, welcher Gruppe sie angehören</em> in „Studie bearbeiten", um eine Gruppenzuweisung
+        zum Zeitpunkt des Beitretens zu erfassen. Die teilnehmende Person gibt einen Gruppennamen ein; wenn dieser Name bereits
+        in der Studie existiert, wird sie derselben Gruppe zugewiesen.
+      </p>
+      <p>
+        Bei der Einschreibung erhobene Gruppen werden typischerweise für die Bedingungszuweisung in Designs verwendet, bei denen
+        Teilnehmende sich selbst auswählen. Für eine von Forschenden kontrollierte Zuweisung weisen Sie Gruppen stattdessen über die
+        Teilnehmenden-Tabelle zu. Vollständige Details finden Sie unter <a href="/docs/groups">Gruppen</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>Was Sie nach der Einschreibung sehen</h2>
+      <p>
+        Jede eingeschriebene Person erscheint im Tab <strong>Teilnehmende</strong> Ihrer Studie. Die Tabellenspalten sind:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Spalte</th>
+            <th>Was sie enthält</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_DE.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Erneutes Beitreten und Token-Aktualisierung</h3>
+      <p>
+        Wenn eine teilnehmende Person erneut auf den Beitrittslink tippt – nach einer Neuinstallation der App oder einem Gerätewechsel –
+        gleicht Samply sie anhand der Samply-ID ab und aktualisiert ihren Push-Benachrichtigungs-Token. Sie werden nicht als Duplikat hinzugefügt.
+        Ihre Gruppe, ihr Code und ihr Antwortverlauf bleiben erhalten.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Wenn eine teilnehmende Person die Studie verlässt</h3>
+      <p>
+        Teilnehmende können eine Studie innerhalb der Samply Research-App verlassen. Wenn sie dies tun, wird ihre Zeile in
+        der Teilnehmenden-Tabelle als <em>deaktiviert</em> markiert und sie erhalten keine Benachrichtigungen mehr.
+        Ihre historischen Daten – vergangene Benachrichtigungen und Antworten – verbleiben zur Dokumentation in der Studie.
+      </p>
+    </>
+  );
+}
+
+function InviteContentNl() {
+  return (
+    <>
+      <p>
+        Deelnemers nemen deel via de <strong>Samply Research</strong>-app, beschikbaar voor{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        en{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>.
+        Deelnemers moeten de app installeren voordat zij zich kunnen inschrijven voor een studie.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Vier manieren om uit te nodigen</h2>
+      <p>
+        Alle vier methoden eindigen op dezelfde plek: de deelnemer is ingeschreven en hun push-meldingtoken
+        is geregistreerd. Kies de methode die past bij uw wervingskanaal.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_NL.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>Wat de deelnemer ziet</h2>
+      <p>
+        Voordat deelnemers zich aanmelden, moeten zij de Samply Research-app installeren via de{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        of{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a>.
+        Zodra de app is geïnstalleerd, leidt het tikken op een deelnamelink hen door een korte stappen:
+      </p>
+      <ol>
+        <li><strong>Account aanmaken.</strong> Deelnemers maken een deelnemersaccount aan met een e-mailadres en wachtwoord. Terugkerende deelnemers melden zich aan met hun bestaande account.</li>
+        <li><strong>Toestemmingsformulier</strong> (indien uw studie er een heeft). De tekst die u in de studie-instellingen heeft ingevoerd, wordt volledig weergegeven. De deelnemer moet dit bevestigen voordat hij of zij verder kan gaan.</li>
+        <li><strong>Deelnemerscode invoeren</strong> (indien uw studie dit inschakelt). De deelnemer typt een aangepaste identifier — een labcode, een deelnemersnummer, alles wat u toewijst.</li>
+        <li><strong>Groep invoeren</strong> (indien uw studie dit inschakelt). De deelnemer typt de naam van de groep waartoe hij of zij behoort.</li>
+      </ol>
+      <p>
+        Na inschrijving verschijnt de studie in hun app en registreert Samply direct alle geplande
+        meldingen voor hen.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Deelnemersaccounts en e-mailadressen</h2>
+      <p>
+        Voor het aanmaken van een deelnemersaccount is een e-mailadres vereist. Samply slaat dit adres op en gebruikt
+        het uitsluitend voor authenticatie — het wordt nooit aan de onderzoeker getoond of voor enig ander doel gebruikt.
+        Er zijn drie redenen waarom dit vereist is:
+      </p>
+      <ul>
+        <li><strong>Één account per persoon.</strong> Het vereisen van een account voorkomt dat één persoon zich meerdere keren inschrijft vanaf hetzelfde apparaat.</li>
+        <li><strong>Continuïteit over apparaten heen.</strong> Als een deelnemer een nieuwe telefoon krijgt, kan hij of zij inloggen op het nieuwe apparaat en de studie voortzetten zonder de geschiedenis te verliezen.</li>
+        <li><strong>Wachtwoordherstel.</strong> Als een deelnemer zijn of haar wachtwoord vergeet, kan dit via e-mail worden hersteld.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Deelnemerscodes</h2>
+      <p>
+        Schakel <em>Vraag deelnemer om een code</em> in via Studie bewerken als u Samply-gegevens wilt koppelen aan een
+        extern systeem — een lab-ID, een REDCap-recordnummer, een Qualtrics-respondent-ID.
+      </p>
+      <p>
+        De deelnemer typt zijn of haar code tijdens de inschrijving. U ziet deze in de deelnemerstabel en kunt
+        hem gebruiken als <a href="/docs/placeholders">URL-plaatshouder</a> zodat de code automatisch wordt
+        doorgestuurd naar uw enquêtetool.
+      </p>
+      <p>
+        U kunt de code ook vooraf invullen door <code>&amp;code=ABC</code> toe te voegen aan de directe deeplink —
+        de deelnemer ziet het veld al ingevuld en hoeft dit alleen te bevestigen.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Groepen bij inschrijving</h2>
+      <p>
+        Schakel <em>Vraag deelnemer aan welke groep hij of zij behoort</em> in via Studie bewerken om een groepstoewijzing
+        te verzamelen op het moment van aanmelding. De deelnemer typt een groepsnaam; als die naam al bestaat in de studie,
+        wordt de deelnemer aan dezelfde groep toegewezen.
+      </p>
+      <p>
+        Groepen die bij inschrijving worden verzameld, worden doorgaans gebruikt voor conditietoewijzing in ontwerpen waarbij
+        deelnemers zichzelf selecteren. Voor door de onderzoeker gecontroleerde toewijzing kunt u groepen toewijzen vanuit de
+        deelnemerstabel. Volledige details staan in <a href="/docs/groups">Groepen</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>Wat u ziet na inschrijving</h2>
+      <p>
+        Elke ingeschreven deelnemer verschijnt in het tabblad <strong>Deelnemers</strong> van uw studie. De tabelkolommen zijn:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Kolom</th>
+            <th>Wat het bevat</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_NL.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Opnieuw deelnemen en token vernieuwen</h3>
+      <p>
+        Als een deelnemer opnieuw op de deelnamelink tikt — na het opnieuw installeren van de app of het wisselen van apparaat —
+        koppelt Samply hem of haar aan de hand van de Samply ID en werkt het push-meldingtoken bij. De deelnemer wordt niet als
+        duplicaat toegevoegd. De groep, code en antwoordgeschiedenis blijven bewaard.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Wanneer een deelnemer de studie verlaat</h3>
+      <p>
+        Deelnemers kunnen een studie verlaten vanuit de Samply Research-app. Wanneer zij dit doen, wordt hun rij in
+        de deelnemerstabel gemarkeerd als <em>gedeactiveerd</em> en ontvangen zij geen meldingen meer.
+        Hun historische gegevens — eerdere meldingen en antwoorden — blijven in de studie bewaard voor uw administratie.
+      </p>
+    </>
+  );
+}
+
+const JOIN_METHODS_KO = [
+  {
+    id: "web",
+    label: "웹 링크",
+    when: "모집 이메일, 랜딩 페이지, URL이 포함된 포스터",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "브라우저 페이지를 엽니다. 참여자가 버튼을 탭하면 Samply Research 앱으로 이동합니다.",
+      "연구가 '현재 활성' 상태로 표시되어 있어야 합니다. 비활성 연구는 이 페이지에서 '이용 불가' 메시지를 표시합니다.",
+    ],
+  },
+  {
+    id: "deep",
+    label: "직접 딥 링크",
+    when: "SMS, 메시징 앱, QR 코드 — 앱을 바로 여는 모든 방법",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "브라우저 랜딩 페이지를 건너뛰고 앱을 바로 엽니다.",
+      "연구의 활성 여부와 관계없이 작동합니다.",
+      "&code=ABC를 추가하면 등록 시 참여자 코드 필드가 미리 채워집니다.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "앱 내 탐색",
+    when: "앱이 이미 열려 있는 공유 기기를 사용하는 실험실 세션",
+    format: "— 링크 불필요 —",
+    notes: [
+      "참여자가 Samply Research 앱에서 이름이나 ID로 연구를 검색합니다.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "보안 초대 링크",
+    when: "각 참여자가 고유한 시간 제한 링크를 받아야 하는 종단 연구",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "설정 가능한 유효 기간(기본값 168시간 = 7일)으로 초대 페이지에서 생성됩니다.",
+      "링크는 암호화 서명되어 있어 변조 시 무효화됩니다.",
+      "생성기에는 선택적 코드 필드가 있습니다. 누구나 사용할 수 있는 링크의 경우 비워두고, 특정 참여자의 등록 시 식별자를 미리 채우려면 코드를 입력하여 해당 인원에게 실질적으로 일회용 링크로 만드십시오.",
+      "생성된 링크의 QR 코드가 화면에 표시되어 간편하게 스캔할 수 있습니다.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_KO = [
+  { col: "Samply ID", desc: "앱에서 생성된 익명 식별자 — 실제 이름이나 이메일과 연결되지 않습니다." },
+  { col: "Token", desc: "기기의 푸시 알림 토큰입니다. Samply는 이를 사용하여 알림을 전달합니다." },
+  { col: "날짜", desc: "참여자가 등록한 시점입니다." },
+  { col: "코드", desc: "연구에서 요청하는 경우 참여자가 입력한 사용자 정의 식별자입니다." },
+  { col: "그룹", desc: "연구에서 그룹을 사용하는 경우 참여자가 배정된 그룹입니다." },
+  { col: "시간대", desc: "참여자 기기에서 감지됩니다. 올바른 현지 시간에 개인 알림을 예약하는 데 사용됩니다." },
+  { col: "시간 창", desc: "참여자가 앱에서 설정한 알림 수신 희망 시간대입니다. 이 설정은 예약된 발송 시간에 영향을 미치지 않습니다. 개인 시간 선호도를 존중하려면 알림 일정을 구성할 때 수동으로 고려해야 합니다." },
+  { col: "기록", desc: "각 참여자별 모든 알림 발송 및 설문 응답 감지 여부에 대한 로그입니다." },
+];
+
+const JOIN_METHODS_IT = [
+  {
+    id: "web",
+    label: "Link web",
+    when: "Email di reclutamento, landing page, poster con URL",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "Apre una pagina nel browser. Il partecipante tocca un pulsante per passare all'app Samply Research.",
+      "Richiede che lo studio sia contrassegnato come Attualmente attivo. Gli studi inattivi mostrano un messaggio di 'non disponibile' su questa pagina.",
+    ],
+  },
+  {
+    id: "deep",
+    label: "Link diretto (deep link)",
+    when: "SMS, app di messaggistica, codici QR — qualsiasi cosa apra direttamente l'app",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "Bypassa la landing page del browser e apre l'app direttamente.",
+      "Funziona indipendentemente dal fatto che lo studio sia attivo o meno.",
+      "Aggiungere &code=ABC per precompilare il campo del codice partecipante durante l'iscrizione.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "Sfoglia nell'app",
+    when: "Sessioni di laboratorio in cui i partecipanti utilizzano un dispositivo condiviso con l'app già aperta",
+    format: "— nessun link necessario —",
+    notes: [
+      "I partecipanti cercano il proprio studio per nome o ID all'interno dell'app Samply Research.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "Link di invito sicuro",
+    when: "Studi longitudinali in cui ogni partecipante deve ricevere un link univoco con scadenza temporale",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "Generato nella pagina Inviti con una finestra di validità configurabile (predefinita: 168 ore = 7 giorni).",
+      "Il link è firmato crittograficamente — qualsiasi manomissione lo invalida.",
+      "Il generatore dispone di un campo Codice opzionale. Lasciarlo vuoto per un link utilizzabile da qualsiasi partecipante; inserire un codice per precompilare l'identificatore del partecipante durante l'iscrizione, rendendo il link di fatto monouso per quella persona.",
+      "Un codice QR per il link generato viene visualizzato sullo schermo per una facile scansione.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_IT = [
+  { col: "Samply ID", desc: "Identificatore anonimo generato dall'app — non è mai collegato a un nome reale o a un indirizzo email." },
+  { col: "Token", desc: "Il token di notifica push del dispositivo. Samply lo utilizza per recapitare le notifiche." },
+  { col: "Data", desc: "Quando il partecipante si è iscritto." },
+  { col: "Codice", desc: "L'identificatore personalizzato inserito dal partecipante, se lo studio lo richiede." },
+  { col: "Gruppo", desc: "Il gruppo a cui è stato assegnato il partecipante, se lo studio utilizza i gruppi." },
+  { col: "Fuso orario", desc: "Rilevato dal dispositivo del partecipante. Utilizzato per pianificare le notifiche personali all'ora locale corretta." },
+  { col: "Finestra temporale", desc: "Le ore in cui il partecipante preferisce ricevere notifiche, impostate dal partecipante nell'app. Questa impostazione non influisce sugli orari di invio pianificati — se si desidera rispettare le preferenze temporali individuali, è necessario tenerne conto manualmente durante la configurazione dei calendari di notifica." },
+  { col: "Cronologia", desc: "Un registro per partecipante di ogni invio di notifica e se è stata rilevata una risposta al sondaggio." },
+];
+
+function InviteContentKo() {
+  return (
+    <>
+      <p>
+        참여자는 <strong>Samply Research</strong> 앱을 통해 참여합니다. 앱은{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        및{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>에서 이용할 수 있습니다.
+        참여자는 어떤 연구에든 등록하기 전에 앱을 먼저 설치해야 합니다.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>네 가지 초대 방법</h2>
+      <p>
+        네 가지 방법 모두 동일한 결과로 이어집니다. 참여자가 등록되고 푸시 알림 토큰이 등록됩니다.
+        모집 채널에 맞는 방법을 선택하십시오.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_KO.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>참여자가 보는 화면</h2>
+      <p>
+        참여하기 전에 참여자는{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        또는{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a>에서
+        Samply Research 앱을 설치해야 합니다.
+        앱이 설치되면 참여 링크를 탭하여 짧은 단계를 거치게 됩니다.
+      </p>
+      <ol>
+        <li><strong>계정 생성.</strong> 참여자는 이메일 주소와 비밀번호로 참여자 계정을 만듭니다. 기존 참여자는 기존 계정으로 로그인합니다.</li>
+        <li><strong>동의서</strong> (연구에 포함된 경우). 연구 설정에 입력한 텍스트가 전체 표시됩니다. 참여자는 계속 진행하기 전에 이를 확인해야 합니다.</li>
+        <li><strong>참여자 코드 입력</strong> (연구에서 활성화한 경우). 실험실 코드, 참여자 번호 등 직접 지정한 사용자 정의 식별자를 입력합니다.</li>
+        <li><strong>그룹 입력</strong> (연구에서 활성화한 경우). 자신이 속한 그룹 이름을 입력합니다.</li>
+      </ol>
+      <p>
+        등록 후 연구가 참여자의 앱에 나타나며, Samply는 즉시 예약된 알림을 등록합니다.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>참여자 계정 및 이메일 주소</h2>
+      <p>
+        참여자 계정을 만들려면 이메일 주소가 필요합니다. Samply는 이 주소를 저장하며
+        인증 목적으로만 사용합니다. 연구자에게 공개되거나 다른 용도로 사용되지 않습니다.
+        이것이 필요한 세 가지 이유가 있습니다.
+      </p>
+      <ul>
+        <li><strong>1인 1계정.</strong> 계정을 요구함으로써 같은 기기에서 한 사람이 여러 번 등록하는 것을 방지합니다.</li>
+        <li><strong>기기 간 연속성.</strong> 참여자가 새 휴대폰을 구입한 경우 새 기기에서 로그인하여 기록을 잃지 않고 연구를 계속할 수 있습니다.</li>
+        <li><strong>비밀번호 복구.</strong> 참여자가 비밀번호를 잊은 경우 이메일을 통해 재설정할 수 있습니다.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>참여자 코드</h2>
+      <p>
+        Samply 데이터를 외부 시스템(실험실 ID, REDCap 레코드 번호, Qualtrics 응답자 ID)과 연결해야 하는 경우
+        연구 편집에서 <em>참여자에게 코드 요청</em>을 활성화하십시오.
+      </p>
+      <p>
+        참여자는 등록 시 코드를 입력합니다. 참여자 표에서 확인할 수 있으며
+        <a href="/docs/placeholders">URL 플레이스홀더</a>로 사용하여 코드를 설문 도구에 자동으로 전달할 수 있습니다.
+      </p>
+      <p>
+        직접 딥 링크에 <code>&amp;code=ABC</code>를 추가하여 코드를 미리 채울 수도 있습니다.
+        참여자는 필드가 이미 채워진 것을 확인하고 확인만 하면 됩니다.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>등록 시 그룹</h2>
+      <p>
+        연구 편집에서 <em>참여자가 속한 그룹 물어보기</em>를 활성화하면 참여 시 그룹 배정 정보를 수집할 수 있습니다.
+        참여자가 그룹 이름을 입력하고, 해당 이름이 연구에 이미 존재하는 경우 같은 그룹에 배정됩니다.
+      </p>
+      <p>
+        등록 시 수집된 그룹은 일반적으로 참여자가 자체 선택하는 설계의 조건 배정에 사용됩니다.
+        연구자가 직접 배정을 관리하려면 참여자 표에서 그룹을 배정하십시오. 자세한 내용은 <a href="/docs/groups">그룹</a>을 참조하십시오.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>등록 후 연구자가 보는 내용</h2>
+      <p>
+        등록된 모든 참여자는 연구의 <strong>참여자</strong> 탭에 나타납니다. 표의 열은 다음과 같습니다.
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>열</th>
+            <th>내용</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_KO.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>재참여 및 토큰 갱신</h3>
+      <p>
+        참여자가 앱을 재설치하거나 기기를 바꾼 후 참여 링크를 다시 탭하면
+        Samply는 Samply ID로 해당 참여자를 식별하고 푸시 알림 토큰을 업데이트합니다.
+        중복으로 추가되지 않으며, 그룹, 코드, 응답 기록이 모두 보존됩니다.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>참여자가 연구를 떠날 때</h3>
+      <p>
+        참여자는 Samply Research 앱 내에서 연구를 떠날 수 있습니다. 탈퇴하면 참여자 표의 해당 행이
+        <em>비활성화</em>로 표시되며 알림 수신이 중단됩니다.
+        과거 알림 및 응답 등 기록 데이터는 연구 기록을 위해 연구에 남아 있습니다.
+      </p>
+    </>
+  );
+}
+
+function InviteContentIt() {
+  return (
+    <>
+      <p>
+        I partecipanti si uniscono tramite l'app <strong>Samply Research</strong>, disponibile per{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        e{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>.
+        I partecipanti devono installare l'app prima di potersi iscrivere a qualsiasi studio.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Quattro modi per invitare</h2>
+      <p>
+        Tutti e quattro i metodi conducono allo stesso risultato: il partecipante è iscritto e il suo token
+        di notifica push è registrato. Scegliere il metodo più adatto al proprio canale di reclutamento.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_IT.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>Cosa vede il partecipante</h2>
+      <p>
+        Prima di iscriversi, i partecipanti devono installare l'app Samply Research dall'{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        o da{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a>.
+        Una volta installata l'app, toccando un link di partecipazione si avvia una breve sequenza di passaggi:
+      </p>
+      <ol>
+        <li><strong>Creazione dell'account.</strong> I partecipanti creano un account partecipante con un indirizzo email e una password. I partecipanti già registrati accedono con il proprio account esistente.</li>
+        <li><strong>Modulo di consenso</strong> (se lo studio ne prevede uno). Il testo inserito nelle impostazioni dello studio viene mostrato per intero. Il partecipante deve confermarlo prima di procedere.</li>
+        <li><strong>Richiesta del codice partecipante</strong> (se lo studio lo prevede). Il partecipante digita un identificatore personalizzato — un codice di laboratorio, un numero di partecipante o qualsiasi altro identificatore assegnato.</li>
+        <li><strong>Richiesta del gruppo</strong> (se lo studio lo prevede). Il partecipante digita il nome del gruppo di appartenenza.</li>
+      </ol>
+      <p>
+        Dopo l'iscrizione, lo studio appare nell'app del partecipante e Samply registra immediatamente
+        tutte le notifiche pianificate per quel partecipante.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Account dei partecipanti e indirizzi email</h2>
+      <p>
+        La creazione di un account partecipante richiede un indirizzo email. Samply memorizza questo indirizzo
+        e lo utilizza esclusivamente per l'autenticazione — non viene mai mostrato al ricercatore né utilizzato
+        per altri scopi. Ci sono tre motivi per cui questo è richiesto:
+      </p>
+      <ul>
+        <li><strong>Un account per persona.</strong> Richiedere un account impedisce a una singola persona di iscriversi più volte dallo stesso dispositivo.</li>
+        <li><strong>Continuità tra dispositivi.</strong> Se un partecipante ottiene un nuovo telefono, può accedere dal nuovo dispositivo e continuare lo studio senza perdere la cronologia.</li>
+        <li><strong>Recupero della password.</strong> Se un partecipante dimentica la password, può reimpostarla tramite email.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Codici partecipante</h2>
+      <p>
+        Abilitare <em>Chiedi al partecipante un codice</em> in Modifica studio se è necessario collegare i dati
+        di Samply a un sistema esterno — un ID di laboratorio, un numero di record REDCap, un ID di risposta Qualtrics.
+      </p>
+      <p>
+        Il partecipante digita il proprio codice durante l'iscrizione. Lo si visualizza nella tabella Partecipanti
+        e può essere utilizzato come <a href="/docs/placeholders">segnaposto URL</a> in modo che il codice venga
+        trasmesso automaticamente allo strumento di indagine.
+      </p>
+      <p>
+        È anche possibile precompilare il codice aggiungendo <code>&amp;code=ABC</code> al link diretto —
+        il partecipante vedrà il campo già compilato e dovrà solo confermarlo.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Gruppi all'iscrizione</h2>
+      <p>
+        Abilitare <em>Chiedi al partecipante a quale gruppo appartiene</em> in Modifica studio per raccogliere
+        l'assegnazione al gruppo al momento dell'iscrizione. Il partecipante digita un nome di gruppo; se quel
+        nome esiste già nello studio, il partecipante viene assegnato allo stesso gruppo.
+      </p>
+      <p>
+        I gruppi raccolti all'iscrizione vengono tipicamente utilizzati per l'assegnazione delle condizioni in
+        disegni in cui i partecipanti si auto-selezionano. Per un'assegnazione controllata dal ricercatore,
+        assegnare i gruppi dalla tabella Partecipanti. I dettagli completi sono disponibili in <a href="/docs/groups">Gruppi</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>Cosa si vede dopo l'iscrizione</h2>
+      <p>
+        Ogni partecipante iscritto appare nella scheda <strong>Partecipanti</strong> dello studio. Le colonne della
+        tabella sono:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Colonna</th>
+            <th>Contenuto</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_IT.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Nuova iscrizione e aggiornamento del token</h3>
+      <p>
+        Se un partecipante tocca nuovamente il link di partecipazione — dopo aver reinstallato l'app o cambiato
+        dispositivo — Samply lo identifica tramite il Samply ID e aggiorna il token di notifica push. Non viene
+        aggiunto come duplicato. Il gruppo, il codice e la cronologia delle risposte vengono preservati.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Quando un partecipante abbandona lo studio</h3>
+      <p>
+        I partecipanti possono abbandonare uno studio dall'interno dell'app Samply Research. Quando lo fanno,
+        la loro riga nella tabella Partecipanti viene contrassegnata come <em>disattivata</em> e smettono di
+        ricevere notifiche. I dati storici — notifiche passate e risposte — rimangono nello studio a fini di
+        documentazione.
+      </p>
+    </>
+  );
+}
+
+const JOIN_METHODS_ES = [
+  {
+    id: "web",
+    label: "Enlace web",
+    when: "Correos de reclutamiento, páginas de destino, carteles con una URL",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "Abre una página en el navegador. El participante toca un botón para ser redirigido a la aplicación Samply Research.",
+      "Requiere que el estudio esté marcado como Actualmente activo. Los estudios inactivos muestran un mensaje «no disponible» en esta página.",
+    ],
+  },
+  {
+    id: "deep",
+    label: "Enlace directo profundo",
+    when: "SMS, aplicaciones de mensajería, códigos QR — todo lo que abre la aplicación directamente",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "Omite la página de destino del navegador y abre la aplicación directamente.",
+      "Funciona independientemente de si el estudio está actualmente activo o no.",
+      "Añada &code=ABC para rellenar previamente el campo de código de participante durante el registro.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "Explorar en la aplicación",
+    when: "Sesiones en laboratorio donde los participantes usan un dispositivo compartido con la aplicación ya abierta",
+    format: "— no se requiere enlace —",
+    notes: [
+      "Los participantes buscan su estudio por nombre o identificador desde la aplicación Samply Research.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "Enlace de invitación seguro",
+    when: "Estudios longitudinales donde cada participante debe recibir un enlace único de duración limitada",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "Generado en la página de Invitaciones con una ventana de validez configurable (por defecto 168 horas = 7 días).",
+      "El enlace está firmado criptográficamente — cualquier manipulación lo invalida.",
+      "El generador tiene un campo de Código opcional. Déjelo vacío para un enlace utilizable por cualquier participante; introduzca un código para rellenar previamente el identificador de ese participante durante el registro, haciendo el enlace en la práctica de un solo uso para esa persona.",
+      "Se muestra en pantalla un código QR para el enlace generado para facilitar el escaneo.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_ES = [
+  { col: "Samply ID", desc: "Identificador anónimo generado por la aplicación — nunca asociado a un nombre real ni a una dirección de correo electrónico." },
+  { col: "Token", desc: "El token de notificación push del dispositivo. Samply lo usa para enviar las notificaciones." },
+  { col: "Fecha", desc: "La fecha en que el participante se registró." },
+  { col: "Código", desc: "El identificador personalizado introducido por el participante, si su estudio lo solicita." },
+  { col: "Grupo", desc: "El grupo al que fue asignado el participante, si su estudio usa grupos." },
+  { col: "Zona horaria", desc: "Detectada desde el dispositivo del participante. Se usa para programar las notificaciones personales a la hora local correcta." },
+  { col: "Franja horaria", desc: "Las horas en que el participante desea recibir notificaciones, definidas por él en la aplicación. Esto no afecta las horas de envío programadas — si desea respetar las preferencias horarias individuales, debe tenerlo en cuenta manualmente al configurar sus calendarios de notificación." },
+  { col: "Historial", desc: "Un registro por participante de cada envío de notificación y si se detectó una respuesta a la encuesta." },
+];
+
+const JOIN_METHODS_FR = [
+  {
+    id: "web",
+    label: "Lien web",
+    when: "Emails de recrutement, pages d'atterrissage, affiches avec une URL",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "Ouvre une page dans le navigateur. Le participant appuie sur un bouton pour être redirigé vers l'application Samply Research.",
+      "Requiert que l'étude soit marquée comme Actuellement active. Les études inactives affichent un message « non disponible » sur cette page.",
+    ],
+  },
+  {
+    id: "deep",
+    label: "Lien profond direct",
+    when: "SMS, applications de messagerie, codes QR — tout ce qui ouvre l'application directement",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "Contourne la page d'atterrissage du navigateur et ouvre l'application directement.",
+      "Fonctionne que l'étude soit actuellement active ou non.",
+      "Ajouter &code=ABC pour préremplir le champ du code participant lors de l'inscription.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "Parcourir dans l'application",
+    when: "Sessions en laboratoire où les participants utilisent un appareil partagé avec l'application déjà ouverte",
+    format: "— aucun lien requis —",
+    notes: [
+      "Les participants recherchent votre étude par nom ou par identifiant depuis l'application Samply Research.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "Lien d'invitation sécurisé",
+    when: "Études longitudinales où chaque participant doit recevoir un lien unique à durée limitée",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "Généré sur la page Invitations avec une fenêtre de validité configurable (par défaut 168 heures = 7 jours).",
+      "Le lien est signé cryptographiquement — toute manipulation le rend invalide.",
+      "Le générateur dispose d'un champ Code optionnel. Laissez-le vide pour un lien utilisable par n'importe quel participant ; saisissez un code pour préremplir l'identifiant de ce participant lors de l'inscription, rendant le lien en pratique à usage unique pour cette personne.",
+      "Un code QR pour le lien généré est affiché à l'écran pour une numérisation facile.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_FR = [
+  { col: "Samply ID", desc: "Identifiant anonyme généré par l'application — jamais associé à un nom réel ou à une adresse email." },
+  { col: "Token", desc: "Le token de notification push de l'appareil. Samply l'utilise pour envoyer les notifications." },
+  { col: "Date", desc: "La date à laquelle le participant s'est inscrit." },
+  { col: "Code", desc: "L'identifiant personnalisé saisi par le participant, si votre étude en demande un." },
+  { col: "Groupe", desc: "Le groupe auquel le participant a été affecté, si votre étude utilise des groupes." },
+  { col: "Fuseau horaire", desc: "Détecté depuis l'appareil du participant. Utilisé pour planifier les notifications personnelles à la bonne heure locale." },
+  { col: "Plage horaire", desc: "Les heures pendant lesquelles le participant souhaite recevoir des notifications, définies par le participant dans l'application. Cela n'affecte pas les heures d'envoi planifiées — si vous souhaitez respecter les préférences horaires individuelles, vous devez en tenir compte manuellement lors de la configuration de vos calendriers de notification." },
+  { col: "Historique", desc: "Un journal par participant de chaque envoi de notification et de la détection éventuelle d'une réponse au sondage." },
+];
+
+function InviteContentFr() {
+  return (
+    <>
+      <p>
+        Les participants rejoignent l'étude via l'application <strong>Samply Research</strong>, disponible sur{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        et{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>.
+        Les participants doivent installer l'application avant de pouvoir s'inscrire à une étude.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Quatre façons d'inviter</h2>
+      <p>
+        Les quatre méthodes aboutissent au même résultat : le participant est inscrit et son token de
+        notification push est enregistré. Choisissez la méthode adaptée à votre canal de recrutement.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_FR.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>Ce que voit le participant</h2>
+      <p>
+        Avant de rejoindre l'étude, les participants doivent installer l'application Samply Research depuis l'{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        ou{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a>.
+        Une fois l'application installée, appuyer sur un lien de participation les guide à travers une courte séquence :
+      </p>
+      <ol>
+        <li><strong>Création du compte.</strong> Les participants créent un compte participant avec une adresse email et un mot de passe. Les participants déjà inscrits se connectent avec leur compte existant.</li>
+        <li><strong>Formulaire de consentement</strong> (si votre étude en prévoit un). Le texte saisi dans les paramètres de l'étude est affiché en intégralité. Le participant doit le confirmer avant de continuer.</li>
+        <li><strong>Saisie du code participant</strong> (si votre étude l'active). Le participant saisit un identifiant personnalisé — un code de laboratoire, un numéro de participant ou tout autre identifiant que vous lui attribuez.</li>
+        <li><strong>Saisie du groupe</strong> (si votre étude l'active). Le participant saisit le nom du groupe auquel il appartient.</li>
+      </ol>
+      <p>
+        Après l'inscription, l'étude apparaît dans l'application du participant et Samply enregistre immédiatement
+        toutes les notifications planifiées pour lui.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Comptes des participants et adresses email</h2>
+      <p>
+        La création d'un compte participant requiert une adresse email. Samply stocke cette adresse et l'utilise
+        uniquement à des fins d'authentification — elle n'est jamais communiquée au chercheur ni utilisée à
+        d'autres fins. Trois raisons justifient cette exigence :
+      </p>
+      <ul>
+        <li><strong>Un compte par personne.</strong> Exiger un compte empêche une même personne de s'inscrire plusieurs fois depuis le même appareil.</li>
+        <li><strong>Continuité entre les appareils.</strong> Si un participant change de téléphone, il peut se connecter sur le nouvel appareil et reprendre l'étude sans perdre son historique.</li>
+        <li><strong>Réinitialisation du mot de passe.</strong> Si un participant oublie son mot de passe, il peut le réinitialiser par email.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Codes participants</h2>
+      <p>
+        Activez <em>Demander un code au participant</em> dans Modifier l'étude si vous devez relier les données
+        Samply à un système externe — un identifiant de laboratoire, un numéro d'enregistrement REDCap, un
+        identifiant de répondant Qualtrics.
+      </p>
+      <p>
+        Le participant saisit son code lors de l'inscription. Vous le voyez dans le tableau Participants et
+        pouvez l'utiliser comme <a href="/docs/placeholders">paramètre de substitution URL</a> pour que le
+        code soit automatiquement transmis à votre outil de sondage.
+      </p>
+      <p>
+        Vous pouvez également préremplir le code en ajoutant <code>&amp;code=ABC</code> au lien profond direct —
+        le participant verra le champ déjà rempli et n'aura qu'à confirmer.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Groupes lors de l'inscription</h2>
+      <p>
+        Activez <em>Demander au participant à quel groupe il appartient</em> dans Modifier l'étude pour collecter
+        une affectation de groupe au moment de l'inscription. Le participant saisit un nom de groupe ; si ce nom
+        existe déjà dans l'étude, le participant est affecté au même groupe.
+      </p>
+      <p>
+        Les groupes collectés lors de l'inscription sont généralement utilisés pour l'affectation aux conditions
+        dans les protocoles où les participants se sélectionnent eux-mêmes. Pour une affectation contrôlée par le
+        chercheur, attribuez les groupes depuis le tableau Participants. Les détails complets sont disponibles dans{" "}
+        <a href="/docs/groups">Groupes</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>Ce que vous voyez après l'inscription</h2>
+      <p>
+        Chaque participant inscrit apparaît dans l'onglet <strong>Participants</strong> de votre étude. Les colonnes
+        du tableau sont :
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Colonne</th>
+            <th>Contenu</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_FR.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Réinscription et actualisation du token</h3>
+      <p>
+        Si un participant appuie à nouveau sur le lien de participation — après avoir réinstallé l'application
+        ou changé d'appareil — Samply l'identifie par son Samply ID et met à jour son token de notification push.
+        Il n'est pas ajouté en doublon. Son groupe, son code et son historique de réponses sont préservés.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Lorsqu'un participant quitte l'étude</h3>
+      <p>
+        Les participants peuvent quitter une étude depuis l'application Samply Research. Lorsqu'ils le font,
+        leur ligne dans le tableau Participants est marquée comme <em>désactivée</em> et ils cessent de recevoir
+        des notifications. Leurs données historiques — notifications passées et réponses — restent dans l'étude
+        pour vos archives.
+      </p>
+    </>
+  );
+}
+
+function InviteContentEs() {
+  return (
+    <>
+      <p>
+        Los participantes se unen a través de la aplicación <strong>Samply Research</strong>, disponible para{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        y{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>.
+        Los participantes deben instalar la aplicación antes de poder inscribirse en cualquier estudio.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Cuatro formas de invitar</h2>
+      <p>
+        Los cuatro métodos producen el mismo resultado: el participante queda inscrito y su token de
+        notificación push queda registrado. Elija el método adecuado para su canal de reclutamiento.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_ES.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>Lo que ve el participante</h2>
+      <p>
+        Antes de unirse al estudio, los participantes deben instalar la aplicación Samply Research desde la{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        o{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a>.
+        Una vez instalada la aplicación, al tocar un enlace de participación se les guía por una breve secuencia:
+      </p>
+      <ol>
+        <li><strong>Creación de cuenta.</strong> Los participantes crean una cuenta de participante con una dirección de correo electrónico y una contraseña. Los participantes ya registrados inician sesión con su cuenta existente.</li>
+        <li><strong>Formulario de consentimiento</strong> (si su estudio lo incluye). El texto introducido en la configuración del estudio se muestra completo. El participante debe confirmarlo antes de continuar.</li>
+        <li><strong>Introducción del código de participante</strong> (si su estudio lo activa). El participante introduce un identificador personalizado — un código de laboratorio, un número de participante o cualquier otro identificador que usted le asigne.</li>
+        <li><strong>Introducción del grupo</strong> (si su estudio lo activa). El participante introduce el nombre del grupo al que pertenece.</li>
+      </ol>
+      <p>
+        Tras el registro, el estudio aparece en la aplicación del participante y Samply programa inmediatamente
+        todas las notificaciones planificadas para él.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Cuentas de participantes y direcciones de correo electrónico</h2>
+      <p>
+        La creación de una cuenta de participante requiere una dirección de correo electrónico. Samply almacena
+        esta dirección y la usa únicamente con fines de autenticación — nunca se comparte con el investigador
+        ni se usa para otros propósitos. Hay tres razones para este requisito:
+      </p>
+      <ul>
+        <li><strong>Una cuenta por persona.</strong> Exigir una cuenta evita que la misma persona se registre varias veces desde el mismo dispositivo.</li>
+        <li><strong>Continuidad entre dispositivos.</strong> Si un participante cambia de teléfono, puede iniciar sesión en el nuevo dispositivo y retomar el estudio sin perder su historial.</li>
+        <li><strong>Restablecimiento de contraseña.</strong> Si un participante olvida su contraseña, puede restablecerla por correo electrónico.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Códigos de participante</h2>
+      <p>
+        Active <em>Solicitar un código al participante</em> en Editar estudio si necesita vincular los datos
+        de Samply a un sistema externo — un identificador de laboratorio, un número de registro REDCap, un
+        identificador de respondente de Qualtrics.
+      </p>
+      <p>
+        El participante introduce su código durante el registro. Usted lo ve en la tabla de Participantes y
+        puede usarlo como <a href="/docs/placeholders">marcador de sustitución de URL</a> para que el
+        código se transmita automáticamente a su herramienta de encuesta.
+      </p>
+      <p>
+        También puede rellenar previamente el código añadiendo <code>&amp;code=ABC</code> al enlace directo
+        profundo — el participante verá el campo ya rellenado y solo tendrá que confirmar.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Grupos durante el registro</h2>
+      <p>
+        Active <em>Preguntar al participante a qué grupo pertenece</em> en Editar estudio para recopilar
+        una asignación de grupo en el momento del registro. El participante introduce un nombre de grupo; si
+        ese nombre ya existe en el estudio, el participante es asignado al mismo grupo.
+      </p>
+      <p>
+        Los grupos recopilados durante el registro se usan habitualmente para la asignación a condiciones
+        en protocolos donde los participantes se autoseleccionan. Para una asignación controlada por el
+        investigador, asigne los grupos desde la tabla de Participantes. Los detalles completos están
+        disponibles en{" "}
+        <a href="/docs/groups">Grupos</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>Lo que ve tras el registro</h2>
+      <p>
+        Cada participante inscrito aparece en la pestaña <strong>Participantes</strong> de su estudio. Las
+        columnas de la tabla son:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Columna</th>
+            <th>Contenido</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_ES.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Volver a unirse y actualizar el token</h3>
+      <p>
+        Si un participante vuelve a tocar el enlace de participación — después de reinstalar la aplicación
+        o cambiar de dispositivo — Samply lo identifica por su Samply ID y actualiza su token de notificación
+        push. No se añade como duplicado. Su grupo, código e historial de respuestas se conservan.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Cuando un participante abandona el estudio</h3>
+      <p>
+        Los participantes pueden abandonar un estudio desde la aplicación Samply Research. Cuando lo hacen,
+        su fila en la tabla de Participantes se marca como <em>desactivada</em> y dejan de recibir
+        notificaciones. Sus datos históricos — notificaciones pasadas y respuestas — permanecen en el estudio
+        para sus registros.
+      </p>
+    </>
+  );
+}
+
+const JOIN_METHODS_PT = [
+  {
+    id: "web",
+    label: "Link web",
+    when: "E-mails de recrutamento, páginas de destino, cartazes com uma URL",
+    format: "https://samply.uni-konstanz.de/studies/your-study-slug",
+    notes: [
+      "Abre uma página no navegador. O participante toca em um botão para ser redirecionado ao aplicativo Samply Research.",
+      "Requer que o estudo esteja marcado como Atualmente ativo. Os estudos inativos exibem uma mensagem «não disponível» nessa página.",
+    ],
+  },
+  {
+    id: "deep",
+    label: "Link direto profundo",
+    when: "SMS, aplicativos de mensagens, códigos QR — tudo que abre o aplicativo diretamente",
+    format: "samply://--/study?id=<study-id>",
+    notes: [
+      "Ignora a página de destino do navegador e abre o aplicativo diretamente.",
+      "Funciona independentemente de o estudo estar atualmente ativo ou não.",
+      "Adicione &code=ABC para pré-preencher o campo de código do participante durante o registro.",
+    ],
+  },
+  {
+    id: "browse",
+    label: "Navegar no aplicativo",
+    when: "Sessões em laboratório onde os participantes usam um dispositivo compartilhado com o aplicativo já aberto",
+    format: "— nenhum link necessário —",
+    notes: [
+      "Os participantes pesquisam seu estudo pelo nome ou identificador no aplicativo Samply Research.",
+    ],
+  },
+  {
+    id: "secure",
+    label: "Link de convite seguro",
+    when: "Estudos longitudinais onde cada participante deve receber um link único de duração limitada",
+    format: "samply://register?study=…&validfor=…&checksum=…",
+    notes: [
+      "Gerado na página de Convites com uma janela de validade configurável (padrão 168 horas = 7 dias).",
+      "O link é assinado criptograficamente — qualquer manipulação o invalida.",
+      "O gerador tem um campo de Código opcional. Deixe em branco para um link utilizável por qualquer participante; insira um código para pré-preencher o identificador desse participante durante o registro, tornando o link na prática de uso único para essa pessoa.",
+      "Um código QR para o link gerado é exibido na tela para facilitar a leitura.",
+    ],
+  },
+];
+
+const PARTICIPANT_TABLE_COLUMNS_PT = [
+  { col: "Samply ID", desc: "Identificador anônimo gerado pelo aplicativo — nunca associado a um nome real ou a um endereço de e-mail." },
+  { col: "Token", desc: "O token de notificação push do dispositivo. O Samply o usa para enviar as notificações." },
+  { col: "Data", desc: "A data em que o participante se registrou." },
+  { col: "Código", desc: "O identificador personalizado inserido pelo participante, se o seu estudo o solicitar." },
+  { col: "Grupo", desc: "O grupo ao qual o participante foi atribuído, se o seu estudo usar grupos." },
+  { col: "Fuso horário", desc: "Detectado a partir do dispositivo do participante. Usado para agendar as notificações pessoais no horário local correto." },
+  { col: "Faixa horária", desc: "Os horários em que o participante deseja receber notificações, definidos por ele no aplicativo. Isso não afeta os horários de envio agendados — se quiser respeitar as preferências de horário individuais, deve levá-las em conta manualmente ao configurar seus calendários de notificação." },
+  { col: "Histórico", desc: "Um registro por participante de cada envio de notificação e se uma resposta à pesquisa foi detectada." },
+];
+
+function InviteContentPt() {
+  return (
+    <>
+      <p>
+        Os participantes entram por meio do aplicativo <strong>Samply Research</strong>, disponível para{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">iOS</a>{" "}
+        e{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Android</a>.
+        Os participantes devem instalar o aplicativo antes de poder se inscrever em qualquer estudo.
+      </p>
+
+      {/* ── Four methods ──────────────────────────────────────────────────── */}
+      <h2>Quatro formas de convidar</h2>
+      <p>
+        Os quatro métodos produzem o mesmo resultado: o participante fica inscrito e seu token de
+        notificação push fica registrado. Escolha o método adequado para o seu canal de recrutamento.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2.4rem 0 4rem" }}>
+        {JOIN_METHODS_PT.map((m) => (
+          <div
+            key={m.id}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "2rem 2.2rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.8rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)" }}>{m.label}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)", letterSpacing: "0.04em" }}>{m.when}</span>
+            </div>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.5rem 1rem", borderRadius: "0.5rem", marginBottom: "1rem", wordBreak: "break-all" }}>{m.format}</div>
+            <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+              {m.notes.map((n, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{n}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Participant experience ────────────────────────────────────────── */}
+      <h2>O que o participante vê</h2>
+      <p>
+        Antes de entrar no estudo, os participantes devem instalar o aplicativo Samply Research na{" "}
+        <a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer">App Store</a>{" "}
+        ou{" "}
+        <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer">Google Play</a>.
+        Depois de instalar o aplicativo, tocar em um link de participação os guia por uma breve sequência:
+      </p>
+      <ol>
+        <li><strong>Criação de conta.</strong> Os participantes criam uma conta de participante com um endereço de e-mail e uma senha. Os participantes já registrados fazem login com sua conta existente.</li>
+        <li><strong>Formulário de consentimento</strong> (se o seu estudo o incluir). O texto inserido nas configurações do estudo é exibido na íntegra. O participante deve confirmá-lo antes de continuar.</li>
+        <li><strong>Inserção do código do participante</strong> (se o seu estudo o ativar). O participante insere um identificador personalizado — um código de laboratório, um número de participante ou qualquer outro identificador que você lhe atribua.</li>
+        <li><strong>Inserção do grupo</strong> (se o seu estudo o ativar). O participante insere o nome do grupo ao qual pertence.</li>
+      </ol>
+      <p>
+        Após o registro, o estudo aparece no aplicativo do participante e o Samply agenda imediatamente
+        todas as notificações planejadas para ele.
+      </p>
+
+      {/* ── Accounts and email ───────────────────────────────────────────── */}
+      <h2>Contas de participantes e endereços de e-mail</h2>
+      <p>
+        A criação de uma conta de participante requer um endereço de e-mail. O Samply armazena
+        esse endereço e o usa apenas para fins de autenticação — nunca é compartilhado com o pesquisador
+        nem usado para outros fins. Há três razões para esse requisito:
+      </p>
+      <ul>
+        <li><strong>Uma conta por pessoa.</strong> Exigir uma conta impede que a mesma pessoa se registre várias vezes a partir do mesmo dispositivo.</li>
+        <li><strong>Continuidade entre dispositivos.</strong> Se um participante trocar de telefone, pode fazer login no novo dispositivo e retomar o estudo sem perder seu histórico.</li>
+        <li><strong>Redefinição de senha.</strong> Se um participante esquecer sua senha, pode redefini-la por e-mail.</li>
+      </ul>
+
+      {/* ── Codes ─────────────────────────────────────────────────────────── */}
+      <h2>Códigos de participante</h2>
+      <p>
+        Ative <em>Solicitar um código ao participante</em> em Editar estudo se precisar vincular os dados
+        do Samply a um sistema externo — um identificador de laboratório, um número de registro REDCap, um
+        identificador de respondente do Qualtrics.
+      </p>
+      <p>
+        O participante insere seu código durante o registro. Você o vê na tabela de Participantes e
+        pode usá-lo como <a href="/docs/placeholders">marcador de substituição de URL</a> para que o
+        código seja transmitido automaticamente à sua ferramenta de pesquisa.
+      </p>
+      <p>
+        Você também pode pré-preencher o código adicionando <code>&amp;code=ABC</code> ao link direto
+        profundo — o participante verá o campo já preenchido e só precisará confirmar.
+      </p>
+
+      {/* ── Groups ────────────────────────────────────────────────────────── */}
+      <h2>Grupos durante o registro</h2>
+      <p>
+        Ative <em>Perguntar ao participante a qual grupo ele pertence</em> em Editar estudo para coletar
+        uma atribuição de grupo no momento do registro. O participante insere um nome de grupo; se
+        esse nome já existir no estudo, o participante é atribuído ao mesmo grupo.
+      </p>
+      <p>
+        Os grupos coletados durante o registro são normalmente usados para atribuição a condições
+        em protocolos onde os participantes se autosselecionam. Para atribuição controlada pelo
+        pesquisador, atribua os grupos na tabela de Participantes. Os detalhes completos estão
+        disponíveis em{" "}
+        <a href="/docs/groups">Grupos</a>.
+      </p>
+
+      {/* ── What you see ──────────────────────────────────────────────────── */}
+      <h2>O que você vê após o registro</h2>
+      <p>
+        Cada participante inscrito aparece na aba <strong>Participantes</strong> do seu estudo. As
+        colunas da tabela são:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Coluna</th>
+            <th>Conteúdo</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARTICIPANT_TABLE_COLUMNS_PT.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Re-joining ────────────────────────────────────────────────────── */}
+      <h3>Reingressar e atualizar o token</h3>
+      <p>
+        Se um participante tocar novamente no link de participação — após reinstalar o aplicativo
+        ou trocar de dispositivo — o Samply o identifica pelo seu Samply ID e atualiza seu token de notificação
+        push. Ele não é adicionado como duplicado. Seu grupo, código e histórico de respostas são preservados.
+      </p>
+
+      {/* ── Leaving ───────────────────────────────────────────────────────── */}
+      <h3>Quando um participante sai do estudo</h3>
+      <p>
+        Os participantes podem sair de um estudo pelo aplicativo Samply Research. Quando fazem isso,
+        sua linha na tabela de Participantes é marcada como <em>desativada</em> e eles param de receber
+        notificações. Seus dados históricos — notificações passadas e respostas — permanecem no estudo
+        para seus registros.
       </p>
     </>
   );

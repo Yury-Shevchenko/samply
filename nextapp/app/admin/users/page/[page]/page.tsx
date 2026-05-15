@@ -29,7 +29,7 @@ export default async function AdminUsersPageN({
 
   const { page: pageStr } = await params;
   const page = Math.max(1, parseInt(pageStr) || 1);
-  const { sort = "created", dir = "asc", filter = "", q = "" } = await searchParams;
+  const { sort = "created", dir = "desc", filter = "", q = "" } = await searchParams;
 
   const [{ users, count, pages, skip }, totalCounts] = await Promise.all([
     fetchAdminUsers(page, sort, dir, filter, q),

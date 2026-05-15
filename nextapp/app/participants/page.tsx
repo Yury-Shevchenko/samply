@@ -4,6 +4,7 @@ import { fetchUserProjects } from "@/lib/data/projects";
 import { fetchParticipants } from "@/lib/data/participants";
 import ProjectSelector from "@/app/components/ProjectSelector";
 import type { MobileUser } from "@/lib/data/participants";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Participants — Samply" };
 
@@ -57,6 +58,7 @@ export default async function ParticipantsPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const { project: projectId } = await searchParams;
   const { projects } = await fetchUserProjects(session.user.id);
@@ -72,18 +74,18 @@ export default async function ParticipantsPage({
   return (
     <div className="inner">
       <div className="userTable">
-        <h2>Participants</h2>
+        <h2>{t("legacyParticipants.title")}</h2>
 
         <ProjectSelector
           projects={selectorProjects}
           selectedId={selectedId}
-          label="Study:"
+          label={t("legacyParticipants.studyLabel")}
         />
 
         {!selectedId ? (
-          <p>Select a study above to view its participants.</p>
+          <p>{t("legacyParticipants.selectStudy")}</p>
         ) : participants.length === 0 ? (
-          <p>No participants yet.</p>
+          <p>{t("legacyParticipants.noParticipants")}</p>
         ) : (
           <div className="card">
             <div className="users">
@@ -91,16 +93,16 @@ export default async function ParticipantsPage({
                 <thead>
                   <tr>
                     <td>№</td>
-                    <td>Status</td>
-                    <td>Samply ID</td>
-                    <td>Token</td>
-                    <td>Date</td>
-                    <td>Code</td>
-                    <td>Group</td>
-                    <td>Time preferences</td>
-                    <td>Timezone</td>
-                    <td>Payout</td>
-                    <td>History</td>
+                    <td>{t("legacyParticipants.colStatus")}</td>
+                    <td>{t("legacyParticipants.colSamplyId")}</td>
+                    <td>{t("legacyParticipants.colToken")}</td>
+                    <td>{t("legacyParticipants.colDate")}</td>
+                    <td>{t("legacyParticipants.colCode")}</td>
+                    <td>{t("legacyParticipants.colGroup")}</td>
+                    <td>{t("legacyParticipants.colPrefs")}</td>
+                    <td>{t("legacyParticipants.colTimezone")}</td>
+                    <td>{t("legacyParticipants.colPayout")}</td>
+                    <td>{t("legacyParticipants.colHistory")}</td>
                   </tr>
                 </thead>
                 <tbody>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useT } from "@/app/components/TranslationProvider";
 
 interface Participant { id: string; username?: string }
 interface Group { id: string; name?: string }
@@ -17,19 +18,11 @@ interface Props {
 }
 
 const TIMEZONES = Intl.supportedValuesOf("timeZone");
-const WEEKDAYS = [
-  { value: "MON", label: "Mon" }, { value: "TUE", label: "Tue" }, { value: "WED", label: "Wed" },
-  { value: "THU", label: "Thu" }, { value: "FRI", label: "Fri" }, { value: "SAT", label: "Sat" },
-  { value: "SUN", label: "Sun" },
-];
-const MONTHS = [
-  { value: "JAN", label: "Jan" }, { value: "FEB", label: "Feb" }, { value: "MAR", label: "Mar" },
-  { value: "APR", label: "Apr" }, { value: "MAY", label: "May" }, { value: "JUN", label: "Jun" },
-  { value: "JUL", label: "Jul" }, { value: "AUG", label: "Aug" }, { value: "SEP", label: "Sep" },
-  { value: "OCT", label: "Oct" }, { value: "NOV", label: "Nov" }, { value: "DEC", label: "Dec" },
-];
+const WEEKDAY_VALUES = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"] as const;
+const MONTH_VALUES   = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"] as const;
 
 const now = new Date();
+const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
 
 function getRandomSec() { return Math.floor(Math.random() * 60); }
 
@@ -204,6 +197,7 @@ function DatetimeStrategyPicker({
   afterDays, onAfterDaysChange, afterHours, onAfterHoursChange, afterMinutes, onAfterMinutesChange,
   event, onEventChange,
   nextDay, onNextDayChange, nextEvent, onNextEventChange,
+  tFn,
 }: {
   type: "specific" | "event" | "next"; onTypeChange: (v: "specific" | "event" | "next") => void;
   hour: number; onHourChange: (v: number) => void;
@@ -217,14 +211,15 @@ function DatetimeStrategyPicker({
   event: "registration" | "now"; onEventChange: (v: "registration" | "now") => void;
   nextDay: number; onNextDayChange: (v: number) => void;
   nextEvent: "registration" | "now"; onNextEventChange: (v: "registration" | "now") => void;
+  tFn: (key: string) => string;
 }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
       <Segment
         options={[
-          { value: "specific", label: "Specific date/time" },
-          { value: "event", label: "Relative to event" },
-          { value: "next", label: "Day N after event" },
+          { value: "specific", label: tFn("notificationForm.specificDateTime") },
+          { value: "event", label: tFn("notificationForm.relativeToEvent") },
+          { value: "next", label: tFn("notificationForm.dayNAfterEvent") },
         ]}
         value={type}
         onChange={(v) => onTypeChange(v as "specific" | "event" | "next")}
@@ -232,12 +227,12 @@ function DatetimeStrategyPicker({
 
       {type === "specific" && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8rem", alignItems: "center" }}>
-          <span style={INLINE_LABEL}>Time</span>
+          <span style={INLINE_LABEL}>{tFn("notificationForm.inlineTime")}</span>
           <input type="number" min={0} max={23} value={hour} style={FIELD_SM} onChange={(e) => onHourChange(Number(e.target.value))} />
           <span style={INLINE_LABEL}>h</span>
           <input type="number" min={0} max={59} value={minute} style={FIELD_SM} onChange={(e) => onMinuteChange(Number(e.target.value))} />
           <span style={INLINE_LABEL}>m</span>
-          <span style={{ ...INLINE_LABEL, marginLeft: "0.8rem" }}>Date</span>
+          <span style={{ ...INLINE_LABEL, marginLeft: "0.8rem" }}>{tFn("notificationForm.inlineDate")}</span>
           <input type="number" min={1} max={31} value={day} style={FIELD_SM} onChange={(e) => onDayChange(Number(e.target.value))} />
           <span style={INLINE_LABEL}>/</span>
           <input type="number" min={1} max={12} value={month} style={FIELD_SM} onChange={(e) => onMonthChange(Number(e.target.value))} />
@@ -248,30 +243,30 @@ function DatetimeStrategyPicker({
 
       {type === "event" && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8rem", alignItems: "center" }}>
-          <span style={INLINE_LABEL}>After</span>
+          <span style={INLINE_LABEL}>{tFn("notificationForm.inlineAfter")}</span>
           <input type="number" min={0} value={afterDays} style={FIELD_SM} onChange={(e) => onAfterDaysChange(Number(e.target.value))} />
           <span style={INLINE_LABEL}>d</span>
           <input type="number" min={0} value={afterHours} style={FIELD_SM} onChange={(e) => onAfterHoursChange(Number(e.target.value))} />
           <span style={INLINE_LABEL}>h</span>
           <input type="number" min={0} value={afterMinutes} style={FIELD_SM} onChange={(e) => onAfterMinutesChange(Number(e.target.value))} />
-          <span style={INLINE_LABEL}>m from</span>
+          <span style={INLINE_LABEL}>{tFn("notificationForm.inlineMFrom")}</span>
           <select value={event} onChange={(e) => onEventChange(e.target.value as "registration" | "now")}
             style={{ ...SELECT, width: "auto", fontSize: "1.1rem", padding: "0.6rem 2.4rem 0.6rem 1rem" }}>
-            <option value="registration">registration</option>
-            <option value="now">now</option>
+            <option value="registration">{tFn("notificationForm.optRegistration")}</option>
+            <option value="now">{tFn("notificationForm.optNow")}</option>
           </select>
         </div>
       )}
 
       {type === "next" && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8rem", alignItems: "center" }}>
-          <span style={INLINE_LABEL}>Day</span>
+          <span style={INLINE_LABEL}>{tFn("notificationForm.inlineDay")}</span>
           <input type="number" min={1} max={10000} value={nextDay} style={{ ...FIELD_SM, width: "7rem" }} onChange={(e) => onNextDayChange(Number(e.target.value))} />
-          <span style={INLINE_LABEL}>after</span>
+          <span style={INLINE_LABEL}>{tFn("notificationForm.inlineAfterWord")}</span>
           <select value={nextEvent} onChange={(e) => onNextEventChange(e.target.value as "registration" | "now")}
             style={{ ...SELECT, width: "auto", fontSize: "1.1rem", padding: "0.6rem 2.4rem 0.6rem 1rem" }}>
-            <option value="registration">registration</option>
-            <option value="now">now</option>
+            <option value="registration">{tFn("notificationForm.optRegistration")}</option>
+            <option value="now">{tFn("notificationForm.optNow")}</option>
           </select>
         </div>
       )}
@@ -282,6 +277,23 @@ function DatetimeStrategyPicker({
 // ── Main form ──────────────────────────────────────────────────────────────────
 
 export default function NotificationForm({ projectId, participants, groups, preselectedParticipantId }: Props) {
+  const { t } = useT();
+
+  const WEEKDAYS = [
+    { value: "MON", label: t("notificationForm.mon") }, { value: "TUE", label: t("notificationForm.tue") },
+    { value: "WED", label: t("notificationForm.wed") }, { value: "THU", label: t("notificationForm.thu") },
+    { value: "FRI", label: t("notificationForm.fri") }, { value: "SAT", label: t("notificationForm.sat") },
+    { value: "SUN", label: t("notificationForm.sun") },
+  ];
+  const MONTHS = [
+    { value: "JAN", label: t("notificationForm.jan") }, { value: "FEB", label: t("notificationForm.feb") },
+    { value: "MAR", label: t("notificationForm.mar") }, { value: "APR", label: t("notificationForm.apr") },
+    { value: "MAY", label: t("notificationForm.may") }, { value: "JUN", label: t("notificationForm.jun") },
+    { value: "JUL", label: t("notificationForm.jul") }, { value: "AUG", label: t("notificationForm.aug") },
+    { value: "SEP", label: t("notificationForm.sep") }, { value: "OCT", label: t("notificationForm.oct") },
+    { value: "NOV", label: t("notificationForm.nov") }, { value: "DEC", label: t("notificationForm.dec") },
+  ];
+
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [url, setUrl] = useState("https://");
@@ -297,10 +309,19 @@ export default function NotificationForm({ projectId, participants, groups, pres
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>(preselectedParticipantId ? [preselectedParticipantId] : []);
   const [allCurrentGroups, setAllCurrentGroups] = useState(true);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [yokedDesign, setYokedDesign] = useState(false);
 
-  const [timeType, setTimeType] = useState<"specific" | "interval" | "repeat">("specific");
+  const [timeType, setTimeType] = useState<"specific" | "interval" | "repeat" | "enrollment">("specific");
+  const [enrollmentDays, setEnrollmentDays] = useState(0);
+  const [enrollmentHours, setEnrollmentHours] = useState(0);
+  const [enrollmentMinutes, setEnrollmentMinutes] = useState(0);
+
+  // Auto-enable future participants when enrollment type is selected
+  useEffect(() => {
+    if (timeType === "enrollment") setIncludeFuture(true);
+  }, [timeType]);
   const [timepoints, setTimepoints] = useState<Timepoint[]>([{ hour: 12, minute: 0 }]);
-  const [timeWindows, setTimeWindows] = useState<TimeWindow[]>([{ hourStart: 9, minuteStart: 0, hourEnd: 17, minuteEnd: 0, distance: 0, number: 1 }]);
+  const [timeWindows, setTimeWindows] = useState<TimeWindow[]>([{ hourStart: 9, minuteStart: 0, hourEnd: 21, minuteEnd: 0, distance: 2700000, number: 5 }]);
   const [repeatEvery, setRepeatEvery] = useState(30);
 
   const [dateType, setDateType] = useState<"specific" | "every" | "spec-week" | "spec-month">("specific");
@@ -328,9 +349,9 @@ export default function NotificationForm({ projectId, participants, groups, pres
   const [stopType, setStopType] = useState<"specific" | "event" | "next">("specific");
   const [stopHour, setStopHour] = useState(now.getHours());
   const [stopMinute, setStopMinute] = useState(now.getMinutes());
-  const [stopDay, setStopDay] = useState(now.getDate());
-  const [stopMonth, setStopMonth] = useState(now.getMonth() + 1);
-  const [stopYear, setStopYear] = useState(now.getFullYear());
+  const [stopDay, setStopDay] = useState(twoWeeksFromNow.getDate());
+  const [stopMonth, setStopMonth] = useState(twoWeeksFromNow.getMonth() + 1);
+  const [stopYear, setStopYear] = useState(twoWeeksFromNow.getFullYear());
   const [stopAfterDays, setStopAfterDays] = useState(0);
   const [stopAfterHours, setStopAfterHours] = useState(0);
   const [stopAfterMinutes, setStopAfterMinutes] = useState(0);
@@ -446,15 +467,15 @@ export default function NotificationForm({ projectId, participants, groups, pres
   }
 
   async function handleSubmit() {
-    if (!title.trim()) { alert("Enter a title"); return; }
-    if (!message.trim()) { alert("Enter a message"); return; }
-    if (!includeCurrent && !includeFuture && !includeGroups) { alert("Choose at least one recipient group"); return; }
+    if (!title.trim()) { alert(t("notificationForm.alertTitle")); return; }
+    if (!message.trim()) { alert(t("notificationForm.alertMessage")); return; }
+    if (!includeCurrent && !includeFuture && !includeGroups) { alert(t("notificationForm.alertRecipient")); return; }
 
     let participantsList: string[] | null = null;
     if (includeCurrent) {
       if (allCurrentParticipants) { participantsList = []; }
       else {
-        if (!selectedParticipants.length) { alert("Choose specific participants or select all"); return; }
+        if (!selectedParticipants.length) { alert(t("notificationForm.alertParticipants")); return; }
         participantsList = selectedParticipants;
       }
     }
@@ -463,7 +484,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
     if (includeGroups) {
       if (allCurrentGroups) { groupsList = []; }
       else {
-        if (!selectedGroups.length) { alert("Choose specific groups or select all"); return; }
+        if (!selectedGroups.length) { alert(t("notificationForm.alertGroups")); return; }
         groupsList = selectedGroups;
       }
     }
@@ -473,7 +494,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
       ? reminders.map((r) => ({ title: r.title, message: r.message, time: ((r.days * 24 * 60 + r.hours * 60 + r.minutes) * 60000) }))
       : [];
 
-    const commonFields = { projectId, title, message, url: url.trim(), timezone, useParticipantTimezone, expireIn, reminders: reminderList, scheduleInFuture: includeFuture, participants: participantsList, groups: groupsList };
+    const commonFields = { projectId, title, message, url: url.trim(), timezone, useParticipantTimezone, expireIn, reminders: reminderList, scheduleInFuture: includeFuture, participants: participantsList, groups: groupsList, yokedDesign: includeGroups ? yokedDesign : false };
 
     setSubmitting(true);
     setStatus(null);
@@ -482,12 +503,16 @@ export default function NotificationForm({ projectId, participants, groups, pres
       let endpoint = "";
       let payload: Record<string, unknown> = {};
 
-      if (timeType === "specific" && dateType === "specific") {
+      if (timeType === "enrollment") {
+        endpoint = "/createenrollmentnotification";
+        payload = { ...commonFields, delay: { days: enrollmentDays, hours: enrollmentHours, minutes: enrollmentMinutes } };
+
+      } else if (timeType === "specific" && dateType === "specific") {
         endpoint = "/createschedulenotification";
         payload = { ...commonFields, timepoints, dates: specificDates };
 
       } else if (timeType === "repeat") {
-        if (dateType === "specific") { alert("Repeat every N minutes with specific dates is not supported. Choose a date pattern instead."); setSubmitting(false); return; }
+        if (dateType === "specific") { alert(t("notificationForm.alertRepeatDates")); setSubmitting(false); return; }
         const s = buildStartingStrategy(), e = buildStoppingStrategy();
         const dayStart = new Date(s.startMoment || Date.now()).getDate();
         const isRegBased = s.startEvent === "registration" || e.stopEvent === "registration";
@@ -523,7 +548,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
 
       const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = await res.json() as { warning?: string; redirect?: string; error?: string };
-      if (!res.ok) { setStatus(`Error: ${data.error ?? "Request failed"}`); return; }
+      if (!res.ok) { setStatus(`Error: ${data.error ?? t("notificationForm.alertError")}`); return; }
       if (data.warning) alert(data.warning);
       window.location.href = `/dashboard/${projectId}/schedule`;
     } catch (err) {
@@ -533,7 +558,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
     }
   }
 
-  const showDateSteps = dateType !== "specific";
+  const showDateSteps = dateType !== "specific" && timeType !== "enrollment";
 
   // ── Render ───────────────────────────────────────────────────────────────────
 
@@ -541,18 +566,18 @@ export default function NotificationForm({ projectId, participants, groups, pres
     <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
 
       {/* Content */}
-      <StepCard num="content" title="Notification content">
+      <StepCard num="content" title={t("notificationForm.cardContent")}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
           <div>
-            <label style={LABEL}>Title</label>
-            <input style={FIELD} type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Daily check-in" />
+            <label style={LABEL}>{t("notificationForm.labelTitle")}</label>
+            <input style={FIELD} type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t("notificationForm.titlePlaceholder")} />
           </div>
           <div>
-            <label style={LABEL}>Message</label>
-            <input style={FIELD} type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder="How are you feeling right now?" />
+            <label style={LABEL}>{t("notificationForm.labelMessage")}</label>
+            <input style={FIELD} type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder={t("notificationForm.messagePlaceholder")} />
           </div>
           <div>
-            <label style={LABEL}>Web link</label>
+            <label style={LABEL}>{t("notificationForm.labelWebLink")}</label>
             <input style={FIELD} type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://your-survey.com/?id=%SAMPLY_ID%" />
             {/* URL placeholder accordion */}
             <button
@@ -574,7 +599,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
               }}
             >
               <span style={{ fontSize: "0.8em", transform: urlHelpOpen ? "rotate(90deg)" : "rotate(0deg)", display: "inline-block", transition: "transform .15s" }}>▶</span>
-              Recording participant data in the survey URL
+              {t("notificationForm.urlHelpToggle")}
             </button>
             {urlHelpOpen && (
               <div style={{
@@ -588,14 +613,14 @@ export default function NotificationForm({ projectId, participants, groups, pres
                 gap: "1rem",
               }}>
                 <p style={{ margin: 0, fontSize: "1.2rem", color: "var(--ink-60)", lineHeight: 1.7 }}>
-                  Samply replaces placeholders in the URL before sending it to each participant, so you can capture identifiers directly in your survey tool&apos;s query string.
+                  {t("notificationForm.urlHelpDesc")}
                 </p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                   {[
-                    { ph: "%SAMPLY_ID%", desc: "Participant's unique Samply identifier (always present)." },
-                    { ph: "%PARTICIPANT_CODE%", desc: "Code the participant entered when joining the study. Falls back to the Samply ID if no code was provided." },
-                    { ph: "%MESSAGE_ID%", desc: "Unique ID of this specific notification delivery." },
-                    { ph: "%GROUP_CODE%", desc: "The participant's group name, if they belong to one." },
+                    { ph: "%SAMPLY_ID%", desc: t("notificationForm.urlHelpPhSamplyId") },
+                    { ph: "%PARTICIPANT_CODE%", desc: t("notificationForm.urlHelpPhCode") },
+                    { ph: "%MESSAGE_ID%", desc: t("notificationForm.urlHelpPhMessageId") },
+                    { ph: "%GROUP_CODE%", desc: t("notificationForm.urlHelpPhGroup") },
                   ].map(({ ph, desc }) => (
                     <div key={ph} style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
                       <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--coral)", background: "rgba(214,90,48,.06)", padding: "0.15rem 0.5rem", borderRadius: "0.3rem", flexShrink: 0 }}>{ph}</code>
@@ -604,16 +629,16 @@ export default function NotificationForm({ projectId, participants, groups, pres
                   ))}
                 </div>
                 <div style={{ background: "var(--surface)", borderRadius: "0.5rem", padding: "0.9rem 1.1rem" }}>
-                  <p style={{ margin: "0 0 0.4rem", fontFamily: "var(--font-mono)", fontSize: "0.95rem", color: "var(--ink-40)", letterSpacing: ".1em", textTransform: "uppercase" }}>Example</p>
+                  <p style={{ margin: "0 0 0.4rem", fontFamily: "var(--font-mono)", fontSize: "0.95rem", color: "var(--ink-40)", letterSpacing: ".1em", textTransform: "uppercase" }}>{t("notificationForm.urlHelpExample")}</p>
                   <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink)", wordBreak: "break-all" }}>
                     {"https://survey.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%"}
                   </code>
                 </div>
                 <p style={{ margin: 0, fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.6 }}>
-                  Your survey tool can then extract these values from the address bar. See{" "}
-                  <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank" rel="noreferrer" style={{ color: "var(--coral)", textDecoration: "none" }}>query strings</a>
-                  {" "}and the{" "}
-                  <a href="https://samply.uni-konstanz.de/docs/notifications#placeholders" target="_blank" rel="noreferrer" style={{ color: "var(--coral)", textDecoration: "none" }}>full placeholder reference</a>.
+                  {t("notificationForm.urlHelpSeeQueryPre")}{" "}
+                  <a href="https://en.wikipedia.org/wiki/Query_string" target="_blank" rel="noreferrer" style={{ color: "var(--coral)", textDecoration: "none" }}>{t("notificationForm.urlHelpQueryStrings")}</a>
+                  {" "}{t("notificationForm.urlHelpSeeQueryMid")}{" "}
+                  <a href="https://samply.uni-konstanz.de/docs/notifications#placeholders" target="_blank" rel="noreferrer" style={{ color: "var(--coral)", textDecoration: "none" }}>{t("notificationForm.urlHelpFullRef")}</a>.
                 </p>
               </div>
             )}
@@ -622,10 +647,10 @@ export default function NotificationForm({ projectId, participants, groups, pres
       </StepCard>
 
       {/* Timezone */}
-      <StepCard num="step 1" title="Timezone">
-        <Check label="Adjust delivery time for each participant's timezone" checked={useParticipantTimezone} onChange={setUseParticipantTimezone} />
+      <StepCard num="step 1" title={t("notificationForm.cardTimezone")}>
+        <Check label={t("notificationForm.adjustTimezone")} checked={useParticipantTimezone} onChange={setUseParticipantTimezone} />
         <div>
-          <label style={LABEL}>Reference timezone</label>
+          <label style={LABEL}>{t("notificationForm.refTimezone")}</label>
           <select style={SELECT} value={timezone} onChange={(e) => setTimezone(e.target.value)}>
             {TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
           </select>
@@ -633,16 +658,16 @@ export default function NotificationForm({ projectId, participants, groups, pres
       </StepCard>
 
       {/* Recipients */}
-      <StepCard num="step 2" title="Recipients">
+      <StepCard num="step 2" title={t("notificationForm.cardRecipients")}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <Check label="Future participants (anyone who joins after this schedule is created)" checked={includeFuture} onChange={setIncludeFuture} />
+          <Check label={t("notificationForm.futureParticipants")} checked={includeFuture} onChange={setIncludeFuture} />
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-            <Check label="Current participants" checked={includeCurrent} onChange={setIncludeCurrent} />
+            <Check label={t("notificationForm.currentParticipants")} checked={includeCurrent} onChange={setIncludeCurrent} />
             {includeCurrent && (
               <div style={{ paddingLeft: "2.2rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                 <Segment
-                  options={[{ value: "all", label: "All participants" }, { value: "select", label: "Select specific" }]}
+                  options={[{ value: "all", label: t("notificationForm.allParticipants") }, { value: "select", label: t("notificationForm.selectSpecific") }]}
                   value={allCurrentParticipants ? "all" : "select"}
                   onChange={(v) => { setAllCurrentParticipants(v === "all"); if (v === "all") setSelectedParticipants([]); }}
                 />
@@ -653,7 +678,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
                         label={p.username ? `${p.username} (${p.id})` : p.id} />
                     ))}
                     {participants.length === 0 && (
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>No participants yet</span>
+                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>{t("notificationForm.noParticipantsYet")}</span>
                     )}
                   </div>
                 )}
@@ -663,11 +688,11 @@ export default function NotificationForm({ projectId, participants, groups, pres
 
           {groups.length > 0 && (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
-              <Check label="Groups" checked={includeGroups} onChange={setIncludeGroups} />
+              <Check label={t("notificationForm.groupsLabel")} checked={includeGroups} onChange={setIncludeGroups} />
               {includeGroups && (
-                <div style={{ paddingLeft: "2.2rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                <div style={{ paddingLeft: "2.2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
                   <Segment
-                    options={[{ value: "all", label: "All groups" }, { value: "select", label: "Select specific" }]}
+                    options={[{ value: "all", label: t("notificationForm.allGroups") }, { value: "select", label: t("notificationForm.selectSpecific") }]}
                     value={allCurrentGroups ? "all" : "select"}
                     onChange={(v) => { setAllCurrentGroups(v === "all"); if (v === "all") setSelectedGroups([]); }}
                   />
@@ -678,6 +703,26 @@ export default function NotificationForm({ projectId, participants, groups, pres
                       ))}
                     </div>
                   )}
+                  {!(timeType === "specific" && dateType === "specific") && timeType !== "enrollment" && (
+                    <div style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "1rem 1.4rem", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                        <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}>
+                          {t("notificationForm.yokedLabel")}
+                        </span>
+                        <Segment
+                          options={[
+                            { value: "off", label: t("notificationForm.yokedOff") },
+                            { value: "on", label: t("notificationForm.yokedOn") },
+                          ]}
+                          value={yokedDesign ? "on" : "off"}
+                          onChange={(v) => setYokedDesign(v === "on")}
+                        />
+                      </div>
+                      <p style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", lineHeight: 1.6 }}>
+                        {yokedDesign ? t("notificationForm.yokedHintOn") : t("notificationForm.yokedHintOff")}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -686,12 +731,13 @@ export default function NotificationForm({ projectId, participants, groups, pres
       </StepCard>
 
       {/* Time */}
-      <StepCard num="step 3" title="Time">
+      <StepCard num="step 3" title={t("notificationForm.cardTime")}>
         <Segment
           options={[
-            { value: "specific", label: "Specific timepoints" },
-            { value: "interval", label: "Random within window" },
-            { value: "repeat", label: "Repeat every N min" },
+            { value: "specific", label: t("notificationForm.specificTimepoints") },
+            { value: "interval", label: t("notificationForm.randomWindow") },
+            { value: "repeat", label: t("notificationForm.repeatEveryNMin") },
+            { value: "enrollment", label: t("notificationForm.afterJoining") },
           ]}
           value={timeType}
           onChange={(v) => setTimeType(v as typeof timeType)}
@@ -710,7 +756,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
                 {timepoints.length > 1 && <RemoveLink onClick={() => setTimepoints((p) => p.filter((_, j) => j !== i))} />}
               </div>
             ))}
-            <AddLink label="Add timepoint" onClick={() => setTimepoints((p) => [...p, { hour: 12, minute: 0 }])} />
+            <AddLink label={t("notificationForm.addTimepoint")} onClick={() => setTimepoints((p) => [...p, { hour: 12, minute: 0 }])} />
           </div>
         )}
 
@@ -719,13 +765,13 @@ export default function NotificationForm({ projectId, participants, groups, pres
             {timeWindows.map((w, i) => (
               <div key={i} style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "1.2rem 1.4rem", display: "flex", flexDirection: "column", gap: "0.8rem" }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8rem", alignItems: "center" }}>
-                  <span style={INLINE_LABEL}>From</span>
+                  <span style={INLINE_LABEL}>{t("notificationForm.labelFrom")}</span>
                   <input type="number" min={0} max={23} value={w.hourStart} style={FIELD_SM}
                     onChange={(e) => setTimeWindows((p) => p.map((x, j) => j === i ? { ...x, hourStart: Number(e.target.value) } : x))} />
                   <span style={INLINE_LABEL}>h</span>
                   <input type="number" min={0} max={59} value={w.minuteStart} style={FIELD_SM}
                     onChange={(e) => setTimeWindows((p) => p.map((x, j) => j === i ? { ...x, minuteStart: Number(e.target.value) } : x))} />
-                  <span style={INLINE_LABEL}>m  →  To</span>
+                  <span style={INLINE_LABEL}>{t("notificationForm.labelTo")}</span>
                   <input type="number" min={0} max={23} value={w.hourEnd} style={FIELD_SM}
                     onChange={(e) => setTimeWindows((p) => p.map((x, j) => j === i ? { ...x, hourEnd: Number(e.target.value) } : x))} />
                   <span style={INLINE_LABEL}>h</span>
@@ -735,37 +781,61 @@ export default function NotificationForm({ projectId, participants, groups, pres
                   {timeWindows.length > 1 && <RemoveLink onClick={() => setTimeWindows((p) => p.filter((_, j) => j !== i))} />}
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "0.8rem", alignItems: "center" }}>
-                  <span style={INLINE_LABEL}># notifications</span>
+                  <span style={INLINE_LABEL}>{t("notificationForm.numNotifications")}</span>
                   <input type="number" min={1} value={w.number} style={FIELD_SM}
                     onChange={(e) => setTimeWindows((p) => p.map((x, j) => j === i ? { ...x, number: Number(e.target.value) } : x))} />
-                  <span style={{ ...INLINE_LABEL, marginLeft: "0.8rem" }}>Min gap (min)</span>
+                  <span style={{ ...INLINE_LABEL, marginLeft: "0.8rem" }}>{t("notificationForm.minGap")}</span>
                   <input type="number" min={0} value={Math.round(w.distance / 60000)} style={FIELD_SM}
                     onChange={(e) => setTimeWindows((p) => p.map((x, j) => j === i ? { ...x, distance: Number(e.target.value) * 60000 } : x))} />
                 </div>
               </div>
             ))}
-            <AddLink label="Add window" onClick={() => setTimeWindows((p) => [...p, { hourStart: 9, minuteStart: 0, hourEnd: 17, minuteEnd: 0, distance: 0, number: 1 }])} />
+            <AddLink label={t("notificationForm.addWindow")} onClick={() => setTimeWindows((p) => [...p, { hourStart: 9, minuteStart: 0, hourEnd: 21, minuteEnd: 0, distance: 2700000, number: 5 }])} />
           </div>
         )}
 
         {timeType === "repeat" && (
           <div>
-            <label style={LABEL}>Repeat every</label>
+            <label style={LABEL}>{t("notificationForm.labelRepeatEvery")}</label>
             <select style={{ ...SELECT, width: "auto" }} value={repeatEvery} onChange={(e) => setRepeatEvery(Number(e.target.value))}>
-              {[1, 2, 5, 10, 15, 30].map((n) => <option key={n} value={n}>{n} minute{n > 1 ? "s" : ""}</option>)}
+              {[1, 2, 5, 10, 15, 30].map((n) => <option key={n} value={n}>{n} {n > 1 ? t("notificationForm.minutePlural") : t("notificationForm.minuteSingular")}</option>)}
             </select>
+          </div>
+        )}
+
+        {timeType === "enrollment" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div>
+              <label style={LABEL}>{t("notificationForm.afterJoiningDelay")}</label>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
+                <input type="number" min={0} value={enrollmentDays} style={FIELD_SM} onChange={(e) => setEnrollmentDays(Math.max(0, Number(e.target.value)))} />
+                <span style={INLINE_LABEL}>d</span>
+                <input type="number" min={0} max={23} value={enrollmentHours} style={FIELD_SM} onChange={(e) => setEnrollmentHours(Math.max(0, Number(e.target.value)))} />
+                <span style={INLINE_LABEL}>h</span>
+                <input type="number" min={0} max={59} value={enrollmentMinutes} style={FIELD_SM} onChange={(e) => setEnrollmentMinutes(Math.max(0, Number(e.target.value)))} />
+                <span style={INLINE_LABEL}>m</span>
+              </div>
+            </div>
+            <p style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", lineHeight: 1.6 }}>
+              {t("notificationForm.afterJoiningNote")}
+            </p>
+            <div style={{ background: "rgba(80,140,100,.06)", border: "1px solid rgba(80,140,100,.22)", borderRadius: "0.6rem", padding: "0.9rem 1.2rem" }}>
+              <p style={{ margin: 0, fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-60)", lineHeight: 1.6 }}>
+                {t("notificationForm.afterJoiningFutureNote")}
+              </p>
+            </div>
           </div>
         )}
       </StepCard>
 
-      {/* Date */}
-      <StepCard num="step 4" title="Date">
+      {/* Date — hidden for enrollment */}
+      {timeType !== "enrollment" && <StepCard num="step 4" title={t("notificationForm.cardDate")}>
         <Segment
           options={[
-            { value: "specific", label: "Specific dates" },
-            { value: "every", label: "Every N days" },
-            { value: "spec-week", label: "Weekdays" },
-            { value: "spec-month", label: "Days of month" },
+            { value: "specific", label: t("notificationForm.specificDates") },
+            { value: "every", label: t("notificationForm.everyNDays", { n: "N" }) },
+            { value: "spec-week", label: t("notificationForm.weekdaysOption") },
+            { value: "spec-month", label: t("notificationForm.daysOfMonth") },
           ]}
           value={dateType}
           onChange={(v) => setDateType(v as typeof dateType)}
@@ -786,16 +856,15 @@ export default function NotificationForm({ projectId, participants, groups, pres
                 {specificDates.length > 1 && <RemoveLink onClick={() => setSpecificDates((p) => p.filter((_, j) => j !== i))} />}
               </div>
             ))}
-            <AddLink label="Add date" onClick={() => setSpecificDates((p) => [...p, { day: now.getDate(), month: now.getMonth() + 1, year: now.getFullYear() }])} />
+            <AddLink label={t("notificationForm.addDate")} onClick={() => setSpecificDates((p) => [...p, { day: now.getDate(), month: now.getMonth() + 1, year: now.getFullYear() }])} />
           </div>
         )}
 
         {dateType === "every" && (
           <div>
-            <label style={LABEL}>Interval</label>
             <select style={{ ...SELECT, width: "auto" }} value={everyNDays} onChange={(e) => setEveryNDays(Number(e.target.value))}>
               {[1, ...Array.from({ length: 30 }, (_, i) => i + 2)].map((n) => (
-                <option key={n} value={n}>{n === 1 ? "Every day" : `Every ${n} days`}</option>
+                <option key={n} value={n}>{n === 1 ? t("notificationForm.everyDay") : t("notificationForm.everyNDays", { n: String(n) })}</option>
               ))}
             </select>
           </div>
@@ -816,13 +885,13 @@ export default function NotificationForm({ projectId, participants, groups, pres
             ))}
           </div>
         )}
-      </StepCard>
+      </StepCard>}
 
       {/* Month (only non-specific dates) */}
       {showDateSteps && (
-        <StepCard num="step 5" title="Month">
+        <StepCard num="step 5" title={t("notificationForm.cardMonth")}>
           <Segment
-            options={[{ value: "every", label: "Any month" }, { value: "specific", label: "Specific months" }]}
+            options={[{ value: "every", label: t("notificationForm.anyMonth") }, { value: "specific", label: t("notificationForm.specificMonths") }]}
             value={monthType}
             onChange={(v) => setMonthType(v as "every" | "specific")}
           />
@@ -839,7 +908,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
       {/* Start / Stop (only non-specific dates) */}
       {showDateSteps && (
         <>
-          <StepCard num="step 6" title="Start">
+          <StepCard num="step 6" title={t("notificationForm.cardStart")}>
             <DatetimeStrategyPicker
               type={startType} onTypeChange={setStartType}
               hour={startHour} onHourChange={setStartHour}
@@ -853,10 +922,11 @@ export default function NotificationForm({ projectId, participants, groups, pres
               event={startEvent} onEventChange={setStartEvent}
               nextDay={startNextDay} onNextDayChange={setStartNextDay}
               nextEvent={startNextEvent} onNextEventChange={setStartNextEvent}
+              tFn={t}
             />
           </StepCard>
 
-          <StepCard num="step 7" title="Stop">
+          <StepCard num="step 7" title={t("notificationForm.cardStop")}>
             <DatetimeStrategyPicker
               type={stopType} onTypeChange={setStopType}
               hour={stopHour} onHourChange={setStopHour}
@@ -870,15 +940,16 @@ export default function NotificationForm({ projectId, participants, groups, pres
               event={stopEvent} onEventChange={setStopEvent}
               nextDay={stopNextDay} onNextDayChange={setStopNextDay}
               nextEvent={stopNextEvent} onNextEventChange={setStopNextEvent}
+              tFn={t}
             />
           </StepCard>
         </>
       )}
 
       {/* Expiry */}
-      <StepCard num="step 8" title="Link expiry">
+      <StepCard num="step 8" title={t("notificationForm.cardExpiry")}>
         <Segment
-          options={[{ value: "no", label: "Does not expire" }, { value: "yes", label: "Expires after" }]}
+          options={[{ value: "no", label: t("notificationForm.doesNotExpire") }, { value: "yes", label: t("notificationForm.expiresAfter") }]}
           value={expireType}
           onChange={(v) => setExpireType(v as "no" | "yes")}
         />
@@ -895,33 +966,33 @@ export default function NotificationForm({ projectId, participants, groups, pres
       </StepCard>
 
       {/* Reminders */}
-      <StepCard num="step 9" title="Reminders">
+      <StepCard num="step 9" title={t("notificationForm.cardReminders")}>
         <Segment
-          options={[{ value: "no", label: "No reminders" }, { value: "yes", label: "Add reminders" }]}
+          options={[{ value: "no", label: t("notificationForm.noReminders") }, { value: "yes", label: t("notificationForm.addReminders") }]}
           value={reminderType}
           onChange={(v) => setReminderType(v as "no" | "yes")}
         />
         {reminderType === "yes" && (
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.6 }}>
-              Sent if the participant has not completed the survey after the specified delay.
+              {t("notificationForm.reminderHint")}
             </p>
             {reminders.map((r, i) => (
               <div key={i} style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "1.2rem 1.4rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ display: "flex", gap: "1rem" }}>
                   <div style={{ flex: 1 }}>
-                    <label style={LABEL}>Title</label>
+                    <label style={LABEL}>{t("notificationForm.labelTitle")}</label>
                     <input style={FIELD} type="text" value={r.title}
                       onChange={(e) => setReminders((p) => p.map((x, j) => j === i ? { ...x, title: e.target.value } : x))} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <label style={LABEL}>Message</label>
+                    <label style={LABEL}>{t("notificationForm.labelMessage")}</label>
                     <input style={FIELD} type="text" value={r.message}
                       onChange={(e) => setReminders((p) => p.map((x, j) => j === i ? { ...x, message: e.target.value } : x))} />
                   </div>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.8rem" }}>
-                  <span style={INLINE_LABEL}>Send after</span>
+                  <span style={INLINE_LABEL}>{t("notificationForm.sendAfter")}</span>
                   <input type="number" min={0} value={r.days} style={FIELD_SM}
                     onChange={(e) => setReminders((p) => p.map((x, j) => j === i ? { ...x, days: Number(e.target.value) } : x))} />
                   <span style={INLINE_LABEL}>d</span>
@@ -935,7 +1006,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
                 </div>
               </div>
             ))}
-            <AddLink label="Add reminder" onClick={() => setReminders((p) => [...p, { title: "", message: "", days: 0, hours: 0, minutes: 0 }])} />
+            <AddLink label={t("notificationForm.addReminder")} onClick={() => setReminders((p) => [...p, { title: "", message: "", days: 0, hours: 0, minutes: 0 }])} />
           </div>
         )}
       </StepCard>
@@ -962,7 +1033,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
           alignSelf: "flex-start",
         }}
         className={submitting ? "" : "hover:opacity-90 transition-opacity"}>
-        {submitting ? "Scheduling…" : "Schedule notifications →"}
+        {submitting ? t("notificationForm.submitting") : t("notificationForm.submit")}
       </button>
     </div>
   );

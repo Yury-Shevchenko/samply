@@ -698,25 +698,24 @@ function checkObjectIdValid(id) {
 
 exports.getPublicStudy = async (req, res) => {
   const { id, token } = req.params;
+  const projection = {
+    name: 1,
+    description: 1,
+    image: 1,
+    welcomeMessage: 1,
+    codeMessage: 1,
+    groupMessage: 1,
+    messageAfterJoin: 1,
+    geofencingInstruction: 1,
+    settings: 1,
+    samplycode: 1,
+    mobileUsers: 1,
+    projectGroups: 1,
+    creator: 1,
+  };
   let study;
   if (checkObjectIdValid(id)) {
-    study = await Project.findOne(
-      { _id: id },
-      {
-        name: 1,
-        description: 1,
-        image: 1,
-        welcomeMessage: 1,
-        codeMessage: 1,
-        groupMessage: 1,
-        messageAfterJoin: 1,
-        geofencingInstruction: 1,
-        settings: 1,
-        samplycode: 1,
-        mobileUsers: 1,
-        creator: 1,
-      },
-    );
+    study = await Project.findOne({ _id: id }, projection);
   } else {
     const safeId = escapeStringRegexp(id);
     study = await Project.findOne(
@@ -726,20 +725,7 @@ exports.getPublicStudy = async (req, res) => {
           { samplycode: { $regex: new RegExp(`^${safeId}$`, "i") } },
         ],
       },
-      {
-        name: 1,
-        description: 1,
-        image: 1,
-        welcomeMessage: 1,
-        codeMessage: 1,
-        groupMessage: 1,
-        messageAfterJoin: 1,
-        geofencingInstruction: 1,
-        settings: 1,
-        samplycode: 1,
-        mobileUsers: 1,
-        creator: 1,
-      },
+      projection,
     );
   }
   if (!study) {
@@ -764,7 +750,22 @@ exports.getPublicStudy = async (req, res) => {
     author,
   };
 
+  // Build available group list for "select from list" mode
+  if (study.settings && study.settings.groupEntryMethod === "list") {
+    const groupMap = new Map();
+    for (const u of study.mobileUsers || []) {
+      if (u.group && u.group.id && !groupMap.has(u.group.id)) {
+        groupMap.set(u.group.id, u.group.name || u.group.id);
+      }
+    }
+    for (const g of study.projectGroups || []) {
+      if (!groupMap.has(g.id)) groupMap.set(g.id, g.name);
+    }
+    studyUser.availableGroups = Array.from(groupMap.entries()).map(([id, name]) => ({ id, name }));
+  }
+
   delete studyUser.mobileUsers;
+  delete studyUser.projectGroups;
   res.send(studyUser);
 };
 

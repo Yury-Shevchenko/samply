@@ -4,10 +4,12 @@ import ProjectForm from "@/app/components/ProjectForm";
 import { createProjectAction } from "../actions";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "New Study — Samply" };
 
 export default async function NewProjectPage() {
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -42,16 +44,16 @@ export default async function NewProjectPage() {
             className="font-[family-name:var(--font-display)] font-bold m-0"
             style={{ fontSize: "clamp(2.2rem, 5vw, 3.2rem)", letterSpacing: "-0.025em" }}
           >
-            New study
+            {t("projectForm.newTitle")}
           </h1>
           <p style={{ margin: "0.6rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)" }}>
-            Fill in the basics — you can always change these later.
+            {t("projectForm.newSubtitle")}
           </p>
         </div>
 
         <ProjectForm
           action={createProjectAction}
-          submitLabel="Create study →"
+          submitLabel={t("projectForm.createStudy")}
           cancelHref="/dashboard"
         />
       </div>

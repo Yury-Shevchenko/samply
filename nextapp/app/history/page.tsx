@@ -4,6 +4,7 @@ import { fetchUserProjects } from "@/lib/data/projects";
 import { fetchHistory } from "@/lib/data/participants";
 import ProjectSelector from "@/app/components/ProjectSelector";
 import type { IResult } from "@/lib/models/result";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Notification History — Samply" };
 
@@ -67,6 +68,7 @@ export default async function HistoryPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const { project: projectId, page: pageStr, id: participantId } = await searchParams;
 
@@ -91,11 +93,11 @@ export default async function HistoryPage({
     <div className="inner">
       <div className="userTable">
         <h2>
-          Notification History
+          {t("legacyHistory.title")}
           {participantId ? ` — participant ${participantId}` : ""}
         </h2>
 
-        <ProjectSelector projects={selectorProjects} selectedId={selectedId} label="Study:" />
+        <ProjectSelector projects={selectorProjects} selectedId={selectedId} label={t("legacyHistory.studyLabel")} />
 
         {selectedId && (
           <p>
@@ -104,9 +106,9 @@ export default async function HistoryPage({
         )}
 
         {!selectedId ? (
-          <p>Select a study above to view its notification history.</p>
+          <p>{t("legacyHistory.selectStudy")}</p>
         ) : history.length === 0 ? (
-          <p>No results found.</p>
+          <p>{t("legacyHistory.noResults")}</p>
         ) : (
           <>
             <div className="pagination">
@@ -115,7 +117,7 @@ export default async function HistoryPage({
               </div>
               <div className="pagination__text">
                 <p>
-                  Page {page} of {pages} — {count} records
+                  {t("legacyHistory.page", { n: String(page), pages: String(pages), count: String(count) })}
                 </p>
               </div>
               <div className="pagination__next">
@@ -128,22 +130,22 @@ export default async function HistoryPage({
                 <thead>
                   <tr>
                     <td>№</td>
-                    <td>Samply ID</td>
-                    <td>Batch</td>
-                    <td>Title</td>
-                    <td>Message</td>
-                    <td>URL</td>
-                    <td>Sent</td>
-                    <td>Expires</td>
-                    <td>Received</td>
-                    <td>Tapped</td>
-                    <td>Opened</td>
-                    <td>Archived</td>
-                    <td>Geofence</td>
-                    <td>Completed</td>
-                    <td>Message ID</td>
-                    <td>Status</td>
-                    <td>Receipt</td>
+                    <td>{t("legacyHistory.colSamplyId")}</td>
+                    <td>{t("legacyHistory.colBatch")}</td>
+                    <td>{t("legacyHistory.colTitle")}</td>
+                    <td>{t("legacyHistory.colMessage")}</td>
+                    <td>{t("legacyHistory.colUrl")}</td>
+                    <td>{t("legacyHistory.colSent")}</td>
+                    <td>{t("legacyHistory.colExpires")}</td>
+                    <td>{t("legacyHistory.colReceived")}</td>
+                    <td>{t("legacyHistory.colTapped")}</td>
+                    <td>{t("legacyHistory.colOpened")}</td>
+                    <td>{t("legacyHistory.colArchived")}</td>
+                    <td>{t("legacyHistory.colGeofence")}</td>
+                    <td>{t("legacyHistory.colCompleted")}</td>
+                    <td>{t("legacyHistory.colMessageId")}</td>
+                    <td>{t("legacyHistory.colStatus")}</td>
+                    <td>{t("legacyHistory.colReceipt")}</td>
                   </tr>
                 </thead>
                 <tbody>
@@ -160,7 +162,7 @@ export default async function HistoryPage({
               </div>
               <div className="pagination__text">
                 <p>
-                  Page {page} of {pages} — {count} records
+                  {t("legacyHistory.page", { n: String(page), pages: String(pages), count: String(count) })}
                 </p>
               </div>
               <div className="pagination__next">

@@ -1,6 +1,7 @@
 "use client";
 
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { useT } from "@/app/components/TranslationProvider";
 
 type ServerAction = (formData?: FormData) => void | Promise<void>;
 
@@ -51,6 +52,7 @@ export function PendingActions({
   cancelAction?: ServerAction;
   reactivateAction?: ServerAction;
 }) {
+  const { t } = useT();
   const isFuture = scheduledFor ? new Date(scheduledFor) > new Date() : false;
 
   return (
@@ -58,23 +60,23 @@ export function PendingActions({
       {cancelAction && (status === "pending" || status === "processing" || status === "failed") && (
         <ActionButton
           action={cancelAction}
-          label="cancel"
-          confirmMessage="Cancel this notification? It can be re-activated later if it hasn't fired yet."
+          label={t("pendingActions.cancel")}
+          confirmMessage={t("pendingActions.cancelConfirm")}
           color="var(--ink-60)"
         />
       )}
       {reactivateAction && status === "cancelled" && isFuture && (
         <ActionButton
           action={reactivateAction}
-          label="re-activate"
-          confirmMessage="Re-activate this notification?"
+          label={t("pendingActions.reActivate")}
+          confirmMessage={t("pendingActions.reActivateConfirm")}
           color="var(--sage)"
         />
       )}
       <ActionButton
         action={deleteAction}
-        label="delete"
-        confirmMessage="Permanently delete this notification? This cannot be undone."
+        label={t("pendingActions.delete")}
+        confirmMessage={t("pendingActions.deleteConfirm")}
         color="var(--coral)"
       />
     </div>

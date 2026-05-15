@@ -2,13 +2,14 @@
 
 import { useState, useTransition } from "react";
 import { PendingActions } from "./PendingActions";
+import { useT } from "@/app/components/TranslationProvider";
 
-const PN_STATUS_META: Record<string, { label: string; bg: string; color: string }> = {
-  pending:    { label: "pending",    bg: "rgba(180,140,40,.1)",  color: "#b48c28" },
-  processing: { label: "processing", bg: "rgba(60,100,200,.1)",  color: "#3c64c8" },
-  sent:       { label: "sent",       bg: "rgba(61,115,107,.1)",  color: "var(--sage)" },
-  failed:     { label: "failed",     bg: "rgba(214,90,48,.1)",   color: "var(--coral)" },
-  cancelled:  { label: "cancelled",  bg: "var(--ink-10)",        color: "var(--ink-40)" },
+const STATUS_BG_COLOR: Record<string, { bg: string; color: string }> = {
+  pending:    { bg: "rgba(180,140,40,.1)",  color: "#b48c28" },
+  processing: { bg: "rgba(60,100,200,.1)",  color: "#3c64c8" },
+  sent:       { bg: "rgba(61,115,107,.1)",  color: "var(--sage)" },
+  failed:     { bg: "rgba(214,90,48,.1)",   color: "var(--coral)" },
+  cancelled:  { bg: "var(--ink-10)",        color: "var(--ink-40)" },
 };
 
 const TH: React.CSSProperties = {
@@ -79,11 +80,12 @@ function SortArrow({ field, pnSort, pnDir }: { field: string; pnSort: string; pn
   return <span style={{ marginLeft: "0.3rem" }}>{pnDir === "asc" ? "↑" : "↓"}</span>;
 }
 
-function RecipientCell({ recipientGroupIds, recipientUserIds, participantCodeById, groupNameById }: {
+function RecipientCell({ recipientGroupIds, recipientUserIds, participantCodeById, groupNameById, allLabel }: {
   recipientGroupIds: string[];
   recipientUserIds: string[];
   participantCodeById: Record<string, string>;
   groupNameById: Record<string, string>;
+  allLabel: string;
 }) {
   if (recipientGroupIds.length) {
     return (
@@ -103,15 +105,24 @@ function RecipientCell({ recipientGroupIds, recipientUserIds, participantCodeByI
       </span>
     );
   }
-  return <span style={{ color: "var(--ink-40)" }}>all</span>;
+  return <span style={{ color: "var(--ink-40)" }}>{allLabel}</span>;
 }
 
 export function PendingTable({ rows, participantCodeById, groupNameById, bulkDeleteAction, sortHrefs, pnSort, pnDir }: Props) {
+  const { t } = useT();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [isPending, startTransition] = useTransition();
 
   const allSelected = rows.length > 0 && selected.size === rows.length;
   const someSelected = selected.size > 0 && !allSelected;
+
+  const PN_STATUS_LABELS: Record<string, string> = {
+    pending:    t("pendingTable.statusPending"),
+    processing: t("pendingTable.statusProcessing"),
+    sent:       t("pendingTable.statusSent"),
+    failed:     t("pendingTable.statusFailed"),
+    cancelled:  t("pendingTable.statusCancelled"),
+  };
 
   function toggleAll() {
     setSelected(allSelected ? new Set() : new Set(rows.map((r) => r.id)));
@@ -127,7 +138,8 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
   }
 
   function handleBulkDelete() {
-    if (!window.confirm(`Permanently delete ${selected.size} notification${selected.size !== 1 ? "s" : ""}? This cannot be undone.`)) return;
+    const plural = selected.size !== 1 ? "s" : "";
+    if (!window.confirm(t("pendingTable.confirmDelete", { n: String(selected.size), plural }))) return;
     const ids = Array.from(selected);
     startTransition(async () => {
       await bulkDeleteAction(ids);
@@ -140,7 +152,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
       {selected.size > 0 && (
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "0.8rem", padding: "0.7rem 1.2rem", background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.2)", borderRadius: "0.8rem" }}>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-60)", flexShrink: 0 }}>
-            {selected.size} selected
+            {t("pendingTable.selected", { n: String(selected.size) })}
           </span>
           <button
             onClick={handleBulkDelete}
@@ -148,7 +160,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
             style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".06em", padding: "0.35rem 1.2rem", borderRadius: "9999px", border: "none", background: "var(--coral)", color: "#fff", cursor: isPending ? "wait" : "pointer" }}
             className="hover:opacity-90 transition-opacity"
           >
-            {isPending ? "Deleting…" : `Delete ${selected.size}`}
+            {isPending ? t("pendingTable.deleting") : t("pendingTable.deleteN", { n: String(selected.size) })}
           </button>
           <button
             type="button"
@@ -156,7 +168,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
             style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", background: "transparent", border: "none", cursor: "pointer", padding: 0 }}
             className="hover:text-[var(--ink)] transition-colors"
           >
-            clear ×
+            {t("pendingTable.clearSelection")}
           </button>
         </div>
       )}
@@ -177,23 +189,24 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
               </th>
               <th style={TH}>
                 <a href={sortHrefs.scheduledFor} style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center" }}>
-                  Scheduled for<SortArrow field="scheduledFor" pnSort={pnSort} pnDir={pnDir} />
+                  {t("pendingTable.colScheduledFor")}<SortArrow field="scheduledFor" pnSort={pnSort} pnDir={pnDir} />
                 </a>
               </th>
               <th style={TH}>
                 <a href={sortHrefs.status} style={{ textDecoration: "none", color: "inherit", display: "inline-flex", alignItems: "center" }}>
-                  Status<SortArrow field="status" pnSort={pnSort} pnDir={pnDir} />
+                  {t("pendingTable.colStatus")}<SortArrow field="status" pnSort={pnSort} pnDir={pnDir} />
                 </a>
               </th>
-              <th style={TH}>Title</th>
-              <th style={{ ...TH, textAlign: "center" }}>Rem.</th>
-              <th style={TH}>To</th>
+              <th style={TH}>{t("pendingTable.colTitle")}</th>
+              <th style={{ ...TH, textAlign: "center" }}>{t("pendingTable.colReminder")}</th>
+              <th style={TH}>{t("pendingTable.colTo")}</th>
               <th style={{ ...TH, width: "1%" }}></th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row, i) => {
-              const sm = PN_STATUS_META[row.status] ?? PN_STATUS_META.cancelled;
+              const colors = STATUS_BG_COLOR[row.status] ?? STATUS_BG_COLOR.cancelled;
+              const statusLabel = PN_STATUS_LABELS[row.status] ?? row.status;
               const isSelected = selected.has(row.id);
               return (
                 <tr
@@ -214,8 +227,8 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                   </td>
                   <td style={TD} suppressHydrationWarning>{fmt(row.scheduledFor)}</td>
                   <td style={{ padding: "0.75rem 1rem" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.7rem", borderRadius: "9999px", background: sm.bg, color: sm.color }}>
-                      {sm.label}
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.7rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
+                      {statusLabel}
                     </span>
                   </td>
                   <td style={{ ...TD, maxWidth: "20rem" }}>
@@ -223,7 +236,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                   </td>
                   <td style={{ padding: "0.75rem 1rem", textAlign: "center" }}>
                     {row.isReminder ? (
-                      <span title="Reminder" style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 700, padding: "0.15rem 0.6rem", borderRadius: "9999px", background: "rgba(124,106,181,.12)", color: "#7c6ab5" }}>R</span>
+                      <span title={t("pendingTable.reminderBadge")} style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 700, padding: "0.15rem 0.6rem", borderRadius: "9999px", background: "rgba(124,106,181,.12)", color: "#7c6ab5" }}>R</span>
                     ) : (
                       <span style={{ color: "var(--ink-20)", fontSize: "1rem" }}>—</span>
                     )}
@@ -234,6 +247,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                       recipientUserIds={row.recipientUserIds}
                       participantCodeById={participantCodeById}
                       groupNameById={groupNameById}
+                      allLabel={t("pendingTable.recipientAll")}
                     />
                   </td>
                   <td style={{ padding: "0.5rem 1rem", whiteSpace: "nowrap" }}>
@@ -264,21 +278,22 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
             style={{ cursor: "pointer", accentColor: "var(--coral)", width: "1.1rem", height: "1.1rem" }}
           />
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", letterSpacing: ".1em", textTransform: "uppercase", color: "var(--ink-40)" }}>
-            {allSelected ? "Deselect all" : "Select all"}
+            {allSelected ? t("pendingTable.deselectAll") : t("pendingTable.selectAll")}
           </span>
           <div style={{ marginLeft: "auto", display: "flex", gap: "0.5rem" }}>
             <a href={sortHrefs.scheduledFor} style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--ink-40)", textDecoration: "none", padding: "0.2rem 0.6rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", display: "inline-flex", alignItems: "center" }}>
-              Date <SortArrow field="scheduledFor" pnSort={pnSort} pnDir={pnDir} />
+              {t("pendingTable.sortDate")} <SortArrow field="scheduledFor" pnSort={pnSort} pnDir={pnDir} />
             </a>
             <a href={sortHrefs.status} style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", color: "var(--ink-40)", textDecoration: "none", padding: "0.2rem 0.6rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", display: "inline-flex", alignItems: "center" }}>
-              Status <SortArrow field="status" pnSort={pnSort} pnDir={pnDir} />
+              {t("pendingTable.sortStatus")} <SortArrow field="status" pnSort={pnSort} pnDir={pnDir} />
             </a>
           </div>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {rows.map((row) => {
-            const sm = PN_STATUS_META[row.status] ?? PN_STATUS_META.cancelled;
+            const colors = STATUS_BG_COLOR[row.status] ?? STATUS_BG_COLOR.cancelled;
+            const statusLabel = PN_STATUS_LABELS[row.status] ?? row.status;
             const isSelected = selected.has(row.id);
             return (
               <div
@@ -294,12 +309,12 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                 {/* Card header: status + checkbox */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.55rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase", padding: "0.15rem 0.65rem", borderRadius: "9999px", background: sm.bg, color: sm.color }}>
-                      {sm.label}
+                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase", padding: "0.15rem 0.65rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
+                      {statusLabel}
                     </span>
                     {row.isReminder && (
-                      <span title="Reminder" style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "9999px", background: "rgba(124,106,181,.12)", color: "#7c6ab5" }}>
-                        reminder
+                      <span title={t("pendingTable.reminderBadge")} style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 700, padding: "0.15rem 0.5rem", borderRadius: "9999px", background: "rgba(124,106,181,.12)", color: "#7c6ab5" }}>
+                        {t("pendingTable.reminderBadge")}
                       </span>
                     )}
                   </div>
@@ -330,6 +345,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                     recipientUserIds={row.recipientUserIds}
                     participantCodeById={participantCodeById}
                     groupNameById={groupNameById}
+                    allLabel={t("pendingTable.recipientAll")}
                   />
                 </div>
 

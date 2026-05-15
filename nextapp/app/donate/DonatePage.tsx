@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { createDonationSession } from "./actions";
+import { useT } from "@/app/components/TranslationProvider";
 
 const PRESETS = [5, 10, 25, 50] as const;
 
 export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
+  const { t } = useT();
   const [frequency, setFrequency] = useState<"one-time" | "monthly">("one-time");
   const [selected, setSelected] = useState<number | "custom">(10);
   const [custom, setCustom] = useState("");
@@ -42,23 +44,22 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
             className="font-[family-name:var(--font-hand)]"
             style={{ fontSize: "1.8rem", color: "var(--coral)", marginBottom: "1rem" }}
           >
-            support open research
+            {t("donate.eyebrow")}
           </div>
           <h1
             className="font-[family-name:var(--font-display)] font-bold"
             style={{ fontSize: "3.6rem", letterSpacing: "-0.03em", lineHeight: 1.1, margin: "0 0 1.6rem" }}
           >
-            Donate to Samply
+            {t("donate.title")}
           </h1>
           <p style={{ fontSize: "1.4rem", color: "var(--ink-60)", lineHeight: 1.65, margin: 0 }}>
-            Samply is free and open-source. Your donation helps keep the servers running,
-            fund new features, and support researchers worldwide.
+            {t("donate.subtitle")}
           </p>
         </div>
 
         {cancelled && (
           <div style={{ background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.2)", borderRadius: "1rem", padding: "1.2rem 1.6rem", marginBottom: "2.4rem", fontSize: "1.25rem", color: "var(--coral)" }}>
-            Payment cancelled — no charge was made.
+            {t("donate.cancelled")}
           </div>
         )}
 
@@ -68,11 +69,11 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
             {/* Frequency toggle */}
             <div style={{ marginBottom: "2.8rem" }}>
               <div style={{ fontSize: "1.05rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1.2rem" }}>
-                Frequency
+                {t("donate.frequencyLabel")}
               </div>
               <div style={{ display: "flex", gap: "0.6rem" }}>
-                {pill("One-time", frequency === "one-time", () => setFrequency("one-time"))}
-                {pill("Monthly", frequency === "monthly", () => setFrequency("monthly"))}
+                {pill(t("donate.oneTime"), frequency === "one-time", () => setFrequency("one-time"))}
+                {pill(t("donate.monthly"), frequency === "monthly", () => setFrequency("monthly"))}
               </div>
               <input type="hidden" name="frequency" value={frequency} />
             </div>
@@ -80,7 +81,7 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
             {/* Amount presets */}
             <div style={{ marginBottom: "2.4rem" }}>
               <div style={{ fontSize: "1.05rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1.2rem" }}>
-                Amount
+                {t("donate.amountLabel")}
               </div>
               <div style={{ display: "flex", gap: "0.8rem", flexWrap: "wrap", marginBottom: "1.2rem" }}>
                 {PRESETS.map((amt) => {
@@ -123,7 +124,7 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
                     transition: "all .1s",
                   }}
                 >
-                  Custom
+                  {t("donate.custom")}
                 </button>
               </div>
 
@@ -137,7 +138,7 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
                     step="1"
                     value={custom}
                     onChange={(e) => setCustom(e.target.value)}
-                    placeholder="Enter amount"
+                    placeholder={t("donate.enterAmount")}
                     required={selected === "custom"}
                     style={{
                       fontSize: "1.5rem",
@@ -161,9 +162,9 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
             <div style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", padding: "1.2rem 1.6rem", marginBottom: "2.4rem", fontSize: "1.25rem", color: "var(--ink-60)" }}>
               {selected === "custom"
                 ? custom
-                  ? `€${parseFloat(custom).toFixed(2)} ${frequency === "monthly" ? "per month" : "one-time"}`
-                  : "Enter an amount above"
-                : `€${selected}.00 ${frequency === "monthly" ? "per month" : "one-time"}`}
+                  ? `€${parseFloat(custom).toFixed(2)} ${frequency === "monthly" ? t("donate.perMonth") : t("donate.oneTimeLabel")}`
+                  : t("donate.summaryEmpty")
+                : `€${selected}.00 ${frequency === "monthly" ? t("donate.perMonth") : t("donate.oneTimeLabel")}`}
             </div>
 
             {/* Submit */}
@@ -183,11 +184,11 @@ export default function DonatePage({ cancelled }: { cancelled?: boolean }) {
                 letterSpacing: "-0.01em",
               }}
             >
-              {frequency === "monthly" ? "Start monthly donation →" : "Donate now →"}
+              {frequency === "monthly" ? t("donate.submitMonthly") : t("donate.submitOneTime")}
             </button>
 
             <p style={{ textAlign: "center", fontSize: "1.1rem", color: "var(--ink-40)", margin: "1.4rem 0 0" }}>
-              Powered by Stripe · Secure payment · Cancel anytime
+              {t("donate.poweredBy")}
             </p>
           </div>
         </form>

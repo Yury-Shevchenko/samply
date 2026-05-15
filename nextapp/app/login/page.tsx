@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { signIn, auth } from "@/lib/auth";
 import { AuthError } from "next-auth";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Log in — Samply" };
 
@@ -30,6 +31,7 @@ export default async function LoginPage({
   if (session) redirect("/dashboard");
 
   const { error, notice } = await searchParams;
+  const { t } = await getT();
 
   return (
     <main
@@ -73,10 +75,10 @@ export default async function LoginPage({
           className="font-[family-name:var(--font-display)] font-bold m-0"
           style={{ fontSize: "2.6rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "0.6rem" }}
         >
-          Welcome back
+          {t("login.title")}
         </h1>
         <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem" }}>
-          Sign in to your researcher account.
+          {t("login.subtitle")}
         </p>
 
         {/* Notices */}
@@ -114,11 +116,11 @@ export default async function LoginPage({
         {/* Form */}
         <form action={loginAction} className="flex flex-col gap-[10px]">
           <label className="flex flex-col gap-[5px]">
-            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Email</span>
+            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("login.emailLabel")}</span>
             <input
               type="email"
               name="email"
-              placeholder="you@university.edu"
+              placeholder={t("login.emailPlaceholder")}
               required
               autoComplete="email"
               style={inputStyle}
@@ -127,9 +129,9 @@ export default async function LoginPage({
 
           <label className="flex flex-col gap-[5px]">
             <div className="flex justify-between">
-              <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Password</span>
+              <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("login.passwordLabel")}</span>
               <a href="/forgot" style={{ fontSize: "1.2rem", color: "var(--ink-40)", textDecoration: "none" }}>
-                Forgot?
+                {t("login.forgotPassword")}
               </a>
             </div>
             <input
@@ -143,7 +145,7 @@ export default async function LoginPage({
           </label>
 
           <SubmitButton
-            pendingLabel="Signing in…"
+            pendingLabel={t("login.submitting")}
             className="font-[family-name:var(--font-body)] font-medium transition-opacity hover:opacity-90"
             style={{
               marginTop: "0.8rem",
@@ -156,22 +158,22 @@ export default async function LoginPage({
               fontSize: "1.4rem",
             }}
           >
-            Sign in →
+            {t("login.submit")}
           </SubmitButton>
         </form>
 
         {/* Footer */}
         <p style={{ margin: "2.2rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", textAlign: "center" }}>
-          No account?{" "}
+          {t("login.noAccount")}{" "}
           <a href="/register" style={{ color: "var(--ink)", fontWeight: 500, textDecoration: "none" }}>
-            Create one — it&apos;s free
+            {t("login.createFree")}
           </a>
         </p>
       </div>
 
       {/* Below-card note */}
       <p style={{ marginTop: "2rem", fontSize: "1.2rem", color: "var(--ink-40)", textAlign: "center" }}>
-        Free for academic use · no credit card
+        {t("login.footerNote")}
       </p>
     </main>
   );

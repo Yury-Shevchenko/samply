@@ -123,7 +123,7 @@ export default async function AdminStudiesPage({
   const session = await auth();
   if (!session || session.user.level <= 100) redirect("/login");
 
-  const { sort = "created", dir = "asc", filter = "", q = "" } = await searchParams;
+  const { sort = "created", dir = "desc", filter = "", q = "" } = await searchParams;
   const { projects, count, pages } = await fetchAdminStudies(sort, dir, 1, q);
 
   const f = filter as FilterKey;

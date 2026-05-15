@@ -19,6 +19,7 @@ import {
 } from "../actions";
 import { DeleteScheduleButton } from "../DeleteScheduleButton";
 import { PendingTable } from "../PendingTable";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -33,18 +34,6 @@ interface Props {
   }>;
 }
 
-const JOB_TYPE_LABELS: Record<string, string> = {
-  one_time_notification:         "One-time",
-  regular_notification:          "Repeat",
-  start_manager:                 "Start manager",
-  end_manager:                   "End manager",
-  personal_notification:         "Personal",
-  start_personal_manager:        "Personal start",
-  end_personal_manager:          "Personal end",
-  start_random_personal_manager: "Random start",
-  end_random_personal_manager:   "Random end",
-  random_personal_notification:  "Random personal",
-};
 
 function fmt(d?: Date | string | null) {
   if (!d) return "—";
@@ -80,6 +69,7 @@ function describeEvent(
 }
 
 function scheduleType(n: NotificationConfig): string {
+  if (n.schedule === "enrollment") return "enrollment";
   if (n.randomize) return "random";
   if (n.date && !n.int_start) return "one-time";
   if (n.start_event || n.stop_event) return "event";
@@ -87,13 +77,6 @@ function scheduleType(n: NotificationConfig): string {
   return "fixed";
 }
 
-const TYPE_META: Record<string, { label: string; fg: string; bg: string; border: string }> = {
-  random:    { label: "random",    fg: "var(--coral)",  bg: "rgba(214,90,48,.08)",   border: "rgba(214,90,48,.25)" },
-  "one-time":{ label: "one-time",  fg: "var(--sage)",   bg: "rgba(61,115,107,.08)",  border: "rgba(61,115,107,.25)" },
-  event:     { label: "event",     fg: "#7c6ab5",       bg: "rgba(124,106,181,.08)", border: "rgba(124,106,181,.25)" },
-  repeating: { label: "repeating", fg: "var(--ink-60)", bg: "var(--ink-10)",         border: "var(--ink-20)" },
-  fixed:     { label: "fixed",     fg: "var(--ink-60)", bg: "var(--ink-10)",         border: "var(--ink-20)" },
-};
 
 const TH: React.CSSProperties = {
   padding: "0.7rem 1rem",
@@ -155,6 +138,30 @@ function FilterPill({ label, href, active, title }: { label: string; href: strin
 export default async function ScheduledJobsPage({ params, searchParams }: Props) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+
+  const { t } = await getT();
+
+  const JOB_TYPE_LABELS: Record<string, string> = {
+    one_time_notification:         t("scheduled.jobOneTime"),
+    regular_notification:          t("scheduled.jobRepeat"),
+    start_manager:                 t("scheduled.jobStartManager"),
+    end_manager:                   t("scheduled.jobEndManager"),
+    personal_notification:         t("scheduled.jobPersonal"),
+    start_personal_manager:        t("scheduled.jobPersonalStart"),
+    end_personal_manager:          t("scheduled.jobPersonalEnd"),
+    start_random_personal_manager: t("scheduled.jobRandomStart"),
+    end_random_personal_manager:   t("scheduled.jobRandomEnd"),
+    random_personal_notification:  t("scheduled.jobRandomPersonal"),
+  };
+
+  const TYPE_META: Record<string, { label: string; fg: string; bg: string; border: string }> = {
+    random:     { label: t("scheduled.typeRandom"),      fg: "var(--coral)",  bg: "rgba(214,90,48,.08)",   border: "rgba(214,90,48,.25)" },
+    "one-time": { label: t("scheduled.typeOneTime"),     fg: "var(--sage)",   bg: "rgba(61,115,107,.08)",  border: "rgba(61,115,107,.25)" },
+    event:      { label: t("scheduled.typeEvent"),       fg: "#7c6ab5",       bg: "rgba(124,106,181,.08)", border: "rgba(124,106,181,.25)" },
+    enrollment: { label: t("scheduled.typeEnrollment"),  fg: "#7c6ab5",       bg: "rgba(124,106,181,.08)", border: "rgba(124,106,181,.25)" },
+    repeating:  { label: t("scheduled.typeRepeating"),   fg: "var(--ink-60)", bg: "var(--ink-10)",         border: "var(--ink-20)" },
+    fixed:      { label: t("scheduled.typeFixed"),       fg: "var(--ink-60)", bg: "var(--ink-10)",         border: "var(--ink-20)" },
+  };
 
   const { id: studyId } = await params;
   const {
@@ -246,19 +253,19 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
   }
 
   const JOB_TYPE_FILTERS = [
-    { key: undefined,         label: "All" },
-    { key: "one-time",        label: "One-time" },
-    { key: "repeat",          label: "Repeat" },
-    { key: "personal",        label: "Personal" },
-    { key: "random-personal", label: "Random" },
+    { key: undefined,         label: t("scheduled.filterAll") },
+    { key: "one-time",        label: t("scheduled.filterOneTime") },
+    { key: "repeat",          label: t("scheduled.filterRepeat") },
+    { key: "personal",        label: t("scheduled.filterPersonal") },
+    { key: "random-personal", label: t("scheduled.filterRandom") },
   ];
 
   const PN_STATUS_TOGGLES = [
-    { key: "pending",    label: "Pending",    title: "Queued — not yet picked up by the delivery worker" },
-    { key: "processing", label: "Processing", title: "Being sent right now" },
-    { key: "sent",       label: "Sent",       title: undefined },
-    { key: "failed",     label: "Failed",     title: undefined },
-    { key: "cancelled",  label: "Cancelled",  title: undefined },
+    { key: "pending",    label: t("scheduled.statusPending"),    title: "Queued — not yet picked up by the delivery worker" },
+    { key: "processing", label: t("scheduled.statusProcessing"), title: "Being sent right now" },
+    { key: "sent",       label: t("scheduled.statusSent"),       title: undefined },
+    { key: "failed",     label: t("scheduled.statusFailed"),     title: undefined },
+    { key: "cancelled",  label: t("scheduled.statusCancelled"),  title: undefined },
   ];
 
   const durationHours = notification?.expireIn
@@ -316,12 +323,12 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
           <a href={`/dashboard/${studyId}/schedule`}
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-40)", textDecoration: "none" }}
             className="hover:text-[var(--ink)] transition-colors">
-            ← Schedule
+            {t("scheduled.breadcrumb")}
           </a>
           {deleteScheduleAction && (
             <DeleteScheduleButton
               action={deleteScheduleAction}
-              label="Delete schedule"
+              label={t("scheduled.deleteSchedule")}
               style={{
                 fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".04em",
                 padding: "0.5rem 1.2rem", borderRadius: "9999px",
@@ -336,11 +343,11 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
         {!notification && (
           <div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-              scheduled queue
+              {t("scheduled.queueLabel")}
             </div>
             <div className="font-[family-name:var(--font-display)] font-bold"
               style={{ fontSize: "2.2rem", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--ink)" }}>
-              {project.name} · all schedules
+              {project.name} · {t("scheduled.allSchedules")}
             </div>
           </div>
         )}
@@ -350,7 +357,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
           <div style={{ borderBottom: "1px solid var(--ink-10)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }} className="px-[1.2rem] py-[1.2rem] sm:px-[2.4rem] sm:pt-[1.8rem] sm:pb-[1.6rem]">
             <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.5rem" }}>
-                notification schedule
+                {t("scheduled.notifSchedule")}
               </div>
               <div className="font-[family-name:var(--font-display)] font-bold"
                 style={{ fontSize: "clamp(1.6rem, 4vw, 2.2rem)", letterSpacing: "-0.02em", lineHeight: 1.2, color: "var(--ink)", wordBreak: "break-word" }}>
@@ -363,7 +370,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               </span>
               {notification.created && (
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "var(--ink-40)" }}>
-                  created {fmt(notification.created)}
+                  {t("scheduled.created", { date: fmt(notification.created) })}
                 </span>
               )}
             </div>
@@ -371,13 +378,13 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
 
           <div className="px-[1.2rem] sm:px-[2.4rem] pt-[0.2rem] pb-[1.2rem]">
             {notification.name && notification.title && notification.name !== notification.title && (
-              <MetaRow label="Title">{notification.title}</MetaRow>
+              <MetaRow label={t("scheduled.labelTitle")}>{notification.title}</MetaRow>
             )}
             {notification.message && (
-              <MetaRow label="Message">{notification.message}</MetaRow>
+              <MetaRow label={t("scheduled.labelMessage")}>{notification.message}</MetaRow>
             )}
             {notification.url && (
-              <MetaRow label="URL">
+              <MetaRow label={t("scheduled.labelUrl")}>
                 <a href={notification.url} target="_blank" rel="noreferrer"
                   style={{ color: "var(--ink-60)", textDecoration: "none", wordBreak: "break-all" }}
                   className="hover:text-[var(--coral)] transition-colors">
@@ -386,55 +393,68 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               </MetaRow>
             )}
             {notification.timezone && (
-              <MetaRow label="Timezone">
+              <MetaRow label={t("scheduled.labelTimezone")}>
                 {notification.timezone}
                 {notification.useParticipantTimezone && (
-                  <span style={{ marginLeft: 8, opacity: 0.6 }}>(adjusted to participant)</span>
+                  <span style={{ marginLeft: 8, opacity: 0.6 }}>{t("scheduled.adjustedToParticipant")}</span>
                 )}
               </MetaRow>
             )}
             {/* One-time */}
             {type_ === "one-time" && notification.date && (
-              <MetaRow label="Scheduled for">{fmt(notification.date)}</MetaRow>
+              <MetaRow label={t("scheduled.labelScheduledFor")}>{fmt(notification.date)}</MetaRow>
             )}
+            {/* Enrollment */}
+            {type_ === "enrollment" && (() => {
+              const d = notification.delay;
+              const hasDelay = d && (d.days || d.hours || d.minutes);
+              if (hasDelay) {
+                const parts: string[] = [];
+                if (d!.days)    parts.push(`${d!.days} day${d!.days !== 1 ? "s" : ""}`);
+                if (d!.hours)   parts.push(`${d!.hours} hour${d!.hours !== 1 ? "s" : ""}`);
+                if (d!.minutes) parts.push(`${d!.minutes} minute${d!.minutes !== 1 ? "s" : ""}`);
+                return <MetaRow label={t("scheduled.labelDelayAfterJoin")}>{parts.join(", ")}</MetaRow>;
+              }
+              return <MetaRow label={t("scheduled.labelDelayAfterJoin")}>{t("scheduled.immediately")}</MetaRow>;
+            })()}
             {notification.window_from && notification.window_to && (
-              <MetaRow label="Time window">{fmt(notification.window_from)} – {fmt(notification.window_to)}</MetaRow>
+              <MetaRow label={t("scheduled.labelTimeWindow")}>{fmt(notification.window_from)} – {fmt(notification.window_to)}</MetaRow>
             )}
             {/* Repeat */}
             {notification.readable?.interval && (
-              <MetaRow label="Repeat interval">{notification.readable.interval}</MetaRow>
+              <MetaRow label={t("scheduled.labelRepeatInterval")}>{notification.readable.interval}</MetaRow>
             )}
-            {startDesc && <MetaRow label="Start">{startDesc}</MetaRow>}
-            {stopDesc  && <MetaRow label="Stop">{stopDesc}</MetaRow>}
+            {startDesc && <MetaRow label={t("scheduled.labelStart")}>{startDesc}</MetaRow>}
+            {stopDesc  && <MetaRow label={t("scheduled.labelStop")}>{stopDesc}</MetaRow>}
             {notification.readable?.from && notification.readable?.to && (
-              <MetaRow label="Daily window">
+              <MetaRow label={t("scheduled.labelDailyWindow")}>
                 {notification.readable.from} – {notification.readable.to}
                 {notification.windowInterval?.number != null && (
-                  <span style={{ marginLeft: 8, opacity: 0.6 }}>· {notification.windowInterval.number} per day</span>
+                  <span style={{ marginLeft: 8, opacity: 0.6 }}>· {t("scheduled.perDay", { n: String(notification.windowInterval.number) })}</span>
                 )}
               </MetaRow>
             )}
             {/* Random */}
             {notification.number != null && (
-              <MetaRow label="Count">{notification.number} notifications</MetaRow>
+              <MetaRow label={t("scheduled.labelCount")}>{t("scheduled.notifications", { n: String(notification.number) })}</MetaRow>
             )}
             {notification.distance != null && (
-              <MetaRow label="Min. distance">{Math.round(notification.distance / 60000)} min</MetaRow>
+              <MetaRow label={t("scheduled.labelMinDistance")}>{t("scheduled.minutes", { n: String(Math.round(notification.distance / 60000)) })}</MetaRow>
             )}
             {/* Audience */}
             {notification.reminders && notification.reminders.length > 0 && (
-              <MetaRow label={`Reminder${notification.reminders.length > 1 ? "s" : ""}`}>
+              <MetaRow label={notification.reminders.length > 1 ? t("scheduled.labelReminders") : t("scheduled.labelReminder")}>
                 <span style={{ display: "inline-flex", flexDirection: "column", gap: "0.4rem" }}>
                   {notification.reminders.map((r, i) => (
                     <span key={i} style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>
-                      {Math.round(r.time / 60000)} min — {r.title || r.message || "—"}
+                      {t("scheduled.minutes", { n: String(Math.round(r.time / 60000)) })} — {r.title || r.message || "—"}
                     </span>
                   ))}
                 </span>
               </MetaRow>
             )}
             {notification.groups && notification.groups.length > 0 && (
-              <MetaRow label="Groups">
+              <MetaRow label={t("scheduled.labelGroups")}>
                 <span style={{ display: "inline-flex", flexWrap: "wrap", gap: "0.4rem" }}>
                   {notification.groups.map((gid) => (
                     <span key={gid} style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", padding: "0.2rem 0.8rem", borderRadius: "9999px", background: "var(--ink-10)", color: "var(--ink-60)" }}>
@@ -445,19 +465,19 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               </MetaRow>
             )}
             {notification.participantId && notification.participantId.length > 0 && (
-              <MetaRow label="Participants">{notification.participantId.join(", ")}</MetaRow>
+              <MetaRow label={t("scheduled.labelParticipants")}>{notification.participantId.join(", ")}</MetaRow>
             )}
             {notification.allCurrentParticipants && (
-              <MetaRow label="Audience">All current participants</MetaRow>
+              <MetaRow label={t("scheduled.labelAudience")}>{t("scheduled.allCurrentParticipants")}</MetaRow>
             )}
             {notification.randomize && (
-              <MetaRow label="Randomized">Yes</MetaRow>
+              <MetaRow label={t("scheduled.labelRandomized")}>{t("scheduled.yes")}</MetaRow>
             )}
             {notification.scheduleInFuture && (
-              <MetaRow label="Future participants">Included</MetaRow>
+              <MetaRow label={t("scheduled.labelFutureParticipants")}>{t("scheduled.included")}</MetaRow>
             )}
             {durationHours != null && (
-              <MetaRow label="Expires in">{durationHours} h</MetaRow>
+              <MetaRow label={t("scheduled.labelExpiresIn")}>{t("scheduled.hours", { n: String(durationHours) })}</MetaRow>
             )}
           </div>
         </div>}
@@ -466,7 +486,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
         {notification && jobs.length > 0 && (
           <section>
             <div style={{ marginBottom: "1.2rem" }}>
-              <SectionLabel>agenda jobs · {jobs.length}</SectionLabel>
+              <SectionLabel>{t("scheduled.agendaJobs", { n: String(jobs.length) })}</SectionLabel>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                 {JOB_TYPE_FILTERS.map(({ key, label }) => (
                   <FilterPill
@@ -483,12 +503,12 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "56rem" }}>
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                    <th style={TH}>Type</th>
-                    <th style={TH}>Next run</th>
-                    <th style={TH}>Last run</th>
-                    <th style={TH}>Interval</th>
-                    <th style={TH}>Participant</th>
-                    <th style={TH}>Group</th>
+                    <th style={TH}>{t("scheduled.colType")}</th>
+                    <th style={TH}>{t("scheduled.colNextRun")}</th>
+                    <th style={TH}>{t("scheduled.colLastRun")}</th>
+                    <th style={TH}>{t("scheduled.colInterval")}</th>
+                    <th style={TH}>{t("scheduled.colParticipant")}</th>
+                    <th style={TH}>{t("scheduled.colGroup")}</th>
                     <th style={{ ...TH, width: "10rem" }}></th>
                   </tr>
                 </thead>
@@ -516,12 +536,12 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                           <a href={`/scheduled/${notificationId}/edit/${job._id}?project=${studyId}`}
                             style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
                             className="hover:text-[var(--ink)] transition-colors">
-                            edit
+                            {t("scheduled.jobEdit")}
                           </a>
                           <a href={`/scheduled/delete/${notificationId}/${job._id}?project=${studyId}`}
                             style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--coral)", textDecoration: "none", letterSpacing: ".04em" }}
                             className="hover:opacity-70 transition-opacity">
-                            delete
+                            {t("scheduled.jobDelete")}
                           </a>
                         </div>
                       </td>
@@ -539,7 +559,9 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
             {/* Header row */}
             <div style={{ marginBottom: "0.8rem" }}>
               <SectionLabel>
-                scheduled queue · {pendingCount.toLocaleString()} notification{pendingCount !== 1 ? "s" : ""}
+                {pendingCount !== 1
+                  ? t("scheduled.queueCountPlural", { n: pendingCount.toLocaleString() })
+                  : t("scheduled.queueCount", { n: pendingCount.toLocaleString() })}
               </SectionLabel>
               <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
                 {PN_STATUS_TOGGLES.map(({ key, label, title }) => (
@@ -555,7 +577,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                   <a href={filterHref({ pnStatus: "", pnPage: "1" })}
                     style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: ".04em", padding: "0.3rem 0.6rem", alignSelf: "center" }}
                     className="hover:text-[var(--ink)] transition-colors">
-                    clear ×
+                    {t("scheduled.clearFilter")}
                   </a>
                 )}
               </div>
@@ -570,11 +592,11 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                 {pnSort && <input type="hidden" name="pnSort" value={pnSort} />}
                 {pnDir && <input type="hidden" name="pnDir" value={pnDir} />}
                 <label style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", fontWeight: 600, letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", flexShrink: 0 }}>
-                  Participant
+                  {t("scheduled.colParticipant")}
                 </label>
                 <select name="pnUser" defaultValue={pnUser ?? ""}
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink)", background: "var(--surface)", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", padding: "0.45rem 0.9rem", outline: "none", flex: "1 1 14rem", minWidth: 0 }}>
-                  <option value="">All participants</option>
+                  <option value="">{t("scheduled.allParticipants")}</option>
                   {participants.map((p) => (
                     <option key={p.id} value={p.id}>
                       {p.username ? `${p.username} (${p.id})` : p.id}
@@ -584,13 +606,13 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                 <button type="submit"
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.45rem 1.2rem", borderRadius: "9999px", border: "1px solid var(--ink-20)", background: "transparent", color: "var(--ink-60)", cursor: "pointer", flexShrink: 0 }}
                   className="hover:opacity-70 transition-opacity">
-                  Apply
+                  {t("scheduled.applyFilter")}
                 </button>
                 {pnUser && (
                   <a href={filterHref({ pnUser: "" })}
                     style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: ".04em" }}
                     className="hover:text-[var(--ink)] transition-colors">
-                    clear ×
+                    {t("scheduled.clearFilter")}
                   </a>
                 )}
               </form>
@@ -600,14 +622,16 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "3.2rem 2.4rem", textAlign: "center" }}>
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink-40)", margin: "0 0 0.6rem" }}>
                   {pnStatuses.length > 0
-                    ? "No notifications match this filter."
-                    : "No notifications in the queue."}
+                    ? t("scheduled.noMatchFilter")
+                    : t("scheduled.noQueue")}
                 </p>
                 {pnStatuses.length === 0 && (
                   <p style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-20)", margin: 0, lineHeight: 1.6 }}>
-                    All sends have been delivered, or this schedule has not generated any rows yet.
-                    {" "}Toggle <strong style={{ fontWeight: 600, color: "var(--ink-40)" }}>Sent</strong> or{" "}
-                    <strong style={{ fontWeight: 600, color: "var(--ink-40)" }}>Cancelled</strong> above to see history.
+                    {t("scheduled.allDelivered")}
+                    {" "}{t("scheduled.toggleHintPre")}{" "}
+                    <strong style={{ fontWeight: 600, color: "var(--ink-40)" }}>{t("scheduled.toggleHintSent")}</strong>{" "}or{" "}
+                    <strong style={{ fontWeight: 600, color: "var(--ink-40)" }}>{t("scheduled.toggleHintCancelled")}</strong>{" "}
+                    {t("scheduled.toggleHintPost")}
                   </p>
                 )}
               </div>
@@ -627,21 +651,21 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                 {pendingPages > 1 && (
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "1.2rem", flexWrap: "wrap", gap: "0.8rem" }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", letterSpacing: ".04em" }}>
-                      Page {pnPage} of {pendingPages} · {pendingCount.toLocaleString()} total
+                      {t("scheduled.pageSummary", { page: String(pnPage), pages: String(pendingPages), total: pendingCount.toLocaleString() })}
                     </span>
                     <div style={{ display: "flex", gap: "0.6rem" }}>
                       {pnPage > 1 && (
                         <a href={pageHref(pnPage - 1)}
                           style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", padding: "0.4rem 1rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", textDecoration: "none", color: "var(--ink-60)" }}
                           className="hover:opacity-70 transition-opacity">
-                          ← Prev
+                          {t("scheduled.prevPage")}
                         </a>
                       )}
                       {pnPage < pendingPages && (
                         <a href={pageHref(pnPage + 1)}
                           style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", padding: "0.4rem 1rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", textDecoration: "none", color: "var(--ink-60)" }}
                           className="hover:opacity-70 transition-opacity">
-                          Next →
+                          {t("scheduled.nextPage")}
                         </a>
                       )}
                     </div>

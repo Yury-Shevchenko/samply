@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import ProjectForm from "@/app/components/ProjectForm";
 import { updateProjectAction } from "../../actions";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Edit Study — Samply" };
 
@@ -13,6 +14,7 @@ export default async function EditProjectPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ notice?: string; error?: string }>;
 }) {
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -45,7 +47,7 @@ export default async function EditProjectPage({
             className="font-[family-name:var(--font-display)] font-bold m-0"
             style={{ fontSize: "clamp(2.2rem, 5vw, 3.2rem)", letterSpacing: "-0.025em" }}
           >
-            Edit study
+            {t("projectForm.editTitle")}
           </h1>
           <p style={{ margin: "0.5rem 0 0", fontSize: "1.35rem", color: "var(--ink-60)" }}>
             {project.name}
@@ -87,7 +89,7 @@ export default async function EditProjectPage({
         <ProjectForm
           project={project}
           action={boundAction}
-          submitLabel="Save changes"
+          submitLabel={t("projectForm.saveChanges")}
           cancelHref={`/dashboard/${id}`}
         />
 
@@ -100,7 +102,7 @@ export default async function EditProjectPage({
           }}
         >
           <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1.2rem" }}>
-            Danger zone
+            {t("projectForm.dangerZone")}
           </div>
           <a
             href={`/projects/${id}/delete`}
@@ -112,7 +114,7 @@ export default async function EditProjectPage({
             }}
             className="hover:opacity-70 transition-opacity"
           >
-            Delete this study →
+            {t("projectForm.deleteStudy")}
           </a>
         </div>
       </div>

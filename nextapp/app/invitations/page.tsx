@@ -6,6 +6,7 @@ import Project from "@/lib/models/project";
 import ProjectSelector from "@/app/components/ProjectSelector";
 import CopyButton from "./CopyButton";
 import SecureLinkGenerator from "./SecureLinkGenerator";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Invitations — Samply" };
 
@@ -48,6 +49,7 @@ export default async function InvitationsPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const { project: projectId } = await searchParams;
 
@@ -61,9 +63,9 @@ export default async function InvitationsPage({
 
   return (
     <div className="inner">
-      <h2>Invitations</h2>
+      <h2>{t("legacyInvitations.title")}</h2>
 
-      <ProjectSelector projects={selectorProjects} selectedId={selectedId} label="Study:" />
+      <ProjectSelector projects={selectorProjects} selectedId={selectedId} label={t("legacyInvitations.studyLabel")} />
 
       <div className="card">
         {!selectedId || !data ? (
@@ -94,12 +96,12 @@ export default async function InvitationsPage({
             </p>
 
             <h5>
-              <div className="headerLink">Way 1. The web page of your study</div>
+              <div className="headerLink">{t("legacyInvitations.way1")}</div>
             </h5>
             <table className="table">
               <tbody>
                 <tr>
-                  <td>The web page of your study</td>
+                  <td>{t("legacyInvitations.webLink")}</td>
                   <td>
                     {data.currentlyActive ? (
                       <>
@@ -109,7 +111,7 @@ export default async function InvitationsPage({
                           readOnly
                           defaultValue={`https://samply.uni-konstanz.de/studies/${data.slug}`}
                         />
-                        <CopyButton targetId="weblink" label="Copy link" />
+                        <CopyButton targetId="weblink" label={t("legacyInvitations.copyLink")} />
                       </>
                     ) : (
                       <p>
@@ -130,12 +132,12 @@ export default async function InvitationsPage({
             </p>
 
             <h5>
-              <div className="headerLink">Way 2. The direct link to your study in the mobile app</div>
+              <div className="headerLink">{t("legacyInvitations.way2")}</div>
             </h5>
             <table className="table">
               <tbody>
                 <tr>
-                  <td>Direct link to your study in the mobile app</td>
+                  <td>{t("legacyInvitations.directLink")}</td>
                   <td>
                     <input
                       type="text"
@@ -143,7 +145,7 @@ export default async function InvitationsPage({
                       readOnly
                       defaultValue={`samply://--/study?id=${data.id}`}
                     />
-                    <CopyButton targetId="direct" label="Copy link" />
+                    <CopyButton targetId="direct" label={t("legacyInvitations.copyLink")} />
                   </td>
                 </tr>
               </tbody>
@@ -171,21 +173,21 @@ export default async function InvitationsPage({
             <table className="table">
               <tbody>
                 <tr>
-                  <td>Custom link to your study in the mobile app</td>
+                  <td>{t("legacyInvitations.customLink")}</td>
                   <td>
                     <input
                       type="text"
                       id="custom"
                       defaultValue={`samply://--/study?id=${data.id}&code=123`}
                     />
-                    <CopyButton targetId="custom" label="Copy link" />
+                    <CopyButton targetId="custom" label={t("legacyInvitations.copyLink")} />
                   </td>
                 </tr>
               </tbody>
             </table>
 
             <h5>
-              <div className="headerLink">Way 3. Ask participants to find your study in the mobile app</div>
+              <div className="headerLink">{t("legacyInvitations.way3")}</div>
             </h5>
             <p>
               If your study is public, participants can find it in the list of public studies within

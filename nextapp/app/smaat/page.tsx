@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Samply vs SMAAT — Which platform fits your study?" };
 
@@ -39,9 +40,9 @@ function CellValue({ v }: { v: React.ReactNode }) {
   return <span style={{ fontSize: "1.2rem", color: "var(--ink-60)", lineHeight: 1.45 }}>{v}</span>;
 }
 
-const USE_CASES = [
+const USE_CASES_STATIC = [
   {
-    title: "Use Samply when…",
+    titleKey: "smaat.useSamplyTitle" as const,
     color: "var(--ink)",
     bg: "var(--surface)",
     border: "var(--ink-10)",
@@ -52,7 +53,7 @@ const USE_CASES = [
     ],
   },
   {
-    title: "Consider SMAAT when…",
+    titleKey: "smaat.considerSmaatTitle" as const,
     color: "#7c6ab5",
     bg: "rgba(124,106,181,.05)",
     border: "rgba(124,106,181,.18)",
@@ -67,6 +68,7 @@ const USE_CASES = [
 
 export default async function SmaatPage() {
   const session = await auth();
+  const { t } = await getT();
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
@@ -75,7 +77,7 @@ export default async function SmaatPage() {
         {/* Header */}
         <div style={{ marginBottom: "4.8rem" }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "1rem" }}>
-            platform comparison
+            {t("smaat.platformComparison")}
           </div>
           <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "4rem", letterSpacing: "-0.03em", margin: "0 0 1.6rem", lineHeight: 1.05 }}>
             Samply vs SMAAT
@@ -87,12 +89,12 @@ export default async function SmaatPage() {
         </div>
 
         {/* Use-case cards */}
-        <SectionLabel>when to use each</SectionLabel>
+        <SectionLabel>{t("smaat.whenToUse")}</SectionLabel>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "5.6rem" }}>
-          {USE_CASES.map(({ title, color, bg, border, items }) => (
-            <div key={title} style={{ background: bg, border: `1px solid ${border}`, borderRadius: "1rem", padding: "2.4rem" }}>
+          {USE_CASES_STATIC.map(({ titleKey, color, bg, border, items }) => (
+            <div key={titleKey} style={{ background: bg, border: `1px solid ${border}`, borderRadius: "1rem", padding: "2.4rem" }}>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", fontWeight: 600, color, marginBottom: "1.6rem", letterSpacing: ".04em" }}>
-                {title}
+                {t(titleKey)}
               </div>
               <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
                 {items.map((item) => (
@@ -107,12 +109,12 @@ export default async function SmaatPage() {
         </div>
 
         {/* Feature table */}
-        <SectionLabel>feature comparison</SectionLabel>
+        <SectionLabel>{t("smaat.featureComparison")}</SectionLabel>
         <div style={{ border: "1px solid var(--ink-10)", borderRadius: "1rem", overflow: "hidden", marginBottom: "5.6rem" }}>
           {/* Table header */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", background: "var(--ink)", color: "var(--paper)" }}>
-            <div style={{ padding: "1.4rem 2rem", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase" }}>Feature</div>
-            <div style={{ padding: "1.4rem 2rem", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", borderLeft: "1px solid rgba(255,255,255,.1)" }}>Samply</div>
+            <div style={{ padding: "1.4rem 2rem", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase" }}>{t("smaat.colFeature")}</div>
+            <div style={{ padding: "1.4rem 2rem", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", borderLeft: "1px solid rgba(255,255,255,.1)" }}>{t("smaat.colSamply")}</div>
             <div style={{ padding: "1.4rem 2rem", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", borderLeft: "1px solid rgba(255,255,255,.1)", color: "#c4b8f0" }}>SMAAT</div>
           </div>
 
@@ -143,8 +145,7 @@ export default async function SmaatPage() {
               SMAAT
             </div>
             <p style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.65, margin: "0 0 2rem", maxWidth: 500 }}>
-              A commercial ESM platform with built-in surveys, cognitive tasks, sensor data collection, and gamification.
-              Free tier available for testing with up to 10 participants.
+              {t("smaat.smaatDescription")}
             </p>
             <a
               href="https://smaat.eu"
@@ -162,7 +163,7 @@ export default async function SmaatPage() {
         {session && (
           <div style={{ marginTop: "4rem", textAlign: "center" }}>
             <a href="/dashboard" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: ".06em" }} className="hover:opacity-70 transition-opacity">
-              ← back to dashboard
+              {t("smaat.backToDashboard")}
             </a>
           </div>
         )}

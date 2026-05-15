@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { DB_LANG_TO_LOCALE } from "@/lib/i18n";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Account — Samply" };
 
@@ -19,8 +22,18 @@ async function updateAccountAction(formData: FormData) {
   if (user.level > 10) {
     user.institute = (formData.get("institute") as string) || "";
   }
-  user.language = (formData.get("language") as string) || user.language;
+  const newLang = (formData.get("language") as string) || user.language;
+  user.language = newLang;
   await user.save();
+
+  // Sync the locale cookie so all pages reflect the new language immediately
+  const locale = DB_LANG_TO_LOCALE[newLang] ?? "en";
+  const cookieStore = await cookies();
+  cookieStore.set("NEXT_LOCALE", locale, {
+    maxAge: 365 * 24 * 60 * 60,
+    path: "/",
+    sameSite: "lax",
+  });
 
   redirect("/account?notice=" + encodeURIComponent("Profile updated."));
 }
@@ -75,6 +88,7 @@ export default async function AccountPage({
   if (!user) redirect("/login");
 
   const { notice, error } = await searchParams;
+  const { t } = await getT();
   const isResearcher = user.level > 10;
   const initial = (user.name?.[0] || user.email?.[0] || "?").toUpperCase();
 
@@ -96,7 +110,7 @@ export default async function AccountPage({
             style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}
             className="hover:opacity-70 transition-opacity"
           >
-            ← Dashboard
+            {t("account.breadcrumb")}
           </a>
         </div>
 
@@ -169,12 +183,12 @@ export default async function AccountPage({
                     color: isResearcher ? "var(--sage)" : "var(--ink-40)",
                   }}
                 >
-                  {isResearcher ? "researcher" : "participant"}
+                  {isResearcher ? t("account.roleResearcher") : t("account.roleParticipant")}
                 </span>
               </div>
               {joinDate && (
                 <div style={{ fontSize: "1.15rem", color: "var(--ink-40)", marginTop: "0.3rem" }}>
-                  Member since {joinDate}
+                  {t("account.memberSince", { date: joinDate })}
                 </div>
               )}
             </div>
@@ -183,13 +197,13 @@ export default async function AccountPage({
           {/* Email confirmation */}
           <div style={{ padding: "1.8rem 3.2rem", borderBottom: "1px solid var(--ink-10)" }}>
             <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
-              Email
+              {t("account.sectionEmail")}
             </div>
             {user.emailIsConfirmed ? (
               <div className="flex items-center gap-[8px]">
                 <span style={{ fontSize: "1.35rem", color: "var(--ink)" }}>{user.email}</span>
                 <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--sage)", background: "rgba(61,115,107,.1)", padding: "0.2rem 0.8rem", borderRadius: "9999px" }}>
-                  ✓ confirmed
+                  {t("account.emailConfirmed")}
                 </span>
               </div>
             ) : (
@@ -197,13 +211,13 @@ export default async function AccountPage({
                 <div className="flex items-center gap-[8px]" style={{ marginBottom: "1rem" }}>
                   <span style={{ fontSize: "1.35rem", color: "var(--ink)" }}>{user.email}</span>
                   <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--coral)", background: "rgba(214,90,48,.1)", padding: "0.2rem 0.8rem", borderRadius: "9999px" }}>
-                    not confirmed
+                    {t("account.emailNotConfirmed")}
                   </span>
                 </div>
                 <form action={resendConfirmationAction}>
                   <input type="hidden" name="email" value={user.email} />
                   <SubmitButton
-                    pendingLabel="Sending…"
+                    pendingLabel={t("account.resendPending")}
                     style={{
                       fontSize: "1.25rem",
                       padding: "0.7rem 1.4rem",
@@ -214,7 +228,7 @@ export default async function AccountPage({
                       fontFamily: "var(--font-body)",
                     }}
                   >
-                    Resend confirmation email
+                    {t("account.resendConfirmation")}
                   </SubmitButton>
                 </form>
               </div>
@@ -225,23 +239,23 @@ export default async function AccountPage({
           <form action={updateAccountAction}>
             <div style={{ padding: "2rem 3.2rem", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
               <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                Profile
+                {t("account.sectionProfile")}
               </div>
 
               <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Display name</span>
+                <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("account.displayName")}</span>
                 <input type="text" name="name" defaultValue={user.name || ""} style={inputStyle} />
               </label>
 
               {isResearcher && (
                 <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Research institute</span>
-                  <input type="text" name="institute" defaultValue={user.institute || ""} placeholder="University of…" style={inputStyle} />
+                  <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("account.researchInstitute")}</span>
+                  <input type="text" name="institute" defaultValue={user.institute || ""} placeholder={t("account.institutePlaceholder")} style={inputStyle} />
                 </label>
               )}
 
               <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Language</span>
+                <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("account.languageLabel")}</span>
                 <select
                   name="language"
                   defaultValue={user.language || "english"}
@@ -250,13 +264,15 @@ export default async function AccountPage({
                   <option value="english">English</option>
                   <option value="german">Deutsch</option>
                   <option value="dutch">Nederlands</option>
+                  <option value="russian">Русский</option>
+                  <option value="chinese">中文</option>
                 </select>
               </label>
             </div>
 
             <div style={{ padding: "0 3.2rem 2.4rem" }}>
               <SubmitButton
-                pendingLabel="Saving…"
+                pendingLabel={t("account.savePending")}
                 style={{
                   padding: "1rem 2.4rem",
                   background: "var(--coral)",
@@ -268,7 +284,7 @@ export default async function AccountPage({
                   fontFamily: "var(--font-body)",
                 }}
               >
-                Save changes
+                {t("account.saveChanges")}
               </SubmitButton>
             </div>
           </form>
@@ -277,7 +293,7 @@ export default async function AccountPage({
           {!isResearcher && (
             <div style={{ padding: "1.8rem 3.2rem", borderTop: "1px solid var(--ink-10)" }}>
               <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
-                Studies
+                {t("account.sectionStudies")}
               </div>
               {(user.code?.id || user.samplyId) && (
                 <div style={{ fontSize: "1.2rem", color: "var(--ink-40)", marginBottom: "1rem", fontFamily: "var(--font-mono)" }}>
@@ -299,7 +315,7 @@ export default async function AccountPage({
                 </div>
               ) : (
                 <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: 0 }}>
-                  Not currently participating in any studies.
+                  {t("account.notParticipating")}
                 </p>
               )}
             </div>
@@ -310,14 +326,14 @@ export default async function AccountPage({
         {isResearcher && (
           <div style={{ marginTop: "2.8rem", paddingTop: "2rem", borderTop: "1px solid var(--ink-10)" }}>
             <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
-              Danger zone
+              {t("account.dangerZone")}
             </div>
             <a
               href="/account/delete"
               style={{ fontSize: "1.3rem", color: "var(--coral)", textDecoration: "none", fontWeight: 500 }}
               className="hover:opacity-70 transition-opacity"
             >
-              Delete my account →
+              {t("account.deleteAccount")}
             </a>
           </div>
         )}

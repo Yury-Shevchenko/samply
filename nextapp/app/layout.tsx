@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, Caveat, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "./components/Nav";
+import { TranslationProvider } from "./components/TranslationProvider";
+import { getLocale } from "@/lib/i18n.server";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -56,20 +58,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${spaceGrotesk.variable} ${inter.variable} ${caveat.variable} ${ibmPlexMono.variable}`}
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
-        <Nav />
-        {children}
+        <TranslationProvider locale={locale}>
+          <Nav />
+          {children}
+        </TranslationProvider>
       </body>
     </html>
   );

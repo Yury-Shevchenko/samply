@@ -31,6 +31,7 @@ interface IndividualBody {
   scheduleInFuture?: boolean;
   participantId?: string[] | null;
   groups?: string[] | null;
+  yokedDesign?: boolean;
   interval: string[];
   int_start?: StartingStrategy;
   int_end?: StoppingStrategy;
@@ -85,7 +86,7 @@ export async function POST(req: NextRequest) {
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
 
   const { projectId, title, message, url: rawUrl, timezone, useParticipantTimezone, expireIn, reminders,
-    scheduleInFuture, participantId, groups, interval, int_start, int_end } = body;
+    scheduleInFuture, participantId, groups, yokedDesign, interval, int_start, int_end } = body;
   const url = sanitizeSurveyUrl(rawUrl);
 
   if (!projectId || !title || !message || !timezone || !interval?.length) {
@@ -148,25 +149,41 @@ export async function POST(req: NextRequest) {
     start_after: int_start?.startAfter, stop_after: int_end?.stopAfter,
     start_next: int_start?.startNextDay, stop_next: int_end?.stopNextDay,
     start_event: int_start?.startEvent, stop_event: int_end?.stopEvent,
-    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, created: new Date(),
+    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, created: new Date(),
     interval: iv,
   }));
 
   try {
     if (groupIds) {
       for (const group of groupIds) {
-        const latestUser = p.mobileUsers.filter((u) => u.group?.id === group)
-          .sort((a, b) => (b.created?.getTime() ?? 0) - (a.created?.getTime() ?? 0))[0];
-        if (!latestUser) continue;
-        const gStart = resolveUserStart(int_start, latestUser.created!, timezone) || int_startResolved;
-        const gEnd = resolveUserStop(int_end, latestUser.created!, timezone) || int_endResolved;
-        if (!gStart || !gEnd) continue;
-        for (const iv of interval) {
-          const dates = expandCronBetween(patchStartDay(iv, gStart), gStart, gEnd, timezone);
-          const r = await scheduleBatch(dates.map((d) => ({
-            ...baseDoc, scheduledFor: new Date(d), recipientGroupIds: [group], recipientUserIds: [],
-          })));
-          counter.inserted += r.inserted; counter.skipped += r.skipped;
+        const groupMembers = p.mobileUsers.filter((u) => u.group?.id === group && !u.deactivated);
+        if (!groupMembers.length) continue;
+        if (yokedDesign) {
+          const latestUser = groupMembers
+            .sort((a, b) => (b.created?.getTime() ?? 0) - (a.created?.getTime() ?? 0))[0];
+          const gStart = resolveUserStart(int_start, latestUser.created!, timezone) || int_startResolved;
+          const gEnd = resolveUserStop(int_end, latestUser.created!, timezone) || int_endResolved;
+          if (!gStart || !gEnd) continue;
+          for (const iv of interval) {
+            const dates = expandCronBetween(patchStartDay(iv, gStart), gStart, gEnd, timezone);
+            const r = await scheduleBatch(dates.map((d) => ({
+              ...baseDoc, scheduledFor: new Date(d), recipientGroupIds: [group], recipientUserIds: [],
+            })));
+            counter.inserted += r.inserted; counter.skipped += r.skipped;
+          }
+        } else {
+          for (const member of groupMembers) {
+            const uStart = resolveUserStart(int_start, member.created!, timezone) || int_startResolved;
+            const uEnd = resolveUserStop(int_end, member.created!, timezone) || int_endResolved;
+            if (!uStart || !uEnd) continue;
+            for (const iv of interval) {
+              const dates = expandCronBetween(patchStartDay(iv, uStart), uStart, uEnd, timezone);
+              const r = await scheduleBatch(dates.map((d) => ({
+                ...baseDoc, scheduledFor: new Date(d), recipientUserIds: [member.id], recipientGroupIds: [],
+              })));
+              counter.inserted += r.inserted; counter.skipped += r.skipped;
+            }
+          }
         }
       }
     }

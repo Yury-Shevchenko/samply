@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
+import { getT } from "@/lib/i18n.server";
 import DocsSearch from "./DocsSearch";
 import HomeContent from "./HomeContent";
 import FirstStudyContent from "./FirstStudyContent";
@@ -17,6 +18,7 @@ import ChangelogContent from "./ChangelogContent";
 import LegalNoticeContent from "./LegalNoticeContent";
 import PolicyContent from "./PolicyContent";
 import TermsContent from "./TermsContent";
+import IrbContent from "./IrbContent";
 import EventContingentContent from "./EventContingentContent";
 import GeofencingContent from "./GeofencingContent";
 import StreamContent from "./StreamContent";
@@ -32,7 +34,7 @@ const SIDEBAR_PAGES = [
   "event-contingent", "geofencing", "stream",
   "glossary", "api", "changelog", "about",
 ] as const;
-const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms"] as const;
+const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb"] as const;
 type DocsPage = (typeof ALL_PAGES)[number];
 
 const NAV_LABELS: Record<DocsPage, string> = {
@@ -56,6 +58,7 @@ const NAV_LABELS: Record<DocsPage, string> = {
   legalnotice:         "Legal Notice",
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
+  irb:                 "IRB / Ethics Brief",
 };
 
 const PAGE_TITLES: Record<DocsPage, string> = {
@@ -79,6 +82,7 @@ const PAGE_TITLES: Record<DocsPage, string> = {
   legalnotice:         "Legal Notice",
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
+  irb:                 "IRB & Ethics Brief",
 };
 
 const PAGE_META: Record<string, { eyebrow: string; lede: string; section: string }> = {
@@ -101,25 +105,31 @@ const PAGE_META: Record<string, { eyebrow: string; lede: string; section: string
   about:        { section: "Reference",              eyebrow: "where it came from",                                lede: "Why Samply was built, the problems it set out to solve, and how the platform has evolved since 2019." },
 };
 
-const NAV_GROUPS: { label: string; pages: (typeof SIDEBAR_PAGES)[number][] }[] = [
-  { label: "Get started",            pages: ["home", "first-study", "invite"] },
-  { label: "Notification schedules", pages: ["types", "form", "personal", "queue"] },
-  { label: "Power features",         pages: ["placeholders", "groups", "reminders"] },
-  { label: "Advanced features",      pages: ["event-contingent", "geofencing", "stream"] },
-  { label: "Reference",              pages: ["glossary", "api", "changelog", "about"] },
+const NAV_GROUPS: { label: string; sectionKey: string; pages: (typeof SIDEBAR_PAGES)[number][] }[] = [
+  { label: "Get started",            sectionKey: "getStarted",            pages: ["home", "first-study", "invite"] },
+  { label: "Notification schedules", sectionKey: "notificationSchedules", pages: ["types", "form", "personal", "queue"] },
+  { label: "Power features",         sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders"] },
+  { label: "Advanced features",      sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream"] },
+  { label: "Reference",              sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about"] },
 ];
+
+// Maps each docs page to its sidebar section key
+const PAGE_SECTION_KEY: Partial<Record<DocsPage, string>> = Object.fromEntries(
+  NAV_GROUPS.flatMap((g) => g.pages.map((p) => [p, g.sectionKey]))
+);
 
 /* ── Metadata ─────────────────────────────────────────────────────────────── */
 
 export async function generateMetadata({ params }: { params: Promise<{ page: string }> }) {
   const { page } = await params;
-  const label = NAV_LABELS[page as DocsPage] ?? "Documentation";
+  const { t } = await getT();
+  const label = t(`docs.navLabels.${page}`) || NAV_LABELS[page as DocsPage] || "Documentation";
   return { title: `${label} — Samply Docs` };
 }
 
 /* ── Sidebar ──────────────────────────────────────────────────────────────── */
 
-function DocsSidebar({ current }: { current: string }) {
+function DocsSidebar({ current, navLabels, groupLabels, searchPlaceholder }: { current: string; navLabels: Record<DocsPage, string>; groupLabels: Record<string, string>; searchPlaceholder: string }) {
   return (
     <aside className="docs-sidebar" style={{ width: "22rem", flexShrink: 0, position: "sticky", top: "8rem", maxHeight: "calc(100vh - 10rem)", overflowY: "auto", scrollbarWidth: "none", paddingBottom: "4rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", marginBottom: "1.6rem" }}>
@@ -136,17 +146,17 @@ function DocsSidebar({ current }: { current: string }) {
         <span style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 700, letterSpacing: "-0.02em", color: "var(--ink)" }}>Samply</span>
         <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", border: "1px solid var(--coral)", padding: "2px 6px", borderRadius: "0.4rem", marginLeft: "auto" }}>docs</span>
       </div>
-      <DocsSearch />
+      <DocsSearch placeholder={searchPlaceholder} />
       <nav style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         {NAV_GROUPS.map((grp) => (
-          <div key={grp.label}>
-            <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>{grp.label}</div>
+          <div key={grp.sectionKey}>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>{groupLabels[grp.sectionKey] ?? grp.label}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
               {grp.pages.map((p) => {
                 const on = p === current;
                 return (
                   <a key={p} href={`/docs/${p}`} style={{ display: "block", padding: "0.55rem 0.9rem 0.55rem 1rem", borderRadius: "0.6rem", fontSize: "1.35rem", fontWeight: on ? 600 : 400, textDecoration: "none", color: on ? "var(--coral)" : "var(--ink-60)", background: on ? "var(--coral-soft)" : "transparent", borderLeft: on ? "2px solid var(--coral)" : "2px solid transparent", transition: "all 0.12s" }}>
-                    {NAV_LABELS[p]}
+                    {navLabels[p]}
                   </a>
                 );
               })}
@@ -155,8 +165,8 @@ function DocsSidebar({ current }: { current: string }) {
         ))}
       </nav>
       <div style={{ marginTop: "2.8rem", paddingTop: "1.6rem", borderTop: "1px solid var(--ink-10)", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-        {(["legalnotice", "policy", "terms"] as const).map((p) => (
-          <a key={p} href={`/docs/${p}`} style={{ display: "block", padding: "0.5rem 1rem", fontSize: "1.2rem", color: "var(--ink-40)", textDecoration: "none" }}>{NAV_LABELS[p]}</a>
+        {(["legalnotice", "policy", "terms", "irb"] as const).map((p) => (
+          <a key={p} href={`/docs/${p}`} style={{ display: "block", padding: "0.5rem 1rem", fontSize: "1.2rem", color: "var(--ink-40)", textDecoration: "none" }}>{navLabels[p]}</a>
         ))}
       </div>
     </aside>
@@ -165,21 +175,19 @@ function DocsSidebar({ current }: { current: string }) {
 
 /* ── Page header ──────────────────────────────────────────────────────────── */
 
-function DocsPageHeader({ page, title }: { page: string; title: string }) {
-  const meta = PAGE_META[page];
-  if (!meta) return null;
+function DocsPageHeader({ section, eyebrow, title, lede, navLabel }: { section: string; eyebrow: string; title: string; lede: string; navLabel: string }) {
   return (
     <div style={{ marginBottom: "3.6rem" }}>
       <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--ink-40)", display: "flex", gap: "0.6rem", alignItems: "center", marginBottom: "1.2rem" }}>
         <a href="/docs/home" style={{ color: "var(--ink-40)", textDecoration: "none" }}>docs</a>
         <span>/</span>
-        <span style={{ color: "var(--ink-60)" }}>{meta.section}</span>
+        <span style={{ color: "var(--ink-60)" }}>{section}</span>
         <span>/</span>
-        <span style={{ color: "var(--coral)" }}>{NAV_LABELS[page as DocsPage] ?? title}</span>
+        <span style={{ color: "var(--coral)" }}>{navLabel}</span>
       </div>
-      <div className="font-[family-name:var(--font-hand)]" style={{ fontSize: "1.7rem", color: "var(--coral)", marginBottom: "0.4rem", transform: "rotate(-0.5deg)", display: "inline-block" }}>{meta.eyebrow}</div>
+      <div className="font-[family-name:var(--font-hand)]" style={{ fontSize: "1.7rem", color: "var(--coral)", marginBottom: "0.4rem", transform: "rotate(-0.5deg)", display: "inline-block" }}>{eyebrow}</div>
       <h1 className="docs-page-h1 font-[family-name:var(--font-display)]" style={{ fontSize: "3.8rem", lineHeight: 1.05, letterSpacing: "-0.03em", fontWeight: 700, margin: "0 0 1.2rem", color: "var(--ink)" }}>{title}.</h1>
-      <p style={{ fontSize: "1.5rem", lineHeight: 1.55, color: "var(--ink-60)", margin: 0, maxWidth: "56rem" }}>{meta.lede}</p>
+      <p style={{ fontSize: "1.5rem", lineHeight: 1.55, color: "var(--ink-60)", margin: 0, maxWidth: "56rem" }}>{lede}</p>
     </div>
   );
 }
@@ -190,12 +198,31 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
   const { page } = await params;
   if (!ALL_PAGES.includes(page as DocsPage)) notFound();
 
+  const { t, locale } = await getT();
+  const navLabels = Object.fromEntries(
+    ALL_PAGES.map((p) => [p, t(`docs.navLabels.${p}`) || NAV_LABELS[p]])
+  ) as Record<DocsPage, string>;
+  const searchPlaceholder = t("docs.searchPlaceholder");
+
+  // Translated sidebar group labels
+  const groupLabels = Object.fromEntries(
+    NAV_GROUPS.map((g) => [g.sectionKey, t(`docs.sections.${g.sectionKey}`) || g.label])
+  ) as Record<string, string>;
+
   const hdrs = await headers();
   const host = hdrs.get("host") ?? "localhost:3000";
   const baseUrl = host.startsWith("localhost") ? `http://${host}` : `https://${host}`;
 
   const currentPage = page as DocsPage;
   const isLegal = !SIDEBAR_PAGES.includes(currentPage as (typeof SIDEBAR_PAGES)[number]);
+
+  // Translated page header parts
+  const pageTitle = t(`docs.pageTitles.${currentPage}`) || PAGE_TITLES[currentPage];
+  const rawMeta = PAGE_META[currentPage];
+  const sectionKey = PAGE_SECTION_KEY[currentPage];
+  const translatedSection = sectionKey ? (groupLabels[sectionKey] ?? rawMeta?.section ?? "") : (rawMeta?.section ?? "");
+  const translatedEyebrow = t(`docs.pageEyebrows.${currentPage}`) || rawMeta?.eyebrow || "";
+  const translatedLede = t(`docs.pageLedes.${currentPage}`) || rawMeta?.lede || "";
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
@@ -204,13 +231,15 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
           <div style={{ maxWidth: "68rem" }}>
             <a href="/docs/home" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase" }}>← docs</a>
             <div style={{ marginTop: "3.2rem" }} className="docs-prose">
-              <h1 className="font-[family-name:var(--font-display)]" style={{ fontSize: "3rem", fontWeight: 700, letterSpacing: "-0.02em", margin: "0 0 2.4rem" }}>{PAGE_TITLES[currentPage]}</h1>
+              <h1 className="font-[family-name:var(--font-display)]" style={{ fontSize: "3rem", fontWeight: 700, letterSpacing: "-0.02em", margin: "0 0 2.4rem" }}>{pageTitle}</h1>
               {currentPage === "legalnotice" ? (
-                <LegalNoticeContent />
+                <LegalNoticeContent locale={locale} />
               ) : currentPage === "policy" ? (
-                <PolicyContent />
+                <PolicyContent locale={locale} />
               ) : currentPage === "terms" ? (
-                <TermsContent />
+                <TermsContent locale={locale} />
+              ) : currentPage === "irb" ? (
+                <IrbContent locale={locale} />
               ) : (
                 <p style={{ color: "var(--ink-60)" }}>Content coming soon.</p>
               )}
@@ -218,45 +247,45 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
           </div>
         ) : (
           <div className="docs-layout" style={{ display: "flex", gap: "6rem", alignItems: "flex-start" }}>
-            <DocsSidebar current={currentPage} />
+            <DocsSidebar current={currentPage} navLabels={navLabels} groupLabels={groupLabels} searchPlaceholder={searchPlaceholder} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <DocsMobileNav current={currentPage} />
-              <DocsPageHeader page={currentPage} title={PAGE_TITLES[currentPage]} />
+              <DocsPageHeader section={translatedSection} eyebrow={translatedEyebrow} title={pageTitle} lede={translatedLede} navLabel={navLabels[currentPage] ?? pageTitle} />
               <article className="docs-prose">
                 {currentPage === "home" ? (
-                  <HomeContent />
+                  <HomeContent locale={locale} />
                 ) : currentPage === "first-study" ? (
-                  <FirstStudyContent />
+                  <FirstStudyContent locale={locale} />
                 ) : currentPage === "invite" ? (
-                  <InviteContent />
+                  <InviteContent locale={locale} />
                 ) : currentPage === "types" ? (
-                  <TypesContent />
+                  <TypesContent locale={locale} />
                 ) : currentPage === "personal" ? (
-                  <PersonalContent />
+                  <PersonalContent locale={locale} />
                 ) : currentPage === "form" ? (
-                  <FormContent />
+                  <FormContent locale={locale} />
                 ) : currentPage === "queue" ? (
-                  <QueueContent />
+                  <QueueContent locale={locale} />
                 ) : currentPage === "placeholders" ? (
-                  <PlaceholdersContent />
+                  <PlaceholdersContent locale={locale} />
                 ) : currentPage === "groups" ? (
-                  <GroupsContent />
+                  <GroupsContent locale={locale} />
                 ) : currentPage === "reminders" ? (
-                  <RemindersContent baseUrl={baseUrl} />
+                  <RemindersContent baseUrl={baseUrl} locale={locale} />
                 ) : currentPage === "glossary" ? (
-                  <GlossaryContent />
+                  <GlossaryContent locale={locale} />
                 ) : currentPage === "api" ? (
-                  <ApiContent />
+                  <ApiContent locale={locale} />
                 ) : currentPage === "event-contingent" ? (
-                  <EventContingentContent />
+                  <EventContingentContent locale={locale} />
                 ) : currentPage === "geofencing" ? (
-                  <GeofencingContent />
+                  <GeofencingContent locale={locale} />
                 ) : currentPage === "stream" ? (
-                  <StreamContent />
+                  <StreamContent locale={locale} />
                 ) : currentPage === "changelog" ? (
-                  <ChangelogContent />
+                  <ChangelogContent locale={locale} />
                 ) : currentPage === "about" ? (
-                  <AboutContent />
+                  <AboutContent locale={locale} />
                 ) : (
                   <p style={{ fontSize: "1.4rem", lineHeight: 1.65, color: "var(--ink-60)" }}>
                     Content for this section is being written. Check back soon.

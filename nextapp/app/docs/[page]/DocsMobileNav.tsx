@@ -1,37 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useT } from "@/app/components/TranslationProvider";
 
-const NAV_GROUPS: { label: string; pages: string[] }[] = [
-  { label: "Get started",            pages: ["home", "first-study", "invite"] },
-  { label: "Notification schedules", pages: ["types", "form", "personal", "queue"] },
-  { label: "Power features",         pages: ["placeholders", "groups", "reminders"] },
-  { label: "Advanced features",      pages: ["event-contingent", "geofencing", "stream"] },
-  { label: "Reference",              pages: ["glossary", "api", "changelog", "about"] },
+const NAV_GROUPS: { sectionKey: string; pages: string[] }[] = [
+  { sectionKey: "getStarted",            pages: ["home", "first-study", "invite"] },
+  { sectionKey: "notificationSchedules", pages: ["types", "form", "personal", "queue"] },
+  { sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders"] },
+  { sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream"] },
+  { sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about"] },
 ];
 
-const NAV_LABELS: Record<string, string> = {
-  home:               "Welcome",
-  "first-study":      "Your first study",
-  invite:             "Inviting participants",
-  types:              "The four types",
-  personal:           "Personal (event-based)",
-  form:               "Creating a schedule",
-  queue:              "The scheduled queue",
-  placeholders:       "URL placeholders",
-  groups:             "Groups",
-  reminders:          "Reminders",
-  "event-contingent": "Event-contingent design",
-  geofencing:         "Geofencing",
-  stream:             "Stream API",
-  glossary:           "Glossary",
-  api:                "API",
-  changelog:          "Changelog",
-  about:              "About Samply",
-};
+const PAGE_KEYS = [
+  "home", "first-study", "invite", "types", "form", "personal", "queue",
+  "placeholders", "groups", "reminders", "event-contingent", "geofencing",
+  "stream", "glossary", "api", "changelog", "about",
+];
 
 export default function DocsMobileNav({ current }: { current: string }) {
   const router = useRouter();
+  const { t } = useT();
+
+  const navLabel = (page: string) =>
+    t(`docs.navLabels.${page}`) || page;
+
+  const sectionLabel = (key: string) =>
+    t(`docs.sections.${key}`) || key;
 
   return (
     <div className="docs-mobile-nav">
@@ -58,9 +52,9 @@ export default function DocsMobileNav({ current }: { current: string }) {
         }}
       >
         {NAV_GROUPS.map((grp) => (
-          <optgroup key={grp.label} label={grp.label}>
+          <optgroup key={grp.sectionKey} label={sectionLabel(grp.sectionKey)}>
             {grp.pages.map((p) => (
-              <option key={p} value={`/docs/${p}`}>{NAV_LABELS[p] ?? p}</option>
+              <option key={p} value={`/docs/${p}`}>{navLabel(p)}</option>
             ))}
           </optgroup>
         ))}

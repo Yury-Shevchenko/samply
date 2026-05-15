@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
+import { useT } from "@/app/components/TranslationProvider";
 
 type Entry = {
   slug: string;
@@ -43,7 +44,8 @@ function hl(text: string, q: string) {
   );
 }
 
-export default function DocsSearch() {
+export default function DocsSearch({ placeholder = "Search the manual…" }: { placeholder?: string }) {
+  const { t } = useT();
   const [open, setOpen]   = useState(false);
   const [query, setQuery] = useState("");
   const [sel, setSel]     = useState(0);
@@ -123,7 +125,7 @@ export default function DocsSearch() {
         <div ref={listRef} style={{ maxHeight: "58vh", overflowY: "auto" }}>
           {results.length === 0 ? (
             <p style={{ padding: "3.2rem", textAlign: "center", color: "var(--ink-40)", fontFamily: "var(--font-mono)", fontSize: "1.2rem", margin: 0 }}>
-              No results for &ldquo;{query}&rdquo;
+              {t("docs.searchNoResults")} &ldquo;{query}&rdquo;
             </p>
           ) : (
             results.map((e, i) => (
@@ -148,7 +150,7 @@ export default function DocsSearch() {
 
         {/* footer */}
         <div style={{ padding: "0.75rem 1.6rem", borderTop: "1px solid var(--ink-10)", display: "flex", gap: "1.6rem", fontFamily: "var(--font-mono)", fontSize: "0.95rem", color: "var(--ink-40)" }}>
-          {[["↑↓", "navigate"], ["↵", "open"], ["esc", "close"]].map(([k, label]) => (
+          {[["↑↓", t("docs.searchNavigate")], ["↵", t("docs.searchOpen")], ["esc", t("docs.searchClose")]].map(([k, label]) => (
             <span key={k}><kbd style={{ border: "1px solid var(--ink-20)", borderRadius: "0.25rem", padding: "1px 5px" }}>{k}</kbd> {label}</span>
           ))}
         </div>
@@ -164,7 +166,7 @@ export default function DocsSearch() {
         style={{ width: "100%", padding: "0.8rem 1rem", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", display: "flex", alignItems: "center", gap: "0.8rem", background: "var(--surface)", marginBottom: "2rem", cursor: "text", textAlign: "left" }}
       >
         <span style={{ color: "var(--coral)", fontSize: "1.2rem" }}>⌕</span>
-        <span style={{ fontSize: "1.2rem", color: "var(--ink-40)", flex: 1 }}>search the manual</span>
+        <span style={{ fontSize: "1.2rem", color: "var(--ink-40)", flex: 1 }}>{placeholder}</span>
         <kbd style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "var(--ink-40)", border: "1px solid var(--ink-20)", padding: "1px 4px", borderRadius: "0.3rem" }}>⌘K</kbd>
       </button>
 

@@ -27,7 +27,7 @@ export default async function AdminUsersPage({
   const session = await auth();
   if (!session || session.user.level <= 100) redirect("/login");
 
-  const { sort = "created", dir = "asc", filter = "", q = "" } = await searchParams;
+  const { sort = "created", dir = "desc", filter = "", q = "" } = await searchParams;
   const [{ users, count, pages, skip }, totalCounts] = await Promise.all([
     fetchAdminUsers(1, sort, dir, filter, q),
     fetchTotalCounts(),

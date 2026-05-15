@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import ForumCategory from "@/lib/models/forumCategory";
 import ForumThread from "@/lib/models/forumThread";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Forum — Samply" };
 
@@ -11,6 +12,7 @@ function fmt(d: Date) {
 }
 
 export default async function ForumPage() {
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -37,21 +39,21 @@ export default async function ForumPage() {
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "3.6rem" }}>
           <div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.8rem" }}>
-              community
+              {t("forum.communityLabel")}
             </div>
             <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "4rem", letterSpacing: "-0.03em", margin: 0, lineHeight: 1 }}>
-              Forum
+              {t("forum.title")}
             </h1>
           </div>
           <a href="/forum/search" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", color: "var(--ink-60)", textDecoration: "none", padding: "0.7rem 1.4rem", border: "1px solid var(--ink-20)", borderRadius: "9999px" }} className="hover:opacity-70 transition-opacity">
-            Search →
+            {t("forum.search")}
           </a>
         </div>
 
         {/* Category list */}
         {categories.length === 0 ? (
           <div style={{ textAlign: "center", padding: "6rem 0", color: "var(--ink-40)", fontFamily: "var(--font-mono)", fontSize: "1.2rem" }}>
-            No categories yet. An admin will set them up soon.
+            {t("forum.noCategories")}
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem" }}>
@@ -77,7 +79,7 @@ export default async function ForumPage() {
                     </div>
                     <div style={{ textAlign: "right", flexShrink: 0 }}>
                       <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)" }}>
-                        {stats?.count ?? 0} threads
+                        {t("forum.threads", { n: stats?.count ?? 0 })}
                       </div>
                       {stats?.latest && (
                         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", marginTop: "0.3rem" }}>
@@ -88,7 +90,7 @@ export default async function ForumPage() {
                   </div>
                   {stats?.latest && (
                     <div style={{ marginTop: "1.2rem", paddingTop: "1.2rem", borderTop: "1px solid var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                      Latest: {stats.latest.title}
+                      {t("forum.latest", { title: stats.latest.title })}
                     </div>
                   )}
                 </a>

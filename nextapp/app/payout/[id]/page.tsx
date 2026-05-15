@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchParticipantBysamplyId } from "@/lib/data/participants";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Payout — Samply" };
 
@@ -11,6 +12,7 @@ export default async function PayoutPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const { id: samplyId } = await params;
 
@@ -27,41 +29,41 @@ export default async function PayoutPage({
     <div className="inner">
       <p />
       <nav>
-        <strong>Payouts</strong>
+        <strong>{t("legacyPayouts.tabPayouts")}</strong>
         {" | "}
-        <a href={`/receipts/${samplyId}`}>Receipts</a>
+        <a href={`/receipts/${samplyId}`}>{t("legacyPayouts.tabReceipts")}</a>
       </nav>
 
-      <h2>Participant info</h2>
+      <h2>{t("legacyPayouts.participantInfo")}</h2>
       <div className="participantInformation">
-        <div className="cell">Samply ID</div>
+        <div className="cell">{t("legacyPayouts.idLabel")}</div>
         <div className="cell">{samplyId}</div>
         {p.name && (
           <>
-            <div className="cell">Name</div>
+            <div className="cell">{t("legacyPayouts.nameLabel")}</div>
             <div className="cell">{p.name}</div>
           </>
         )}
         {p.stripeInformation?.payouts_enabled && (
           <>
-            <div className="cell">Email</div>
+            <div className="cell">{t("legacyPayouts.emailLabel")}</div>
             <div className="cell">{p.email}</div>
           </>
         )}
-        <div className="cell">Payments</div>
+        <div className="cell">{t("legacyPayouts.paymentsLabel")}</div>
         <div className="cell">
-          {p.stripeInformation?.payouts_enabled ? "Enabled" : "Disabled"}
+          {p.stripeInformation?.payouts_enabled ? t("legacyPayouts.enabled") : t("legacyPayouts.disabled")}
         </div>
       </div>
 
       {p.stripeInformation?.payouts_enabled ? (
         <>
-          <h2>Send payment</h2>
+          <h2>{t("legacyPayouts.sendPayment")}</h2>
           {/* Payment form still handled by Express Stripe integration */}
           <form action="/create-checkout-session" method="POST">
             <input type="hidden" name="samplyid" value={samplyId} />
 
-            <label htmlFor="currency">Currency</label>
+            <label htmlFor="currency">{t("legacyPayouts.currencyLabel")}</label>
             <div className="custom-select">
               <select name="currency" id="currency">
                 <option value="eur">Euro</option>
@@ -69,15 +71,15 @@ export default async function PayoutPage({
               </select>
             </div>
 
-            <label htmlFor="amount">Amount</label>
+            <label htmlFor="amount">{t("legacyPayouts.amountLabel")}</label>
             <input type="text" name="amount" id="amount" placeholder="e.g. 5.00" required />
 
             <p />
-            <input type="submit" className="button" value="Send payment" />
+            <input type="submit" className="button" value={t("legacyPayouts.sendButton")} />
           </form>
         </>
       ) : (
-        <p>This participant has not set up a payment account yet.</p>
+        <p>{t("legacyPayouts.notSetUp")}</p>
       )}
     </div>
   );

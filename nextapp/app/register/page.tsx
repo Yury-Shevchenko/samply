@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { auth, signIn } from "@/lib/auth";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Create account — Samply" };
 
@@ -46,6 +47,7 @@ export default async function RegisterPage({
   if (session) redirect("/dashboard");
 
   const { error, notice } = await searchParams;
+  const { t } = await getT();
 
   return (
     <main
@@ -89,10 +91,10 @@ export default async function RegisterPage({
           className="font-[family-name:var(--font-display)] font-bold m-0"
           style={{ fontSize: "2.6rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "0.6rem" }}
         >
-          Create a researcher account
+          {t("register.title")}
         </h1>
         <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem" }}>
-          Use your university email. Free for academic use.
+          {t("register.subtitle")}
         </p>
 
         {/* Notices */}
@@ -130,11 +132,11 @@ export default async function RegisterPage({
         {/* Form */}
         <form action={registerAction} className="flex flex-col gap-[10px]">
           <label className="flex flex-col gap-[5px]">
-            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Full name</span>
+            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("register.nameLabel")}</span>
             <input
               type="text"
               name="name"
-              placeholder="Dr. Jane Smith"
+              placeholder={t("register.namePlaceholder")}
               required
               autoComplete="name"
               style={inputStyle}
@@ -142,11 +144,11 @@ export default async function RegisterPage({
           </label>
 
           <label className="flex flex-col gap-[5px]">
-            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Email</span>
+            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("register.emailLabel")}</span>
             <input
               type="email"
               name="email"
-              placeholder="you@university.edu"
+              placeholder={t("register.emailPlaceholder")}
               required
               autoComplete="email"
               style={inputStyle}
@@ -154,7 +156,7 @@ export default async function RegisterPage({
           </label>
 
           <label className="flex flex-col gap-[5px]">
-            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Password</span>
+            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("register.passwordLabel")}</span>
             <input
               type="password"
               name="password"
@@ -166,7 +168,7 @@ export default async function RegisterPage({
           </label>
 
           <label className="flex flex-col gap-[5px]">
-            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Confirm password</span>
+            <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("register.confirmPasswordLabel")}</span>
             <input
               type="password"
               name="password-confirm"
@@ -178,7 +180,7 @@ export default async function RegisterPage({
           </label>
 
           <SubmitButton
-            pendingLabel="Creating account…"
+            pendingLabel={t("register.submitting")}
             className="font-[family-name:var(--font-body)] font-medium transition-opacity hover:opacity-90"
             style={{
               marginTop: "0.8rem",
@@ -191,22 +193,27 @@ export default async function RegisterPage({
               fontSize: "1.4rem",
             }}
           >
-            Create account →
+            {t("register.submit")}
           </SubmitButton>
         </form>
 
         {/* Footer */}
         <p style={{ margin: "2.2rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", textAlign: "center" }}>
-          Already have an account?{" "}
+          {t("register.alreadyHaveAccount")}{" "}
           <a href="/login" style={{ color: "var(--ink)", fontWeight: 500, textDecoration: "none" }}>
-            Sign in
+            {t("register.signIn")}
           </a>
         </p>
       </div>
 
       {/* Below-card note */}
       <p style={{ marginTop: "2rem", fontSize: "1.2rem", color: "var(--ink-40)", textAlign: "center" }}>
-        By creating an account you agree to use Samply for research purposes.
+        {t("register.footerNote")}
+      </p>
+      <p style={{ marginTop: "0.6rem", fontSize: "1.2rem", color: "var(--ink-40)", textAlign: "center" }}>
+        <a href="/docs/terms" style={{ color: "var(--ink-40)", textDecoration: "underline" }}>{t("register.termsLink")}</a>
+        {" · "}
+        <a href="/docs/policy" style={{ color: "var(--ink-40)", textDecoration: "underline" }}>{t("register.policyLink")}</a>
       </p>
     </main>
   );

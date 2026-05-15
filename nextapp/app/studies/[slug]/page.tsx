@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import QRCode from "qrcode";
 import { fetchStudyBySlug } from "@/lib/data/studies";
+import { getT } from "@/lib/i18n.server";
 
 export default async function StudyDetailPage({
   params,
@@ -8,6 +9,7 @@ export default async function StudyDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const { t } = await getT();
   const { project, author } = await fetchStudyBySlug(slug);
 
   if (!project) notFound();
@@ -26,7 +28,7 @@ export default async function StudyDetailPage({
             className="font-medium no-underline hover:opacity-70 transition-opacity"
             style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}
           >
-            ← All studies
+            {t("studyDetail.allStudies")}
           </a>
         </div>
 
@@ -69,7 +71,7 @@ export default async function StudyDetailPage({
                 letterSpacing: "0.04em",
               }}
             >
-              ● accepting participants
+              {t("studyDetail.acceptingParticipants")}
             </div>
 
             {/* Title */}
@@ -224,7 +226,7 @@ export default async function StudyDetailPage({
                 className="font-[family-name:var(--font-hand)]"
                 style={{ fontSize: "1.6rem", color: "var(--coral)", marginBottom: "1.2rem" }}
               >
-                scan to join
+                {t("studyDetail.scanToJoin")}
               </div>
 
               {/* QR code */}
@@ -248,14 +250,14 @@ export default async function StudyDetailPage({
               </div>
 
               <p style={{ margin: "1.4rem 0 0.8rem", fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
-                Open with the Samply app<br />on iOS or Android
+                {t("studyDetail.openWithApp")}
               </p>
 
               {/* Or enter code divider */}
               <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", margin: "1.2rem 0" }}>
                 <div style={{ flex: 1, height: "1px", borderTop: "1px dashed var(--ink-20)" }} />
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}>
-                  or type this code
+                  {t("studyDetail.orTypeCode")}
                 </span>
                 <div style={{ flex: 1, height: "1px", borderTop: "1px dashed var(--ink-20)" }} />
               </div>
@@ -273,14 +275,14 @@ export default async function StudyDetailPage({
               }}>
                 <div style={{ textAlign: "left" }}>
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.3rem" }}>
-                    study code
+                    {t("studyDetail.studyCodeLabel")}
                   </div>
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.6rem", fontWeight: 700, letterSpacing: ".14em", color: "var(--ink)" }}>
                     {project.slug?.toUpperCase()}
                   </div>
                 </div>
                 <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", lineHeight: 1.4, textAlign: "right", maxWidth: "9rem" }}>
-                  in Find a Study → Enter code
+                  {t("studyDetail.findStudyHint")}
                 </div>
               </div>
 
@@ -298,12 +300,12 @@ export default async function StudyDetailPage({
 
             {/* Direct link hint */}
             <p style={{ margin: "1.2rem 0 0", fontSize: "1.15rem", color: "var(--ink-40)", textAlign: "center" }}>
-              On your phone?{" "}
+              {t("studyDetail.tapToOpen")}{" "}
               <a
                 href={qrUrl}
                 style={{ color: "var(--ink-60)", textDecoration: "underline" }}
               >
-                Tap to open directly
+                {t("studyDetail.tapToOpenLink")}
               </a>
             </p>
           </div>

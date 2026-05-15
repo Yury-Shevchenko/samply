@@ -69,7 +69,7 @@ export default async function AdminStudiesPageN({
 
   const { page: pageStr } = await params;
   const page = Math.max(1, parseInt(pageStr) || 1);
-  const { sort = "created", dir = "asc", filter = "", q = "" } = await searchParams;
+  const { sort = "created", dir = "desc", filter = "", q = "" } = await searchParams;
   const { projects, count, pages, skip } = await fetchAdminStudies(sort, dir, page, q);
 
   const f = filter as FilterKey;

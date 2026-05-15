@@ -4,9 +4,11 @@ import { fetchProjectById } from "@/lib/data/projects";
 import { fetchHistory, type HistorySortBy, type HistorySortOrder } from "@/lib/data/participants";
 import { fetchComplianceForProject } from "@/lib/data/compliance";
 import Hand from "@/app/components/ui/Hand";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 import { ResultRow } from "./ResultRow";
 import { DeleteAllForm } from "./DeleteAllForm";
 import { deleteAllResultsAction } from "./actions";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -88,6 +90,7 @@ export default async function DataPage({ params, searchParams }: Props) {
     : "created";
   const order: HistorySortOrder = orderParam === "asc" ? "asc" : "desc";
 
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -103,6 +106,15 @@ export default async function DataPage({ params, searchParams }: Props) {
 
   const deleteAllAction = deleteAllResultsAction.bind(null, studyId);
 
+  const STATUS_LABEL: Record<string, string> = {
+    "completed":       t("data.statusCompleted"),
+    "tapped":          t("data.statusTapped"),
+    "opened-in-app":   t("data.statusOpenedInApp"),
+    "sent":            t("data.statusSent"),
+    "archived":        t("data.statusArchived"),
+    "received-in-app": t("data.statusReceivedInApp"),
+  };
+
   function pageHref(p: number) {
     return buildHref(studyId, p, sort, order, participant);
   }
@@ -114,11 +126,11 @@ export default async function DataPage({ params, searchParams }: Props) {
       <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-            notifications sent{participant ? ` · ${participant}` : ""}
+            {participant ? t("data.labelParticipant", { participant }) : t("data.label")}
           </div>
           <div className="font-[family-name:var(--font-display)] font-bold"
             style={{ fontSize: "2.8rem", letterSpacing: "-0.02em", lineHeight: 1 }}>
-            {count.toLocaleString()} notification{count !== 1 ? "s" : ""}
+            {t(count !== 1 ? "data.countPlural" : "data.count", { n: count.toLocaleString() })}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
@@ -136,7 +148,7 @@ export default async function DataPage({ params, searchParams }: Props) {
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.8rem 1.8rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
             className="hover:opacity-70 transition-opacity"
           >
-            ↓ Export CSV
+            {t("data.exportCsv")}
           </a>
         </div>
       </div>
@@ -146,7 +158,7 @@ export default async function DataPage({ params, searchParams }: Props) {
         <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", padding: "1.6rem 2.2rem", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)", display: "flex", alignItems: "center", gap: "2rem" }}>
           <div style={{ flex: 1 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "0.8rem" }}>
-              <Hand size={14}>7-day compliance</Hand>
+              <Hand size={14}>{t("data.complianceLabel")}</Hand>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", fontWeight: 600, color: isLow ? "var(--coral)" : "var(--sage)", letterSpacing: ".02em" }}>
                 {compliance.pct}%
               </span>
@@ -161,7 +173,7 @@ export default async function DataPage({ params, searchParams }: Props) {
               {compliance.responded}
             </div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", letterSpacing: ".06em", marginTop: "0.2rem" }}>
-              of {compliance.sent} sent
+              {t("data.complianceSent", { n: compliance.sent })}
             </div>
           </div>
         </div>
@@ -171,12 +183,10 @@ export default async function DataPage({ params, searchParams }: Props) {
       {history.length === 0 ? (
         <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "5.6rem 2.4rem", textAlign: "center" }}>
           <div style={{ fontFamily: "var(--font-hand)", fontSize: "2.2rem", color: "var(--coral)", marginBottom: "1rem" }}>
-            {participant ? "no notifications for this participant" : "no responses yet"}
+            {participant ? t("data.emptyTitleParticipant") : t("data.emptyTitle")}
           </div>
           <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.6 }}>
-            {participant
-              ? "Notifications will appear here once they are sent to this participant."
-              : "Participants will appear here once they tap a notification."}
+            {participant ? t("data.emptyBodyParticipant") : t("data.emptyBody")}
           </p>
         </div>
       ) : (
@@ -185,11 +195,11 @@ export default async function DataPage({ params, searchParams }: Props) {
             <thead>
               <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
                 {!participant && (
-                  <SortTh studyId={studyId} page={page} col="samplyid" label="Participant" currentSort={sort} currentOrder={order} participant={participant} />
+                  <SortTh studyId={studyId} page={page} col="samplyid" label={t("data.colParticipant")}   currentSort={sort} currentOrder={order} participant={participant} />
                 )}
-                <SortTh studyId={studyId} page={page} col="title"   label="Notification" currentSort={sort} currentOrder={order} participant={participant} />
-                <SortTh studyId={studyId} page={page} col="created"  label="Sent"         currentSort={sort} currentOrder={order} participant={participant} />
-                <SortTh studyId={studyId} page={page} col="status"   label="Status"       currentSort={sort} currentOrder={order} participant={participant} />
+                <SortTh studyId={studyId} page={page} col="title"   label={t("data.colNotification")} currentSort={sort} currentOrder={order} participant={participant} />
+                <SortTh studyId={studyId} page={page} col="created"  label={t("data.colSent")}         currentSort={sort} currentOrder={order} participant={participant} />
+                <SortTh studyId={studyId} page={page} col="status"   label={t("data.colStatus")}       currentSort={sort} currentOrder={order} participant={participant} />
               </tr>
             </thead>
             <tbody>
@@ -221,7 +231,7 @@ export default async function DataPage({ params, searchParams }: Props) {
                       <div className="truncate">{r.data?.title ?? r.data?.message ?? "—"}</div>
                     </td>
                     <td style={{ padding: "1.1rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
-                      {new Date(r.created).toLocaleString()}
+                      <LocalDate iso={String(r.created)} />
                     </td>
                     <td style={{ padding: "1.1rem 1.8rem" }}>
                       <span style={{
@@ -235,7 +245,7 @@ export default async function DataPage({ params, searchParams }: Props) {
                         background: isCompleted ? "rgba(61,115,107,.1)" : isTapped ? "rgba(124,106,181,.1)" : "var(--ink-10)",
                         color: isCompleted ? "var(--sage)" : isTapped ? "#7c6ab5" : "var(--ink-60)",
                       }}>
-                        {status}
+                        {STATUS_LABEL[status] ?? status}
                       </span>
                     </td>
                   </ResultRow>
@@ -253,7 +263,7 @@ export default async function DataPage({ params, searchParams }: Props) {
             <a href={pageHref(page - 1)}
               style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
               className="hover:opacity-70 transition-opacity">
-              ← prev
+              {t("data.prev")}
             </a>
           )}
           <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", letterSpacing: ".08em" }}>
@@ -263,10 +273,18 @@ export default async function DataPage({ params, searchParams }: Props) {
             <a href={pageHref(page + 1)}
               style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
               className="hover:opacity-70 transition-opacity">
-              next →
+              {t("data.next")}
             </a>
           )}
         </div>
+      )}
+
+      {/* Timezone + export note */}
+      {history.length > 0 && (
+        <p style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-30)", margin: 0, lineHeight: 1.6 }}>
+          Times are shown in your local timezone.{" "}
+          When you export the CSV, event times are saved as Unix timestamps — the number of milliseconds elapsed since 1 January 1970 (UTC).
+        </p>
       )}
 
       {/* Danger zone — only shown without participant filter */}
@@ -274,15 +292,15 @@ export default async function DataPage({ params, searchParams }: Props) {
         <section>
           <div style={{ height: "0.1rem", backgroundImage: "radial-gradient(circle, var(--ink-40) 1px, transparent 1.2px)", backgroundSize: "0.8rem 0.1rem", backgroundRepeat: "repeat-x", opacity: 0.2, marginBottom: "2rem" }} />
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "1.2rem" }}>
-            danger zone
+            {t("data.dangerZone")}
           </div>
           <div style={{ background: "rgba(214,90,48,.04)", border: "1px solid rgba(214,90,48,.15)", borderRadius: "0.8rem", padding: "1.8rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1.6rem", flexWrap: "wrap" }}>
             <div>
               <div style={{ fontSize: "1.35rem", fontWeight: 600, color: "var(--ink)", marginBottom: "0.3rem" }}>
-                Delete all records
+                {t("data.deleteAllTitle")}
               </div>
               <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.55 }}>
-                Permanently deletes all {count.toLocaleString()} notification records for this study.
+                {t("data.deleteAllBody", { n: count.toLocaleString() })}
               </p>
             </div>
             <DeleteAllForm action={deleteAllAction} count={count} />

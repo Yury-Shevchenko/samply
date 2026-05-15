@@ -1,6 +1,7 @@
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import { auth } from "@/lib/auth";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Email confirmation — Samply" };
 
@@ -11,6 +12,7 @@ export default async function ConfirmEmailPage({
 }) {
   const { token } = await params;
   const session = await auth();
+  const { t } = await getT();
 
   await connectDB();
   const user = await User.findOne({
@@ -91,14 +93,14 @@ export default async function ConfirmEmailPage({
                 className="font-[family-name:var(--font-hand)]"
                 style={{ fontSize: "1.8rem", color: "var(--sage)", marginBottom: "0.6rem", opacity: 0.8 }}
               >
-                you&apos;re all set!
+                {t("confirmEmail.allSet")}
               </div>
 
               <div
                 className="font-[family-name:var(--font-display)] font-bold"
                 style={{ fontSize: "2.2rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "1.2rem" }}
               >
-                Email confirmed
+                {t("confirmEmail.title")}
               </div>
 
               {/* Email pill */}
@@ -124,8 +126,8 @@ export default async function ConfirmEmailPage({
               )}
 
               <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem", lineHeight: 1.65 }}>
-                {name ? `Welcome, ${name}. ` : ""}
-                {session ? "Your email is confirmed. Head to your dashboard." : "Your account is ready — log in to get started."}
+                {name ? `${t("confirmEmail.welcomeName", { name })} ` : ""}
+                {session ? t("confirmEmail.sessionBody") : t("confirmEmail.noSessionBody")}
               </p>
 
               <a
@@ -144,7 +146,7 @@ export default async function ConfirmEmailPage({
                   letterSpacing: "-0.01em",
                 }}
               >
-                {session ? "Go to dashboard →" : "Log in →"}
+                {session ? t("confirmEmail.toDashboard") : t("confirmEmail.toLogin")}
               </a>
             </>
           ) : (
@@ -183,11 +185,11 @@ export default async function ConfirmEmailPage({
                 className="font-[family-name:var(--font-display)] font-bold"
                 style={{ fontSize: "2.2rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "1.2rem" }}
               >
-                Link expired
+                {t("confirmEmail.expiredTitle")}
               </div>
 
               <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem", lineHeight: 1.65 }}>
-                This confirmation link is invalid or has expired. Log in and request a new one from your account settings.
+                {t("confirmEmail.expiredBody")}
               </p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", alignItems: "center" }}>
@@ -207,14 +209,14 @@ export default async function ConfirmEmailPage({
                     letterSpacing: "-0.01em",
                   }}
                 >
-                  Log in
+                  {t("confirmEmail.loginButton")}
                 </a>
                 <a
                   href="/account"
                   style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}
                   className="hover:opacity-70 transition-opacity"
                 >
-                  Go to account settings
+                  {t("confirmEmail.toAccountSettings")}
                 </a>
               </div>
             </>

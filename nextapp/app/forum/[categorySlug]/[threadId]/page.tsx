@@ -17,6 +17,7 @@ import {
   deletePostAction,
 } from "@/app/forum/actions";
 import { ForumConfirmButton } from "@/app/forum/ForumConfirmButton";
+import { getT } from "@/lib/i18n.server";
 
 function fmt(d: Date) {
   return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" });
@@ -42,6 +43,7 @@ export default async function ThreadPage({
 }: {
   params: Promise<{ categorySlug: string; threadId: string }>;
 }) {
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -72,7 +74,7 @@ export default async function ThreadPage({
 
         {/* Breadcrumb */}
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", marginBottom: "2rem", letterSpacing: ".06em" }}>
-          <a href="/forum" style={{ color: "var(--ink-40)", textDecoration: "none" }} className="hover:opacity-70">Forum</a>
+          <a href="/forum" style={{ color: "var(--ink-40)", textDecoration: "none" }} className="hover:opacity-70">{t("forum.breadcrumb")}</a>
           <span style={{ margin: "0 0.6rem" }}>›</span>
           <a href={`/forum/${categorySlug}`} style={{ color: "var(--ink-40)", textDecoration: "none" }} className="hover:opacity-70">{category.name}</a>
         </div>
@@ -85,9 +87,9 @@ export default async function ThreadPage({
             <VoteForm action={voteThreadBound} votes={thread.votes} voted={votedThread} />
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", alignItems: "center", marginBottom: "0.8rem" }}>
-                {thread.pinned && <span style={{ fontSize: "1rem", fontFamily: "var(--font-mono)", color: "var(--coral)", background: "rgba(214,90,48,.08)", padding: "2px 8px", borderRadius: 999 }}>pinned</span>}
-                {thread.locked && <span style={{ fontSize: "1rem", fontFamily: "var(--font-mono)", color: "var(--ink-40)", background: "var(--ink-10)", padding: "2px 8px", borderRadius: 999 }}>locked</span>}
-                {thread.solvedPostId && <span style={{ fontSize: "1rem", fontFamily: "var(--font-mono)", color: "var(--sage)", background: "rgba(61,115,107,.08)", padding: "2px 8px", borderRadius: 999 }}>✓ solved</span>}
+                {thread.pinned && <span style={{ fontSize: "1rem", fontFamily: "var(--font-mono)", color: "var(--coral)", background: "rgba(214,90,48,.08)", padding: "2px 8px", borderRadius: 999 }}>{t("forum.pinned")}</span>}
+                {thread.locked && <span style={{ fontSize: "1rem", fontFamily: "var(--font-mono)", color: "var(--ink-40)", background: "var(--ink-10)", padding: "2px 8px", borderRadius: 999 }}>{t("forum.locked")}</span>}
+                {thread.solvedPostId && <span style={{ fontSize: "1rem", fontFamily: "var(--font-mono)", color: "var(--sage)", background: "rgba(61,115,107,.08)", padding: "2px 8px", borderRadius: 999 }}>{t("forum.solvedBadge")}</span>}
               </div>
               <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: "2.4rem", letterSpacing: "-0.03em", margin: "0 0 0.6rem", lineHeight: 1.15 }}>
                 {thread.title}
@@ -111,12 +113,12 @@ export default async function ThreadPage({
               <div style={{ padding: "1.2rem 2rem", display: "flex", gap: "0.8rem", flexWrap: "wrap" }}>
                 <form action={pinThreadBound}>
                   <button type="submit" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", padding: "0.5rem 1.2rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", background: "none", cursor: "pointer", color: thread.pinned ? "var(--coral)" : "var(--ink-60)" }} className="hover:opacity-70 transition-opacity">
-                    {thread.pinned ? "Unpin" : "Pin"}
+                    {thread.pinned ? t("forum.unpin") : t("forum.pin")}
                   </button>
                 </form>
                 <form action={lockThreadBound}>
                   <button type="submit" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", padding: "0.5rem 1.2rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", background: "none", cursor: "pointer", color: thread.locked ? "var(--sage)" : "var(--ink-60)" }} className="hover:opacity-70 transition-opacity">
-                    {thread.locked ? "Unlock" : "Lock"}
+                    {thread.locked ? t("forum.unlock") : t("forum.lock")}
                   </button>
                 </form>
                 <ForumConfirmButton
@@ -124,7 +126,7 @@ export default async function ThreadPage({
                   message="Delete this thread and all its replies?"
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", padding: "0.5rem 1.2rem", border: "1px solid rgba(214,90,48,.3)", borderRadius: "9999px", background: "none", cursor: "pointer", color: "var(--coral)" }}
                 >
-                  Delete thread
+                  {t("forum.deleteThread")}
                 </ForumConfirmButton>
               </div>
             </>
@@ -159,7 +161,7 @@ export default async function ThreadPage({
                         {(isAuthor || isAdmin) && !thread.locked && (
                           <form action={markSolvedBound} style={{ display: "inline" }}>
                             <button type="submit" style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "1rem", color: isSolved ? "var(--sage)" : "var(--ink-40)", padding: 0 }} className="hover:opacity-70 transition-opacity">
-                              {isSolved ? "✓ Solved" : "Mark as answer"}
+                              {isSolved ? t("forum.solvedBadge") : t("forum.markSolved")}
                             </button>
                           </form>
                         )}
@@ -169,7 +171,7 @@ export default async function ThreadPage({
                             message="Delete this reply?"
                             style={{ background: "none", border: "none", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--coral)", padding: 0 }}
                           >
-                            Delete
+                            {t("forum.deletePost")}
                           </ForumConfirmButton>
                         )}
                       </div>
@@ -194,7 +196,7 @@ export default async function ThreadPage({
                 name="body"
                 required
                 rows={6}
-                placeholder="Write your reply… Markdown is supported."
+                placeholder={t("forum.replyPlaceholder")}
                 style={{ padding: "1rem 1.2rem", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", fontSize: "1.3rem", fontFamily: "var(--font-mono)", background: "var(--paper)", color: "var(--ink)", outline: "none", resize: "vertical", width: "100%", boxSizing: "border-box", lineHeight: 1.6 }}
               />
               <div style={{ display: "flex", justifyContent: "flex-end" }}>
@@ -203,7 +205,7 @@ export default async function ThreadPage({
                   style={{ padding: "0.9rem 2rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "9999px", fontSize: "1.2rem", fontWeight: 500, fontFamily: "var(--font-body)", border: "none", cursor: "pointer" }}
                   className="hover:opacity-80 transition-opacity"
                 >
-                  Post reply
+                  {t("forum.postReply")}
                 </button>
               </div>
             </form>

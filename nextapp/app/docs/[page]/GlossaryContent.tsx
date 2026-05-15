@@ -1,3 +1,4 @@
+import type { Locale } from "@/lib/i18n";
 import { Fragment } from 'react';
 
 const TERMS: { term: string; definition: string }[] = [
@@ -115,7 +116,480 @@ const TERMS: { term: string; definition: string }[] = [
   },
 ];
 
-export default function GlossaryContent() {
+const TERMS_DE: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: 'Ein Zähler, der verfolgt, wie viele Benachrichtigungen ein Teilnehmer von einer Studie erhalten hat, beginnend bei 1. Die erste Benachrichtigung hat batch = 1, die zweite hat batch = 2 und so weiter. Batch gilt studienübergreifend, nicht pro Zeitplan: Wenn ein Teilnehmer von zwei Zeitplänen angesprochen wird, erhöht sich der Zähler bei jedem Versand aus beiden. Verfügbar als %BATCH%-URL-Platzhalter.',
+  },
+  {
+    term: 'Completion event',
+    definition: 'Ein Signal, das an Samply gesendet wird, wenn ein Teilnehmer eine Umfrage abschließt. Samply verwendet es, um den Ergebnisdatensatz als abgeschlossen zu markieren und alle ausstehenden Erinnerungen für diesen Versand zu stornieren. Ein Abschlussereignis wird entweder registriert, indem der Teilnehmer am Ende der Umfrage zur Samply-Abschluss-URL weitergeleitet wird, oder indem eine HTTP-POST-Anfrage vom Umfrage-Tool gesendet wird.',
+  },
+  {
+    term: 'Day N',
+    definition: 'Die in persönlichen Zeitplänen verwendete Kurzform für ein Datum relativ zur Anmeldung jedes Teilnehmers. Tag 1 ist der Tag des Beitritts selbst (der Zeitplan beginnt ungefähr eine Minute nach der Anmeldung des Teilnehmers). Tag 2 ist Mitternacht des nächsten Kalendertages in der gewählten Zeitzone. Tag N für N > 1 ist Mitternacht des N-ten Kalendertages, gezählt ab dem Beitrittsdatum.',
+  },
+  {
+    term: 'Deactivated participant',
+    definition: 'Ein Teilnehmer, der vom Empfang von Benachrichtigungen gesperrt wurde, ohne aus der Studie entfernt zu werden. Wenn ein Teilnehmer deaktiviert wird, werden alle ausstehenden Warteschlangen-Zeilen, die an ihn adressiert sind, zum Auslösezeitpunkt übersprungen. Die Reaktivierung eines Teilnehmers erstellt keine übersprungenen Sendungen neu.',
+  },
+  {
+    term: 'ESM',
+    definition: 'Experience Sampling Method. Eine Forschungsmethodik, bei der Teilnehmer — typischerweise über Push-Benachrichtigungen — aufgefordert werden, kurze Umfragen oder Bewertungen zum oder in der Nähe des Erlebniszeitpunkts auszufüllen. Samply wurde speziell für ESM-Studien entwickelt.',
+  },
+  {
+    term: 'Expiry',
+    definition: 'Ein optionales Zeitlimit, wie lange ein Umfrage-Link nach der Zustellung einer Benachrichtigung aktiv bleibt. Wird in Schritt 8 des Zeitplanformulars festgelegt. Nach dem Ablaufzeitraum öffnet das Tippen auf die Benachrichtigungsleiste nicht mehr die Umfrage. Nützlich für momentane Bewertungen, bei denen veraltete Antworten die Daten verzerren würden.',
+  },
+  {
+    term: 'finid',
+    definition: 'Ein interner 15-Zeichen-Bezeichner, der einen ursprünglichen Versand mit allen seinen Erinnerungszeilen verknüpft. Wird zum Versandzeitpunkt generiert, wenn Erinnerungen konfiguriert sind. Samply verwendet finid, um alle ausstehenden Erinnerungen für einen Versand in einem einzigen Vorgang zu stornieren, wenn ein Abschlussereignis eintrifft. Nicht direkt in der Dashboard-Benutzeroberfläche sichtbar.',
+  },
+  {
+    term: 'Group',
+    definition: 'Eine benannte Untergruppe von Teilnehmern innerhalb einer Studie. Jeder Teilnehmer kann jeweils zu höchstens einer Gruppe gehören. Gruppen ermöglichen es, verschiedene Zeitpläne an verschiedene Kohorten zu senden — zum Beispiel eine Interventionsgruppe und eine Kontrollgruppe — ohne separate Studien zu erstellen. Eine Gruppe hat einen Namen (vom Forscher definiert) und eine automatisch generierte vierstellige ID.',
+  },
+  {
+    term: 'Group ID',
+    definition: 'Der vierstellige Code, der von Samply automatisch generiert wird, wenn eine Gruppe erstellt wird. Wird im %GROUP_ID%-URL-Platzhalter verwendet und in der Warteschlange angezeigt. Stabil über Löschen und Neuerstellen hinweg: Wenn eine Gruppe gelöscht und eine neue Gruppe mit demselben Namen erstellt wird, wird die ursprüngliche ID wiederverwendet.',
+  },
+  {
+    term: 'Invite link',
+    definition: 'Eine URL, die Teilnehmer in einem Browser öffnen oder in der Samply Research-App antippen, um einer Studie beizutreten. Strukturell gleichwertig mit dem Scannen des QR-Codes. Der Link enthält den Studien-Slug und führt den Teilnehmer durch den Anmeldevorgang.',
+  },
+  {
+    term: 'isReminder',
+    definition: 'Ein boolesches Feld in einer Warteschlangen-Zeile (PendingNotification), das angibt, ob die Zeile ein Erinnerungsversand und kein ursprünglicher Versand ist. In der Warteschlange als "Reminder: yes" sichtbar. Erinnerungszeilen werden zum Versandzeitpunkt für die ursprüngliche Benachrichtigung erstellt und storniert, wenn ein Abschlussereignis eintrifft.',
+  },
+  {
+    term: 'Message ID',
+    definition: 'Ein eindeutiger 15-stelliger alphanumerischer Bezeichner, der für jeden einzelnen Versand an jeden Teilnehmer generiert wird. Wird verwendet, um ein Abschlussereignis mit der genauen Benachrichtigung zu verknüpfen, die die Umfrage ausgelöst hat. Verfügbar als %MESSAGE_ID%-URL-Platzhalter. Erforderlich, damit die Erinnerungsstornierung korrekt funktioniert.',
+  },
+  {
+    term: 'One-time schedule',
+    definition: 'Ein Zeitplan, der an einem oder mehreren bestimmten Kalendertagen zu bestimmten Uhrzeiten auslöst. Wiederholt sich nicht. Wird durch Auswahl bestimmter Zeitpunkte in Schritt 3 und bestimmter Datum/Daten in Schritt 4 des Zeitplanformulars erstellt.',
+  },
+  {
+    term: 'Participant',
+    definition: 'Eine Person, die an einer Studie teilnimmt und Push-Benachrichtigungen über die Samply Research-App erhält. Teilnehmer werden durch ihre Samply-ID und optional durch einen Teilnehmercode identifiziert. Forscher sehen keine Kontaktdaten der Teilnehmer — die Anmeldung ist anonym.',
+  },
+  {
+    term: 'Participant code',
+    definition: 'Ein optionaler benutzerdefinierter Bezeichner, den ein Teilnehmer beim Beitritt zu einer Studie eingibt. Aktiviert mit der Einstellung "Nach Teilnehmercode fragen" in Studie bearbeiten. Wird verwendet, um Samply-Datensätze mit externen Datensätzen zu verknüpfen (REDCap-Datensatz-IDs, institutionelle IDs, vorab zugewiesene Codes). Ein Teilnehmer kann sowohl einen Code als auch eine Gruppe haben. Verfügbar als %PARTICIPANT_CODE%-URL-Platzhalter.',
+  },
+  {
+    term: 'Personal schedule',
+    definition: 'Ein Zeitplan, dessen Start- und Enddaten relativ zum Beitrittsdatum jedes Teilnehmers und nicht zu festen Kalenderdaten definiert sind. Teilnehmer, die zu verschiedenen Zeiten beitreten, erhalten jeweils ihren eigenen Tag 1. Wird durch Auswahl eines Wiederholungsdatumsmusters in Schritt 4 und eines relativen Starts oder Endes (Tag N oder Dauerversatz) in den Schritten 6 und 7 erstellt.',
+  },
+  {
+    term: 'Placeholder',
+    definition: 'Eine %TOKEN%-Zeichenfolge, die in den Benachrichtigungs-Weblink eingebettet ist und die Samply zum Versandzeitpunkt durch einen teilnehmerspezifischen Wert ersetzt. Verfügbare Token: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. Die in der Zeitplandefinition gespeicherte ursprüngliche URL wird nie geändert — die ersetzte URL existiert nur in der zugestellten Benachrichtigungs-Payload.',
+  },
+  {
+    term: 'Push token',
+    definition: 'Der geräteseitige Bezeichner, der vom Expo-Push-Benachrichtigungsdienst für jede Installation der Samply Research-App ausgestellt wird. Samply speichert den Push-Token für jeden Teilnehmer und verwendet ihn, um Benachrichtigungen weiterzuleiten. Ein veralteter oder fehlender Push-Token (z. B. nachdem der Teilnehmer die App neu installiert) führt dazu, dass Warteschlangen-Zeilen mit dem Status "failed" fehlschlagen.',
+  },
+  {
+    term: 'Queue',
+    definition: 'Die flache Liste der einzelnen Sendungen, die Samply generiert, wenn ein Zeitplan eingereicht wird. Eine Zeile pro Teilnehmer pro Versandzeitpunkt. Jede Zeile hat einen Status (pending, processing, sent, failed, cancelled) und eine geplante Zeit. Die Warteschlange ist das, was der Cron-Dispatcher abarbeitet; die Zeitplandefinition ist nur die Regel, die sie erzeugt hat.',
+  },
+  {
+    term: 'Randomized schedule',
+    definition: 'Ein Zeitplan, der für jeden Teilnehmer an jedem Auslösetag eine zufällige Versandzeit innerhalb eines definierten Fensters auswählt. Wird durch Auswahl eines Zeitfensters in Schritt 3 anstelle bestimmter Zeitpunkte erstellt. Kann einmalig oder wiederholt sein. Die zufällige Zeit unterscheidet sich zwischen Teilnehmern und zwischen Tagen.',
+  },
+  {
+    term: 'Reminder',
+    definition: 'Eine automatisch gesendete Follow-up-Push-Benachrichtigung, wenn Samply kein Abschlussereignis für den ursprünglichen Versand erhalten hat. Wird in Schritt 9 des Zeitplanformulars konfiguriert. Jede Erinnerung hat ihren eigenen Titel, ihre eigene Nachricht und einen Verzögerungsversatz vom Original. Alle ausstehenden Erinnerungen für einen Versand werden storniert, sobald ein Abschlussereignis eintrifft.',
+  },
+  {
+    term: 'Repeating schedule',
+    definition: 'Ein Zeitplan, der nach einem wiederkehrenden Datumsmuster auslöst — alle N Tage, bestimmte Wochentage oder bestimmte Tage des Monats — innerhalb eines definierten Start- und Endfensters. Wird durch Auswahl einer Wiederholungsdatumsoption in Schritt 4 erstellt. Wenn Start und Ende absolute Kalenderdaten sind, ist der Zeitplan für jeden Teilnehmer gleich. Wenn sie relativ zur Anmeldung sind, wird er zu einem persönlichen Zeitplan.',
+  },
+  {
+    term: 'Result',
+    definition: 'Der Datensatz, den Samply schreibt, wenn eine Benachrichtigung versendet wird. Speichert die Samply-ID, Message-ID, Benachrichtigungsinhalt, serverseitigen Versandzeitpunkt und ereignisbezogene Zeitstempel für Empfang, Tippen und Umfrageöffnung. Wenn ein Abschlussereignis eintrifft, fügt Samply ein "completed"-Ereignis zum gleichen Ergebnisdatensatz hinzu. Das Verlaufsprotokoll zeigt Ergebnisse; sie können als CSV heruntergeladen werden.',
+  },
+  {
+    term: 'Samply ID',
+    definition: 'Der anonyme Bezeichner, der einem Teilnehmer bei der Anmeldung zugewiesen wird. Von Samply generiert, für den Teilnehmer nicht sichtbar und niemals mit persönlichen Kontaktdaten verknüpft. Wird als Primärschlüssel für alle Teilnehmerdaten im Dashboard verwendet. Verfügbar als %SAMPLY_ID%-URL-Platzhalter.',
+  },
+  {
+    term: 'Schedule',
+    definition: 'Eine Benachrichtigungskonfiguration, die den Inhalt, die Zielgruppe, den Zeitpunkt und optional Erinnerungen für eine Reihe von Sendungen definiert. Das Einreichen eines Zeitplans erweitert ihn sofort in eine Warteschlange. Es gibt vier Typen: einmalig, wiederholt, persönlich und zufällig. Ein Zeitplan kann nach dem Einreichen nicht bearbeitet werden — löschen und neu erstellen, um Änderungen vorzunehmen.',
+  },
+  {
+    term: 'Study',
+    definition: 'Der übergeordnete Container in Samply. Alle Teilnehmer, Zeitpläne, Warteschlangen-Zeilen und Antwortverlauf gehören genau einer Studie. Forscher erstellen eine Studie einmalig und verwalten alles darin. Entspricht dem Projektmodell in der Datenschicht.',
+  },
+  {
+    term: 'Time window',
+    definition: 'Ein Versandzeitpunkt-Modus, bei dem Samply für jeden Teilnehmer an jedem Auslösetag eine zufällige Zeit zwischen einer Von- und einer Bis-Zeit auswählt, mit einem Mindestabstand zwischen den Zügen, wenn mehrere Sendungen pro Fenster angefordert werden. Wird in Schritt 3 des Zeitplanformulars gewählt. Erzeugt einen zufälligen oder persönlich-zufälligen Zeitplan.',
+  },
+  {
+    term: 'Timestamp sent',
+    definition: 'Der Unix-Zeitstempel in Millisekunden des genauen Moments, in dem die Benachrichtigung vom Samply-Server versendet wurde. Verfügbar als %TIMESTAMP_SENT%-URL-Platzhalter. Wird immer ersetzt.',
+  },
+];
+
+const TERMS_NL: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: 'Een teller die bijhoudt hoeveel meldingen een deelnemer van een studie heeft ontvangen, beginnend bij 1. De eerste melding heeft batch = 1, de tweede heeft batch = 2, enzovoort. Batch geldt studiebreed, niet per schema: als een deelnemer door twee schema\'s wordt aangesproken, neemt de teller toe bij elke verzending van elk van beide. Beschikbaar als URL-plaatshouder %BATCH%.',
+  },
+  {
+    term: 'Completion event',
+    definition: 'Een signaal dat naar Samply wordt gestuurd wanneer een deelnemer een vragenlijst heeft voltooid. Samply gebruikt het om het resultaatrecord als voltooid te markeren en alle openstaande herinneringen voor die verzending te annuleren. Een voltooiingsgebeurtenis wordt geregistreerd door de deelnemer aan het einde van de vragenlijst door te sturen naar de Samply-voltooiings-URL, of door een HTTP POST-verzoek te sturen vanuit de vragenlijsttool.',
+  },
+  {
+    term: 'Day N',
+    definition: 'De afkorting die in persoonlijke schema\'s wordt gebruikt voor een datum relatief aan de inschrijfdatum van elke deelnemer. Dag 1 is de dag van deelname zelf (het schema start ongeveer één minuut na de inschrijving van de deelnemer). Dag 2 is middernacht van de volgende kalenderdag in de gekozen tijdzone. Dag N voor N > 1 is middernacht van de N-de kalenderdag geteld vanaf de deelnamedatum.',
+  },
+  {
+    term: 'Deactivated participant',
+    definition: 'Een deelnemer die is geschorst van het ontvangen van meldingen zonder uit de studie te worden verwijderd. Wanneer een deelnemer wordt gedeactiveerd, worden alle openstaande wachtrij-rijen die aan hem zijn geadresseerd overgeslagen op het moment van verzending. Het opnieuw activeren van een deelnemer herstelt geen overgeslagen verzendingen.',
+  },
+  {
+    term: 'ESM',
+    definition: 'Experience Sampling Method. Een onderzoeksmethode waarbij deelnemers — doorgaans via pushmelding — worden gevraagd om korte vragenlijsten of beoordelingen in te vullen op of nabij het moment van de ervaring. Samply is speciaal ontwikkeld voor ESM-studies.',
+  },
+  {
+    term: 'Expiry',
+    definition: 'Een optionele tijdslimiet voor hoe lang een vragenlijstlink actief blijft nadat een melding is afgeleverd. Ingesteld in stap 8 van het schemaformulier. Na het vervaltijdvenster opent het tikken op de meldingsbalk de vragenlijst niet meer. Nuttig voor momentane beoordelingen waarbij verouderde antwoorden de gegevens zouden vertekenen.',
+  },
+  {
+    term: 'finid',
+    definition: 'Een interne 15-tekens identifier die een originele verzending koppelt aan al zijn herinneringsrijen. Gegenereerd bij het verzendmoment wanneer herinneringen zijn geconfigureerd. Samply gebruikt finid om alle openstaande herinneringen voor een verzending in één bewerking te annuleren wanneer een voltooiingsgebeurtenis binnenkomt. Niet direct zichtbaar in de dashboard-gebruikersinterface.',
+  },
+  {
+    term: 'Group',
+    definition: 'Een benoemde deelgroep van deelnemers binnen een studie. Elke deelnemer kan op enig moment tot maximaal één groep behoren. Groepen stellen u in staat verschillende schema\'s naar verschillende cohorten te sturen — bijvoorbeeld een interventiegroep en een controlegroep — zonder aparte studies aan te maken. Een groep heeft een naam (door de onderzoeker gedefinieerd) en een automatisch gegenereerde viertekens-ID.',
+  },
+  {
+    term: 'Group ID',
+    definition: 'De viertekens-code die automatisch door Samply wordt gegenereerd wanneer een groep wordt aangemaakt. Gebruikt in de URL-plaatshouder %GROUP_ID% en weergegeven in de wachtrij. Stabiel na verwijderen en opnieuw aanmaken: als een groep wordt verwijderd en een nieuwe groep met dezelfde naam wordt aangemaakt, wordt de oorspronkelijke ID hergebruikt.',
+  },
+  {
+    term: 'Invite link',
+    definition: 'Een URL die deelnemers in een browser openen of aantikken in de Samply Research-app om aan een studie deel te nemen. Structureel equivalent aan het scannen van de QR-code. De link codeert de studie-slug en leidt de deelnemer door de inschrijvingsstroom.',
+  },
+  {
+    term: 'isReminder',
+    definition: 'Een booleaans veld op een wachtrij-rij (PendingNotification) dat aangeeft of de rij een herinneringsverzending is in plaats van een originele verzending. Zichtbaar in de wachtrij als "Reminder: yes". Herinneringsrijen worden aangemaakt bij het verzendmoment voor de originele melding en geannuleerd wanneer een voltooiingsgebeurtenis binnenkomt.',
+  },
+  {
+    term: 'Message ID',
+    definition: 'Een unieke 15-tekens alfanumerieke identifier die voor elke individuele verzending aan elke deelnemer wordt gegenereerd. Gebruikt om een voltooiingsgebeurtenis te koppelen aan de exacte melding die de vragenlijst heeft getriggerd. Beschikbaar als URL-plaatshouder %MESSAGE_ID%. Vereist voor de correcte werking van herinneringsannulering.',
+  },
+  {
+    term: 'One-time schedule',
+    definition: 'Een schema dat op één of meer specifieke kalenderdatums op specifieke kloktijden wordt getriggerd. Herhaalt zich niet. Aangemaakt door specifieke tijdpunten te kiezen in stap 3 en specifieke datum(s) in stap 4 van het schemaformulier.',
+  },
+  {
+    term: 'Participant',
+    definition: 'Een persoon die is ingeschreven in een studie en pushmeldingen ontvangt via de mobiele app Samply Research. Deelnemers worden geïdentificeerd door hun Samply-ID en optioneel door een deelnemerscode. Onderzoekers zien geen contactgegevens van deelnemers — inschrijving is anoniem.',
+  },
+  {
+    term: 'Participant code',
+    definition: 'Een optionele aangepaste identifier die een deelnemer invult bij het deelnemen aan een studie. Ingeschakeld met de instelling "Vraag om deelnemerscode" in Studie bewerken. Gebruikt om Samply-records te koppelen aan externe datasets (REDCap-record-ID\'s, institutionele ID\'s, vooraf toegewezen codes). Een deelnemer kan zowel een code als een groep hebben. Beschikbaar als URL-plaatshouder %PARTICIPANT_CODE%.',
+  },
+  {
+    term: 'Personal schedule',
+    definition: 'Een schema waarvan de start- en einddatums zijn gedefinieerd relatief aan de deelnamedatum van elke deelnemer in plaats van vaste kalenderdatums. Deelnemers die op verschillende tijdstippen inschrijven, krijgen elk hun eigen Dag 1. Aangemaakt door een herhalingspatroon te kiezen in stap 4 en een relatieve start of einde (Dag N of duurverschuiving) in stappen 6 en 7.',
+  },
+  {
+    term: 'Placeholder',
+    definition: 'Een %TOKEN%-tekenreeks die is ingebed in de weblink van de melding en die Samply bij het verzendmoment vervangt door een deelnemersspecifieke waarde. Beschikbare tokens: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. De oorspronkelijke URL opgeslagen in de schemadefinitie wordt nooit gewijzigd — de vervangen URL bestaat alleen in de afgeleverde meldingspayload.',
+  },
+  {
+    term: 'Push token',
+    definition: 'De apparaat-identifier die door de Expo pushmeldingsdienst wordt verstrekt aan elke installatie van de Samply Research-app. Samply slaat de push-token op voor elke deelnemer en gebruikt deze om meldingen te routeren. Een verouderde of ontbrekende push-token (bijv. nadat de deelnemer de app opnieuw heeft geïnstalleerd) zorgt ervoor dat wachtrij-rijen mislukken met de status "failed".',
+  },
+  {
+    term: 'Queue',
+    definition: 'De platte lijst van individuele verzendingen die Samply genereert wanneer een schema wordt ingediend. Één rij per deelnemer per verzendmoment. Elke rij heeft een status (pending, processing, sent, failed, cancelled) en een geplande tijd. De wachtrij is wat de cron-dispatcher verwerkt; de schemadefinitie is slechts de regel die hem heeft voortgebracht.',
+  },
+  {
+    term: 'Randomized schedule',
+    definition: 'Een schema dat voor elke deelnemer op elke triggerdatum een willekeurig verzendmoment kiest binnen een gedefinieerd venster. Aangemaakt door in stap 3 een tijdvenster te kiezen in plaats van specifieke tijdpunten. Kan eenmalig of herhalend zijn. De willekeurige tijd verschilt per deelnemer en per dag.',
+  },
+  {
+    term: 'Reminder',
+    definition: 'Een automatisch verzonden follow-up pushmelding wanneer Samply geen voltooiingsgebeurtenis heeft ontvangen voor de originele verzending. Geconfigureerd in stap 9 van het schemaformulier. Elke herinnering heeft zijn eigen titel, bericht en vertragingsverschuiving ten opzichte van het origineel. Alle openstaande herinneringen voor een verzending worden geannuleerd zodra een voltooiingsgebeurtenis binnenkomt.',
+  },
+  {
+    term: 'Repeating schedule',
+    definition: 'Een schema dat wordt getriggerd op een terugkerend datumpatroon — elke N dagen, specifieke weekdagen of specifieke dagen van de maand — binnen een gedefinieerd start- en eindvenster. Aangemaakt door in stap 4 een herhalingsdatumoptie te kiezen. Wanneer start en einde absolute kalenderdatums zijn, is het schema voor elke deelnemer hetzelfde. Wanneer ze relatief zijn aan de inschrijving, wordt het een persoonlijk schema.',
+  },
+  {
+    term: 'Result',
+    definition: 'Het record dat Samply schrijft wanneer een melding wordt verzonden. Slaat de Samply-ID, message-ID, meldingsinhoud, serversijdig verzendmoment en per-event-tijdstempels op voor ontvangst, tikken en het openen van de vragenlijst. Wanneer een voltooiingsgebeurtenis binnenkomt, voegt Samply een "completed"-gebeurtenis toe aan hetzelfde resultaatrecord. Het historielogboek toont resultaten; ze kunnen worden gedownload als CSV.',
+  },
+  {
+    term: 'Samply ID',
+    definition: 'De anonieme identifier die aan een deelnemer wordt toegewezen bij inschrijving. Gegenereerd door Samply, niet zichtbaar voor de deelnemer en nooit gekoppeld aan persoonlijke contactgegevens. Gebruikt als primaire sleutel voor alle deelnemersgegevens in het dashboard. Beschikbaar als URL-plaatshouder %SAMPLY_ID%.',
+  },
+  {
+    term: 'Schedule',
+    definition: 'Een meldingsconfiguratie die de inhoud, doelgroep, timing en optioneel herinneringen definieert voor een reeks verzendingen. Het indienen van een schema breidt het onmiddellijk uit in een wachtrij. Er zijn vier typen: eenmalig, herhalend, persoonlijk en willekeurig. Een schema kan na indiening niet worden bewerkt — verwijder en maak opnieuw aan om wijzigingen door te voeren.',
+  },
+  {
+    term: 'Study',
+    definition: 'De overkoepelende container in Samply. Alle deelnemers, schema\'s, wachtrij-rijen en antwoordgeschiedenis behoren tot precies één studie. Onderzoekers maken een studie eenmalig aan en beheren alles daarbinnen. Komt overeen met het Project-model in de gegevenslaag.',
+  },
+  {
+    term: 'Time window',
+    definition: 'Een verzendmodus waarbij Samply voor elke deelnemer op elke triggerdatum een willekeurige tijd kiest tussen een Van- en een Tot-tijd, met een minimale tussenruimte tussen trekkingen als meerdere verzendingen per venster worden gevraagd. Gekozen in stap 3 van het schemaformulier. Produceert een willekeurig of persoonlijk-willekeurig schema.',
+  },
+  {
+    term: 'Timestamp sent',
+    definition: 'Het Unix-tijdstempel in milliseconden van het exacte moment waarop de melding door de Samply-server is verzonden. Beschikbaar als URL-plaatshouder %TIMESTAMP_SENT%. Wordt altijd vervangen.',
+  },
+];
+
+const TERMS_RU: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: 'Счётчик, который отслеживает, сколько уведомлений участник получил от исследования, начиная с 1. Первое уведомление имеет batch = 1, второе — batch = 2 и так далее. Batch является общим для всего исследования, а не отдельным для каждого расписания: если участник охвачен двумя расписаниями, счётчик увеличивается при каждой отправке из любого из них. Доступен как URL-заполнитель %BATCH%.',
+  },
+  {
+    term: 'Completion event',
+    definition: 'Сигнал, отправляемый в Samply, когда участник завершает опрос. Samply использует его, чтобы отметить запись результата как завершённую и отменить все ожидающие напоминания для данной отправки. Событие завершения регистрируется либо путём перенаправления участника на URL завершения Samply в конце опроса, либо путём отправки HTTP POST-запроса из инструмента опроса.',
+  },
+  {
+    term: 'Day N',
+    definition: 'Сокращение, используемое в персональных расписаниях для обозначения даты относительно даты регистрации каждого участника. День 1 — это сам день вступления (расписание начинается примерно через минуту после регистрации участника). День 2 — это полночь следующего календарного дня в выбранном часовом поясе. День N для N > 1 — это полночь N-го календарного дня, отсчитанного от даты вступления.',
+  },
+  {
+    term: 'Deactivated participant',
+    definition: 'Участник, которому приостановлена отправка уведомлений без исключения из исследования. При деактивации участника все ожидающие строки очереди, адресованные ему, пропускаются в момент отправки. Повторная активация участника не восстанавливает пропущенные отправки.',
+  },
+  {
+    term: 'ESM',
+    definition: 'Experience Sampling Method (метод выборки опыта). Методология исследования, при которой участников — как правило, посредством push-уведомлений — просят заполнить краткие опросы или оценки в момент переживания или вблизи него. Samply создан специально для ESM-исследований.',
+  },
+  {
+    term: 'Expiry',
+    definition: 'Необязательное ограничение времени, в течение которого ссылка на опрос остаётся активной после доставки уведомления. Устанавливается на шаге 8 формы расписания. По истечении срока действия нажатие на уведомление в строке состояния больше не открывает опрос. Полезно для моментальных оценок, где устаревшие ответы могут исказить данные.',
+  },
+  {
+    term: 'finid',
+    definition: 'Внутренний 15-символьный идентификатор, связывающий исходную отправку со всеми строками напоминаний. Генерируется в момент отправки при настроенных напоминаниях. Samply использует finid для отмены всех ожидающих напоминаний для одной отправки за одну операцию при поступлении события завершения. Не отображается непосредственно в интерфейсе панели управления.',
+  },
+  {
+    term: 'Group',
+    definition: 'Именованное подмножество участников внутри исследования. Каждый участник может одновременно принадлежать не более чем одной группе. Группы позволяют отправлять разные расписания разным когортам — например, группе вмешательства и контрольной группе — без создания отдельных исследований. Группа имеет название (задаётся исследователем) и автоматически сгенерированный четырёхсимвольный идентификатор.',
+  },
+  {
+    term: 'Group ID',
+    definition: 'Четырёхсимвольный код, автоматически генерируемый Samply при создании группы. Используется в URL-заполнителе %GROUP_ID% и отображается в очереди. Стабилен при удалении и повторном создании: если группа удалена и создана новая группа с тем же именем, исходный идентификатор используется повторно.',
+  },
+  {
+    term: 'Invite link',
+    definition: 'URL, который участники открывают в браузере или нажимают в приложении Samply Research, чтобы вступить в исследование. Структурно эквивалентен сканированию QR-кода. Ссылка кодирует slug исследования и проводит участника через процесс регистрации.',
+  },
+  {
+    term: 'isReminder',
+    definition: 'Булево поле в строке очереди (PendingNotification), указывающее, является ли строка отправкой напоминания, а не исходной отправкой. Отображается в очереди как "Reminder: yes". Строки напоминаний создаются в момент исходной отправки уведомления и отменяются при поступлении события завершения.',
+  },
+  {
+    term: 'Message ID',
+    definition: 'Уникальный 15-символьный буквенно-цифровой идентификатор, генерируемый для каждой отдельной отправки каждому участнику. Используется для связи события завершения с точным уведомлением, инициировавшим опрос. Доступен как URL-заполнитель %MESSAGE_ID%. Необходим для корректной работы отмены напоминаний.',
+  },
+  {
+    term: 'One-time schedule',
+    definition: 'Расписание, срабатывающее в один или несколько конкретных календарных дней в конкретное время. Не повторяется. Создаётся путём выбора конкретных моментов времени на шаге 3 и конкретных дат на шаге 4 формы расписания.',
+  },
+  {
+    term: 'Participant',
+    definition: 'Человек, зарегистрированный в исследовании и получающий push-уведомления через мобильное приложение Samply Research. Участники идентифицируются по своему Samply ID и, при необходимости, по коду участника. Исследователи не видят контактных данных участников — регистрация анонимна.',
+  },
+  {
+    term: 'Participant code',
+    definition: 'Необязательный пользовательский идентификатор, который участник вводит при вступлении в исследование. Включается настройкой "Запрашивать код участника" в разделе редактирования исследования. Используется для связи записей Samply с внешними наборами данных (идентификаторы записей REDCap, институциональные идентификаторы, предварительно назначенные коды). Участник может иметь как код, так и группу. Доступен как URL-заполнитель %PARTICIPANT_CODE%.',
+  },
+  {
+    term: 'Personal schedule',
+    definition: 'Расписание, даты начала и окончания которого определяются относительно даты вступления каждого участника, а не фиксированных календарных дат. Участники, регистрирующиеся в разное время, каждый получают свой собственный День 1. Создаётся путём выбора шаблона дат повторения на шаге 4 и относительного начала или окончания (День N или смещение по длительности) на шагах 6 и 7.',
+  },
+  {
+    term: 'Placeholder',
+    definition: 'Строка вида %TOKEN%, встроенная в веб-ссылку уведомления, которую Samply заменяет значением, специфичным для участника, в момент отправки. Доступные токены: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. Исходный URL, хранящийся в определении расписания, никогда не изменяется — заменённый URL существует только в полезной нагрузке доставленного уведомления.',
+  },
+  {
+    term: 'Push token',
+    definition: 'Идентификатор уровня устройства, выдаваемый службой push-уведомлений Expo каждой установке приложения Samply Research. Samply хранит push-токен для каждого участника и использует его для маршрутизации уведомлений. Устаревший или отсутствующий push-токен (например, после переустановки приложения участником) приводит к тому, что строки очереди завершаются неудачей со статусом "failed".',
+  },
+  {
+    term: 'Queue',
+    definition: 'Плоский список отдельных отправок, генерируемых Samply при отправке расписания. Одна строка на участника на каждый момент отправки. Каждая строка имеет статус (pending, processing, sent, failed, cancelled) и запланированное время. Очередь — это то, что обрабатывает планировщик cron; определение расписания — лишь правило, породившее её.',
+  },
+  {
+    term: 'Randomized schedule',
+    definition: 'Расписание, выбирающее случайный момент отправки в пределах заданного окна для каждого участника в каждый день срабатывания. Создаётся путём выбора временного окна на шаге 3 вместо конкретных моментов времени. Может быть разовым или повторяющимся. Случайное время отличается для разных участников и для разных дней.',
+  },
+  {
+    term: 'Reminder',
+    definition: 'Последующее push-уведомление, отправляемое автоматически, когда Samply не получил события завершения для исходной отправки. Настраивается на шаге 9 формы расписания. Каждое напоминание имеет собственный заголовок, сообщение и временное смещение от исходного. Все ожидающие напоминания для отправки отменяются в момент поступления события завершения.',
+  },
+  {
+    term: 'Repeating schedule',
+    definition: 'Расписание, срабатывающее по повторяющемуся шаблону дат — каждые N дней, в определённые дни недели или в определённые дни месяца — в пределах заданного окна начала и окончания. Создаётся путём выбора варианта повторяющейся даты на шаге 4. Когда начало и конец являются абсолютными календарными датами, расписание одинаково для всех участников. Когда они относительны к дате регистрации, оно становится персональным расписанием.',
+  },
+  {
+    term: 'Result',
+    definition: 'Запись, которую Samply создаёт при отправке уведомления. Содержит Samply ID, Message ID, содержимое уведомления, серверное время отправки и временные метки событий получения, нажатия и открытия опроса. При поступлении события завершения Samply добавляет событие "completed" к той же записи результата. Журнал истории показывает результаты; их можно скачать в формате CSV.',
+  },
+  {
+    term: 'Samply ID',
+    definition: 'Анонимный идентификатор, присваиваемый участнику при регистрации. Генерируется Samply, не виден участнику и никогда не связывается с личными контактными данными. Используется как первичный ключ для всех данных участника на панели управления. Доступен как URL-заполнитель %SAMPLY_ID%.',
+  },
+  {
+    term: 'Schedule',
+    definition: 'Конфигурация уведомлений, определяющая содержимое, аудиторию, время и, при необходимости, напоминания для набора отправок. Отправка расписания немедленно разворачивает его в очередь. Существует четыре типа: разовое, повторяющееся, персональное и случайное. Расписание нельзя редактировать после отправки — удалите и создайте заново, чтобы внести изменения.',
+  },
+  {
+    term: 'Study',
+    definition: 'Контейнер верхнего уровня в Samply. Все участники, расписания, строки очереди и история ответов принадлежат ровно одному исследованию. Исследователи создают исследование один раз и управляют всем внутри него. Соответствует модели Project в слое данных.',
+  },
+  {
+    term: 'Time window',
+    definition: 'Режим времени отправки, при котором Samply выбирает случайное время между временем "От" и временем "До" для каждого участника в каждый день срабатывания, с минимальным промежутком между выборками, если запрошено несколько отправок в окне. Выбирается на шаге 3 формы расписания. Создаёт случайное или персонально-случайное расписание.',
+  },
+  {
+    term: 'Timestamp sent',
+    definition: 'Unix-временная метка в миллисекундах точного момента, когда уведомление было отправлено сервером Samply. Доступна как URL-заполнитель %TIMESTAMP_SENT%. Всегда подставляется.',
+  },
+];
+
+const TERMS_ZH: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: '追踪参与者从某项研究收到通知数量的计数器，从 1 开始。第一条通知的 batch = 1，第二条为 batch = 2，依此类推。Batch 是研究范围内的全局计数，而非每个日程单独计算：若参与者同时被两个日程覆盖，每次从任一日程发送后计数器都会递增。可用作 URL 占位符 %BATCH%。',
+  },
+  {
+    term: 'Completion event',
+    definition: '参与者完成问卷后向 Samply 发送的信号。Samply 用它将结果记录标记为已完成，并取消该次发送的所有待处理提醒。完成事件可通过以下两种方式注册：在问卷结束时将参与者重定向至 Samply 完成 URL，或从问卷工具发送 HTTP POST 请求。',
+  },
+  {
+    term: 'Day N',
+    definition: '在个人日程中用于表示相对于每位参与者注册日期的日期缩写。第 1 天即参与者加入的当天（日程在参与者注册后约一分钟开始）。第 2 天是所选时区中下一个日历日的午夜。N > 1 时，第 N 天是从加入日期起算的第 N 个日历日的午夜。',
+  },
+  {
+    term: 'Deactivated participant',
+    definition: '已暂停接收通知、但未从研究中移除的参与者。参与者被停用后，所有发送至其的待处理队列行在触发时均会被跳过。重新激活参与者不会重新创建已跳过的发送记录。',
+  },
+  {
+    term: 'ESM',
+    definition: '经验取样法（Experience Sampling Method）。一种研究方法，通常通过推送通知提示参与者在经历发生时或临近时填写简短的问卷或评估。Samply 专为 ESM 研究而设计。',
+  },
+  {
+    term: 'Expiry',
+    definition: '通知送达后问卷链接保持有效的可选时间限制。在日程表单的第 8 步进行设置。超过有效期后，点击通知栏将不再打开问卷。适用于即时评估场景，在这些场景中过时的回答会使数据产生偏差。',
+  },
+  {
+    term: 'finid',
+    definition: '将原始发送与其所有提醒行关联起来的内部 15 字符标识符。在配置了提醒的情况下，于发送时生成。Samply 使用 finid 在完成事件到达时通过单次操作取消某次发送的所有待处理提醒。在仪表盘界面中不直接可见。',
+  },
+  {
+    term: 'Group',
+    definition: '研究中参与者的命名子集。每位参与者同时只能属于最多一个组。组允许您向不同的队列发送不同的日程——例如干预组和对照组——而无需创建独立的研究。一个组具有研究者定义的名称和自动生成的四字符 ID。',
+  },
+  {
+    term: 'Group ID',
+    definition: '创建组时由 Samply 自动生成的四字符代码。用于 %GROUP_ID% URL 占位符，并在队列中显示。在删除并重新创建时保持稳定：若某个组被删除后以相同名称重新创建，将沿用原始 ID。',
+  },
+  {
+    term: 'Invite link',
+    definition: '参与者在浏览器中打开或在 Samply Research 应用中点击以加入研究的 URL。在结构上等同于扫描 QR 码。链接编码了研究 slug，并引导参与者完成注册流程。',
+  },
+  {
+    term: 'isReminder',
+    definition: '队列行（PendingNotification）上的布尔字段，表示该行是提醒发送而非原始发送。在队列中显示为"Reminder: yes"。提醒行在原始通知发送时创建，并在完成事件到达时取消。',
+  },
+  {
+    term: 'Message ID',
+    definition: '为每次向每位参与者的个别发送生成的唯一 15 字符字母数字标识符。用于将完成事件与触发问卷的确切通知关联起来。可用作 URL 占位符 %MESSAGE_ID%。正确取消提醒需要此项。',
+  },
+  {
+    term: 'One-time schedule',
+    definition: '在一个或多个特定日历日期的特定时钟时间触发的日程。不重复。通过在日程表单的第 3 步选择特定时间点、在第 4 步选择特定日期来创建。',
+  },
+  {
+    term: 'Participant',
+    definition: '注册参与研究并通过 Samply Research 移动应用接收推送通知的人。参与者通过其 Samply ID 以及可选的参与者代码进行标识。研究者看不到参与者的联系方式——注册是匿名的。',
+  },
+  {
+    term: 'Participant code',
+    definition: '参与者加入研究时输入的可选自定义标识符。通过编辑研究中的"要求参与者代码"设置启用。用于将 Samply 记录与外部数据集关联（REDCap 记录 ID、机构 ID、预分配代码）。参与者可以同时拥有代码和组。可用作 URL 占位符 %PARTICIPANT_CODE%。',
+  },
+  {
+    term: 'Personal schedule',
+    definition: '起止日期相对于每位参与者加入日期而非固定日历日期定义的日程。不同时间注册的参与者各自拥有独立的第 1 天。通过在第 4 步选择重复日期模式、在第 6 步和第 7 步选择相对起止时间（第 N 天或时长偏移）来创建。',
+  },
+  {
+    term: 'Placeholder',
+    definition: '嵌入通知网页链接中的 %TOKEN% 字符串，Samply 在发送时将其替换为参与者的具体值。可用的令牌：%SAMPLY_ID%、%PARTICIPANT_CODE%、%GROUP_ID%、%MESSAGE_ID%、%TIMESTAMP_SENT%、%BATCH%。存储在日程定义中的原始 URL 不会被修改——替换后的 URL 仅存在于已送达的通知载荷中。',
+  },
+  {
+    term: 'Push token',
+    definition: 'Expo 推送通知服务为 Samply Research 应用的每次安装颁发的设备级标识符。Samply 为每位参与者存储推送令牌，并使用它来路由通知。过时或缺失的推送令牌（例如参与者重新安装应用后）会导致队列行以"failed"状态失败。',
+  },
+  {
+    term: 'Queue',
+    definition: 'Samply 在提交日程时生成的各次发送的平面列表。每位参与者每个发送时间对应一行。每行具有状态（pending、processing、sent、failed、cancelled）和计划时间。队列是 cron 调度器处理的对象；日程定义只是生成它的规则。',
+  },
+  {
+    term: 'Randomized schedule',
+    definition: '为每位参与者在每个触发日在定义的窗口内选取随机发送时间的日程。通过在第 3 步选择时间窗口而非特定时间点来创建。可以是一次性或重复性的。不同参与者之间以及不同日期之间的随机时间各不相同。',
+  },
+  {
+    term: 'Reminder',
+    definition: '当 Samply 未收到原始发送的完成事件时自动发送的后续推送通知。在日程表单的第 9 步进行配置。每条提醒都有其自己的标题、消息和相对于原始通知的延迟偏移。一次发送的所有待处理提醒在完成事件到达时立即取消。',
+  },
+  {
+    term: 'Repeating schedule',
+    definition: '按重复日期模式触发的日程——每 N 天、特定的星期几或每月特定日期——在定义的起止窗口内执行。通过在第 4 步选择重复日期选项来创建。当起止时间为绝对日历日期时，所有参与者的日程相同。当它们相对于注册日期时，则变为个人日程。',
+  },
+  {
+    term: 'Result',
+    definition: 'Samply 在通知被调度时写入的记录。存储 Samply ID、消息 ID、通知内容、服务端发送时间以及接收、点击和问卷打开的各事件时间戳。当完成事件到达时，Samply 将"completed"事件添加到同一结果记录中。历史日志显示结果；可下载为 CSV 文件。',
+  },
+  {
+    term: 'Samply ID',
+    definition: '注册时分配给参与者的匿名标识符。由 Samply 生成，参与者不可见，且从不与个人联系方式关联。用作仪表盘中所有参与者数据的主键。可用作 URL 占位符 %SAMPLY_ID%。',
+  },
+  {
+    term: 'Schedule',
+    definition: '定义一组发送的内容、受众、时间以及可选提醒的通知配置。提交日程后，系统会立即将其展开为队列。共有四种类型：一次性、重复性、个人和随机。日程提交后无法编辑——需删除后重新创建以进行更改。',
+  },
+  {
+    term: 'Study',
+    definition: 'Samply 中的顶级容器。所有参与者、日程、队列行和回答历史记录均归属于一个研究。研究者一次性创建研究，并在其中管理所有内容。对应数据层中的 Project 模型。',
+  },
+  {
+    term: 'Time window',
+    definition: '一种发送时间模式，Samply 在每个触发日为每位参与者在"从"到"至"时间之间选取一个随机时间，若请求在窗口内发送多次则在抽取之间设置最小间隔。在日程表单的第 3 步选择。生成随机或个人随机日程。',
+  },
+  {
+    term: 'Timestamp sent',
+    definition: '通知被 Samply 服务器调度的确切时刻的 Unix 时间戳（毫秒）。可用作 URL 占位符 %TIMESTAMP_SENT%。始终被替换。',
+  },
+];
+
+export default function GlossaryContent({ locale }: { locale: Locale }) {
+  if (locale === "de") return <GlossaryContentDe />;
+  if (locale === "nl") return <GlossaryContentNl />;
+  if (locale === "ru") return <GlossaryContentRu />;
+  if (locale === "zh") return <GlossaryContentZh />;
+  if (locale === "ko") return <GlossaryContentKo />;
+  if (locale === "it") return <GlossaryContentIt />;
+  if (locale === "fr") return <GlossaryContentFr />;
+  if (locale === "es") return <GlossaryContentEs />;
+  if (locale === "pt") return <GlossaryContentPt />;
+  return <GlossaryContentEn />;
+}
+
+function GlossaryContentEn() {
   return (
     <>
       <p>
@@ -124,6 +598,752 @@ export default function GlossaryContent() {
 
       <dl>
         {TERMS.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+function GlossaryContentNl() {
+  return (
+    <>
+      <p>
+        Sleutelbegrippen die worden gebruikt in Samply en deze documentatie, in alfabetische volgorde.
+      </p>
+
+      <dl>
+        {TERMS_NL.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+function GlossaryContentDe() {
+  return (
+    <>
+      <p>
+        Schlüsselbegriffe, die in Samply und dieser Dokumentation verwendet werden, in alphabetischer Reihenfolge.
+      </p>
+
+      <dl>
+        {TERMS_DE.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+function GlossaryContentRu() {
+  return (
+    <>
+      <p>
+        Ключевые термины, используемые в Samply и данной документации, в алфавитном порядке.
+      </p>
+
+      <dl>
+        {TERMS_RU.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+function GlossaryContentZh() {
+  return (
+    <>
+      <p>
+        Samply 及本文档中使用的关键术语，按字母顺序排列。
+      </p>
+
+      <dl>
+        {TERMS_ZH.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+const TERMS_KO: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: '참여자가 연구에서 받은 알림 수를 1부터 추적하는 카운터입니다. 첫 번째 알림의 batch = 1, 두 번째는 batch = 2, 이후 동일합니다. Batch는 스케줄별이 아닌 연구 전체에 걸쳐 적용됩니다. 참여자가 두 스케줄의 대상이 되면 어느 쪽에서 발송되더라도 카운터가 증가합니다. URL 플레이스홀더 %BATCH%로 사용할 수 있습니다.',
+  },
+  {
+    term: 'Completion event',
+    definition: '참여자가 설문을 완료했을 때 Samply로 전송되는 신호입니다. Samply는 이를 사용해 결과 레코드를 완료로 표시하고 해당 발송의 보류 중인 리마인더를 모두 취소합니다. 완료 이벤트는 설문 종료 시 참여자를 Samply 완료 URL로 리디렉션하거나 설문 도구에서 HTTP POST 요청을 전송하여 등록됩니다.',
+  },
+  {
+    term: 'Day N',
+    definition: '개인 스케줄에서 각 참여자의 등록 날짜를 기준으로 한 날짜를 나타내는 약어입니다. 1일은 참여자가 가입한 당일(스케줄은 참여자 등록 후 약 1분 후에 시작됩니다)입니다. 2일은 선택한 시간대에서 다음 달력 날의 자정입니다. N > 1인 경우 N일은 가입일로부터 계산한 N번째 달력 날의 자정입니다.',
+  },
+  {
+    term: 'Deactivated participant',
+    definition: '연구에서 제거되지 않은 채 알림 수신이 일시 중단된 참여자입니다. 참여자가 비활성화되면 해당 참여자에게 주소가 지정된 모든 보류 중인 큐 행이 발송 시 건너뜁니다. 참여자를 다시 활성화해도 건너뛴 발송은 재생성되지 않습니다.',
+  },
+  {
+    term: 'ESM',
+    definition: '경험 표집법(Experience Sampling Method). 참여자가 일반적으로 푸시 알림을 통해 경험 시점이나 그 근처에서 짧은 설문이나 평가를 완료하도록 촉구하는 연구 방법론입니다. Samply는 ESM 연구를 위해 특별히 설계되었습니다.',
+  },
+  {
+    term: 'Expiry',
+    definition: '알림이 전달된 후 설문 링크가 활성 상태로 유지되는 선택적 시간 제한입니다. 스케줄 양식의 8단계에서 설정합니다. 만료 시간이 지나면 알림 바를 탭해도 더 이상 설문이 열리지 않습니다. 오래된 응답이 데이터를 왜곡할 수 있는 순간 평가에 유용합니다.',
+  },
+  {
+    term: 'finid',
+    definition: '원본 발송을 모든 리마인더 행과 연결하는 내부 15자 식별자입니다. 리마인더가 구성된 경우 발송 시점에 생성됩니다. Samply는 완료 이벤트가 도착할 때 finid를 사용하여 단일 작업으로 발송의 모든 보류 중인 리마인더를 취소합니다. 대시보드 UI에서 직접 표시되지 않습니다.',
+  },
+  {
+    term: 'Group',
+    definition: '연구 내 참여자의 명명된 하위 집합입니다. 각 참여자는 동시에 최대 하나의 그룹에 속할 수 있습니다. 그룹을 사용하면 별도의 연구를 만들지 않고 다른 코호트에 다른 스케줄을 보낼 수 있습니다(예: 개입 그룹과 통제 그룹). 그룹에는 연구자가 정의한 이름과 자동 생성된 4자 ID가 있습니다.',
+  },
+  {
+    term: 'Group ID',
+    definition: '그룹이 생성될 때 Samply가 자동으로 생성하는 4자 코드입니다. %GROUP_ID% URL 플레이스홀더에 사용되며 큐에 표시됩니다. 삭제 후 재생성 시에도 안정적으로 유지됩니다. 그룹이 삭제되고 동일한 이름으로 새 그룹이 생성되면 원래 ID가 재사용됩니다.',
+  },
+  {
+    term: 'Invite link',
+    definition: '참여자가 브라우저에서 열거나 Samply Research 앱에서 탭하여 연구에 참여하는 URL입니다. QR 코드 스캔과 구조적으로 동일합니다. 링크는 연구 슬러그를 인코딩하고 참여자를 등록 흐름으로 안내합니다.',
+  },
+  {
+    term: 'isReminder',
+    definition: '행이 원본 발송이 아닌 리마인더 발송인지 여부를 나타내는 큐 행(PendingNotification)의 부울 필드입니다. 큐에서 "Reminder: yes"로 표시됩니다. 리마인더 행은 원본 알림의 발송 시점에 생성되고 완료 이벤트가 도착하면 취소됩니다.',
+  },
+  {
+    term: 'Message ID',
+    definition: '각 참여자에 대한 각 개별 발송에 대해 생성되는 고유한 15자 영숫자 식별자입니다. 설문을 트리거한 정확한 알림에 완료 이벤트를 다시 연결하는 데 사용됩니다. URL 플레이스홀더 %MESSAGE_ID%로 사용할 수 있습니다. 리마인더 취소가 올바르게 작동하려면 필요합니다.',
+  },
+  {
+    term: 'One-time schedule',
+    definition: '특정 달력 날짜의 특정 시계 시간에 한 번 또는 여러 번 발송되는 스케줄입니다. 반복되지 않습니다. 스케줄 양식의 3단계에서 특정 시간 포인트를 선택하고 4단계에서 특정 날짜를 선택하여 생성합니다.',
+  },
+  {
+    term: 'Participant',
+    definition: 'Samply Research 모바일 앱을 통해 푸시 알림을 받는 연구에 등록된 사람입니다. 참여자는 Samply ID와 선택적으로 참여자 코드로 식별됩니다. 연구자는 참여자 연락처를 볼 수 없습니다 — 등록은 익명으로 이루어집니다.',
+  },
+  {
+    term: 'Participant code',
+    definition: '참여자가 연구에 참여할 때 입력하는 선택적 사용자 지정 식별자입니다. 연구 편집의 "참여자 코드 요청" 설정으로 활성화합니다. Samply 레코드를 외부 데이터셋(REDCap 레코드 ID, 기관 ID, 사전 할당 코드)에 연결하는 데 사용됩니다. 참여자는 코드와 그룹을 모두 가질 수 있습니다. URL 플레이스홀더 %PARTICIPANT_CODE%로 사용할 수 있습니다.',
+  },
+  {
+    term: 'Personal schedule',
+    definition: '시작 및 종료 날짜가 고정된 달력 날짜가 아닌 각 참여자의 가입 날짜를 기준으로 정의된 스케줄입니다. 다른 시간에 등록하는 참여자는 각자 1일을 갖습니다. 스케줄 양식의 4단계에서 반복 날짜 패턴을 선택하고 6단계와 7단계에서 상대적 시작 또는 종료(N일 또는 기간 오프셋)를 선택하여 생성합니다.',
+  },
+  {
+    term: 'Placeholder',
+    definition: 'Samply가 발송 시점에 참여자별 값으로 대체하는 알림 웹 링크에 포함된 %TOKEN% 문자열입니다. 사용 가능한 토큰: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. 스케줄 정의에 저장된 원래 URL은 절대 수정되지 않습니다 — 대체된 URL은 전달된 알림 페이로드에만 존재합니다.',
+  },
+  {
+    term: 'Push token',
+    definition: 'Expo 푸시 알림 서비스가 Samply Research 앱의 각 설치에 발급하는 기기 수준 식별자입니다. Samply는 각 참여자의 푸시 토큰을 저장하고 알림을 라우팅하는 데 사용합니다. 오래되거나 누락된 푸시 토큰(예: 참여자가 앱을 재설치한 후)으로 인해 큐 행이 "failed" 상태로 실패합니다.',
+  },
+  {
+    term: 'Queue',
+    definition: 'Samply가 스케줄이 제출될 때 생성하는 개별 발송의 플랫 목록입니다. 발송 시간당 참여자당 한 행입니다. 각 행에는 상태(pending, processing, sent, failed, cancelled)와 예약된 시간이 있습니다. 큐는 cron 디스패처가 처리하는 것이며, 스케줄 정의는 큐를 생성한 규칙일 뿐입니다.',
+  },
+  {
+    term: 'Randomized schedule',
+    definition: '각 발송일에 각 참여자에 대해 정의된 창 내에서 임의의 발송 시간을 선택하는 스케줄입니다. 스케줄 양식의 3단계에서 특정 시간 포인트 대신 시간 창을 선택하여 생성합니다. 일회성 또는 반복적일 수 있습니다. 임의 시간은 참여자 간 및 날짜 간에 다릅니다.',
+  },
+  {
+    term: 'Reminder',
+    definition: 'Samply가 원본 발송에 대한 완료 이벤트를 받지 못했을 때 자동으로 전송되는 후속 푸시 알림입니다. 스케줄 양식의 9단계에서 구성합니다. 각 리마인더에는 자체 제목, 메시지 및 원본으로부터의 지연 오프셋이 있습니다. 발송의 모든 보류 중인 리마인더는 완료 이벤트가 도착하는 순간 취소됩니다.',
+  },
+  {
+    term: 'Repeating schedule',
+    definition: '정의된 시작 및 종료 창 내에서 반복 날짜 패턴(N일마다, 특정 요일, 월의 특정 날)으로 발송되는 스케줄입니다. 스케줄 양식의 4단계에서 반복 날짜 옵션을 선택하여 생성합니다. 시작 및 종료가 절대 달력 날짜인 경우 스케줄은 모든 참여자에게 동일합니다. 등록을 기준으로 상대적인 경우 개인 스케줄이 됩니다.',
+  },
+  {
+    term: 'Result',
+    definition: 'Samply가 알림이 발송될 때 기록하는 레코드입니다. Samply ID, 메시지 ID, 알림 내용, 서버 측 발송 시간, 수신, 탭, 설문 열기에 대한 이벤트별 타임스탬프를 저장합니다. 완료 이벤트가 도착하면 Samply는 동일한 결과 레코드에 "completed" 이벤트를 추가합니다. 기록 로그에 결과가 표시되며 CSV로 다운로드할 수 있습니다.',
+  },
+  {
+    term: 'Samply ID',
+    definition: '등록 시 참여자에게 할당되는 익명 식별자입니다. Samply가 생성하며 참여자에게 표시되지 않고 개인 연락처와 연결되지 않습니다. 대시보드의 모든 참여자 데이터에 대한 기본 키로 사용됩니다. URL 플레이스홀더 %SAMPLY_ID%로 사용할 수 있습니다.',
+  },
+  {
+    term: 'Schedule',
+    definition: '일련의 발송에 대한 내용, 대상, 타이밍 및 선택적 리마인더를 정의하는 알림 구성입니다. 스케줄을 제출하면 즉시 큐로 확장됩니다. 네 가지 유형이 있습니다: 일회성, 반복, 개인, 무작위. 스케줄은 제출 후 편집할 수 없습니다 — 변경하려면 삭제 후 다시 생성하십시오.',
+  },
+  {
+    term: 'Study',
+    definition: 'Samply의 최상위 컨테이너입니다. 모든 참여자, 스케줄, 큐 행 및 응답 기록은 정확히 하나의 연구에 속합니다. 연구자는 연구를 한 번 생성하고 그 안에서 모든 것을 관리합니다. 데이터 레이어의 Project 모델에 해당합니다.',
+  },
+  {
+    term: 'Time window',
+    definition: '창당 여러 발송이 요청된 경우 최소 간격을 두고 각 발송일에 각 참여자에 대해 시작 시간과 종료 시간 사이의 임의 시간을 Samply가 선택하는 발송 시간 모드입니다. 스케줄 양식의 3단계에서 선택합니다. 무작위 또는 개인 무작위 스케줄을 생성합니다.',
+  },
+  {
+    term: 'Timestamp sent',
+    definition: 'Samply 서버가 알림을 발송한 정확한 순간의 밀리초 단위 Unix 타임스탬프입니다. URL 플레이스홀더 %TIMESTAMP_SENT%로 사용할 수 있습니다. 항상 대체됩니다.',
+  },
+];
+
+const TERMS_IT: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: 'Un contatore che tiene traccia di quante notifiche un partecipante ha ricevuto da uno studio, a partire da 1. La prima notifica ha batch = 1, la seconda ha batch = 2 e così via. Il batch è a livello di studio, non per singolo schema: se un partecipante è coinvolto da due schemi, il contatore aumenta ad ogni invio da entrambi. Disponibile come segnaposto URL %BATCH%.',
+  },
+  {
+    term: 'Completion event',
+    definition: 'Un segnale inviato a Samply quando un partecipante completa un sondaggio. Samply lo utilizza per contrassegnare il record del risultato come completato e per annullare i promemoria in sospeso per quell\'invio. Un completion event viene registrato reindirizzando il partecipante all\'URL di completamento di Samply al termine del sondaggio, oppure inviando una richiesta HTTP POST dallo strumento del sondaggio.',
+  },
+  {
+    term: 'Day N',
+    definition: 'La notazione abbreviata utilizzata negli schemi personali per una data relativa alla data di iscrizione di ogni partecipante. Il giorno 1 è il giorno stesso dell\'iscrizione (lo schema inizia circa un minuto dopo che il partecipante si è iscritto). Il giorno 2 è la mezzanotte del giorno di calendario successivo nel fuso orario scelto. Il giorno N per N > 1 è la mezzanotte dell\'N-esimo giorno di calendario contato dalla data di iscrizione.',
+  },
+  {
+    term: 'Deactivated participant',
+    definition: 'Un partecipante che è stato sospeso dalla ricezione di notifiche senza essere rimosso dallo studio. Quando un partecipante viene disattivato, tutte le righe della coda in sospeso indirizzate a lui vengono saltate al momento dell\'invio. La riattivazione di un partecipante non ricrea gli invii saltati.',
+  },
+  {
+    term: 'ESM',
+    definition: 'Experience Sampling Method (Metodo di campionamento dell\'esperienza). Una metodologia di ricerca in cui i partecipanti vengono sollecitati — tipicamente tramite notifica push — a completare brevi sondaggi o valutazioni nel momento dell\'esperienza o vicino ad esso. Samply è progettato appositamente per gli studi ESM.',
+  },
+  {
+    term: 'Expiry',
+    definition: 'Un limite di tempo opzionale su quanto a lungo rimane attivo un link al sondaggio dopo la consegna di una notifica. Impostato nel passaggio 8 del modulo dello schema. Dopo la finestra di scadenza, toccare la barra delle notifiche non apre più il sondaggio. Utile per le valutazioni istantanee in cui le risposte obsolete potrebbero distorcere i dati.',
+  },
+  {
+    term: 'finid',
+    definition: 'Un identificatore interno di 15 caratteri che collega un invio originale a tutte le sue righe di promemoria. Generato al momento dell\'invio quando i promemoria sono configurati. Samply utilizza il finid per annullare tutti i promemoria in sospeso per un invio in un\'unica operazione quando arriva un completion event. Non direttamente visibile nell\'interfaccia utente del pannello di controllo.',
+  },
+  {
+    term: 'Group',
+    definition: 'Un sottoinsieme denominato di partecipanti all\'interno di uno studio. Ogni partecipante può appartenere al massimo a un gruppo alla volta. I gruppi consentono di inviare schemi diversi a coorti diverse — ad esempio, un gruppo di intervento e un gruppo di controllo — senza creare studi separati. Un gruppo ha un nome (definito dal ricercatore) e un ID a quattro caratteri generato automaticamente.',
+  },
+  {
+    term: 'Group ID',
+    definition: 'Il codice a quattro caratteri generato automaticamente da Samply quando viene creato un gruppo. Utilizzato nel segnaposto URL %GROUP_ID% e visualizzato nella coda. Stabile durante l\'eliminazione e la ricreazione: se un gruppo viene eliminato e un nuovo gruppo viene creato con lo stesso nome, l\'ID originale viene riutilizzato.',
+  },
+  {
+    term: 'Invite link',
+    definition: 'Un URL che i partecipanti aprono in un browser o toccano nell\'app Samply Research per iscriversi a uno studio. Strutturalmente equivalente alla scansione del QR code. Il link codifica lo slug dello studio e guida il partecipante attraverso il flusso di iscrizione.',
+  },
+  {
+    term: 'isReminder',
+    definition: 'Un campo booleano su una riga della coda (PendingNotification) che indica se la riga è un invio di promemoria piuttosto che un invio originale. Visibile nella coda come "Reminder: yes". Le righe di promemoria vengono create al momento dell\'invio per la notifica originale e annullate quando arriva un completion event.',
+  },
+  {
+    term: 'Message ID',
+    definition: 'Un identificatore alfanumerico univoco di 15 caratteri generato per ogni singolo invio a ogni partecipante. Utilizzato per collegare un completion event alla notifica esatta che ha innescato il sondaggio. Disponibile come segnaposto URL %MESSAGE_ID%. Necessario affinché l\'annullamento dei promemoria funzioni correttamente.',
+  },
+  {
+    term: 'One-time schedule',
+    definition: 'Uno schema che si attiva su una o più date di calendario specifiche a orari dell\'orologio specifici. Non si ripete. Creato scegliendo punti temporali specifici nel passaggio 3 e date specifiche nel passaggio 4 del modulo dello schema.',
+  },
+  {
+    term: 'Participant',
+    definition: 'Una persona iscritta a uno studio che riceve notifiche push tramite l\'app mobile Samply Research. I partecipanti sono identificati dal loro Samply ID e facoltativamente da un codice partecipante. I ricercatori non vedono i dettagli di contatto dei partecipanti — l\'iscrizione è anonima.',
+  },
+  {
+    term: 'Participant code',
+    definition: 'Un identificatore personalizzato opzionale che un partecipante inserisce quando si iscrive a uno studio. Abilitato con l\'impostazione "Richiedi codice partecipante" in Modifica studio. Utilizzato per collegare i record di Samply a dataset esterni (ID record REDCap, ID istituzionali, codici pre-assegnati). Un partecipante può avere sia un codice che un gruppo. Disponibile come segnaposto URL %PARTICIPANT_CODE%.',
+  },
+  {
+    term: 'Personal schedule',
+    definition: 'Uno schema le cui date di inizio e fine sono definite in relazione alla data di iscrizione di ogni partecipante piuttosto che a date di calendario fisse. I partecipanti che si iscrivono in momenti diversi ottengono ciascuno il proprio Giorno 1. Creato scegliendo un modello di date di ripetizione nel passaggio 4 e un inizio o fine relativo (Giorno N o offset di durata) nei passaggi 6 e 7.',
+  },
+  {
+    term: 'Placeholder',
+    definition: 'Una stringa %TOKEN% incorporata nel link web della notifica che Samply sostituisce con un valore specifico del partecipante al momento dell\'invio. Token disponibili: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. L\'URL originale memorizzato nella definizione dello schema non viene mai modificato — l\'URL sostituito esiste solo nel payload della notifica consegnata.',
+  },
+  {
+    term: 'Push token',
+    definition: 'L\'identificatore a livello di dispositivo emesso dal servizio di notifiche push Expo a ogni installazione dell\'app Samply Research. Samply memorizza il push token per ogni partecipante e lo utilizza per instradare le notifiche. Un push token obsoleto o mancante (ad es. dopo che il partecipante ha reinstallato l\'app) fa sì che le righe della coda falliscano con lo stato "failed".',
+  },
+  {
+    term: 'Queue',
+    definition: 'L\'elenco piatto dei singoli invii che Samply genera quando uno schema viene inviato. Una riga per partecipante per orario di invio. Ogni riga ha uno stato (pending, processing, sent, failed, cancelled) e un orario pianificato. La coda è ciò su cui lavora il dispatcher cron; la definizione dello schema è solo la regola che l\'ha prodotta.',
+  },
+  {
+    term: 'Randomized schedule',
+    definition: 'Uno schema che sceglie un orario di invio casuale all\'interno di una finestra definita per ogni partecipante in ogni giorno di attivazione. Creato scegliendo una finestra temporale nel passaggio 3 invece di punti temporali specifici. Può essere una tantum o ripetuto. L\'orario casuale differisce tra i partecipanti e tra i giorni.',
+  },
+  {
+    term: 'Reminder',
+    definition: 'Una notifica push di follow-up inviata automaticamente quando Samply non ha ricevuto un completion event per l\'invio originale. Configurato nel passaggio 9 del modulo dello schema. Ogni promemoria ha il proprio titolo, messaggio e offset di ritardo dall\'originale. Tutti i promemoria in sospeso per un invio vengono annullati nel momento in cui arriva un completion event.',
+  },
+  {
+    term: 'Repeating schedule',
+    definition: 'Uno schema che si attiva su un modello di date ricorrente — ogni N giorni, giorni della settimana specifici o giorni specifici del mese — all\'interno di una finestra di inizio e fine definita. Creato scegliendo un\'opzione di data di ripetizione nel passaggio 4. Quando inizio e fine sono date di calendario assolute, lo schema è lo stesso per ogni partecipante. Quando sono relativi alla registrazione, diventa uno schema personale.',
+  },
+  {
+    term: 'Result',
+    definition: 'Il record che Samply scrive quando viene inviata una notifica. Memorizza il Samply ID, il message ID, il contenuto della notifica, l\'orario di invio lato server e i timestamp per evento di ricezione, tocco e apertura del sondaggio. Quando arriva un completion event, Samply aggiunge un evento "completed" allo stesso record del risultato. Il registro della cronologia mostra i risultati; possono essere scaricati come CSV.',
+  },
+  {
+    term: 'Samply ID',
+    definition: 'L\'identificatore anonimo assegnato a un partecipante all\'iscrizione. Generato da Samply, non visibile al partecipante e mai collegato ai dettagli di contatto personali. Utilizzato come chiave primaria per tutti i dati dei partecipanti nel pannello di controllo. Disponibile come segnaposto URL %SAMPLY_ID%.',
+  },
+  {
+    term: 'Schedule',
+    definition: 'Una configurazione di notifica che definisce il contenuto, il pubblico, i tempi e facoltativamente i promemoria per un insieme di invii. L\'invio di uno schema lo espande immediatamente in una coda. Esistono quattro tipi: una tantum, ripetuto, personale e randomizzato. Uno schema non può essere modificato dopo l\'invio — eliminare e ricreare per apportare modifiche.',
+  },
+  {
+    term: 'Study',
+    definition: 'Il contenitore di livello superiore in Samply. Tutti i partecipanti, gli schemi, le righe della coda e la cronologia delle risposte appartengono esattamente a uno studio. I ricercatori creano uno studio una volta e gestiscono tutto al suo interno. Corrisponde al modello Project nel livello dati.',
+  },
+  {
+    term: 'Time window',
+    definition: 'Una modalità di orario di invio in cui Samply sceglie un orario casuale tra un orario Di e un orario A per ogni partecipante in ogni giorno di attivazione, con un intervallo minimo tra le estrazioni se vengono richiesti più invii per finestra. Scelto nel passaggio 3 del modulo dello schema. Produce uno schema randomizzato o personale-randomizzato.',
+  },
+  {
+    term: 'Timestamp sent',
+    definition: 'Il timestamp Unix in millisecondi del momento esatto in cui la notifica è stata inviata dal server Samply. Disponibile come segnaposto URL %TIMESTAMP_SENT%. Sempre sostituito.',
+  },
+];
+
+function GlossaryContentKo() {
+  return (
+    <>
+      <p>
+        Samply 및 본 문서 전반에서 사용되는 주요 용어를 알파벳 순서로 정리했습니다.
+      </p>
+
+      <dl>
+        {TERMS_KO.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+function GlossaryContentIt() {
+  return (
+    <>
+      <p>
+        Termini chiave utilizzati in Samply e in questa documentazione, in ordine alfabetico.
+      </p>
+
+      <dl>
+        {TERMS_IT.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+const TERMS_FR: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: "Un compteur qui suit le nombre de notifications reçues par un participant dans le cadre d'une étude, à partir de 1. La première notification a batch = 1, la deuxième a batch = 2, et ainsi de suite. Le batch est à l'échelle de l'étude, pas par planning : si un participant est ciblé par deux plannings, le compteur augmente à chaque envoi de l'un ou l'autre. Disponible comme variable de substitution URL %BATCH%.",
+  },
+  {
+    term: 'Completion event',
+    definition: "Un signal envoyé à Samply lorsqu'un participant termine un sondage. Samply l'utilise pour marquer l'enregistrement de résultat comme complété et pour annuler tous les rappels en attente pour cet envoi. Un completion event est enregistré soit en redirigeant le participant vers l'URL de complétion Samply à la fin du sondage, soit en envoyant une requête HTTP POST depuis l'outil de sondage.",
+  },
+  {
+    term: 'Day N',
+    definition: "La notation abrégée utilisée dans les plannings personnels pour une date relative à la date d'inscription de chaque participant. Le jour 1 est le jour de l'adhésion lui-même (le planning démarre environ une minute après l'inscription du participant). Le jour 2 est minuit du jour calendaire suivant dans le fuseau horaire choisi. Le jour N pour N > 1 est minuit du N-ième jour calendaire compté depuis la date d'adhésion.",
+  },
+  {
+    term: 'Deactivated participant',
+    definition: "Un participant qui a été suspendu de la réception de notifications sans être retiré de l'étude. Lorsqu'un participant est désactivé, toutes les lignes de file d'attente en attente qui lui sont adressées sont ignorées au moment de l'envoi. La réactivation d'un participant ne recrée pas les envois ignorés.",
+  },
+  {
+    term: 'ESM',
+    definition: "Experience Sampling Method (méthode d'échantillonnage des expériences). Une méthodologie de recherche dans laquelle les participants sont invités — généralement via une notification push — à remplir de brèves enquêtes ou évaluations au moment de l'expérience ou à proximité. Samply est spécialement conçu pour les études ESM.",
+  },
+  {
+    term: 'Expiry',
+    definition: "Une limite de temps optionnelle sur la durée d'activité d'un lien de sondage après la livraison d'une notification. Définie à l'étape 8 du formulaire de planning. Passé ce délai, appuyer sur la barre de notification n'ouvre plus le sondage. Utile pour les évaluations momentanées où des réponses périmées biaiseraient les données.",
+  },
+  {
+    term: 'finid',
+    definition: "Un identifiant interne de 15 caractères qui relie un envoi original à toutes ses lignes de rappel. Généré au moment de l'envoi lorsque des rappels sont configurés. Samply utilise le finid pour annuler tous les rappels en attente pour un envoi en une seule opération lorsqu'un completion event arrive. Non directement visible dans l'interface utilisateur du tableau de bord.",
+  },
+  {
+    term: 'Group',
+    definition: "Un sous-ensemble nommé de participants au sein d'une étude. Chaque participant peut appartenir à au plus un groupe à la fois. Les groupes permettent d'envoyer des plannings différents à des cohortes différentes — par exemple, un groupe d'intervention et un groupe de contrôle — sans créer d'études séparées. Un groupe possède un nom (défini par le chercheur) et un identifiant à quatre caractères généré automatiquement.",
+  },
+  {
+    term: 'Group ID',
+    definition: "Le code à quatre caractères généré automatiquement par Samply lors de la création d'un groupe. Utilisé dans la variable de substitution URL %GROUP_ID% et affiché dans la file d'attente. Stable lors de la suppression et de la recréation : si un groupe est supprimé et qu'un nouveau groupe est créé avec le même nom, l'identifiant d'origine est réutilisé.",
+  },
+  {
+    term: 'Invite link',
+    definition: "Une URL que les participants ouvrent dans un navigateur ou appuient dans l'application Samply Research pour rejoindre une étude. Structurellement équivalent au scan du QR code. Le lien encode le slug de l'étude et guide le participant à travers le processus d'inscription.",
+  },
+  {
+    term: 'isReminder',
+    definition: "Un champ booléen sur une ligne de file d'attente (PendingNotification) indiquant si la ligne est un envoi de rappel plutôt qu'un envoi original. Visible dans la file d'attente sous la forme « Reminder: yes ». Les lignes de rappel sont créées au moment de l'envoi pour la notification originale et annulées lorsqu'un completion event arrive.",
+  },
+  {
+    term: 'Message ID',
+    definition: "Un identifiant alphanumérique unique de 15 caractères généré pour chaque envoi individuel à chaque participant. Utilisé pour relier un completion event à la notification exacte qui a déclenché le sondage. Disponible comme variable de substitution URL %MESSAGE_ID%. Nécessaire pour que l'annulation des rappels fonctionne correctement.",
+  },
+  {
+    term: 'One-time schedule',
+    definition: "Un planning qui se déclenche sur une ou plusieurs dates calendaires spécifiques à des heures précises. Ne se répète pas. Créé en choisissant des points temporels spécifiques à l'étape 3 et une ou des date(s) spécifique(s) à l'étape 4 du formulaire de planning.",
+  },
+  {
+    term: 'Participant',
+    definition: "Une personne inscrite dans une étude qui reçoit des notifications push via l'application mobile Samply Research. Les participants sont identifiés par leur Samply ID et éventuellement par un code participant. Les chercheurs ne voient pas les coordonnées des participants — l'inscription est anonyme.",
+  },
+  {
+    term: 'Participant code',
+    definition: "Un identifiant personnalisé optionnel qu'un participant saisit lors de son adhésion à une étude. Activé avec le paramètre « Demander un code participant » dans Modifier l'étude. Utilisé pour relier les enregistrements Samply à des jeux de données externes (identifiants d'enregistrement REDCap, identifiants institutionnels, codes pré-assignés). Un participant peut avoir à la fois un code et un groupe. Disponible comme variable de substitution URL %PARTICIPANT_CODE%.",
+  },
+  {
+    term: 'Personal schedule',
+    definition: "Un planning dont les dates de début et de fin sont définies par rapport à la date d'adhésion de chaque participant plutôt que par des dates calendaires fixes. Les participants qui s'inscrivent à des moments différents obtiennent chacun leur propre Jour 1. Créé en choisissant un modèle de dates de répétition à l'étape 4 et un début ou une fin relatif (Jour N ou décalage de durée) aux étapes 6 et 7.",
+  },
+  {
+    term: 'Placeholder',
+    definition: "Une chaîne %TOKEN% intégrée dans le lien Web de la notification que Samply remplace par une valeur spécifique au participant au moment de l'envoi. Tokens disponibles : %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. L'URL d'origine stockée dans la définition du planning n'est jamais modifiée — l'URL substituée n'existe que dans la charge utile de la notification délivrée.",
+  },
+  {
+    term: 'Push token',
+    definition: "L'identifiant au niveau du périphérique émis par le service de notifications push Expo pour chaque installation de l'application Samply Research. Samply stocke le push token pour chaque participant et l'utilise pour router les notifications. Un push token obsolète ou manquant (par exemple après que le participant ait réinstallé l'application) entraîne l'échec des lignes de file d'attente avec le statut « failed ».",
+  },
+  {
+    term: 'Queue',
+    definition: "La liste plate des envois individuels que Samply génère lorsqu'un planning est soumis. Une ligne par participant par heure d'envoi. Chaque ligne a un statut (pending, processing, sent, failed, cancelled) et une heure planifiée. La file d'attente est ce que le dispatcher cron traite ; la définition du planning est uniquement la règle qui l'a produite.",
+  },
+  {
+    term: 'Randomized schedule',
+    definition: "Un planning qui choisit une heure d'envoi aléatoire dans une fenêtre définie pour chaque participant à chaque jour de déclenchement. Créé en choisissant une fenêtre temporelle à l'étape 3 plutôt que des points temporels spécifiques. Peut être ponctuel ou répété. L'heure aléatoire diffère entre les participants et entre les jours.",
+  },
+  {
+    term: 'Reminder',
+    definition: "Une notification push de suivi envoyée automatiquement lorsque Samply n'a pas reçu de completion event pour l'envoi original. Configuré à l'étape 9 du formulaire de planning. Chaque rappel a son propre titre, message et décalage de délai par rapport à l'original. Tous les rappels en attente pour un envoi sont annulés dès qu'un completion event arrive.",
+  },
+  {
+    term: 'Repeating schedule',
+    definition: "Un planning qui se déclenche selon un modèle de dates récurrent — tous les N jours, certains jours de la semaine, ou certains jours du mois — dans une fenêtre de début et de fin définie. Créé en choisissant une option de date de répétition à l'étape 4. Lorsque le début et la fin sont des dates calendaires absolues, le planning est identique pour chaque participant. Lorsqu'ils sont relatifs à l'inscription, il devient un planning personnel.",
+  },
+  {
+    term: 'Result',
+    definition: "L'enregistrement que Samply crée lorsqu'une notification est envoyée. Stocke le Samply ID, le message ID, le contenu de la notification, l'heure d'envoi côté serveur et les horodatages par événement pour la réception, l'appui et l'ouverture du sondage. Lorsqu'un completion event arrive, Samply ajoute un événement « completed » au même enregistrement de résultat. Le journal d'historique affiche les résultats ; ils peuvent être téléchargés au format CSV.",
+  },
+  {
+    term: 'Samply ID',
+    definition: "L'identifiant anonyme attribué à un participant lors de l'inscription. Généré par Samply, non visible par le participant et jamais lié à des coordonnées personnelles. Utilisé comme clé primaire pour toutes les données des participants dans le tableau de bord. Disponible comme variable de substitution URL %SAMPLY_ID%.",
+  },
+  {
+    term: 'Schedule',
+    definition: "Une configuration de notification qui définit le contenu, l'audience, le calendrier et éventuellement les rappels pour un ensemble d'envois. La soumission d'un planning l'étend immédiatement en une file d'attente. Il existe quatre types : ponctuel, répété, personnel et aléatoire. Un planning ne peut pas être modifié après soumission — supprimez-le et recréez-le pour apporter des modifications.",
+  },
+  {
+    term: 'Study',
+    definition: "Le conteneur de niveau supérieur dans Samply. Tous les participants, plannings, lignes de file d'attente et historiques de réponses appartiennent à exactement une étude. Les chercheurs créent une étude une fois et gèrent tout à l'intérieur. Correspond au modèle Project dans la couche de données.",
+  },
+  {
+    term: 'Time window',
+    definition: "Un mode d'heure d'envoi dans lequel Samply choisit une heure aléatoire entre une heure De et une heure À pour chaque participant à chaque jour de déclenchement, avec un écart minimum entre les tirages si plusieurs envois par fenêtre sont demandés. Choisi à l'étape 3 du formulaire de planning. Produit un planning aléatoire ou personnel-aléatoire.",
+  },
+  {
+    term: 'Timestamp sent',
+    definition: "L'horodatage Unix en millisecondes du moment exact où la notification a été envoyée par le serveur Samply. Disponible comme variable de substitution URL %TIMESTAMP_SENT%. Toujours substitué.",
+  },
+];
+
+function GlossaryContentFr() {
+  return (
+    <>
+      <p>
+        Termes clés utilisés dans Samply et cette documentation, par ordre alphabétique.
+      </p>
+
+      <dl>
+        {TERMS_FR.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+const TERMS_ES: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: "Un contador que registra cuántas notificaciones ha recibido un participante en el marco de un estudio, comenzando en 1. La primera notificación tiene batch = 1, la segunda batch = 2, y así sucesivamente. El batch es de alcance global en el estudio, no por calendario: si un participante es cubierto por dos calendarios, el contador aumenta con cada envío de cualquiera de ellos. Disponible como marcador de posición URL %BATCH%.",
+  },
+  {
+    term: 'Completion event',
+    definition: "Una señal enviada a Samply cuando un participante termina una encuesta. Samply la usa para marcar el registro de resultado como completado y para cancelar todos los recordatorios pendientes de ese envío. Un completion event se registra redirigiendo al participante a la URL de finalización de Samply al término de la encuesta, o enviando una solicitud HTTP POST desde la herramienta de encuesta.",
+  },
+  {
+    term: 'Day N',
+    definition: "La notación abreviada utilizada en los calendarios personales para una fecha relativa a la fecha de registro de cada participante. El día 1 es el propio día de incorporación (el calendario comienza aproximadamente un minuto después de que el participante se registra). El día 2 es la medianoche del siguiente día calendario en la zona horaria elegida. El día N para N > 1 es la medianoche del N-ésimo día calendario contado desde la fecha de incorporación.",
+  },
+  {
+    term: 'Deactivated participant',
+    definition: "Un participante que ha sido suspendido de recibir notificaciones sin ser eliminado del estudio. Cuando un participante es desactivado, todas las filas de cola pendientes dirigidas a él se omiten en el momento del envío. Reactivar a un participante no recrea los envíos omitidos.",
+  },
+  {
+    term: 'ESM',
+    definition: "Experience Sampling Method (método de muestreo de experiencias). Una metodología de investigación en la que los participantes son invitados —generalmente mediante notificación push— a completar breves encuestas o evaluaciones en el momento de la experiencia o cerca de él. Samply está diseñado específicamente para estudios ESM.",
+  },
+  {
+    term: 'Expiry',
+    definition: "Un límite de tiempo opcional sobre cuánto tiempo permanece activo un enlace de encuesta después de que se entrega una notificación. Se define en el paso 8 del formulario de calendario. Transcurrido ese plazo, pulsar la barra de notificaciones ya no abre la encuesta. Útil para evaluaciones momentáneas donde las respuestas caducadas sesgarían los datos.",
+  },
+  {
+    term: 'finid',
+    definition: "Un identificador interno de 15 caracteres que vincula un envío original con todas sus filas de recordatorio. Se genera en el momento del envío cuando los recordatorios están configurados. Samply utiliza el finid para cancelar todos los recordatorios pendientes de un envío en una sola operación cuando llega un completion event. No es directamente visible en la interfaz del panel de control.",
+  },
+  {
+    term: 'Group',
+    definition: "Un subconjunto nombrado de participantes dentro de un estudio. Cada participante puede pertenecer a un máximo de un grupo a la vez. Los grupos permiten enviar calendarios diferentes a cohortes diferentes —por ejemplo, un grupo de intervención y un grupo de control— sin crear estudios separados. Un grupo tiene un nombre (definido por el investigador) y un ID de cuatro caracteres generado automáticamente.",
+  },
+  {
+    term: 'Group ID',
+    definition: "El código de cuatro caracteres generado automáticamente por Samply al crear un grupo. Se utiliza en el marcador de posición URL %GROUP_ID% y se muestra en la cola. Es estable ante eliminaciones y recreaciones: si se elimina un grupo y se crea uno nuevo con el mismo nombre, se reutiliza el ID original.",
+  },
+  {
+    term: 'Invite link',
+    definition: "Una URL que los participantes abren en un navegador o pulsas en la aplicación Samply Research para unirse a un estudio. Estructuralmente equivalente a escanear el código QR. El enlace codifica el slug del estudio y guía al participante a través del proceso de registro.",
+  },
+  {
+    term: 'isReminder',
+    definition: "Un campo booleano en una fila de cola (PendingNotification) que indica si la fila es un envío de recordatorio en lugar de un envío original. Visible en la cola como «Reminder: yes». Las filas de recordatorio se crean en el momento del envío para la notificación original y se cancelan cuando llega un completion event.",
+  },
+  {
+    term: 'Message ID',
+    definition: "Un identificador alfanumérico único de 15 caracteres generado para cada envío individual a cada participante. Se usa para vincular un completion event con la notificación exacta que desencadenó la encuesta. Disponible como marcador de posición URL %MESSAGE_ID%. Necesario para que la cancelación de recordatorios funcione correctamente.",
+  },
+  {
+    term: 'One-time schedule',
+    definition: "Un calendario que se dispara en una o más fechas de calendario específicas a horas del reloj concretas. No se repite. Se crea eligiendo puntos temporales específicos en el paso 3 y una o varias fechas específicas en el paso 4 del formulario de calendario.",
+  },
+  {
+    term: 'Participant',
+    definition: "Una persona registrada en un estudio que recibe notificaciones push a través de la aplicación móvil Samply Research. Los participantes se identifican por su Samply ID y, opcionalmente, por un código de participante. Los investigadores no ven los datos de contacto de los participantes: el registro es anónimo.",
+  },
+  {
+    term: 'Participant code',
+    definition: "Un identificador personalizado opcional que un participante introduce al incorporarse a un estudio. Se activa con el ajuste «Solicitar código de participante» en Editar estudio. Se usa para vincular los registros de Samply con conjuntos de datos externos (ID de registro REDCap, ID institucionales, códigos preasignados). Un participante puede tener tanto un código como un grupo. Disponible como marcador de posición URL %PARTICIPANT_CODE%.",
+  },
+  {
+    term: 'Personal schedule',
+    definition: "Un calendario cuyas fechas de inicio y fin se definen en relación con la fecha de incorporación de cada participante, en lugar de fechas de calendario fijas. Los participantes que se registran en distintos momentos obtienen cada uno su propio Día 1. Se crea eligiendo un patrón de fechas de repetición en el paso 4 y un inicio o fin relativo (Día N o desplazamiento de duración) en los pasos 6 y 7.",
+  },
+  {
+    term: 'Placeholder',
+    definition: "Una cadena %TOKEN% integrada en el enlace web de la notificación que Samply sustituye por un valor específico del participante en el momento del envío. Tokens disponibles: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. La URL original almacenada en la definición del calendario nunca se modifica: la URL sustituida solo existe en la carga útil de la notificación entregada.",
+  },
+  {
+    term: 'Push token',
+    definition: "El identificador a nivel de dispositivo emitido por el servicio de notificaciones push de Expo para cada instalación de la aplicación Samply Research. Samply almacena el push token de cada participante y lo usa para enrutar las notificaciones. Un push token obsoleto o ausente (por ejemplo, tras reinstalar la aplicación) provoca que las filas de cola fallen con el estado «failed».",
+  },
+  {
+    term: 'Queue',
+    definition: "La lista plana de envíos individuales que Samply genera cuando se envía un calendario. Una fila por participante por hora de envío. Cada fila tiene un estado (pending, processing, sent, failed, cancelled) y una hora programada. La cola es lo que procesa el despachador cron; la definición del calendario es solo la regla que la produjo.",
+  },
+  {
+    term: 'Randomized schedule',
+    definition: "Un calendario que elige una hora de envío aleatoria dentro de una ventana definida para cada participante en cada día de disparo. Se crea eligiendo una ventana temporal en el paso 3 en lugar de puntos temporales específicos. Puede ser puntual o repetido. La hora aleatoria difiere entre participantes y entre días.",
+  },
+  {
+    term: 'Reminder',
+    definition: "Una notificación push de seguimiento enviada automáticamente cuando Samply no ha recibido un completion event para el envío original. Se configura en el paso 9 del formulario de calendario. Cada recordatorio tiene su propio título, mensaje y desplazamiento de retraso respecto al original. Todos los recordatorios pendientes de un envío se cancelan en el momento en que llega un completion event.",
+  },
+  {
+    term: 'Repeating schedule',
+    definition: "Un calendario que se dispara según un patrón de fechas recurrente —cada N días, días de la semana específicos o días concretos del mes— dentro de una ventana de inicio y fin definida. Se crea eligiendo una opción de fecha de repetición en el paso 4. Cuando el inicio y el fin son fechas de calendario absolutas, el calendario es idéntico para todos los participantes. Cuando son relativos al registro, se convierte en un calendario personal.",
+  },
+  {
+    term: 'Result',
+    definition: "El registro que Samply crea cuando se envía una notificación. Almacena el Samply ID, el message ID, el contenido de la notificación, la hora de envío en el servidor y las marcas de tiempo por evento para la recepción, el toque y la apertura de la encuesta. Cuando llega un completion event, Samply añade un evento «completed» al mismo registro de resultado. El registro de historial muestra los resultados; pueden descargarse en formato CSV.",
+  },
+  {
+    term: 'Samply ID',
+    definition: "El identificador anónimo asignado a un participante en el momento del registro. Generado por Samply, no visible para el participante y nunca vinculado a datos de contacto personales. Se usa como clave principal para todos los datos de participantes en el panel de control. Disponible como marcador de posición URL %SAMPLY_ID%.",
+  },
+  {
+    term: 'Schedule',
+    definition: "Una configuración de notificación que define el contenido, la audiencia, el calendario y, opcionalmente, los recordatorios para un conjunto de envíos. Enviar un calendario lo expande inmediatamente en una cola. Existen cuatro tipos: puntual, repetido, personal y aleatorio. Un calendario no puede editarse después de enviarlo: elimínelo y vuelva a crearlo para hacer cambios.",
+  },
+  {
+    term: 'Study',
+    definition: "El contenedor de nivel superior en Samply. Todos los participantes, calendarios, filas de cola e historiales de respuestas pertenecen exactamente a un estudio. Los investigadores crean un estudio una vez y gestionan todo dentro de él. Corresponde al modelo Project en la capa de datos.",
+  },
+  {
+    term: 'Time window',
+    definition: "Un modo de hora de envío en el que Samply elige una hora aleatoria entre una hora De y una hora A para cada participante en cada día de disparo, con un intervalo mínimo entre extracciones si se solicitan varios envíos por ventana. Se elige en el paso 3 del formulario de calendario. Produce un calendario aleatorio o personal-aleatorio.",
+  },
+  {
+    term: 'Timestamp sent',
+    definition: "La marca de tiempo Unix en milisegundos del momento exacto en que el servidor Samply envió la notificación. Disponible como marcador de posición URL %TIMESTAMP_SENT%. Siempre se sustituye.",
+  },
+];
+
+function GlossaryContentEs() {
+  return (
+    <>
+      <p>
+        Términos clave utilizados en Samply y en esta documentación, en orden alfabético.
+      </p>
+
+      <dl>
+        {TERMS_ES.map((t) => (
+          <Fragment key={t.term}>
+            <dt>{t.term}</dt>
+            <dd>{t.definition}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </>
+  );
+}
+
+const TERMS_PT: { term: string; definition: string }[] = [
+  {
+    term: 'Batch',
+    definition: "Um contador que registra quantas notificações um participante recebeu no âmbito de um estudo, começando em 1. A primeira notificação tem batch = 1, a segunda batch = 2, e assim por diante. O batch é de escopo global no estudo, não por calendário: se um participante for coberto por dois calendários, o contador aumenta a cada envio de qualquer um deles. Disponível como marcador de posição de URL %BATCH%.",
+  },
+  {
+    term: 'Completion event',
+    definition: "Um sinal enviado ao Samply quando um participante conclui uma pesquisa. O Samply o utiliza para marcar o registro de resultado como concluído e para cancelar todos os lembretes pendentes desse envio. Um completion event é registrado redirecionando o participante para a URL de conclusão do Samply ao final da pesquisa, ou enviando uma solicitação HTTP POST a partir da ferramenta de pesquisa.",
+  },
+  {
+    term: 'Day N',
+    definition: "A notação abreviada utilizada nos calendários pessoais para uma data relativa à data de registro de cada participante. O Dia 1 é o próprio dia de adesão (o calendário começa aproximadamente um minuto após o participante se registrar). O Dia 2 é a meia-noite do dia de calendário seguinte no fuso horário escolhido. O Dia N para N > 1 é a meia-noite do N-ésimo dia de calendário contado a partir da data de adesão.",
+  },
+  {
+    term: 'Deactivated participant',
+    definition: "Um participante que foi suspenso de receber notificações sem ser removido do estudo. Quando um participante é desativado, todas as linhas de fila pendentes endereçadas a ele são ignoradas no momento do envio. Reativar um participante não recria os envios ignorados.",
+  },
+  {
+    term: 'ESM',
+    definition: "Experience Sampling Method (método de amostragem de experiências). Uma metodologia de pesquisa na qual os participantes são convidados — geralmente por meio de notificação push — a completar breves pesquisas ou avaliações no momento da experiência ou próximo a ele. O Samply foi desenvolvido especificamente para estudos ESM.",
+  },
+  {
+    term: 'Expiry',
+    definition: "Um limite de tempo opcional sobre por quanto tempo um link de pesquisa permanece ativo após a entrega de uma notificação. Definido no passo 8 do formulário de calendário. Após esse prazo, tocar na barra de notificações não abre mais a pesquisa. Útil para avaliações momentâneas em que respostas desatualizadas enviessariam os dados.",
+  },
+  {
+    term: 'finid',
+    definition: "Um identificador interno de 15 caracteres que vincula um envio original a todas as suas linhas de lembrete. Gerado no momento do envio quando os lembretes estão configurados. O Samply usa o finid para cancelar todos os lembretes pendentes de um envio em uma única operação quando um completion event chega. Não é diretamente visível na interface do painel de controle.",
+  },
+  {
+    term: 'Group',
+    definition: "Um subconjunto nomeado de participantes dentro de um estudo. Cada participante pode pertencer a no máximo um grupo por vez. Os grupos permitem enviar calendários diferentes a coortes diferentes — por exemplo, um grupo de intervenção e um grupo de controle — sem criar estudos separados. Um grupo tem um nome (definido pelo pesquisador) e um ID de quatro caracteres gerado automaticamente.",
+  },
+  {
+    term: 'Group ID',
+    definition: "O código de quatro caracteres gerado automaticamente pelo Samply ao criar um grupo. Utilizado no marcador de posição de URL %GROUP_ID% e exibido na fila. É estável após exclusões e recriações: se um grupo for excluído e um novo grupo for criado com o mesmo nome, o ID original será reutilizado.",
+  },
+  {
+    term: 'Invite link',
+    definition: "Uma URL que os participantes abrem em um navegador ou tocam no aplicativo Samply Research para ingressar em um estudo. Estruturalmente equivalente a escanear o código QR. O link codifica o slug do estudo e orienta o participante pelo processo de registro.",
+  },
+  {
+    term: 'isReminder',
+    definition: "Um campo booleano em uma linha de fila (PendingNotification) que indica se a linha é um envio de lembrete em vez de um envio original. Visível na fila como «Reminder: yes». As linhas de lembrete são criadas no momento do envio para a notificação original e canceladas quando um completion event chega.",
+  },
+  {
+    term: 'Message ID',
+    definition: "Um identificador alfanumérico único de 15 caracteres gerado para cada envio individual a cada participante. Usado para vincular um completion event à notificação exata que desencadeou a pesquisa. Disponível como marcador de posição de URL %MESSAGE_ID%. Necessário para que o cancelamento de lembretes funcione corretamente.",
+  },
+  {
+    term: 'One-time schedule',
+    definition: "Um calendário que dispara em uma ou mais datas de calendário específicas em horários específicos. Não se repete. Criado escolhendo pontos de tempo específicos no passo 3 e uma ou mais datas específicas no passo 4 do formulário de calendário.",
+  },
+  {
+    term: 'Participant',
+    definition: "Uma pessoa registrada em um estudo que recebe notificações push por meio do aplicativo móvel Samply Research. Os participantes são identificados pelo seu Samply ID e, opcionalmente, por um código de participante. Os pesquisadores não veem os dados de contato dos participantes — o registro é anônimo.",
+  },
+  {
+    term: 'Participant code',
+    definition: "Um identificador personalizado opcional que um participante insere ao ingressar em um estudo. Ativado com a configuração «Solicitar código de participante» em Editar estudo. Usado para vincular os registros do Samply a conjuntos de dados externos (IDs de registro REDCap, IDs institucionais, códigos pré-atribuídos). Um participante pode ter tanto um código quanto um grupo. Disponível como marcador de posição de URL %PARTICIPANT_CODE%.",
+  },
+  {
+    term: 'Personal schedule',
+    definition: "Um calendário cujas datas de início e fim são definidas em relação à data de adesão de cada participante, em vez de datas de calendário fixas. Os participantes que se registram em momentos diferentes obtêm cada um o seu próprio Dia 1. Criado escolhendo um padrão de datas de repetição no passo 4 e um início ou fim relativo (Dia N ou deslocamento de duração) nos passos 6 e 7.",
+  },
+  {
+    term: 'Placeholder',
+    definition: "Uma cadeia %TOKEN% incorporada no link web da notificação que o Samply substitui por um valor específico do participante no momento do envio. Tokens disponíveis: %SAMPLY_ID%, %PARTICIPANT_CODE%, %GROUP_ID%, %MESSAGE_ID%, %TIMESTAMP_SENT%, %BATCH%. A URL original armazenada na definição do calendário nunca é modificada — a URL substituída existe apenas na carga útil da notificação entregue.",
+  },
+  {
+    term: 'Push token',
+    definition: "O identificador no nível do dispositivo emitido pelo serviço de notificações push do Expo para cada instalação do aplicativo Samply Research. O Samply armazena o push token de cada participante e o usa para rotear as notificações. Um push token desatualizado ou ausente (por exemplo, após o participante reinstalar o aplicativo) faz com que as linhas de fila falhem com o status «failed».",
+  },
+  {
+    term: 'Queue',
+    definition: "A lista plana de envios individuais que o Samply gera quando um calendário é submetido. Uma linha por participante por horário de envio. Cada linha tem um status (pending, processing, sent, failed, cancelled) e um horário programado. A fila é o que o despachante cron processa; a definição do calendário é apenas a regra que a produziu.",
+  },
+  {
+    term: 'Randomized schedule',
+    definition: "Um calendário que escolhe um horário de envio aleatório dentro de uma janela definida para cada participante em cada dia de disparo. Criado escolhendo uma janela de tempo no passo 3 em vez de pontos de tempo específicos. Pode ser pontual ou repetido. O horário aleatório difere entre participantes e entre dias.",
+  },
+  {
+    term: 'Reminder',
+    definition: "Uma notificação push de acompanhamento enviada automaticamente quando o Samply não recebeu um completion event para o envio original. Configurado no passo 9 do formulário de calendário. Cada lembrete tem seu próprio título, mensagem e deslocamento de atraso em relação ao original. Todos os lembretes pendentes de um envio são cancelados no momento em que um completion event chega.",
+  },
+  {
+    term: 'Repeating schedule',
+    definition: "Um calendário que dispara segundo um padrão de datas recorrente — a cada N dias, dias específicos da semana ou dias concretos do mês — dentro de uma janela de início e fim definida. Criado escolhendo uma opção de data de repetição no passo 4. Quando o início e o fim são datas de calendário absolutas, o calendário é idêntico para todos os participantes. Quando são relativos ao registro, torna-se um calendário pessoal.",
+  },
+  {
+    term: 'Result',
+    definition: "O registro que o Samply cria quando uma notificação é enviada. Armazena o Samply ID, o message ID, o conteúdo da notificação, o horário de envio no servidor e os carimbos de tempo por evento para recebimento, toque e abertura da pesquisa. Quando um completion event chega, o Samply adiciona um evento «completed» ao mesmo registro de resultado. O registro de histórico exibe os resultados; eles podem ser baixados em formato CSV.",
+  },
+  {
+    term: 'Samply ID',
+    definition: "O identificador anônimo atribuído a um participante no momento do registro. Gerado pelo Samply, não visível ao participante e nunca vinculado a dados de contato pessoais. Usado como chave primária para todos os dados de participantes no painel de controle. Disponível como marcador de posição de URL %SAMPLY_ID%.",
+  },
+  {
+    term: 'Schedule',
+    definition: "Uma configuração de notificação que define o conteúdo, o público, o calendário e, opcionalmente, os lembretes para um conjunto de envios. Submeter um calendário o expande imediatamente em uma fila. Existem quatro tipos: pontual, repetido, pessoal e aleatório. Um calendário não pode ser editado após a submissão — exclua e recrie para fazer alterações.",
+  },
+  {
+    term: 'Study',
+    definition: "O contêiner de nível superior no Samply. Todos os participantes, calendários, linhas de fila e históricos de respostas pertencem exatamente a um estudo. Os pesquisadores criam um estudo uma vez e gerenciam tudo dentro dele. Corresponde ao modelo Project na camada de dados.",
+  },
+  {
+    term: 'Time window',
+    definition: "Um modo de horário de envio em que o Samply escolhe um horário aleatório entre um horário De e um horário Até para cada participante em cada dia de disparo, com um intervalo mínimo entre extrações se forem solicitados vários envios por janela. Escolhido no passo 3 do formulário de calendário. Produz um calendário aleatório ou pessoal-aleatório.",
+  },
+  {
+    term: 'Timestamp sent',
+    definition: "O carimbo de tempo Unix em milissegundos do momento exato em que o servidor Samply enviou a notificação. Disponível como marcador de posição de URL %TIMESTAMP_SENT%. Sempre substituído.",
+  },
+];
+
+function GlossaryContentPt() {
+  return (
+    <>
+      <p>
+        Termos-chave utilizados no Samply e nesta documentação, em ordem alfabética.
+      </p>
+
+      <dl>
+        {TERMS_PT.map((t) => (
           <Fragment key={t.term}>
             <dt>{t.term}</dt>
             <dd>{t.definition}</dd>

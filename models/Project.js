@@ -96,12 +96,14 @@ const projectSchema = new mongoose.Schema({
       stop_next: Number,
       allCurrentParticipants: Boolean,
       allCurrentGroups: Boolean,
+      yokedDesign: Boolean,
       timezone: String,
       expireIn: Number, // number of milliseconds
       useParticipantTimezone: Boolean,
       reminders: JSON,
     },
   ],
+  projectGroups: [{ id: String, name: String }],
   mobileUsers: [
     {
       id: String,

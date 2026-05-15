@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchParticipantBysamplyId, fetchReceipts } from "@/lib/data/participants";
 import type { IReceipt } from "@/lib/models/receipt";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Receipts — Samply" };
 
@@ -22,6 +23,7 @@ export default async function ReceiptsPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const { id: samplyId } = await params;
 
@@ -40,41 +42,41 @@ export default async function ReceiptsPage({
     <div className="inner">
       <p />
       <nav>
-        <a href={`/payout/${samplyId}`}>Payouts</a>
+        <a href={`/payout/${samplyId}`}>{t("legacyPayouts.tabPayouts")}</a>
         {" | "}
-        <strong>Receipts</strong>
+        <strong>{t("legacyPayouts.tabReceipts")}</strong>
       </nav>
 
-      <h2>Participant info</h2>
+      <h2>{t("legacyPayouts.participantInfo")}</h2>
       <div className="participantInformation">
-        <div className="cell">Samply ID</div>
+        <div className="cell">{t("legacyPayouts.idLabel")}</div>
         <div className="cell">{samplyId}</div>
         {p.name && (
           <>
-            <div className="cell">Name</div>
+            <div className="cell">{t("legacyPayouts.nameLabel")}</div>
             <div className="cell">{p.name}</div>
           </>
         )}
         {p.stripeInformation?.payouts_enabled && (
           <>
-            <div className="cell">Email</div>
+            <div className="cell">{t("legacyPayouts.emailLabel")}</div>
             <div className="cell">{p.email}</div>
           </>
         )}
-        <div className="cell">Payments</div>
+        <div className="cell">{t("legacyPayouts.paymentsLabel")}</div>
         <div className="cell">
-          {p.stripeInformation?.payouts_enabled ? "Enabled" : "Disabled"}
+          {p.stripeInformation?.payouts_enabled ? t("legacyPayouts.enabled") : t("legacyPayouts.disabled")}
         </div>
       </div>
 
-      <h2>Receipts</h2>
+      <h2>{t("legacyPayouts.tabReceipts")}</h2>
 
       <p>
         <a href={`/downloadreceipts/${samplyId}`}>⬇ Download CSV</a>
       </p>
 
       {receipts.length === 0 ? (
-        <p>No receipts yet.</p>
+        <p>{t("legacyPayouts.noReceipts")}</p>
       ) : (
         <div className="card">
           <div className="users">
@@ -82,13 +84,13 @@ export default async function ReceiptsPage({
               <thead>
                 <tr>
                   <td>№</td>
-                  <td>Date</td>
-                  <td>Receipt ID</td>
-                  <td>Status</td>
-                  <td>Currency</td>
-                  <td>Amount</td>
-                  <td>Fee</td>
-                  <td>URL</td>
+                  <td>{t("legacyPayouts.colDate")}</td>
+                  <td>{t("legacyPayouts.colReceiptId")}</td>
+                  <td>{t("legacyPayouts.colStatus")}</td>
+                  <td>{t("legacyPayouts.colCurrency")}</td>
+                  <td>{t("legacyPayouts.colAmount")}</td>
+                  <td>{t("legacyPayouts.colFee")}</td>
+                  <td>{t("legacyPayouts.colUrl")}</td>
                 </tr>
               </thead>
               <tbody>

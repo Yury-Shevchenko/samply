@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import InvitationsClient from "./InvitationsClient";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -9,6 +10,7 @@ interface Props {
 
 export default async function InvitationsPage({ params }: Props) {
   const { studyId } = await params;
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -26,11 +28,11 @@ export default async function InvitationsPage({ params }: Props) {
       {/* Header */}
       <div>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-          enrollment
+          {t("invitations.label")}
         </div>
         <div className="font-[family-name:var(--font-display)] font-bold"
           style={{ fontSize: "2.8rem", letterSpacing: "-0.02em", lineHeight: 1 }}>
-          Invite participants
+          {t("invitations.title")}
         </div>
       </div>
 
@@ -39,19 +41,20 @@ export default async function InvitationsPage({ params }: Props) {
         <span style={{ fontSize: "1.8rem", flexShrink: 0, marginTop: "0.1rem" }}>📱</span>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", fontWeight: 600, color: "var(--sage)", letterSpacing: ".08em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
-            Prerequisite: Samply Research app
+            {t("invitations.prereqLabel")}
           </div>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.6, letterSpacing: ".01em" }}>
-            Participants must install <strong style={{ color: "var(--ink)" }}>Samply Research</strong> before joining.{" "}
+            {(() => { const [pre, post] = t("invitations.prereqBody").split("{appName}"); return <>{pre}<strong style={{ color: "var(--ink)" }}>Samply Research</strong>{post}</>;})()}
+            {" "}
             <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noreferrer"
               style={{ color: "var(--sage)", textDecoration: "none" }}
               className="hover:opacity-70 transition-opacity">
-              Google Play
+              {t("invitations.googlePlay")}
             </a>{" "}·{" "}
             <a href="https://apps.apple.com/app/samply-research/id1511062019" target="_blank" rel="noreferrer"
               style={{ color: "var(--sage)", textDecoration: "none" }}
               className="hover:opacity-70 transition-opacity">
-              App Store
+              {t("invitations.appStore")}
             </a>
           </p>
         </div>
@@ -66,6 +69,7 @@ export default async function InvitationsPage({ params }: Props) {
         webLink={webLink}
         deepLink={deepLink}
         customLink={customLink}
+        studyCode={project.slug}
       />
 
     </div>

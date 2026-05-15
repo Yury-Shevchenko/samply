@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ProjectFull } from "@/lib/data/projects";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { useT } from "@/app/components/TranslationProvider";
 
 interface ProjectFormProps {
   project?: Partial<ProjectFull>;
@@ -169,6 +170,7 @@ function ImagePicker({
   onFileChange,
   onRemove,
   onCancelNew,
+  t,
 }: {
   currentImage?: string;
   previewUrl: string | null;
@@ -176,14 +178,15 @@ function ImagePicker({
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onRemove: () => void;
   onCancelNew: () => void;
+  t: (key: string) => string;
 }) {
   const displayUrl = previewUrl ?? (currentImage && !removeImage ? currentImage : null);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-      <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Study image</span>
+      <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("projectForm.imageLabel")}</span>
       <p style={{ margin: "0 0 0.4rem", fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
-        Displayed next to your study in the app and on the public studies page.
+        {t("projectForm.imageHint")}
       </p>
 
       <label
@@ -235,10 +238,10 @@ function ImagePicker({
         {/* Text + hidden input */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontSize: "1.3rem", color: "var(--ink)", fontWeight: 500 }}>
-            {displayUrl ? (previewUrl ? "Image selected" : "Current image") : "Choose image"}
+            {displayUrl ? (previewUrl ? t("projectForm.imageSelected") : t("projectForm.imageCurrent")) : t("projectForm.imageChoose")}
           </div>
           <div style={{ fontSize: "1.1rem", color: "var(--ink-40)", marginTop: "0.2rem" }}>
-            JPG, PNG or GIF
+            {t("projectForm.imageTypes")}
           </div>
         </div>
 
@@ -265,7 +268,7 @@ function ImagePicker({
             pointerEvents: "none",
           }}
         >
-          {displayUrl ? "Replace" : "Browse"}
+          {displayUrl ? t("projectForm.imageReplace") : t("projectForm.imageBrowse")}
         </div>
       </label>
 
@@ -278,7 +281,7 @@ function ImagePicker({
               onClick={onCancelNew}
               style={{ fontSize: "1.2rem", color: "var(--ink-60)", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "var(--font-body)" }}
             >
-              Cancel selection
+              {t("projectForm.imageCancelSel")}
             </button>
           )}
           {!previewUrl && currentImage && !removeImage && (
@@ -287,7 +290,7 @@ function ImagePicker({
               onClick={onRemove}
               style={{ fontSize: "1.2rem", color: "var(--coral)", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "var(--font-body)" }}
             >
-              Remove image
+              {t("projectForm.imageRemove")}
             </button>
           )}
         </div>
@@ -303,13 +306,16 @@ function ImagePicker({
 export default function ProjectForm({
   project = {},
   action,
-  submitLabel = "Save",
+  submitLabel,
   cancelHref = "/dashboard",
 }: ProjectFormProps) {
+  const { t } = useT();
   const s = project.settings ?? {};
   const [showCode, setShowCode] = useState(s.askParticipantCode ?? false);
   const [showGroup, setShowGroup] = useState(s.askParticipantGroup ?? false);
+  const [groupEntryMethod, setGroupEntryMethod] = useState<"code" | "list" | "random">(s.groupEntryMethod ?? "code");
   const [removeImage, setRemoveImage] = useState(false);
+
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -330,28 +336,28 @@ export default function ProjectForm({
     <form action={action} style={{ display: "flex", flexDirection: "column", gap: "1.8rem" }}>
 
       {/* 1 · Study identity */}
-      <Section title="Study identity">
-        <Field label="Study name *" htmlFor="name">
+      <Section title={t("projectForm.sectionIdentity")}>
+        <Field label={t("projectForm.nameLabel")} htmlFor="name">
           <input
             type="text"
             id="name"
             name="name"
             defaultValue={project.name ?? ""}
             required
-            placeholder="e.g. Daily Mood Study 2025"
+            placeholder={t("projectForm.namePlaceholder")}
             style={inputStyle}
           />
         </Field>
         <Field
-          label="Description"
+          label={t("projectForm.descLabel")}
           htmlFor="description"
-          hint="Brief overview shown to participants in the app and on the public studies page."
+          hint={t("projectForm.descHint")}
         >
           <textarea
             id="description"
             name="description"
             defaultValue={project.description ?? ""}
-            placeholder="Tell participants what the study is about, how long it lasts, and how often they will receive notifications…"
+            placeholder={t("projectForm.descPlaceholder")}
             style={textareaStyle}
           />
         </Field>
@@ -363,83 +369,84 @@ export default function ProjectForm({
           onFileChange={handleImageChange}
           onRemove={() => { setRemoveImage(true); setPreviewUrl(null); }}
           onCancelNew={handleCancelNew}
+          t={t}
         />
       </Section>
 
       {/* 2 · Participant experience */}
-      <Section title="Participant experience">
+      <Section title={t("projectForm.sectionExperience")}>
         <Field
-          label="Consent form"
+          label={t("projectForm.consentLabel")}
           htmlFor="welcomeMessage"
         >
           <div style={{ marginBottom: "0.8rem", padding: "1.2rem 1.4rem", background: "rgba(180,130,0,.06)", border: "1px solid rgba(180,130,0,.22)", borderRadius: "0.8rem", fontSize: "1.15rem", color: "var(--ink-60)", lineHeight: 1.6 }}>
-            <strong style={{ color: "var(--ink)", display: "block", marginBottom: "0.5rem" }}>For health-related human subject research, this consent text must include:</strong>
+            <strong style={{ color: "var(--ink)", display: "block", marginBottom: "0.5rem" }}>{t("projectForm.consentNoticeTitle")}</strong>
             <ol style={{ margin: 0, paddingLeft: "1.6rem", display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-              <li>The nature, purpose, and duration of the research</li>
-              <li>The procedures, risks, and expected benefits to participants</li>
-              <li>How data will be handled, kept confidential, and whether it will be shared with third parties</li>
-              <li>A contact point for participant questions</li>
-              <li>How participants can withdraw from the study</li>
+              <li>{t("projectForm.consentNoticeItem1")}</li>
+              <li>{t("projectForm.consentNoticeItem2")}</li>
+              <li>{t("projectForm.consentNoticeItem3")}</li>
+              <li>{t("projectForm.consentNoticeItem4")}</li>
+              <li>{t("projectForm.consentNoticeItem5")}</li>
             </ol>
-            <p style={{ margin: "0.8rem 0 0" }}>Only publish studies once this information is complete and reviewed. If consent is obtained outside the app, only participants who have already completed that external consent process may be invited — use individual invitation links or codes so that only previously consented participants can join.</p>
+            <p style={{ margin: "0.8rem 0 0" }}>{t("projectForm.consentNoticeFooter")}</p>
           </div>
           <p style={{ margin: "0 0 0.5rem", fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.5 }}>
-            Displayed when participants tap &apos;Join the study&apos; in the app. Required for public studies.
+            {t("projectForm.consentHint")}
           </p>
           <textarea
             id="welcomeMessage"
             name="welcomeMessage"
             defaultValue={project.welcomeMessage ?? ""}
-            placeholder="Welcome to our study! By joining, you agree to…"
+            placeholder={t("projectForm.consentPlaceholder")}
             style={{ ...textareaStyle, minHeight: "12rem" }}
           />
         </Field>
         <Field
-          label="Message after joining"
+          label={t("projectForm.afterJoinLabel")}
           htmlFor="messageAfterJoin"
-          hint="Shown immediately after a participant taps 'Join'. Use it to confirm enrolment and set expectations for the first notification."
+          hint={t("projectForm.afterJoinHint")}
         >
           <textarea
             id="messageAfterJoin"
             name="messageAfterJoin"
             defaultValue={project.messageAfterJoin ?? ""}
-            placeholder="Thank you for joining! You will receive your first notification tomorrow at 9 am…"
+            placeholder={t("projectForm.afterJoinPlaceholder")}
             style={textareaStyle}
           />
         </Field>
         <Field
-          label="Completion message"
+          label={t("projectForm.completionLabel")}
           htmlFor="completionMessage"
-          hint="Displayed to participants after they complete a survey or task — relevant when you redirect participants to a Samply completion URL to register the completion event."
+          hint={t("projectForm.completionHint")}
         >
           <textarea
             id="completionMessage"
             name="completionMessage"
             defaultValue={project.completionMessage ?? ""}
-            placeholder="Thank you! Your response has been recorded. The study has ended."
+            placeholder={t("projectForm.completionPlaceholder")}
             style={textareaStyle}
           />
         </Field>
       </Section>
 
       {/* 3 · Enrollment options */}
-      <Section title="Enrollment options">
+      <Section title={t("projectForm.sectionEnrollment")}>
         <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
           <div style={{ paddingBottom: "1.6rem" }}>
             <Toggle
               id="askParticipantCode"
               name="askParticipantCode"
-              label="Ask for individual participant code"
-              hint="Useful for linking app participants to external datasets or counterbalancing conditions."
+              label={t("projectForm.codeToggle")}
+              hint={t("projectForm.codeToggleHint")}
               checked={showCode}
               onChange={setShowCode}
             >
-              <Field label="Code prompt message" htmlFor="codeMessage">
+              <Field label={t("projectForm.codePromptLabel")} htmlFor="codeMessage">
                 <textarea
                   id="codeMessage"
                   name="codeMessage"
                   defaultValue={project.codeMessage ?? ""}
-                  placeholder="Please enter the code provided by the researcher."
+                  placeholder={t("projectForm.codePlaceholder")}
                   style={{ ...textareaStyle, minHeight: "6.4rem" }}
                 />
               </Field>
@@ -451,20 +458,65 @@ export default function ProjectForm({
           <Toggle
             id="askParticipantGroup"
             name="askParticipantGroup"
-            label="Ask participants to select a group"
-            hint="Useful for between-subjects designs where participants are assigned to different conditions."
+            label={t("projectForm.groupToggle")}
+            hint={t("projectForm.groupToggleHint")}
             checked={showGroup}
             onChange={setShowGroup}
           >
-            <Field label="Group prompt message" htmlFor="groupMessage">
-              <textarea
-                id="groupMessage"
-                name="groupMessage"
-                defaultValue={project.groupMessage ?? ""}
-                placeholder="Please enter the group code assigned to you by the researcher."
-                style={{ ...textareaStyle, minHeight: "6.4rem" }}
-              />
-            </Field>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+              <Field label={t("projectForm.groupMethodLabel")} htmlFor="groupEntryMethod">
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                  {(["code", "list", "random"] as const).map((method) => (
+                    <label
+                      key={method}
+                      style={{ display: "flex", alignItems: "flex-start", gap: "1rem", cursor: "pointer" }}
+                    >
+                      <input
+                        type="radio"
+                        name="groupEntryMethod"
+                        value={method}
+                        checked={groupEntryMethod === method}
+                        onChange={() => setGroupEntryMethod(method)}
+                        style={{ marginTop: "0.25rem", accentColor: "var(--sage)", flexShrink: 0 }}
+                      />
+                      <span style={{ fontSize: "1.2rem", color: "var(--ink-60)", lineHeight: 1.5 }}>
+                        {method === "code" ? (
+                          <>
+                            <strong style={{ color: "var(--ink)", display: "block" }}>{t("projectForm.groupMethodCodeTitle")}</strong>
+                            {t("projectForm.groupMethodCodeDesc")}
+                          </>
+                        ) : method === "list" ? (
+                          <>
+                            <strong style={{ color: "var(--ink)", display: "block" }}>{t("projectForm.groupMethodListTitle")}</strong>
+                            {t("projectForm.groupMethodListDesc")}
+                          </>
+                        ) : (
+                          <>
+                            <strong style={{ color: "var(--ink)", display: "block" }}>{t("projectForm.groupMethodRandomTitle")}</strong>
+                            {t("projectForm.groupMethodRandomDesc")}
+                          </>
+                        )}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </Field>
+              <Field label={t("projectForm.groupPromptLabel")} htmlFor="groupMessage">
+                <textarea
+                  id="groupMessage"
+                  name="groupMessage"
+                  defaultValue={project.groupMessage ?? ""}
+                  placeholder={
+                    groupEntryMethod === "list"
+                      ? t("projectForm.groupPromptListPh")
+                      : groupEntryMethod === "random"
+                        ? t("projectForm.groupPromptRandomPh")
+                        : t("projectForm.groupPromptCodePh")
+                  }
+                  style={{ ...textareaStyle, minHeight: "6.4rem" }}
+                />
+              </Field>
+            </div>
           </Toggle>
         </div>
       </Section>
@@ -472,7 +524,7 @@ export default function ProjectForm({
       {/* Submit */}
       <div className="flex items-center gap-[1.6rem]" style={{ paddingTop: "0.4rem" }}>
         <SubmitButton
-          pendingLabel="Saving…"
+          pendingLabel={t("projectForm.saving")}
           style={{
             padding: "1.2rem 2.8rem",
             background: "var(--coral)",
@@ -484,14 +536,14 @@ export default function ProjectForm({
             fontFamily: "var(--font-body)",
           }}
         >
-          {submitLabel}
+          {submitLabel ?? t("projectForm.saveChanges")}
         </SubmitButton>
         <a
           href={cancelHref}
           style={{ fontSize: "1.35rem", color: "var(--ink-60)", textDecoration: "none" }}
           className="hover:opacity-70 transition-opacity"
         >
-          Cancel
+          {t("projectForm.cancel")}
         </a>
       </div>
     </form>

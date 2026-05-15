@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import { toggleApprovalRequestAction } from "../actions";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 export async function generateMetadata({ params }: { params: Promise<{ studyId: string }> }) {
   const { studyId } = await params;
@@ -21,6 +22,7 @@ export default async function ApprovalPage({
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
+  const { t } = await getT();
   const project = await fetchProjectById(studyId, session.user.id);
   if (!project) notFound();
 
@@ -47,19 +49,19 @@ export default async function ApprovalPage({
         <div style={CARD}>
           <h2 className="font-[family-name:var(--font-display)] font-bold m-0"
             style={{ fontSize: "2rem", letterSpacing: "-0.02em", marginBottom: "1.8rem" }}>
-            Your study is public
+            {t("approval.publicTitle")}
           </h2>
           <p style={PROSE}>
-            Your study is now displayed in the public list of studies in the <strong>Samply Research</strong> mobile application.
-            Participants who browse the app can discover and join it directly.
+            {t("approval.publicBody1", { appName: "Samply Research" }).replace("Samply Research", "")}
+            <strong>Samply Research</strong>
+            {t("approval.publicBody1", { appName: "Samply Research" }).split("Samply Research")[1]}
           </p>
           <p style={PROSE}>
-            If you want to remove the study from the public list, press the button below.
-            Note that this action cannot be undone — if you want to make your study public again later, you would need to reapply for approval.
+            {t("approval.publicBody2")}
           </p>
           <form action={toggleAction}>
             <SubmitButton
-              pendingLabel="Removing…"
+              pendingLabel={t("approval.removingLabel")}
               style={{
                 padding: "0.9rem 2.2rem",
                 background: "rgba(214,90,48,.08)",
@@ -71,7 +73,7 @@ export default async function ApprovalPage({
                 fontFamily: "var(--font-body)",
               }}
             >
-              Remove from public list
+              {t("approval.removeFromPublic")}
             </SubmitButton>
           </form>
         </div>
@@ -86,20 +88,21 @@ export default async function ApprovalPage({
           <div style={{ fontSize: "2.4rem", marginBottom: "1rem" }}>✓</div>
           <h2 className="font-[family-name:var(--font-display)] font-bold m-0"
             style={{ fontSize: "2rem", letterSpacing: "-0.02em", marginBottom: "1.8rem", color: "var(--sage)" }}>
-            Request submitted
+            {t("approval.pendingTitle")}
           </h2>
           <p style={{ ...PROSE, color: "var(--ink)" }}>
-            Your request for approval has been submitted. We will review your study and get back to you.
+            {t("approval.pendingBody1")}
           </p>
           <p style={{ ...PROSE }}>
-            If you don&apos;t hear from us for a while, don&apos;t hesitate to contact us by{" "}
+            {t("approval.pendingBody2", { emailLink: "" }).split("{emailLink}")[0]}
             <a href="mailto:yury.shevchenko@uni.kn?subject=Samply approval request" style={{ color: "var(--sage)" }}>
-              email
-            </a>.
+              {t("approval.pendingEmail")}
+            </a>
+            {t("approval.pendingBody2", { emailLink: "" }).split("{emailLink}")[1]}
           </p>
           <form action={toggleAction} style={{ marginTop: "2rem" }}>
             <SubmitButton
-              pendingLabel="Withdrawing…"
+              pendingLabel={t("approval.withdrawingLabel")}
               style={{
                 padding: "0.7rem 1.8rem",
                 background: "none",
@@ -111,7 +114,7 @@ export default async function ApprovalPage({
                 fontFamily: "var(--font-body)",
               }}
             >
-              Withdraw request
+              {t("approval.withdrawRequest")}
             </SubmitButton>
           </form>
         </div>
@@ -124,16 +127,18 @@ export default async function ApprovalPage({
       <div style={CARD}>
         <h2 className="font-[family-name:var(--font-display)] font-bold m-0"
           style={{ fontSize: "2rem", letterSpacing: "-0.02em", marginBottom: "1.8rem" }}>
-          Submit for public approval
+          {t("approval.submitTitle")}
         </h2>
 
         <p style={PROSE}>
-          Public studies are displayed in the study list inside the <strong>Samply Research</strong> mobile app,
-          so any participant browsing the app can discover and join your study.
+          {t("approval.submitBody1", { appName: "Samply Research" }).split("Samply Research")[0]}
+          <strong>Samply Research</strong>
+          {t("approval.submitBody1", { appName: "Samply Research" }).split("Samply Research")[1]}
         </p>
         <p style={PROSE}>
-          Your study does <strong>not</strong> have to be public to collect data — you can always invite participants
-          privately via QR code or direct link.
+          {t("approval.submitBody2", { not: "" }).split("{not}")[0]}
+          <strong>{t("approval.submitBodyNot")}</strong>
+          {t("approval.submitBody2", { not: "" }).split("{not}")[1]}
         </p>
 
         <div
@@ -146,15 +151,13 @@ export default async function ApprovalPage({
           }}
         >
           <p style={{ ...PROSE, margin: 0, color: "var(--ink)" }}>
-            <strong>Requirements for approval:</strong> complete participant instructions, a consent form,
-            researcher information, and a confirmed researcher email address.
-            Studies intended only for testing should use the private QR-code invitation instead.
+            {t("approval.requirementsNote")}
           </p>
         </div>
 
         <form action={toggleAction}>
           <SubmitButton
-            pendingLabel="Submitting…"
+            pendingLabel={t("approval.submittingLabel")}
             style={{
               padding: "0.9rem 2.4rem",
               background: "var(--ink)",
@@ -166,7 +169,7 @@ export default async function ApprovalPage({
               fontFamily: "var(--font-body)",
             }}
           >
-            Submit approval request →
+            {t("approval.submitButton")}
           </SubmitButton>
         </form>
       </div>

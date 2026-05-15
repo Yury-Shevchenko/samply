@@ -15,6 +15,7 @@ const nanoid = customAlphabet(
 );
 const webhookController = require("./webhookController");
 const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByFinid, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
+const { scheduleForUser } = require("../services/scheduleForUser");
 
 const MAX_PROJECT_PENDING = 50_000;
 
@@ -1689,6 +1690,8 @@ exports.joinStudy = async (req, res) => {
       {
         notifications: 1,
         mobileUsers: 1,
+        projectGroups: 1,
+        settings: 1,
         name: 1,
         description: 1,
         image: 1,
@@ -1717,16 +1720,44 @@ exports.joinStudy = async (req, res) => {
     if (req.body.group) {
       // remove whitespace from both ends of the string
       const newGroupName = req.body.group.trim();
-      // search for the group in the existing groups
-      const groups = project.mobileUsers.filter(
+      // search for the group among existing participant assignments
+      const existingInUsers = project.mobileUsers.find(
         (user) => user.group && user.group.name === newGroupName
       );
-      if (groups.length) {
-        // if group exists, add the group name and ID to a new user
-        group = { name: groups[0].group.name, id: groups[0].group.id };
+      // also check standalone projectGroups (pre-created empty groups)
+      const existingInGroups = (project.projectGroups || []).find(
+        (g) => g.name === newGroupName
+      );
+      if (existingInUsers) {
+        group = { name: existingInUsers.group.name, id: existingInUsers.group.id };
+      } else if (existingInGroups) {
+        group = { name: existingInGroups.name, id: existingInGroups.id };
       } else {
-        // if group does not exist, create new ID
+        // group does not exist anywhere — create new ID
         group = { name: newGroupName, id: nanoid(4) };
+      }
+    }
+
+    // Balanced random assignment — only for new participants without a group
+    const existingParticipant = project.mobileUsers.find((u) => u.id === req.body.id);
+    if (!group && !existingParticipant?.group && project.settings?.askParticipantGroup && project.settings?.groupEntryMethod === "random") {
+      // Build the list of all defined groups (projectGroups + participant-derived) with active participant counts
+      const groupMap = new Map();
+      for (const g of project.projectGroups || []) {
+        groupMap.set(g.id, { id: g.id, name: g.name, count: 0 });
+      }
+      for (const u of project.mobileUsers) {
+        if (u.group && u.group.id && !u.deactivated) {
+          if (!groupMap.has(u.group.id)) groupMap.set(u.group.id, { id: u.group.id, name: u.group.name, count: 0 });
+          groupMap.get(u.group.id).count++;
+        }
+      }
+      const allGroups = Array.from(groupMap.values());
+      if (allGroups.length > 0) {
+        const minCount = Math.min(...allGroups.map((g) => g.count));
+        const candidates = allGroups.filter((g) => g.count === minCount);
+        const picked = candidates[Math.floor(Math.random() * candidates.length)];
+        group = { name: picked.name, id: picked.id };
       }
     }
 
@@ -1756,6 +1787,14 @@ exports.joinStudy = async (req, res) => {
     }
     await project.save();
 
+    // Auto-schedule group-targeted non-yoked notifications for this new group member
+    if (group && project.notifications && project.notifications.length > 0) {
+      const userCreated = isNew ? new Date() : (project.mobileUsers.find((u) => u.id === req.body.id) || {}).created || new Date();
+      await scheduleForUser(project._id, { id: req.body.id, created: userCreated }, group.id, project.notifications).catch((err) => {
+        console.error("scheduleForUser error during joinStudy:", err);
+      });
+    }
+
     // if there are scheduled notifications, create them for the new user
     if (project && project.notifications && project.notifications.length > 0) {
       await Promise.all(
@@ -1778,7 +1817,24 @@ exports.joinStudy = async (req, res) => {
             recipientGroupIds: [],
           };
 
-          if (sub.scheduleInFuture && sub.schedule === "repeat") {
+          if (sub.schedule === "enrollment") {
+            // Group-targeted configs are handled by scheduleForUser above; skip here to avoid duplicates
+            const isGroupTargeted = (sub.groups && sub.groups.length > 0) || sub.allCurrentGroups;
+            if (isGroupTargeted && group) return;
+            // For non-group-targeted configs, check group requirement
+            if (sub.allCurrentGroups && !group) return;
+            const delayMs = (((sub.delay && sub.delay.days) || 0) * 86400 + ((sub.delay && sub.delay.hours) || 0) * 3600 + ((sub.delay && sub.delay.minutes) || 0) * 60) * 1000;
+            // Add 30s buffer so scheduleBatch's strict > now filter doesn't skip zero-delay docs
+            const MIN_BUFFER_MS = 30 * 1000;
+            const scheduledFor = new Date(Date.now() + delayMs + MIN_BUFFER_MS);
+            await scheduleBatch([{
+              ...baseDoc,
+              scheduledFor,
+              status: "pending",
+              created: new Date(),
+            }]).catch((err) => console.error("enrollment schedule error:", err));
+
+          } else if (sub.scheduleInFuture && sub.schedule === "repeat") {
             let user_int_start = sub.int_start;
             let user_int_end = sub.int_end;
 

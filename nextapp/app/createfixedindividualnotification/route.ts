@@ -23,6 +23,7 @@ interface FixedBody {
   scheduleInFuture?: boolean;
   participantId?: string[] | null;
   groups?: string[] | null;
+  yokedDesign?: boolean;
   intervals: FixedInterval[];
 }
 
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
   try { body = await req.json(); } catch { return NextResponse.json({ error: "Invalid JSON" }, { status: 400 }); }
 
   const { projectId, title, message, url: rawUrl, timezone, useParticipantTimezone, expireIn, reminders,
-    scheduleInFuture, participantId, groups, intervals } = body;
+    scheduleInFuture, participantId, groups, yokedDesign, intervals } = body;
   const url = sanitizeSurveyUrl(rawUrl);
 
   if (!projectId || !title || !message || !timezone || !intervals?.length) {
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
   const p = project as unknown as {
     creator: { toString(): string };
     members?: Array<{ toString(): string }>;
-    mobileUsers: Array<{ id: string; deactivated?: boolean; group?: { id: string } }>;
+    mobileUsers: Array<{ id: string; deactivated?: boolean; created?: Date; group?: { id: string } }>;
   };
   const isOwner = p.creator.toString() === session.user.id;
   const isMember = p.members?.some((m) => m.toString() === session.user.id) ?? false;
@@ -89,21 +90,36 @@ export async function POST(req: NextRequest) {
     allCurrentParticipants: participantId !== null && participantId !== undefined && participantId.length === 0,
     allCurrentGroups: groups !== null && groups !== undefined && groups.length === 0,
     name: "One-time", windowInterval: interval,
-    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, created: new Date(),
+    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, created: new Date(),
   }));
 
   try {
     for (const interval of intervals) {
       if (groupIds) {
         for (const group of groupIds) {
-          const docs = computeRandomWindowDocs({
-            ...baseDoc, windowFrom: interval.from, windowTo: interval.to,
-            int_start: interval.from, int_end: interval.to,
-            number: interval.number, distance: interval.distance || 0,
-            recipientGroupIds: [group], recipientUserIds: [],
-          });
-          const r = await scheduleBatch(docs);
-          counter.inserted += r.inserted; counter.skipped += r.skipped;
+          const groupMembers = p.mobileUsers.filter((u) => u.group?.id === group && !u.deactivated);
+          if (!groupMembers.length) continue;
+          if (yokedDesign) {
+            const docs = computeRandomWindowDocs({
+              ...baseDoc, windowFrom: interval.from, windowTo: interval.to,
+              int_start: interval.from, int_end: interval.to,
+              number: interval.number, distance: interval.distance || 0,
+              recipientGroupIds: [group], recipientUserIds: [],
+            });
+            const r = await scheduleBatch(docs);
+            counter.inserted += r.inserted; counter.skipped += r.skipped;
+          } else {
+            for (const member of groupMembers) {
+              const docs = computeRandomWindowDocs({
+                ...baseDoc, windowFrom: interval.from, windowTo: interval.to,
+                int_start: interval.from, int_end: interval.to,
+                number: interval.number, distance: interval.distance || 0,
+                recipientUserIds: [member.id], recipientGroupIds: [],
+              });
+              const r = await scheduleBatch(docs);
+              counter.inserted += r.inserted; counter.skipped += r.skipped;
+            }
+          }
         }
       }
 

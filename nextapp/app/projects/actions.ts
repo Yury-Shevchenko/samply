@@ -93,6 +93,7 @@ export async function createProjectAction(formData: FormData) {
     settings: {
       askParticipantCode: formData.get("askParticipantCode") === "on",
       askParticipantGroup: formData.get("askParticipantGroup") === "on",
+      groupEntryMethod: (["list", "random"] as const).includes(formData.get("groupEntryMethod") as "list" | "random") ? formData.get("groupEntryMethod") as "list" | "random" : "code",
     },
   });
 
@@ -125,6 +126,7 @@ export async function updateProjectAction(id: string, formData: FormData) {
     completionMessage: getStr("completionMessage", 2000),
     "settings.askParticipantCode": formData.get("askParticipantCode") === "on",
     "settings.askParticipantGroup": formData.get("askParticipantGroup") === "on",
+    "settings.groupEntryMethod": (["list", "random"] as const).includes(formData.get("groupEntryMethod") as "list" | "random") ? formData.get("groupEntryMethod") as "list" | "random" : "code",
   };
 
   if (newImageUrl) {

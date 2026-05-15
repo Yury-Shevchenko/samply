@@ -5,6 +5,7 @@ import { fetchScheduledNotifications, type NotificationConfig } from "@/lib/data
 import Hand from "@/app/components/ui/Hand";
 import { deleteNotificationAction } from "@/app/scheduled/actions";
 import { DeleteScheduleButton } from "@/app/scheduled/DeleteScheduleButton";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -14,10 +15,11 @@ interface Props {
 const TILTS = [-0.8, 0.6, -0.5, 0.7, -0.6, 0.5];
 
 const TYPE_META: Record<string, { label: string; fg: string; bg: string; border: string }> = {
-  "one-time":  { label: "one-time",   fg: "var(--coral)", bg: "rgba(214,90,48,.08)",  border: "rgba(214,90,48,.25)" },
-  repeating:   { label: "repeating",  fg: "var(--sage)",  bg: "rgba(61,115,107,.08)", border: "rgba(61,115,107,.25)" },
-  randomized:  { label: "randomized", fg: "var(--sage)",  bg: "rgba(61,115,107,.08)", border: "rgba(61,115,107,.25)" },
-  personal:    { label: "personal",   fg: "var(--coral)", bg: "rgba(214,90,48,.08)",  border: "rgba(214,90,48,.25)" },
+  "one-time":   { label: "one-time",   fg: "var(--coral)",  bg: "rgba(214,90,48,.08)",   border: "rgba(214,90,48,.25)" },
+  repeating:    { label: "repeating",  fg: "var(--sage)",   bg: "rgba(61,115,107,.08)",  border: "rgba(61,115,107,.25)" },
+  randomized:   { label: "randomized", fg: "var(--sage)",   bg: "rgba(61,115,107,.08)",  border: "rgba(61,115,107,.25)" },
+  personal:     { label: "personal",   fg: "var(--coral)",  bg: "rgba(214,90,48,.08)",   border: "rgba(214,90,48,.25)" },
+  enrollment:   { label: "on join",    fg: "#7c6ab5",       bg: "rgba(124,106,181,.08)", border: "rgba(124,106,181,.25)" },
 };
 
 function eventWindowStr(
@@ -41,6 +43,7 @@ function eventWindowStr(
 }
 
 function scheduleType(n: NotificationConfig): string {
+  if (n.schedule === "enrollment") return "enrollment";
   if (n.start_event === "registration" || n.stop_event === "registration") return "personal";
   if (n.randomize) return "randomized";
   if (n.date && !n.int_start) return "one-time";
@@ -50,6 +53,15 @@ function scheduleType(n: NotificationConfig): string {
 
 function scheduleDescription(n: NotificationConfig): string {
   const type = scheduleType(n);
+  if (type === "enrollment") {
+    const d = n.delay;
+    if (!d || (!d.days && !d.hours && !d.minutes)) return "immediately on join";
+    const parts: string[] = [];
+    if (d.days)    parts.push(`${d.days}d`);
+    if (d.hours)   parts.push(`${d.hours}h`);
+    if (d.minutes) parts.push(`${d.minutes}m`);
+    return `${parts.join(" ")} after join`;
+  }
   if (type === "randomized") {
     const count = n.number ?? "?";
     const from = n.readable?.from ?? "—";
@@ -72,8 +84,9 @@ function scheduleDescription(n: NotificationConfig): string {
 }
 
 type BoundAction = (formData?: FormData) => void | Promise<void>;
+type TFn = (key: string, params?: Record<string, string | number>) => string;
 
-function NotifCard({ n, studyId, index, deleteAction }: { n: NotificationConfig; studyId: string; index: number; deleteAction: BoundAction }) {
+function NotifCard({ n, studyId, index, deleteAction, t }: { n: NotificationConfig; studyId: string; index: number; deleteAction: BoundAction; t: TFn }) {
   const type = scheduleType(n);
   const tm = TYPE_META[type] ?? TYPE_META.repeating;
   const tilt = TILTS[index % TILTS.length];
@@ -104,7 +117,7 @@ function NotifCard({ n, studyId, index, deleteAction }: { n: NotificationConfig;
           background: tm.bg,
           border: `1px solid ${tm.border}`,
         }}>
-          {tm.label}
+          {type === "one-time" ? t("schedule.typeOneTime") : type === "randomized" ? t("schedule.typeRandomized") : type === "personal" ? t("schedule.typePersonal") : type === "enrollment" ? t("schedule.typeEnrollment") : t("schedule.typeRepeating")}
         </span>
       </div>
 
@@ -138,11 +151,11 @@ function NotifCard({ n, studyId, index, deleteAction }: { n: NotificationConfig;
         <a href={`/scheduled/${studyId}?notificationId=${n.id}`}
           style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
           className="hover:opacity-70 transition-opacity">
-          view queue →
+          {t("schedule.viewQueueCard")}
         </a>
         <DeleteScheduleButton
           action={deleteAction}
-          label="delete"
+          label={t("schedule.delete")}
           style={{
             fontFamily: "var(--font-mono)",
             fontSize: "1rem",
@@ -160,10 +173,11 @@ function NotifCard({ n, studyId, index, deleteAction }: { n: NotificationConfig;
   );
 }
 
-const SECTION_ORDER = ["one-time", "repeating", "randomized", "personal"] as const;
+const SECTION_ORDER = ["enrollment", "one-time", "repeating", "randomized", "personal"] as const;
 
 export default async function SchedulePage({ params }: Props) {
   const { studyId } = await params;
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -175,6 +189,7 @@ export default async function SchedulePage({ params }: Props) {
   if (!project) notFound();
 
   const byType: Record<string, typeof notifications> = {
+    enrollment:  notifications.filter((n) => scheduleType(n) === "enrollment"),
     "one-time":  notifications.filter((n) => scheduleType(n) === "one-time"),
     repeating:   notifications.filter((n) => scheduleType(n) === "repeating"),
     randomized:  notifications.filter((n) => scheduleType(n) === "randomized"),
@@ -190,36 +205,36 @@ export default async function SchedulePage({ params }: Props) {
       <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-            notification schedules
+            {t("schedule.label")}
           </div>
           <div className="font-[family-name:var(--font-display)] font-bold"
             style={{ fontSize: "2.8rem", letterSpacing: "-0.02em", lineHeight: 1 }}>
-            {notifications.length} schedule{notifications.length !== 1 ? "s" : ""}
+            {t(notifications.length === 1 ? "schedule.count" : "schedule.countPlural", { n: notifications.length })}
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
           <a href={`/scheduled/${studyId}`}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "transparent", color: "var(--ink-60)", border: "1px solid var(--ink-20)", borderRadius: "9999px", fontSize: "1.3rem", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-body)" }}
             className="hover:opacity-70 transition-opacity">
-            View queue →
+            {t("schedule.viewQueue")}
           </a>
           <a href={`/dashboard/${studyId}/schedule/new`}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontSize: "1.3rem", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-body)" }}
             className="hover:opacity-90 transition-opacity">
-            + Add schedule
+            {t("schedule.addSchedule")}
           </a>
         </div>
       </div>
 
       {notifications.length === 0 ? (
         <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "5.6rem 2.4rem", textAlign: "center" }}>
-          <Hand size={20} style={{ marginBottom: "1.2rem" }}>no schedules yet</Hand>
+          <Hand size={20} style={{ marginBottom: "1.2rem" }}>{t("schedule.emptyTitle")}</Hand>
           <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2rem", lineHeight: 1.6 }}>
-            Add a notification schedule to start reaching your participants.
+            {t("schedule.emptyBody")}
           </p>
           <a href={`/dashboard/${studyId}/schedule/new`}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "1rem 2.4rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontSize: "1.35rem", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-body)" }}>
-            + Add first schedule
+            {t("schedule.addFirst")}
           </a>
         </div>
       ) : (
@@ -232,16 +247,16 @@ export default async function SchedulePage({ params }: Props) {
               <section key={type}>
                 <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.4rem" }}>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".14em", textTransform: "uppercase", padding: "0.3rem 0.8rem", borderRadius: "9999px", color: tm.fg, background: tm.bg, border: `1px solid ${tm.border}` }}>
-                    {tm.label}
+                    {type === "one-time" ? t("schedule.typeOneTime") : type === "randomized" ? t("schedule.typeRandomized") : type === "personal" ? t("schedule.typePersonal") : type === "enrollment" ? t("schedule.typeEnrollment") : t("schedule.typeRepeating")}
                   </span>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", letterSpacing: ".1em" }}>
-                    {items.length} config{items.length !== 1 ? "s" : ""}
+                    {t(items.length === 1 ? "schedule.configs" : "schedule.configsPlural", { n: items.length })}
                   </span>
                 </div>
                 <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.8rem" }}>
                   {items.map((n) => {
                     const deleteAction = deleteNotificationAction.bind(null, studyId, n.id, `/dashboard/${studyId}/schedule`);
-                    return <NotifCard key={n.id} n={n} studyId={studyId} index={cardIndex++} deleteAction={deleteAction} />;
+                    return <NotifCard key={n.id} n={n} studyId={studyId} index={cardIndex++} deleteAction={deleteAction} t={t} />;
                   })}
                 </div>
               </section>

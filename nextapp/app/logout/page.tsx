@@ -1,6 +1,8 @@
 import { signOut } from "@/lib/auth";
+import { getT } from "@/lib/i18n.server";
 
-export default function LogoutPage() {
+export default async function LogoutPage() {
+  const { t } = await getT();
   return (
     <div className="inner">
       <form
@@ -9,7 +11,7 @@ export default function LogoutPage() {
           await signOut({ redirectTo: "/login" });
         }}
       >
-        <button type="submit" className="button">Log out</button>
+        <button type="submit" className="button">{t("logout.button")}</button>
       </form>
     </div>
   );

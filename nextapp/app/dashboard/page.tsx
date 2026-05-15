@@ -6,10 +6,10 @@ import Badge from "@/app/components/ui/Badge";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import { getSiteSettings } from "@/lib/models/siteSettings";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Dashboard — Samply" };
 
-// Alternating subtle tilts matching the postcards design language
 const TILTS = [-0.7, 0.5, -0.5, 0.6, -0.4, 0.7, -0.6, 0.4];
 
 function HandUnderline({ width = 160 }: { width?: number }) {
@@ -37,11 +37,13 @@ function StudyCard({
   compliance,
   isOwner,
   index,
+  t,
 }: {
   project: ProjectListItem;
   compliance: StudyCompliance;
   isOwner: boolean;
   index: number;
+  t: ReturnType<typeof import("@/lib/i18n").createT>;
 }) {
   const id = String(project._id);
   const participantCount = project.members?.length ?? 0;
@@ -73,7 +75,7 @@ function StudyCard({
             color: "var(--ink-40)",
           }}
         >
-          {isOwner ? "study" : "collab"}
+          {isOwner ? t("dashboard.studyLabel") : t("dashboard.collabLabel")}
         </span>
         <Badge variant={project.currentlyActive ? "live" : "draft"} />
       </div>
@@ -128,7 +130,7 @@ function StudyCard({
                 color: "var(--ink-40)",
               }}
             >
-              7d compliance
+              {t("dashboard.complianceLabel")}
             </span>
             <span
               style={{
@@ -163,7 +165,7 @@ function StudyCard({
             letterSpacing: ".06em",
           }}
         >
-          no data yet
+          {t("dashboard.noData")}
         </div>
       )}
 
@@ -177,10 +179,10 @@ function StudyCard({
           gap: "1.4rem",
         }}
       >
-        <span>{participantCount} participants</span>
+        <span>{t("dashboard.participantsCount", { n: participantCount })}</span>
         {compliance.sent > 0 && (
           <span>
-            {compliance.responded}/{compliance.sent} responses
+            {t("dashboard.responsesCount", { responded: compliance.responded, sent: compliance.sent })}
           </span>
         )}
       </div>
@@ -207,17 +209,17 @@ function StudyCard({
         }}
       >
         {[
-          { label: "schedule", href: `/dashboard/${id}/schedule` },
-          { label: "participants", href: `/dashboard/${id}/participants` },
-          { label: "history", href: `/dashboard/${id}/data` },
-        ].map(({ label, href }) => (
+          { key: "dashboard.quickSchedule",     href: `/dashboard/${id}/schedule` },
+          { key: "dashboard.quickParticipants",  href: `/dashboard/${id}/participants` },
+          { key: "dashboard.quickHistory",       href: `/dashboard/${id}/data` },
+        ].map(({ key, href }) => (
           <a
-            key={label}
+            key={key}
             href={href}
             className="hover:opacity-70 transition-opacity"
             style={{ color: "var(--ink-60)", textDecoration: "none" }}
           >
-            {label} →
+            {t(key)} →
           </a>
         ))}
       </div>
@@ -225,7 +227,7 @@ function StudyCard({
   );
 }
 
-function SmaatBanner() {
+function SmaatBanner({ t }: { t: ReturnType<typeof import("@/lib/i18n").createT> }) {
   return (
     <div
       style={{
@@ -242,10 +244,10 @@ function SmaatBanner() {
     >
       <div style={{ flex: 1, minWidth: 260 }}>
         <span style={{ fontSize: "1.25rem", color: "var(--ink)", fontWeight: 500 }}>
-          Need built-in surveys, cognitive tasks, sensor data, or gamification?
+          {t("dashboard.smaatText")}
         </span>
         <span style={{ fontSize: "1.2rem", color: "var(--ink-60)", marginLeft: "0.5rem" }}>
-          Samply handles ESM notifications to external URLs. For studies that need everything in one app, take a look at SMAAT.
+          {t("dashboard.smaatDetail")}
         </span>
       </div>
       <a
@@ -268,13 +270,13 @@ function SmaatBanner() {
         }}
         className="hover:opacity-70 transition-opacity"
       >
-        Compare platforms →
+        {t("dashboard.smaatLink")}
       </a>
     </div>
   );
 }
 
-function LowComplianceBanner({ studies }: { studies: string[] }) {
+function LowComplianceBanner({ studies, t }: { studies: string[]; t: ReturnType<typeof import("@/lib/i18n").createT> }) {
   if (studies.length === 0) return null;
   return (
     <div
@@ -303,10 +305,10 @@ function LowComplianceBanner({ studies }: { studies: string[] }) {
       </span>
       <div>
         <span style={{ fontSize: "1.3rem", color: "var(--ink)", fontWeight: 500 }}>
-          Low compliance
+          {t("dashboard.lowComplianceTitle")}
         </span>
         <span style={{ fontSize: "1.3rem", color: "var(--ink-60)", marginLeft: "0.6rem" }}>
-          {studies.join(", ")} — below 60% in the last 7 days.
+          {t("dashboard.lowComplianceBody", { studies: studies.join(", ") })}
         </span>
       </div>
     </div>
@@ -338,6 +340,8 @@ export default async function DashboardPage() {
   const ownerIds = new Set(projects.map((p) => String(p._id)));
   let cardIndex = 0;
 
+  const { t } = await getT();
+
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
       <div style={{ maxWidth: 1000, margin: "0 auto", padding: "5.2rem var(--page-px) 9.6rem" }}>
@@ -355,7 +359,7 @@ export default async function DashboardPage() {
                 lineHeight: 1,
               }}
             >
-              your studies
+              {t("dashboard.eyebrow")}
             </span>
             <h1
               style={{
@@ -369,7 +373,7 @@ export default async function DashboardPage() {
                 display: "inline-block",
               }}
             >
-              Dashboard
+              {t("dashboard.title")}
               <HandUnderline width={178} />
             </h1>
           </div>
@@ -392,11 +396,11 @@ export default async function DashboardPage() {
                 }}
                 className="btn-pill hover:opacity-80 transition-opacity"
               >
-                + New study
+                {t("dashboard.newStudy")}
               </a>
             ) : (
               <span
-                title="Confirm your email to create studies"
+                title={t("dashboard.newStudyDisabledTitle")}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -412,7 +416,7 @@ export default async function DashboardPage() {
                 }}
                 className="btn-pill"
               >
-                + New study
+                {t("dashboard.newStudy")}
               </span>
             )}
           </div>
@@ -435,17 +439,17 @@ export default async function DashboardPage() {
             <span style={{ fontSize: "1.5rem", flexShrink: 0, lineHeight: 1.4 }}>✉</span>
             <div>
               <span style={{ fontSize: "1.3rem", color: "var(--ink)", fontWeight: 600 }}>
-                Please confirm your email address.
+                {t("dashboard.emailUnconfirmedTitle")}
               </span>
               <span style={{ fontSize: "1.3rem", color: "var(--ink-60)", marginLeft: "0.5rem" }}>
-                You need a confirmed email to create new studies and to be added as a collaborator on other researchers&apos; studies. Check your inbox for the confirmation link sent when you registered.
+                {t("dashboard.emailUnconfirmedBody")}
               </span>
             </div>
           </div>
         )}
 
         {/* Low-compliance nudge */}
-        <LowComplianceBanner studies={lowComplianceStudies} />
+        <LowComplianceBanner studies={lowComplianceStudies} t={t} />
 
         {/* My studies */}
         {projects.length > 0 && (
@@ -460,7 +464,7 @@ export default async function DashboardPage() {
                 marginBottom: "1.8rem",
               }}
             >
-              my studies · {projects.length}
+              {t("dashboard.myStudiesLabel", { n: projects.length })}
             </div>
             <div
               style={{
@@ -483,6 +487,7 @@ export default async function DashboardPage() {
                   }
                   isOwner
                   index={cardIndex++}
+                  t={t}
                 />
               ))}
             </div>
@@ -502,7 +507,7 @@ export default async function DashboardPage() {
                 marginBottom: "1.8rem",
               }}
             >
-              collaborating · {invitedProjects.length}
+              {t("dashboard.collaboratingLabel", { n: invitedProjects.length })}
             </div>
             <div
               style={{
@@ -525,6 +530,7 @@ export default async function DashboardPage() {
                   }
                   isOwner={ownerIds.has(String(p._id))}
                   index={cardIndex++}
+                  t={t}
                 />
               ))}
             </div>
@@ -532,7 +538,7 @@ export default async function DashboardPage() {
         )}
 
         {/* SMAAT cross-promotion */}
-        {allProjects.length > 0 && showSmaat && <SmaatBanner />}
+        {allProjects.length > 0 && showSmaat && <SmaatBanner t={t} />}
 
         {/* Testimonial nudge */}
         {showTestimonials && allProjects.length > 0 && (
@@ -542,7 +548,7 @@ export default async function DashboardPage() {
               style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: "0.08em" }}
               className="hover:opacity-70 transition-opacity"
             >
-              Using Samply for research? Share your experience →
+              {t("dashboard.testimonialNudge")}
             </a>
           </div>
         )}
@@ -594,7 +600,7 @@ export default async function DashboardPage() {
                 lineHeight: 1,
               }}
             >
-              no studies yet
+              {t("dashboard.emptyLabel")}
             </span>
             <p
               style={{
@@ -606,7 +612,7 @@ export default async function DashboardPage() {
                 lineHeight: 1.6,
               }}
             >
-              Create your first study to start scheduling experience sampling notifications.
+              {t("dashboard.emptyBody")}
             </p>
             {emailIsConfirmed ? (
               <a
@@ -627,11 +633,11 @@ export default async function DashboardPage() {
                 }}
                 className="hover:opacity-90 transition-opacity"
               >
-                Create a study →
+                {t("dashboard.emptyCta")}
               </a>
             ) : (
               <span
-                title="Confirm your email to create studies"
+                title={t("dashboard.newStudyDisabledTitle")}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -647,7 +653,7 @@ export default async function DashboardPage() {
                   letterSpacing: "-0.01em",
                 }}
               >
-                Create a study →
+                {t("dashboard.emptyCta")}
               </span>
             )}
           </div>

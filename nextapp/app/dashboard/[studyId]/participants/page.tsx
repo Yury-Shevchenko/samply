@@ -3,6 +3,7 @@ import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import { fetchParticipants, type MobileUser } from "@/lib/data/participants";
 import { ParticipantRow } from "./ParticipantRow";
+import { getT } from "@/lib/i18n.server";
 
 const PAGE_SIZE = 50;
 
@@ -87,6 +88,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
     : "created";
   const order: SortOrder = orderParam === "asc" ? "asc" : "desc";
 
+  const { t } = await getT();
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
@@ -117,13 +119,13 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
       <div className="mob-col mob-col-start" style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
         <div>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-            enrolled
+            {t("participants.enrolled")}
           </div>
           <div className="font-[family-name:var(--font-display)] font-bold"
             style={{ fontSize: "2.8rem", letterSpacing: "-0.02em", lineHeight: 1 }}>
-            {allActive.length} active
+            {t("participants.activeCount", { active: allActive.length })}
             <span style={{ fontSize: "1.5rem", fontWeight: 400, color: "var(--ink-40)", marginLeft: "1rem", letterSpacing: "-0.01em" }}>
-              / {participants.length} total
+              {t("participants.total", { total: participants.length })}
             </span>
           </div>
         </div>
@@ -134,7 +136,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
               style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.8rem 1.8rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
               className="hover:opacity-70 transition-opacity"
             >
-              ↓ Export CSV
+              {t("participants.exportCsv")}
             </a>
           )}
           <a
@@ -142,14 +144,14 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", color: "var(--ink-60)", textDecoration: "none", padding: "0.8rem 1.6rem", border: "1px solid var(--ink-20)", borderRadius: "9999px" }}
             className="hover:opacity-70 transition-opacity"
           >
-            Manage groups →
+            {t("participants.manageGroups")}
           </a>
           <a
             href={`/dashboard/${studyId}/invitations`}
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", color: "var(--ink-60)", textDecoration: "none", padding: "0.8rem 1.6rem", border: "1px solid var(--ink-20)", borderRadius: "9999px" }}
             className="hover:opacity-70 transition-opacity"
           >
-            Invitation links →
+            {t("participants.invitationLinks")}
           </a>
         </div>
       </div>
@@ -161,11 +163,11 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
             <table style={{ width: "100%", minWidth: "52rem", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                  <SortTh studyId={studyId} page={page} col="id"       label="Participant ID"  currentSort={sort} currentOrder={order} />
-                  <SortTh studyId={studyId} page={page} col="username" label="Code"            currentSort={sort} currentOrder={order} />
-                  <SortTh studyId={studyId} page={page} col="group"    label="Group"           currentSort={sort} currentOrder={order} />
-                  <StaticTh label="Token" />
-                  <SortTh studyId={studyId} page={page} col="created"  label="Enrolled"        currentSort={sort} currentOrder={order} />
+                  <SortTh studyId={studyId} page={page} col="id"       label={t("participants.colId")}       currentSort={sort} currentOrder={order} />
+                  <SortTh studyId={studyId} page={page} col="username" label={t("participants.colCode")}     currentSort={sort} currentOrder={order} />
+                  <SortTh studyId={studyId} page={page} col="group"    label={t("participants.colGroup")}    currentSort={sort} currentOrder={order} />
+                  <StaticTh label={t("participants.colToken")} />
+                  <SortTh studyId={studyId} page={page} col="created"  label={t("participants.colEnrolled")} currentSort={sort} currentOrder={order} />
                 </tr>
               </thead>
               <tbody>
@@ -190,7 +192,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
                       ) : "—"}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>
-                      {p.token ? p.token.slice(0, 12) + "…" : <span style={{ color: "var(--coral)", fontWeight: 500 }} title="No push token — participant has not allowed notifications">no token</span>}
+                      {p.token ? p.token.slice(0, 12) + "…" : <span style={{ color: "var(--coral)", fontWeight: 500 }} title={t("participants.noTokenTitle")}>{t("participants.noToken")}</span>}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
                       {p.created ? new Date(p.created).toLocaleString(undefined, { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"}
@@ -208,7 +210,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
                 <a href={pageHref(page - 1)}
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
                   className="hover:opacity-70 transition-opacity">
-                  ← prev
+                  {t("participants.prev")}
                 </a>
               )}
               <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", letterSpacing: ".08em" }}>
@@ -218,7 +220,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
                 <a href={pageHref(page + 1)}
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-60)", textDecoration: "none" }}
                   className="hover:opacity-70 transition-opacity">
-                  next →
+                  {t("participants.next")}
                 </a>
               )}
             </div>
@@ -226,13 +228,13 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
         </>
       ) : (
         <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "5.6rem 2.4rem", textAlign: "center" }}>
-          <div style={{ fontFamily: "var(--font-hand)", fontSize: "2.2rem", color: "var(--coral)", marginBottom: "1rem" }}>no participants yet</div>
+          <div style={{ fontFamily: "var(--font-hand)", fontSize: "2.2rem", color: "var(--coral)", marginBottom: "1rem" }}>{t("participants.emptyTitle")}</div>
           <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 1.8rem", lineHeight: 1.6 }}>
-            Share your study enrollment link to get started.
+            {t("participants.emptyBody")}
           </p>
           <a href={`/dashboard/${studyId}/invitations`}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontSize: "1.3rem", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-body)" }}>
-            Get enrollment link →
+            {t("participants.getEnrollmentLink")}
           </a>
         </div>
       )}
@@ -241,7 +243,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
       {allInactive.length > 0 && (
         <section>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "1.2rem" }}>
-            deactivated · {allInactive.length}
+            {t("participants.deactivated", { n: allInactive.length })}
           </div>
           <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], opacity: 0.65 }}>
             <table style={{ width: "100%", minWidth: "32rem", borderCollapse: "collapse" }}>

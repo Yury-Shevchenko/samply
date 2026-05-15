@@ -10,6 +10,7 @@ import { toggleStudyActiveAction } from "./actions";
 import connectDB from "@/lib/db";
 import PendingNotification from "@/lib/models/pendingNotification";
 import mongoose from "mongoose";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -136,24 +137,39 @@ export default async function StudyOverviewPage({ params }: Props) {
   const isLow = compliance.sent > 0 && compliance.pct < 60;
 
   const toggleActive = toggleStudyActiveAction.bind(null, studyId);
+  const { t } = await getT();
+
+  // Localised schedule type badge label
+  const typeLabel = (type: string) =>
+    t(`studyOverview.type${type.charAt(0).toUpperCase() + type.slice(1).replace("-", "")}` as Parameters<typeof t>[0]) || type;
 
   return (
     <div className="flex flex-col gap-[3.2rem]">
 
       {/* Stats row */}
       <div className="stats-grid">
-        <StatBox label="Participants" value={activeParticipants.length} sub={`${participants.length} total enrolled`} />
-        <StatBox label="Schedules" value={notifications.length} sub="notification configs" />
         <StatBox
-          label="7-day compliance"
+          label={t("studyOverview.statParticipants")}
+          value={activeParticipants.length}
+          sub={t("studyOverview.statParticipantsSub", { n: participants.length })}
+        />
+        <StatBox
+          label={t("studyOverview.statSchedules")}
+          value={notifications.length}
+          sub={t("studyOverview.statSchedulesSub")}
+        />
+        <StatBox
+          label={t("studyOverview.statCompliance")}
           value={compliance.sent > 0 ? `${compliance.pct}%` : "—"}
-          sub={compliance.sent > 0 ? `${compliance.responded}/${compliance.sent} responses` : "no data yet"}
+          sub={compliance.sent > 0
+            ? t("studyOverview.statComplianceSub", { responded: compliance.responded, sent: compliance.sent })
+            : t("studyOverview.statComplianceNoData")}
           accent={isLow}
         />
         <StatBox
-          label="Status"
-          value={project.currentlyActive ? "Live" : "Draft"}
-          sub={project.public ? "publicly listed" : "private study"}
+          label={t("studyOverview.statStatus")}
+          value={project.currentlyActive ? t("studyOverview.statusLive") : t("studyOverview.statusDraft")}
+          sub={project.public ? t("studyOverview.statusPublic") : t("studyOverview.statusPrivate")}
         />
       </div>
 
@@ -161,7 +177,7 @@ export default async function StudyOverviewPage({ params }: Props) {
       <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
         <form action={toggleActive}>
           <SubmitButton
-            pendingLabel={project.currentlyActive ? "Pausing…" : "Activating…"}
+            pendingLabel={project.currentlyActive ? t("studyOverview.pausingStudy") : t("studyOverview.activatingStudy")}
             style={{
               display: "inline-flex",
               alignItems: "center",
@@ -177,11 +193,7 @@ export default async function StudyOverviewPage({ params }: Props) {
               transition: "opacity .12s",
             }}
           >
-            {project.currentlyActive ? (
-              <><span style={{ fontSize: "0.7em" }}>●</span> Collecting — pause study</>
-            ) : (
-              <>Activate study</>
-            )}
+            {project.currentlyActive ? t("studyOverview.pauseStudy") : t("studyOverview.activateStudy")}
           </SubmitButton>
         </form>
 
@@ -204,12 +216,12 @@ export default async function StudyOverviewPage({ params }: Props) {
             }}
             className="hover:opacity-70 transition-opacity"
           >
-            {project.requestedForApproval ? "✓ Review requested" : "Submit for review →"}
+            {project.requestedForApproval ? t("studyOverview.reviewRequested") : t("studyOverview.submitForReview")}
           </a>
         )}
         {project.public && (
           <span style={{ fontSize: "1.25rem", color: "var(--sage)", fontWeight: 500 }}>
-            ✓ Publicly listed
+            {t("studyOverview.publiclyListed")}
           </span>
         )}
       </div>
@@ -218,7 +230,7 @@ export default async function StudyOverviewPage({ params }: Props) {
       {compliance.sent > 0 && (
         <section style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", padding: "1.8rem 2.2rem", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "1rem" }}>
-            <Hand size={15}>7-day compliance</Hand>
+            <Hand size={15}>{t("studyOverview.statCompliance")}</Hand>
             <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: isLow ? "var(--coral)" : "var(--sage)", fontWeight: 600 }}>
               {compliance.pct}% · {compliance.responded}/{compliance.sent}
             </span>
@@ -228,7 +240,7 @@ export default async function StudyOverviewPage({ params }: Props) {
           </div>
           {isLow && (
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", marginTop: "0.8rem", letterSpacing: ".02em" }}>
-              ▲ Below 60% — consider checking in with participants.
+              {t("studyOverview.lowComplianceWarning")}
             </p>
           )}
         </section>
@@ -237,28 +249,28 @@ export default async function StudyOverviewPage({ params }: Props) {
       {/* Notification schedules preview */}
       <section>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.4rem" }}>
-          <MonoLabel>notification schedules · {notifications.length}</MonoLabel>
+          <MonoLabel>{t("studyOverview.schedulesLabel", { n: notifications.length })}</MonoLabel>
           <div style={{ display: "flex", gap: "1.4rem" }}>
             <a href={`/scheduled/${studyId}`}
               style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
               className="hover:opacity-70 transition-opacity">
-              view queue →
+              {t("studyOverview.viewQueue")}
             </a>
             <a href={`/dashboard/${studyId}/schedule`}
               style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
               className="hover:opacity-70 transition-opacity">
-              view all →
+              {t("studyOverview.viewAllSchedules")}
             </a>
           </div>
         </div>
 
         {notifications.length === 0 ? (
           <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "3.2rem 2.4rem", textAlign: "center" }}>
-            <Hand size={17} style={{ marginBottom: "1rem" }}>no schedules yet</Hand>
-            <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 1.6rem" }}>Add a schedule to start reaching participants.</p>
+            <Hand size={17} style={{ marginBottom: "1rem" }}>{t("studyOverview.noSchedulesYet")}</Hand>
+            <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 1.6rem" }}>{t("studyOverview.noSchedulesBody")}</p>
             <a href={`/dashboard/${studyId}/schedule/new`}
               style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 2rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontSize: "1.3rem", fontWeight: 500, textDecoration: "none", fontFamily: "var(--font-body)" }}>
-              + Add schedule
+              {t("studyOverview.addSchedule")}
             </a>
           </div>
         ) : (
@@ -284,7 +296,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                   className="hover:bg-[var(--ink-05)] transition-colors"
                 >
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".1em", textTransform: "uppercase", padding: "0.2rem 0.7rem", borderRadius: "9999px", color: tc.fg, background: tc.bg, flexShrink: 0 }}>
-                    {type}
+                    {typeLabel(type)}
                   </span>
                   <span style={{ flex: 1, minWidth: 0 }}>
                     <span style={{ display: "block", fontSize: "1.35rem", color: "var(--ink)", fontWeight: 500 }} className="truncate">
@@ -298,9 +310,9 @@ export default async function StudyOverviewPage({ params }: Props) {
                   </span>
                   {total !== null && (
                     <span className="mob-hide" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", flexShrink: 0, textAlign: "right", lineHeight: 1.4 }}>
-                      <span style={{ display: "block" }}>{total} total</span>
+                      <span style={{ display: "block" }}>{t("studyOverview.totalCount", { total })}</span>
                       <span style={{ color: counts!.pending > 0 ? "var(--coral)" : "var(--ink-20)" }}>
-                        {counts!.sent} sent · {counts!.pending} pending
+                        {t("studyOverview.sentPending", { sent: counts!.sent, pending: counts!.pending })}
                       </span>
                     </span>
                   )}
@@ -312,7 +324,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                 <a href={`/dashboard/${studyId}/schedule`}
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none" }}
                   className="hover:opacity-70 transition-opacity">
-                  + {notifications.length - 5} more schedules →
+                  {t("studyOverview.moreSchedules", { n: notifications.length - 5 })}
                 </a>
               </div>
             )}
@@ -323,22 +335,22 @@ export default async function StudyOverviewPage({ params }: Props) {
       {/* Participants preview */}
       <section>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.4rem" }}>
-          <MonoLabel>participants · {activeParticipants.length} active</MonoLabel>
+          <MonoLabel>{t("studyOverview.participantsLabel", { n: activeParticipants.length })}</MonoLabel>
           <a href={`/dashboard/${studyId}/participants`}
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
             className="hover:opacity-70 transition-opacity">
-            view all →
+            {t("studyOverview.viewAllParticipants")}
           </a>
         </div>
 
         {activeParticipants.length === 0 ? (
           <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "2.8rem 2.4rem", textAlign: "center" }}>
             <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 1.4rem" }}>
-              No participants enrolled yet.
+              {t("studyOverview.noParticipantsYet")}
             </p>
             <a href={`/dashboard/${studyId}/invitations`}
               style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", padding: "0.7rem 1.4rem", border: "1px solid var(--ink-20)", borderRadius: "9999px", letterSpacing: ".04em" }}>
-              Get enrollment link →
+              {t("studyOverview.getEnrollmentLink")}
             </a>
           </div>
         ) : (
@@ -375,7 +387,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                   )}
                   {joinDate && (
                     <span className="mob-hide" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-20)", flexShrink: 0 }}>
-                      joined {joinDate}
+                      {t("studyOverview.joinedDate", { date: joinDate })}
                     </span>
                   )}
                 </a>
@@ -386,7 +398,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                 <a href={`/dashboard/${studyId}/participants`}
                   style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none" }}
                   className="hover:opacity-70 transition-opacity">
-                  + {activeParticipants.length - 5} more →
+                  {t("studyOverview.moreParticipants", { n: activeParticipants.length - 5 })}
                 </a>
               </div>
             )}
@@ -399,12 +411,12 @@ export default async function StudyOverviewPage({ params }: Props) {
         <Perf />
         <div style={{ paddingTop: "1.6rem", display: "flex", flexWrap: "wrap", gap: "0.8rem" }}>
           {[
-            { label: "Edit study",       href: `/projects/${studyId}/edit` },
-            { label: "Invitation links", href: `/dashboard/${studyId}/invitations` },
-            { label: "Export CSV",       href: `/dashboard/${studyId}/data/export` },
-            { label: "Delete study",     href: `/projects/${studyId}/delete`, coral: true },
-          ].map(({ label, href, coral }) => (
-            <a key={label} href={href}
+            { key: "studyOverview.editStudy",       href: `/projects/${studyId}/edit`,              coral: false },
+            { key: "studyOverview.invitationLinks", href: `/dashboard/${studyId}/invitations`,       coral: false },
+            { key: "studyOverview.exportCsv",       href: `/dashboard/${studyId}/data/export`,       coral: false },
+            { key: "studyOverview.deleteStudy",     href: `/projects/${studyId}/delete`,             coral: true  },
+          ].map(({ key, href, coral }) => (
+            <a key={key} href={href}
               style={{
                 fontFamily: "var(--font-mono)",
                 fontSize: "1.1rem",
@@ -417,7 +429,7 @@ export default async function StudyOverviewPage({ params }: Props) {
                 background: coral ? "rgba(214,90,48,.05)" : "transparent",
               }}
               className="hover:opacity-70 transition-opacity">
-              {label} →
+              {t(key as Parameters<typeof t>[0])} →
             </a>
           ))}
         </div>

@@ -1,22 +1,25 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-
-const TABS = [
-  { label: "Overview",     suffix: "" },
-  { label: "Participants", suffix: "/participants" },
-  { label: "Schedule",     suffix: "/schedule" },
-  { label: "History",      suffix: "/data" },
-  { label: "Invitations",  suffix: "/invitations" },
-  { label: "Settings",     suffix: "/settings" },
-  { label: "Approval",     suffix: "/approval" },
-  { label: "Stream API",   suffix: "/api" },
-] as const;
+import { useT } from "@/app/components/TranslationProvider";
 
 export default function StudyTabNav({ studyId }: { studyId: string }) {
   const pathname = usePathname();
   const router = useRouter();
   const base = `/dashboard/${studyId}`;
+  const { t } = useT();
+
+  const TABS = [
+    { key: "studyTab.overview",     suffix: "" },
+    { key: "studyTab.participants", suffix: "/participants" },
+    { key: "studyTab.schedule",     suffix: "/schedule" },
+    { key: "studyTab.history",      suffix: "/data" },
+    { key: "studyTab.analytics",    suffix: "/analytics" },
+    { key: "studyTab.invitations",  suffix: "/invitations" },
+    { key: "studyTab.settings",     suffix: "/settings" },
+    { key: "studyTab.approval",     suffix: "/approval" },
+    { key: "studyTab.streamApi",    suffix: "/api" },
+  ] as const;
 
   const activeTab = TABS.find(({ suffix }) =>
     suffix === ""
@@ -29,15 +32,16 @@ export default function StudyTabNav({ studyId }: { studyId: string }) {
       {/* Desktop: tab bar */}
       <div className="study-tab-nav-desktop" style={{ borderBottom: "1px solid var(--ink-10)" }}>
         <div style={{ display: "flex", gap: "0.4rem" }}>
-          {TABS.map(({ label, suffix }) => {
+          {TABS.map(({ key, suffix }) => {
             const href = base + suffix;
             const isActive = suffix === ""
               ? pathname === base || pathname === base + "/"
               : pathname.startsWith(href);
+            const label = t(key);
 
             return (
               <a
-                key={label}
+                key={key}
                 href={href}
                 style={{
                   display: "inline-block",
@@ -88,8 +92,8 @@ export default function StudyTabNav({ studyId }: { studyId: string }) {
             cursor: "pointer",
           }}
         >
-          {TABS.map(({ label, suffix }) => (
-            <option key={suffix} value={base + suffix}>{label}</option>
+          {TABS.map(({ key, suffix }) => (
+            <option key={suffix} value={base + suffix}>{t(key)}</option>
           ))}
         </select>
       </div>

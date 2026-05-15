@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Reset password — Samply" };
 
@@ -28,6 +29,7 @@ export default async function ForgotPage({
   searchParams: Promise<{ sent?: string }>;
 }) {
   const { sent } = await searchParams;
+  const { t } = await getT();
 
   return (
     <main
@@ -88,18 +90,17 @@ export default async function ForgotPage({
               className="font-[family-name:var(--font-display)] font-bold m-0"
               style={{ fontSize: "2.4rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "1rem" }}
             >
-              Check your inbox
+              {t("forgot.sentTitle")}
             </h1>
             <p style={{ fontSize: "1.4rem", color: "var(--ink-60)", margin: "0 0 2.8rem", lineHeight: 1.55 }}>
-              If an account exists for that address, a password reset link is on its way.
-              It may take a minute or two.
+              {t("forgot.sentBody")}
             </p>
             <a
               href="/login"
               className="inline-flex items-center font-medium transition-opacity hover:opacity-70"
               style={{ fontSize: "1.35rem", color: "var(--ink)", textDecoration: "none" }}
             >
-              ← Back to sign in
+              {t("forgot.backToSignIn")}
             </a>
           </div>
         ) : (
@@ -109,19 +110,19 @@ export default async function ForgotPage({
               className="font-[family-name:var(--font-display)] font-bold m-0"
               style={{ fontSize: "2.6rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "0.6rem" }}
             >
-              Forgot your password?
+              {t("forgot.title")}
             </h1>
             <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem" }}>
-              Enter your email and we&apos;ll send a reset link.
+              {t("forgot.subtitle")}
             </p>
 
             <form action={forgotAction} className="flex flex-col gap-[10px]">
               <label className="flex flex-col gap-[5px]">
-                <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Email</span>
+                <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("forgot.emailLabel")}</span>
                 <input
                   type="email"
                   name="email"
-                  placeholder="you@university.edu"
+                  placeholder={t("forgot.emailPlaceholder")}
                   required
                   autoComplete="email"
                   style={inputStyle}
@@ -129,7 +130,7 @@ export default async function ForgotPage({
               </label>
 
               <SubmitButton
-                pendingLabel="Sending…"
+                pendingLabel={t("forgot.submitting")}
                 className="font-[family-name:var(--font-body)] font-medium transition-opacity hover:opacity-90"
                 style={{
                   marginTop: "0.8rem",
@@ -142,13 +143,13 @@ export default async function ForgotPage({
                   fontSize: "1.4rem",
                 }}
               >
-                Send reset link →
+                {t("forgot.submit")}
               </SubmitButton>
             </form>
 
             <p style={{ margin: "2.2rem 0 0", fontSize: "1.3rem", color: "var(--ink-60)", textAlign: "center" }}>
               <a href="/login" style={{ color: "var(--ink)", fontWeight: 500, textDecoration: "none" }}>
-                ← Back to sign in
+                {t("forgot.backToSignIn")}
               </a>
             </p>
           </div>
