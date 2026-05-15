@@ -52,6 +52,7 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["recharts"],
   turbopack: {
     // Prevent Next.js from mistaking the parent Website/ lockfile as the root.
     root: __dirname,
