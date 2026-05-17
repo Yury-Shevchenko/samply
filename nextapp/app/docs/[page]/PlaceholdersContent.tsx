@@ -1042,6 +1042,10 @@ export default function PlaceholdersContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <PlaceholdersContentFr />;
   if (locale === "es") return <PlaceholdersContentEs />;
   if (locale === "pt") return <PlaceholdersContentPt />;
+  if (locale === "ja") return <PlaceholdersContentJa />;
+  if (locale === "ar") return <PlaceholdersContentAr />;
+  if (locale === "pl") return <PlaceholdersContentPl />;
+  if (locale === "tr") return <PlaceholdersContentTr />;
   return <PlaceholdersContentEn />;
 }
 
@@ -2089,6 +2093,820 @@ function PlaceholdersContentPt() {
           participante em todo o estudo, não apenas dentro de um calendário. Se um participante
           é alvo de dois calendários, seu contador de batch aumenta a cada envio de
           qualquer um dos dois calendários.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+const TOKENS_JA = [
+  {
+    token: '%SAMPLY_ID%',
+    replaced_with: '参加者の匿名Samply ID。',
+    fallback: '常に置換されます — すべての参加者が持っています。',
+    example: 'abc123XYZ',
+  },
+  {
+    token: '%PARTICIPANT_CODE%',
+    replaced_with: '参加時に参加者が入力したカスタムコード。',
+    fallback: '参加者がコードを入力しなかった場合、置換されずに残ります。研究編集で「参加者にコードを尋ねる」を有効にし、参加者が記入することを確認してください。',
+    example: 'P042',
+  },
+  {
+    token: '%GROUP_ID%',
+    replaced_with: '参加者が属するグループの短いID。',
+    fallback: '参加者にグループが割り当てられていない場合、置換されずに残ります。',
+    example: 'g7xk',
+  },
+  {
+    token: '%MESSAGE_ID%',
+    replaced_with: 'この特定の参加者へのこの特定の送信に対して生成されたユニークなID。',
+    fallback: '常に置換されます。',
+    example: 'aB3dE6fG9hJ2kL5',
+  },
+  {
+    token: '%TIMESTAMP_SENT%',
+    replaced_with: '通知が発送された瞬間のUnixタイムスタンプ（ミリ秒）。',
+    fallback: '常に置換されます。',
+    example: '1715420400000',
+  },
+  {
+    token: '%BATCH%',
+    replaced_with: 'この参加者がこの研究からこれまでに受け取った通知の数。1から数えます。最初の通知はbatch = 1、2番目はbatch = 2、というように。',
+    fallback: '常に置換されます。',
+    example: '3',
+  },
+];
+
+const TOOLS_JA = [
+  {
+    name: 'Qualtrics',
+    steps: [
+      '調査フローで、最初の質問ブロックの前に「埋め込みデータ」要素を追加します。',
+      'id、code、wave、messageid（またはURLパラメーターに対応する任意の名前）という名前のフィールドを作成します。',
+      'Qualtricsは、それらを含むURLから調査がロードされたときに、クエリ文字列パラメーターを自動的にキャプチャします。',
+      '${e://Field/id}構文を使用して、質問のテキストやロジックでこれらの値を参照します。',
+    ],
+    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
+  },
+  {
+    name: 'REDCap',
+    steps: [
+      'recordパラメーター付きの調査キューまたは公開調査リンクを使用します。',
+      '各提出が正しいREDCapレコードにマップされるように、%PARTICIPANT_CODE%をrecord値として渡します。',
+      'リマインダーをキャンセルする完了コールバックを設定する必要がある場合は、%MESSAGE_ID%を隠しフィールドとして渡します。',
+    ],
+    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
+  },
+  {
+    name: 'LimeSurvey',
+    steps: [
+      '調査設定で「URLフィールド」を有効にします。',
+      'プレースホルダー値をURLパラメーターとして渡します — LimeSurveyはそれらを自動的に応答データとして保存します。',
+    ],
+    url: 'https://survey.institution.edu/123456?lang=ja&samply_id=%SAMPLY_ID%&batch=%BATCH%',
+  },
+];
+
+function PlaceholdersContentJa() {
+  return (
+    <>
+      <p>
+        プレースホルダーは、通知のWebリンクに埋め込む<Code>%TOKEN%</Code>文字列です。
+        Samplyが通知を発火すると、URLを開く前に、各トークンをその参加者の実際の値に置換します。
+        各参加者がパーソナライズされたリンクを受け取ります — 手作業は不要です。
+      </p>
+
+      {/* ── Token reference ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>トークン リファレンス</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>トークン</th>
+            <th>置換される値</th>
+            <th>利用できない場合</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TOKENS_JA.map((t) => (
+            <tr key={t.token}>
+              <td style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', color: 'var(--coral)', whiteSpace: 'nowrap' }}>{t.token}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{t.replaced_with}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem', color: 'var(--ink-40)' }}>{t.fallback}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>置換の仕組み</h2>
+      <p>
+        置換は送信時、通知ディスパッチャー内、プッシュが配信のためにキューに入れられる直前に発生します。
+        スケジュール定義に保存された元のURLは決して変更されません — 置換されたURLは、デバイスに配信される
+        通知ペイロード内にのみ存在します。これが、すべての通知が同じスケジュールから来ても、
+        各参加者がユニークなURLを受け取る理由です。
+      </p>
+      <p>
+        SamplyはURLに少なくとも1つの<Code>%</Code>文字が含まれている場合にのみ置換を実行します。
+        <Code>%</Code>のないURLは変更されずに通過するため、プレースホルダーを使用しない
+        スケジュールにパフォーマンス上のペナルティはありません。
+      </p>
+
+      {/* ── Constructing the URL ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>URLの構築</h2>
+      <p>
+        プレースホルダーを標準のクエリ文字列パラメーターとして追加します。必要な数だけ組み合わせる
+        ことができます。参加者、ウェーブ、完了を追跡する研究の一般的なURLは次のようになります：
+      </p>
+      <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%' />
+      <p style={{ marginTop: '1.4rem' }}>
+        Samplyがこの通知を参加者<em>abc123</em>に3回目の送信で発火するとき、URLは次のようになります：
+      </p>
+      <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
+
+      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>ツール別設定</h2>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
+        {TOOLS_JA.map((tool) => (
+          <div
+            key={tool.name}
+            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
+          >
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
+            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
+              {tool.steps.map((s, i) => (
+                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
+              ))}
+            </ol>
+            <UrlBox url={tool.url} />
+          </div>
+        ))}
+      </div>
+
+      {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_IDと完了の追跡</h2>
+      <p>
+        <Code>%MESSAGE_ID%</Code>は、調査応答をそれをトリガーした通知にリンクするキーです。
+        参加者が調査を完了すると、調査ツールはそのIDを使ってSamplyにコールバックを送信する必要があります。
+        Samplyはこれを使用して：
+      </p>
+      <ol>
+        <li>対応する結果レコードを完了済みとしてマークします。</li>
+        <li>その送信に対する保留中のリマインダー通知をキャンセルします。</li>
+      </ol>
+      <p>
+        このコールバックがないと、Samplyは調査が提出されたことを知る方法がなく、完了に関係なく
+        リマインダーが発火します。コールバックの設定は{' '}
+        <a href='/docs/reminders'>リマインダー</a>に記載されています。
+      </p>
+
+      {/* ── Permanent link ────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>研究のパーマネントリンク内のプレースホルダー</h2>
+      <p>
+        同じトークンは研究のパーマネントリンクでも機能します — スケジュールされた通知の外で、
+        いつでもSamplyアプリで参加者がタップできるURLです。これは<strong>イベント駆動型デザイン
+        </strong>の基礎です：固定時刻に通知を送信する代わりに、参加者が一日の関連イベントが
+        発生したときにいつでも自分でレポートを開始できるようにします。研究ダッシュボードの
+        <strong>設定</strong>タブ、<em>イベント駆動型デザイン</em>でパーマネントリンクを設定します。
+      </p>
+      <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP_SENT%' />
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>注意すべき点</h3>
+      <dl>
+        <dt>URLに置換されていないトークン</dt>
+        <dd>
+          トークンが特定の参加者の値を持っていない場合（コードなし、グループなし）、URLにリテラル文字列として
+          残ります — たとえば<Code>?code=%PARTICIPANT_CODE%</Code>。調査ツールはこのリテラル文字列を
+          パラメーター値として受け取ります。コードが設定されていない参加者でテストして、調査が
+          これを正しく処理することを確認してください。
+        </dd>
+        <dt>URLエンコーディング</dt>
+        <dd>
+          置換された値はそのまま挿入されます。Samply IDとメッセージIDは英数字のみを使用し、URLで
+          安全です。参加者コードは研究者によって定義されます — コードがURLで使用される場合、
+          スペースや特殊文字を避けてください。
+        </dd>
+        <dt>BATCHは1つのスケジュールだけでなく、研究のすべての送信をカウントします</dt>
+        <dd>
+          バッチ番号は、その参加者についてSamplyが研究全体で記録した結果の総数であり、1つの
+          スケジュール内だけのものではありません。参加者が2つのスケジュールの対象である場合、
+          どちらかのスケジュールから送信されるたびに、そのバッチカウンターが増加します。
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+const TOKENS_TR = [
+  {
+    token: "%SAMPLY_ID%",
+    replaced_with: "Katılımcının anonim Samply ID değeri.",
+    fallback: "Her zaman değiştirilir — tüm katılımcılarda bulunur.",
+    example: "abc123XYZ",
+  },
+  {
+    token: "%PARTICIPANT_CODE%",
+    replaced_with: "Katılım sırasında katılımcının girdiği özel kod.",
+    fallback: "Katılımcı bir kod girmediyse değiştirilmeden kalır. Çalışmayı Düzenle bölümünde «Katılımcıdan bir kod iste» seçeneğini etkinleştirip katılımcıların doldurduğundan emin olun.",
+    example: "P042",
+  },
+  {
+    token: "%GROUP_ID%",
+    replaced_with: "Katılımcının ait olduğu grubun kısa kimliği.",
+    fallback: "Katılımcıya bir grup atanmadıysa değiştirilmeden kalır.",
+    example: "g7xk",
+  },
+  {
+    token: "%MESSAGE_ID%",
+    replaced_with: "Bu belirli katılımcıya yapılan bu belirli gönderim için oluşturulan benzersiz kimlik.",
+    fallback: "Her zaman değiştirilir.",
+    example: "aB3dE6fG9hJ2kL5",
+  },
+  {
+    token: "%TIMESTAMP_SENT%",
+    replaced_with: "Bildirimin gönderildiği anın Unix zaman damgası (milisaniye).",
+    fallback: "Her zaman değiştirilir.",
+    example: "1715420400000",
+  },
+  {
+    token: "%BATCH%",
+    replaced_with: "Bu katılımcının şimdiye kadar bu çalışmadan aldığı bildirim sayısı. 1'den itibaren sayar. İlk bildirim batch = 1, ikincisi batch = 2 ve böyle devam eder.",
+    fallback: "Her zaman değiştirilir.",
+    example: "3",
+  },
+];
+
+const TOOLS_TR = [
+  {
+    name: "Qualtrics",
+    steps: [
+      "Anket akışında, ilk soru bloğundan önce bir «Gömülü Veri» öğesi ekleyin.",
+      "id, code, wave, messageid adlı alanlar oluşturun (veya URL parametrelerinize karşılık gelen herhangi bir ad).",
+      "Qualtrics, anket bu parametreleri içeren bir URL'den yüklendiğinde sorgu dizesi parametrelerini otomatik olarak yakalar.",
+      "Bu değerlere soru metinlerinde veya mantıkta ${e://Field/id} sözdizimi ile başvurun.",
+    ],
+    url: "https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%",
+  },
+  {
+    name: "REDCap",
+    steps: [
+      "record parametreli bir anket kuyruğu veya genel anket bağlantısı kullanın.",
+      "Her gönderimin doğru REDCap kaydına eşlenmesi için %PARTICIPANT_CODE% değerini record değeri olarak geçirin.",
+      "Hatırlatmaları iptal eden bir tamamlanma geri çağrısı yapılandırmanız gerekiyorsa %MESSAGE_ID% değerini gizli bir alan olarak geçirin.",
+    ],
+    url: "https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
+  },
+  {
+    name: "LimeSurvey",
+    steps: [
+      "Anket ayarlarında «URL alanları» seçeneğini etkinleştirin.",
+      "Yer tutucu değerlerini URL parametreleri olarak geçirin — LimeSurvey bunları otomatik olarak yanıt verisi olarak saklar.",
+    ],
+    url: "https://survey.institution.edu/123456?lang=tr&samply_id=%SAMPLY_ID%&batch=%BATCH%",
+  },
+];
+
+function PlaceholdersContentTr() {
+  return (
+    <>
+      <p>
+        Yer tutucular, bildirimlerin web bağlantılarına gömdüğünüz <Code>%TOKEN%</Code> dizeleridir.
+        Samply bir bildirimi tetiklediğinde, URL'yi açmadan önce her tokenı o katılımcının gerçek
+        değerleriyle değiştirir. Her katılımcı kişiselleştirilmiş bir bağlantı alır — elle iş gerekmez.
+      </p>
+
+      {/* ── Token reference ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Token referansı</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Değiştirileceği değer</th>
+            <th>Kullanılamadığında</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TOKENS_TR.map((t) => (
+            <tr key={t.token}>
+              <td style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--coral)", whiteSpace: "nowrap" }}>{t.token}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{t.replaced_with}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-40)" }}>{t.fallback}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Değiştirme nasıl çalışır</h2>
+      <p>
+        Değiştirme, gönderim anında bildirim dağıtıcısında, push iletim için kuyruğa alınmadan hemen önce
+        gerçekleşir. Program tanımında kayıtlı orijinal URL asla değişmez — değiştirilmiş URL yalnızca
+        cihaza iletilen bildirim yükünün içinde bulunur. Tüm bildirimler aynı programdan gelse bile her
+        katılımcının benzersiz bir URL almasının nedeni budur.
+      </p>
+      <p>
+        Samply, URL'de en az bir <Code>%</Code> karakteri olduğunda değiştirme yapar.
+        <Code>%</Code> içermeyen URL'ler değiştirilmeden geçer, dolayısıyla yer tutucu kullanmayan
+        programlarda performans cezası yoktur.
+      </p>
+
+      {/* ── Constructing the URL ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>URL'yi oluşturma</h2>
+      <p>
+        Yer tutucuları standart sorgu dizesi parametreleri olarak ekleyin. İstediğiniz kadar birleştirebilirsiniz.
+        Katılımcıları, dalgaları ve tamamlanmaları izleyen bir çalışma için tipik URL şöyle görünür:
+      </p>
+      <UrlBox url="https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%" />
+      <p style={{ marginTop: "1.4rem" }}>
+        Samply bu bildirimi <em>abc123</em> katılımcısına üçüncü gönderimde tetiklediğinde URL şu hâle gelir:
+      </p>
+      <UrlBox url="https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5" />
+
+      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Araca özgü ayarlar</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 3.6rem" }}>
+        {TOOLS_TR.map((tool) => (
+          <div
+            key={tool.name}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
+          >
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{tool.name}</div>
+            <ol style={{ margin: "0 0 0.4rem", paddingLeft: "1.8rem" }}>
+              {tool.steps.map((s, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.4rem" }}>{s}</li>
+              ))}
+            </ol>
+            <UrlBox url={tool.url} />
+          </div>
+        ))}
+      </div>
+
+      {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>MESSAGE_ID ve tamamlanmaları izleme</h2>
+      <p>
+        <Code>%MESSAGE_ID%</Code>, anket yanıtını onu tetikleyen bildirime bağlayan anahtardır.
+        Katılımcı anketi tamamladığında, anket aracının bu kimlikle Samply'ye bir geri çağırma göndermesi gerekir.
+        Samply bunu şunlar için kullanır:
+      </p>
+      <ol>
+        <li>İlgili sonuç kaydını tamamlanmış olarak işaretler.</li>
+        <li>Bu gönderim için bekleyen hatırlatma bildirimlerini iptal eder.</li>
+      </ol>
+      <p>
+        Bu geri çağırma olmadan Samply, anketin gönderildiğini bilmenin bir yolu yoktur ve hatırlatmalar
+        tamamlanmadan bağımsız olarak tetiklenir. Geri çağırmanın yapılandırılması{" "}
+        <a href="/docs/reminders">Hatırlatmalar</a> bölümünde açıklanmıştır.
+      </p>
+
+      {/* ── Permanent link ────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Çalışmanın kalıcı bağlantısındaki yer tutucular</h2>
+      <p>
+        Aynı tokenlar çalışmanın kalıcı bağlantısında da çalışır — planlanmış bildirimlerin dışında,
+        Samply uygulamasında katılımcının istediği zaman dokunabileceği URL. Bu, <strong>olay güdümlü
+        tasarımların</strong> temelidir: sabit zamanlarda bildirim göndermek yerine, katılımcılar günün
+        ilgili bir olayı yaşandığında kendi raporlarını başlatabilir. Çalışma panelinin
+        <strong>Ayarlar</strong> sekmesinde, <em>Olay güdümlü tasarım</em> bölümünde kalıcı bağlantıyı yapılandırın.
+      </p>
+      <UrlBox url="https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP_SENT%" />
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>Dikkat edilmesi gerekenler</h3>
+      <dl>
+        <dt>URL'de değiştirilmemiş tokenlar</dt>
+        <dd>
+          Bir tokenın belirli bir katılımcı için değeri yoksa (kod yok, grup yok), URL'de bir literal
+          dize olarak kalır — örneğin <Code>?code=%PARTICIPANT_CODE%</Code>. Anket aracınız bu literal dizeyi
+          parametre değeri olarak alır. Anketinizin bunu doğru biçimde işlediğinden emin olmak için kodu
+          ayarlanmamış bir katılımcıyla test edin.
+        </dd>
+        <dt>URL kodlaması</dt>
+        <dd>
+          Değiştirilen değerler oldukları gibi yerleştirilir. Samply ID ve mesaj kimliği yalnızca alfanümerik
+          karakterler kullanır ve URL'lerde güvenlidir. Katılımcı kodları araştırmacı tarafından tanımlanır —
+          kod URL'de kullanılıyorsa boşluklardan ve özel karakterlerden kaçının.
+        </dd>
+        <dt>BATCH yalnızca bir programı değil çalışmanın tüm gönderimlerini sayar</dt>
+        <dd>
+          Toplu numarası, Samply'nin o katılımcı için tüm çalışma boyunca kaydettiği toplam sonuç sayısıdır,
+          yalnızca bir program içindeki değil. Bir katılımcı iki programın kapsamındaysa, her iki programdan
+          gönderim yapıldığında toplu sayacı artar.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+const TOKENS_PL = [
+  {
+    token: "%SAMPLY_ID%",
+    replaced_with: "Anonimowe Samply ID uczestnika.",
+    fallback: "Zawsze zastępowane — wszyscy uczestnicy je mają.",
+    example: "abc123XYZ",
+  },
+  {
+    token: "%PARTICIPANT_CODE%",
+    replaced_with: "Niestandardowy kod wprowadzony przez uczestnika podczas dołączania.",
+    fallback: "Pozostaje niezastąpione, jeśli uczestnik nie wprowadził kodu. Włącz «Poproś uczestnika o kod» w sekcji Edytuj badanie i upewnij się, że uczestnicy go wypełniają.",
+    example: "P042",
+  },
+  {
+    token: "%GROUP_ID%",
+    replaced_with: "Krótki identyfikator grupy, do której należy uczestnik.",
+    fallback: "Pozostaje niezastąpione, jeśli uczestnik nie został przypisany do grupy.",
+    example: "g7xk",
+  },
+  {
+    token: "%MESSAGE_ID%",
+    replaced_with: "Unikalny identyfikator wygenerowany dla tej konkretnej wysyłki do tego konkretnego uczestnika.",
+    fallback: "Zawsze zastępowane.",
+    example: "aB3dE6fG9hJ2kL5",
+  },
+  {
+    token: "%TIMESTAMP_SENT%",
+    replaced_with: "Unix timestamp (milisekundy) momentu wysłania powiadomienia.",
+    fallback: "Zawsze zastępowane.",
+    example: "1715420400000",
+  },
+  {
+    token: "%BATCH%",
+    replaced_with: "Liczba powiadomień, które ten uczestnik otrzymał z tego badania do tej pory. Liczy od 1. Pierwsze powiadomienie ma batch = 1, drugie batch = 2 i tak dalej.",
+    fallback: "Zawsze zastępowane.",
+    example: "3",
+  },
+];
+
+const TOOLS_PL = [
+  {
+    name: "Qualtrics",
+    steps: [
+      "W przepływie ankiety dodaj element «Embedded Data» przed pierwszym blokiem pytań.",
+      "Utwórz pola o nazwach id, code, wave, messageid (lub dowolnych nazwach odpowiadających Twoim parametrom URL).",
+      "Qualtrics automatycznie przechwyci parametry ciągu zapytania, gdy ankieta zostanie załadowana z URL zawierającym te parametry.",
+      "Odwołuj się do tych wartości w tekstach pytań lub logice za pomocą składni ${e://Field/id}.",
+    ],
+    url: "https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%",
+  },
+  {
+    name: "REDCap",
+    steps: [
+      "Użyj kolejki ankiet lub publicznego linku do ankiety z parametrem record.",
+      "Przekaż %PARTICIPANT_CODE% jako wartość record, aby każda wysyłka była mapowana do prawidłowego rekordu REDCap.",
+      "Przekaż %MESSAGE_ID% jako ukryte pole, jeśli musisz skonfigurować wywołanie zwrotne ukończenia, które anuluje przypomnienia.",
+    ],
+    url: "https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
+  },
+  {
+    name: "LimeSurvey",
+    steps: [
+      "Włącz «Pola URL» w ustawieniach ankiety.",
+      "Przekaż wartości placeholderów jako parametry URL — LimeSurvey automatycznie przechowuje je jako dane odpowiedzi.",
+    ],
+    url: "https://survey.institution.edu/123456?lang=pl&samply_id=%SAMPLY_ID%&batch=%BATCH%",
+  },
+];
+
+function PlaceholdersContentPl() {
+  return (
+    <>
+      <p>
+        Placeholdery to ciągi <Code>%TOKEN%</Code>, które osadzasz w linkach internetowych
+        powiadomień. Gdy Samply wyzwala powiadomienie, zastępuje każdy Token rzeczywistymi
+        wartościami tego uczestnika przed otwarciem URL. Każdy uczestnik otrzymuje
+        spersonalizowany link — bez żadnej ręcznej pracy.
+      </p>
+
+      {/* ── Token reference ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Słownik tokenów</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Zastępowane przez</th>
+            <th>Gdy niedostępne</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TOKENS_PL.map((t) => (
+            <tr key={t.token}>
+              <td style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--coral)", whiteSpace: "nowrap" }}>{t.token}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{t.replaced_with}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-40)" }}>{t.fallback}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Jak działa zastępowanie</h2>
+      <p>
+        Zastępowanie odbywa się w momencie wysyłki w dystrybutorze powiadomień, tuż przed
+        umieszczeniem powiadomienia w kolejce do dostarczenia push. Oryginalny URL zapisany w
+        definicji harmonogramu nigdy się nie zmienia — zastąpiony URL istnieje tylko w
+        ładunku powiadomienia dostarczonym do urządzenia. To dlatego każdy uczestnik
+        otrzymuje unikalny URL, mimo że wszystkie powiadomienia pochodzą z tego samego harmonogramu.
+      </p>
+      <p>
+        Samply wykonuje zastępowanie, gdy URL zawiera co najmniej jeden znak <Code>%</Code>.
+        URL bez <Code>%</Code> przechodzą niezmienione, więc nie ma kary za wydajność dla
+        harmonogramów, które nie używają placeholderów.
+      </p>
+
+      {/* ── Constructing the URL ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Konstruowanie URL</h2>
+      <p>
+        Dodaj placeholdery jako standardowe parametry ciągu zapytania. Możesz łączyć tyle,
+        ile potrzebujesz. Typowy URL dla badania śledzącego uczestników, fale i ukończenia
+        wygląda następująco:
+      </p>
+      <UrlBox url="https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%" />
+      <p style={{ marginTop: "1.4rem" }}>
+        Gdy Samply wyzwala to powiadomienie dla uczestnika <em>abc123</em> przy ich trzeciej
+        wysyłce, URL staje się:
+      </p>
+      <UrlBox url="https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5" />
+
+      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Konfiguracja dla konkretnych narzędzi</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 3.6rem" }}>
+        {TOOLS_PL.map((tool) => (
+          <div
+            key={tool.name}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
+          >
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{tool.name}</div>
+            <ol style={{ margin: "0 0 0.4rem", paddingLeft: "1.8rem" }}>
+              {tool.steps.map((s, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.4rem" }}>{s}</li>
+              ))}
+            </ol>
+            <UrlBox url={tool.url} />
+          </div>
+        ))}
+      </div>
+
+      {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>MESSAGE_ID i śledzenie ukończeń</h2>
+      <p>
+        <Code>%MESSAGE_ID%</Code> jest kluczem, który łączy odpowiedź ankiety z powiadomieniem,
+        które ją wyzwoliło. Gdy uczestnik kończy ankietę, narzędzie ankietowe musi wysłać
+        wywołanie zwrotne do Samply z tym identyfikatorem. Samply używa go do:
+      </p>
+      <ol>
+        <li>Oznaczenia odpowiedniego rekordu wyniku jako ukończonego.</li>
+        <li>Anulowania oczekujących powiadomień przypomnień dla tej wysyłki.</li>
+      </ol>
+      <p>
+        Bez tego wywołania zwrotnego Samply nie wie, że ankieta została przesłana, a
+        przypomnienia są wyzwalane niezależnie od ukończenia. Konfigurowanie wywołania
+        zwrotnego jest udokumentowane w sekcji{" "}
+        <a href="/docs/reminders">Przypomnienia</a>.
+      </p>
+
+      {/* ── Permanent link ────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>Placeholdery w stałym linku badania</h2>
+      <p>
+        Te same tokeny działają w stałym linku badania — URL, w który uczestnik może stuknąć
+        w dowolnym momencie w aplikacji Samply, poza zaplanowanymi powiadomieniami. Jest to
+        podstawa <strong>projektów sterowanych zdarzeniami</strong>: zamiast wysyłać
+        powiadomienia o stałych godzinach, uczestnicy mogą sami zainicjować raport, gdy w
+        ciągu dnia wystąpi istotne zdarzenie. Skonfiguruj stały link w zakładce{' '}
+        <strong>Ustawienia</strong> panelu badania pod sekcją <em>Projekt sterowany zdarzeniami</em>.
+      </p>
+      <UrlBox url="https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP_SENT%" />
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>Na co należy uważać</h3>
+      <dl>
+        <dt>Niezastąpione tokeny w URL</dt>
+        <dd>
+          Jeśli Token nie ma wartości dla danego uczestnika (brak kodu, brak grupy), pozostaje
+          w URL jako dosłowny ciąg — na przykład <Code>?code=%PARTICIPANT_CODE%</Code>. Twoje
+          narzędzie ankietowe otrzyma ten dosłowny ciąg jako wartość parametru. Przetestuj z
+          uczestnikiem bez ustawionego kodu, aby upewnić się, że Twoja ankieta obsługuje to poprawnie.
+        </dd>
+        <dt>Kodowanie URL</dt>
+        <dd>
+          Zastąpione wartości są wstawiane tak, jak są. Samply ID i identyfikator wiadomości
+          używają tylko znaków alfanumerycznych i są bezpieczne w URL. Kody uczestników są
+          definiowane przez Badacza — unikaj spacji i znaków specjalnych, jeśli kod jest
+          używany w URL.
+        </dd>
+        <dt>BATCH zlicza wszystkie wysyłki z badania, nie tylko jeden harmonogram</dt>
+        <dd>
+          Numer partii to całkowita liczba wyników, które Samply zarejestrował dla tego
+          uczestnika w całym badaniu, a nie tylko w obrębie jednego harmonogramu. Jeśli
+          uczestnik jest objęty dwoma harmonogramami, licznik partii rośnie wraz z wysyłkami
+          z obu harmonogramów.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+const TOKENS_AR = [
+  {
+    token: "%SAMPLY_ID%",
+    replaced_with: "Samply ID المجهول للمشارك.",
+    fallback: "يُستبدل دائماً — جميع المشاركين يمتلكونه.",
+    example: "abc123XYZ",
+  },
+  {
+    token: "%PARTICIPANT_CODE%",
+    replaced_with: "الرمز المخصص الذي أدخله المشارك عند الانضمام.",
+    fallback: "يبقى دون استبدال إذا لم يُدخل المشارك رمزاً. فعِّل «اطلب رمزاً من المشارك» في «تعديل الدراسة» وتأكد من أن المشاركين يعبّئونه.",
+    example: "P042",
+  },
+  {
+    token: "%GROUP_ID%",
+    replaced_with: "معرّف قصير للمجموعة التي ينتمي إليها المشارك.",
+    fallback: "يبقى دون استبدال إذا لم يُعيَّن المشارك إلى مجموعة.",
+    example: "g7xk",
+  },
+  {
+    token: "%MESSAGE_ID%",
+    replaced_with: "معرّف فريد يُولَّد لهذا الإرسال المحدد لهذا المشارك المحدد.",
+    fallback: "يُستبدل دائماً.",
+    example: "aB3dE6fG9hJ2kL5",
+  },
+  {
+    token: "%TIMESTAMP_SENT%",
+    replaced_with: "طابع Unix الزمني (بالميلي ثانية) للحظة إرسال الإشعار.",
+    fallback: "يُستبدل دائماً.",
+    example: "1715420400000",
+  },
+  {
+    token: "%BATCH%",
+    replaced_with: "عدد الإشعارات التي تلقاها هذا المشارك من هذه الدراسة حتى الآن. يبدأ العد من 1. الإشعار الأول batch = 1، والثاني batch = 2، وهكذا.",
+    fallback: "يُستبدل دائماً.",
+    example: "3",
+  },
+];
+
+const TOOLS_AR = [
+  {
+    name: "Qualtrics",
+    steps: [
+      "في تدفق الاستطلاع، أضف عنصر «Embedded Data» قبل كتلة الأسئلة الأولى.",
+      "أنشئ حقولاً باسم id وcode وwave وmessageid (أو بأي أسماء تطابق معاملات الـ URL لديك).",
+      "سيلتقط Qualtrics معاملات سلسلة الاستعلام تلقائياً عند تحميل الاستطلاع من URL يحتوي على هذه المعاملات.",
+      "أحل إلى هذه القيم في نصوص الأسئلة أو المنطق باستخدام بناء الجملة ${e://Field/id}.",
+    ],
+    url: "https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%",
+  },
+  {
+    name: "REDCap",
+    steps: [
+      "استخدم طابور الاستطلاعات أو الرابط العام للاستطلاع مع معامل record.",
+      "مرِّر %PARTICIPANT_CODE% كقيمة لـ record بحيث تُربط كل عملية إرسال بسجل REDCap الصحيح.",
+      "مرِّر %MESSAGE_ID% كحقل مخفي إذا احتجت إلى إعداد رد إكمال يُلغي التذكيرات.",
+    ],
+    url: "https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
+  },
+  {
+    name: "LimeSurvey",
+    steps: [
+      "فعِّل «حقول URL» في إعدادات الاستطلاع.",
+      "مرِّر قيم العناصر النائبة كمعاملات URL — يخزّنها LimeSurvey تلقائياً كبيانات للرد.",
+    ],
+    url: "https://survey.institution.edu/123456?lang=ar&samply_id=%SAMPLY_ID%&batch=%BATCH%",
+  },
+];
+
+function PlaceholdersContentAr() {
+  return (
+    <>
+      <p>
+        العناصر النائبة هي سلاسل <Code>%TOKEN%</Code> تُضمِّنها في روابط الويب للإشعارات.
+        عندما يُطلق Samply إشعاراً، يستبدل كل Token بالقيم الفعلية لهذا المشارك قبل فتح
+        الـ URL. يحصل كل مشارك على رابط مخصص — دون أي عمل يدوي.
+      </p>
+
+      {/* ── Token reference ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>مرجع الـ Tokens</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>يُستبدل بـ</th>
+            <th>عند عدم التوفر</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TOKENS_AR.map((t) => (
+            <tr key={t.token}>
+              <td style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--coral)", whiteSpace: "nowrap" }}>{t.token}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{t.replaced_with}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-40)" }}>{t.fallback}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>كيف يعمل الاستبدال</h2>
+      <p>
+        يحدث الاستبدال وقت الإرسال في موزّع الإشعارات، قبل وضع الإشعار في طابور
+        التسليم الفوري مباشرةً. الـ URL الأصلي المخزَّن في تعريف الجدول لا يتغيّر أبداً —
+        الـ URL المُستبدَل موجود فقط في حمولة الإشعار المُسلَّمة إلى الجهاز. لهذا يحصل كل
+        مشارك على URL فريد، رغم أن جميع الإشعارات تأتي من الجدول ذاته.
+      </p>
+      <p>
+        يقوم Samply بالاستبدال عندما يحتوي الـ URL على رمز <Code>%</Code> واحد على الأقل.
+        تمرّ الـ URLs التي لا تحتوي على <Code>%</Code> دون تغيير، فلا توجد عقوبة أداء
+        للجداول التي لا تستخدم العناصر النائبة.
+      </p>
+
+      {/* ── Constructing the URL ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>إنشاء الـ URL</h2>
+      <p>
+        أضف العناصر النائبة كمعاملات قياسية في سلسلة الاستعلام. يمكنك دمج ما تحتاجه. URL
+        نموذجي لدراسة تتتبع المشاركين والموجات والإكمالات يبدو كالتالي:
+      </p>
+      <UrlBox url="https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%" />
+      <p style={{ marginTop: "1.4rem" }}>
+        عندما يُطلق Samply هذا الإشعار للمشارك <em>abc123</em> عند الإرسال الثالث، يصبح
+        الـ URL:
+      </p>
+      <UrlBox url="https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5" />
+
+      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>إعداد الأدوات المحددة</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 3.6rem" }}>
+        {TOOLS_AR.map((tool) => (
+          <div
+            key={tool.name}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
+          >
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{tool.name}</div>
+            <ol style={{ margin: "0 0 0.4rem", paddingLeft: "1.8rem" }}>
+              {tool.steps.map((s, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.4rem" }}>{s}</li>
+              ))}
+            </ol>
+            <UrlBox url={tool.url} />
+          </div>
+        ))}
+      </div>
+
+      {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>MESSAGE_ID وتتبع الإكمالات</h2>
+      <p>
+        <Code>%MESSAGE_ID%</Code> هو المفتاح الذي يربط رد الاستطلاع بالإشعار الذي
+        أطلقه. عندما ينهي مشارك استطلاعاً، يجب على أداة الاستطلاع إرسال رد إلى Samply
+        بهذا المعرّف. يستخدمه Samply لـ:
+      </p>
+      <ol>
+        <li>تعليم سجل النتيجة المعني على أنه مكتمل.</li>
+        <li>إلغاء إشعارات التذكيرات المعلقة لهذا الإرسال.</li>
+      </ol>
+      <p>
+        دون هذا الرد، لا يعرف Samply أن الاستطلاع قد أُرسل، وتُطلَق التذكيرات بصرف النظر
+        عن الإكمال. تجد توثيق إعداد الرد في قسم{" "}
+        <a href="/docs/reminders">التذكيرات</a>.
+      </p>
+
+      {/* ── Permanent link ────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: "3.6rem" }}>العناصر النائبة في الرابط الدائم للدراسة</h2>
+      <p>
+        تعمل الـ Tokens نفسها في الرابط الدائم للدراسة — وهو URL يمكن للمشارك النقر عليه
+        في أي وقت من تطبيق Samply، خارج الإشعارات المجدولة. هذا هو أساس{' '}
+        <strong>التصاميم المُحرَّكة بالأحداث</strong>: بدلاً من إرسال إشعارات في أوقات
+        ثابتة، يمكن للمشاركين بدء تقرير بأنفسهم عند وقوع حدث ذي صلة خلال اليوم. أعدّ
+        الرابط الدائم في علامة التبويب <strong>إعدادات</strong> في لوحة الدراسة تحت قسم{' '}
+        <em>التصميم المُحرَّك بالأحداث</em>.
+      </p>
+      <UrlBox url="https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP_SENT%" />
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>أمور يجب الانتباه إليها</h3>
+      <dl>
+        <dt>Tokens غير مُستبدلة في الـ URL</dt>
+        <dd>
+          إذا لم يكن للـ Token قيمة لدى المشارك (لا يوجد رمز، لا توجد مجموعة)، فإنه يبقى
+          في الـ URL كسلسلة حرفية — على سبيل المثال <Code>?code=%PARTICIPANT_CODE%</Code>.
+          ستستلم أداة الاستطلاع هذه السلسلة الحرفية كقيمة معامل. اختبر مع مشارك دون رمز
+          محدد للتأكد من أن استطلاعك يعالج ذلك بشكل صحيح.
+        </dd>
+        <dt>ترميز الـ URL</dt>
+        <dd>
+          تُدرَج القيم المُستبدَلة كما هي. يستخدم Samply ID ومعرّف الرسالة أحرفاً أبجدية
+          رقمية فقط، وهي آمنة في الـ URL. تُعرَّف رموز المشاركين من قِبل الباحث — تجنّب
+          المسافات والأحرف الخاصة إذا كان الرمز يُستخدم في URL.
+        </dd>
+        <dt>BATCH يَعُدّ جميع الإرسالات من الدراسة، وليس جدولاً واحداً فقط</dt>
+        <dd>
+          رقم الدفعة هو إجمالي عدد النتائج التي سجّلها Samply لهذا المشارك عبر الدراسة
+          بأكملها، وليس داخل جدول واحد فقط. إذا كان المشارك خاضعاً لجدولَين، فإن عداد
+          الدفعة يزداد مع كل إرسال من كلا الجدولَين.
         </dd>
       </dl>
     </>

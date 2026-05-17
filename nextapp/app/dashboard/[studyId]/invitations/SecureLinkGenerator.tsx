@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { md5 } from "js-md5";
+import { useT } from "@/app/components/TranslationProvider";
 
 const FIELD: React.CSSProperties = {
   fontFamily: "var(--font-mono)",
@@ -56,6 +57,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 }
 
 export default function SecureLinkGenerator({ projectId }: { projectId: string }) {
+  const { t } = useT();
   const [protocol, setProtocol] = useState("https");
   const [server, setServer] = useState("samply.uni-konstanz.de");
   const [mode, setMode] = useState("multi");
@@ -111,42 +113,42 @@ export default function SecureLinkGenerator({ projectId }: { projectId: string }
 
       {/* Config grid */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem" }}>
-        <Field label="Protocol" hint="https is secure and recommended">
+        <Field label={t("invitations.secureProtocolLabel")} hint={t("invitations.secureProtocolHint")}>
           <select style={SELECT} value={protocol} onChange={(e) => setProtocol(e.target.value)}>
             <option value="https">https</option>
             <option value="http">http</option>
           </select>
         </Field>
 
-        <Field label="Server" hint="e.g. samply.uni-konstanz.de">
+        <Field label={t("invitations.secureServerLabel")} hint={t("invitations.secureServerHint")}>
           <input style={FIELD} type="text" value={server} onChange={(e) => setServer(e.target.value)} placeholder="samply.uni-konstanz.de" />
         </Field>
 
-        <Field label="Study ID" hint="Auto-filled — cannot be changed">
+        <Field label={t("invitations.secureStudyIdLabel")} hint={t("invitations.secureStudyIdHint")}>
           <input style={{ ...FIELD, opacity: 0.6, cursor: "not-allowed" }} type="text" value={projectId} readOnly />
         </Field>
 
-        <Field label="Mode" hint="Multi: supports multiple studies · Single: this study only">
+        <Field label={t("invitations.secureModeLabel")} hint={t("invitations.secureModeHint")}>
           <select style={SELECT} value={mode} onChange={(e) => setMode(e.target.value)}>
-            <option value="multi">Multi</option>
-            <option value="single">Single</option>
+            <option value="multi">{t("invitations.secureModeMulti")}</option>
+            <option value="single">{t("invitations.secureModeSingle")}</option>
           </select>
         </Field>
 
-        <Field label="Valid for (hours)" hint="e.g. 168 = 7 days">
+        <Field label={t("invitations.secureValidForLabel")} hint={t("invitations.secureValidForHint")}>
           <input style={FIELD} type="number" value={validfor} min={1} onChange={(e) => setValidfor(Number(e.target.value))} />
         </Field>
 
-        <Field label="Participant code" hint="Leave empty for shared link · Fill to assign one person">
-          <input style={FIELD} type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder="e.g. P001" />
+        <Field label={t("invitations.secureCodeLabel")} hint={t("invitations.secureCodeHint")}>
+          <input style={FIELD} type="text" value={code} onChange={(e) => setCode(e.target.value)} placeholder={t("invitations.secureCodePlaceholder")} />
         </Field>
       </div>
 
       {/* Toggles row */}
       <div style={{ display: "flex", gap: "2rem" }}>
         {[
-          { label: "Allow timezone updates", checked: allowtz, onChange: setAllowtz },
-          { label: "Allow payment account", checked: allowpayment, onChange: setAllowpayment },
+          { label: t("invitations.secureAllowTz"), checked: allowtz, onChange: setAllowtz },
+          { label: t("invitations.secureAllowPayment"), checked: allowpayment, onChange: setAllowpayment },
         ].map(({ label, checked, onChange }) => (
           <label key={label} style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: "pointer" }}>
             <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)}
@@ -163,7 +165,7 @@ export default function SecureLinkGenerator({ projectId }: { projectId: string }
         <button type="button" onClick={generateLink}
           style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", letterSpacing: ".06em", padding: "0.9rem 2.2rem", borderRadius: "9999px", border: "none", background: "var(--coral)", color: "#fff", cursor: "pointer" }}
           className="hover:opacity-90 transition-opacity">
-          Generate secure link
+          {t("invitations.secureGenerate")}
         </button>
       </div>
 
@@ -185,16 +187,16 @@ export default function SecureLinkGenerator({ projectId }: { projectId: string }
                 color: copied ? "var(--sage)" : "var(--ink-60)",
                 cursor: "pointer", transition: "all .15s", flexShrink: 0,
               }}>
-              {copied ? "Copied ✓" : "Copy link"}
+              {copied ? t("invitations.secureCopied") : t("invitations.secureCopyLink")}
             </button>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.6rem" }}>
-            <span style={LABEL}>QR code</span>
+            <span style={LABEL}>{t("invitations.secureQrLabel")}</span>
             <div style={{ background: "#fff", padding: "0.8rem", borderRadius: "0.6rem", border: "1px solid var(--ink-10)", display: "inline-block" }}>
               <canvas ref={canvasRef} />
             </div>
-            <span style={HINT}>Participants can scan this to open the registration link directly on their phone.</span>
+            <span style={HINT}>{t("invitations.secureQrHint")}</span>
           </div>
         </div>
       )}

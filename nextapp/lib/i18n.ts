@@ -8,13 +8,17 @@ import it from "@/locales/it";
 import fr from "@/locales/fr";
 import es from "@/locales/es";
 import pt from "@/locales/pt";
+import ja from "@/locales/ja";
+import tr from "@/locales/tr";
+import pl from "@/locales/pl";
+import ar from "@/locales/ar";
 import type { Messages } from "@/locales/en";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
-export type Locale = "en" | "de" | "nl" | "ru" | "zh" | "ko" | "it" | "fr" | "es" | "pt";
+export type Locale = "en" | "de" | "nl" | "ru" | "zh" | "ko" | "it" | "fr" | "es" | "pt" | "ja" | "tr" | "pl" | "ar";
 
-export const SUPPORTED_LOCALES: Locale[] = ["en", "de", "nl", "ru", "zh", "ko", "it", "fr", "es", "pt"];
+export const SUPPORTED_LOCALES: Locale[] = ["en", "de", "nl", "ru", "zh", "ko", "it", "fr", "es", "pt", "ja", "tr", "pl", "ar"];
 
 export const LOCALE_NAMES: Record<Locale, string> = {
   en: "English",
@@ -27,6 +31,10 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   fr: "Français",
   es: "Español",
   pt: "Português",
+  ja: "日本語",
+  tr: "Türkçe",
+  pl: "Polski",
+  ar: "العربية",
 };
 
 // Map the value stored in user.language (DB) → Locale code
@@ -41,6 +49,10 @@ export const DB_LANG_TO_LOCALE: Record<string, Locale> = {
   french:  "fr",
   spanish:    "es",
   portuguese: "pt",
+  japanese:   "ja",
+  turkish:    "tr",
+  polish:     "pl",
+  arabic:     "ar",
 };
 
 // Map Locale code → value used in user.language (DB)
@@ -55,6 +67,10 @@ export const LOCALE_TO_DB_LANG: Record<Locale, string> = {
   fr: "french",
   es: "spanish",
   pt: "portuguese",
+  ja: "japanese",
+  tr: "turkish",
+  pl: "polish",
+  ar: "arabic",
 };
 
 // ── Locale detection ──────────────────────────────────────────────────────────
@@ -78,6 +94,10 @@ const MESSAGES: Record<Locale, DeepRecord> = {
   fr: fr as unknown as DeepRecord,
   es: es as unknown as DeepRecord,
   pt: pt as unknown as DeepRecord,
+  ja: ja as unknown as DeepRecord,
+  tr: tr as unknown as DeepRecord,
+  pl: pl as unknown as DeepRecord,
+  ar: ar as unknown as DeepRecord,
 };
 
 function lookup(obj: DeepRecord, parts: string[]): string | undefined {

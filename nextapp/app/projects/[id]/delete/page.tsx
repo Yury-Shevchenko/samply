@@ -4,6 +4,7 @@ import { fetchProjectById } from "@/lib/data/projects";
 import connectDB from "@/lib/db";
 import { deleteProjectAction } from "../../actions";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Delete Study — Samply" };
 
@@ -24,6 +25,7 @@ export default async function DeleteProjectPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const { id } = await params;
   const { error } = await searchParams;
@@ -82,13 +84,13 @@ export default async function DeleteProjectPage({
             style={{ borderBottom: "1px solid var(--ink-10)" }}
           >
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.5rem" }}>
-              destructive action
+              {t("deleteStudy.destructiveAction")}
             </div>
             <div
               className="font-[family-name:var(--font-display)] font-bold"
               style={{ fontSize: "clamp(2rem, 5vw, 2.6rem)", letterSpacing: "-0.02em", lineHeight: 1.1, color: "var(--ink)" }}
             >
-              Delete study
+              {t("deleteStudy.title")}
             </div>
           </div>
 
@@ -109,7 +111,7 @@ export default async function DeleteProjectPage({
             {/* Study name */}
             <div>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.85rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--ink-40)", fontWeight: 600, marginBottom: "0.5rem" }}>
-                Study
+                {t("deleteStudy.studyLabel")}
               </div>
               <div style={{ fontSize: "1.5rem", fontWeight: 600, color: "var(--ink)", letterSpacing: "-0.01em", wordBreak: "break-word" }}>
                 {project.name}
@@ -119,8 +121,8 @@ export default async function DeleteProjectPage({
             {/* Stats */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
               {[
-                { label: "Participants", value: project.members.length },
-                { label: "Responses", value: resultsCount },
+                { label: t("deleteStudy.statParticipants"), value: project.members.length },
+                { label: t("deleteStudy.statResponses"), value: resultsCount },
               ].map(({ label, value }) => (
                 <div key={label} style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "0.9rem 1.2rem" }}>
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", letterSpacing: ".14em", textTransform: "uppercase", color: "var(--ink-40)", fontWeight: 600, marginBottom: "0.35rem" }}>
@@ -140,13 +142,13 @@ export default async function DeleteProjectPage({
             {hasData ? (
               <div style={{ background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.2)", borderRadius: "0.6rem", padding: "1.1rem 1.2rem" }}>
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--coral)", margin: 0, lineHeight: 1.65 }}>
-                  This study has participants and response data. Deleting it will permanently erase all records. <strong>This cannot be undone.</strong>
+                  {t("deleteStudy.warnHasData")} <strong>{t("deleteStudy.warnHasDataStrong")}</strong>
                 </p>
               </div>
             ) : (
               <div style={{ background: "var(--ink-10)", border: "1px solid var(--ink-20)", borderRadius: "0.6rem", padding: "1.1rem 1.2rem" }}>
                 <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.65 }}>
-                  This study has no participants or responses yet. It will be permanently deleted.
+                  {t("deleteStudy.warnNoData")}
                 </p>
               </div>
             )}
@@ -157,9 +159,9 @@ export default async function DeleteProjectPage({
             {/* Confirmation input */}
             <div>
               <label style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)", fontWeight: 600, display: "block", marginBottom: "0.5rem", lineHeight: 1.5 }}>
-                Type{" "}
+                {t("deleteStudy.confirmPre")}{" "}
                 <span style={{ color: "var(--ink)", wordBreak: "break-word" }}>{project.name}</span>
-                {" "}to confirm
+                {" "}{t("deleteStudy.confirmPost")}
               </label>
               <input
                 type="text"
@@ -185,7 +187,7 @@ export default async function DeleteProjectPage({
             {/* Actions — stacked on mobile, inline on sm+ */}
             <div className="flex flex-col sm:flex-row sm:items-center gap-[0.9rem] sm:gap-[1.4rem]" style={{ paddingTop: "0.2rem" }}>
               <SubmitButton
-                pendingLabel="Deleting…"
+                pendingLabel={t("deleteStudy.deletingLabel")}
                 className="sm:flex-1 hover:opacity-90 transition-opacity"
                 style={{
                   width: "100%",
@@ -200,7 +202,7 @@ export default async function DeleteProjectPage({
                   textAlign: "center",
                 }}
               >
-                Delete permanently
+                {t("deleteStudy.deletePermanently")}
               </SubmitButton>
               <a
                 href={`/dashboard/${id}`}
@@ -217,7 +219,7 @@ export default async function DeleteProjectPage({
                   flexShrink: 0,
                 }}
               >
-                Cancel
+                {t("deleteStudy.cancel")}
               </a>
             </div>
 

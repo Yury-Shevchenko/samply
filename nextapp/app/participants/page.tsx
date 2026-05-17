@@ -22,9 +22,7 @@ function ParticipantRow({ person, i }: { person: MobileUser; i: number }) {
     <tr>
       <td>{i + 1}</td>
       <td>{person.deactivated ? "⚫" : "🟢"}</td>
-      <td>
-        <a href={`/history?id=${person.id}`}>{person.id}</a>
-      </td>
+      <td>{person.id}</td>
       <td>{hasToken ? "Ok" : person.token ? "—" : ""}</td>
       <td>
         {person.created
@@ -43,9 +41,6 @@ function ParticipantRow({ person, i }: { person: MobileUser; i: number }) {
       <td>{timezone ?? ""}</td>
       <td>
         <a href={`/payout/${person.id}`}>Open</a>
-      </td>
-      <td>
-        <a href={`/history?id=${person.id}`}>Open</a>
       </td>
     </tr>
   );
@@ -102,7 +97,6 @@ export default async function ParticipantsPage({
                     <td>{t("legacyParticipants.colPrefs")}</td>
                     <td>{t("legacyParticipants.colTimezone")}</td>
                     <td>{t("legacyParticipants.colPayout")}</td>
-                    <td>{t("legacyParticipants.colHistory")}</td>
                   </tr>
                 </thead>
                 <tbody>

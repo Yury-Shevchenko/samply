@@ -801,6 +801,10 @@ export default function AboutContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <AboutContentFr />;
   if (locale === "es") return <AboutContentEs />;
   if (locale === "pt") return <AboutContentPt />;
+  if (locale === "ja") return <AboutContentJa />;
+  if (locale === "ar") return <AboutContentAr />;
+  if (locale === "pl") return <AboutContentPl />;
+  if (locale === "tr") return <AboutContentTr />;
   return <AboutContentEn />;
 }
 
@@ -3124,6 +3128,1218 @@ function AboutContentPt() {
       </p>
       <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publicação</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
+          https://doi.org/10.3758/s13428-020-01527-9
+        </a>
+      </div>
+    </>
+  );
+}
+
+const PROBLEMS_JA = [
+  {
+    n: "01",
+    title: "プラットフォームの分断",
+    body: "研究用のネイティブモバイルアプリを構築することは、Android用にJavaで一度、iOS用にObjective-CまたはSwiftで一度、合計2回書くことを意味していました。多くの研究ツールは、結局1つのプラットフォームしかサポートしないことになりました。",
+  },
+  {
+    n: "02",
+    title: "限定的な質問タイプ",
+    body: "プロプライエタリなプラットフォームは、固定された回答フォーマットのセットを提供します。研究者は、ソフトウェアが提供するものに研究デザインを合わせる必要があり、その逆ではありませんでした。",
+  },
+  {
+    n: "03",
+    title: "高額な費用",
+    body: "一部のプラットフォームのライセンス料は、参加者50名で約500ドルに達しました。これにより、専用の資金を持たないチームにとって、反復測定研究は手の届かないものとなっていました。",
+  },
+];
+
+const TIMELINE_JA: {
+  date: string;
+  headline: string;
+  items: string[];
+  accent?: "coral" | "sage";
+}[] = [
+  {
+    date: "2018",
+    headline: "起源",
+    items: [
+      "Samplyは、オンライン実験を実施するためのプラットフォームであるOpen Lab（open-lab.online）内の通知モジュールとして始まりました。これは、プッシュ通知で参加者を促す必要がある研究者向けに設計されました。",
+      "目標：ネイティブアプリのコードを書かずに、どの研究者でもモバイル通知をスケジュールできるようにすること。",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "2020年5月",
+    headline: "最初のモバイルアプリ",
+    items: [
+      "Samply Researchモバイルアプリの最初の公開バージョンがリリースされました。",
+      "Samplyは、主任開発者のYury Shevchenkoが博士研究員として在籍するコンスタンツ大学のiScienceグループの支援を受けるようになりました。",
+      "ウェブサイトのユーザビリティ調査が実施されました。",
+      "プラットフォーム上で、タイムマネジメントとウェルビーイングに関する最初のESM研究が実施されました。",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "2020年12月",
+    headline: "出版物",
+    items: [
+      "SamplyはBehavior Research Methodsの査読付き論文で紹介されました（Shevchenko, Kuhlmann & Reips, 2021, BRM 53, 1710–1730）。",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "2021年5月",
+    headline: "ジオフェンシング",
+    items: [
+      "ジオフェンシング機能を追加：参加者が定義された場所に入るか離れると、通知が自動的にトリガーされます。",
+      "モバイルアプリのユーザビリティ調査。",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "2021年12月",
+    headline: "プラットフォームの成熟",
+    items: [
+      "公開および非公開の研究タイプを導入。",
+      "通知スケジュールにおけるタイムゾーンのサポート。",
+      "通知リンクの有効期限。",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "2022年11月",
+    headline: "API、ローカライゼーション、新機能",
+    items: [
+      "Samply APIがリリースされました — 研究者は自身のシステムからの外部カスタムイベントに基づいて通知を送信できるようになりました。",
+      "モバイルアプリがドイツ語、オランダ語、ロシア語、中国語に翻訳されました。",
+      "イベント随伴サンプリングが追加されました。",
+      "リマインダーと完了登録。",
+      "ハイブリッドワーク、ウェルビーイングに関するESM研究、およびコロナ日次調査が実施されました。",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "2023年9月",
+    headline: "ジオフェンシングの検証",
+    items: [
+      "ジオフェンシング検証研究が完了し、発表されました（Shevchenko & Reips, 2024, BRM 56, 6411–6439）。",
+      "最適な半径、iOSとAndroidの感度の比較、推奨される滞留時間に関する実証的証拠。",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "2024年4月",
+    headline: "スケジュール編集",
+    items: [
+      "研究者はすでにスケジュール済みの通知を編集できるようになりました — 長く要望されていた機能。",
+      "ニュースにおける誤情報の評価研究が実施されました。",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "2026年4月",
+    headline: "再設計",
+    items: [
+      "研究者向けウェブダッシュボードの全面再設計 — より明確な情報アーキテクチャ、改善されたスケジュール管理、新しいドキュメントシステムを備え、明瞭さのために再構築されました。",
+      "Samply Researchモバイルアプリは、使いやすさと、より親しみやすい参加者体験に焦点を当てて再設計されました。",
+      "目標：経験サンプリング法を初めて使用する研究者にとってSamplyを分かりやすくしつつ、上級ユーザーには引き続きすべての機能を提供すること。",
+    ],
+    accent: "coral",
+  },
+];
+
+function AboutContentJa() {
+  return (
+    <>
+      {/* ── Motivation ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Samplyが存在する理由</h2>
+      <p>
+        経験サンプリング、デイリーダイアリー研究、生態学的瞬間評価などの研究手法には、共通の要件があります。それは、参加者が自分の電話で適切なタイミングに繰り返し回答を促される必要があるということです。Samply以前は、これを実現するには、3つの繰り返し発生する問題に直面することを意味しました。
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", margin: "2.4rem 0 3.6rem" }}>
+        {PROBLEMS_JA.map((p) => (
+          <div
+            key={p.n}
+            style={{
+              display: "flex",
+              gap: "2rem",
+              alignItems: "flex-start",
+              background: "var(--surface)",
+              border: "1px solid var(--ink-10)",
+              borderRadius: "1rem",
+              padding: "1.8rem 2rem",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1rem",
+              color: "var(--coral)",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              flexShrink: 0,
+              paddingTop: "0.2rem",
+              width: "2.4rem",
+            }}>
+              {p.n}
+            </span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.45rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>
+                {p.title}
+              </div>
+              <div style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6 }}>
+                {p.body}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p>
+        Samplyは、これら3つの障壁すべてを取り除くために構築されました。クロスプラットフォームの1つのアプリ、調査フォーマットに対する制約なし（独自の調査ツールを持ち込めます）、そして無料で利用できます。
+      </p>
+
+      {/* ── Timeline ────────────────────────────────────────────────────── */}
+      <h2>開発のタイムライン</h2>
+      <p>
+        開発は2018年に、オンライン実験プラットフォームである{" "}
+        <a href="https://research.open-lab.online/" target="_blank" rel="noopener noreferrer">Open Lab</a>
+        内のモジュールとして始まりました。独自のモバイルアプリ、ウェブダッシュボード、REST API、そして活発な研究コミュニティを持つ独立したプロジェクトへと成長しました。
+      </p>
+
+      <div style={{ margin: "2.8rem 0 4rem", position: "relative" }}>
+        {/* Vertical rail */}
+        <div style={{
+          position: "absolute",
+          left: "10.4rem",
+          top: "0.6rem",
+          bottom: "0.6rem",
+          width: "2px",
+          background: "var(--ink-10)",
+        }} />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+          {TIMELINE_JA.map((entry, i) => {
+            const accentColor = entry.accent === "coral" ? "var(--coral)" : "var(--sage)";
+            const accentBg = entry.accent === "coral" ? "var(--coral-soft)" : "var(--sage-soft)";
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: "0",
+                  alignItems: "flex-start",
+                  paddingBottom: i < TIMELINE_JA.length - 1 ? "2.8rem" : 0,
+                }}
+              >
+                {/* Date label */}
+                <div style={{
+                  width: "10.4rem",
+                  flexShrink: 0,
+                  paddingRight: "2rem",
+                  paddingTop: "0.15rem",
+                  textAlign: "right",
+                }}>
+                  <span style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: accentColor,
+                    letterSpacing: "0.06em",
+                    whiteSpace: "nowrap",
+                  }}>
+                    {entry.date}
+                  </span>
+                </div>
+
+                {/* Dot */}
+                <div style={{
+                  width: "1.2rem",
+                  height: "1.2rem",
+                  borderRadius: "50%",
+                  background: accentColor,
+                  flexShrink: 0,
+                  marginTop: "0.2rem",
+                  position: "relative",
+                  zIndex: 1,
+                  boxShadow: `0 0 0 3px var(--paper), 0 0 0 5px ${accentColor}22`,
+                }} />
+
+                {/* Content */}
+                <div style={{ flex: 1, paddingLeft: "2rem" }}>
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.8rem",
+                    marginBottom: "0.8rem",
+                  }}>
+                    <span style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.5rem",
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                    }}>
+                      {entry.headline}
+                    </span>
+                    <span style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.9rem",
+                      color: accentColor,
+                      background: accentBg,
+                      padding: "0.15rem 0.6rem",
+                      borderRadius: "0.4rem",
+                      letterSpacing: "0.04em",
+                    }}>
+                      {entry.date}
+                    </span>
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                    {entry.items.map((item, j) => (
+                      <li key={j} style={{
+                        fontSize: "1.3rem",
+                        color: "var(--ink-60)",
+                        lineHeight: 1.65,
+                        marginBottom: j < entry.items.length - 1 ? "0.4rem" : 0,
+                      }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Open source ─────────────────────────────────────────────────── */}
+      <h2>オープンソースで無料</h2>
+      <p>
+        2020年以降、Samplyはコンスタンツ大学の{" "}
+        <a href="https://iscience.uni-konstanz.de/en/" target="_blank" rel="noopener noreferrer">iScienceグループ</a>{" "}
+        の支援を受けています。主任開発者のYury Shevchenkoは、同グループで博士研究員として在籍しています。インターネットベースの手法と経験サンプリングに焦点を当てた同グループの研究は、Samplyのデザインと機能の優先順位に直接影響を与えています。
+      </p>
+      <p>
+        Samplyは無料で利用でき、オープンソースです。ウェブダッシュボードのソースコードは、<a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>で公開されています。貢献、バグレポート、機能リクエストを歓迎します。
+      </p>
+      <p>
+        Samplyを研究で使用する場合は、元の出版物を引用してください：
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>出版物</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
+          https://doi.org/10.3758/s13428-020-01527-9
+        </a>
+      </div>
+    </>
+  );
+}
+
+const PROBLEMS_TR = [
+  {
+    n: "01",
+    title: "Platform parçalanması",
+    body: "Bir çalışma için yerel bir mobil uygulama geliştirmek, onu iki kez yazmak anlamına geliyordu — bir kez Android için Java'da, bir kez iOS için Objective-C veya Swift'te. Birçok araştırma aracı sonunda yalnızca tek bir platformu destekleyebildi.",
+  },
+  {
+    n: "02",
+    title: "Kısıtlı soru türleri",
+    body: "Tescilli platformlar sabit bir yanıt formatı kümesi sunar. Araştırmacılar, çalışma tasarımlarını yazılımın sunduğuna uydurmak zorunda kaldılar; tam tersi değil.",
+  },
+  {
+    n: "03",
+    title: "Yüksek maliyet",
+    body: "Bazı platformların lisans ücretleri 50 katılımcı için yaklaşık 500 dolara ulaşıyordu. Bu, tekrarlanan ölçüm çalışmalarını özel finansmanı olmayan ekipler için ulaşılmaz hale getirdi.",
+  },
+];
+
+const TIMELINE_TR: {
+  date: string;
+  headline: string;
+  items: string[];
+  accent?: "coral" | "sage";
+}[] = [
+  {
+    date: "2018",
+    headline: "Kökenler",
+    items: [
+      "Samply, çevrimiçi deneyler yürütmek için bir platform olan Open Lab (open-lab.online) içinde bir bildirim modülü olarak başladı; katılımcıları push bildirimiyle uyarması gereken araştırmacılar için tasarlandı.",
+      "Amaç: herhangi bir araştırmacının yerel uygulama kodu yazmadan mobil bildirimleri programlayabilmesini sağlamak.",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "Mayıs 2020",
+    headline: "İlk mobil uygulama",
+    items: [
+      "Samply Research mobil uygulamasının ilk genel sürümü yayınlandı.",
+      "Samply, baş geliştirici Yury Shevchenko'nun doktora sonrası araştırmacı olarak görev yaptığı Konstanz Üniversitesi'ndeki iScience grubu tarafından desteklenmeye başlandı.",
+      "Web sitesi kullanılabilirlik çalışması gerçekleştirildi.",
+      "Platformda zaman yönetimi ve iyi oluş üzerine ilk ESM çalışmaları yürütüldü.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Aralık 2020",
+    headline: "Yayın",
+    items: [
+      "Samply, Behavior Research Methods dergisinde hakemli bir makalede tanıtıldı (Shevchenko, Kuhlmann & Reips, 2021, BRM 53, 1710–1730).",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "Mayıs 2021",
+    headline: "Geofencing",
+    items: [
+      "Geofencing özelliği eklendi: bir katılımcı tanımlı bir konuma girdiğinde veya ayrıldığında bildirimler otomatik olarak tetiklenir.",
+      "Mobil uygulama kullanılabilirlik çalışması.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Aralık 2021",
+    headline: "Platform olgunluğu",
+    items: [
+      "Genel ve özel çalışma türleri tanıtıldı.",
+      "Bildirim programlamada saat dilimi desteği.",
+      "Bildirim bağlantıları için son kullanma süresi.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Kasım 2022",
+    headline: "API, yerelleştirme ve yeni özellikler",
+    items: [
+      "Samply API yayınlandı — araştırmacılar artık kendi sistemlerinden gelen harici özel olaylara dayalı olarak bildirim gönderebilir.",
+      "Mobil uygulama Almanca, Felemenkçe, Rusça ve Çinceye çevrildi.",
+      "Olaya bağlı örnekleme eklendi.",
+      "Hatırlatıcılar ve tamamlanma kaydı.",
+      "Hibrit çalışma, iyi oluş üzerine ESM çalışmaları ve günlük bir Corona anketi yürütüldü.",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "Eylül 2023",
+    headline: "Geofencing doğrulaması",
+    items: [
+      "Geofencing doğrulama çalışması tamamlandı ve yayınlandı (Shevchenko & Reips, 2024, BRM 56, 6411–6439).",
+      "Optimum yarıçap, iOS ve Android duyarlılığı ve önerilen bekleme süreleri hakkında ampirik kanıtlar.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Nisan 2024",
+    headline: "Program düzenleme",
+    items: [
+      "Araştırmacılar artık halihazırda programlanmış bildirimleri düzenleyebilir — uzun süredir talep edilen bir özellik.",
+      "Haberlerdeki yanlış bilgiyi değerlendirme çalışması yürütüldü.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Nisan 2026",
+    headline: "Yeniden tasarım",
+    items: [
+      "Araştırmacı web panelinin tamamen yeniden tasarımı — daha temiz bir bilgi mimarisi, geliştirilmiş program yönetimi ve yeni bir dokümantasyon sistemi ile netlik için yeniden inşa edildi.",
+      "Samply Research mobil uygulaması, kullanılabilirliğe ve daha sıcak bir katılımcı deneyimine odaklanarak yeniden tasarlandı.",
+      "Amaç: deneyim örnekleme yöntemlerinde yeni olan araştırmacılar için Samply'ı kolay anlaşılır hale getirirken, ileri düzey kullanıcılar için tam gücü erişilebilir tutmak.",
+    ],
+    accent: "coral",
+  },
+];
+
+function AboutContentTr() {
+  return (
+    <>
+      {/* ── Motivation ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Samply neden var</h2>
+      <p>
+        Deneyim örnekleme, günlük günce çalışmaları ve ekolojik anlık değerlendirme gibi araştırma yöntemlerinin hepsi tek bir gerektirimi paylaşır: katılımcılar doğru anda, tekrar tekrar, kendi telefonlarında yanıt vermeye yönlendirilmelidir. Samply'dan önce, bunu kurmak üç tekrarlayan sorunla yüzleşmek anlamına geliyordu.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", margin: "2.4rem 0 3.6rem" }}>
+        {PROBLEMS_TR.map((p) => (
+          <div
+            key={p.n}
+            style={{
+              display: "flex",
+              gap: "2rem",
+              alignItems: "flex-start",
+              background: "var(--surface)",
+              border: "1px solid var(--ink-10)",
+              borderRadius: "1rem",
+              padding: "1.8rem 2rem",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1rem",
+              color: "var(--coral)",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              flexShrink: 0,
+              paddingTop: "0.2rem",
+              width: "2.4rem",
+            }}>
+              {p.n}
+            </span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.45rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>
+                {p.title}
+              </div>
+              <div style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6 }}>
+                {p.body}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p>
+        Samply, bu üç engelin tümünü kaldırmak için inşa edildi: tek bir platformlar arası uygulama, anket formatında kısıtlama yok (kendi anket aracınızı getirirsiniz) ve ücretsiz kullanım.
+      </p>
+
+      {/* ── Timeline ────────────────────────────────────────────────────── */}
+      <h2>Geliştirme zaman çizelgesi</h2>
+      <p>
+        Geliştirme, 2018 yılında çevrimiçi bir deney platformu olan{" "}
+        <a href="https://research.open-lab.online/" target="_blank" rel="noopener noreferrer">Open Lab</a>
+        {" "}içinde bir modül olarak başladı. Kendi mobil uygulaması, web paneli, REST API'si ve aktif bir araştırma topluluğuna sahip bağımsız bir projeye dönüştü.
+      </p>
+
+      <div style={{ margin: "2.8rem 0 4rem", position: "relative" }}>
+        {/* Vertical rail */}
+        <div style={{
+          position: "absolute",
+          left: "10.4rem",
+          top: "0.6rem",
+          bottom: "0.6rem",
+          width: "2px",
+          background: "var(--ink-10)",
+        }} />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+          {TIMELINE_TR.map((entry, i) => {
+            const accentColor = entry.accent === "coral" ? "var(--coral)" : "var(--sage)";
+            const accentBg = entry.accent === "coral" ? "var(--coral-soft)" : "var(--sage-soft)";
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: "0",
+                  alignItems: "flex-start",
+                  paddingBottom: i < TIMELINE_TR.length - 1 ? "2.8rem" : 0,
+                }}
+              >
+                {/* Date label */}
+                <div style={{
+                  width: "10.4rem",
+                  flexShrink: 0,
+                  paddingRight: "2rem",
+                  paddingTop: "0.15rem",
+                  textAlign: "right",
+                }}>
+                  <span style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: accentColor,
+                    letterSpacing: "0.06em",
+                    whiteSpace: "nowrap",
+                  }}>
+                    {entry.date}
+                  </span>
+                </div>
+
+                {/* Dot */}
+                <div style={{
+                  width: "1.2rem",
+                  height: "1.2rem",
+                  borderRadius: "50%",
+                  background: accentColor,
+                  flexShrink: 0,
+                  marginTop: "0.2rem",
+                  position: "relative",
+                  zIndex: 1,
+                  boxShadow: `0 0 0 3px var(--paper), 0 0 0 5px ${accentColor}22`,
+                }} />
+
+                {/* Content */}
+                <div style={{ flex: 1, paddingLeft: "2rem" }}>
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.8rem",
+                    marginBottom: "0.8rem",
+                  }}>
+                    <span style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.5rem",
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                    }}>
+                      {entry.headline}
+                    </span>
+                    <span style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.9rem",
+                      color: accentColor,
+                      background: accentBg,
+                      padding: "0.15rem 0.6rem",
+                      borderRadius: "0.4rem",
+                      letterSpacing: "0.04em",
+                    }}>
+                      {entry.date}
+                    </span>
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                    {entry.items.map((item, j) => (
+                      <li key={j} style={{
+                        fontSize: "1.3rem",
+                        color: "var(--ink-60)",
+                        lineHeight: 1.65,
+                        marginBottom: j < entry.items.length - 1 ? "0.4rem" : 0,
+                      }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Open source ─────────────────────────────────────────────────── */}
+      <h2>Açık kaynak ve ücretsiz</h2>
+      <p>
+        2020'den bu yana Samply, Konstanz Üniversitesi'ndeki{" "}
+        <a href="https://iscience.uni-konstanz.de/en/" target="_blank" rel="noopener noreferrer">iScience grubu</a>{" "}
+        tarafından desteklenmektedir. Baş geliştirici Yury Shevchenko, burada doktora sonrası araştırmacı olarak görev yapmaktadır. Grubun internet tabanlı yöntemler ve deneyim örnekleme üzerindeki araştırma odağı, Samply'ın tasarımını ve özellik önceliklerini doğrudan şekillendirmektedir.
+      </p>
+      <p>
+        Samply ücretsiz kullanılabilir ve açık kaynaklıdır. Web panelinin kaynak kodu <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a> üzerinde mevcuttur. Katkılar, hata raporları ve özellik istekleri memnuniyetle karşılanır.
+      </p>
+      <p>
+        Samply'ı araştırmanızda kullanıyorsanız, lütfen orijinal yayını alıntılayın:
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Yayın</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
+          https://doi.org/10.3758/s13428-020-01527-9
+        </a>
+      </div>
+    </>
+  );
+}
+
+const PROBLEMS_PL = [
+  {
+    n: "01",
+    title: "Fragmentacja platform",
+    body: "Stworzenie natywnej aplikacji mobilnej do badania oznaczało napisanie jej dwa razy — raz w Javie dla Androida, raz w Objective-C lub Swift dla iOS. Wiele narzędzi badawczych ostatecznie obsługiwało tylko jedną platformę.",
+  },
+  {
+    n: "02",
+    title: "Ograniczone typy pytań",
+    body: "Zastrzeżone platformy dostarczają stały zestaw formatów odpowiedzi. Badacze musieli dostosowywać projekty swoich badań do tego, co oferowało oprogramowanie, a nie odwrotnie.",
+  },
+  {
+    n: "03",
+    title: "Wysokie koszty",
+    body: "Opłaty licencyjne za niektóre platformy sięgały około 500 dolarów za 50 uczestników. Sprawiało to, że badania z powtarzanymi pomiarami były nieosiągalne dla zespołów bez dedykowanego finansowania.",
+  },
+];
+
+const TIMELINE_PL: {
+  date: string;
+  headline: string;
+  items: string[];
+  accent?: "coral" | "sage";
+}[] = [
+  {
+    date: "2018",
+    headline: "Początki",
+    items: [
+      "Samply rozpoczęło się jako moduł powiadomień w Open Lab (open-lab.online) — platformie do prowadzenia eksperymentów online, zaprojektowanej dla badaczy, którzy musieli przypominać uczestnikom za pomocą powiadomień push.",
+      "Cel: umożliwić każdemu badaczowi planowanie powiadomień mobilnych bez pisania natywnego kodu aplikacji.",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "Maj 2020",
+    headline: "Pierwsza aplikacja mobilna",
+    items: [
+      "Wydano pierwszą publiczną wersję aplikacji mobilnej Samply Research.",
+      "Samply zostaje wsparte przez grupę iScience na Uniwersytecie w Konstancji, gdzie główny programista Yury Shevchenko jest zatrudniony jako badacz post-doktorancki.",
+      "Przeprowadzono badanie użyteczności strony internetowej.",
+      "Na platformie przeprowadzono pierwsze badania ESM dotyczące zarządzania czasem i dobrostanu.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Grudzień 2020",
+    headline: "Publikacja",
+    items: [
+      "Samply opisane w recenzowanym artykule w Behavior Research Methods (Shevchenko, Kuhlmann & Reips, 2021, BRM 53, 1710–1730).",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "Maj 2021",
+    headline: "Geofencing",
+    items: [
+      "Dodano funkcję geofencing: powiadomienia wyzwalane automatycznie, gdy uczestnik wchodzi lub opuszcza zdefiniowaną lokalizację.",
+      "Badanie użyteczności aplikacji mobilnej.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Grudzień 2021",
+    headline: "Dojrzałość platformy",
+    items: [
+      "Wprowadzono publiczne i prywatne typy badań.",
+      "Obsługa stref czasowych w planowaniu powiadomień.",
+      "Czas wygaśnięcia dla linków powiadomień.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Listopad 2022",
+    headline: "API, lokalizacja i nowe funkcje",
+    items: [
+      "Wydano Samply API — badacze mogą teraz wysyłać powiadomienia na podstawie zewnętrznych, niestandardowych zdarzeń z własnych systemów.",
+      "Aplikacja mobilna przetłumaczona na niemiecki, niderlandzki, rosyjski i chiński.",
+      "Dodano próbkowanie zależne od zdarzeń.",
+      "Przypomnienia i rejestracja ukończenia.",
+      "Przeprowadzono badania ESM dotyczące pracy hybrydowej, dobrostanu oraz codzienną ankietę o COVID.",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "Wrzesień 2023",
+    headline: "Walidacja geofencingu",
+    items: [
+      "Badanie walidacyjne geofencingu ukończone i opublikowane (Shevchenko & Reips, 2024, BRM 56, 6411–6439).",
+      "Empiryczne dowody dotyczące optymalnego promienia, wrażliwości iOS w porównaniu z Androidem oraz zalecanych czasów przebywania.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Kwiecień 2024",
+    headline: "Edycja harmonogramu",
+    items: [
+      "Badacze mogą teraz edytować już zaplanowane powiadomienia — od dawna oczekiwana funkcja.",
+      "Przeprowadzono badanie oceny dezinformacji w wiadomościach.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "Kwiecień 2026",
+    headline: "Przeprojektowanie",
+    items: [
+      "Pełne przeprojektowanie panelu badacza w sieci — odbudowane dla większej przejrzystości, z czystszą architekturą informacji, ulepszonym zarządzaniem harmonogramem i nowym systemem dokumentacji.",
+      "Aplikacja mobilna Samply Research przeprojektowana z naciskiem na użyteczność i bardziej przyjazne doświadczenie uczestnika.",
+      "Cel: uczynić Samply prostym dla badaczy, którzy są nowi w metodach próbkowania doświadczeń, zachowując jednocześnie pełną moc dostępną dla zaawansowanych użytkowników.",
+    ],
+    accent: "coral",
+  },
+];
+
+function AboutContentPl() {
+  return (
+    <>
+      {/* ── Motivation ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Dlaczego Samply istnieje</h2>
+      <p>
+        Metody badawcze, takie jak próbkowanie doświadczeń, badania dziennikowe i ekologiczna ocena chwilowa, mają jedno wspólne wymaganie: uczestnicy muszą być powiadamiani, by odpowiadać we właściwym momencie, wielokrotnie, na własnych telefonach. Przed Samply ustawienie tego oznaczało zmierzenie się z trzema powtarzającymi się problemami.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", margin: "2.4rem 0 3.6rem" }}>
+        {PROBLEMS_PL.map((p) => (
+          <div
+            key={p.n}
+            style={{
+              display: "flex",
+              gap: "2rem",
+              alignItems: "flex-start",
+              background: "var(--surface)",
+              border: "1px solid var(--ink-10)",
+              borderRadius: "1rem",
+              padding: "1.8rem 2rem",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1rem",
+              color: "var(--coral)",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              flexShrink: 0,
+              paddingTop: "0.2rem",
+              width: "2.4rem",
+            }}>
+              {p.n}
+            </span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.45rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>
+                {p.title}
+              </div>
+              <div style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6 }}>
+                {p.body}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p>
+        Samply zostało zbudowane, aby usunąć wszystkie trzy bariery: jedna aplikacja wieloplatformowa, brak ograniczeń co do formatu ankiety (przynosisz własne narzędzie ankietowe) i darmowe użytkowanie.
+      </p>
+
+      {/* ── Timeline ────────────────────────────────────────────────────── */}
+      <h2>Oś czasu rozwoju</h2>
+      <p>
+        Rozwój rozpoczął się w 2018 roku jako moduł w ramach{" "}
+        <a href="https://research.open-lab.online/" target="_blank" rel="noopener noreferrer">Open Lab</a>,
+        platformy do eksperymentów online. Przekształciło się to w niezależny projekt z własną aplikacją mobilną, panelem internetowym, REST API i aktywną społecznością badawczą.
+      </p>
+
+      <div style={{ margin: "2.8rem 0 4rem", position: "relative" }}>
+        {/* Vertical rail */}
+        <div style={{
+          position: "absolute",
+          left: "10.4rem",
+          top: "0.6rem",
+          bottom: "0.6rem",
+          width: "2px",
+          background: "var(--ink-10)",
+        }} />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+          {TIMELINE_PL.map((entry, i) => {
+            const accentColor = entry.accent === "coral" ? "var(--coral)" : "var(--sage)";
+            const accentBg = entry.accent === "coral" ? "var(--coral-soft)" : "var(--sage-soft)";
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: "0",
+                  alignItems: "flex-start",
+                  paddingBottom: i < TIMELINE_PL.length - 1 ? "2.8rem" : 0,
+                }}
+              >
+                {/* Date label */}
+                <div style={{
+                  width: "10.4rem",
+                  flexShrink: 0,
+                  paddingRight: "2rem",
+                  paddingTop: "0.15rem",
+                  textAlign: "right",
+                }}>
+                  <span style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: accentColor,
+                    letterSpacing: "0.06em",
+                    whiteSpace: "nowrap",
+                  }}>
+                    {entry.date}
+                  </span>
+                </div>
+
+                {/* Dot */}
+                <div style={{
+                  width: "1.2rem",
+                  height: "1.2rem",
+                  borderRadius: "50%",
+                  background: accentColor,
+                  flexShrink: 0,
+                  marginTop: "0.2rem",
+                  position: "relative",
+                  zIndex: 1,
+                  boxShadow: `0 0 0 3px var(--paper), 0 0 0 5px ${accentColor}22`,
+                }} />
+
+                {/* Content */}
+                <div style={{ flex: 1, paddingLeft: "2rem" }}>
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.8rem",
+                    marginBottom: "0.8rem",
+                  }}>
+                    <span style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.5rem",
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                    }}>
+                      {entry.headline}
+                    </span>
+                    <span style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.9rem",
+                      color: accentColor,
+                      background: accentBg,
+                      padding: "0.15rem 0.6rem",
+                      borderRadius: "0.4rem",
+                      letterSpacing: "0.04em",
+                    }}>
+                      {entry.date}
+                    </span>
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                    {entry.items.map((item, j) => (
+                      <li key={j} style={{
+                        fontSize: "1.3rem",
+                        color: "var(--ink-60)",
+                        lineHeight: 1.65,
+                        marginBottom: j < entry.items.length - 1 ? "0.4rem" : 0,
+                      }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Open source ─────────────────────────────────────────────────── */}
+      <h2>Otwarte źródło i darmowe</h2>
+      <p>
+        Od 2020 roku Samply jest wspierane przez{" "}
+        <a href="https://iscience.uni-konstanz.de/en/" target="_blank" rel="noopener noreferrer">grupę iScience</a>{" "}
+        na Uniwersytecie w Konstancji. Główny programista, Yury Shevchenko, jest tam zatrudniony jako badacz post-doktorancki. Badawczy nacisk grupy na metody internetowe i próbkowanie doświadczeń bezpośrednio kształtuje projekt Samply i priorytety jego funkcji.
+      </p>
+      <p>
+        Samply jest darmowe w użyciu i open source. Kod źródłowy panelu internetowego jest dostępny na <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>. Wkład, zgłoszenia błędów i prośby o funkcje są mile widziane.
+      </p>
+      <p>
+        Jeśli używasz Samply w swoich badaniach, prosimy o cytowanie oryginalnej publikacji:
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publikacja</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
+          https://doi.org/10.3758/s13428-020-01527-9
+        </a>
+      </div>
+    </>
+  );
+}
+
+const PROBLEMS_AR = [
+  {
+    n: "01",
+    title: "تجزئة المنصات",
+    body: "كان إنشاء تطبيق جوال أصلي للدراسة يعني كتابته مرتين — مرة بلغة Java لنظام Android، ومرة بلغة Objective-C أو Swift لنظام iOS. وفي النهاية، كانت كثير من أدوات البحث تدعم منصة واحدة فقط.",
+  },
+  {
+    n: "02",
+    title: "أنواع محدودة من الأسئلة",
+    body: "توفر المنصات المملوكة مجموعة ثابتة من تنسيقات الإجابات. كان على الباحثين تكييف تصاميم دراساتهم مع ما يقدمه البرنامج، وليس العكس.",
+  },
+  {
+    n: "03",
+    title: "تكاليف مرتفعة",
+    body: "بلغت رسوم ترخيص بعض المنصات نحو 500 دولار لكل 50 مشاركاً. وهذا جعل دراسات القياسات المتكررة بعيدة عن متناول الفرق التي لا تملك تمويلاً مخصصاً.",
+  },
+];
+
+const TIMELINE_AR: {
+  date: string;
+  headline: string;
+  items: string[];
+  accent?: "coral" | "sage";
+}[] = [
+  {
+    date: "2018",
+    headline: "البدايات",
+    items: [
+      "بدأ Samply كوحدة إشعارات داخل Open Lab (open-lab.online) — منصة لإجراء التجارب عبر الإنترنت، صُمّمت للباحثين الذين يحتاجون إلى تذكير المشاركين عبر إشعارات الدفع.",
+      "الهدف: تمكين أي باحث من جدولة الإشعارات على الأجهزة المحمولة دون كتابة شيفرة تطبيق أصلية.",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "مايو 2020",
+    headline: "أول تطبيق جوال",
+    items: [
+      "إصدار أول نسخة عامة من تطبيق Samply Research للجوال.",
+      "أصبح Samply مدعوماً من مجموعة iScience في جامعة كونستانس، حيث يعمل المطوّر الرئيسي يوري شيفتشينكو باحثاً ما بعد الدكتوراه.",
+      "إجراء دراسة لقابلية استخدام الموقع الإلكتروني.",
+      "إجراء أولى دراسات ESM على المنصة حول إدارة الوقت والرفاه.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "ديسمبر 2020",
+    headline: "المنشور",
+    items: [
+      "وصف Samply في مقالة محكّمة في Behavior Research Methods (Shevchenko, Kuhlmann & Reips, 2021, BRM 53, 1710–1730).",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "مايو 2021",
+    headline: "Geofencing",
+    items: [
+      "إضافة ميزة Geofencing: إشعارات تُطلق تلقائياً عندما يدخل المشارك إلى موقع محدد أو يغادره.",
+      "دراسة لقابلية استخدام تطبيق الجوال.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "ديسمبر 2021",
+    headline: "نضج المنصة",
+    items: [
+      "تقديم أنواع الدراسات العامة والخاصة.",
+      "دعم المناطق الزمنية في جدولة الإشعارات.",
+      "مدة انتهاء صلاحية لروابط الإشعارات.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "نوفمبر 2022",
+    headline: "API، توطين، وميزات جديدة",
+    items: [
+      "إصدار Samply API — يستطيع الباحثون الآن إرسال الإشعارات بناءً على أحداث خارجية مخصصة من أنظمتهم الخاصة.",
+      "ترجمة تطبيق الجوال إلى الألمانية والهولندية والروسية والصينية.",
+      "إضافة المعاينة المعتمدة على الأحداث.",
+      "تذكيرات وتسجيل الإكمال.",
+      "إجراء دراسات ESM حول العمل الهجين والرفاه واستطلاع يومي عن كوفيد.",
+    ],
+    accent: "coral",
+  },
+  {
+    date: "سبتمبر 2023",
+    headline: "التحقق من صحة Geofencing",
+    items: [
+      "إنجاز دراسة التحقق من صحة Geofencing ونشرها (Shevchenko & Reips, 2024, BRM 56, 6411–6439).",
+      "أدلة تجريبية حول نصف القطر الأمثل، وحساسية iOS مقارنةً بـ Android، وأوقات المكوث الموصى بها.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "أبريل 2024",
+    headline: "تحرير الجدول",
+    items: [
+      "يستطيع الباحثون الآن تعديل الإشعارات المجدولة مسبقاً — ميزة طال انتظارها.",
+      "إجراء دراسة لتقييم المعلومات المضللة في الأخبار.",
+    ],
+    accent: "sage",
+  },
+  {
+    date: "أبريل 2026",
+    headline: "إعادة التصميم",
+    items: [
+      "إعادة تصميم شاملة للوحة تحكم الباحث على الويب — أُعيد بناؤها لتحقيق وضوح أكبر، مع بنية معلومات أنظف، وإدارة محسّنة للجداول، ونظام توثيق جديد.",
+      "إعادة تصميم تطبيق Samply Research للجوال مع تركيز على قابلية الاستخدام وتجربة أكثر ملاءمة للمشارك.",
+      "الهدف: جعل Samply سهلاً للباحثين الجدد في أساليب معاينة الخبرات، مع الإبقاء على القوة الكاملة في متناول المستخدمين المتقدمين.",
+    ],
+    accent: "coral",
+  },
+];
+
+function AboutContentAr() {
+  return (
+    <>
+      {/* ── Motivation ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>لماذا وُجد Samply</h2>
+      <p>
+        تشترك أساليب البحث مثل معاينة الخبرات ودراسات اليوميات والتقييم البيئي اللحظي في متطلب واحد: يجب إشعار المشاركين للاستجابة في اللحظة المناسبة، مراراً وتكراراً، على هواتفهم. قبل Samply، كان إعداد ذلك يعني مواجهة ثلاث مشكلات متكررة.
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", margin: "2.4rem 0 3.6rem" }}>
+        {PROBLEMS_AR.map((p) => (
+          <div
+            key={p.n}
+            style={{
+              display: "flex",
+              gap: "2rem",
+              alignItems: "flex-start",
+              background: "var(--surface)",
+              border: "1px solid var(--ink-10)",
+              borderRadius: "1rem",
+              padding: "1.8rem 2rem",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1rem",
+              color: "var(--coral)",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              flexShrink: 0,
+              paddingTop: "0.2rem",
+              width: "2.4rem",
+            }}>
+              {p.n}
+            </span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.45rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>
+                {p.title}
+              </div>
+              <div style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6 }}>
+                {p.body}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p>
+        بُني Samply لإزالة هذه العوائق الثلاثة جميعاً: تطبيق واحد متعدد المنصات، ولا قيود على تنسيق الاستطلاع (تُحضر أداة الاستطلاع الخاصة بك)، والاستخدام مجاني.
+      </p>
+
+      {/* ── Timeline ────────────────────────────────────────────────────── */}
+      <h2>الجدول الزمني للتطوير</h2>
+      <p>
+        بدأ التطوير عام 2018 كوحدة ضمن{" "}
+        <a href="https://research.open-lab.online/" target="_blank" rel="noopener noreferrer">Open Lab</a>،
+        وهي منصة للتجارب عبر الإنترنت. وقد تطور ذلك إلى مشروع مستقل بتطبيق جوال خاص به ولوحة تحكم على الويب وREST API ومجتمع بحثي نشط.
+      </p>
+
+      <div style={{ margin: "2.8rem 0 4rem", position: "relative" }}>
+        {/* Vertical rail */}
+        <div style={{
+          position: "absolute",
+          left: "10.4rem",
+          top: "0.6rem",
+          bottom: "0.6rem",
+          width: "2px",
+          background: "var(--ink-10)",
+        }} />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
+          {TIMELINE_AR.map((entry, i) => {
+            const accentColor = entry.accent === "coral" ? "var(--coral)" : "var(--sage)";
+            const accentBg = entry.accent === "coral" ? "var(--coral-soft)" : "var(--sage-soft)";
+            return (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  gap: "0",
+                  alignItems: "flex-start",
+                  paddingBottom: i < TIMELINE_AR.length - 1 ? "2.8rem" : 0,
+                }}
+              >
+                {/* Date label */}
+                <div style={{
+                  width: "10.4rem",
+                  flexShrink: 0,
+                  paddingRight: "2rem",
+                  paddingTop: "0.15rem",
+                  textAlign: "right",
+                }}>
+                  <span style={{
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: accentColor,
+                    letterSpacing: "0.06em",
+                    whiteSpace: "nowrap",
+                  }}>
+                    {entry.date}
+                  </span>
+                </div>
+
+                {/* Dot */}
+                <div style={{
+                  width: "1.2rem",
+                  height: "1.2rem",
+                  borderRadius: "50%",
+                  background: accentColor,
+                  flexShrink: 0,
+                  marginTop: "0.2rem",
+                  position: "relative",
+                  zIndex: 1,
+                  boxShadow: `0 0 0 3px var(--paper), 0 0 0 5px ${accentColor}22`,
+                }} />
+
+                {/* Content */}
+                <div style={{ flex: 1, paddingLeft: "2rem" }}>
+                  <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.8rem",
+                    marginBottom: "0.8rem",
+                  }}>
+                    <span style={{
+                      fontFamily: "var(--font-display)",
+                      fontSize: "1.5rem",
+                      fontWeight: 700,
+                      color: "var(--ink)",
+                    }}>
+                      {entry.headline}
+                    </span>
+                    <span style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "0.9rem",
+                      color: accentColor,
+                      background: accentBg,
+                      padding: "0.15rem 0.6rem",
+                      borderRadius: "0.4rem",
+                      letterSpacing: "0.04em",
+                    }}>
+                      {entry.date}
+                    </span>
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                    {entry.items.map((item, j) => (
+                      <li key={j} style={{
+                        fontSize: "1.3rem",
+                        color: "var(--ink-60)",
+                        lineHeight: 1.65,
+                        marginBottom: j < entry.items.length - 1 ? "0.4rem" : 0,
+                      }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Open source ─────────────────────────────────────────────────── */}
+      <h2>مفتوح المصدر ومجاني</h2>
+      <p>
+        منذ عام 2020، يحظى Samply بدعم{" "}
+        <a href="https://iscience.uni-konstanz.de/en/" target="_blank" rel="noopener noreferrer">مجموعة iScience</a>{" "}
+        في جامعة كونستانس. ويعمل المطوّر الرئيسي، يوري شيفتشينكو، هناك باحثاً ما بعد الدكتوراه. ويوجّه توجّه المجموعة البحثي نحو الأساليب القائمة على الإنترنت ومعاينة الخبرات تصميم Samply وأولويات ميزاته بشكل مباشر.
+      </p>
+      <p>
+        Samply مجاني الاستخدام ومفتوح المصدر. الكود المصدري للوحة التحكم على الويب متاح على <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>. والمساهمات وتقارير الأخطاء وطلبات الميزات مرحَّب بها.
+      </p>
+      <p>
+        إذا كنت تستخدم Samply في بحثك، فيُرجى الاستشهاد بالمنشور الأصلي:
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>منشور</div>
         <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
           Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
         </p>

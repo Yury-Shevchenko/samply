@@ -10,6 +10,10 @@ export default function GeofencingContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <GeofencingContentFr />;
   if (locale === "es") return <GeofencingContentEs />;
   if (locale === "pt") return <GeofencingContentPt />;
+  if (locale === "ja") return <GeofencingContentJa />;
+  if (locale === "ar") return <GeofencingContentAr />;
+  if (locale === "pl") return <GeofencingContentPl />;
+  if (locale === "tr") return <GeofencingContentTr />;
   return <GeofencingContentEn />;
 }
 
@@ -2242,6 +2246,846 @@ function GeofencingContentPt() {
           ou se o usuário alterar as configurações do aplicativo. O geofencing para de funcionar
           silenciosamente quando a permissão está ausente. Lembre aos participantes nas instruções
           do seu estudo que mantenham a localização em segundo plano ativada.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GeofencingContentJa() {
+  return (
+    <>
+      <p>
+        ジオフェンシングは、参加者が定義された地理的ゾーンに進入または退出したとき — 職場、スーパーマーケット、
+        住宅地など — に、Samplyが自動的に通知を送信し、調査を開くことを可能にします。トリガーは時計の時刻ではなく、
+        位置イベントそのものです。
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: 'var(--coral-soft)', borderLeft: '3px solid var(--coral)', borderRadius: '0 0.8rem 0.8rem 0', padding: '1.4rem 1.6rem', margin: '0.4rem 0 2.4rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--coral)', marginBottom: '0.7rem' }}>Published research</div>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)' }}>
+          Samplyのジオフェンシング実装は、<em>Behavior Research Methods</em>誌の査読付き論文で記述・実証的に検証されています：
+        </p>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)', fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2024). Geofencing in location-based behavioral research: Methodology, challenges, and implementation. <em>Behavior Research Methods</em>, 56, 6411–6439.
+        </p>
+        <a href='https://doi.org/10.3758/s13428-023-02213-2' target='_blank' rel='noopener noreferrer' style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', wordBreak: 'break-all' }}>https://doi.org/10.3758/s13428-023-02213-2</a>
+        <p style={{ margin: '1rem 0 0', fontSize: '1.25rem', lineHeight: 1.6, color: 'var(--ink-60)' }}>
+          Samplyアプリを用いた3つの制御研究では、360回のフェンス横断における全体的な通知感度が{' '}
+          <strong style={{ color: 'var(--ink)' }}>82.5%</strong>でした。本論文では、半径選択、プラットフォーム間の違い、環境要因に関する実証的ガイダンスを提供しています — 以下の推奨事項はこの研究に基づいています。
+        </p>
+      </div>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2>ジオフェンシングの仕組み</h2>
+      <p>
+        参加者がジオフェンシングを有効にした研究に参加するとすぐに、Samply Researchアプリはデバイス上にジオフェンス
+        ゾーンを登録し、バックグラウンドで位置の監視を開始します — アプリが閉じているときでも。デバイスが参加者の
+        ゾーンへの進入や退出を検出すると、アプリはローカル通知を発火し、研究履歴に
+        <strong>geofencing-event</strong>を記録します。
+      </p>
+      <p>
+        位置処理は完全に参加者のデバイス上で行われます。SamplyはGPS座標の生データを受信しません。
+        サーバーはジオフェンスイベント（進入または退出）が発生したことをタイムスタンプとともに
+        記録するだけです。研究者は履歴ログでイベントを見ますが、絶対的な位置は見えません。
+      </p>
+
+      {/* ── Enabling ──────────────────────────────────────────────────────── */}
+      <h2>ジオフェンシングを有効にする</h2>
+      <p>
+        <strong>研究を編集</strong>を開いて<strong>ジオフェンシングを有効化</strong>をオンにします。
+        2つの設定パネルが表示されます：1つは研究者定義の場所用、もう1つは参加者定義の場所用です。
+        どちらか一方または両方を使用できます。
+      </p>
+      <p>
+        保存する前に、<strong>ジオフェンシング指示</strong>フィールドに入力してください。
+        このテキストは参加者が研究に参加するときに表示され、連続的な位置追跡が必要な理由と
+        データの使用方法を説明します。ジオフェンシングが機能するには、参加者がSamply Researchアプリに
+        バックグラウンド位置許可を付与する必要があります。
+      </p>
+
+      {/* ── Researcher-defined locations ──────────────────────────────────── */}
+      <h2>研究者定義の場所</h2>
+      <p>
+        場所を自分で入力します — すべての参加者に同じように適用されます。各場所について、次を提供します：
+      </p>
+      <dl>
+        <dt>緯度と経度</dt>
+        <dd>
+          ジオフェンシングゾーンの中心。保存後、マーカーが地図上に表示され、ドラッグして位置を
+          視覚的に調整できます。
+        </dd>
+        <dt>半径（メートル）</dt>
+        <dd>
+          中心点周りの円形の境界。参加者のデバイスのGPSがその距離以内にあるとゾーンがアクティブになります。
+        </dd>
+        <dt>退出ゾーンサイズ（メートル）</dt>
+        <dd>
+          退出検出に使用される、通常はより大きい別の半径。進入ゾーンより大きい退出ゾーンを設定すると、
+          境界でのGPSドリフトによって引き起こされる誤った退出イベントを減らせます。
+        </dd>
+        <dt>最小時間ウィンドウ（分）</dt>
+        <dd>
+          このゾーンからの2つの通知の最小間隔。参加者が境界の近くにとどまり、GPS信号が揺れているときに
+          繰り返しのアクティブ化を防ぎます。
+        </dd>
+        <dt>進入時にトリガー / 退出時にトリガー</dt>
+        <dd>どちらの横断方向で通知がアクティブになるかを選択します。両方を有効にできます。</dd>
+        <dt>通知を非表示にしてもイベントを記録</dt>
+        <dd>
+          表示通知は送信しませんが、それでも履歴にgeofencing-eventを記録します。参加者を中断することなく
+          位置イベントの受動的な記録が必要な場合に使用します。
+        </dd>
+      </dl>
+      <p>
+        すべての研究者定義の場所は同じ通知コンテンツを共有します：タイトル、メッセージ本文、調査URL
+        （研究編集のジオフェンシングセクションで設定）。URLプレースホルダーがサポートされています —
+        完全なリストについては<a href='/docs/placeholders'>URLプレースホルダー</a>を参照してください。
+      </p>
+
+      {/* ── Participant-defined locations ─────────────────────────────────── */}
+      <h2>参加者定義の場所</h2>
+      <p>
+        ゾーンを自分で指定する代わりに、参加者がSamply Researchアプリで直接自分の場所を入力できるように
+        することができます — たとえば、自宅や職場。研究編集で参加者定義の場所を有効にし、デフォルトの
+        半径と調査URLを提供します。
+      </p>
+      <p>
+        各参加者は自分にとってプライベートなゾーンを定義します。ゾーンはデバイスに保存され、Samply
+        サーバーに送信されることはありません。これは、対象の場所が個人的で参加者ごとに異なる研究
+        （例：「あなたの自宅」、「いつものスーパーマーケット」）に適したオプションです。
+      </p>
+
+      {/* ── Privacy ───────────────────────────────────────────────────────── */}
+      <h2>プライバシーと同意</h2>
+      <p>
+        バックグラウンド位置追跡はiOSおよびAndroidでセンシティブな許可です。ジオフェンシング指示
+        フィールドで、どの位置データを収集するか、なぜ、どのくらいの期間保持するかを参加者に説明する
+        必要があります。この説明は研究登録時に表示されます — インフォームドコンセントの開示として扱ってください。
+      </p>
+      <p>
+        主要なプライバシー特性：
+      </p>
+      <ul>
+        <li>SamplyはGPS座標を保存しません。進入/退出イベントとタイムスタンプのみがサーバーに到達します。</li>
+        <li>参加者は研究を離脱せずに、アプリで特定の研究の位置追跡を無効にできます。</li>
+        <li>参加者は電話の設定でSamply Researchアプリの位置許可をオフにすることで、すべての位置追跡を停止できます。</li>
+      </ul>
+
+      {/* ── History and data ──────────────────────────────────────────────── */}
+      <h2>履歴内のジオフェンシングイベント</h2>
+      <p>
+        各ジオフェンシングのアクティブ化は、イベントステータス<strong>geofencing-event</strong>と
+        横断のタイムスタンプを持つ結果レコードを書き込みます。これらのレコードは、スケジュールされた通知の
+        結果とともに研究の履歴ログに表示され、CSVエクスポートでダウンロードできます。エクスポートには
+        通知の受信およびタップイベントと同じイベントごとの列にジオフェンシングイベントのタイムスタンプが
+        含まれます。
+      </p>
+      <p>
+        ジオフェンシングゾーンに調査URLを関連付けた場合、URLはイベントとともに結果に記録されます — 位置
+        トリガーとその後の調査完了の間にリンクを提供します（<a href='/docs/reminders'>完了リマインダー</a>
+        メカニズムを介して）。
+      </p>
+
+      {/* ── Empirical guidance ────────────────────────────────────────────── */}
+      <h2>実証的推奨事項</h2>
+      <p>
+        以下の推奨事項は、360回のフェンス横断による3つの制御研究でSamplyのジオフェンシングを検証した
+        <a href='https://doi.org/10.3758/s13428-023-02213-2' target='_blank' rel='noopener noreferrer'>Shevchenko &amp; Reips (2024)</a>の結果に基づいています。
+      </p>
+      <dl>
+        <dt>少なくとも100メートルの半径を使用する</dt>
+        <dd>
+          10mの半径はAndroidで頻繁な失敗を、iOSで誤検知を引き起こしました。100mでは感度が両方のプラットフォーム
+          で安定しました。より小さい半径は、優れたGPS信号のあるオープンな環境でのみ信頼できます。
+        </dd>
+        <dt>iOSはAndroidを上回る — それに応じて計画する</dt>
+        <dd>
+          iOSデバイスはより高い全体的な感度を示しました。Androidの通知は、フェンスの境界からより遠くで
+          到着する傾向がありました（トリガーがアクティブになる前にデバイスがすでに遠くまで横断していた）。
+          研究の対象が混在している場合は、プラットフォームを共変量として記録し、分析を層別化することを
+          検討してください。
+        </dd>
+        <dt>進入イベントと退出イベントは異なる動作をする</dt>
+        <dd>
+          退出通知は進入通知よりも境界から有意に遠くで配信されました — 研究では平均234m対87m。プロトコルが
+          退出の瞬間を正確に捕捉することに依存する場合は、より大きな退出ゾーン半径を定義し、退出イベントの
+          タイムスタンプをより大きな許容度で扱ってください。
+        </dd>
+        <dt>滞在時間が重要</dt>
+        <dd>
+          場所に少なくとも5分間とどまった参加者は、簡単に通過しただけの参加者よりも顕著に高い感度を示しました。
+          一時的な暴露（例：バス停）の場合は、検出率が低くなることを予期してください。
+        </dd>
+        <dt>森林環境と低接続性環境は感度を低下させる</dt>
+        <dd>
+          インターネット接続の低いゾーン（密林、地下空間、信号の弱い農村部）は感度を有意に低下させます。
+          アプリはゾーン検出のためにネットワーク支援GPSに依存します。接続がないと、イベントが遅延したり
+          完全に失われたりする可能性があります。研究プロトコルでこの制限を示してください。
+        </dd>
+      </dl>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>注意すべき点</h3>
+      <dl>
+        <dt>参加者はゾーンの変更を受け取るために研究に再参加する必要があります</dt>
+        <dd>
+          ジオフェンシングゾーンは、参加者が研究に参加するときにデバイスに登録されます。参加者がすでに
+          登録した後で研究編集でゾーンを追加または変更しても、研究を離れて再参加するまで更新された
+          ゾーンを受け取りません。
+        </dd>
+        <dt>GPS精度が実効半径を制限する</dt>
+        <dd>
+          都市環境でのGPS精度は通常5〜20メートルです。屋内や密集したゾーンでは50メートルを超えることが
+          あります。アクティブ化の見落としを避けるため、必要な精度より大きな半径を設定してください。
+          退出ゾーンパラメーターは境界での揺れを補正します。
+        </dd>
+        <dt>バックグラウンド位置許可は取り消される可能性があります</dt>
+        <dd>
+          iOSとAndroidは、OSアップデート後、デバイス再起動後、またはユーザーがアプリ設定を変更した場合に、
+          いつでもバックグラウンド位置許可を取り消すことができます。許可がないと、ジオフェンシングは
+          静かに動作を停止します。研究の指示で、バックグラウンド位置を有効に保つよう参加者に注意してください。
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GeofencingContentTr() {
+  return (
+    <>
+      <p>
+        Geofencing, bir katılımcı tanımlı coğrafi bir bölgeye girdiğinde veya bu bölgeden çıktığında —
+        işyeri, süpermarket, konut alanı vb. — Samply'nin otomatik olarak bir bildirim göndermesini ve
+        bir anket açmasını mümkün kılar. Tetikleyici saatin zamanı değil, konum olayının kendisidir.
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 2.4rem" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Yayımlanmış araştırma</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)" }}>
+          Samply'nin geofencing uygulaması, <em>Behavior Research Methods</em> dergisindeki hakemli bir makalede tanımlanmış ve ampirik olarak doğrulanmıştır:
+        </p>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2024). Geofencing in location-based behavioral research: Methodology, challenges, and implementation. <em>Behavior Research Methods</em>, 56, 6411–6439.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-023-02213-2" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>https://doi.org/10.3758/s13428-023-02213-2</a>
+        <p style={{ margin: "1rem 0 0", fontSize: "1.25rem", lineHeight: 1.6, color: "var(--ink-60)" }}>
+          Samply uygulamasıyla yürütülen üç kontrollü çalışmada, 360 sınır geçişinde genel bildirim duyarlılığı{" "}
+          <strong style={{ color: "var(--ink)" }}>%82,5</strong> olmuştur. Makale, yarıçap seçimi, platformlar arası farklılıklar ve çevresel etkenler için ampirik rehberlik sunmaktadır — aşağıdaki öneriler bu araştırmaya dayanmaktadır.
+        </p>
+      </div>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2>Geofencing nasıl çalışır</h2>
+      <p>
+        Bir katılımcı geofencing etkinleştirilmiş bir çalışmaya katılır katılmaz, Samply Research uygulaması
+        cihazda geofencing bölgelerini kaydeder ve arka planda — uygulama kapalıyken bile — konum
+        izlemeye başlar. Cihaz, katılımcının bölgesine giriş veya çıkış algıladığında, uygulama yerel bir
+        bildirim tetikler ve çalışma geçmişine bir <strong>geofencing-event</strong> kaydeder.
+      </p>
+      <p>
+        Konum işleme tamamen katılımcının cihazında gerçekleşir. Samply ham GPS koordinatlarını almaz.
+        Sunucu yalnızca bir geofencing olayının (giriş veya çıkış) gerçekleştiğini bir zaman damgasıyla
+        kaydeder. Araştırmacılar geçmiş günlüğünde olayları görür, ancak mutlak konumları görmez.
+      </p>
+
+      {/* ── Enabling ──────────────────────────────────────────────────────── */}
+      <h2>Geofencing'i etkinleştirme</h2>
+      <p>
+        <strong>Çalışmayı Düzenle</strong>'yi açın ve <strong>Geofencing'i etkinleştir</strong> seçeneğini
+        açın. İki yapılandırma paneli görüntülenir: biri araştırmacı tanımlı konumlar için, diğeri
+        katılımcı tanımlı konumlar içindir. İkisinden birini veya her ikisini de kullanabilirsiniz.
+      </p>
+      <p>
+        Kaydetmeden önce <strong>Geofencing talimatları</strong> alanını doldurun. Bu metin, katılımcılar
+        çalışmaya katıldıklarında gösterilir ve sürekli konum izlemenin neden gerekli olduğunu ve verilerin
+        nasıl kullanılacağını açıklar. Geofencing'in çalışması için, katılımcıların Samply Research
+        uygulamasına arka plan konumu izni vermesi gerekir.
+      </p>
+
+      {/* ── Researcher-defined locations ──────────────────────────────────── */}
+      <h2>Araştırmacı tanımlı konumlar</h2>
+      <p>
+        Konumları kendiniz girersiniz — tüm katılımcılara aynı şekilde uygulanır. Her konum için şunları sağlarsınız:
+      </p>
+      <dl>
+        <dt>Enlem ve boylam</dt>
+        <dd>
+          Geofencing bölgesinin merkezi. Kaydettikten sonra, haritada bir işaretçi görünür ve onu sürükleyerek
+          konumu görsel olarak ayarlayabilirsiniz.
+        </dd>
+        <dt>Yarıçap (metre)</dt>
+        <dd>
+          Merkez noktasının etrafındaki dairesel sınır. Katılımcının cihaz GPS'i bu mesafe içindeyken bölge etkin olur.
+        </dd>
+        <dt>Çıkış bölgesi büyüklüğü (metre)</dt>
+        <dd>
+          Çıkış algılaması için kullanılan, genellikle daha büyük olan ayrı bir yarıçap. Giriş bölgesinden
+          daha büyük bir çıkış bölgesi ayarlamak, sınırdaki GPS sapmasından kaynaklanan yanlış çıkış olaylarını azaltır.
+        </dd>
+        <dt>Minimum zaman aralığı (dakika)</dt>
+        <dd>
+          Bu bölgeden iki bildirim arasındaki minimum süre. Katılımcı sınıra yakın kaldığında ve GPS sinyali
+          dalgalandığında tekrarlanan etkinleştirmeleri önler.
+        </dd>
+        <dt>Girişte tetikle / Çıkışta tetikle</dt>
+        <dd>Hangi geçiş yönünün bir bildirimi etkinleştireceğini seçin. Her ikisini de etkinleştirebilirsiniz.</dd>
+        <dt>Bildirimi gizle ama olayı kaydet</dt>
+        <dd>
+          Görünür bir bildirim göndermez, ancak yine de geçmişe bir geofencing-event kaydeder. Konum olaylarının
+          katılımcıyı kesintiye uğratmadan pasif şekilde kaydedilmesi gerektiğinde kullanın.
+        </dd>
+      </dl>
+      <p>
+        Tüm araştırmacı tanımlı konumlar aynı bildirim içeriğini paylaşır: başlık, mesaj gövdesi, anket URL'si
+        (Çalışmayı Düzenle'nin geofencing bölümünde yapılandırılır). URL yer tutucuları desteklenir — tam
+        liste için <a href="/docs/placeholders">URL yer tutucuları</a> bölümüne bakın.
+      </p>
+
+      {/* ── Participant-defined locations ─────────────────────────────────── */}
+      <h2>Katılımcı tanımlı konumlar</h2>
+      <p>
+        Bölgeleri kendiniz belirtmek yerine, katılımcıların kendi konumlarını doğrudan Samply Research
+        uygulamasına girmesine izin verebilirsiniz — örneğin kendi evi veya işyeri. Çalışmayı Düzenle'de
+        katılımcı tanımlı konumları etkinleştirin ve bir varsayılan yarıçap ve anket URL'si sağlayın.
+      </p>
+      <p>
+        Her katılımcı yalnızca kendileri için özel bir bölge tanımlar. Bölgeler cihazda saklanır ve asla
+        Samply sunucularına gönderilmez. Bu, ilgilenilen konumun kişisel ve katılımcıdan katılımcıya
+        farklı olduğu çalışmalar için (örn. «sizin eviniz», «her zamanki süpermarketiniz») iyi bir seçenektir.
+      </p>
+
+      {/* ── Privacy ───────────────────────────────────────────────────────── */}
+      <h2>Gizlilik ve onam</h2>
+      <p>
+        Arka plan konum izleme, hem iOS'te hem de Android'de hassas bir izindir. Geofencing talimatları
+        alanında, hangi konum verilerinin toplandığını, nedenini ve ne kadar süre saklandığını
+        katılımcılara açıklamanız gerekir. Bu açıklama çalışmaya kayıt sırasında gösterilir — onu
+        bilgilendirilmiş onamın bir açıklaması olarak ele alın.
+      </p>
+      <p>
+        Temel gizlilik özellikleri:
+      </p>
+      <ul>
+        <li>Samply GPS koordinatlarını saklamaz. Yalnızca giriş/çıkış olayları ve zaman damgaları sunucuya ulaşır.</li>
+        <li>Katılımcılar çalışmadan ayrılmadan, uygulama içinden belirli bir çalışma için konum izlemeyi devre dışı bırakabilir.</li>
+        <li>Katılımcılar, telefon ayarlarında Samply Research uygulamasının konum izinlerini kapatarak tüm konum izlemeyi durdurabilir.</li>
+      </ul>
+
+      {/* ── History and data ──────────────────────────────────────────────── */}
+      <h2>Geçmişteki geofencing olayları</h2>
+      <p>
+        Her geofencing etkinleştirmesi, olay durumu <strong>geofencing-event</strong> ve geçiş zaman damgasıyla
+        bir sonuç kaydı yazar. Bu kayıtlar planlanmış bildirimlerin sonuçlarıyla birlikte çalışmanın geçmiş
+        günlüğünde görünür ve CSV dışa aktarımında indirilebilir. Dışa aktarım, geofencing olayı zaman
+        damgalarını bildirim alındı ve dokunma olayları için olan aynı olay başına sütunlara dahil eder.
+      </p>
+      <p>
+        Bir geofencing bölgesine bir anket URL'si bağladıysanız, URL olayla birlikte sonuca kaydedilir —
+        konum tetikleyicisi ile sonraki anket tamamlanması arasında (<a href="/docs/reminders">tamamlanma
+        hatırlatma</a> mekanizması aracılığıyla) bir bağlantı sağlar.
+      </p>
+
+      {/* ── Empirical guidance ────────────────────────────────────────────── */}
+      <h2>Ampirik öneriler</h2>
+      <p>
+        Aşağıdaki öneriler, Samply geofencing'ini üç kontrollü çalışmada 360 sınır geçişiyle doğrulayan
+        <a href="https://doi.org/10.3758/s13428-023-02213-2" target="_blank" rel="noopener noreferrer">Shevchenko &amp; Reips (2024)</a> sonuçlarına dayanmaktadır.
+      </p>
+      <dl>
+        <dt>En az 100 metrelik bir yarıçap kullanın</dt>
+        <dd>
+          10 m yarıçaplar Android'de sık başarısızlığa, iOS'te yanlış pozitiflere neden oldu. 100 m'de
+          duyarlılık her iki platformda da kararlı hale geldi. Daha küçük yarıçaplar yalnızca iyi GPS
+          sinyali olan açık ortamlarda güvenilirdir.
+        </dd>
+        <dt>iOS, Android'i geride bırakır — buna göre planlama yapın</dt>
+        <dd>
+          iOS cihazları genel olarak daha yüksek duyarlılık gösterdi. Android bildirimleri çit sınırından
+          daha uzakta gelme eğilimindeydi (tetikleyici etkinleşmeden önce cihaz zaten daha öteye geçmişti).
+          Çalışmanızın katılımcı kitlesi karışıksa, platformu bir ortak değişken olarak kaydetmeyi ve
+          analizleri katmanlandırmayı düşünün.
+        </dd>
+        <dt>Giriş ve çıkış olayları farklı davranır</dt>
+        <dd>
+          Çıkış bildirimleri sınırdan giriş bildirimlerinden anlamlı derecede daha uzakta iletildi —
+          çalışmalarda ortalama 234 m'ye karşı 87 m. Protokolünüz çıkış anını doğru yakalamaya bağlıysa,
+          daha büyük bir çıkış bölgesi yarıçapı tanımlayın ve çıkış olayı zaman damgalarını daha geniş
+          bir toleransla ele alın.
+        </dd>
+        <dt>Kalış süresi önemlidir</dt>
+        <dd>
+          Bir konumda en az beş dakika kalan katılımcılar, basitçe geçenlere göre belirgin biçimde daha
+          yüksek duyarlılık gösterdi. Geçici maruziyetler (örn. otobüs durakları) için daha düşük algılama
+          oranları bekleyin.
+        </dd>
+        <dt>Ormanlık ve düşük bağlantılı ortamlar duyarlılığı düşürür</dt>
+        <dd>
+          Düşük internet bağlantısı olan bölgeler (yoğun ormanlar, yer altı alanları, sinyali zayıf kırsal
+          bölgeler) duyarlılığı anlamlı şekilde düşürür. Uygulama, bölge algılama için ağ destekli GPS'e
+          dayanır. Bağlantı olmadığında, olaylar gecikebilir veya tamamen kaybolabilir. Çalışma protokolünüzde
+          bu sınırlamayı belirtin.
+        </dd>
+      </dl>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>Dikkat edilmesi gerekenler</h3>
+      <dl>
+        <dt>Katılımcıların bölge değişikliklerini almak için çalışmaya yeniden katılması gerekir</dt>
+        <dd>
+          Geofencing bölgeleri, katılımcı çalışmaya katıldığında cihaza kaydedilir. Bir katılımcı zaten
+          kaydolduktan sonra Çalışmayı Düzenle'de bölge ekler veya değiştirirseniz, katılımcı çalışmadan
+          ayrılıp yeniden katılana dek güncellenmiş bölgeleri almaz.
+        </dd>
+        <dt>GPS doğruluğu etkin yarıçapı sınırlar</dt>
+        <dd>
+          GPS doğruluğu kentsel ortamlarda genellikle 5-20 metredir; iç mekânlarda veya yoğun bölgelerde
+          50 metreyi aşabilir. Etkinleşmelerin kaçırılmasını önlemek için ihtiyacınız olan kesinlikten daha
+          büyük bir yarıçap belirleyin. Çıkış bölgesi parametresi sınırdaki dalgalanmaları telafi eder.
+        </dd>
+        <dt>Arka plan konum izinleri iptal edilebilir</dt>
+        <dd>
+          iOS ve Android, bir işletim sistemi güncellemesinden, cihaz yeniden başlatılmasından sonra veya
+          kullanıcı uygulama ayarlarını değiştirdiğinde herhangi bir zamanda arka plan konum izinlerini
+          iptal edebilir. İzin olmadan, geofencing sessizce çalışmayı durdurur. Çalışma talimatlarında,
+          katılımcıları arka plan konumunu etkin tutmaları konusunda hatırlatın.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GeofencingContentPl() {
+  return (
+    <>
+      <p>
+        Geofencing umożliwia Samply automatyczne wysłanie powiadomienia i otwarcie ankiety,
+        gdy uczestnik wchodzi do zdefiniowanego obszaru geograficznego lub go opuszcza —
+        miejsca pracy, supermarketu, dzielnicy mieszkalnej itp. Wyzwalaczem jest samo
+        zdarzenie lokalizacyjne, a nie czas zegarowy.
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 2.4rem" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Opublikowane badanie</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)" }}>
+          Implementacja geofencingu Samply jest opisana i empirycznie zwalidowana w recenzowanym artykule w czasopiśmie <em>Behavior Research Methods</em>:
+        </p>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2024). Geofencing in location-based behavioral research: Methodology, challenges, and implementation. <em>Behavior Research Methods</em>, 56, 6411–6439.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-023-02213-2" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>https://doi.org/10.3758/s13428-023-02213-2</a>
+        <p style={{ margin: "1rem 0 0", fontSize: "1.25rem", lineHeight: 1.6, color: "var(--ink-60)" }}>
+          W trzech kontrolowanych badaniach przeprowadzonych z aplikacją Samply ogólna czułość powiadomień przy 360 przekroczeniach granic wyniosła{" "}
+          <strong style={{ color: "var(--ink)" }}>82,5%</strong>. Artykuł zawiera empiryczne wytyczne dotyczące wyboru Promienia, różnic między platformami i czynników środowiskowych — poniższe zalecenia są oparte na tym badaniu.
+        </p>
+      </div>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2>Jak działa geofencing</h2>
+      <p>
+        Gdy tylko uczestnik dołącza do badania z włączonym geofencingiem, aplikacja Samply
+        Research rejestruje strefy geofencingowe na urządzeniu i zaczyna śledzić lokalizację
+        w tle — nawet gdy aplikacja jest zamknięta. Gdy urządzenie wykryje Wejście lub
+        Wyjście ze strefy uczestnika, aplikacja wyzwala lokalne powiadomienie i zapisuje
+        <strong>geofencing-event</strong> w historii badania.
+      </p>
+      <p>
+        Przetwarzanie lokalizacji odbywa się całkowicie na urządzeniu uczestnika. Samply nie
+        otrzymuje surowych Współrzędnych GPS. Serwer rejestruje jedynie, że nastąpiło
+        zdarzenie geofencingu (Wejście lub Wyjście) wraz ze znacznikiem czasu. Badacze widzą
+        zdarzenia w dzienniku historii, ale nie widzą bezwzględnych lokalizacji.
+      </p>
+
+      {/* ── Enabling ──────────────────────────────────────────────────────── */}
+      <h2>Włączanie geofencingu</h2>
+      <p>
+        Otwórz <strong>Edytuj badanie</strong> i włącz <strong>Włącz geofencing</strong>.
+        Wyświetlają się dwa panele konfiguracji: jeden dla lokalizacji zdefiniowanych przez
+        Badacza i drugi dla lokalizacji zdefiniowanych przez uczestnika. Możesz używać
+        jednego lub obu.
+      </p>
+      <p>
+        Wypełnij pole <strong>Instrukcje dotyczące geofencingu</strong> przed zapisaniem. Ten
+        tekst jest pokazywany uczestnikom, gdy dołączają do badania, i wyjaśnia, dlaczego
+        konieczne jest ciągłe śledzenie lokalizacji i jak dane będą wykorzystywane. Aby
+        geofencing działał, uczestnicy muszą udzielić aplikacji Samply Research uprawnienia
+        do lokalizacji w tle.
+      </p>
+
+      {/* ── Researcher-defined locations ──────────────────────────────────── */}
+      <h2>Lokalizacje zdefiniowane przez Badacza</h2>
+      <p>
+        Lokalizacje wprowadzasz sam — są stosowane do wszystkich uczestników w ten sam
+        sposób. Dla każdej lokalizacji podajesz:
+      </p>
+      <dl>
+        <dt>Szerokość i długość geograficzna</dt>
+        <dd>
+          Środek strefy geofencingowej. Po zapisaniu na mapie pojawia się znacznik, który
+          możesz przeciągnąć, aby wizualnie dostosować położenie.
+        </dd>
+        <dt>Promień (metry)</dt>
+        <dd>
+          Okrągła granica wokół punktu środkowego. Strefa jest aktywna, gdy GPS urządzenia
+          uczestnika znajduje się w tej odległości.
+        </dd>
+        <dt>Rozmiar strefy Wyjścia (metry)</dt>
+        <dd>
+          Oddzielny, zwykle większy Promień używany do wykrywania Wyjścia. Ustawienie strefy
+          Wyjścia większej niż strefa Wejścia zmniejsza liczbę fałszywych zdarzeń Wyjścia
+          spowodowanych dryftem GPS na granicy.
+        </dd>
+        <dt>Minimalny odstęp czasowy (minuty)</dt>
+        <dd>
+          Minimalny czas między dwoma powiadomieniami z tej strefy. Zapobiega powtarzającym
+          się wyzwoleniom, gdy uczestnik pozostaje blisko granicy, a sygnał GPS fluktuuje.
+        </dd>
+        <dt>Wyzwalaj przy Wejściu / Wyzwalaj przy Wyjściu</dt>
+        <dd>Wybierz, który kierunek przekroczenia ma wyzwalać powiadomienie. Możesz włączyć oba.</dd>
+        <dt>Ukryj powiadomienie, ale zapisz zdarzenie</dt>
+        <dd>
+          Nie wysyła widocznego powiadomienia, ale nadal zapisuje geofencing-event w
+          historii. Użyj, gdy zdarzenia lokalizacyjne powinny być rejestrowane pasywnie, bez
+          przerywania uczestnikowi.
+        </dd>
+      </dl>
+      <p>
+        Wszystkie lokalizacje zdefiniowane przez Badacza dzielą tę samą zawartość
+        powiadomienia: tytuł, treść wiadomości, URL ankiety (skonfigurowane w sekcji
+        geofencingu w Edytuj badanie). Placeholdery URL są obsługiwane — pełną listę
+        znajdziesz w sekcji <a href="/docs/placeholders">Placeholdery URL</a>.
+      </p>
+
+      {/* ── Participant-defined locations ─────────────────────────────────── */}
+      <h2>Lokalizacje zdefiniowane przez uczestnika</h2>
+      <p>
+        Zamiast samodzielnie określać strefy, możesz pozwolić uczestnikom wprowadzać własne
+        lokalizacje bezpośrednio w aplikacji Samply Research — na przykład swój własny dom
+        lub miejsce pracy. Włącz lokalizacje definiowane przez uczestnika w Edytuj badanie i
+        podaj domyślny Promień oraz URL ankiety.
+      </p>
+      <p>
+        Każdy uczestnik definiuje strefę unikalną tylko dla siebie. Strefy są przechowywane
+        na urządzeniu i nigdy nie są wysyłane na serwery Samply. To jest dobry wybór w
+        przypadku badań, w których interesująca lokalizacja jest osobista i różni się w
+        zależności od uczestnika (np. «twój dom», «twój zwykły supermarket»).
+      </p>
+
+      {/* ── Privacy ───────────────────────────────────────────────────────── */}
+      <h2>Prywatność i zgoda</h2>
+      <p>
+        Śledzenie lokalizacji w tle jest wrażliwym uprawnieniem zarówno w iOS, jak i
+        Android. W polu Instrukcje dotyczące geofencingu musisz wyjaśnić uczestnikom, jakie
+        dane lokalizacyjne są zbierane, dlaczego i jak długo są przechowywane. To
+        wyjaśnienie jest pokazywane podczas rejestracji w badaniu — traktuj je jako
+        deklarację świadomej zgody.
+      </p>
+      <p>
+        Kluczowe cechy prywatności:
+      </p>
+      <ul>
+        <li>Samply nie przechowuje Współrzędnych GPS. Tylko zdarzenia Wejścia/Wyjścia i znaczniki czasu trafiają na serwer.</li>
+        <li>Uczestnicy mogą wyłączyć śledzenie lokalizacji dla konkretnego badania z poziomu aplikacji, bez opuszczania badania.</li>
+        <li>Uczestnicy mogą zatrzymać całe śledzenie lokalizacji, wyłączając uprawnienia lokalizacyjne aplikacji Samply Research w ustawieniach telefonu.</li>
+      </ul>
+
+      {/* ── History and data ──────────────────────────────────────────────── */}
+      <h2>Zdarzenia geofencingu w historii</h2>
+      <p>
+        Każde wyzwolenie geofencingu zapisuje rekord wyniku ze statusem zdarzenia{' '}
+        <strong>geofencing-event</strong> i znacznikiem czasu przekroczenia. Te rekordy
+        pojawiają się w dzienniku historii badania obok wyników zaplanowanych powiadomień i
+        są dostępne do pobrania w eksporcie CSV. Eksport zawiera znaczniki czasu zdarzeń
+        geofencingu w tych samych kolumnach na zdarzenie, co dla zdarzeń odebrania
+        powiadomienia i stuknięcia.
+      </p>
+      <p>
+        Jeśli powiązałeś URL ankiety ze strefą geofencingową, URL jest zapisywany w wyniku
+        wraz ze zdarzeniem — zapewniając połączenie między wyzwalaczem lokalizacyjnym a
+        późniejszym ukończeniem ankiety (poprzez mechanizm{' '}
+        <a href="/docs/reminders">przypomnień ukończenia</a>).
+      </p>
+
+      {/* ── Empirical guidance ────────────────────────────────────────────── */}
+      <h2>Empiryczne zalecenia</h2>
+      <p>
+        Poniższe zalecenia są oparte na wynikach{' '}
+        <a href="https://doi.org/10.3758/s13428-023-02213-2" target="_blank" rel="noopener noreferrer">Shevchenko &amp; Reips (2024)</a>,
+        którzy zwalidowali geofencing Samply w trzech kontrolowanych badaniach z 360
+        przekroczeniami granic.
+      </p>
+      <dl>
+        <dt>Używaj Promienia co najmniej 100 metrów</dt>
+        <dd>
+          Promienie 10 m powodowały częste niepowodzenia na Androidzie i fałszywe pozytywne
+          wyniki na iOS. Przy 100 m czułość stała się stabilna na obu platformach. Mniejsze
+          promienie są wiarygodne tylko w środowiskach otwartych z dobrym sygnałem GPS.
+        </dd>
+        <dt>iOS przewyższa Androida — planuj odpowiednio</dt>
+        <dd>
+          Urządzenia iOS ogólnie wykazywały wyższą czułość. Powiadomienia Androida miały
+          tendencję do nadchodzenia dalej od granicy ogrodzenia (urządzenie już się dalej
+          przemieściło, zanim wyzwalacz został aktywowany). Jeśli próba uczestników Twojego
+          badania jest mieszana, rozważ zapisanie platformy jako współzmiennej i
+          warstwowanie analiz.
+        </dd>
+        <dt>Zdarzenia Wejścia i Wyjścia zachowują się inaczej</dt>
+        <dd>
+          Powiadomienia o Wyjściu były dostarczane znacznie dalej od granicy niż
+          powiadomienia o Wejściu — średnio 234 m w porównaniu do 87 m w badaniach. Jeśli
+          Twój protokół zależy od dokładnego uchwycenia momentu Wyjścia, zdefiniuj większy
+          Promień strefy Wyjścia i traktuj znaczniki czasu zdarzeń Wyjścia z większą tolerancją.
+        </dd>
+        <dt>Czas przebywania ma znaczenie</dt>
+        <dd>
+          Uczestnicy, którzy przebywali w danym miejscu co najmniej pięć minut, wykazywali
+          zauważalnie wyższą czułość niż ci, którzy po prostu przechodzili. W przypadku
+          krótkotrwałej ekspozycji (np. przystanków autobusowych) oczekuj niższych
+          wskaźników wykrywania.
+        </dd>
+        <dt>Środowiska zalesione i z niską łącznością obniżają czułość</dt>
+        <dd>
+          Obszary z niską łącznością internetową (gęste lasy, podziemne przestrzenie, obszary
+          wiejskie ze słabym sygnałem) znacznie obniżają czułość. Aplikacja polega na GPS
+          wspomaganym przez sieć w wykrywaniu stref. Bez łączności zdarzenia mogą być
+          opóźnione lub całkowicie utracone. Wskaż to ograniczenie w protokole badania.
+        </dd>
+      </dl>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>Na co należy uważać</h3>
+      <dl>
+        <dt>Uczestnicy muszą ponownie dołączyć do badania, aby otrzymać zmiany stref</dt>
+        <dd>
+          Strefy geofencingowe są zapisywane na urządzeniu, gdy uczestnik dołącza do
+          badania. Jeśli dodasz lub zmienisz strefy w Edytuj badanie po tym, jak uczestnik
+          już się zarejestrował, uczestnik nie otrzyma zaktualizowanych stref, dopóki nie
+          opuści badania i ponownie do niego nie dołączy.
+        </dd>
+        <dt>Dokładność GPS ogranicza efektywny Promień</dt>
+        <dd>
+          Dokładność GPS w środowisku miejskim wynosi zazwyczaj 5–20 metrów; w pomieszczeniach
+          lub gęstych obszarach może przekraczać 50 metrów. Aby uniknąć pominięcia wyzwoleń,
+          ustaw Promień większy niż precyzja, której potrzebujesz. Parametr strefy Wyjścia
+          kompensuje fluktuacje na granicy.
+        </dd>
+        <dt>Uprawnienia do lokalizacji w tle mogą zostać cofnięte</dt>
+        <dd>
+          iOS i Android mogą cofnąć uprawnienia do lokalizacji w tle w dowolnym momencie po
+          aktualizacji systemu operacyjnego, ponownym uruchomieniu urządzenia lub gdy
+          użytkownik zmieni ustawienia aplikacji. Bez uprawnień geofencing po cichu
+          przestaje działać. W instrukcjach badania przypomnij uczestnikom, aby utrzymywali
+          lokalizację w tle włączoną.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GeofencingContentAr() {
+  return (
+    <>
+      <p>
+        يتيح Geofencing لـ Samply أن يرسل تلقائياً إشعاراً ويفتح استطلاعاً عندما يدخل
+        مشارك منطقة جغرافية مُعرَّفة أو يغادرها — مكان عمل، أو متجر، أو حي سكني، إلخ.
+        المُشغِّل هو حدث الموقع نفسه، وليس وقت الساعة.
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 2.4rem" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>بحث منشور</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)" }}>
+          تنفيذ Geofencing في Samply موثَّق وقد تم التحقق منه تجريبياً في مقالة مُحكَّمة في دورية <em>Behavior Research Methods</em>:
+        </p>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2024). Geofencing in location-based behavioral research: Methodology, challenges, and implementation. <em>Behavior Research Methods</em>, 56, 6411–6439.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-023-02213-2" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>https://doi.org/10.3758/s13428-023-02213-2</a>
+        <p style={{ margin: "1rem 0 0", fontSize: "1.25rem", lineHeight: 1.6, color: "var(--ink-60)" }}>
+          في ثلاث دراسات مضبوطة أُجريت بتطبيق Samply، بلغت الحساسية الإجمالية للإشعارات عند 360 عبوراً للحدود{" "}
+          <strong style={{ color: "var(--ink)" }}>82.5%</strong>. تتضمن المقالة إرشادات تجريبية حول اختيار نصف القطر والاختلافات بين المنصات والعوامل البيئية — التوصيات أدناه مبنية على هذا البحث.
+        </p>
+      </div>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <h2>كيف يعمل Geofencing</h2>
+      <p>
+        بمجرد انضمام مشارك إلى دراسة مفعَّل فيها Geofencing، يسجّل تطبيق Samply Research
+        مناطق Geofencing على الجهاز ويبدأ بتتبّع الموقع في الخلفية — حتى عندما يكون
+        التطبيق مغلقاً. عندما يكتشف الجهاز الدخول إلى منطقة المشارك أو الخروج منها،
+        يُطلق التطبيق إشعاراً محلياً ويسجّل <strong>geofencing-event</strong> في سجل الدراسة.
+      </p>
+      <p>
+        تتم معالجة الموقع بالكامل على جهاز المشارك. لا يتلقى Samply الإحداثيات الأولية لـ GPS.
+        لا يسجّل الخادم سوى أن حدث Geofencing قد وقع (الدخول أو الخروج) مع طابع زمني.
+        يرى الباحثون الأحداث في سجل التاريخ، لكنهم لا يرون المواقع المطلقة.
+      </p>
+
+      {/* ── Enabling ──────────────────────────────────────────────────────── */}
+      <h2>تفعيل Geofencing</h2>
+      <p>
+        افتح <strong>تعديل الدراسة</strong> وفعِّل <strong>تفعيل Geofencing</strong>.
+        تظهر لوحتا إعداد: واحدة للمواقع التي يحددها الباحث وأخرى للمواقع التي يحددها
+        المشارك. يمكنك استخدام إحداهما أو كلتيهما.
+      </p>
+      <p>
+        املأ حقل <strong>تعليمات Geofencing</strong> قبل الحفظ. يُعرض هذا النص للمشاركين
+        عند انضمامهم إلى الدراسة، ويشرح سبب الحاجة إلى التتبّع المستمر للموقع وكيفية
+        استخدام البيانات. لكي يعمل Geofencing، يجب على المشاركين منح تطبيق Samply Research
+        إذن الموقع في الخلفية.
+      </p>
+
+      {/* ── Researcher-defined locations ──────────────────────────────────── */}
+      <h2>المواقع التي يحددها الباحث</h2>
+      <p>
+        تُدخل المواقع بنفسك — وتُطبَّق على جميع المشاركين بالطريقة ذاتها. لكل موقع، تُقدّم:
+      </p>
+      <dl>
+        <dt>خط العرض وخط الطول</dt>
+        <dd>
+          مركز منطقة Geofencing. بعد الحفظ، تظهر علامة على الخريطة يمكنك سحبها لتعديل
+          الموقع بصرياً.
+        </dd>
+        <dt>نصف القطر (بالأمتار)</dt>
+        <dd>
+          الحدود الدائرية حول نقطة المركز. تكون المنطقة نشطة عندما يكون GPS جهاز المشارك
+          ضمن هذه المسافة.
+        </dd>
+        <dt>حجم منطقة الخروج (بالأمتار)</dt>
+        <dd>
+          نصف قطر منفصل، عادةً أكبر، يُستخدم لاكتشاف الخروج. ضبط منطقة الخروج بحجم أكبر
+          من منطقة الدخول يقلّل من أحداث الخروج الكاذبة الناتجة عن انجراف GPS عند الحدود.
+        </dd>
+        <dt>الحد الأدنى للفاصل الزمني (بالدقائق)</dt>
+        <dd>
+          الحد الأدنى من الوقت بين إشعارَين من هذه المنطقة. يمنع الإطلاقات المتكررة عندما
+          يظل المشارك قريباً من الحدود وتتذبذب إشارة GPS.
+        </dd>
+        <dt>الإطلاق عند الدخول / الإطلاق عند الخروج</dt>
+        <dd>اختر اتجاه العبور الذي يجب أن يُطلق الإشعار. يمكنك تفعيل كليهما.</dd>
+        <dt>إخفاء الإشعار مع تسجيل الحدث</dt>
+        <dd>
+          لا يرسل إشعاراً مرئياً، لكنه ما يزال يسجّل geofencing-event في السجل. استخدمه
+          عندما يجب تسجيل أحداث الموقع بشكل سلبي، دون إزعاج المشارك.
+        </dd>
+      </dl>
+      <p>
+        تتشارك جميع المواقع التي يحددها الباحث محتوى الإشعار ذاته: العنوان والنص ورابط
+        الاستطلاع (يُكوَّن في قسم Geofencing في «تعديل الدراسة»). تُدعَم العناصر النائبة
+        في الـ URL — تجد القائمة الكاملة في{' '}
+        <a href="/docs/placeholders">العناصر النائبة في URL</a>.
+      </p>
+
+      {/* ── Participant-defined locations ─────────────────────────────────── */}
+      <h2>المواقع التي يحددها المشارك</h2>
+      <p>
+        بدلاً من تحديد المناطق بنفسك، يمكنك السماح للمشاركين بإدخال مواقعهم الخاصة
+        مباشرةً في تطبيق Samply Research — مثل منزله أو مكان عمله. فعِّل المواقع التي
+        يحددها المشارك في «تعديل الدراسة» وقدِّم نصف قطر افتراضياً ورابط استطلاع.
+      </p>
+      <p>
+        يعرّف كل مشارك منطقة فريدة له فقط. تُخزَّن المناطق على الجهاز ولا تُرسَل أبداً إلى
+        خوادم Samply. هذا خيار جيد للدراسات التي يكون فيها الموقع المهم شخصياً ويختلف
+        بحسب المشارك (مثل «منزلك» أو «المتجر الذي تتسوق منه عادةً»).
+      </p>
+
+      {/* ── Privacy ───────────────────────────────────────────────────────── */}
+      <h2>الخصوصية والموافقة</h2>
+      <p>
+        تتبّع الموقع في الخلفية إذنٌ حساس على كلٍّ من iOS وAndroid. في حقل تعليمات
+        Geofencing، يجب أن تشرح للمشاركين أي بيانات موقع تُجمع، ولماذا، ولكم من الوقت
+        تُحفظ. يُعرض هذا التوضيح أثناء التسجيل في الدراسة — اعتبره إعلان موافقة مستنيرة.
+      </p>
+      <p>
+        ميزات الخصوصية الأساسية:
+      </p>
+      <ul>
+        <li>لا يخزّن Samply الإحداثيات. تصل إلى الخادم فقط أحداث الدخول/الخروج والطوابع الزمنية.</li>
+        <li>يمكن للمشاركين إيقاف تتبّع الموقع لدراسة محددة من داخل التطبيق، دون مغادرة الدراسة.</li>
+        <li>يمكن للمشاركين إيقاف تتبّع الموقع كلياً بتعطيل إذن الموقع لتطبيق Samply Research في إعدادات الهاتف.</li>
+      </ul>
+
+      {/* ── History and data ──────────────────────────────────────────────── */}
+      <h2>أحداث Geofencing في السجل</h2>
+      <p>
+        كل إطلاق لـ Geofencing يسجّل سجل نتيجة بحالة حدث{' '}
+        <strong>geofencing-event</strong> وطابع زمني للعبور. تظهر هذه السجلات في سجل
+        تاريخ الدراسة جنباً إلى جنب مع نتائج الإشعارات المجدولة، وهي متاحة للتنزيل في
+        تصدير CSV. يحتوي التصدير على طوابع زمنية لأحداث Geofencing في نفس الأعمدة لكل
+        حدث كما هو الحال لأحداث استلام الإشعار والنقر عليه.
+      </p>
+      <p>
+        إذا ربطت رابط استطلاع بمنطقة Geofencing، يُسجَّل الـ URL في النتيجة مع الحدث —
+        ما يوفّر صلة بين مُشغِّل الموقع والإكمال اللاحق للاستطلاع (عبر آلية{' '}
+        <a href="/docs/reminders">تذكيرات الإكمال</a>).
+      </p>
+
+      {/* ── Empirical guidance ────────────────────────────────────────────── */}
+      <h2>توصيات تجريبية</h2>
+      <p>
+        التوصيات التالية مبنية على نتائج{' '}
+        <a href="https://doi.org/10.3758/s13428-023-02213-2" target="_blank" rel="noopener noreferrer">Shevchenko &amp; Reips (2024)</a>،
+        اللذَين تحققا من Geofencing في Samply عبر ثلاث دراسات مضبوطة بـ 360 عبوراً للحدود.
+      </p>
+      <dl>
+        <dt>استخدم نصف قطر لا يقل عن 100 متر</dt>
+        <dd>
+          أدّت أنصاف الأقطار البالغة 10 أمتار إلى إخفاقات متكررة على Android ونتائج
+          إيجابية كاذبة على iOS. عند 100 متر، أصبحت الحساسية مستقرة على كلتا المنصتَين.
+          أنصاف الأقطار الأصغر موثوقة فقط في البيئات المفتوحة ذات إشارة GPS جيدة.
+        </dd>
+        <dt>تتفوق iOS على Android — خطّط وفقاً لذلك</dt>
+        <dd>
+          أظهرت أجهزة iOS بشكل عام حساسية أعلى. تميل إشعارات Android إلى الوصول أبعد
+          عن حدود السياج (تكون الأجهزة قد ابتعدت أكثر قبل تنشيط المُشغِّل). إذا كانت عيّنة
+          المشاركين في دراستك مختلطة، فأنصح بتسجيل المنصة كمتغير مشترك وتقسيم التحليلات.
+        </dd>
+        <dt>تتصرف أحداث الدخول والخروج بشكل مختلف</dt>
+        <dd>
+          سُلِّمت إشعارات الخروج على بعد أكبر بكثير من الحدود مقارنةً بإشعارات الدخول —
+          بمتوسط 234 متراً مقابل 87 متراً في الدراسات. إذا كان بروتوكولك يعتمد على التقاط
+          لحظة الخروج بدقة، فعرّف نصف قطر منطقة خروج أكبر وعامل طوابع أحداث الخروج
+          الزمنية بتسامح أكبر.
+        </dd>
+        <dt>مدة المكوث تؤثر</dt>
+        <dd>
+          المشاركون الذين بقوا في موقع لمدة خمس دقائق على الأقل أظهروا حساسية أعلى
+          ملحوظاً مقارنةً بالذين عبروا فقط. بالنسبة للتعرّض القصير (مثل محطات الحافلات)،
+          توقع معدلات اكتشاف أدنى.
+        </dd>
+        <dt>البيئات المُغطّاة بالأشجار ومنخفضة الاتصال تخفض الحساسية</dt>
+        <dd>
+          تُخفّض المناطق ذات الاتصال الضعيف بالإنترنت (الغابات الكثيفة والمساحات تحت
+          الأرض والمناطق الريفية ذات الإشارة الضعيفة) الحساسية بشكل ملحوظ. يعتمد التطبيق
+          على GPS المعزَّز بالشبكة في اكتشاف المناطق. بدون اتصال، قد تتأخر الأحداث أو
+          تُفقد كلياً. أَشِر إلى هذا القيد في بروتوكول الدراسة.
+        </dd>
+      </dl>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>أمور يجب الانتباه إليها</h3>
+      <dl>
+        <dt>يجب على المشاركين الانضمام مجدداً إلى الدراسة لاستلام تغييرات المناطق</dt>
+        <dd>
+          تُخزَّن مناطق Geofencing على الجهاز عند انضمام المشارك إلى الدراسة. إذا أضفت
+          أو غيّرت المناطق في «تعديل الدراسة» بعد تسجيل المشارك، فلن يستلم المشارك
+          المناطق المحدّثة حتى يغادر الدراسة ويعيد الانضمام إليها.
+        </dd>
+        <dt>دقة GPS تحدّ من نصف القطر الفعّال</dt>
+        <dd>
+          تبلغ دقة GPS في البيئة الحضرية عادةً 5–20 متراً؛ ويمكن أن تتجاوز 50 متراً في
+          الداخل أو في المناطق الكثيفة. لتجنّب فقدان الإطلاقات، اضبط نصف قطر أكبر من
+          الدقة التي تحتاجها. يعوّض معامل منطقة الخروج عن التذبذبات عند الحدود.
+        </dd>
+        <dt>قد تُسحب أذونات الموقع في الخلفية</dt>
+        <dd>
+          يستطيع iOS وAndroid سحب إذن الموقع في الخلفية في أي وقت بعد تحديث نظام
+          التشغيل أو إعادة تشغيل الجهاز أو عند تغيير المستخدم لإعدادات التطبيق. بدون
+          الإذن، يتوقف Geofencing بصمت. في تعليمات الدراسة، ذكِّر المشاركين بإبقاء
+          الموقع في الخلفية مفعّلاً.
         </dd>
       </dl>
     </>

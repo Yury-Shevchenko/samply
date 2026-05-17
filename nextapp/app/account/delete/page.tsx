@@ -25,22 +25,27 @@ async function deleteAccountAction(formData: FormData) {
   const session = await auth();
   if (!session) redirect("/login");
 
+  const isResearcher = session.user.level >= 11;
+  const loginRedirect = isResearcher ? "/login" : "/participant/login";
+
   if (formData.get("confirm") !== "delete") {
     redirect("/account/delete?error=" + encodeURIComponent("Type 'delete' to confirm."));
   }
 
   await connectDB();
 
-  const projects = await Project.countDocuments({ creator: session.user.id });
-  if (projects > 0) {
-    redirect(
-      "/account/delete?error=" +
-        encodeURIComponent("Please delete all your studies before deleting your account."),
-    );
+  if (isResearcher) {
+    const projects = await Project.countDocuments({ creator: session.user.id });
+    if (projects > 0) {
+      redirect(
+        "/account/delete?error=" +
+          encodeURIComponent("Please delete all your studies before deleting your account."),
+      );
+    }
   }
 
   await User.deleteOne({ _id: session.user.id });
-  await signOut({ redirectTo: "/login" });
+  await signOut({ redirectTo: loginRedirect });
 }
 
 export default async function DeleteAccountPage({
@@ -51,11 +56,16 @@ export default async function DeleteAccountPage({
   const session = await auth();
   if (!session) redirect("/login");
 
+  const isResearcher = session.user.level >= 11;
+
   await connectDB();
-  const projects = await Project.find({ creator: session.user.id }, { name: 1, slug: 1 }).lean();
+  const projects = isResearcher
+    ? await Project.find({ creator: session.user.id }, { name: 1, slug: 1 }).lean()
+    : [];
   const { error } = await searchParams;
 
   const hasProjects = projects.length > 0;
+  const homeHref = isResearcher ? "/dashboard" : "/participant/home";
 
   return (
     <main
@@ -67,7 +77,7 @@ export default async function DeleteAccountPage({
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "3.2rem" }}>
           <a
-            href="/dashboard"
+            href={homeHref}
             className="font-[family-name:var(--font-display)] font-bold"
             style={{ fontSize: "2.2rem", color: "var(--ink)", textDecoration: "none", letterSpacing: "-0.02em" }}
           >
@@ -134,7 +144,7 @@ export default async function DeleteAccountPage({
                 </div>
 
                 <a
-                  href="/dashboard"
+                  href={homeHref}
                   style={{
                     display: "inline-flex",
                     alignItems: "center",

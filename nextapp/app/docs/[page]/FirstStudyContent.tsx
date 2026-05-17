@@ -325,6 +325,10 @@ export default function FirstStudyContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <FirstStudyContentFr />;
   if (locale === "es") return <FirstStudyContentEs />;
   if (locale === "pt") return <FirstStudyContentPt />;
+  if (locale === "ja") return <FirstStudyContentJa />;
+  if (locale === "ar") return <FirstStudyContentAr />;
+  if (locale === "pl") return <FirstStudyContentPl />;
+  if (locale === "tr") return <FirstStudyContentTr />;
   return <FirstStudyContentEn />;
 }
 
@@ -1721,6 +1725,690 @@ function FirstStudyContentPt() {
         <li>Estudo ativado (status alterado de Rascunho para Ativo).</li>
         <li>Link de acesso compartilhado com pelo menos um participante.</li>
         <li>Primeira notificação recebida e resposta de pesquisa confirmada.</li>
+      </ol>
+    </>
+  );
+}
+
+const FORM_FIELDS_JA = [
+  {
+    name: "研究名",
+    required: true,
+    body: "研究の名前です。参加者はこの名前をアプリと公開研究ページで見ます。",
+  },
+  {
+    name: "説明",
+    required: false,
+    body: "アプリと公開研究ページで参加者に表示される研究の短い概要です。",
+  },
+  {
+    name: "同意書",
+    required: false,
+    body: "参加者が「研究に参加する」をタップしたときに表示されます。人を対象とする研究の場合、目的、手順、リスク、データの取り扱い、撤回方法をカバーする必要があります。",
+  },
+  {
+    name: "登録後のメッセージ",
+    required: false,
+    body: "登録に成功した直後に表示されます。登録を確認し、最初の通知がいつ届くかなど、期待値を設定するために使用します。",
+  },
+  {
+    name: "完了メッセージ",
+    required: false,
+    body: "Samplyが参加者の調査回答送信を検出したときに表示されます。参加者をSamplyの完了URLにリダイレクトする場合に関連します。",
+  },
+];
+
+const WORKSPACE_SECTIONS_JA = [
+  {
+    title: "概要",
+    body: "研究のダッシュボード: 参加者数、通知統計、7日間の遵守率、最近のアクティビティ。ここで研究をアクティブ化することもできます。",
+  },
+  {
+    title: "参加者",
+    body: "登録されたすべての人 — 匿名のSamply ID、登録日、割り当てられたグループ（ある場合）、タイムゾーン、回答履歴。",
+  },
+  {
+    title: "スケジュール",
+    body: "この研究に関連するすべての通知スケジュール。ここでスケジュールを追加、表示、削除します。各スケジュールは参加者ごとの送信キューに展開されます。",
+  },
+  {
+    title: "データ",
+    body: "調査リンクを介して送信された回答記録。タイムスタンプと参加者IDが含まれます。",
+  },
+  {
+    title: "招待",
+    body: "参加リンクとQRコード。Webリンクをメールやランディングページにコピーするか、ディープリンクを使用して他のマテリアルに埋め込みます。",
+  },
+  {
+    title: "設定",
+    body: "研究名、説明、同意書、登録オプション、および高度な設定。",
+  },
+  {
+    title: "承認",
+    body: "研究の公開を申請します。研究が公開研究ページに表示される前に必要です。",
+  },
+  {
+    title: "Stream API",
+    body: "リアルタイムで参加者イベントを受信するためのwebhookを設定します。詳細はStream APIガイドを参照してください。",
+  },
+];
+
+function FirstStudyContentJa() {
+  return (
+    <>
+      {/* ── Create the study ─────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>ステップ1 — 研究を作成する</h2>
+      <p>
+        ダッシュボードで<strong>新規研究</strong>をクリックします。以下のフィールドを含むフォームが表示されます。
+        必須なのは<strong>研究名</strong>のみで、その他はすべて今入力するか、後で研究の設定タブで編集できます。
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>フィールド</th>
+            <th>必須</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          {FORM_FIELDS_JA.map((f) => (
+            <tr key={f.name}>
+              <td>{f.name}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: f.required ? "var(--coral)" : "var(--ink-40)" }}>
+                {f.required ? "はい" : "任意"}
+              </td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{f.body}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        <strong>研究を作成</strong>をクリックします。Samplyは研究を作成し、研究のワークスペースに案内します。
+      </p>
+
+      {/* ── The workspace ────────────────────────────────────────────────── */}
+      <h2>ステップ2 — ワークスペースを知る</h2>
+      <p>
+        研究のワークスペースには8つのタブがあり、研究ページ上部のナビゲーションからアクセスできます。
+      </p>
+
+      <dl>
+        {WORKSPACE_SECTIONS_JA.map((s) => (
+          <div key={s.title}>
+            <dt>{s.title}</dt>
+            <dd>{s.body}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* ── Activate ─────────────────────────────────────────────────────── */}
+      <h2>ステップ3 — 研究をアクティブ化する</h2>
+      <p>
+        新しい研究は<strong>下書き</strong>ステータスで開始されます。下書きモードでは、参加リンクのランディングページは
+        新規登録を拒否します — 参加者には「研究は利用できません」というメッセージが表示されます。
+      </p>
+      <p>
+        登録を開始するには: 研究の<strong>概要</strong>タブに移動し、<strong>研究をアクティブ化</strong>をクリックします。
+        ステータスが<strong>アクティブ</strong>に変わります。同じボタンをもう一度クリックすることで、いつでも登録を一時停止できます —
+        データを失うことなく研究は下書きモードに戻ります。
+      </p>
+
+      {/* ── Add a schedule ───────────────────────────────────────────────── */}
+      <h2>ステップ4 — 初めてのスケジュールを追加する</h2>
+      <p>
+        空の研究は何も送信しません。スケジュールが研究をアクティブな研究に変えるものです。
+        <strong>スケジュール</strong>タブに移動し、<strong>スケジュールを追加</strong>をクリックします。
+      </p>
+      <p>
+        最初のスケジュールを作成する前に、<a href="/docs/types">スケジュールの4つのタイプ</a>をお読みください —
+        研究デザインに適したタイプを選ぶことは、Samplyにおける他のどの個別の決定よりも重要です。
+        必要なタイプがわかったら、<a href="/docs/form">スケジュールの作成</a>がフィールドごとにフォームを案内します。
+      </p>
+
+      {/* ── Invite ───────────────────────────────────────────────────────── */}
+      <h2>ステップ5 — 参加者を招待する</h2>
+      <p>
+        <strong>招待</strong>に移動し、募集チャネルに適したリンクまたはQRコードをコピーします。
+        参加者はSamply Researchアプリがインストールされたデバイスでリンクをタップすると、すぐに登録されます。
+      </p>
+      <p>
+        コードとグループが参加フローとどのように連携するかを含む完全な詳細は、{" "}
+        <a href="/docs/invite">参加者を招待する</a>にあります。
+      </p>
+
+      {/* ── Advanced settings note ───────────────────────────────────────── */}
+      <h3>高度な設定</h3>
+      <p>
+        研究の<strong>設定</strong>タブには、基本的な研究では無視できる任意の機能も含まれています:
+        登録時に参加者にカスタムコードまたはグループを尋ねる、イベント依存デザイン、
+        ジオフェンシングトリガー、通知アクションボタン、webhookなどです。各機能はデフォルトで無効になっており、
+        高度な機能および追加機能のセクションで個別に文書化されています。
+      </p>
+
+      {/* ── Checklist ────────────────────────────────────────────────────── */}
+      <h3>初めての研究チェックリスト</h3>
+      <ol>
+        <li>名前付きで研究を作成。</li>
+        <li>同意書を入力。</li>
+        <li>少なくとも1つのスケジュールを追加。</li>
+        <li>研究をアクティブ化（ステータスを下書きからアクティブに変更）。</li>
+        <li>少なくとも1人の参加者と参加リンクを共有。</li>
+        <li>最初の通知を受信し、調査回答を確認。</li>
+      </ol>
+    </>
+  );
+}
+
+const FORM_FIELDS_TR = [
+  {
+    name: "Çalışma adı",
+    required: true,
+    body: "Çalışmanızın adı. Katılımcılar bu adı uygulamada ve genel çalışmalar sayfasında görür.",
+  },
+  {
+    name: "Açıklama",
+    required: false,
+    body: "Uygulamada ve genel çalışmalar sayfasında katılımcılara gösterilen çalışmanın kısa bir özeti.",
+  },
+  {
+    name: "Onam formu",
+    required: false,
+    body: "Katılımcılar «Çalışmaya katıl» seçeneğine dokunduğunda görüntülenir. İnsan deneklerle yapılan araştırmalarda çalışmanın amacını, prosedürlerini, risklerini, veri işlemeyi ve geri çekilme yöntemini kapsamalıdır.",
+  },
+  {
+    name: "Katılım sonrası mesaj",
+    required: false,
+    body: "Başarılı kayıttan hemen sonra gösterilir. Kayıt onayını vermek ve beklentileri belirlemek için kullanın — örneğin ilk bildirimin ne zaman geleceği.",
+  },
+  {
+    name: "Tamamlanma mesajı",
+    required: false,
+    body: "Samply, bir katılımcının anket yanıtı gönderdiğini algıladığında görüntülenir. Katılımcıları bir Samply tamamlanma URL'sine yönlendirdiğinizde geçerlidir.",
+  },
+];
+
+const WORKSPACE_SECTIONS_TR = [
+  {
+    title: "Genel bakış",
+    body: "Çalışma paneli: katılımcı sayısı, bildirim istatistikleri, 7 günlük uyum oranı ve son etkinlikler. Çalışmayı da buradan etkinleştirirsiniz.",
+  },
+  {
+    title: "Katılımcılar",
+    body: "Kayıtlı herkes — anonim Samply kimlikleri, kayıt tarihleri, atanmış grupları (varsa), saat dilimleri ve yanıt geçmişleri.",
+  },
+  {
+    title: "Program",
+    body: "Bu çalışmaya bağlı tüm bildirim programları. Programları buradan ekleyin, görüntüleyin ve silin. Her program katılımcı başına bir gönderim kuyruğuna genişler.",
+  },
+  {
+    title: "Veriler",
+    body: "Anket bağlantılarınız aracılığıyla gönderilen yanıt kayıtları, zaman damgaları ve katılımcı kimlikleriyle birlikte.",
+  },
+  {
+    title: "Davetler",
+    body: "Katılım bağlantılarınız ve QR kodunuz. E-posta veya açılış sayfası için web bağlantısını kopyalayın ya da diğer materyallere yerleştirmek için derin bağlantıyı kullanın.",
+  },
+  {
+    title: "Ayarlar",
+    body: "Çalışma adı, açıklama, onam formu, kayıt seçenekleri ve gelişmiş yapılandırma.",
+  },
+  {
+    title: "Onay",
+    body: "Çalışmanız için genel listeleme talep edin. Çalışmanın genel çalışmalar sayfasında görünmesi için gereklidir.",
+  },
+  {
+    title: "Stream API",
+    body: "Katılımcı olaylarını gerçek zamanlı almak için webhook'ları yapılandırın. Ayrıntılar için Stream API kılavuzuna bakın.",
+  },
+];
+
+function FirstStudyContentTr() {
+  return (
+    <>
+      {/* ── Create the study ─────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Adım 1 — Çalışmayı oluşturun</h2>
+      <p>
+        Panelden <strong>Yeni çalışma</strong> seçeneğine tıklayın. Aşağıdaki alanları içeren bir form göreceksiniz.
+        Yalnızca <strong>Çalışma adı</strong> zorunludur; geri kalan her şey şimdi doldurulabilir veya daha sonra çalışmanın Ayarlar sekmesinden düzenlenebilir.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Alan</th>
+            <th>Zorunlu</th>
+            <th>Açıklama</th>
+          </tr>
+        </thead>
+        <tbody>
+          {FORM_FIELDS_TR.map((f) => (
+            <tr key={f.name}>
+              <td>{f.name}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: f.required ? "var(--coral)" : "var(--ink-40)" }}>
+                {f.required ? "Evet" : "İsteğe bağlı"}
+              </td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{f.body}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        <strong>Çalışmayı oluştur</strong> seçeneğine tıklayın. Samply çalışmayı oluşturur ve sizi çalışmanın çalışma alanına yönlendirir.
+      </p>
+
+      {/* ── The workspace ────────────────────────────────────────────────── */}
+      <h2>Adım 2 — Çalışma alanını tanıyın</h2>
+      <p>
+        Çalışmanın çalışma alanı, çalışma sayfasının üstündeki gezinme menüsünden erişebileceğiniz sekiz sekmeye sahiptir.
+      </p>
+
+      <dl>
+        {WORKSPACE_SECTIONS_TR.map((s) => (
+          <div key={s.title}>
+            <dt>{s.title}</dt>
+            <dd>{s.body}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* ── Activate ─────────────────────────────────────────────────────── */}
+      <h2>Adım 3 — Çalışmayı etkinleştirin</h2>
+      <p>
+        Yeni bir çalışma <strong>taslak</strong> durumunda başlar. Taslak modunda katılım bağlantısının açılış sayfası yeni kayıtları reddeder
+        — katılımcılar «Çalışma kullanılabilir değil» mesajını görür.
+      </p>
+      <p>
+        Kayıtları başlatmak için: çalışmanın <strong>Genel bakış</strong> sekmesine gidin ve <strong>Çalışmayı etkinleştir</strong> seçeneğine tıklayın.
+        Durum <strong>Etkin</strong> olarak değişir. Aynı düğmeye tekrar tıklayarak kayıtları istediğiniz zaman duraklatabilirsiniz —
+        çalışma veri kaybı olmadan taslak moduna geri döner.
+      </p>
+
+      {/* ── Add a schedule ───────────────────────────────────────────────── */}
+      <h2>Adım 4 — İlk programınızı ekleyin</h2>
+      <p>
+        Boş bir çalışma hiçbir şey göndermez. Çalışmayı etkin bir çalışmaya dönüştüren şey programdır.
+        <strong>Program</strong> sekmesine gidin ve <strong>Program ekle</strong> seçeneğine tıklayın.
+      </p>
+      <p>
+        İlk programınızı oluşturmadan önce <a href="/docs/types">Programın dört türü</a> sayfasını okuyun —
+        araştırma tasarımınıza uygun türü seçmek, Samply'da vereceğiniz diğer tüm tekil kararlardan daha önemlidir.
+        Hangi türe ihtiyacınız olduğunu bildiğinizde, <a href="/docs/form">Program oluşturma</a> sayfası size formu alan alan tanıtacaktır.
+      </p>
+
+      {/* ── Invite ───────────────────────────────────────────────────────── */}
+      <h2>Adım 5 — Katılımcıları davet edin</h2>
+      <p>
+        <strong>Davetler</strong> sekmesine gidin ve işe alım kanalınıza uygun bağlantı veya QR kodu kopyalayın.
+        Katılımcılar bağlantıya Samply Research uygulamasının yüklü olduğu bir cihazda dokunduğunda anında kaydedilir.
+      </p>
+      <p>
+        Kodların ve grupların katılım akışıyla nasıl etkileşime girdiği dahil olmak üzere ayrıntıların tamamı{" "}
+        <a href="/docs/invite">Katılımcıları davet etme</a> sayfasındadır.
+      </p>
+
+      {/* ── Advanced settings note ───────────────────────────────────────── */}
+      <h3>Gelişmiş ayarlar</h3>
+      <p>
+        Çalışmanın <strong>Ayarlar</strong> sekmesi, temel bir çalışma için göz ardı edebileceğiniz isteğe bağlı özellikleri de içerir:
+        kayıt sırasında katılımcılardan özel bir kod veya grup istemek, olay bağımlı tasarımlar,
+        geofencing tetikleyicileri, bildirim eylem düğmeleri ve webhook'lar gibi. Her özellik varsayılan olarak devre dışıdır ve
+        gelişmiş özellikler ve ek özellikler bölümlerinde ayrı ayrı belgelenir.
+      </p>
+
+      {/* ── Checklist ────────────────────────────────────────────────────── */}
+      <h3>İlk çalışma kontrol listesi</h3>
+      <ol>
+        <li>Adlandırılmış bir çalışma oluşturun.</li>
+        <li>Bir onam formu girin.</li>
+        <li>En az bir program ekleyin.</li>
+        <li>Çalışmayı etkinleştirin (durumu taslaktan etkine değiştirin).</li>
+        <li>Katılım bağlantısını en az bir katılımcıyla paylaşın.</li>
+        <li>İlk bildirimi alın ve anket yanıtını doğrulayın.</li>
+      </ol>
+    </>
+  );
+}
+
+const FORM_FIELDS_PL = [
+  {
+    name: "Nazwa badania",
+    required: true,
+    body: "Nazwa Twojego badania. Uczestnicy widzą ją w aplikacji i na publicznej stronie badań.",
+  },
+  {
+    name: "Opis",
+    required: false,
+    body: "Krótkie streszczenie badania pokazywane uczestnikom w aplikacji i na publicznej stronie badań.",
+  },
+  {
+    name: "Formularz zgody",
+    required: false,
+    body: "Wyświetla się, gdy uczestnik dotknie «Dołącz do badania». W badaniach z udziałem ludzi powinien obejmować cel badania, procedury, ryzyka, przetwarzanie danych oraz sposób wycofania.",
+  },
+  {
+    name: "Wiadomość po dołączeniu",
+    required: false,
+    body: "Pokazywana zaraz po pomyślnej rejestracji. Użyj jej, aby potwierdzić zapisanie i ustawić oczekiwania — na przykład kiedy nadejdzie pierwsze powiadomienie.",
+  },
+  {
+    name: "Wiadomość o ukończeniu",
+    required: false,
+    body: "Wyświetlana, gdy Samply wykryje, że uczestnik przesłał odpowiedź ankiety. Ma zastosowanie, gdy kierujesz uczestników na adres URL ukończenia Samply.",
+  },
+];
+
+const WORKSPACE_SECTIONS_PL = [
+  {
+    title: "Przegląd",
+    body: "Panel badania: liczba uczestników, statystyki powiadomień, 7-dniowy wskaźnik zgodności i ostatnia aktywność. Stąd również aktywujesz badanie.",
+  },
+  {
+    title: "Uczestnicy",
+    body: "Wszyscy, którzy się zapisali — anonimowe identyfikatory Samply, daty rejestracji, przypisane grupy (jeśli istnieją), strefy czasowe i historia odpowiedzi.",
+  },
+  {
+    title: "Harmonogram",
+    body: "Wszystkie harmonogramy powiadomień przypisane do tego badania. Dodawaj, przeglądaj i usuwaj harmonogramy stąd. Każdy harmonogram rozwija się w kolejkę wysyłek na uczestnika.",
+  },
+  {
+    title: "Dane",
+    body: "Zapisy odpowiedzi przesłanych za pośrednictwem Twoich linków ankietowych, wraz ze znacznikami czasu i identyfikatorami uczestników.",
+  },
+  {
+    title: "Zaproszenia",
+    body: "Twoje linki dołączania i kod QR. Skopiuj link internetowy dla wiadomości e-mail lub strony docelowej albo użyj linku głębokiego do osadzenia w innych materiałach.",
+  },
+  {
+    title: "Ustawienia",
+    body: "Nazwa badania, opis, formularz zgody, opcje rejestracji i konfiguracja zaawansowana.",
+  },
+  {
+    title: "Zatwierdzenie",
+    body: "Poproś o publiczne wystawienie swojego badania. Wymagane, aby badanie pojawiło się na publicznej stronie badań.",
+  },
+  {
+    title: "Stream API",
+    body: "Skonfiguruj webhooki, aby otrzymywać zdarzenia uczestników w czasie rzeczywistym. Szczegóły znajdziesz w przewodniku Stream API.",
+  },
+];
+
+function FirstStudyContentPl() {
+  return (
+    <>
+      {/* ── Create the study ─────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Krok 1 — Utwórz badanie</h2>
+      <p>
+        W panelu kliknij <strong>Nowe badanie</strong>. Zobaczysz formularz z poniższymi polami.
+        Wymagana jest tylko <strong>Nazwa badania</strong>; wszystko inne możesz wypełnić teraz lub edytować później z zakładki Ustawienia badania.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Pole</th>
+            <th>Wymagane</th>
+            <th>Opis</th>
+          </tr>
+        </thead>
+        <tbody>
+          {FORM_FIELDS_PL.map((f) => (
+            <tr key={f.name}>
+              <td>{f.name}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: f.required ? "var(--coral)" : "var(--ink-40)" }}>
+                {f.required ? "Tak" : "Opcjonalne"}
+              </td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{f.body}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        Kliknij <strong>Utwórz badanie</strong>. Samply utworzy badanie i przeniesie Cię do jego obszaru roboczego.
+      </p>
+
+      {/* ── The workspace ────────────────────────────────────────────────── */}
+      <h2>Krok 2 — Poznaj obszar roboczy</h2>
+      <p>
+        Obszar roboczy badania ma osiem zakładek, do których docierasz przez menu nawigacyjne u góry strony badania.
+      </p>
+
+      <dl>
+        {WORKSPACE_SECTIONS_PL.map((s) => (
+          <div key={s.title}>
+            <dt>{s.title}</dt>
+            <dd>{s.body}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* ── Activate ─────────────────────────────────────────────────────── */}
+      <h2>Krok 3 — Aktywuj badanie</h2>
+      <p>
+        Nowe badanie rozpoczyna się w stanie <strong>szkicu</strong>. W trybie szkicu strona docelowa linku dołączania odrzuca nowe rejestracje
+        — uczestnicy zobaczą komunikat «Badanie niedostępne».
+      </p>
+      <p>
+        Aby rozpocząć rejestracje: przejdź do zakładki <strong>Przegląd</strong> badania i kliknij <strong>Aktywuj badanie</strong>.
+        Status zmieni się na <strong>Aktywny</strong>. Możesz wstrzymać rejestracje w dowolnym momencie, klikając ten sam przycisk ponownie —
+        badanie powróci do trybu szkicu bez utraty danych.
+      </p>
+
+      {/* ── Add a schedule ───────────────────────────────────────────────── */}
+      <h2>Krok 4 — Dodaj swój pierwszy harmonogram</h2>
+      <p>
+        Puste badanie niczego nie wysyła. To harmonogram zmienia badanie w działające badanie.
+        Przejdź do zakładki <strong>Harmonogram</strong> i kliknij <strong>Dodaj harmonogram</strong>.
+      </p>
+      <p>
+        Przed utworzeniem pierwszego harmonogramu przeczytaj stronę <a href="/docs/types">Cztery typy harmonogramów</a> —
+        wybór typu pasującego do Twojego projektu badawczego jest ważniejszy niż każda inna pojedyncza decyzja w Samply.
+        Gdy już wiesz, jakiego typu potrzebujesz, strona <a href="/docs/form">Tworzenie harmonogramu</a> przeprowadzi Cię przez formularz pole po polu.
+      </p>
+
+      {/* ── Invite ───────────────────────────────────────────────────────── */}
+      <h2>Krok 5 — Zaproś uczestników</h2>
+      <p>
+        Przejdź do zakładki <strong>Zaproszenia</strong> i skopiuj link lub kod QR pasujący do Twojego kanału rekrutacji.
+        Uczestnicy są zapisywani natychmiast, gdy dotkną linku na urządzeniu z zainstalowaną aplikacją Samply Research.
+      </p>
+      <p>
+        Pełne szczegóły, w tym jak kody i grupy współdziałają z procesem dołączania, znajdziesz na stronie{" "}
+        <a href="/docs/invite">Zapraszanie uczestników</a>.
+      </p>
+
+      {/* ── Advanced settings note ───────────────────────────────────────── */}
+      <h3>Ustawienia zaawansowane</h3>
+      <p>
+        Zakładka <strong>Ustawienia</strong> badania zawiera również opcjonalne funkcje, które możesz zignorować w podstawowym badaniu:
+        żądanie niestandardowego kodu lub grupy od uczestników podczas rejestracji, projekty zależne od zdarzeń,
+        wyzwalacze geofencingu, przyciski akcji powiadomień i webhooki. Każda funkcja jest domyślnie wyłączona i
+        jest udokumentowana osobno w sekcjach funkcji zaawansowanych i dodatkowych.
+      </p>
+
+      {/* ── Checklist ────────────────────────────────────────────────────── */}
+      <h3>Lista kontrolna pierwszego badania</h3>
+      <ol>
+        <li>Utwórz nazwane badanie.</li>
+        <li>Wprowadź formularz zgody.</li>
+        <li>Dodaj co najmniej jeden harmonogram.</li>
+        <li>Aktywuj badanie (zmień status ze szkicu na aktywny).</li>
+        <li>Udostępnij link dołączania co najmniej jednemu uczestnikowi.</li>
+        <li>Odbierz pierwsze powiadomienie i potwierdź odpowiedź w ankiecie.</li>
+      </ol>
+    </>
+  );
+}
+
+const FORM_FIELDS_AR = [
+  {
+    name: "اسم الدراسة",
+    required: true,
+    body: "اسم دراستك. يراه المشاركون في التطبيق وفي صفحة الدراسات العامة.",
+  },
+  {
+    name: "الوصف",
+    required: false,
+    body: "ملخص قصير للدراسة يُعرض على المشاركين في التطبيق وفي صفحة الدراسات العامة.",
+  },
+  {
+    name: "نموذج الموافقة",
+    required: false,
+    body: "يظهر عندما ينقر المشارك على «الانضمام إلى الدراسة». في الدراسات التي تشمل البشر ينبغي أن يغطي هدف الدراسة والإجراءات والمخاطر ومعالجة البيانات وكيفية الانسحاب.",
+  },
+  {
+    name: "رسالة ما بعد الانضمام",
+    required: false,
+    body: "تُعرض فور التسجيل الناجح. استخدمها لتأكيد التسجيل ولتحديد التوقعات — على سبيل المثال متى يصل أول إشعار.",
+  },
+  {
+    name: "رسالة الإكمال",
+    required: false,
+    body: "تُعرض عندما يكتشف Samply أن المشارك قد أرسل إجابة الاستطلاع. تنطبق عندما توجّه المشاركين إلى رابط إكمال Samply.",
+  },
+];
+
+const WORKSPACE_SECTIONS_AR = [
+  {
+    title: "نظرة عامة",
+    body: "لوحة الدراسة: عدد المشاركين، إحصاءات الإشعارات، مؤشر الالتزام لمدة 7 أيام، وأحدث النشاطات. من هنا أيضًا تفعّل الدراسة.",
+  },
+  {
+    title: "المشاركون",
+    body: "كل من سجّل — معرّفات Samply مجهولة الهوية، وتواريخ التسجيل، والمجموعات المخصصة (إن وُجدت)، والمناطق الزمنية، وسجل الإجابات.",
+  },
+  {
+    title: "الجدول",
+    body: "جميع جداول الإشعارات المرتبطة بهذه الدراسة. أضف الجداول واستعرضها واحذفها من هنا. يتوسّع كل جدول إلى طابور إرسال لكل مشارك.",
+  },
+  {
+    title: "البيانات",
+    body: "سجلات الإجابات المُرسلة عبر روابط الاستطلاع الخاصة بك، مع الطوابع الزمنية ومعرّفات المشاركين.",
+  },
+  {
+    title: "الدعوات",
+    body: "روابط الانضمام ورمز QR. انسخ الرابط الإلكتروني لرسائل البريد الإلكتروني أو لصفحة الهبوط، أو استخدم الرابط العميق لإدراجه في مواد أخرى.",
+  },
+  {
+    title: "الإعدادات",
+    body: "اسم الدراسة، الوصف، نموذج الموافقة، خيارات التسجيل، والإعدادات المتقدمة.",
+  },
+  {
+    title: "الموافقة",
+    body: "اطلب إدراج دراستك علنًا. مطلوب لكي تظهر الدراسة في صفحة الدراسات العامة.",
+  },
+  {
+    title: "Stream API",
+    body: "اضبط الـ webhooks لاستقبال أحداث المشاركين في الوقت الفعلي. تجد التفاصيل في دليل Stream API.",
+  },
+];
+
+function FirstStudyContentAr() {
+  return (
+    <>
+      {/* ── Create the study ─────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>الخطوة 1 — إنشاء الدراسة</h2>
+      <p>
+        من لوحة التحكم، انقر على <strong>دراسة جديدة</strong>. سترى نموذجًا يحتوي على الحقول التالية.
+        المطلوب فقط هو <strong>اسم الدراسة</strong>؛ ويمكنك ملء كل شيء آخر الآن أو تعديله لاحقًا من علامة تبويب «الإعدادات».
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>الحقل</th>
+            <th>إلزامي</th>
+            <th>الوصف</th>
+          </tr>
+        </thead>
+        <tbody>
+          {FORM_FIELDS_AR.map((f) => (
+            <tr key={f.name}>
+              <td>{f.name}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: f.required ? "var(--coral)" : "var(--ink-40)" }}>
+                {f.required ? "نعم" : "اختياري"}
+              </td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{f.body}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        انقر على <strong>إنشاء الدراسة</strong>. سيُنشئ Samply الدراسة وينقلك إلى مساحة العمل الخاصة بها.
+      </p>
+
+      {/* ── The workspace ────────────────────────────────────────────────── */}
+      <h2>الخطوة 2 — استكشف مساحة العمل</h2>
+      <p>
+        تحتوي مساحة عمل الدراسة على ثماني علامات تبويب يمكنك الوصول إليها من قائمة التنقل أعلى صفحة الدراسة.
+      </p>
+
+      <dl>
+        {WORKSPACE_SECTIONS_AR.map((s) => (
+          <div key={s.title}>
+            <dt>{s.title}</dt>
+            <dd>{s.body}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {/* ── Activate ─────────────────────────────────────────────────────── */}
+      <h2>الخطوة 3 — تفعيل الدراسة</h2>
+      <p>
+        تبدأ الدراسة الجديدة في حالة <strong>مسودة</strong>. في وضع المسودة، ترفض صفحة هبوط رابط الانضمام عمليات التسجيل الجديدة
+        — وسيظهر للمشاركين رسالة «الدراسة غير متاحة».
+      </p>
+      <p>
+        لبدء قبول التسجيلات: انتقل إلى علامة تبويب <strong>نظرة عامة</strong> في الدراسة وانقر على <strong>تفعيل الدراسة</strong>.
+        ستتغيّر الحالة إلى <strong>نشطة</strong>. يمكنك إيقاف التسجيلات مؤقتًا في أي وقت بالنقر على الزر نفسه مرة أخرى —
+        وتعود الدراسة إلى وضع المسودة دون فقدان البيانات.
+      </p>
+
+      {/* ── Add a schedule ───────────────────────────────────────────────── */}
+      <h2>الخطوة 4 — أضف جدولك الأول</h2>
+      <p>
+        لا ترسل الدراسة الفارغة أي شيء. الجدول هو ما يحوّل الدراسة إلى دراسة فعّالة.
+        انتقل إلى علامة تبويب <strong>الجدول</strong> وانقر على <strong>إضافة جدول</strong>.
+      </p>
+      <p>
+        قبل إنشاء جدولك الأول، اقرأ صفحة <a href="/docs/types">الأنواع الأربعة للجداول</a> —
+        فاختيار النوع المناسب لتصميمك البحثي أهم من أي قرار آخر في Samply.
+        وعندما تعرف النوع الذي تحتاجه، ترشدك صفحة <a href="/docs/form">إنشاء جدول</a> عبر النموذج حقلًا حقلًا.
+      </p>
+
+      {/* ── Invite ───────────────────────────────────────────────────────── */}
+      <h2>الخطوة 5 — ادعُ المشاركين</h2>
+      <p>
+        انتقل إلى علامة تبويب <strong>الدعوات</strong> وانسخ الرابط أو رمز QR المناسب لقناة التجنيد لديك.
+        يُسجَّل المشاركون فور النقر على الرابط في جهاز مثبَّت عليه تطبيق Samply Research.
+      </p>
+      <p>
+        لمزيد من التفاصيل الكاملة، بما في ذلك كيفية تفاعل الرموز والمجموعات مع عملية الانضمام، راجع صفحة{" "}
+        <a href="/docs/invite">دعوة المشاركين</a>.
+      </p>
+
+      {/* ── Advanced settings note ───────────────────────────────────────── */}
+      <h3>الإعدادات المتقدمة</h3>
+      <p>
+        تتضمّن علامة تبويب <strong>الإعدادات</strong> أيضًا ميزات اختيارية يمكنك تجاهلها في دراسة أساسية:
+        طلب رمز مخصص أو مجموعة من المشاركين أثناء التسجيل، والتصاميم المعتمدة على الأحداث،
+        ومحفّزات Geofencing، وأزرار إجراءات الإشعارات، والـ webhooks. كل ميزة معطّلة افتراضيًا
+        وموثّقة بشكل منفصل في أقسام الميزات المتقدمة والإضافية.
+      </p>
+
+      {/* ── Checklist ────────────────────────────────────────────────────── */}
+      <h3>قائمة التحقق للدراسة الأولى</h3>
+      <ol>
+        <li>أنشئ دراسة بعنوان.</li>
+        <li>أدخل نموذج الموافقة.</li>
+        <li>أضف جدولًا واحدًا على الأقل.</li>
+        <li>فعّل الدراسة (انقل الحالة من مسودة إلى نشطة).</li>
+        <li>شارك رابط الانضمام مع مشارك واحد على الأقل.</li>
+        <li>استقبل أول إشعار وأكّد إجابة الاستطلاع.</li>
       </ol>
     </>
   );

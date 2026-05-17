@@ -318,6 +318,10 @@ export default function GroupsContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <GroupsContentFr />;
   if (locale === "es") return <GroupsContentEs />;
   if (locale === "pt") return <GroupsContentPt />;
+  if (locale === "ja") return <GroupsContentJa />;
+  if (locale === "ar") return <GroupsContentAr />;
+  if (locale === "pl") return <GroupsContentPl />;
+  if (locale === "tr") return <GroupsContentTr />;
   return <GroupsContentEn />;
 }
 
@@ -988,6 +992,406 @@ function GroupsContentPt() {
           externo (IDs de registro do REDCap, IDs institucionais, códigos pré-atribuídos). Os
           códigos são identificadores por pessoa, não mecanismos de agrupamento. Um participante
           pode ter tanto um código quanto um grupo.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GroupsContentJa() {
+  return (
+    <>
+      <p>
+        グループとは、同期して通知を受け取る、名前付きの参加者のサブセットです。
+        スケジュールがグループを対象にすると、Samply は同じ瞬間にすべてのメンバーへ通知を送信します
+        — <strong>連動デザイン</strong>です。これにより、グループは二者研究（カップル、仲間）、
+        チーム研究、またはグループ内の同期が不可欠な任意のプロトコルに適しています。各参加者は
+        最大で一つのグループに属します。
+      </p>
+
+      {/* ── Creating groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>グループを作成する</h2>
+      <p>
+        グループはスケジュール設定の前に研究者が作成する必要があります。研究にアクセスし、
+        <strong>参加者</strong>タブを開き、<strong>グループ管理</strong>をクリックしてください。
+        グループ名を入力し、リストから参加者を選択します — まだどのグループにも所属していない
+        参加者のみが表示されます。<strong>グループ作成</strong>をクリックすると、選択したすべての
+        参加者が一度に割り当てられます。
+      </p>
+      <p>
+        Samply は各グループに対して短い <strong>ID</strong> を自動生成します。この ID は
+        URL プレースホルダー <code>%GROUP_ID%</code> およびスケジュールされたキューで使用されます。
+        グループ名はダッシュボードの研究者にのみ表示され、参加者には決して表示されません。
+      </p>
+
+      {/* ── Yoked timing ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>連動タイミング</h2>
+      <p>
+        グループのすべてのメンバーは、同じ送信時刻に同じ通知を受け取ります。Samply は共有された
+        <em>送信予定</em>タイムスタンプでグループごとに 1 行のキューを書き込み、すべてのメンバーに
+        同時に配信します。グループ送信内でメンバーごとのオフセットはありません。
+      </p>
+      <p>
+        個人スケジュール（登録後 N 日目）の場合、Samply は<em>最も最近登録された</em>グループメンバーの
+        参加日を共有の基準点として使用します。これは、個別にいつ参加したかに関わらず、すべての
+        メンバーが同じ 1 日目を共有することを意味します — これは、グループが単一の参照日からプロトコルを
+        一緒に進めることを望むコホートデザインに対して意図的なものです。各参加者に独自の個人的な
+        タイムラインが必要な場合は、グループとしてではなく個別に対象とします。
+      </p>
+
+      {/* ── Targeting groups in schedules ─────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>スケジュールでグループを対象にする</h2>
+      <p>
+        スケジュールフォームのステップ 2（参加者）で、対象者として<strong>グループ</strong>を選択し、
+        対象とするグループを選択します。<strong>通知をスケジュール</strong>をクリックした時点で
+        選択したグループに割り当てられている参加者のみが、そのスケジュールからの送信を受け取ります。
+        後からグループに参加した参加者は、その後の送信に含まれます — グループのメンバーシップは
+        各送信時刻ごとに再評価されます。
+      </p>
+
+      {/* ── Deleting groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>グループを削除する</h2>
+      <p>
+        グループタブのグループ行にある<strong>削除</strong>をクリックしてください。これにより、
+        すべてのメンバーからグループの割り当てがクリアされます — 参加者は研究に残り、
+        グループ対象でない通知を引き続き受け取ります。彼らは新しいグループに追加される資格を
+        得ます。
+      </p>
+      <p>
+        グループを削除すると、すべてのメンバーからグループの割り当てが削除されます。そのグループを
+        対象とした保留中の通知は配信されません — 送信時刻には参加者はもうそのグループのメンバーでは
+        ないため、スキップされます。
+      </p>
+
+      {/* ── GROUP_ID placeholder ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>調査ツールにグループを渡す</h2>
+      <p>
+        通知のウェブリンクに <code>%GROUP_ID%</code> を追加すると、各参加者のグループが
+        調査 URL に自動的に含まれます。Samply は送信時に 4 文字のグループ ID を置換します。
+        参加者にグループがない場合、<code>%GROUP_ID%</code> は置換されないまま残ります —
+        あなたの調査ツールはリテラル文字列を受け取るので、すべての参加者にグループメンバーシップが
+        保証されていない場合は、調査ロジックでこれを処理してください。
+      </p>
+      <p>
+        利用可能なトークンの完全なリストと置換の仕組みについては、
+        <a href='/docs/placeholders'>URL プレースホルダー</a>を参照してください。
+      </p>
+
+      {/* ── Groups vs participant codes ────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>グループ対参加者コード</h2>
+      <dl>
+        <dt>グループを使う場合</dt>
+        <dd>
+          コホートへの連動した同期送信を行いたい場合、または異なるサブセットを異なる通知
+          スケジュールにルーティングする必要がある場合。グループはスケジュールフォームの
+          一級要素であり、誰がどの通知を受け取るかを決定します。
+        </dd>
+        <dt>参加者コードを使う場合</dt>
+        <dd>
+          Samply の参加者を外部システム（REDCap レコード ID、機関 ID、事前割り当てコード）の
+          レコードと一致させる必要がある場合。コードは個人ごとの識別子であり、グループ化の
+          メカニズムではありません。参加者はコードとグループの両方を持つことができます。
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GroupsContentTr() {
+  return (
+    <>
+      <p>
+        Grup, bildirimleri eş zamanlı olarak alan, adlandırılmış bir katılımcı alt kümesidir.
+        Bir program bir grubu hedeflediğinde, Samply bildirimi her üyeye aynı anda gönderir —
+        bir <strong>eşleştirilmiş tasarım</strong>. Bu, grupları diyadik çalışmalar için
+        (çiftler, akranlar), takım araştırması veya grup içi senkronizasyonun şart olduğu
+        her protokol için uygun kılar. Her katılımcı en fazla bir gruba aittir.
+      </p>
+
+      {/* ── Creating groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Grup oluşturma</h2>
+      <p>
+        Gruplar, programlamadan önce araştırmacı tarafından oluşturulmalıdır. Çalışmanıza gidin,
+        <strong>Katılımcılar</strong> sekmesini açın ve <strong>Grupları yönet</strong> seçeneğine
+        tıklayın. Bir grup adı girin ve listeden katılımcıları seçin — yalnızca henüz bir gruba
+        atanmamış katılımcılar görünür. Seçilen tüm katılımcıları aynı anda atamak için
+        <strong>Grup oluştur</strong> seçeneğine tıklayın.
+      </p>
+      <p>
+        Samply her grup için otomatik olarak kısa bir <strong>ID</strong> üretir. Bu ID,
+        <code>%GROUP_ID%</code> URL yer tutucusunda ve programlanmış kuyrukta kullanılır.
+        Ad yalnızca panelde araştırmacılar için görünürdür; katılımcılar bunu asla görmez.
+      </p>
+
+      {/* ── Yoked timing ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Eşleştirilmiş zamanlama</h2>
+      <p>
+        Bir grubun tüm üyeleri aynı bildirimi aynı tetikleme zamanında alır. Samply, paylaşılan bir
+        <em>Programlanan zaman</em> zaman damgasıyla grup başına tek bir kuyruk satırı yazar ve
+        bunu her üyeye eş zamanlı olarak iletir. Bir grup gönderimi içinde üye başına ofset yoktur.
+      </p>
+      <p>
+        Kişisel programlar için (kayıttan sonraki N. Gün), Samply <em>en son kaydolan</em> grup
+        üyesinin katılım tarihini paylaşılan referans noktası olarak kullanır. Bu, bireysel olarak
+        ne zaman katıldıklarına bakılmaksızın her üyenin aynı 1. Günü paylaştığı anlamına gelir —
+        bu, grubun tek bir referans tarihinden itibaren protokolde birlikte ilerlemesini istediğiniz
+        kohort tasarımları için kasıtlıdır. Her katılımcının kendi kişisel zaman çizelgesinde olması
+        gerekiyorsa, onları grup olarak değil bireysel olarak hedefleyin.
+      </p>
+
+      {/* ── Targeting groups in schedules ─────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Bir programda grupları hedefleme</h2>
+      <p>
+        Program formunun 2. Adımında (Katılımcılar) kitle olarak <strong>Gruplar</strong>ı seçin
+        ve hangi grup veya grupları hedefleyeceğinizi belirleyin. Yalnızca
+        <strong>Bildirimleri programla</strong> seçeneğine tıkladığınız anda seçilen grup(lar)a
+        atanmış olan katılımcılar bu programdan gönderim alır. Daha sonra gruba katılan katılımcılar
+        sonraki gönderimlere dahil edilir — grup üyeliği her tetikleme zamanında yeniden değerlendirilir.
+      </p>
+
+      {/* ── Deleting groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Bir grubu silme</h2>
+      <p>
+        Gruplar sekmesindeki grup satırında <strong>Sil</strong> seçeneğine tıklayın. Bu, her üyeden
+        grup atamasını temizler — katılımcılar çalışmada kalır ve gruba hedeflenmeyen tüm bildirimleri
+        almaya devam eder. Yeni bir gruba eklenmeye uygun hale gelirler.
+      </p>
+      <p>
+        Bir grubu silmek, her üyeden grup atamasını kaldırır. O gruba hedeflenen bekleyen bildirimler
+        iletilmez — tetikleme zamanında katılımcılar artık grubun üyesi olmadığından atlanırlar.
+      </p>
+
+      {/* ── GROUP_ID placeholder ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Grubu anket aracınıza aktarma</h2>
+      <p>
+        Her katılımcının grubunu otomatik olarak anket URL'sine dahil etmek için bildirim Web
+        Bağlantınıza <code>%GROUP_ID%</code> ekleyin. Samply gönderim sırasında dört karakterli
+        grup ID'sini yerine koyar. Bir katılımcının grubu yoksa, <code>%GROUP_ID%</code>
+        değiştirilmeden bırakılır — anket aracınız tam metni alır, bu yüzden grup üyeliği tüm
+        katılımcılar için garanti edilmiyorsa bunu anket mantığınızda işleyin.
+      </p>
+      <p>
+        Mevcut tokenların tam listesi ve değiştirme işleminin nasıl çalıştığı için
+        <a href="/docs/placeholders">URL yer tutucuları</a> sayfasına bakın.
+      </p>
+
+      {/* ── Groups vs participant codes ────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Gruplar ile katılımcı kodları karşılaştırması</h2>
+      <dl>
+        <dt>Grupları şu durumda kullanın</dt>
+        <dd>
+          Bir kohorta eşleştirilmiş, senkronize gönderimler istediğinizde veya farklı alt kümeleri
+          farklı bildirim programlarına yönlendirmeniz gerektiğinde. Gruplar program formunda
+          birinci sınıf öğelerdir ve hangi bildirimleri kimin alacağını belirler.
+        </dd>
+        <dt>Katılımcı kodlarını şu durumda kullanın</dt>
+        <dd>
+          Samply katılımcılarını harici bir sistemdeki kayıtlarla (REDCap kayıt ID'leri, kurumsal
+          ID'ler, önceden atanmış kodlar) eşleştirmeniz gerektiğinde. Kodlar, gruplama mekanizmaları
+          değil, kişi başına tanımlayıcılardır. Bir katılımcı hem bir koda hem de bir gruba sahip olabilir.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GroupsContentPl() {
+  return (
+    <>
+      <p>
+        Grupa to nazwany podzbiór uczestników, którzy otrzymują powiadomienia synchronicznie.
+        Gdy harmonogram celuje w grupę, Samply wysyła powiadomienie do każdego członka w tym
+        samym momencie — projekt <strong>sparowany</strong>. To czyni grupy odpowiednimi dla
+        badań diadycznych (pary, rówieśnicy), badań zespołowych lub każdego protokołu,
+        w którym synchronizacja wewnątrz grupy jest niezbędna. Każdy uczestnik należy do
+        co najwyżej jednej grupy.
+      </p>
+
+      {/* ── Creating groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Tworzenie grup</h2>
+      <p>
+        Grupy muszą zostać utworzone przez badacza przed planowaniem. Przejdź do swojego badania,
+        otwórz zakładkę <strong>Uczestnicy</strong> i kliknij <strong>Zarządzaj grupami</strong>.
+        Wpisz nazwę grupy i wybierz uczestników z listy — wyświetlani są tylko uczestnicy
+        jeszcze nieprzypisani do żadnej grupy. Kliknij <strong>Utwórz grupę</strong>, aby
+        przypisać wszystkich wybranych uczestników jednocześnie.
+      </p>
+      <p>
+        Samply automatycznie generuje krótki <strong>ID</strong> dla każdej grupy. Ten ID jest
+        używany w symbolu zastępczym URL <code>%GROUP_ID%</code> oraz w kolejce zaplanowanych
+        wysyłek. Nazwa jest widoczna tylko w panelu dla badaczy; uczestnicy nigdy jej nie widzą.
+      </p>
+
+      {/* ── Yoked timing ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Synchroniczne (sparowane) czasy</h2>
+      <p>
+        Wszyscy członkowie grupy otrzymują to samo powiadomienie w tym samym czasie wyzwolenia.
+        Samply zapisuje jeden wiersz kolejki na grupę ze wspólnym znacznikiem <em>Czas planowany</em>
+        i dostarcza go każdemu członkowi synchronicznie. Wewnątrz jednej wysyłki grupowej nie ma
+        przesunięć dla poszczególnych członków.
+      </p>
+      <p>
+        Dla harmonogramów osobistych (dzień N po rejestracji) Samply używa daty rejestracji
+        <em> ostatnio zarejestrowanego</em> członka grupy jako wspólnego punktu odniesienia.
+        Oznacza to, że każdy członek dzieli ten sam dzień 1, niezależnie od tego, kiedy
+        indywidualnie dołączył — jest to celowe rozwiązanie dla projektów kohortowych, w których
+        chcesz, aby grupa przeszła przez protokół razem od jednej wspólnej daty odniesienia.
+        Jeśli każdy uczestnik potrzebuje własnej osobistej osi czasu, celuj w nich indywidualnie,
+        a nie jako grupę.
+      </p>
+
+      {/* ── Targeting groups in schedules ─────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Wybieranie grup w harmonogramie</h2>
+      <p>
+        W kroku 2 formularza harmonogramu (Uczestnicy) wybierz <strong>Grupy</strong> jako
+        odbiorców i określ, którą grupę lub grupy chcesz wybrać. Tylko uczestnicy przypisani
+        do wybranej grupy (grup) w momencie kliknięcia <strong>Zaplanuj powiadomienia</strong>
+        otrzymają wysyłki z tego harmonogramu. Uczestnicy dodawani do grupy później są
+        uwzględniani w kolejnych wysyłkach — przynależność do grupy jest ponownie oceniana
+        przy każdym wyzwoleniu.
+      </p>
+
+      {/* ── Deleting groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Usuwanie grupy</h2>
+      <p>
+        W wierszu grupy w zakładce Grupy kliknij <strong>Usuń</strong>. Czyści to przypisanie
+        do grupy u każdego członka — uczestnicy pozostają w badaniu i nadal otrzymują wszystkie
+        powiadomienia, które nie są kierowane do grupy. Stają się dostępni do dodania do nowej grupy.
+      </p>
+      <p>
+        Usunięcie grupy usuwa przypisanie do grupy u każdego członka. Oczekujące powiadomienia
+        skierowane do tej grupy nie zostaną dostarczone — w momencie wyzwolenia uczestnicy są
+        pomijani, ponieważ nie są już członkami grupy.
+      </p>
+
+      {/* ── GROUP_ID placeholder ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Przekazywanie grupy do narzędzia ankietowego</h2>
+      <p>
+        Aby automatycznie dołączyć grupę każdego uczestnika do URL ankiety, dodaj
+        <code>%GROUP_ID%</code> do linku internetowego w powiadomieniu. Samply podstawia
+        czteroznakowy identyfikator grupy w momencie wysyłki. Jeśli uczestnik nie ma grupy,
+        <code>%GROUP_ID%</code> pozostaje niepodmieniony — twoje narzędzie ankietowe otrzyma
+        dosłowny tekst, więc obsłuż to w logice ankiety, jeśli przynależność do grupy nie jest
+        gwarantowana dla wszystkich uczestników.
+      </p>
+      <p>
+        Pełną listę dostępnych tokenów i opis działania podstawiania znajdziesz na stronie
+        <a href="/docs/placeholders">symbole zastępcze URL</a>.
+      </p>
+
+      {/* ── Groups vs participant codes ────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Grupy a kody uczestnika</h2>
+      <dl>
+        <dt>Używaj grup, gdy</dt>
+        <dd>
+          Chcesz synchronicznych wysyłek sparowanych z kohortą lub gdy musisz kierować różne
+          podzbiory na różne harmonogramy powiadomień. Grupy są elementami pierwszej klasy
+          w formularzu harmonogramu i decydują, kto otrzyma jakie powiadomienia.
+        </dd>
+        <dt>Używaj kodów uczestnika, gdy</dt>
+        <dd>
+          Musisz powiązać uczestników Samply z rekordami w zewnętrznym systemie (identyfikatory
+          rejestracji REDCap, identyfikatory instytucjonalne, wcześniej przypisane kody). Kody
+          to identyfikatory na osobę, a nie mechanizmy grupowania. Uczestnik może mieć zarówno
+          kod, jak i grupę.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function GroupsContentAr() {
+  return (
+    <>
+      <p>
+        المجموعة هي مجموعة فرعية مسماة من المشاركين الذين يتلقون الإشعارات بشكل متزامن.
+        عندما يستهدف الجدول مجموعة، يرسل Samply الإشعار إلى كل عضو في نفس اللحظة —
+        تصميم <strong>مقترن</strong>. هذا يجعل المجموعات مناسبة للدراسات الثنائية
+        (الأزواج، الأقران)، أو أبحاث الفرق، أو أي بروتوكول يكون فيه التزامن داخل المجموعة
+        أمراً أساسياً. ينتمي كل مشارك إلى مجموعة واحدة على الأكثر.
+      </p>
+
+      {/* ── Creating groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>إنشاء مجموعة</h2>
+      <p>
+        يجب على الباحث إنشاء المجموعات قبل الجدولة. انتقل إلى دراستك، وافتح علامة التبويب{' '}
+        <strong>المشاركون</strong> وانقر على <strong>إدارة المجموعات</strong>. أدخل اسم
+        المجموعة وحدد المشاركين من القائمة — يظهر فقط المشاركون غير المعيّنين بالفعل في
+        مجموعة. انقر على <strong>إنشاء مجموعة</strong> لتعيين جميع المشاركين المحددين
+        دفعة واحدة.
+      </p>
+      <p>
+        يقوم Samply تلقائياً بإنشاء <strong>معرف</strong> قصير لكل مجموعة. يُستخدم هذا
+        المعرف في العنصر النائب لعنوان URL <code>%GROUP_ID%</code> وفي طابور الجدولة.
+        الاسم مرئي فقط للباحثين في لوحة التحكم؛ لا يراه المشاركون أبداً.
+      </p>
+
+      {/* ── Yoked timing ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>التوقيت المتزامن (المقترن)</h2>
+      <p>
+        يتلقى جميع أعضاء المجموعة نفس الإشعار في نفس وقت الإطلاق. يكتب Samply صفاً واحداً
+        في الطابور لكل مجموعة بطابع زمني مشترك <em>مُجدوَل لـ</em> ويسلمه لكل عضو بشكل
+        متزامن. لا توجد إزاحة لكل عضو ضمن إرسال مجموعة واحدة.
+      </p>
+      <p>
+        بالنسبة للجداول الشخصية (اليوم N بعد التسجيل)، يستخدم Samply تاريخ انضمام{' '}
+        <em>آخر عضو مسجل</em> في المجموعة كمرساة مشتركة. وهذا يعني أن كل عضو يشارك في
+        نفس اليوم 1 بغض النظر عن وقت انضمامه الفردي — وهذا مقصود للتصاميم الجماعية
+        التي تريد فيها أن تتنقل المجموعة عبر البروتوكول معاً من تاريخ مرجعي واحد. إذا كنت
+        تحتاج كل مشارك على جدوله الزمني الشخصي، فاستهدفهم بشكل فردي بدلاً من المجموعة.
+      </p>
+
+      {/* ── Targeting groups in schedules ─────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>استهداف المجموعات في الجدول</h2>
+      <p>
+        في الخطوة 2 (المشاركون) من نموذج الجدول، اختر <strong>المجموعات</strong> كجمهور
+        وحدد المجموعة أو المجموعات المراد استهدافها. فقط المشاركون المعينون للمجموعة
+        (المجموعات) المختارة في لحظة نقرك على <strong>جدولة الإشعارات</strong> يتلقون
+        الإرسال من هذا الجدول. المشاركون الذين ينضمون للمجموعة لاحقاً يُدرجون في عمليات
+        الإرسال اللاحقة — تتم إعادة تقييم عضوية المجموعة عند كل وقت إطلاق.
+      </p>
+
+      {/* ── Deleting groups ───────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>حذف مجموعة</h2>
+      <p>
+        انقر على <strong>حذف</strong> في صف المجموعة في علامة تبويب المجموعات. يؤدي هذا
+        إلى مسح تعيين المجموعة من كل عضو — يبقى المشاركون في الدراسة ويستمرون في تلقي
+        أي إشعارات غير موجهة للمجموعة. يصبحون مؤهلين لإضافتهم إلى مجموعة جديدة.
+      </p>
+      <p>
+        حذف المجموعة يزيل تعيين المجموعة من كل عضو. الإشعارات المعلقة الموجهة لتلك
+        المجموعة لن يتم تسليمها — في وقت الإطلاق، لم يعد المشاركون أعضاء في المجموعة،
+        لذا يتم تخطيهم.
+      </p>
+
+      {/* ── GROUP_ID placeholder ──────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>تمرير المجموعة إلى أداة الاستطلاع الخاصة بك</h2>
+      <p>
+        أضف <code>%GROUP_ID%</code> إلى رابط الويب للإشعار لتضمين مجموعة كل مشارك
+        تلقائياً في عنوان URL الاستطلاع. يستبدل Samply معرف المجموعة المكوّن من أربعة
+        أحرف في وقت الإرسال. إذا لم يكن للمشارك مجموعة، يُترك{' '}
+        <code>%GROUP_ID%</code> دون استبدال — تتلقى أداة الاستطلاع لديك النص الحرفي، لذا
+        تعامل مع هذا في منطق الاستطلاع إذا لم تكن عضوية المجموعة مضمونة لجميع المشاركين.
+      </p>
+      <p>
+        راجع <a href='/docs/placeholders'>العناصر النائبة لعنوان URL</a> للقائمة الكاملة
+        من الرموز المتاحة وكيفية عمل الاستبدال.
+      </p>
+
+      {/* ── Groups vs participant codes ────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>المجموعات مقابل أكواد المشارك</h2>
+      <dl>
+        <dt>استخدم المجموعات عندما</dt>
+        <dd>
+          تريد إرسالاً متزامناً ومقترناً لمجموعة، أو تحتاج إلى توجيه مجموعات فرعية مختلفة
+          إلى جداول إشعارات مختلفة. المجموعات هي عناصر من الدرجة الأولى في نموذج الجدول
+          وتحدد من يتلقى أي إشعارات.
+        </dd>
+        <dt>استخدم أكواد المشارك عندما</dt>
+        <dd>
+          تحتاج إلى مطابقة مشاركي Samply بسجلات في نظام خارجي (معرفات سجلات REDCap،
+          والمعرفات المؤسسية، والأكواد المعينة مسبقاً). الأكواد هي معرفات لكل شخص،
+          وليست آليات تجميع. يمكن أن يكون لدى المشارك كود ومجموعة معاً.
         </dd>
       </dl>
     </>

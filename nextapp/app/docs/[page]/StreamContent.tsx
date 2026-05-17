@@ -76,6 +76,10 @@ export default function StreamContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <StreamContentFr />;
   if (locale === "es") return <StreamContentEs />;
   if (locale === "pt") return <StreamContentPt />;
+  if (locale === "ja") return <StreamContentJa />;
+  if (locale === "ar") return <StreamContentAr />;
+  if (locale === "pl") return <StreamContentPl />;
+  if (locale === "tr") return <StreamContentTr />;
   return <StreamContentEn />;
 }
 
@@ -2215,6 +2219,873 @@ function StreamContentPt() {
         <tbody>
           <tr><td><Code>200</Code> / <Code>OK</Code></td><td>Notificação enviada com sucesso.</td></tr>
           <tr><td><Code>401</Code></td><td>Token ausente, expirado ou que não corresponde ao projeto.</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+const TARGETING_JA = [
+  { params: 'groupID + participantID', effect: '指定された参加者を除く、グループのすべてのメンバー。' },
+  { params: 'groupID only',            effect: 'グループのすべてのメンバー。' },
+  { params: 'participantID only',      effect: 'その特定の参加者のみ。' },
+  { params: 'neither',                 effect: '研究のすべての参加者。' },
+];
+
+function StreamContentJa() {
+  return (
+    <>
+      <p>
+        Stream APIを使うと、外部システム — 調査ツール、REDCapワークフロー、スクリプト、または
+        任意のHTTPクライアント — がオンデマンドで研究参加者にプッシュ通知をトリガーできます。
+        スケジュールされた送信を待つ代わりに、Samply通知エンドポイントにPOSTすれば、通知は
+        即座に発火します。これは、通知がイベントの発生に追随すべきであり、固定の時刻ではない
+        イベント連動型デザインに適したツールです。
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: 'var(--coral-soft)', borderLeft: '3px solid var(--coral)', borderRadius: '0 0.8rem 0.8rem 0', padding: '1.4rem 1.6rem', margin: '0.4rem 0 2.4rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--coral)', marginBottom: '0.7rem' }}>Published research</div>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)' }}>
+          Stream APIは、<em>Behavior Research Methods</em>の査読付き論文で紹介され、実証的に検証されています：
+        </p>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)', fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2025). Samply Stream API: The AI-enhanced method for real-time event data streaming. <em>Behavior Research Methods</em>, 57, 119.
+        </p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer' style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', wordBreak: 'break-all' }}>https://doi.org/10.3758/s13428-025-02634-1</a>
+        <p style={{ margin: '1rem 0 0', fontSize: '1.25rem', lineHeight: 1.6, color: 'var(--ink-60)' }}>
+          2週間にわたり<strong style={{ color: 'var(--ink)' }}>110名の参加者</strong>を対象とした実現可能性研究では、AIによって修正されたニュース記事をリアルタイムで配信し、<strong style={{ color: 'var(--ink)' }}>83%の応答率</strong>を達成しました — 外部システムがイベント発生の瞬間に動的でパーソナライズされたコンテンツを参加者にストリーミングできることを示しています。
+        </p>
+      </div>
+
+      {/* ── Endpoint ──────────────────────────────────────────────────────── */}
+      <h2>エンドポイント</h2>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', background: 'var(--ink-10)', padding: '0.9rem 1.2rem', borderRadius: '0.6rem', color: 'var(--ink)' }}>
+        POST https://samply.uni-konstanz.de/api/notify
+      </div>
+      <p style={{ marginTop: '1.2rem' }}>
+        Content-Typeは <Code>application/json</Code> でなければなりません。認証ヘッダーは
+        使用されません — 認証はリクエストボディに含まれる研究ごとのnotifyトークンによって
+        処理されます。
+      </p>
+
+      {/* ── Token ─────────────────────────────────────────────────────────── */}
+      <h2>Notifyトークン</h2>
+      <p>
+        各研究にはAPIへのリクエストを認可するnotifyトークンがあります。トークンには研究所有者が
+        設定する有効期限があります。研究ダッシュボードの <strong>Stream API</strong> タブから
+        トークンを生成または再生成してください。再生成すると、以前のトークンは即座に無効化
+        されます — そのトークンを使用しているすべてのスクリプトを更新してください。
+      </p>
+      <p>
+        トークンを生成できるのは研究所有者のみです。共同編集者（メンバー）は現在のトークンを
+        確認してリクエストに使用することはできますが、再生成することはできません。
+      </p>
+
+      {/* ── Request body ──────────────────────────────────────────────────── */}
+      <h2>リクエストボディ</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>フィールド</th>
+            <th>必須</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>projectID</Code></td>
+            <td>はい</td>
+            <td>ダッシュボードのURLに表示される研究ID。</td>
+          </tr>
+          <tr>
+            <td><Code>token</Code></td>
+            <td>はい</td>
+            <td>研究のnotifyトークン。有効期限切れであってはなりません。</td>
+          </tr>
+          <tr>
+            <td><Code>title</Code></td>
+            <td>はい</td>
+            <td>プッシュ通知の太字の最初の行。</td>
+          </tr>
+          <tr>
+            <td><Code>message</Code></td>
+            <td>はい</td>
+            <td>通知の本文テキスト。</td>
+          </tr>
+          <tr>
+            <td><Code>url</Code></td>
+            <td>いいえ</td>
+            <td>参加者が通知をタップしたときに開く調査リンク。URLプレースホルダーをサポートします（下記参照）。</td>
+          </tr>
+          <tr>
+            <td><Code>expireIn</Code></td>
+            <td>いいえ</td>
+            <td>未配信の通知が破棄されるまでの分数。有効期限を設定しない場合は省略します。</td>
+          </tr>
+          <tr>
+            <td><Code>groupID</Code></td>
+            <td>いいえ</td>
+            <td>短いグループID。配信をそのグループのメンバーに制限します（ターゲティングを参照）。</td>
+          </tr>
+          <tr>
+            <td><Code>participantID</Code></td>
+            <td>いいえ</td>
+            <td>特定の参加者のSamply ID。配信を一人に制限するか、グループ送信から除外します（ターゲティングを参照）。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* ── Targeting ─────────────────────────────────────────────────────── */}
+      <h2>ターゲティング</h2>
+      <p>
+        <Code>groupID</Code> と <Code>participantID</Code> の組み合わせが、通知を受け取る
+        対象を決定します：
+      </p>
+      <div style={{ border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflow: 'hidden', background: 'var(--surface)', margin: '1rem 0 1.6rem' }}>
+        {TARGETING_JA.map((t, i) => (
+          <div key={t.params} style={{ display: 'flex', gap: '2rem', padding: '0.9rem 1.4rem', borderBottom: i < TARGETING_JA.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'baseline', flexWrap: 'wrap' }}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--coral)', background: 'rgba(214,90,48,.06)', padding: '0.15rem 0.6rem', borderRadius: '0.4rem', flexShrink: 0 }}>{t.params}</code>
+            <span style={{ fontSize: '1.25rem', color: 'var(--ink-60)' }}>{t.effect}</span>
+          </div>
+        ))}
+      </div>
+      <p>
+        <Code>groupID + participantID</Code> の組み合わせは、社会的ESMデザインのために
+        設計されています：参加者Aの行動がグループの他のメンバーへの通知をトリガーし、
+        参加者A本人は除外されます。
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2>URLプレースホルダー</h2>
+      <p>
+        <Code>url</Code> フィールドは、スケジュールされた通知と同じ <Code>%TOKEN%</Code>
+        プレースホルダーをサポートします。Samplyはプッシュを配信する前に、参加者ごとに
+        プレースホルダーを置換します：
+      </p>
+      <table>
+        <thead><tr><th>トークン</th><th>置換される値</th></tr></thead>
+        <tbody>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>受信者の匿名Samply ID。</td></tr>
+          <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>受信者の参加者コード（設定されていない場合は置換されません）。</td></tr>
+          <tr><td><Code>%GROUP_CODE%</Code></td><td>受信者のグループID（設定されていない場合は置換されません）。</td></tr>
+          <tr><td><Code>%MESSAGE_ID%</Code></td><td>この送信の一意のID — 完了コールバックの接続やリマインダーのキャンセルに使用してください。</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Code example ──────────────────────────────────────────────────── */}
+      <h2>コード例</h2>
+      <pre style={{ margin: '0.4rem 0 0', padding: '1.6rem', background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflowX: 'auto', fontFamily: 'var(--font-mono)', fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--ink)' }}>
+        <code>{CODE}</code>
+      </pre>
+
+      {/* ── Use cases ─────────────────────────────────────────────────────── */}
+      <h2>ユースケース</h2>
+      <dl>
+        <dt>調査ツールからトリガーされるイベント連動型ESM</dt>
+        <dd>
+          Qualtrics調査の終了時に、調査終了時のJavaScriptスニペットが参加者の{' '}
+          <Code>participantID</Code> を付けて通知エンドポイントにPOSTします。
+          フォローアップ調査の通知が、最初の調査を完了してから数秒以内に参加者のデバイスに
+          届きます。
+        </dd>
+        <dt>社会的インタラクションのデザイン</dt>
+        <dd>
+          参加者Aが社会的インタラクションを示すレポートを送信すると、バックエンドが{' '}
+          <Code>groupID</Code> を彼のグループに、<Code>participantID</Code> を参加者Aに
+          設定してPOSTします。グループの他のメンバーは通知を受け取りますが、参加者Aは
+          受け取りません。
+        </dd>
+        <dt>ラボがトリガーする外来期</dt>
+        <dd>
+          ラボシステムは、ラボセッションが終わった瞬間に、時刻に関係なくすべての参加者
+          （<Code>projectID</Code> のみ、グループや参加者のフィルターなし）に通知をPOST
+          することで、研究の外来期を開始します。
+        </dd>
+      </dl>
+
+      {/* ── Feasibility study ─────────────────────────────────────────────── */}
+      <h2>実現可能性とパフォーマンス</h2>
+      <p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer'>Shevchenko &amp; Reips (2025)</a> は、2週間のESM研究でStream APIを検証しました。
+        この研究では、ニュース記事のRSSフィードを毎日取得し、ChatGPTによって3つの条件
+        — オリジナル、言い換え、誤情報 — に処理してから、通知エンドポイント経由で
+        参加者にストリーミングしました。1日3回の通知が、固定スケジュールではなく
+        リアルタイムの外部イベントに基づいて、110名の参加者に配信されました。
+      </p>
+      <p>主な発見：</p>
+      <ul>
+        <li><strong>全体応答率83%</strong> — 同程度の期間の従来のESM研究と同等またはそれ以上。</li>
+        <li><strong>Android 89% vs. iOS 77%</strong> — 応答率はプラットフォームによって異なりました。分析ではプラットフォームを共変量として報告してください。</li>
+        <li><strong>AI修正は可読性を維持</strong> — AIで修正された項目のうち、判読不能と評価されたのはわずか1.2%でした。誤情報は成功裏に導入されました（84%の不慣れさ vs. 73%のベースライン）。</li>
+        <li><strong>脱落率</strong>は同等の長さの他のESM研究と一致しており、リアルタイムストリーミングが参加者の負担を増やさないことが確認されました。</li>
+      </ul>
+      <p>
+        この研究は、通知内容を配信時に生成または選択する必要があるデザイン — ニュース知覚研究、
+        ソーシャルメディア研究、世論測定、医療介入、環境モニタリングなど — にStream APIが
+        適していることを示しています。このパイプラインを実装するオープンソースのサーバー
+        アプリケーションはGitHubで入手できます。
+      </p>
+
+      {/* ── Responses ─────────────────────────────────────────────────────── */}
+      <h2>サーバー応答</h2>
+      <table>
+        <thead><tr><th>応答</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code> / <Code>OK</Code></td><td>通知が正常に送信されました。</td></tr>
+          <tr><td><Code>401</Code></td><td>トークンが欠落、有効期限切れ、またはプロジェクトと一致しません。</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+const TARGETING_TR = [
+  { params: "groupID + participantID", effect: "Belirtilen katılımcı dışındaki grubun tüm üyeleri." },
+  { params: "groupID only",            effect: "Grubun tüm üyeleri." },
+  { params: "participantID only",      effect: "Yalnızca o belirli katılımcı." },
+  { params: "neither",                 effect: "Çalışmadaki tüm katılımcılar." },
+];
+
+function StreamContentTr() {
+  return (
+    <>
+      <p>
+        Stream API, harici bir sistemin — bir anket aracı, REDCap iş akışı, betik veya
+        herhangi bir HTTP istemcisi — bir çalışmanın katılımcılarına talep üzerine push
+        bildirimleri tetiklemesine olanak tanır. Zamanlanmış bir gönderimi beklemek yerine,
+        Samply bildirim uç noktasına POST yaparsınız ve bildirim anında ateşlenir. Bildirimin
+        bir saat değil bir olayı takip etmesi gereken olay bağımlı tasarımlar için doğru
+        araçtır.
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: 'var(--coral-soft)', borderLeft: '3px solid var(--coral)', borderRadius: '0 0.8rem 0.8rem 0', padding: '1.4rem 1.6rem', margin: '0.4rem 0 2.4rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--coral)', marginBottom: '0.7rem' }}>Published research</div>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)' }}>
+          Stream API, <em>Behavior Research Methods</em> dergisindeki hakemli bir makalede tanıtılmış ve ampirik olarak doğrulanmıştır:
+        </p>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)', fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2025). Samply Stream API: The AI-enhanced method for real-time event data streaming. <em>Behavior Research Methods</em>, 57, 119.
+        </p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer' style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', wordBreak: 'break-all' }}>https://doi.org/10.3758/s13428-025-02634-1</a>
+        <p style={{ margin: '1rem 0 0', fontSize: '1.25rem', lineHeight: 1.6, color: 'var(--ink-60)' }}>
+          İki hafta boyunca <strong style={{ color: 'var(--ink)' }}>110 katılımcı</strong> ile yürütülen bir fizibilite çalışması, yapay zeka ile değiştirilmiş haber makalelerini gerçek zamanlı olarak iletti ve <strong style={{ color: 'var(--ink)' }}>%83 yanıt oranı</strong> elde etti — bu da harici sistemlerin olaylar gerçekleştiğinde katılımcılara dinamik ve kişiselleştirilmiş içerik yayınlayabileceğini göstermektedir.
+        </p>
+      </div>
+
+      {/* ── Endpoint ──────────────────────────────────────────────────────── */}
+      <h2>Uç Nokta</h2>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', background: 'var(--ink-10)', padding: '0.9rem 1.2rem', borderRadius: '0.6rem', color: 'var(--ink)' }}>
+        POST https://samply.uni-konstanz.de/api/notify
+      </div>
+      <p style={{ marginTop: '1.2rem' }}>
+        Content-Type <Code>application/json</Code> olmalıdır. Kimlik doğrulama başlığı
+        kullanılmaz — kimlik doğrulama, istek gövdesindeki çalışmaya özgü notify token
+        aracılığıyla yapılır.
+      </p>
+
+      {/* ── Token ─────────────────────────────────────────────────────────── */}
+      <h2>Notify Token</h2>
+      <p>
+        Her çalışmanın API'ye yapılan istekleri yetkilendiren bir notify token'ı vardır.
+        Token'ların geçerlilik süresi çalışma sahibi tarafından belirlenir. Token'ı çalışma
+        panosundaki <strong>Stream API</strong> sekmesinden oluşturun veya yenileyin.
+        Yenileme yaparken önceki token anında geçersiz kılınır — onu kullanan tüm
+        betikleri güncelleyin.
+      </p>
+      <p>
+        Token'ları yalnızca çalışma sahibi oluşturabilir. Ortak çalışanlar (ekip üyeleri)
+        mevcut token'ı görebilir ve isteklerde kullanabilir, ancak onu yenileyemez.
+      </p>
+
+      {/* ── Request body ──────────────────────────────────────────────────── */}
+      <h2>İstek Gövdesi</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Alan</th>
+            <th>Zorunlu</th>
+            <th>Açıklama</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>projectID</Code></td>
+            <td>evet</td>
+            <td>Pano URL'sinde görüntülenen çalışma kimliği.</td>
+          </tr>
+          <tr>
+            <td><Code>token</Code></td>
+            <td>evet</td>
+            <td>Çalışmanın notify token'ı. Süresi dolmamış olmalıdır.</td>
+          </tr>
+          <tr>
+            <td><Code>title</Code></td>
+            <td>evet</td>
+            <td>Push bildiriminin kalın ilk satırı.</td>
+          </tr>
+          <tr>
+            <td><Code>message</Code></td>
+            <td>evet</td>
+            <td>Bildirimin gövde metni.</td>
+          </tr>
+          <tr>
+            <td><Code>url</Code></td>
+            <td>hayır</td>
+            <td>Katılımcı bildirime dokunduğunda açılan anket bağlantısı. URL yer tutucularını destekler (aşağıya bakın).</td>
+          </tr>
+          <tr>
+            <td><Code>expireIn</Code></td>
+            <td>hayır</td>
+            <td>Teslim edilmemiş bir bildirimin atılmasına kadar geçen dakika sayısı. Geçerlilik süresini devre dışı bırakmak için atlayın.</td>
+          </tr>
+          <tr>
+            <td><Code>groupID</Code></td>
+            <td>hayır</td>
+            <td>Kısa grup kimliği. Teslimatı bu grubun üyeleriyle sınırlar (bkz. Hedefleme).</td>
+          </tr>
+          <tr>
+            <td><Code>participantID</Code></td>
+            <td>hayır</td>
+            <td>Belirli bir katılımcının Samply kimliği. Teslimatı tek bir kişiyle sınırlar veya onu bir grup gönderiminden hariç tutar (bkz. Hedefleme).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* ── Targeting ─────────────────────────────────────────────────────── */}
+      <h2>Hedefleme</h2>
+      <p>
+        <Code>groupID</Code> ve <Code>participantID</Code> kombinasyonu, bildirimi kimin
+        alacağını belirler:
+      </p>
+      <div style={{ border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflow: 'hidden', background: 'var(--surface)', margin: '1rem 0 1.6rem' }}>
+        {TARGETING_TR.map((t, i) => (
+          <div key={t.params} style={{ display: 'flex', gap: '2rem', padding: '0.9rem 1.4rem', borderBottom: i < TARGETING_TR.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'baseline', flexWrap: 'wrap' }}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--coral)', background: 'rgba(214,90,48,.06)', padding: '0.15rem 0.6rem', borderRadius: '0.4rem', flexShrink: 0 }}>{t.params}</code>
+            <span style={{ fontSize: '1.25rem', color: 'var(--ink-60)' }}>{t.effect}</span>
+          </div>
+        ))}
+      </div>
+      <p>
+        <Code>groupID + participantID</Code> kombinasyonu sosyal ESM tasarımları için
+        tasarlanmıştır: A katılımcısının eylemi, kendisi hariç grubun diğer üyelerine bir
+        bildirim tetikler.
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2>URL Yer Tutucuları</h2>
+      <p>
+        <Code>url</Code> alanı, zamanlanmış bildirimlerle aynı <Code>%TOKEN%</Code>
+        yer tutucularını destekler. Samply, push'u teslim etmeden önce her katılımcı için
+        bunları değiştirir:
+      </p>
+      <table>
+        <thead><tr><th>Token</th><th>Değiştirilen değer</th></tr></thead>
+        <tbody>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Alıcının anonim Samply kimliği.</td></tr>
+          <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Alıcının katılımcı kodu (ayarlanmamışsa değiştirilmez).</td></tr>
+          <tr><td><Code>%GROUP_CODE%</Code></td><td>Alıcının grup kimliği (ayarlanmamışsa değiştirilmez).</td></tr>
+          <tr><td><Code>%MESSAGE_ID%</Code></td><td>Bu gönderimin benzersiz kimliği — tamamlanma geri çağrılarını bağlamak ve hatırlatıcıları iptal etmek için kullanın.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Code example ──────────────────────────────────────────────────── */}
+      <h2>Kod Örneği</h2>
+      <pre style={{ margin: '0.4rem 0 0', padding: '1.6rem', background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflowX: 'auto', fontFamily: 'var(--font-mono)', fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--ink)' }}>
+        <code>{CODE}</code>
+      </pre>
+
+      {/* ── Use cases ─────────────────────────────────────────────────────── */}
+      <h2>Kullanım Senaryoları</h2>
+      <dl>
+        <dt>Anket aracından tetiklenen olay bağımlı ESM</dt>
+        <dd>
+          Qualtrics anketinin sonunda, anket sonu JavaScript parçacığı, katılımcının{' '}
+          <Code>participantID</Code> değeri ile bildirim uç noktasına POST yapar. Takip
+          anketi bildirimi, ilk anketin tamamlanmasından sonraki birkaç saniye içinde
+          katılımcının cihazına ulaşır.
+        </dd>
+        <dt>Sosyal etkileşim tasarımları</dt>
+        <dd>
+          A katılımcısı bir sosyal etkileşim raporu gönderdiğinde, arka uçunuz{' '}
+          <Code>groupID</Code> grubuna ve <Code>participantID</Code> A katılımcısına
+          ayarlanmış bir POST yapar. Grubun diğer üyeleri bildirim alır; A katılımcısı
+          almaz.
+        </dd>
+        <dt>Laboratuvar tetiklemeli ambulatuvar faz</dt>
+        <dd>
+          Laboratuvar sistemi, laboratuvar oturumunun sona erdiği anda — saatten bağımsız
+          olarak — tüm katılımcılara (yalnızca <Code>projectID</Code>, grup veya katılımcı
+          filtresi olmadan) bir bildirim POST ederek çalışmanın ambulatuvar fazını başlatır.
+        </dd>
+      </dl>
+
+      {/* ── Feasibility study ─────────────────────────────────────────────── */}
+      <h2>Fizibilite ve Performans</h2>
+      <p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer'>Shevchenko &amp; Reips (2025)</a>, Stream API'yi iki haftalık bir ESM çalışmasında doğruladılar.
+        Bu çalışmada, haber makalelerinin bir RSS akışı günlük olarak alındı ve bildirim
+        uç noktası aracılığıyla katılımcılara yayınlanmadan önce ChatGPT tarafından üç
+        koşulda — orijinal, başka sözcüklerle ifade edilmiş ve dezenformasyon — işlendi.
+        110 katılımcıya, sabit bir programa göre değil gerçek zamanlı harici olaylara
+        dayanarak günde üç bildirim teslim edildi.
+      </p>
+      <p>Temel bulgular:</p>
+      <ul>
+        <li><strong>%83 genel yanıt oranı</strong> — benzer süredeki geleneksel ESM çalışmalarıyla karşılaştırılabilir veya onları aşan.</li>
+        <li><strong>Android %89 vs. iOS %77</strong> — yanıt oranları platformlar arasında farklılık gösterdi; analizlerde platformu ortak değişken olarak dahil edin.</li>
+        <li><strong>Yapay zeka değişiklikleri okunabilirliği korudu</strong> — yapay zeka ile değiştirilmiş öğelerin yalnızca %1,2'si okunaksız olarak değerlendirildi; dezenformasyon başarıyla tanıtıldı (kontrolde %73'e karşı %84 aşinasızlık).</li>
+        <li><strong>Bırakma oranı</strong>, benzer uzunluktaki diğer ESM çalışmalarıyla tutarlıydı ve gerçek zamanlı yayının katılımcı yükünü artırmadığını doğruladı.</li>
+      </ul>
+      <p>
+        Çalışma, bildirim içeriğinin teslim sırasında üretilmesi veya seçilmesi gereken
+        tasarımlar için — haber algısı çalışmaları, sosyal medya araştırması, kamuoyu
+        ölçümü, tıbbi müdahaleler ve çevresel izleme dahil — Stream API'nin uygun olduğunu
+        göstermektedir. Bu boru hattını uygulayan açık kaynaklı bir sunucu uygulaması
+        GitHub'da mevcuttur.
+      </p>
+
+      {/* ── Responses ─────────────────────────────────────────────────────── */}
+      <h2>Sunucu Yanıtları</h2>
+      <table>
+        <thead><tr><th>Yanıt</th><th>Anlam</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code> / <Code>OK</Code></td><td>Bildirim başarıyla gönderildi.</td></tr>
+          <tr><td><Code>401</Code></td><td>Token eksik, süresi dolmuş veya projeyle eşleşmiyor.</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+const TARGETING_PL = [
+  { params: "groupID + participantID", effect: "Wszyscy członkowie grupy oprócz wskazanego uczestnika." },
+  { params: "groupID only",            effect: "Wszyscy członkowie grupy." },
+  { params: "participantID only",      effect: "Tylko ten konkretny uczestnik." },
+  { params: "neither",                 effect: "Wszyscy uczestnicy badania." },
+];
+
+function StreamContentPl() {
+  return (
+    <>
+      <p>
+        Stream API umożliwia zewnętrznemu systemowi — narzędziu ankietowemu, przepływowi
+        REDCap, skryptowi lub dowolnemu klientowi HTTP — wyzwalanie powiadomień push do
+        uczestników badania na żądanie. Zamiast czekać na zaplanowaną wysyłkę, wysyłasz
+        POST do punktu końcowego powiadomień Samply, a powiadomienie jest natychmiast
+        odpalane. To właściwe narzędzie dla projektów zależnych od zdarzeń, w których
+        powiadomienie musi podążać za zdarzeniem, a nie za godziną.
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: 'var(--coral-soft)', borderLeft: '3px solid var(--coral)', borderRadius: '0 0.8rem 0.8rem 0', padding: '1.4rem 1.6rem', margin: '0.4rem 0 2.4rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--coral)', marginBottom: '0.7rem' }}>Published research</div>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)' }}>
+          Stream API został wprowadzony i empirycznie zwalidowany w recenzowanym artykule w czasopiśmie <em>Behavior Research Methods</em>:
+        </p>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)', fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2025). Samply Stream API: The AI-enhanced method for real-time event data streaming. <em>Behavior Research Methods</em>, 57, 119.
+        </p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer' style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', wordBreak: 'break-all' }}>https://doi.org/10.3758/s13428-025-02634-1</a>
+        <p style={{ margin: '1rem 0 0', fontSize: '1.25rem', lineHeight: 1.6, color: 'var(--ink-60)' }}>
+          Studium wykonalności przeprowadzone z <strong style={{ color: 'var(--ink)' }}>110 uczestnikami</strong> przez dwa tygodnie dostarczyło w czasie rzeczywistym artykuły prasowe modyfikowane przez sztuczną inteligencję i osiągnęło <strong style={{ color: 'var(--ink)' }}>83% wskaźnik odpowiedzi</strong> — pokazując, że systemy zewnętrzne mogą transmitować dynamiczne i spersonalizowane treści do uczestników w momencie wystąpienia zdarzeń.
+        </p>
+      </div>
+
+      {/* ── Endpoint ──────────────────────────────────────────────────────── */}
+      <h2>Punkt końcowy</h2>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', background: 'var(--ink-10)', padding: '0.9rem 1.2rem', borderRadius: '0.6rem', color: 'var(--ink)' }}>
+        POST https://samply.uni-konstanz.de/api/notify
+      </div>
+      <p style={{ marginTop: '1.2rem' }}>
+        Content-Type musi być <Code>application/json</Code>. Nie jest używany żaden
+        nagłówek uwierzytelniający — uwierzytelnianie odbywa się za pośrednictwem tokenu
+        notify specyficznego dla badania w treści żądania.
+      </p>
+
+      {/* ── Token ─────────────────────────────────────────────────────────── */}
+      <h2>Notify Token</h2>
+      <p>
+        Każde badanie ma token notify, który autoryzuje żądania do API. Okres ważności
+        tokenów jest ustalany przez właściciela badania. Wygeneruj lub odnów token w
+        zakładce <strong>Stream API</strong> panelu badania. Po odnowieniu poprzedni token
+        jest natychmiast unieważniany — zaktualizuj wszystkie skrypty, które go używają.
+      </p>
+      <p>
+        Tokeny mogą być generowane tylko przez właściciela badania. Współpracownicy
+        (członkowie zespołu) mogą zobaczyć istniejący token i używać go w żądaniach, ale
+        nie mogą go odnowić.
+      </p>
+
+      {/* ── Request body ──────────────────────────────────────────────────── */}
+      <h2>Treść żądania</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Pole</th>
+            <th>Wymagane</th>
+            <th>Opis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>projectID</Code></td>
+            <td>tak</td>
+            <td>Identyfikator badania widoczny w adresie URL panelu.</td>
+          </tr>
+          <tr>
+            <td><Code>token</Code></td>
+            <td>tak</td>
+            <td>Token notify badania. Nie może być wygasły.</td>
+          </tr>
+          <tr>
+            <td><Code>title</Code></td>
+            <td>tak</td>
+            <td>Pogrubiona pierwsza linia powiadomienia push.</td>
+          </tr>
+          <tr>
+            <td><Code>message</Code></td>
+            <td>tak</td>
+            <td>Tekst treści powiadomienia.</td>
+          </tr>
+          <tr>
+            <td><Code>url</Code></td>
+            <td>nie</td>
+            <td>Link do ankiety otwierany, gdy uczestnik dotknie powiadomienia. Obsługuje symbole zastępcze w adresie URL (patrz poniżej).</td>
+          </tr>
+          <tr>
+            <td><Code>expireIn</Code></td>
+            <td>nie</td>
+            <td>Liczba minut do odrzucenia niedostarczonego powiadomienia. Pomiń, aby wyłączyć okres ważności.</td>
+          </tr>
+          <tr>
+            <td><Code>groupID</Code></td>
+            <td>nie</td>
+            <td>Krótki identyfikator grupy. Ogranicza dostarczenie do członków tej grupy (patrz Targetowanie).</td>
+          </tr>
+          <tr>
+            <td><Code>participantID</Code></td>
+            <td>nie</td>
+            <td>Identyfikator Samply konkretnego uczestnika. Ogranicza dostarczenie do jednej osoby lub wyklucza ją z wysyłki grupowej (patrz Targetowanie).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* ── Targeting ─────────────────────────────────────────────────────── */}
+      <h2>Targetowanie</h2>
+      <p>
+        Kombinacja <Code>groupID</Code> i <Code>participantID</Code> określa, kto otrzyma
+        powiadomienie:
+      </p>
+      <div style={{ border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflow: 'hidden', background: 'var(--surface)', margin: '1rem 0 1.6rem' }}>
+        {TARGETING_PL.map((t, i) => (
+          <div key={t.params} style={{ display: 'flex', gap: '2rem', padding: '0.9rem 1.4rem', borderBottom: i < TARGETING_PL.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'baseline', flexWrap: 'wrap' }}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--coral)', background: 'rgba(214,90,48,.06)', padding: '0.15rem 0.6rem', borderRadius: '0.4rem', flexShrink: 0 }}>{t.params}</code>
+            <span style={{ fontSize: '1.25rem', color: 'var(--ink-60)' }}>{t.effect}</span>
+          </div>
+        ))}
+      </div>
+      <p>
+        Kombinacja <Code>groupID + participantID</Code> jest zaprojektowana dla projektów
+        społecznościowych ESM: działanie uczestnika A wyzwala powiadomienie do innych
+        członków grupy z wyjątkiem niego samego.
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2>Symbole zastępcze w adresie URL</h2>
+      <p>
+        Pole <Code>url</Code> obsługuje te same symbole zastępcze <Code>%TOKEN%</Code>,
+        co zaplanowane powiadomienia. Samply podstawia je dla każdego uczestnika przed
+        dostarczeniem pushu:
+      </p>
+      <table>
+        <thead><tr><th>Token</th><th>Wartość zastąpiona</th></tr></thead>
+        <tbody>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Anonimowy identyfikator Samply odbiorcy.</td></tr>
+          <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Kod uczestnika odbiorcy (nie podstawiany, jeśli nie ustawiony).</td></tr>
+          <tr><td><Code>%GROUP_CODE%</Code></td><td>Identyfikator grupy odbiorcy (nie podstawiany, jeśli nie ustawiony).</td></tr>
+          <tr><td><Code>%MESSAGE_ID%</Code></td><td>Unikalny identyfikator tej wysyłki — użyj do łączenia wywołań zwrotnych ukończenia i anulowania przypomnień.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Code example ──────────────────────────────────────────────────── */}
+      <h2>Przykład kodu</h2>
+      <pre style={{ margin: '0.4rem 0 0', padding: '1.6rem', background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflowX: 'auto', fontFamily: 'var(--font-mono)', fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--ink)' }}>
+        <code>{CODE}</code>
+      </pre>
+
+      {/* ── Use cases ─────────────────────────────────────────────────────── */}
+      <h2>Przypadki użycia</h2>
+      <dl>
+        <dt>ESM zależne od zdarzeń wyzwalane z narzędzia ankietowego</dt>
+        <dd>
+          Na końcu ankiety Qualtrics fragment JavaScript wykonywany po zakończeniu ankiety
+          wysyła POST do punktu końcowego powiadomień z wartością{' '}
+          <Code>participantID</Code> uczestnika. Powiadomienie ankiety uzupełniającej
+          dociera do urządzenia uczestnika w ciągu kilku sekund od ukończenia pierwszej
+          ankiety.
+        </dd>
+        <dt>Projekty interakcji społecznych</dt>
+        <dd>
+          Gdy uczestnik A przesyła raport z interakcji społecznej, twoje zaplecze wysyła
+          POST z <Code>groupID</Code> ustawionym na grupę i <Code>participantID</Code>{' '}
+          ustawionym na uczestnika A. Inni członkowie grupy otrzymują powiadomienie;
+          uczestnik A nie.
+        </dd>
+        <dt>Faza ambulatoryjna wyzwalana w laboratorium</dt>
+        <dd>
+          System laboratoryjny wysyła POST z powiadomieniem do wszystkich uczestników
+          (tylko <Code>projectID</Code>, bez filtra grupy lub uczestnika) w momencie
+          zakończenia sesji laboratoryjnej — niezależnie od godziny — rozpoczynając w ten
+          sposób fazę ambulatoryjną badania.
+        </dd>
+      </dl>
+
+      {/* ── Feasibility study ─────────────────────────────────────────────── */}
+      <h2>Wykonalność i wydajność</h2>
+      <p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer'>Shevchenko &amp; Reips (2025)</a> zwalidowali Stream API w dwutygodniowym badaniu ESM.
+        W tym badaniu kanał RSS artykułów prasowych był pobierany codziennie i przetwarzany
+        przez ChatGPT w trzech warunkach — oryginalnym, sparafrazowanym i dezinformacyjnym —
+        przed transmisją do uczestników za pośrednictwem punktu końcowego powiadomień.
+        110 uczestnikom dostarczano trzy powiadomienia dziennie, w oparciu o zewnętrzne
+        zdarzenia w czasie rzeczywistym, a nie według stałego harmonogramu.
+      </p>
+      <p>Kluczowe ustalenia:</p>
+      <ul>
+        <li><strong>83% ogólny wskaźnik odpowiedzi</strong> — porównywalny lub przewyższający tradycyjne badania ESM o podobnym czasie trwania.</li>
+        <li><strong>Android 89% vs. iOS 77%</strong> — wskaźniki odpowiedzi różniły się między platformami; uwzględnij platformę jako kowariantę w analizach.</li>
+        <li><strong>Modyfikacje AI zachowały czytelność</strong> — tylko 1,2% elementów modyfikowanych przez AI zostało ocenionych jako nieczytelne; dezinformacja została pomyślnie wprowadzona (84% nierozpoznawalności w porównaniu z 73% w grupie kontrolnej).</li>
+        <li><strong>Wskaźnik rezygnacji</strong> był zgodny z innymi badaniami ESM o podobnej długości, potwierdzając, że transmisja w czasie rzeczywistym nie zwiększyła obciążenia uczestników.</li>
+      </ul>
+      <p>
+        Badanie pokazuje, że Stream API nadaje się do projektów, w których treść
+        powiadomienia musi być generowana lub wybierana w momencie dostarczenia — w tym
+        do badań percepcji wiadomości, badań mediów społecznościowych, pomiaru opinii
+        publicznej, interwencji medycznych i monitorowania środowiska. Implementacja
+        serwera open source realizująca ten potok jest dostępna na GitHub.
+      </p>
+
+      {/* ── Responses ─────────────────────────────────────────────────────── */}
+      <h2>Odpowiedzi serwera</h2>
+      <table>
+        <thead><tr><th>Odpowiedź</th><th>Znaczenie</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code> / <Code>OK</Code></td><td>Powiadomienie pomyślnie wysłane.</td></tr>
+          <tr><td><Code>401</Code></td><td>Token brakuje, wygasł lub nie pasuje do projektu.</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+const TARGETING_AR = [
+  { params: "groupID + participantID", effect: "جميع أعضاء المجموعة باستثناء المشارك المُحدَّد." },
+  { params: "groupID only",            effect: "جميع أعضاء المجموعة." },
+  { params: "participantID only",      effect: "هذا المشارك المُحدَّد فقط." },
+  { params: "neither",                 effect: "جميع المشاركين في الدراسة." },
+];
+
+function StreamContentAr() {
+  return (
+    <>
+      <p>
+        يُتيح Stream API لنظام خارجي — أداة استطلاع، أو سير عمل REDCap، أو
+        نص برمجي، أو أي عميل HTTP — إطلاق إشعارات الدفع إلى المشاركين في الدراسة
+        عند الطلب. بدلاً من انتظار إرسال مُجدوَل، ترسل طلب POST إلى نقطة نهاية
+        الإشعار في Samply، فيُطلَق الإشعار فوراً. هذه هي الأداة المناسبة للمشاريع
+        المعتمدة على الأحداث، حيث يجب أن يتبع الإشعار حدثاً وليس وقتاً.
+      </p>
+
+      {/* ── Published research ────────────────────────────────────────────── */}
+      <div style={{ background: 'var(--coral-soft)', borderLeft: '3px solid var(--coral)', borderRadius: '0 0.8rem 0.8rem 0', padding: '1.4rem 1.6rem', margin: '0.4rem 0 2.4rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--coral)', marginBottom: '0.7rem' }}>Published research</div>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)' }}>
+          قُدِّم Stream API وجرى التحقق منه تجريبياً في ورقة بحثية مُحكَّمة في مجلة <em>Behavior Research Methods</em>:
+        </p>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)', fontWeight: 500 }}>
+          Shevchenko, Y., &amp; Reips, U.-D. (2025). Samply Stream API: The AI-enhanced method for real-time event data streaming. <em>Behavior Research Methods</em>, 57, 119.
+        </p>
+        <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer' style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', wordBreak: 'break-all' }}>https://doi.org/10.3758/s13428-025-02634-1</a>
+        <p style={{ margin: '1rem 0 0', fontSize: '1.25rem', lineHeight: 1.6, color: 'var(--ink-60)' }}>
+          أجرت دراسة الجدوى مع <strong style={{ color: 'var(--ink)' }}>110 مشاركاً</strong> على مدى أسبوعين تسليم مقالات إخبارية مُعدَّلة بواسطة الذكاء الاصطناعي في الوقت الفعلي وحقّقت <strong style={{ color: 'var(--ink)' }}>معدّل استجابة 83٪</strong> — مُبيِّنةً أن الأنظمة الخارجية يمكنها بثّ محتوى ديناميكي ومُخصَّص إلى المشاركين لحظة وقوع الأحداث.
+        </p>
+      </div>
+
+      {/* ── Endpoint ──────────────────────────────────────────────────────── */}
+      <h2>نقطة النهاية</h2>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.2rem', background: 'var(--ink-10)', padding: '0.9rem 1.2rem', borderRadius: '0.6rem', color: 'var(--ink)' }}>
+        POST https://samply.uni-konstanz.de/api/notify
+      </div>
+      <p style={{ marginTop: '1.2rem' }}>
+        يجب أن يكون Content-Type بقيمة <Code>application/json</Code>. لا تُستخدَم
+        أيّ ترويسة مصادقة — تجري المصادقة عبر رمز notify الخاص بالدراسة
+        ضمن جسم الطلب.
+      </p>
+
+      {/* ── Token ─────────────────────────────────────────────────────────── */}
+      <h2>Notify Token</h2>
+      <p>
+        لكل دراسة رمز notify يُصرِّح للطلبات إلى الـ API. تُحدِّد مالك الدراسة
+        مدّة صلاحية الرمز. أنشئ الرمز أو جدِّده في تبويب <strong>Stream API</strong>
+        في لوحة الدراسة. بعد التجديد، يُبطَل الرمز السابق فوراً — حدِّث جميع
+        النصوص البرمجية التي تستخدمه.
+      </p>
+      <p>
+        يمكن لمالك الدراسة فقط توليد الرموز. أمّا المتعاونون (أعضاء الفريق)
+        فيمكنهم رؤية الرمز الموجود واستخدامه في الطلبات، لكن لا يمكنهم تجديده.
+      </p>
+
+      {/* ── Request body ──────────────────────────────────────────────────── */}
+      <h2>جسم الطلب</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>الحقل</th>
+            <th>إلزامي</th>
+            <th>الوصف</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>projectID</Code></td>
+            <td>نعم</td>
+            <td>مُعرِّف الدراسة الظاهر في عنوان URL للوحة التحكّم.</td>
+          </tr>
+          <tr>
+            <td><Code>token</Code></td>
+            <td>نعم</td>
+            <td>رمز notify الخاص بالدراسة. يجب ألّا يكون منتهي الصلاحية.</td>
+          </tr>
+          <tr>
+            <td><Code>title</Code></td>
+            <td>نعم</td>
+            <td>السطر الأول بخطّ عريض لإشعار الدفع.</td>
+          </tr>
+          <tr>
+            <td><Code>message</Code></td>
+            <td>نعم</td>
+            <td>نصّ متن الإشعار.</td>
+          </tr>
+          <tr>
+            <td><Code>url</Code></td>
+            <td>لا</td>
+            <td>رابط الاستطلاع الذي يُفتَح عند ضغط المشارك على الإشعار. يدعم الرموز النائبة في عنوان URL (انظر أدناه).</td>
+          </tr>
+          <tr>
+            <td><Code>expireIn</Code></td>
+            <td>لا</td>
+            <td>عدد الدقائق التي يُتجاهَل بعدها الإشعار غير المُسلَّم. احذفه لتعطيل فترة الصلاحية.</td>
+          </tr>
+          <tr>
+            <td><Code>groupID</Code></td>
+            <td>لا</td>
+            <td>مُعرِّف المجموعة المختصر. يُقصِر التسليم على أعضاء هذه المجموعة (انظر الاستهداف).</td>
+          </tr>
+          <tr>
+            <td><Code>participantID</Code></td>
+            <td>لا</td>
+            <td>مُعرِّف Samply لمشارك مُعيَّن. يُقصِر التسليم على شخص واحد أو يستثنيه من الإرسال إلى المجموعة (انظر الاستهداف).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* ── Targeting ─────────────────────────────────────────────────────── */}
+      <h2>الاستهداف</h2>
+      <p>
+        تُحدِّد توليفة <Code>groupID</Code> و<Code>participantID</Code> مَن
+        يتلقّى الإشعار:
+      </p>
+      <div style={{ border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflow: 'hidden', background: 'var(--surface)', margin: '1rem 0 1.6rem' }}>
+        {TARGETING_AR.map((t, i) => (
+          <div key={t.params} style={{ display: 'flex', gap: '2rem', padding: '0.9rem 1.4rem', borderBottom: i < TARGETING_AR.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'baseline', flexWrap: 'wrap' }}>
+            <code style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--coral)', background: 'rgba(214,90,48,.06)', padding: '0.15rem 0.6rem', borderRadius: '0.4rem', flexShrink: 0 }}>{t.params}</code>
+            <span style={{ fontSize: '1.25rem', color: 'var(--ink-60)' }}>{t.effect}</span>
+          </div>
+        ))}
+      </div>
+      <p>
+        صُمِّمت توليفة <Code>groupID + participantID</Code> لمشاريع ESM الاجتماعية:
+        يُطلِق فعلٌ من المشارك A إشعاراً إلى بقية أعضاء المجموعة باستثنائه هو.
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2>الرموز النائبة في عنوان URL</h2>
+      <p>
+        يدعم حقل <Code>url</Code> الرموز النائبة نفسها <Code>%TOKEN%</Code> التي
+        تدعمها الإشعارات المُجدوَلة. تستبدلها Samply لكل مشارك قبل تسليم الإشعار:
+      </p>
+      <table>
+        <thead><tr><th>الرمز</th><th>القيمة المُستبدَلة</th></tr></thead>
+        <tbody>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>مُعرِّف Samply المجهول الخاص بالمستلِم.</td></tr>
+          <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>رمز المشارك الخاص بالمستلِم (لا يُستبدَل إن لم يكن مُعيَّناً).</td></tr>
+          <tr><td><Code>%GROUP_CODE%</Code></td><td>مُعرِّف المجموعة الخاص بالمستلِم (لا يُستبدَل إن لم يكن مُعيَّناً).</td></tr>
+          <tr><td><Code>%MESSAGE_ID%</Code></td><td>مُعرِّف فريد لهذا الإرسال — استخدمه لربط استدعاءات الإكمال وإلغاء التذكيرات.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Code example ──────────────────────────────────────────────────── */}
+      <h2>مثال برمجي</h2>
+      <pre style={{ margin: '0.4rem 0 0', padding: '1.6rem', background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '0.8rem', overflowX: 'auto', fontFamily: 'var(--font-mono)', fontSize: '1.15rem', lineHeight: 1.7, color: 'var(--ink)' }}>
+        <code>{CODE}</code>
+      </pre>
+
+      {/* ── Use cases ─────────────────────────────────────────────────────── */}
+      <h2>حالات الاستخدام</h2>
+      <dl>
+        <dt>ESM معتمد على الأحداث يُطلَق من أداة استطلاع</dt>
+        <dd>
+          في نهاية استطلاع Qualtrics، يُنفَّذ مقتطف JavaScript بعد إكمال الاستطلاع
+          ويُرسِل طلب POST إلى نقطة نهاية الإشعار يحمل قيمة <Code>participantID</Code>
+          للمشارك. يصل إشعار الاستطلاع المتابِع إلى جهاز المشارك خلال ثوانٍ من
+          إكمال الاستطلاع الأول.
+        </dd>
+        <dt>مشاريع التفاعل الاجتماعي</dt>
+        <dd>
+          عندما يُرسِل المشارك A تقرير تفاعل اجتماعي، يُرسِل الخادم الخلفي طلب POST
+          مع <Code>groupID</Code> مُعيَّناً للمجموعة و<Code>participantID</Code>{' '}
+          مُعيَّناً للمشارك A. يتلقّى بقية أعضاء المجموعة الإشعار؛ أمّا المشارك A فلا.
+        </dd>
+        <dt>مرحلة إسعافية يُطلِقها المختبر</dt>
+        <dd>
+          يُرسِل نظام المختبر طلب POST بإشعار إلى جميع المشاركين
+          (بـ <Code>projectID</Code> فقط دون مُرشِّح مجموعة أو مشارك) لحظة انتهاء
+          جلسة المختبر — مهما كان الوقت — مُطلِقاً بذلك مرحلة الدراسة الإسعافية.
+        </dd>
+      </dl>
+
+      {/* ── Feasibility study ─────────────────────────────────────────────── */}
+      <h2>الجدوى والأداء</h2>
+      <p>
+        تَحقَّق <a href='https://doi.org/10.3758/s13428-025-02634-1' target='_blank' rel='noopener noreferrer'>Shevchenko &amp; Reips (2025)</a> من Stream API في دراسة ESM لمدّة أسبوعين.
+        في هذه الدراسة، كان يُسحَب علفٌ RSS للمقالات الإخبارية يومياً ويُعالَج
+        بواسطة ChatGPT في ثلاثة شروط — أصلي ومُعاد صياغته ومُضلِّل — قبل بثّه
+        إلى المشاركين عبر نقطة نهاية الإشعار. تلقّى 110 مشاركاً ثلاثة إشعارات
+        يومياً، مدفوعةً بأحداث خارجية في الوقت الفعلي وليس بجدول ثابت.
+      </p>
+      <p>أبرز النتائج:</p>
+      <ul>
+        <li><strong>معدّل استجابة إجمالي 83٪</strong> — مماثل لدراسات ESM التقليدية بمدّة مماثلة أو يفوقها.</li>
+        <li><strong>Android 89٪ مقابل iOS 77٪</strong> — اختلفت معدّلات الاستجابة بين المنصّات؛ ضع المنصّة كمتغيّر مُشارِك في التحليلات.</li>
+        <li><strong>حافظت تعديلات الذكاء الاصطناعي على القابلية للقراءة</strong> — صُنِّف 1.2٪ فقط من العناصر المُعدَّلة بواسطة الذكاء الاصطناعي على أنها غير مقروءة؛ كما زُرِع التضليل بنجاح (84٪ من عدم القابلية للتمييز مقارنةً بـ 73٪ في المجموعة الضابطة).</li>
+        <li><strong>كان معدّل الانسحاب</strong> متّسقاً مع دراسات ESM الأخرى ذات المدّة المماثلة، مما يؤكّد أن البثّ في الوقت الفعلي لم يَزِد العبء على المشاركين.</li>
+      </ul>
+      <p>
+        تُظهِر الدراسة أن Stream API ملائم لمشاريع يجب فيها توليد محتوى الإشعار
+        أو اختياره لحظة التسليم — بما في ذلك أبحاث استقبال الأخبار، وأبحاث وسائل
+        التواصل الاجتماعي، وقياس الرأي العام، والتدخّلات الطبية، ومراقبة البيئة.
+        يتوفّر تطبيق خادم مفتوح المصدر يُنجِز هذا الخطّ على GitHub.
+      </p>
+
+      {/* ── Responses ─────────────────────────────────────────────────────── */}
+      <h2>ردود الخادم</h2>
+      <table>
+        <thead><tr><th>الردّ</th><th>المعنى</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code> / <Code>OK</Code></td><td>أُرسِل الإشعار بنجاح.</td></tr>
+          <tr><td><Code>401</Code></td><td>الرمز مفقود أو منتهي الصلاحية أو لا يطابق المشروع.</td></tr>
         </tbody>
       </table>
     </>

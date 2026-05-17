@@ -56,6 +56,144 @@ const nl: DeepLoose<Messages> = {
     users:           "Gebruikers",
   },
 
+  home: {
+    hero: {
+      greeting:   "hallo, onderzoeker ✉",
+      headline1:  "Stuur kleine",
+      headline2:  "ansichtkaarten",
+      headline3:  "naar uw deelnemers.",
+      subtitle:   "Plan meldingen die op de telefoons van deelnemers verschijnen — willekeurig, vast of gebeurtenisafhankelijk — en stuur elke tik door naar de enquête of taak die u al gebruikt.",
+      cta:        "Start een studie →",
+      freeLabel:  "Gratis voor academisch gebruik",
+      stampYear:  "EST · 2020",
+      stampLabel: "voor onderzoek",
+    },
+
+    howItWorks: {
+      eyebrow:  "vier bewegende delen",
+      heading:  "Van planning naar enquête, zonder een vinger uit te steken.",
+      subtitle: "Samply is het stukje tussen uw studieontwerp en uw enquêtetool. Het draait de cron, levert de melding af en stuurt de tik door.",
+      stepOf:   "stap {n} van {total}",
+      steps: [
+        {
+          title: "Planning",
+          body:  "Kies een tijdsregel — willekeurig, vast of gebeurtenisafhankelijk. Teken een venster op de dag, stel stille uren en een minimumafstand in.",
+        },
+        {
+          title: "Ping",
+          body:  "Samply draait de cron. Elke deelnemer ontvangt een kleine pushmelding in zijn eigen tijdzone, in de Samply Research-app.",
+        },
+        {
+          title: "Tik",
+          body:  "Ze tikken. Samply voegt hun deelnemers-ID en ping-ID toe en stuurt de tik door naar de URL die u heeft opgegeven.",
+        },
+        {
+          title: "Enquête",
+          body:  "Uw bestaande tool — Qualtrics, REDCap, LimeSurvey, uw eigen URL — doet de rest. Samply registreert dat de tik is aangekomen.",
+        },
+      ],
+    },
+
+    timingRules: {
+      sectionLabel: "stap 01 · in detail",
+      heading:      "U tekent vensters op de dag. Wij vullen ze in.",
+      pickOne:      "→ kies er een, of combineer",
+      cards: [
+        {
+          eyebrow: "01 · willekeurig",
+          title:   "Vijf verrassingspings, ergens vandaag.",
+          body:    "Stel een venster, een aantal en een minimumafstand in. Samply verdeelt de prompts zodat deelnemers de volgende niet kunnen voorspellen.",
+        },
+        {
+          eyebrow: "02 · vast",
+          title:   "Elke avond om 9, een dagboek van één minuut.",
+          body:    "Kies de tijden die bij uw protocol passen — 9 uur, 15 uur, bedtijd — en laat deelnemers de gewoonte opbouwen.",
+        },
+        {
+          eyebrow: "03 · gebeurtenis",
+          title:   "Direct nadat ze hun training hebben voltooid.",
+          body:    "Trigger pings vanuit upstream-signalen — wearables, webhooks, een tik van de deelnemer.",
+        },
+      ],
+    },
+
+    mobileSection: {
+      sectionLabel:   "stappen 02 + 03 · in detail",
+      heading:        "De telefoon is het makkelijke deel.",
+      body:           "De Samply Research-app op de telefoon van de deelnemer ontvangt het schema en toont de prompt. Tik erop, en ze komen in uw enquête met hun ID bijgevoegd.",
+      badgePlatforms: "iOS · Android",
+      badgeTZ:        "Tijdzone per deelnemer",
+      languagesLabel: "14 talen —",
+      mockupNote:     "→ dat is alles.",
+      mockupApp:      "Samply · nu",
+      mockupQuestion: "Hoe gaat het met u, nu?",
+      mockupHint:     "tik om te beginnen · ≈90s",
+    },
+
+    integrations: {
+      sectionLabel: "stap 04 · in detail",
+      heading:      "Dan geven we de tik door aan uw enquête.",
+      note:         "werkt goed met",
+    },
+
+    methods: {
+      eyebrow:    "voor de werkende onderzoeker",
+      heading:    "De methoden waarvoor we zijn gebouwd.",
+      subtitle:   "Samply heeft opvattingen over timing, intervallen en stille uren — geleend van de methodologen die ons hebben opgeleid. Hier zijn de protocollen die we door en door kennen.",
+      stampLabel: "EMA · dagboek",
+      cards: [
+        { title: "Experience sampling",             body: "Willekeurige pings binnen blokken; 4–8 per dag; 7–21 dagen. Waarschijnlijk wat u bedoelt." },
+        { title: "Ecological momentary assessment", body: "Hetzelfde als ESM met een klinisch accent. Compliance-bands, drop-out-tracking, audit trail." },
+        { title: "Eindedag-dagboek",                body: "Eén vaste prompt, vaak om 21:00 lokale tijd. De langzame neef." },
+        { title: "Ambulatoire beoordeling",         body: "Gebeurtenisafhankelijke prompts geactiveerd door wearables, geofences of webhooks." },
+        { title: "Measurement burst",               body: "Twee of drie weken intensieve steekproeven, met kwartaalintervallen herhaald." },
+        { title: "Discrete-choice experiment",      body: "Vooraf gerandomiseerde condities, bijgevoegd als embedded data op de route-URL." },
+      ],
+    },
+
+    defaults: {
+      eyebrow:    "standaardwaarden · ontleend aan de literatuur",
+      heading:    "Verstandige cijfers, standaard ingeschakeld.",
+      subtitle:   "We vullen vooraf de knoppen in die onderzoekers het vaakst verkeerd instellen. Override per studie wat u wilt.",
+      colSetting: "instelling",
+      colDefault: "standaard",
+      colWhy:     "waarom",
+      rows: [
+        { k: "Min. interval",     v: "45 min",          w: "Onder 30 vloeien antwoordstijlen over pings heen." },
+        { k: "Venster",           v: "09:00–21:00",     w: "Stille uren worden gerespecteerd per tijdzone van de deelnemer." },
+        { k: "Pings / dag",       v: "5",               w: "Vijf is de gulden middenweg voor ESM bij volwassenen." },
+        { k: "Burstduur",         v: "14 dagen",        w: "Lang genoeg voor variantie binnen een persoon." },
+        { k: "Compliance-vloer",  v: "40%",             w: "Onder 40% triggert een zachte herbetrokkenheid." },
+        { k: "Tokenformaat",      v: "pid · ping · ts", w: "Drie variabelen, elke keer, in elke URL." },
+      ],
+    },
+
+    irb: {
+      heading: "Een IRB-vriendelijke voetafdruk.",
+      sub:     "Niets verlaat uw enquêtetool.",
+      link:    "Lees de samenvatting →",
+    },
+
+    testimonials: {
+      eyebrow: "vanuit de gemeenschap",
+      heading: "Onderzoekers die Samply gebruiken.",
+    },
+
+    cta: {
+      heading: "Zie het in uw eigen protocol.",
+      sub:     "Gratis voor academisch gebruik.",
+      button:  "Start een studie →",
+    },
+
+    footer: {
+      docs:        "Documentatie",
+      studies:     "Studies",
+      github:      "GitHub",
+      publication: "Publicatie",
+      copyright:   "© Samply",
+    },
+  },
+
   login: {
     title:            "Welkom terug",
     subtitle:         "Log in op uw onderzoekersaccount.",
@@ -124,6 +262,10 @@ const nl: DeepLoose<Messages> = {
     lowComplianceBody:  "{studies} — onder 60% in de afgelopen 7 dagen.",
     emptyLabel:        "nog geen studies",
     emptyBody:         "Maak uw eerste studie aan om te beginnen met het plannen van ESM-meldingen.",
+    smaatText:         "Heeft u ingebouwde enquêtes, cognitieve taken, sensordata of gamificatie nodig?",
+    smaatDetail:       "Samply verzorgt ESM-meldingen naar externe URL's. Voor studies die alles in één app nodig hebben, kijk eens naar SMAAT.",
+    smaatLink:         "Platforms vergelijken →",
+    testimonialNudge:  "Gebruikt u Samply voor onderzoek? Deel uw ervaring →",
     emptyCta:          "Studie aanmaken →",
   },
 
@@ -134,6 +276,13 @@ const nl: DeepLoose<Messages> = {
     emailNotConfirmed:    "niet bevestigd",
     resendConfirmation:   "Bevestigingsmail opnieuw verzenden",
     resendPending:        "Bezig met verzenden…",
+    emailChangeHint:      "Als je je e-mailadres wijzigt, geldt het pas als bevestigd zodra je op de link in je nieuwe inbox klikt.",
+    emailSave:            "E-mail opslaan",
+    emailSavePending:     "Bezig met opslaan…",
+    noticeEmailChanged:   "E-mail bijgewerkt. Bevestig het bericht in je nieuwe inbox.",
+    noticeEmailUnchanged: "E-mailadres ongewijzigd.",
+    errorEmailInvalid:    "Vul een geldig e-mailadres in.",
+    errorEmailInUse:      "Dit e-mailadres is al in gebruik door een ander account.",
     sectionProfile:       "Profiel",
     displayName:          "Weergavenaam",
     researchInstitute:    "Onderzoeksinstituut",
@@ -150,6 +299,13 @@ const nl: DeepLoose<Messages> = {
     deleteAccount:        "Mijn account verwijderen →",
     noticeUpdated:        "Profiel bijgewerkt.",
     noticeConfirmationSent: "Bevestigingsmail verzonden. Controleer uw inbox.",
+    privacyTitle: "Privacy & gegevens",
+    privacyIntro: "Uw studiegegevens zijn onderworpen aan automatische bewaartermijnen:",
+    privacyPending: "Wachtende meldingswachtrij — records worden na 30 dagen verwijderd",
+    privacyResults: "Meldingsgeschiedenis & reacties — na 12 maanden verwijderd",
+    privacyExport: "Exporteer uw gegevens regelmatig vanuit het tabblad Geschiedenis van elke studie voordat deze termijnen verstrijken.",
+    privacyPolicy: "Privacybeleid",
+    privacyTerms: "Algemene voorwaarden",
   },
 
   studyTab: {
@@ -168,6 +324,7 @@ const nl: DeepLoose<Messages> = {
     breadcrumb:  "← Dashboard",
     statusLive:  "● verzamelt",
     statusDraft: "concept",
+    editStudy: "Studie bewerken →",
   },
 
   studyOverview: {
@@ -332,6 +489,43 @@ const nl: DeepLoose<Messages> = {
     deactivated:       "gedeactiveerd · {n}",
     prev:              "← vorige",
     next:              "volgende →",
+    backToParticipants: "← Deelnemers",
+    detailEyebrow: "deelnemer",
+    statusActive: "actief",
+    statusDeactivated: "gedeactiveerd",
+    labelGroup: "Groep",
+    labelEnrolled: "Ingeschreven",
+    labelPushToken: "Pushtoken",
+    detailNoToken: "Geen token",
+    detailNoTokenHint: "Deze deelnemer heeft geen toestemming voor meldingen gegeven, dus de Expo-pushtoken is nooit geregistreerd. Vraag de deelnemer om meldingen toe te staan in de apparaatinstellingen en zich opnieuw aan te melden voor de studie door de QR-code te scannen of de uitnodigingslink opnieuw te openen.",
+    labelStripeAccount: "Stripe-account",
+    labelTimezone: "Tijdzone",
+    labelTimeWindow: "Tijdsvenster",
+    scheduleNotification: "+ Melding plannen",
+    enabling: "Bezig met inschakelen…",
+    disabling: "Bezig met uitschakelen…",
+    enableNotifications: "⏵ Meldingen inschakelen",
+    disableNotifications: "⏸ Meldingen uitschakelen",
+    upcomingHeading: "aankomende meldingen",
+    seeAll: "alles bekijken →",
+    noUpcoming: "Geen aankomende meldingen gepland.",
+    thScheduledFor: "Gepland voor",
+    thTitle: "Titel",
+    thRem: "Herin.",
+    sentHeading: "verzonden meldingen · {n}",
+    noSent: "Nog geen meldingen verzonden.",
+    thNotification: "Melding",
+    thSent: "Verzonden",
+    thStatus: "Status",
+    payoutsHeading: "uitbetalingen · {n}",
+    thDate: "Datum",
+    thAmount: "Bedrag",
+    thCurrency: "Valuta",
+    thReceipt: "Bon",
+    openReceipt: "openen →",
+    dangerZoneHeading: "gevarenzone",
+    removeParticipant: "Deelnemer verwijderen",
+    removeParticipantHint: "Verwijdert deze deelnemer uit de studie. De meldingsgeschiedenis blijft bewaard.",
   },
 
   schedule: {
@@ -384,6 +578,7 @@ const nl: DeepLoose<Messages> = {
     statusSent:            "verzonden",
     statusArchived:        "gearchiveerd",
     statusReceivedInApp:   "ontvangen in app",
+    retentionNote: "Meldingsrecords en reacties worden na 12 maanden automatisch verwijderd. Exporteer de CSV regelmatig als u records voor langere termijn nodig heeft.",
   },
 
   invitations: {
@@ -416,6 +611,28 @@ const nl: DeepLoose<Messages> = {
     searchNotePost:     "in de Samply-app. Deel de exacte studienaam:",
     searchPrivate:      "Uw studie is momenteel privé. Gebruik in plaats daarvan de webpagina of de app-link.",
     secureNote:         "Genereer een manipulatiebestendige link met een checksum. Deelnemers kunnen deze op hun telefoon openen of in het registratiescherm plakken. Per-deelnemerscodes maken links eenmalig bruikbaar.",
+    secureProtocolLabel: "Protocol",
+    secureProtocolHint: "https is veilig en aanbevolen",
+    secureServerLabel: "Server",
+    secureServerHint: "bijv. samply.uni-konstanz.de",
+    secureStudyIdLabel: "Studie-ID",
+    secureStudyIdHint: "Automatisch ingevuld — kan niet worden gewijzigd",
+    secureModeLabel: "Modus",
+    secureModeHint: "Multi: ondersteunt meerdere studies · Single: alleen deze studie",
+    secureModeMulti: "Multi",
+    secureModeSingle: "Single",
+    secureValidForLabel: "Geldig voor (uren)",
+    secureValidForHint: "bijv. 168 = 7 dagen",
+    secureCodeLabel: "Deelnemerscode",
+    secureCodeHint: "Leeg laten voor gedeelde link · Vul in om aan één persoon toe te wijzen",
+    secureCodePlaceholder: "bijv. P001",
+    secureAllowTz: "Tijdzone-updates toestaan",
+    secureAllowPayment: "Betaalaccount toestaan",
+    secureGenerate: "Veilige link genereren",
+    secureCopyLink: "Link kopiëren",
+    secureCopied: "Gekopieerd ✓",
+    secureQrLabel: "QR-code",
+    secureQrHint: "Deelnemers kunnen deze scannen om de registratielink direct op hun telefoon te openen.",
   },
 
   approval: {
@@ -496,6 +713,11 @@ const nl: DeepLoose<Messages> = {
     selectLabel:        "Deelnemers selecteren · {n} zonder groep",
     createButton:       "Groep aanmaken →",
     creatingLabel:      "Aanmaken…",
+    selectOptional: "Deelnemers toewijzen (optioneel)",
+    autoScheduledNotice: "{n} melding(en) automatisch in de wachtrij geplaatst voor nieuw toegewezen deelnemers op basis van bestaande niet-gekoppelde schema's.",
+    scheduleWarningTitle: "Deze groep heeft actieve niet-gekoppelde schema's",
+    scheduleWarningBody: "Deelnemers die u toewijst, krijgen onmiddellijk hun komende meldingen ingepland, beginnend vanaf de eigen registratiedatum van elke persoon. Voorbije meldingstijden worden overgeslagen.",
+    noParticipants: "Nog geen deelnemers — u kunt ze later toevoegen.",
   },
 
   forum: {
@@ -544,7 +766,6 @@ const nl: DeepLoose<Messages> = {
   },
 
   studyDetail: {
-    allStudies:            "← Alle studies",
     acceptingParticipants: "● deelnemers welkom",
     scanToJoin:            "scan om deel te nemen",
     openWithApp:           "Openen met de Samply-app op iOS of Android",
@@ -553,6 +774,14 @@ const nl: DeepLoose<Messages> = {
     findStudyHint:         "via Studie zoeken → Code invoeren",
     tapToOpen:             "Op uw telefoon?",
     tapToOpenLink:         "Tik om direct te openen",
+  },
+
+  studyNotFound: {
+    eyebrow:        "deze kaart kwam niet aan",
+    title:          "Studie niet gevonden",
+    body:           "We konden deze studie niet vinden. Misschien is ze afgelopen, door de onderzoeker verwijderd, of klopt de link net niet.",
+    goHome:         "Naar startpagina",
+    footer:         "Als u hier via een e-mail of QR-code bent gekomen, is de aanmelding voor de studie waarschijnlijk gesloten.",
   },
 
   studyDone: {
@@ -747,7 +976,6 @@ const nl: DeepLoose<Messages> = {
     colPrefs:       "Tijdvoorkeuren",
     colTimezone:    "Tijdzone",
     colPayout:      "Uitbetaling",
-    colHistory:     "Geschiedenis",
   },
 
   legacyProjects: {
@@ -759,29 +987,6 @@ const nl: DeepLoose<Messages> = {
     newStudy:       "+ Nieuwe studie",
   },
 
-  legacyHistory: {
-    title:        "Meldingsgeschiedenis",
-    studyLabel:   "Studie:",
-    selectStudy:  "Selecteer hierboven een studie om de meldingsgeschiedenis te bekijken.",
-    noResults:    "Geen resultaten gevonden.",
-    page:         "Pagina {n} van {pages} — {count} records",
-    colSamplyId:  "Samply-ID",
-    colBatch:     "Batch",
-    colTitle:     "Titel",
-    colMessage:   "Bericht",
-    colUrl:       "URL",
-    colSent:      "Verzonden",
-    colExpires:   "Verloopt",
-    colReceived:  "Ontvangen",
-    colTapped:    "Getikt",
-    colOpened:    "Geopend",
-    colArchived:  "Gearchiveerd",
-    colGeofence:  "Geofence",
-    colCompleted: "Voltooid",
-    colMessageId: "Bericht-ID",
-    colStatus:    "Status",
-    colReceipt:   "Ontvangstbewijs",
-  },
 
   legacyPayouts: {
     tabPayouts:      "Uitbetalingen",
@@ -934,6 +1139,19 @@ const nl: DeepLoose<Messages> = {
     prevPage:                "← Vorige",
     nextPage:                "Volgende →",
     agendaJobs:              "agenda-taken · {n}",
+    retentionHistoryLink: "Geschiedenis openen →",
+    retentionNote: "Verzonden en geannuleerde records worden hier 30 dagen bewaard voor debugging en daarna automatisch verwijderd. Verzonden meldingen en reacties worden ook in het tabblad Geschiedenis van de studie geregistreerd en daar 12 maanden bewaard.",
+    editJobTitle: "Agenda-job bewerken",
+    editJobBack: "← Terug naar meldingsjobs",
+    editJobType: "Jobtype",
+    editJobRepeatInterval: "Herhalingsinterval",
+    editJobUserId: "Gebruikers-ID",
+    editJobGroupId: "Groeps-ID",
+    editJobLastRun: "Laatste run",
+    editJobNextRunAt: "Volgende run om",
+    editJobSave: "Opslaan",
+    editJobSaving: "Bezig met opslaan…",
+    editJobCancel: "Annuleren",
   },
 
   pendingTable: {
@@ -1076,6 +1294,11 @@ const nl: DeepLoose<Messages> = {
     alertGroups:         "Kies specifieke groepen of selecteer alle",
     alertRepeatDates:    "Herhalen elke N minuten met specifieke datums wordt niet ondersteund. Kies in plaats daarvan een datumspatroon.",
     alertError:          "Verzoek mislukt",
+    yokedLabel: "Gekoppeld ontwerp",
+    yokedHintOn: "Alle groepsleden ontvangen meldingen op exact dezelfde tijden — één gedeeld schema voor iedereen. Voor registratie-relatieve tijden is het ankerpunt de laatst-toegetreden deelnemer op het moment dat u dit schema aanmaakt; alle anderen worden verschoven om met die tijdlijn overeen te komen. Deelnemers die later aan de groep deelnemen, worden automatisch in hetzelfde gedeelde schema opgenomen op het moment van verzending (geen herankering).",
+    yokedHintOff: "Elke deelnemer krijgt een volledig onafhankelijk schema. Willekeurige tijden worden per persoon afzonderlijk getrokken. Registratie-relatieve vensters beginnen vanaf de eigen aanmelddatum van elke persoon. Nieuwe deelnemers die aan deze groep worden toegewezen, ontvangen automatisch hun eigen vers berekende meldingen.",
+    yokedOn: "Gekoppeld",
+    yokedOff: "Niet-gekoppeld (onafhankelijk)",
   },
 
   projectForm: {
@@ -1141,6 +1364,93 @@ const nl: DeepLoose<Messages> = {
     groupPromptRandomPh:   "U wordt automatisch aan een groep toegewezen.",
   },
 
+  // ─── Deelnemersportaal ────────────────────────────────────────────────────────
+  participant: {
+    nav: {
+      home:     "Home",
+      history:  "Geschiedenis",
+      account:  "Account",
+      signOut:  "Afmelden",
+      signIn:   "Aanmelden",
+    },
+
+    login: {
+      title:            "Meld u aan bij uw account",
+      subtitle:         "Deelnemers — meld u aan om uw studieactiviteit te bekijken.",
+      emailLabel:       "E-mail",
+      emailPlaceholder: "jij@voorbeeld.nl",
+      passwordLabel:    "Wachtwoord",
+      forgotPassword:   "Vergeten?",
+      submit:           "Aanmelden →",
+      submitting:       "Bezig met aanmelden…",
+      enrolHint:        "Nog geen account? Deelnemers worden ingeschreven via de Samply mobiele app of een uitnodigingslink voor een studie.",
+      researcherLink:   "Onderzoeker? Hier aanmelden →",
+      /** Shown on the researcher /login page as a cross-link */
+      participantLink:  "Studiedeelnemer? Hier aanmelden →",
+      errorInvalid:     "Ongeldig e-mailadres of wachtwoord.",
+    },
+
+    home: {
+      eyebrow:           "uw studies",
+      title:             "Welkom terug",
+      /** {name} = participant display name */
+      titleWithName:     "Welkom terug, {name}",
+      idLabel:           "Uw deelnemers-ID",
+      noStudiesTitle:    "U doet nog niet mee aan studies",
+      noStudiesBody:     "Zodra u via de Samply-app of een uitnodigingslink aan een studie deelneemt, verschijnt deze hier.",
+      browseStudies:     "Openbare studies bekijken →",
+      studiesLabel:      "studies · {n}",
+      viewHistory:       "Geschiedenis bekijken →",
+      manageAccount:     "Account beheren →",
+      statsReceived:     "Ontvangen meldingen",
+      statsTapped:       "Geopend",
+      statsCompleted:    "Voltooid",
+      /** Label preceding the researcher's contact (name + email) under each enrolled study */
+      contactLabel:      "Contact:",
+    },
+
+    history: {
+      eyebrow:        "uw meldingen",
+      title:          "Geschiedenis",
+      breadcrumb:     "← Home",
+      empty:          "Nog geen meldingen. Wanneer onderzoekers u een melding sturen, verschijnt deze hier.",
+      colWhen:        "Wanneer",
+      colStudy:       "Studie",
+      colTitle:       "Melding",
+      colStatus:      "Status",
+      statusSent:     "verzonden",
+      statusTapped:   "geopend",
+      statusCompleted: "voltooid",
+      statusArchived: "verwijderd",
+      pagePrev:       "← Nieuwere",
+      pageNext:       "Oudere →",
+      pageOf:         "Pagina {page} van {pages}",
+    },
+
+    account: {
+      breadcrumb:    "← Home",
+      deleteAccount: "Mijn account verwijderen",
+      deleteIntro:   "Verwijder uw account en al uw antwoordgegevens permanent. Deze actie kan niet ongedaan worden gemaakt.",
+    },
+
+    // ─── Uitbetalingsaccount (Stripe Connect voor deelnemers) ──────────────────
+    payable: {
+      title:              "Uitbetalingsaccount",
+      intro:              "Koppel een uitbetalingsaccount als u betaling van onderzoekers wilt ontvangen voor deelname aan studies. Uw account wordt gehost door Stripe.",
+      createButton:       "Uitbetalingsaccount aanmaken →",
+      editButton:         "Uitbetalingsaccount bijwerken →",
+      confirmEmailFirst:  "Bevestig uw e-mailadres voordat u een uitbetalingsaccount instelt.",
+      statusCharges:      "Kan betalingen accepteren",
+      statusDetails:      "Onboardinggegevens",
+      statusPayouts:      "Uitbetalingen naar uw bank",
+      enabled:            "Ingeschakeld",
+      disabled:           "Nog niet ingeschakeld",
+      submitted:          "Ingediend",
+      notSubmitted:       "Niet ingediend",
+      errorCreate:        "Stripe-onboarding kon niet worden gestart. Probeer het opnieuw.",
+    },
+  },
+
   legacyInvitations: {
     title:      "Uitnodigingen",
     studyLabel: "Studie:",
@@ -1151,6 +1461,74 @@ const nl: DeepLoose<Messages> = {
     customLink: "Aangepaste link naar uw studie in de mobiele app",
     way3:       "Manier 3. Vraag deelnemers uw studie te vinden in de mobiele app",
     copyLink:   "Link kopiëren",
+  },
+
+  pushReceipt: {
+    title: "Push-ontvangstbevestiging",
+    note: "Let op: Zelfs als de status \"ok\" is, betekent dit niet dat het apparaat het bericht heeft ontvangen. \"ok\" betekent dat de Android- of iOS-pushservice de melding heeft ontvangen — als het apparaat uit staat, zal de dienst proberen deze later af te leveren.",
+    receiptId: "Ontvangst-ID",
+    status: "Status",
+    message: "Bericht",
+    details: "Details",
+    cleared: "Push-ontvangstbevestigingen worden na 24 uur gewist.",
+    missingPre: "Expo raadt aan om push-ontvangstbevestigingen 15 minuten na het verzenden van meldingen te controleren. Als er na 15 minuten geen bevestiging is, duidt dit waarschijnlijk op een fout in de push-service.",
+    missingLink: "Lees meer over push-ontvangstbevestigingen.",
+  },
+
+  resetPassword: {
+    linkExpired: "Link verlopen",
+    linkExpiredBody: "Deze wachtwoordresetlink is ongeldig of verlopen. Vraag een nieuwe aan.",
+    requestNewLink: "Nieuwe link aanvragen",
+    setNewPassword: "Nieuw wachtwoord instellen",
+    setNewPasswordSub: "Kies een sterk wachtwoord voor uw account.",
+    newPassword: "Nieuw wachtwoord",
+    confirmPassword: "Nieuw wachtwoord bevestigen",
+    resetButton: "Wachtwoord resetten",
+    resetPending: "Bezig met resetten…",
+    passwordUpdated: "Wachtwoord bijgewerkt. Log alstublieft in.",
+    resetFailed: "Reset mislukt. De link is mogelijk verlopen.",
+  },
+
+  deleteStudy: {
+    destructiveAction: "destructieve actie",
+    title: "Studie verwijderen",
+    studyLabel: "Studie",
+    statParticipants: "Deelnemers",
+    statResponses: "Reacties",
+    warnHasData: "Deze studie heeft deelnemers en responsdata. Door te verwijderen worden alle records permanent gewist.",
+    warnHasDataStrong: "Dit kan niet ongedaan worden gemaakt.",
+    warnNoData: "Deze studie heeft nog geen deelnemers of reacties. De studie wordt permanent verwijderd.",
+    confirmPre: "Typ",
+    confirmPost: "om te bevestigen",
+    deletePermanently: "Permanent verwijderen",
+    deletingLabel: "Bezig met verwijderen…",
+    cancel: "Annuleren",
+  },
+
+  testimonial: {
+    submittedTitle: "Bedankt.",
+    submittedBody: "Uw testimonial is ingediend en verschijnt na controle op de site.",
+    submittedBack: "← Terug naar dashboard",
+    breadcrumb: "← dashboard",
+    eyebrow: "uw woorden",
+    title: "Deel uw ervaring.",
+    subtitle: "Vertel ons hoe u Samply gebruikt en wat het mogelijk heeft gemaakt in uw onderzoek. Goedgekeurde testimonials verschijnen op de Samply-startpagina.",
+    fieldText: "Uw testimonial *",
+    fieldTextPlaceholder: "We hebben Samply gebruikt voor een 14-daagse ESM-studie in drie landen…",
+    fieldName: "Weergavenaam *",
+    fieldNamePlaceholder: "Dr. Jane Smith",
+    fieldRole: "Rol / titel",
+    fieldRolePlaceholder: "Universitair docent",
+    fieldInstitute: "Instelling",
+    fieldInstitutePlaceholder: "Universiteit van Voorbeeld",
+    submit: "Testimonial verzenden →",
+  },
+
+  docsError: {
+    label: "// fout",
+    heading: "Er is iets misgegaan.",
+    body: "Deze documentatiepagina kon niet worden weergegeven. Probeer opnieuw te laden — als het probleem aanhoudt, is de server mogelijk nog aan het compileren.",
+    tryAgain: "Opnieuw proberen",
   },
 
 };

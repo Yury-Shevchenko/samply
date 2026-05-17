@@ -354,6 +354,20 @@ const en = {
     emailNotConfirmed:    "not confirmed",
     resendConfirmation:   "Resend confirmation email",
     resendPending:        "Sending…",
+    /** Helper text under the email input on /account explaining what happens on change */
+    emailChangeHint:      "Changing your email will sign you out of confirmation until you click the link sent to the new address.",
+    /** Button to save a new email address */
+    emailSave:            "Save email",
+    /** Button pending label while saving a new email */
+    emailSavePending:     "Saving…",
+    /** Notice after a successful email change */
+    noticeEmailChanged:   "Email updated. Check your new inbox to confirm it.",
+    /** Notice if the submitted email matches the current one */
+    noticeEmailUnchanged: "Email unchanged.",
+    /** Error if the submitted email is not a valid format */
+    errorEmailInvalid:    "Please enter a valid email address.",
+    /** Error if another account already uses that email */
+    errorEmailInUse:      "That email is already in use by another account.",
     sectionProfile:       "Profile",
     displayName:          "Display name",
     researchInstitute:    "Research institute",
@@ -373,6 +387,13 @@ const en = {
     deleteAccount:   "Delete my account →",
     noticeUpdated:   "Profile updated.",
     noticeConfirmationSent: "Confirmation email sent. Check your inbox.",
+    privacyTitle:    "Privacy & Data",
+    privacyIntro:    "Your study data is subject to automatic retention limits:",
+    privacyPending:  "Pending notification queue — records deleted after 30 days",
+    privacyResults:  "Notification history & responses — deleted after 12 months",
+    privacyExport:   "Export your data regularly from each study's History tab before these periods expire.",
+    privacyPolicy:   "Privacy Policy",
+    privacyTerms:    "Terms & Conditions",
   },
 
   // ─── Study tab navigation ────────────────────────────────────────────────────
@@ -607,6 +628,114 @@ const en = {
     deactivated:        "deactivated · {n}",
     prev:               "← prev",
     next:               "next →",
+    // Participant detail page
+    backToParticipants:    "← Participants",
+    detailEyebrow:         "participant",
+    statusActive:          "active",
+    statusDeactivated:     "deactivated",
+    labelGroup:            "Group",
+    labelEnrolled:         "Enrolled",
+    labelPushToken:        "Push token",
+    detailNoToken:         "No token",
+    detailNoTokenHint:     "This participant has not granted notification permission, so their Expo push token was never registered. Ask them to allow notifications in their device settings and then re-join the study by scanning the QR code or opening the invitation link again.",
+    labelStripeAccount:    "Stripe account",
+    labelTimezone:         "Timezone",
+    labelTimeWindow:       "Time window",
+    scheduleNotification:  "+ Schedule notification",
+    enabling:              "Enabling…",
+    disabling:             "Disabling…",
+    enableNotifications:   "⏵ Enable notifications",
+    disableNotifications:  "⏸ Disable notifications",
+    upcomingHeading:       "upcoming notifications",
+    seeAll:                "see all →",
+    noUpcoming:            "No upcoming notifications scheduled.",
+    thScheduledFor:        "Scheduled for",
+    thTitle:               "Title",
+    thRem:                 "Rem.",
+    /** {n} = number of notifications sent */
+    sentHeading:           "notifications sent · {n}",
+    noSent:                "No notifications sent yet.",
+    thNotification:        "Notification",
+    thSent:                "Sent",
+    thStatus:              "Status",
+    /** {n} = number of payouts */
+    payoutsHeading:        "payouts · {n}",
+    thDate:                "Date",
+    thAmount:              "Amount",
+    thCurrency:            "Currency",
+    thReceipt:             "Receipt",
+    openReceipt:           "open →",
+    dangerZoneHeading:     "danger zone",
+    removeParticipant:     "Remove participant",
+    removeParticipantHint: "Removes this participant from the study. Their notification history is preserved.",
+  },
+
+  deleteStudy: {
+    destructiveAction:  "destructive action",
+    title:              "Delete study",
+    studyLabel:         "Study",
+    statParticipants:   "Participants",
+    statResponses:      "Responses",
+    warnHasData:        "This study has participants and response data. Deleting it will permanently erase all records.",
+    warnHasDataStrong:  "This cannot be undone.",
+    warnNoData:         "This study has no participants or responses yet. It will be permanently deleted.",
+    confirmPre:         "Type",
+    confirmPost:        "to confirm",
+    deletePermanently:  "Delete permanently",
+    deletingLabel:      "Deleting…",
+    cancel:             "Cancel",
+  },
+
+  docsError: {
+    label:    "// error",
+    heading:  "Something went wrong.",
+    body:     "This docs page could not be rendered. Try reloading — if the problem persists, the server may still be compiling.",
+    tryAgain: "Try again",
+  },
+
+  testimonial: {
+    submittedTitle:        "Thank you.",
+    submittedBody:         "Your testimonial has been submitted and will appear on the site after review.",
+    submittedBack:         "← Back to dashboard",
+    breadcrumb:            "← dashboard",
+    eyebrow:               "your words",
+    title:                 "Share your experience.",
+    subtitle:              "Tell us how you use Samply and what it has enabled in your research. Approved testimonials appear on the Samply homepage.",
+    fieldText:             "Your testimonial *",
+    fieldTextPlaceholder:  "We used Samply to run a 14-day ESM study across three countries...",
+    fieldName:             "Display name *",
+    fieldNamePlaceholder:  "Dr. Jane Smith",
+    fieldRole:             "Role / title",
+    fieldRolePlaceholder:  "Associate Professor",
+    fieldInstitute:        "Institution",
+    fieldInstitutePlaceholder: "University of Example",
+    submit:                "Submit testimonial →",
+  },
+
+  resetPassword: {
+    linkExpired:       "Link expired",
+    linkExpiredBody:   "This password reset link is invalid or has expired. Request a new one.",
+    requestNewLink:    "Request new link",
+    setNewPassword:    "Set new password",
+    setNewPasswordSub: "Choose a strong password for your account.",
+    newPassword:       "New password",
+    confirmPassword:   "Confirm new password",
+    resetButton:       "Reset password",
+    resetPending:      "Resetting…",
+    passwordUpdated:   "Password updated. Please log in.",
+    resetFailed:       "Reset failed. The link may have expired.",
+  },
+
+  pushReceipt: {
+    title:           "Push Receipt",
+    note:            "Note: Even if a receipt's status says \"ok\", this doesn't guarantee that the device received the message. \"ok\" means the Android or iOS push notification service successfully received the notification — if the device is off, the service will try to deliver it later.",
+    receiptId:       "Receipt ID",
+    status:          "Status",
+    message:         "Message",
+    details:         "Details",
+    cleared:         "Push receipts are cleared after 24 hours.",
+    missingPre:      "Expo recommends checking push receipts 15 minutes after sending notifications. If after 15 minutes there is no receipt, this likely indicates an error with the push notification service.",
+    missingLink:     "Read more about push receipts.",
   },
 
   // ─── Schedule page ───────────────────────────────────────────────────────────
@@ -679,6 +808,8 @@ const en = {
     statusSent:             "sent",
     statusArchived:         "archived",
     statusReceivedInApp:    "received in app",
+    /** Footer note about retention policy for notification records */
+    retentionNote:          "Notification records and responses are automatically deleted after 12 months. Export the CSV regularly if you need longer-term records.",
   },
 
   // ─── Invitations page ────────────────────────────────────────────────────────
@@ -721,6 +852,28 @@ const en = {
     searchPrivate:      "Your study is currently private. Use the Web page or App link tab instead.",
     /** Secure link tab */
     secureNote:         "Generate a tamper-proof link with a checksum. Participants can open it on their phone or paste it into the registration screen. Per-participant codes make links single-use.",
+    secureProtocolLabel:    "Protocol",
+    secureProtocolHint:     "https is secure and recommended",
+    secureServerLabel:      "Server",
+    secureServerHint:       "e.g. samply.uni-konstanz.de",
+    secureStudyIdLabel:     "Study ID",
+    secureStudyIdHint:      "Auto-filled — cannot be changed",
+    secureModeLabel:        "Mode",
+    secureModeHint:         "Multi: supports multiple studies · Single: this study only",
+    secureModeMulti:        "Multi",
+    secureModeSingle:       "Single",
+    secureValidForLabel:    "Valid for (hours)",
+    secureValidForHint:     "e.g. 168 = 7 days",
+    secureCodeLabel:        "Participant code",
+    secureCodeHint:         "Leave empty for shared link · Fill to assign one person",
+    secureCodePlaceholder:  "e.g. P001",
+    secureAllowTz:          "Allow timezone updates",
+    secureAllowPayment:     "Allow payment account",
+    secureGenerate:         "Generate secure link",
+    secureCopyLink:         "Copy link",
+    secureCopied:           "Copied ✓",
+    secureQrLabel:          "QR code",
+    secureQrHint:           "Participants can scan this to open the registration link directly on their phone.",
   },
 
   // ─── Approval page ───────────────────────────────────────────────────────────
@@ -892,7 +1045,6 @@ const en = {
   // @context Public page shown to potential participants. Contains a QR code and
   //          instructions to join. Friendly, accessible tone.
   studyDetail: {
-    allStudies:           "← All studies",
     acceptingParticipants: "● accepting participants",
     scanToJoin:           "scan to join",
     openWithApp:          "Open with the Samply app on iOS or Android",
@@ -901,6 +1053,19 @@ const en = {
     findStudyHint:        "in Find a Study → Enter code",
     tapToOpen:            "On your phone?",
     tapToOpenLink:        "Tap to open directly",
+  },
+
+  // ─── Study not-found page ────────────────────────────────────────────────────
+  // @page    /studies/[slug] when the slug doesn't resolve to a project
+  // @context Shown when a participant follows a stale link, a study has been
+  //          removed by the researcher, or the URL is mistyped. Tone: warm and
+  //          non-blaming — most often the study simply ended.
+  studyNotFound: {
+    eyebrow:        "this postcard didn't deliver",
+    title:          "Study not found",
+    body:           "We couldn't find this study. It may have ended, been removed by the researcher, or the link might be slightly off.",
+    goHome:         "Go home",
+    footer:         "If you reached this page from an email or QR code, the study likely closed enrolment.",
   },
 
   // ─── Study completion page ───────────────────────────────────────────────────
@@ -1139,7 +1304,6 @@ const en = {
     colPrefs:       "Time preferences",
     colTimezone:    "Timezone",
     colPayout:      "Payout",
-    colHistory:     "History",
   },
 
   // ─── Legacy projects page ─────────────────────────────────────────────────────
@@ -1153,31 +1317,6 @@ const en = {
     newStudy:       "+ New study",
   },
 
-  // ─── Legacy history page ──────────────────────────────────────────────────────
-  // @page    /history
-  legacyHistory: {
-    title:        "Notification History",
-    studyLabel:   "Study:",
-    selectStudy:  "Select a study above to view its notification history.",
-    noResults:    "No results found.",
-    page:         "Page {n} of {pages} — {count} records",
-    colSamplyId:  "Samply ID",
-    colBatch:     "Batch",
-    colTitle:     "Title",
-    colMessage:   "Message",
-    colUrl:       "URL",
-    colSent:      "Sent",
-    colExpires:   "Expires",
-    colReceived:  "Received",
-    colTapped:    "Tapped",
-    colOpened:    "Opened",
-    colArchived:  "Archived",
-    colGeofence:  "Geofence",
-    colCompleted: "Completed",
-    colMessageId: "Message ID",
-    colStatus:    "Status",
-    colReceipt:   "Receipt",
-  },
 
   // ─── Legacy payouts / receipts pages ─────────────────────────────────────────
   // @page    /payout/[id], /receipts/[id]
@@ -1362,6 +1501,21 @@ const en = {
     nextPage:                "Next →",
     /** {n} = job count */
     agendaJobs:              "agenda jobs · {n}",
+    /** Footer note about retention policy for the pending queue */
+    retentionNote:           "Sent and cancelled records are kept here for 30 days for debugging, then automatically deleted. Sent notifications and responses are also recorded in the study's History tab, where they are retained for 12 months.",
+    retentionHistoryLink:    "Open History →",
+    /** Edit Agenda Job page */
+    editJobTitle:            "Edit Agenda Job",
+    editJobBack:             "← Back to notification jobs",
+    editJobType:             "Job type",
+    editJobRepeatInterval:   "Repeat interval",
+    editJobUserId:           "User ID",
+    editJobGroupId:          "Group ID",
+    editJobLastRun:          "Last run",
+    editJobNextRunAt:        "Next run at",
+    editJobSave:             "Save",
+    editJobSaving:           "Saving…",
+    editJobCancel:           "Cancel",
   },
 
   // ─── Pending notification row actions ────────────────────────────────────────
@@ -1628,6 +1782,102 @@ const en = {
     groupPromptCodePh:     "Please enter the group code assigned to you by the researcher.",
     groupPromptListPh:     "Please select the group you have been assigned to.",
     groupPromptRandomPh:   "You will be automatically assigned to a group.",
+  },
+
+  // ─── Participant portal ───────────────────────────────────────────────────────
+  // @page    /participant/*
+  // @context UI shown to study participants (not researchers). Tone: warm, simple,
+  //          non-technical. Participants enroll via the mobile app or a study link;
+  //          the website is for reviewing what they’ve already received and managing
+  //          their account.
+  participant: {
+    nav: {
+      home:     "Home",
+      history:  "History",
+      account:  "Account",
+      signOut:  "Sign out",
+      signIn:   "Sign in",
+    },
+
+    login: {
+      title:            "Sign in to your account",
+      subtitle:         "Participants — sign in to review your study activity.",
+      emailLabel:       "Email",
+      emailPlaceholder: "you@example.com",
+      passwordLabel:    "Password",
+      forgotPassword:   "Forgot?",
+      submit:           "Sign in →",
+      submitting:       "Signing in…",
+      enrolHint:        "Don’t have an account? Participants are enrolled through the Samply mobile app or a study invitation link.",
+      researcherLink:   "Researcher? Sign in here →",
+      /** Shown on the researcher /login page as a cross-link */
+      participantLink:  "Study participant? Sign in here →",
+      errorInvalid:     "Invalid email or password.",
+    },
+
+    home: {
+      eyebrow:           "your studies",
+      title:             "Welcome back",
+      /** {name} = participant display name */
+      titleWithName:     "Welcome back, {name}",
+      idLabel:           "Your participant ID",
+      noStudiesTitle:    "You aren’t in any studies yet",
+      noStudiesBody:     "Once you join a study through the Samply mobile app or a study invitation link, it will appear here.",
+      browseStudies:     "Browse public studies →",
+      studiesLabel:      "studies · {n}",
+      viewHistory:       "View history →",
+      manageAccount:     "Manage account →",
+      statsReceived:     "Notifications received",
+      statsTapped:       "Tapped",
+      statsCompleted:    "Completed",
+      /** Label preceding the researcher's contact (name + email) under each enrolled study */
+      contactLabel:      "Contact:",
+    },
+
+    history: {
+      eyebrow:        "your notifications",
+      title:          "History",
+      breadcrumb:     "← Home",
+      empty:          "No notifications yet. When researchers send you a notification, it will show up here.",
+      colWhen:        "When",
+      colStudy:       "Study",
+      colTitle:       "Notification",
+      colStatus:      "Status",
+      statusSent:     "sent",
+      statusTapped:   "tapped",
+      statusCompleted: "completed",
+      statusArchived: "deleted",
+      pagePrev:       "← Newer",
+      pageNext:       "Older →",
+      pageOf:         "Page {page} of {pages}",
+    },
+
+    account: {
+      breadcrumb:    "← Home",
+      deleteAccount: "Delete my account",
+      deleteIntro:   "Permanently delete your account and all your response data. This action cannot be undone.",
+    },
+
+    // ─── Payable account (Stripe Connect for participants) ─────────────────────
+    // @page /account (for participants only)
+    // @context Lets participants connect a Stripe Express account so researchers
+    //          can pay them for participating in studies. This is OPTIONAL — a
+    //          participant only needs it if a study compensates them via Samply.
+    payable: {
+      title:              "Payable account",
+      intro:              "Connect a payable account if you’d like to receive payment from researchers for participating in studies. Your account is hosted by Stripe.",
+      createButton:       "Create payable account →",
+      editButton:         "Update payable account →",
+      confirmEmailFirst:  "Please confirm your email address before setting up a payable account.",
+      statusCharges:      "Can accept charges",
+      statusDetails:      "Onboarding details",
+      statusPayouts:      "Payouts to your bank",
+      enabled:            "Enabled",
+      disabled:           "Not yet enabled",
+      submitted:          "Submitted",
+      notSubmitted:       "Not submitted",
+      errorCreate:        "Could not start Stripe onboarding. Please try again.",
+    },
   },
 
   legacyInvitations: {

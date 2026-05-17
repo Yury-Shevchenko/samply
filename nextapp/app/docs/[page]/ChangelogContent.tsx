@@ -32,6 +32,24 @@ const TAG_LABEL_ZH: Record<ChangeTag, string> = {
   improvement: '改进',
 };
 
+const TAG_LABEL_AR: Record<ChangeTag, string> = {
+  new:         'جديد',
+  fix:         'إصلاح',
+  improvement: 'تحسين',
+};
+
+const TAG_LABEL_PL: Record<ChangeTag, string> = {
+  new:         'Nowe',
+  fix:         'Poprawka',
+  improvement: 'Ulepszenie',
+};
+
+const TAG_LABEL_TR: Record<ChangeTag, string> = {
+  new:         'Yeni',
+  fix:         'Düzeltme',
+  improvement: 'İyileştirme',
+};
+
 const TAG_COLOR: Record<ChangeTag, string> = {
   new:         'var(--coral)',
   fix:         'var(--sage)',
@@ -45,14 +63,30 @@ const TAG_BG: Record<ChangeTag, string> = {
 };
 
 function fmt(d: Date, locale: Locale) {
-  const lang = locale === 'de' ? 'de-DE' : locale === 'nl' ? 'nl-NL' : locale === 'ru' ? 'ru-RU' : locale === 'zh' ? 'zh-CN' : 'en-US';
+  const lang =
+    locale === 'de' ? 'de-DE' :
+    locale === 'nl' ? 'nl-NL' :
+    locale === 'ru' ? 'ru-RU' :
+    locale === 'zh' ? 'zh-CN' :
+    locale === 'ar' ? 'ar-SA' :
+    locale === 'pl' ? 'pl-PL' :
+    locale === 'tr' ? 'tr-TR' :
+    'en-US';
   return new Date(d).toLocaleDateString(lang, {
     month: 'long', day: 'numeric', year: 'numeric',
   });
 }
 
 function EntryCard({ entry, locale }: { entry: IChangelogEntry; locale: Locale }) {
-  const TAG_LABEL = locale === 'de' ? TAG_LABEL_DE : locale === 'nl' ? TAG_LABEL_NL : locale === 'ru' ? TAG_LABEL_RU : locale === 'zh' ? TAG_LABEL_ZH : TAG_LABEL_EN;
+  const TAG_LABEL =
+    locale === 'de' ? TAG_LABEL_DE :
+    locale === 'nl' ? TAG_LABEL_NL :
+    locale === 'ru' ? TAG_LABEL_RU :
+    locale === 'zh' ? TAG_LABEL_ZH :
+    locale === 'ar' ? TAG_LABEL_AR :
+    locale === 'pl' ? TAG_LABEL_PL :
+    locale === 'tr' ? TAG_LABEL_TR :
+    TAG_LABEL_EN;
   return (
     <div style={{ display: 'flex', gap: '4rem', paddingBottom: '3.6rem', borderBottom: '1px solid var(--ink-10)', marginBottom: '3.6rem' }}>
       {/* left — version + date */}
@@ -108,6 +142,12 @@ export default async function ChangelogContent({ locale }: { locale: Locale }) {
           ? 'Записей о версиях пока нет. Загляните позже.'
           : locale === 'zh'
           ? '暂无版本记录。请稍后再来。'
+          : locale === 'ar'
+          ? 'لم تُسجَّل أي إصدارات بعد. عد قريبًا.'
+          : locale === 'pl'
+          ? 'Nie zarejestrowano jeszcze żadnych wydań. Zajrzyj wkrótce.'
+          : locale === 'tr'
+          ? 'Henüz kaydedilmiş bir sürüm yok. Yakında tekrar kontrol edin.'
           : 'No releases logged yet. Check back soon.'}
       </p>
     );

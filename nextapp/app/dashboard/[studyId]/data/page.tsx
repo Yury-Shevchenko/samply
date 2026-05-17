@@ -287,6 +287,25 @@ export default async function DataPage({ params, searchParams }: Props) {
         </p>
       )}
 
+      {/* Retention notice */}
+      {count > 0 && (
+        <p
+          style={{
+            padding: "1.2rem 1.6rem",
+            border: "1px dashed var(--ink-20)",
+            borderRadius: "0.8rem",
+            background: "var(--surface)",
+            fontFamily: "var(--font-mono)",
+            fontSize: "1.05rem",
+            lineHeight: 1.6,
+            color: "var(--ink-60)",
+            margin: 0,
+          }}
+        >
+          {t("data.retentionNote")}
+        </p>
+      )}
+
       {/* Danger zone — only shown without participant filter */}
       {!participant && count > 0 && (
         <section>

@@ -10,6 +10,10 @@ export default function PolicyContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <PolicyContentFr />;
   if (locale === "es") return <PolicyContentEs />;
   if (locale === "pt") return <PolicyContentPt />;
+  if (locale === "ja") return <PolicyContentJa />;
+  if (locale === "ar") return <PolicyContentAr />;
+  if (locale === "pl") return <PolicyContentPl />;
+  if (locale === "tr") return <PolicyContentTr />;
   return <PolicyContentEn />;
 }
 
@@ -78,6 +82,14 @@ function PolicyContentEn() {
         <li>Contractual services and support</li>
         <li>Managing and responding to inquiries</li>
       </ul>
+
+      <h3>Data retention periods</h3>
+      <p>
+        Pending notification queue records are retained for <strong>30 days</strong>.
+        Notification history and response records are retained for <strong>12 months</strong>.
+        After these periods records are deleted automatically by the platform. Researchers can
+        export their study data at any time from the study dashboard before these periods expire.
+      </p>
 
       {/* ── Legal bases ─────────────────────────────────────────────────────── */}
       <h2 id='m13'>Legal bases for the processing</h2>
@@ -591,6 +603,14 @@ function PolicyContentNl() {
         <li>Contractuele diensten en ondersteuning</li>
         <li>Beheren en beantwoorden van verzoeken</li>
       </ul>
+
+      <h3>Bewaartermijnen voor gegevens</h3>
+      <p>
+        Records in de wachtrij voor openstaande meldingen worden <strong>30 dagen</strong> bewaard.
+        Meldingsgeschiedenissen en responsrecords worden <strong>12 maanden</strong> bewaard.
+        Na afloop van deze perioden worden records automatisch verwijderd. Onderzoekers kunnen hun
+        studiegegevens exporteren vanuit het studiedashboard.
+      </p>
 
       {/* ── Rechtsgrondslag ─────────────────────────────────────────────────── */}
       <h2 id='m13'>Rechtsgrondslag voor de verwerking</h2>
@@ -1127,6 +1147,14 @@ function PolicyContentDe() {
         <li>Vertragliche Leistungen und Support</li>
         <li>Verwaltung und Beantwortung von Anfragen</li>
       </ul>
+
+      <h3>Datenspeicherfristen</h3>
+      <p>
+        Warteschlangen-Datensätze für ausstehende Benachrichtigungen werden <strong>30 Tage</strong> aufbewahrt.
+        Benachrichtigungsverläufe und Antwortdatensätze werden <strong>12 Monate</strong> aufbewahrt.
+        Nach Ablauf dieser Fristen werden die Datensätze automatisch gelöscht. Forschende können
+        ihre Studiendaten jederzeit im Studien-Dashboard exportieren.
+      </p>
 
       {/* ── Rechtsgrundlagen ────────────────────────────────────────────────── */}
       <h2 id='m13'>Rechtsgrundlagen für die Verarbeitung</h2>
@@ -1667,6 +1695,14 @@ function PolicyContentRu() {
         <li>Управление запросами и ответы на них</li>
       </ul>
 
+      <h3>Сроки хранения данных</h3>
+      <p>
+        Записи в очереди ожидающих уведомлений хранятся <strong>30 дней</strong>. История уведомлений
+        и записи ответов хранятся <strong>12 месяцев</strong>. По истечении этих сроков записи
+        автоматически удаляются. Исследователи могут экспортировать данные исследования в любое
+        время из панели управления.
+      </p>
+
       {/* ── Правовые основания ──────────────────────────────────────────────── */}
       <h2 id='m13'>Правовые основания для обработки данных</h2>
       <p>
@@ -2184,6 +2220,12 @@ function PolicyContentZh() {
         <li>管理并回复查询</li>
       </ul>
 
+      <h3>数据保留期限</h3>
+      <p>
+        待处理通知队列记录保留 <strong>30 天</strong>。通知历史记录和响应记录保留 <strong>12 个月</strong>。
+        超过这些期限后，记录将由平台自动删除。研究人员可以随时从研究仪表板导出研究数据。
+      </p>
+
       {/* ── 处理的法律依据 ──────────────────────────────────────────────── */}
       <h2 id='m13'>数据处理的法律依据</h2>
       <p>
@@ -2518,6 +2560,13 @@ function PolicyContentKo() {
         <li>계약적 서비스 및 지원</li>
         <li>문의사항 관리 및 응대</li>
       </ul>
+
+      <h3>데이터 보존 기간</h3>
+      <p>
+        대기 중인 알림 큐 기록은 <strong>30일</strong> 동안 보관됩니다. 알림 기록 및 응답 기록은{' '}
+        <strong>12개월</strong> 동안 보관됩니다. 이 기간이 지나면 기록이 자동으로 삭제됩니다.
+        연구자는 언제든지 대시보드에서 데이터를 내보낼 수 있습니다.
+      </p>
 
       {/* ── 처리의 법적 근거 ───────────────────────────────────────────────── */}
       <h2 id='m13'>처리의 법적 근거</h2>
@@ -2990,6 +3039,14 @@ function PolicyContentIt() {
         <li>Servizi contrattuali e assistenza</li>
         <li>Gestione e risposta alle richieste</li>
       </ul>
+
+      <h3>Periodi di conservazione dei dati</h3>
+      <p>
+        I record della coda delle notifiche in sospeso vengono conservati per <strong>30 giorni</strong>.
+        La cronologia delle notifiche e i record delle risposte vengono conservati per{' '}
+        <strong>12 mesi</strong>. Dopo questi periodi i record vengono eliminati automaticamente.
+        I ricercatori possono esportare i dati in qualsiasi momento dal pannello di controllo.
+      </p>
 
       {/* ── Basi giuridiche del trattamento ─────────────────────────────────── */}
       <h2 id='m13'>Basi giuridiche del trattamento</h2>
@@ -3524,6 +3581,15 @@ function PolicyContentFr() {
         <li>Services contractuels et assistance</li>
         <li>Gestion et réponse aux demandes</li>
       </ul>
+
+      <h3>Durées de conservation des données</h3>
+      <p>
+        Les enregistrements de la file d&apos;attente des notifications en attente sont conservés pendant{' '}
+        <strong>30 jours</strong>. L&apos;historique des notifications et les enregistrements de réponses
+        sont conservés pendant <strong>12 mois</strong>. Après ces périodes, les enregistrements sont
+        supprimés automatiquement. Les chercheurs peuvent exporter leurs données à tout moment depuis
+        le tableau de bord.
+      </p>
 
       {/* ── Bases légales ──────────────────────────────────────────────────── */}
       <h2 id='m13'>Bases juridiques du traitement</h2>
@@ -4073,6 +4139,14 @@ function PolicyContentEs() {
         <li>Gestión y respuesta a consultas</li>
       </ul>
 
+      <h3>Períodos de retención de datos</h3>
+      <p>
+        Los registros de la cola de notificaciones pendientes se conservan durante <strong>30 días</strong>.
+        El historial de notificaciones y los registros de respuestas se conservan durante{' '}
+        <strong>12 meses</strong>. Después de estos períodos, los registros son eliminados automáticamente.
+        Los investigadores pueden exportar sus datos en cualquier momento desde el panel de estudio.
+      </p>
+
       {/* ── Bases jurídicas ─────────────────────────────────────────────────── */}
       <h2 id='m13'>Bases jurídicas del tratamiento</h2>
       <p>
@@ -4606,6 +4680,14 @@ function PolicyContentPt() {
         <li>Gerenciamento e resposta a consultas</li>
       </ul>
 
+      <h3>Períodos de retenção de dados</h3>
+      <p>
+        Os registros da fila de notificações pendentes são mantidos por <strong>30 dias</strong>.
+        O histórico de notificações e os registros de respostas são mantidos por{' '}
+        <strong>12 meses</strong>. Após esses períodos, os registros são excluídos automaticamente.
+        Os pesquisadores podem exportar os dados do estudo a qualquer momento.
+      </p>
+
       {/* ── Bases jurídicas ─────────────────────────────────────────────────── */}
       <h2 id='m13'>Bases jurídicas do tratamento</h2>
       <p>
@@ -5065,6 +5147,1378 @@ function PolicyContentPt() {
         <dd>O termo &quot;rastreamento&quot; é utilizado quando o comportamento dos usuários pode ser acompanhado em vários sites. Em geral, as informações sobre o comportamento e os interesses em relação aos sites utilizados são armazenadas em cookies ou nos servidores dos provedores de tecnologia de rastreamento (o que se denomina elaboração de perfis).</dd>
         <dt>Análise web</dt>
         <dd>A análise web serve para avaliar o tráfego de visitantes dos serviços on-line e pode determinar seu comportamento ou seus interesses em determinadas informações, como os conteúdos dos sites. Com a ajuda da análise web, os proprietários de sites podem reconhecer em que horário os visitantes acessam seu site e quais conteúdos lhes interessam.</dd>
+      </dl>
+    </>
+  );
+}
+
+function PolicyContentJa() {
+  return (
+    <>
+      <p>
+        以下のプライバシーポリシーでは、どのような種類のお客様の個人データ（以下「データ」とも略します）を、どのような目的で、どの範囲で処理するかについてご案内します。本プライバシー声明は、当社が行うすべての個人データの処理に適用され、当社のサービス提供の文脈において、特に当社のウェブサイト、モバイルアプリケーション、およびソーシャルメディアプロファイルなどの外部オンラインプレゼンス（以下総称して「オンラインサービス」といいます）における処理に適用されます。
+      </p>
+      <p>使用される用語は性別を特定するものではありません。</p>
+      <p><strong>最終更新日:</strong> 2024年12月3日</p>
+
+      {/* ── 管理者 ──────────────────────────────────────── */}
+      <h2 id='m3'>管理者</h2>
+      <p>
+        iScience研究グループ / コンスタンツ大学<br />
+        Universitätsstraße 10<br />
+        78464 Konstanz, ドイツ
+      </p>
+      <dl>
+        <dt>正式代表者</dt>
+        <dd>Yury Shevchenko</dd>
+        <dt>メールアドレス</dt>
+        <dd><a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a></dd>
+        <dt>電話</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>法的通知</dt>
+        <dd><a href='/docs/legalnotice'>samply.uni-konstanz.de/docs/legalnotice</a></dd>
+      </dl>
+
+      {/* ── 概要 ──────────────────────────────────────── */}
+      <h2 id='mOverview'>処理業務の概要</h2>
+      <p>
+        以下の表は、処理されるデータの種類、処理の目的、および関係するデータ主体をまとめたものです。
+      </p>
+      <h3>処理されるデータの種類</h3>
+      <ul>
+        <li>研究データ（例：テキスト入力、画像）</li>
+        <li>研究者データ（例：氏名、所属機関、メール、言語）</li>
+        <li>参加者データ（例：メール、タイムゾーン、時間設定、参加者コード）</li>
+        <li>通知データ（例：タイトル、メッセージ、URL、通知スケジュール）</li>
+        <li>通知タイムスタンプ（例：アプリで通知を受信した時刻、通知バーでタップした時刻、アプリで開いた時刻、削除、ジオフェンシングイベント、完了イベント）</li>
+        <li>メタ／通信データ（例：クッキー）</li>
+        <li>連絡先データ（例：メール、電話番号）</li>
+      </ul>
+      <h3>データ主体のカテゴリー</h3>
+      <ul>
+        <li>研究者</li>
+        <li>参加者</li>
+      </ul>
+      <h3>処理の目的</h3>
+      <ul>
+        <li>認証プロセス</li>
+        <li>当社のオンラインサービスの提供および使いやすさ</li>
+        <li>事務および組織運営の手続き</li>
+        <li>フィードバック（例：オンラインフォームによるフィードバックの収集）</li>
+        <li>連絡先からの問い合わせおよびコミュニケーション</li>
+        <li>セキュリティ対策</li>
+        <li>契約サービスおよびサポート</li>
+        <li>問い合わせの管理および対応</li>
+      </ul>
+
+      <h3>データ保持期間</h3>
+      <p>
+        保留中の通知キューのレコードは <strong>30日間</strong> 保持されます。通知履歴および回答レコードは{' '}
+        <strong>12ヶ月</strong> 保持されます。これらの期間が過ぎると、自動的に削除されます。
+        研究者はいつでもダッシュボードからデータをエクスポートできます。
+      </p>
+
+      {/* ── 法的根拠 ──────────────────────────────────────── */}
+      <h2 id='m13'>処理の法的根拠</h2>
+      <p>
+        以下では、当社が個人データを処理する根拠としているEU一般データ保護規則（GDPR）の法的根拠についてお知らせします。GDPRの規定に加え、お客様の国または当社の居住国もしくは所在国の国内データ保護規定が適用される場合があることにご留意ください。さらに、個別のケースにおいてより具体的な法的根拠が適用される場合は、本プライバシー声明においてお知らせします。
+      </p>
+      <ul>
+        <li><strong>同意（GDPR第6条第1項(a)）</strong> — データ主体が、特定の1つまたは複数の目的のための個人データの処理に同意した場合。</li>
+        <li><strong>契約の履行および契約締結前の要請（GDPR第6条第1項(b)）</strong> — データ主体が当事者である契約の履行のため、または契約締結前にデータ主体の要請に応じて措置を講じるために処理が必要な場合。</li>
+        <li><strong>法的義務の遵守（GDPR第6条第1項(c)）</strong> — 管理者が従う法的義務の遵守のために処理が必要な場合。</li>
+        <li><strong>重大な利益の保護（GDPR第6条第1項(d)）</strong> — データ主体または他の自然人の重大な利益を保護するために処理が必要な場合。</li>
+        <li><strong>正当な利益（GDPR第6条第1項(f)）</strong> — 管理者または第三者が追求する正当な利益のために処理が必要な場合。ただし、個人データの保護を必要とするデータ主体の利益または基本的権利および自由がそれらの利益に優先する場合を除きます。</li>
+      </ul>
+      <p>
+        <strong>ドイツにおける国内データ保護規定:</strong>{' '}
+        GDPRの規定に加え、ドイツでは国内のデータ保護規定が適用されます。これには特に、連邦データ保護法（BDSG）が含まれます。同法には、アクセス権、削除権、異議申立権、特別カテゴリーの個人データの処理、他の目的のための処理および伝達、ならびにプロファイリングを含む自動化された個別意思決定に関する特別な規定が含まれています。さらに、各連邦州のデータ保護法が適用される場合があります。
+      </p>
+
+      {/* ── モバイルアプリ ──────────────────────────────────────── */}
+      <h2 id='m200'>Samply Researchモバイルアプリの提供</h2>
+      <p>
+        <strong>ユーザーから提供される情報:</strong> 当アプリは、お客様がダウンロードして登録する際に提供される情報を取得します。アプリの基本機能を使用するためには登録が必要です。登録およびアプリの使用を通じて、お客様は次の情報を提供します：(a) メールアドレスとパスワード、(b) スマートフォンのタイムゾーンと言語、(c) 次のイベントのタイムスタンプ：アプリでの通知の受信、通知バーでのタップ、アプリでの通知の開封、通知の削除、調査の完了、(d) 当社にサポートを求めて連絡される際に提供される情報、(e) 例えば研究に参加する際など、アプリを使用する際に当社のシステムに入力される情報、(f) ジオフェンシングを使用する研究に参加される場合、アプリを使用中およびアプリが閉じている間における現在地情報およびジオフェンシングイベントのタイムスタンプ。
+      </p>
+      <p>
+        <strong>バックグラウンドでの現在地の使用:</strong>{' '}
+        一部の研究では、お客様が特定の場所（例：職場）に入ったり離れたりしたときにオンライン調査へのリンクを送信する必要がある場合があります。そのため、参加者とのこの種の連絡方法を使用する研究に参加される場合、継続的な位置追跡を許可するように求められます。同意される場合、アプリは閉じている間も継続的にお客様の位置を追跡します。アプリは、お客様の位置データを第三者サービスや研究者と共有しません。お客様の位置情報は、研究者が作成したオンライン調査へのリンクを含む通知を送信する目的でのみ使用されます。特定の研究について、アプリ内でいつでも位置追跡を有効または無効にすることができます。前述の目的でお客様の位置情報を使用してほしくない場合は、アカウント設定、携帯電話の設定、および／またはモバイルアプリ自体において、モバイルアプリの位置情報サービスを無効にする必要があります。
+      </p>
+      <p>
+        <strong>データ保持ポリシー、お客様の情報の管理:</strong>{' '}
+        お客様のアカウントを削除し（「その他」メニュー、次に「設定」、次に「アカウントを削除する」を選択）、アプリをアンインストールすることで、アプリによるすべての情報収集を停止できます。モバイル端末で利用可能な標準的なアンインストール手順、またはモバイルアプリのストアやネットワークを通じてアンインストールできます。
+      </p>
+      <dl>
+        <dt>処理されるデータの種類</dt>
+        <dd>研究データ、研究者データ、参加者データ、通知データ、通知タイムスタンプ。</dd>
+        <dt>関係する人</dt>
+        <dd>参加者。</dd>
+        <dt>処理の目的</dt>
+        <dd>認証プロセス、当社のオンラインサービスの提供および使いやすさ、連絡先からの問い合わせおよびコミュニケーション、セキュリティ対策、問い合わせの管理および対応。</dd>
+        <dt>法的根拠</dt>
+        <dd>同意（GDPR第6条第1項(a)）、法的義務の遵守（GDPR第6条第1項(c)）、重大な利益の保護（GDPR第6条第1項(d)）、正当な利益（GDPR第6条第1項(f)）。</dd>
+      </dl>
+      <p><strong>利用するサービスおよびサービスプロバイダー:</strong></p>
+      <ul>
+        <li><strong>Expo</strong> — モバイルアプリを作成し、AndroidおよびiOSで配信するためのツールキットおよびプラットフォーム。プロバイダー：Expo。ウェブサイト：<a href='https://expo.dev/' target='_blank' rel='noreferrer'>https://expo.dev/</a>。プライバシーポリシー：<a href='https://expo.dev/privacy' target='_blank' rel='noreferrer'>https://expo.dev/privacy</a>。</li>
+        <li><strong>App Store</strong> — iOSおよびiPadOS向けのモバイルアプリ配信プラットフォーム。プロバイダー：Apple Inc., One Apple Park Way, Cupertino, CA 95014, アメリカ合衆国。ウェブサイト：<a href='https://www.apple.com/app-store/' target='_blank' rel='noreferrer'>https://www.apple.com/app-store/</a>。プライバシーポリシー：<a href='https://www.apple.com/privacy/' target='_blank' rel='noreferrer'>https://www.apple.com/privacy/</a>。</li>
+        <li><strong>Google Play</strong> — AndroidおよびChrome OS端末向けのアプリ配信プラットフォーム。プロバイダー：Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, アメリカ合衆国。ウェブサイト：<a href='https://play.google.com/store' target='_blank' rel='noreferrer'>https://play.google.com/store</a>。プライバシーポリシー：<a href='https://policies.google.com/privacy' target='_blank' rel='noreferrer'>https://policies.google.com/privacy</a>。</li>
+      </ul>
+
+      {/* ── ウェブホスティング ──────────────────────────────────────── */}
+      <h2 id='m225'>オンラインサービスの提供およびウェブホスティング</h2>
+      <p>
+        Samplyウェブサイト（https://samply.uni-konstanz.de/）でオンラインサービスを提供するために、ドイツのコンスタンツ大学のインフラ（ウェブサーバー、計算能力、ストレージ、データベースサービス、セキュリティおよび技術メンテナンスサービス）を利用しています。
+      </p>
+      <p>
+        ウェブサイトの提供の文脈で処理されるデータには、Samply Researchモバイルアプリおよびsamplyウェブサイトのユーザーに関するすべての情報が含まれ、使用および通信中に収集されます。参加者データおよび通知のタイムスタンプは、安全なデータベースに保存され、それらを収集した対応する研究の研究者のみがアクセスできます。研究者は、Samplyウェブサイトのインターフェースを介してこれらのデータを削除できます。
+      </p>
+      <p>
+        <strong>メールの送信およびホスティング:</strong> 当社が利用するウェブホスティングサービスには、メールの送信、受信、保存も含まれます。この目的のために、受信者および送信者のアドレス、ならびにメール送信に関連するその他の情報（例：関係するプロバイダー）および各メールの内容が処理されます。これらのデータは、SPAM検出の目的でも処理される場合があります。インターネット上のメールは、一般的に暗号化されて送信されない点にご留意ください。原則として、メールは転送中は暗号化されますが、送受信されるサーバー上では暗号化されません（エンドツーエンドの暗号化方式が使用されている場合を除く）。したがって、当社のサーバー上での受信と送信者の間のメールの送信経路について、当社は責任を負うことはできません。
+      </p>
+      <p>
+        <strong>アクセスデータおよびログファイルの収集:</strong> 当社自身または当社のウェブホスティングプロバイダーは、サーバーへの各アクセスに基づいてデータを収集します（いわゆるサーバーログファイル）。これらのファイルには、アクセスされたウェブページおよびファイルのアドレスと名前、アクセスの日時、転送されたデータ量、アクセス成功の通知、ブラウザの種類とバージョン、ユーザーのオペレーティングシステム、リファラーURL（前に訪問したページ）、および一般的にIPアドレスと要求元プロバイダーが含まれる場合があります。サーバーログファイルは、セキュリティの目的、例えばサーバーの過負荷を防ぐため（特にいわゆるDDoS攻撃のような不正な攻撃の場合）、およびサーバーの安定性と最適な負荷分散を確保するために使用される場合があります。
+      </p>
+      <p>
+        <strong>データ保持ポリシー、お客様の情報の管理:</strong>{' '}
+        ウェブサイトのユーザー（研究者および参加者）は、Samplyウェブサイトのインターフェースを介して自分のアカウントを管理できます。ユーザーは、「アカウント」メニュー、次に「アカウントを削除する」からアカウントを削除できます。
+      </p>
+      <dl>
+        <dt>処理されるデータの種類</dt>
+        <dd>研究データ、研究者データ、参加者データ、通知データ、通知タイムスタンプ。</dd>
+        <dt>関係する人</dt>
+        <dd>研究者、参加者。</dd>
+        <dt>処理の目的</dt>
+        <dd>認証プロセス、当社のオンラインサービスの提供および使いやすさ、連絡先からの問い合わせおよびコミュニケーション、セキュリティ対策、問い合わせの管理および対応。</dd>
+        <dt>法的根拠</dt>
+        <dd>同意（GDPR第6条第1項(a)）、法的義務の遵守（GDPR第6条第1項(c)）、重大な利益の保護（GDPR第6条第1項(d)）、正当な利益（GDPR第6条第1項(f)）。</dd>
+      </dl>
+      <p><strong>利用するサービスおよびサービスプロバイダー:</strong></p>
+      <ul>
+        <li><strong>大学ウェブサーバー</strong> — プロバイダー：コンスタンツ大学、Universitätsstraße 10, 78464 Konstanz, ドイツ。ウェブサイト：<a href='https://www.kim.uni-konstanz.de/en/' target='_blank' rel='noreferrer'>https://www.kim.uni-konstanz.de/en/</a>。プライバシーポリシー：<a href='https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/' target='_blank' rel='noreferrer'>https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/</a>。</li>
+        <li><strong>Postmark</strong> — トランザクションメールサービス。プロバイダー：Wildbit, LLC, 225 Chestnut Street, Philadelphia, PA 19106, アメリカ合衆国。ウェブサイト：<a href='https://postmarkapp.com/' target='_blank' rel='noreferrer'>https://postmarkapp.com/</a>。プライバシーポリシー：<a href='https://wildbit.com/privacy-policy' target='_blank' rel='noreferrer'>https://wildbit.com/privacy-policy</a>。</li>
+      </ul>
+
+      {/* ── セキュリティ ──────────────────────────────────────── */}
+      <h2 id='m27'>セキュリティ対策</h2>
+      <p>
+        当社は、技術水準、実施コスト、処理の性質、範囲、状況および目的、ならびに自然人の権利および自由に対する発生可能性および重大度の異なるリスクを考慮し、リスクに適した適切なセキュリティレベルを確保するために、法的要件に従って適切な技術的および組織的措置を講じています。
+      </p>
+      <p>
+        措置には、特に、データへの物理的および電子的アクセスを管理することによるデータの機密性、完全性および可用性の確保、ならびにデータへのアクセス、入力、転送、セキュリティおよび分離が含まれます。さらに、データ主体の権利の行使、データの削除、およびデータへの脅威への迅速な対応能力を保証するための手順を確立しています。同様に、設計および初期設定によるデータ保護の原則に従い、ハードウェア、ソフトウェアおよびサービスプロバイダーの開発または選定の段階から個人データの保護を考慮しています。
+      </p>
+      <p>
+        <strong>IPアドレスのマスキング:</strong> 一般的に、研究者および参加者のIPアドレスは記録および保存されません。今後そのようなことが行われる場合、お客様のIPアドレスを短縮するか、短縮させます。IPアドレスを短縮することは、いわゆる「IPマスキング」とも呼ばれ、IPアドレスの最後のオクテット、つまり最後の2桁の数字が削除されます。この短縮により、IPアドレスに基づいて個人を特定することを防止するか、大幅に困難にすることを目的としています。
+      </p>
+      <p>
+        <strong>SSL暗号化（https）:</strong> 当社のオンラインサービスを通じてお客様が送信するデータを可能な限り保護するために、SSL暗号化を使用しています。これらの暗号化された接続は、ブラウザのアドレスバーのhttps://プレフィックスで認識できます。
+      </p>
+
+      {/* ── 伝達 ──────────────────────────────────────── */}
+      <h2 id='m25'>個人データの伝達および開示</h2>
+      <p>
+        当社の個人データ処理の文脈において、データが他の場所、企業または個人に転送されたり、開示されたりすることがあります。これらのデータの受信者には、例えば、支払取引の文脈における支払機関、IT業務を委託されたサービスプロバイダー、またはウェブサイトに統合されたサービスおよびコンテンツのプロバイダーが含まれる場合があります。その場合、法的要件が尊重され、特にお客様のデータの受信者とお客様のデータの保護に資する対応する契約または合意が締結されます。
+      </p>
+
+      {/* ── 第三国 ──────────────────────────────────────── */}
+      <h2 id='m24'>第三国におけるデータ処理</h2>
+      <p>
+        当社が第三国（つまり、欧州連合（EU）または欧州経済領域（EEA）の外）でデータを処理する場合、または第三者サービスの利用、他者、機関もしくは企業へのデータの開示もしくは転送の文脈で処理が行われる場合、それは法的要件に従ってのみ行われます。
+      </p>
+      <p>
+        明示的な同意または契約もしくは法律により義務付けられた伝達に従い、当社は、認められたデータ保護レベルを有する第三国においてのみ、特別な保証に基づいて、例えば欧州委員会の標準データ保護条項による契約上の義務、認証、または拘束力のある内部データ保護規範が処理を正当化する場合のみ、データを処理するか処理させます（GDPR第44条から第49条）。
+      </p>
+
+      {/* ── クッキー ──────────────────────────────────────── */}
+      <h2 id='m134'>クッキーの使用</h2>
+      <p>
+        当社は、第三者クッキーや、統計、マーケティング、またはパーソナライゼーション目的のクッキーを使用しません。ウェブサイトの機能（例：ユーザー認証）に必要な必須クッキー（不可欠なクッキー）のみを使用します。
+      </p>
+      <p>
+        クッキーは、訪問したウェブサイトまたはドメインからのデータを含むテキストファイルで、ブラウザがユーザーのコンピュータに保存します。クッキーは主に、オンラインサービスを訪問する間または訪問後にユーザーに関する情報を保存するために使用されます。保存される情報には、例えば、ウェブサイトの言語設定、ログイン状態、買い物かご、または動画の視聴場所などが含まれます。
+      </p>
+      <p><strong>以下のクッキーの種類および機能が区別されます:</strong></p>
+      <ul>
+        <li><strong>一時的なクッキー（セッションクッキーとも呼ばれます）:</strong> 一時的なクッキーは、遅くともユーザーがオンラインサービスを離れてブラウザを閉じた時点で削除されます。</li>
+        <li><strong>永続的なクッキー:</strong> 永続的なクッキーは、ブラウザを閉じた後も保存されたままです。例えば、ログイン状態を保存したり、ユーザーが再度ウェブサイトを訪問したときに優先コンテンツを直接表示したりできます。</li>
+        <li><strong>ファーストパーティクッキー:</strong> ファーストパーティクッキーは当社自身によって設定されます。</li>
+        <li><strong>第三者クッキー:</strong> 第三者クッキーは、主に広告主（いわゆる第三者）によってユーザーの情報を処理するために使用されます。</li>
+        <li><strong>必須クッキー（不可欠なクッキーとも呼ばれます）:</strong> クッキーはウェブサイトの機能に必要な場合があります（例：ログインやその他のユーザー入力を保存するため、またはセキュリティ上の理由から）。</li>
+        <li><strong>統計、マーケティングおよびパーソナライゼーションクッキー:</strong> クッキーは、ウェブサイトのリーチを測定するため、およびユーザーの関心や行動がユーザープロファイルに保存されるときにも一般的に使用されます。これらのプロファイルは、例えば、ユーザーに対してその潜在的な関心に対応するコンテンツを表示するために使用されます。</li>
+      </ul>
+      <p>
+        <strong>法的根拠に関する情報:</strong> クッキーを利用してお客様の個人データを処理する法的根拠は、お客様の同意を求めるかどうかによって異なります。そうである場合、お客様がクッキーの使用に同意される場合、お客様のデータの処理の法的根拠はお客様が表明した同意となります。それ以外の場合、クッキーを利用して処理されるデータは、当社の正当な利益（例：当社のオンラインサービスの商業運営およびその改善）に基づいて、またはクッキーの使用が当社の契約上の義務を履行するために必要な場合に処理されます。
+      </p>
+      <p>
+        <strong>保持期間:</strong> 永続的クッキーの保持期間について明示的に情報を提供しない限り、その期間は最大2年間となる可能性があることをご考慮ください。
+      </p>
+      <p>
+        <strong>同意の撤回および異議申立（オプトアウト）に関する一般情報:</strong>{' '}
+        クッキー技術を介したデータ処理にいつでも異議を申し立てたり、同意を撤回したりすることが可能です。最初にブラウザの設定を通じて異議を表明することができ、例えばクッキーの使用を無効化することができます（これにより当社のオンラインサービスの機能性が制限される場合もあります）。オンラインマーケティング目的のクッキー使用に対する異議は、特にトラッキングの場合、{' '}
+        <a href='https://www.aboutads.info/choices/' target='_blank' rel='noreferrer'>https://www.aboutads.info/choices/</a>{' '}
+        および{' '}
+        <a href='https://www.youronlinechoices.com' target='_blank' rel='noreferrer'>https://www.youronlinechoices.com</a>
+        {' '}のウェブサイトを通じて、多くのサービスについて行使することができます。
+      </p>
+      <dl>
+        <dt>処理されるデータの種類</dt>
+        <dd>メタ／通信データ（例：クッキー）。</dd>
+        <dt>関係する人</dt>
+        <dd>研究者、参加者。</dd>
+        <dt>法的根拠</dt>
+        <dd>同意（GDPR第6条第1項(a)）、正当な利益（GDPR第6条第1項(f)）。</dd>
+      </dl>
+
+      {/* ── 商業サービス ──────────────────────────────────────── */}
+      <h2 id='m317'>商業サービス</h2>
+      <p>
+        商業サービスに関する以下の情報は、SamplyプラットフォームとStripeの統合を通じて参加者に報酬を支払うことを希望する研究者にのみ適用されます。
+      </p>
+      <p>
+        当社は、契約関係および類似の関係の文脈、ならびに関連する活動および契約パートナーとの通信または契約締結前の段階において、例えば問い合わせに応じるために、契約パートナーおよびビジネスパートナー、例えば顧客および利害関係者（総称して「契約パートナー」）のデータを処理します。
+      </p>
+      <p>
+        当社は、契約上の義務を履行し、当社の権利を保護し、これらのデータおよびビジネス組織に関連する管理業務の目的のためにこれらのデータを処理します。当社は、適用法の範囲内で、上記の目的のために必要な範囲、法的義務の履行のため、またはデータ主体の同意がある場合にのみ、契約パートナーのデータを第三者に転送します。
+      </p>
+      <p>
+        当社は、法定の保証期間および類似の義務の終了後、つまり原則として4年の経過後にデータを削除します。ただし、データが顧客アカウントに保存されている場合、または法的なアーカイブ目的のために保管する必要がある場合（例：税務目的では一般的に10年間）を除きます。
+      </p>
+      <dl>
+        <dt>処理されるデータの種類</dt>
+        <dd>研究者データ（例：氏名、所属機関、メール、言語）、参加者データ（例：メール、タイムゾーン、時間設定、参加者コード）。</dd>
+        <dt>関係する人</dt>
+        <dd>研究者、参加者。</dd>
+        <dt>処理の目的</dt>
+        <dd>契約サービスおよびサポート、連絡先からの問い合わせおよびコミュニケーション、事務および組織運営の手続き、問い合わせの管理および対応、セキュリティ対策。</dd>
+        <dt>法的根拠</dt>
+        <dd>契約の履行および契約締結前の要請（GDPR第6条第1項(b)）、法的義務の遵守（GDPR第6条第1項(c)）、正当な利益（GDPR第6条第1項(f)）。</dd>
+      </dl>
+      <p><strong>利用するサービスおよびサービスプロバイダー:</strong></p>
+      <ul>
+        <li><strong>Stripe</strong> — 決済処理プラットフォーム。プロバイダー：Stripe Inc., 354 Oyster Point Blvd, South San Francisco, CA 94080, アメリカ合衆国。ウェブサイト：<a href='https://stripe.com/' target='_blank' rel='noreferrer'>https://stripe.com/</a>。プライバシーポリシー：<a href='https://stripe.com/en-de/privacy' target='_blank' rel='noreferrer'>https://stripe.com/en-de/privacy</a>。</li>
+      </ul>
+
+      {/* ── 登録 ──────────────────────────────────────── */}
+      <h2 id='m367'>登録、ログインおよびユーザーアカウント</h2>
+      <p>
+        ユーザーはユーザーアカウントを作成できます。登録の文脈において、必要な必須情報がユーザーに通知され、契約上の義務の履行に基づくユーザーアカウントの提供を目的として処理されます。処理されるデータには、特にログイン情報（氏名、パスワード、メールアドレス）が含まれます。
+      </p>
+      <p>
+        ユーザーは、技術的な変更など、ユーザーアカウントに関連する情報についてメールで通知されることがあります。ユーザーがユーザーアカウントを解約する場合、法的な保持義務に従い、当該アカウントに関するそのデータは削除されます。解約の際、契約終了前に自分のデータを保護することはユーザーの責任です。当社は、契約期間中に保存されたすべてのユーザーデータを回復不可能な方法で削除する権利を有します。
+      </p>
+      <p>
+        当社の登録およびログイン機能の使用、ならびにユーザーアカウントの使用の文脈において、当社は各ユーザーアクションのIPアドレスと時刻を保存します。この保存は、当社の正当な利益、ならびに不正使用およびその他の不正使用からのユーザーの保護に基づいています。当社の請求の追求のために必要な場合、またはこれに関する法的義務がある場合を除き、これらのデータは第三者に伝達されません。
+      </p>
+      <dl>
+        <dt>処理されるデータの種類</dt>
+        <dd>研究者データ（例：氏名、メール）、参加者データ（例：メール）。</dd>
+        <dt>関係する人</dt>
+        <dd>研究者、参加者。</dd>
+        <dt>処理の目的</dt>
+        <dd>契約サービスおよびサポート、セキュリティ対策、問い合わせの管理および対応。</dd>
+        <dt>法的根拠</dt>
+        <dd>同意（GDPR第6条第1項(a)）、契約の履行および契約締結前の要請（GDPR第6条第1項(b)）、正当な利益（GDPR第6条第1項(f)）。</dd>
+      </dl>
+
+      {/* ── 連絡先 ──────────────────────────────────────── */}
+      <h2 id='m182'>連絡先</h2>
+      <p>
+        当社にご連絡いただく場合（例：お問い合わせフォーム、メール、電話、またはソーシャルメディアを通じて）、問い合わせを行う方のデータは、連絡先からの問い合わせおよび要求された活動への対応に必要な範囲で処理されます。
+      </p>
+      <p>
+        契約関係または契約締結前の関係の文脈における連絡先からの問い合わせへの対応は、契約上の義務を履行するため、または（契約締結前の）問い合わせに対応するために行われ、その他の場合には、問い合わせに対応する正当な利益に基づいて行われます。
+      </p>
+      <dl>
+        <dt>処理されるデータの種類</dt>
+        <dd>連絡先データ（例：メール、電話番号）。</dd>
+        <dt>関係する人</dt>
+        <dd>研究者、参加者。</dd>
+        <dt>処理の目的</dt>
+        <dd>連絡先からの問い合わせおよびコミュニケーション。</dd>
+        <dt>法的根拠</dt>
+        <dd>契約の履行および契約締結前の要請（GDPR第6条第1項(b)）、正当な利益（GDPR第6条第1項(f)）。</dd>
+      </dl>
+
+      {/* ── データの削除 ──────────────────────────────────────── */}
+      <h2 id='m12'>データの削除</h2>
+      <p>
+        当社が処理するデータは、その処理が取り消されるか、その他の許可が適用されなくなった時点で（例：これらのデータの処理目的が存在しなくなった場合、またはその目的のためにもはや必要ない場合）、法的規定に従って削除されます。
+      </p>
+      <p>
+        データが法的に認められたその他の目的のために必要であるために削除されない場合、その処理はそれらの目的に限定されます。これは、データが制限され、他の目的のために処理されないことを意味します。これは、例えば、商業上もしくは税務上の理由から保管する必要があるデータ、または法的請求の行使、主張もしくは防御のため、または他の自然人もしくは法人の権利を保護するために保管が必要なデータに適用されます。
+      </p>
+
+      {/* ── 変更および更新 ──────────────────────────────────────── */}
+      <h2 id='m15'>プライバシーポリシーの変更および更新</h2>
+      <p>
+        当社のプライバシー声明の内容について定期的にご確認いただくようお願いします。当社のデータ処理慣行の変更により必要となった時点で、プライバシーポリシーを修正します。変更によりお客様の関与（例：同意）またはその他の個別の通知が必要となり次第、お知らせします。
+      </p>
+      <p>
+        本プライバシーポリシーにおいて会社および組織の住所および連絡先情報を提供する場合、住所は時間とともに変更される可能性があることにご留意いただき、ご連絡いただく前に情報を確認していただくようお願いします。
+      </p>
+
+      {/* ── 権利 ──────────────────────────────────────── */}
+      <h2 id='m10'>データ主体の権利</h2>
+      <p>
+        データ主体として、お客様はGDPRに基づき様々な権利を有しており、これらは特にGDPRの第15条から第21条に由来します：
+      </p>
+      <ul>
+        <li><strong>異議申立権:</strong> お客様は、特定の状況に関連する理由で、GDPR第6条第1項(e)または(f)に基づくお客様の個人データの処理（これらの規定に基づくプロファイリングを含む）にいつでも異議を申し立てる権利を有します。</li>
+        <li><strong>同意撤回権:</strong> お客様はいつでも同意を撤回する権利を有します。</li>
+        <li><strong>アクセス権:</strong> お客様は、お客様に関するデータが処理されているかの確認を求める権利、これらのデータについて通知される権利、ならびに法的規定に従い追加の情報およびデータのコピーを受け取る権利を有します。</li>
+        <li><strong>訂正権:</strong> お客様は、法律に従って、お客様に関するデータの補完またはお客様に関する不正確なデータの訂正を求める権利を有します。</li>
+        <li><strong>削除権および処理の制限権:</strong> 法的規定に従い、お客様は、関連するデータの即時削除を要求する権利、または代替的に、法的規定に従ってデータ処理の制限を要求する権利を有します。</li>
+        <li><strong>データポータビリティ権:</strong> お客様は、お客様に関し当社に提供したデータを、法的要件に従って構造化され、一般的に使用され、機械可読な形式で受け取る権利、または別の管理者への伝達を要求する権利を有します。</li>
+        <li><strong>監督当局への苦情:</strong> お客様はまた、法律で定められた条件の下で、特にお客様の常居所、勤務地、または申し立てられた違反が発生した加盟国において、お客様に関する個人データの処理がGDPRに違反するとお考えの場合、監督当局に苦情を申し立てる権利を有します。</li>
+      </ul>
+
+      {/* ── 用語および定義 ──────────────────────────────────────── */}
+      <h2 id='m42'>用語および定義</h2>
+      <p>
+        このセクションでは、本プライバシーポリシーで使用される用語の概要を提供します。これらの用語の多くは法律から引用されたものであり、主にGDPR第4条で定義されています。以下の説明は、何よりも理解を容易にすることを目的としています。
+      </p>
+      <dl>
+        <dt>管理者</dt>
+        <dd>「管理者」とは、単独でまたは他者と共同で、個人データの処理の目的および手段を決定する自然人もしくは法人、公的機関、サービスまたはその他の団体を意味します。</dd>
+        <dt>個人データ</dt>
+        <dd>「個人データ」とは、識別された、または識別され得る自然人（「データ主体」）に関するあらゆる情報を意味します。識別され得る自然人とは、特に、氏名、識別番号、位置データ、オンライン識別子、または当該自然人の身体的、生理的、遺伝的、精神的、経済的、文化的もしくは社会的アイデンティティに固有の1つもしくは複数の要素のような識別子を参照することにより、直接的または間接的に識別され得る者をいいます。</dd>
+        <dt>処理</dt>
+        <dd>「処理」という用語は広範な範囲を網羅し、データのほぼあらゆる取り扱い、すなわち収集、評価、保存、伝達、または削除を含みます。</dd>
+        <dt>リマーケティング</dt>
+        <dd>「リマーケティング」または「リターゲティング」は、例えば、ユーザーがウェブサイトで興味を持った商品を、他のウェブサイト（例：広告）でユーザーに思い出させるために、広告目的で示すために使用される用語です。</dd>
+        <dt>トラッキング</dt>
+        <dd>「トラッキング」という用語は、ユーザーの行動を複数のウェブサイトにわたって追跡できる場合に使用されます。一般的に、使用されたウェブサイトに関する行動および興味についての情報は、クッキーまたはトラッキング技術プロバイダーのサーバーに保存されます（これをプロファイリングといいます）。</dd>
+        <dt>ウェブ解析</dt>
+        <dd>ウェブ解析は、オンラインサービスへの訪問者のトラフィックを評価するために役立ち、ウェブサイトのコンテンツなどの特定の情報に対する訪問者の行動または関心を判断できます。ウェブ解析の助けを借りて、ウェブサイトの所有者は、訪問者がどの時間帯にサイトを訪問し、どのコンテンツに興味を持っているかを認識できます。</dd>
+      </dl>
+    </>
+  );
+}
+
+function PolicyContentTr() {
+  return (
+    <>
+      <p>
+        Aşağıdaki gizlilik politikası ile, hangi türde kişisel verilerinizi (bundan sonra «veriler» olarak da kısaltılacaktır) hangi amaçlarla ve hangi kapsamda işlediğimiz hakkında sizi bilgilendirmek istiyoruz. Gizlilik beyanı, tarafımızca gerçekleştirilen tüm kişisel veri işleme faaliyetlerine uygulanır; bu, hizmetlerimizin sunulması bağlamında ve özellikle web sitelerimizde, mobil uygulamalarda ve sosyal medya profillerimiz gibi harici çevrimiçi mecralarda (bundan sonra topluca «çevrimiçi hizmetler» olarak anılacaktır) geçerlidir.
+      </p>
+      <p>Kullanılan terimler cinsiyete özgü değildir.</p>
+      <p><strong>Son güncelleme:</strong> 3 Aralık 2024</p>
+
+      {/* ── Veri Sorumlusu ──────────────────────────────────────── */}
+      <h2 id='m3'>Veri Sorumlusu</h2>
+      <p>
+        iScience Araştırma Grubu / Konstanz Üniversitesi<br />
+        Universitätsstraße 10<br />
+        78464 Konstanz, Almanya
+      </p>
+      <dl>
+        <dt>Yetkili Temsilciler</dt>
+        <dd>Yury Shevchenko</dd>
+        <dt>E-posta adresi</dt>
+        <dd><a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a></dd>
+        <dt>Telefon</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>Yasal Bildirim</dt>
+        <dd><a href='/docs/legalnotice'>samply.uni-konstanz.de/docs/legalnotice</a></dd>
+      </dl>
+
+      {/* ── Genel Bakış ──────────────────────────────────────── */}
+      <h2 id='mOverview'>İşleme faaliyetlerine genel bakış</h2>
+      <p>
+        Aşağıdaki tablo, işlenen veri türlerini, işleme amaçlarını ve ilgili veri sahiplerini özetlemektedir.
+      </p>
+      <h3>İşlenen veri kategorileri</h3>
+      <ul>
+        <li>Çalışma verileri (ör. metin girdileri, görseller)</li>
+        <li>Araştırmacı verileri (ör. ad, kurum, e-posta, dil)</li>
+        <li>Katılımcı verileri (ör. e-posta, saat dilimi, zaman tercihleri, katılımcı kodu)</li>
+        <li>Bildirim verileri (ör. başlık, mesaj, URL, bildirim programı)</li>
+        <li>Bildirim zaman damgaları (ör. bir bildirimin uygulamada alındığı, bildirim çubuğunda dokunulduğu, uygulamada açıldığı, silindiği zaman, coğrafi sınır olayı, tamamlanma olayı)</li>
+        <li>Meta/iletişim verileri (ör. çerezler)</li>
+        <li>İletişim verileri (ör. e-posta, telefon numaraları)</li>
+      </ul>
+      <h3>Veri sahibi kategorileri</h3>
+      <ul>
+        <li>Araştırmacılar</li>
+        <li>Katılımcılar</li>
+      </ul>
+      <h3>İşleme amaçları</h3>
+      <ul>
+        <li>Kimlik doğrulama süreçleri</li>
+        <li>Çevrimiçi hizmetlerimizin sunulması ve kullanılabilirliği</li>
+        <li>Ofis ve organizasyonel prosedürler</li>
+        <li>Geri bildirim (ör. çevrimiçi form aracılığıyla geri bildirim toplama)</li>
+        <li>İletişim talepleri ve iletişim</li>
+        <li>Güvenlik önlemleri</li>
+        <li>Sözleşmesel hizmetler ve destek</li>
+        <li>Soruların yönetilmesi ve yanıtlanması</li>
+      </ul>
+
+      <h3>Veri saklama süreleri</h3>
+      <p>
+        Bekleyen bildirim kuyruğu kayıtları <strong>30 gün</strong> süreyle saklanır. Bildirim geçmişi ve yanıt kayıtları{' '}
+        <strong>12 ay</strong> süreyle saklanır. Bu sürelerin sonunda kayıtlar platform tarafından otomatik olarak silinir.
+        Araştırmacılar, bu süreler sona ermeden önce çalışma panosundan istedikleri zaman çalışma verilerini dışa aktarabilirler.
+      </p>
+
+      {/* ── Hukuki dayanaklar ──────────────────────────────────────── */}
+      <h2 id='m13'>İşlemenin hukuki dayanakları</h2>
+      <p>
+        Aşağıda, kişisel verileri işlerken dayandığımız Genel Veri Koruma Tüzüğü (GDPR) kapsamındaki hukuki dayanak hakkında sizi bilgilendiriyoruz. GDPR düzenlemelerine ek olarak, ülkenizde veya ikametgâhımızın bulunduğu ülkede ulusal veri koruma düzenlemelerinin uygulanabileceğini lütfen unutmayın. Ayrıca, münferit durumlarda daha spesifik hukuki dayanakların geçerli olması halinde, bu konuda sizi veri koruma beyanında bilgilendireceğiz.
+      </p>
+      <ul>
+        <li><strong>Onam (GDPR Madde 6(1)(a))</strong> — Veri sahibinin, bir veya daha fazla belirli amaç doğrultusunda kişisel verilerinin işlenmesine onay vermesi halinde.</li>
+        <li><strong>Sözleşmenin ifası ve sözleşme öncesi talepler (GDPR Madde 6(1)(b))</strong> — Veri sahibinin taraf olduğu bir sözleşmenin ifası için veya sözleşme öncesi aşamada veri sahibinin talebi üzerine tedbir alınması için işlemenin gerekli olması halinde.</li>
+        <li><strong>Yasal yükümlülüklere uyum (GDPR Madde 6(1)(c))</strong> — Veri sorumlusunun tabi olduğu yasal bir yükümlülüğe uyum için işlemenin gerekli olması halinde.</li>
+        <li><strong>Hayati menfaatlerin korunması (GDPR Madde 6(1)(d))</strong> — Veri sahibinin veya başka bir gerçek kişinin hayati menfaatlerini korumak için işlemenin gerekli olması halinde.</li>
+        <li><strong>Meşru menfaatler (GDPR Madde 6(1)(f))</strong> — Veri sorumlusu veya üçüncü bir tarafça izlenen meşru menfaatler için işlemenin gerekli olması halinde, kişisel verilerin korunmasını gerektiren veri sahibinin menfaatleri veya temel hakları ve özgürlükleri bu menfaatlerin üzerinde olmadığı sürece.</li>
+      </ul>
+      <p>
+        <strong>Almanya'daki ulusal veri koruma düzenlemeleri:</strong>{' '}
+        GDPR düzenlemelerine ek olarak, Almanya'da ulusal veri koruma düzenlemeleri uygulanır. Bunlar özellikle Federal Veri Koruma Kanunu'nu (BDSG) içerir. Söz konusu kanun; erişim hakkı, silme hakkı, itiraz hakkı, özel kategorideki kişisel verilerin işlenmesi, başka amaçlarla işleme ve aktarma ile profil oluşturma dahil otomatik bireysel karar verme konusunda özel hükümler içerir. Ayrıca, ilgili federal eyaletlerin veri koruma kanunları da uygulanabilir.
+      </p>
+
+      {/* ── Mobil Uygulama ──────────────────────────────────────── */}
+      <h2 id='m200'>Samply Research mobil uygulamasının sağlanması</h2>
+      <p>
+        <strong>Kullanıcı tarafından sağlanan bilgiler:</strong> Uygulamamız, indirip kaydolduğunuzda sağladığınız bilgileri elde eder. Uygulamanın temel işlevini kullanmak için kayıt gereklidir. Kayıt ve uygulama kullanımı yoluyla şu bilgileri sağlarsınız: (a) e-posta adresi ve parola, (b) akıllı telefonun saat dilimi ve dili, (c) şu olayların zaman damgaları: uygulamada bildirim alınması, bildirim çubuğunda dokunulması, uygulamada bildirim açılması, bildirimin silinmesi, anketin tamamlanması, (d) destek için bizimle iletişime geçtiğinizde sağladığınız bilgiler, (e) örneğin bir çalışmaya katıldığınızda uygulamayı kullanırken sistemlerimize girdiğiniz bilgiler, (f) coğrafi sınırlama kullanan bir çalışmaya katılırsanız, uygulamayı kullanırken ve uygulama kapalıyken mevcut konum bilgileri ve coğrafi sınır olaylarının zaman damgaları.
+      </p>
+      <p>
+        <strong>Arka planda konum kullanımı:</strong>{' '}
+        Bazı çalışmaların, belirli bir konuma (ör. iş yeri) giriş yaptığınızda veya oradan ayrıldığınızda çevrimiçi bir ankete bağlantı göndermesi gerekebilir. Bu nedenle, katılımcılarla bu tür iletişim yöntemini kullanan bir çalışmaya katılırsanız, sürekli konum takibine izin vermeniz istenecektir. Onay verirseniz, uygulama kapalıyken bile konumunuzu sürekli olarak takip eder. Uygulama, konum verilerinizi üçüncü taraf hizmetlerle veya araştırmacılarla paylaşmaz. Konum bilgileriniz, yalnızca araştırmacı tarafından oluşturulan çevrimiçi ankete bir bağlantı içeren bildirim göndermek amacıyla kullanılır. Belirli bir çalışma için uygulama içinde herhangi bir zamanda konum takibini etkinleştirebilir veya devre dışı bırakabilirsiniz. Konum bilginizin yukarıda belirtilen amaç için kullanılmasını istemiyorsanız, hesap ayarlarında, telefon ayarlarında ve/veya mobil uygulamanın kendisinde mobil uygulamanın konum hizmetlerini devre dışı bırakmanız gerekir.
+      </p>
+      <p>
+        <strong>Veri saklama politikası, bilgilerinizin yönetilmesi:</strong>{' '}
+        Hesabınızı silerek («Diğer» menüsü, ardından «Ayarlar», ardından «Hesabımı sil» seçeneğini seçerek) ve uygulamayı kaldırarak uygulamanın tüm bilgi toplama işlemini durdurabilirsiniz. Mobil cihazınızda bulunan standart kaldırma süreçlerini veya mobil uygulama mağazasını ya da ağını kullanarak kaldırabilirsiniz.
+      </p>
+      <dl>
+        <dt>İşlenen veri türleri</dt>
+        <dd>Çalışma verileri, araştırmacı verileri, katılımcı verileri, bildirim verileri, bildirim zaman damgaları.</dd>
+        <dt>İlgili kişiler</dt>
+        <dd>Katılımcılar.</dd>
+        <dt>İşleme amaçları</dt>
+        <dd>Kimlik doğrulama süreçleri, çevrimiçi hizmetlerimizin sunulması ve kullanılabilirliği, iletişim talepleri ve iletişim, güvenlik önlemleri, soruların yönetilmesi ve yanıtlanması.</dd>
+        <dt>Hukuki dayanak</dt>
+        <dd>Onam (GDPR Madde 6(1)(a)), yasal yükümlülüklere uyum (GDPR Madde 6(1)(c)), hayati menfaatlerin korunması (GDPR Madde 6(1)(d)), meşru menfaatler (GDPR Madde 6(1)(f)).</dd>
+      </dl>
+      <p><strong>Kullanılan hizmetler ve hizmet sağlayıcılar:</strong></p>
+      <ul>
+        <li><strong>Expo</strong> — Android ve iOS için mobil uygulamalar oluşturmak ve dağıtmak için bir araç seti ve platform. Sağlayıcı: Expo. Web sitesi: <a href='https://expo.dev/' target='_blank' rel='noreferrer'>https://expo.dev/</a>. Gizlilik politikası: <a href='https://expo.dev/privacy' target='_blank' rel='noreferrer'>https://expo.dev/privacy</a>.</li>
+        <li><strong>App Store</strong> — iOS ve iPadOS için mobil uygulama dağıtım platformu. Sağlayıcı: Apple Inc., One Apple Park Way, Cupertino, CA 95014, Amerika Birleşik Devletleri. Web sitesi: <a href='https://www.apple.com/app-store/' target='_blank' rel='noreferrer'>https://www.apple.com/app-store/</a>. Gizlilik politikası: <a href='https://www.apple.com/privacy/' target='_blank' rel='noreferrer'>https://www.apple.com/privacy/</a>.</li>
+        <li><strong>Google Play</strong> — Android ve Chrome OS cihazlar için uygulama dağıtım platformu. Sağlayıcı: Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, Amerika Birleşik Devletleri. Web sitesi: <a href='https://play.google.com/store' target='_blank' rel='noreferrer'>https://play.google.com/store</a>. Gizlilik politikası: <a href='https://policies.google.com/privacy' target='_blank' rel='noreferrer'>https://policies.google.com/privacy</a>.</li>
+      </ul>
+
+      {/* ── Web Barındırma ──────────────────────────────────────── */}
+      <h2 id='m225'>Çevrimiçi hizmetlerin sağlanması ve web barındırma</h2>
+      <p>
+        Çevrimiçi hizmetleri Samply web sitesinde (https://samply.uni-konstanz.de/) sunmak için Almanya'daki Konstanz Üniversitesi altyapısını (web sunucusu, hesaplama gücü, depolama, veritabanı hizmetleri, güvenlik ve teknik bakım hizmetleri) kullanıyoruz.
+      </p>
+      <p>
+        Web sitesinin sağlanması bağlamında işlenen veriler, Samply Research mobil uygulamasının ve samply web sitesinin kullanıcılarına ilişkin tüm bilgileri içerir ve kullanım ve iletişim sırasında toplanır. Katılımcı verileri ve bildirim zaman damgaları güvenli bir veritabanında saklanır ve yalnızca bunları toplayan ilgili çalışmanın araştırmacısı tarafından erişilebilir. Araştırmacılar bu verileri Samply web sitesi arayüzü aracılığıyla silebilir.
+      </p>
+      <p>
+        <strong>E-posta gönderimi ve barındırma:</strong> Kullandığımız web barındırma hizmetleri ayrıca e-postaların gönderilmesi, alınması ve saklanmasını da içerir. Bu amaçla, alıcıların ve gönderenlerin adresleri ile e-posta gönderimiyle ilgili diğer bilgiler (ör. ilgili sağlayıcılar) ve her bir e-postanın içeriği işlenir. Bu veriler SPAM tespiti amacıyla da işlenebilir. İnternette e-postaların genellikle şifreli olarak gönderilmediğini lütfen unutmayın. Kural olarak, e-postalar aktarım sırasında şifrelenir, ancak gönderildikleri ve alındıkları sunucularda şifrelenmez (uçtan uca şifreleme yöntemi kullanılmadığı sürece). Bu nedenle, sunucularımıza varış ile gönderici arasındaki e-postaların aktarım yolu için sorumluluk kabul edemeyiz.
+      </p>
+      <p>
+        <strong>Erişim verileri ve günlük dosyalarının toplanması:</strong> Biz ya da web barındırma sağlayıcımız, sunucumuza her erişim temelinde veri topluyoruz (sözde sunucu günlük dosyaları). Bu dosyalar; erişilen web sayfalarının ve dosyaların adresleri ve adları, erişim tarihi ve saati, aktarılan veri miktarları, başarılı erişim bildirimi, tarayıcı türü ve sürümü, kullanıcının işletim sistemi, yönlendiren URL (önceden ziyaret edilen sayfa) ve genel olarak IP adresleri ve talep eden sağlayıcı içerebilir. Sunucu günlük dosyaları güvenlik amacıyla, örneğin sunucunun aşırı yüklenmesini önlemek için (özellikle DDoS saldırıları gibi kötü niyetli saldırılar durumunda) ve sunucuların istikrarını ve optimum yük dengelemesini sağlamak için kullanılabilir.
+      </p>
+      <p>
+        <strong>Veri saklama politikası, bilgilerinizin yönetilmesi:</strong>{' '}
+        Web sitesinin kullanıcıları (araştırmacılar ve katılımcılar) hesaplarını Samply web sitesi arayüzü üzerinden yönetebilirler. Kullanıcılar «Hesap» menüsünden, ardından «Hesabımı sil» seçeneğinden hesaplarını silebilirler.
+      </p>
+      <dl>
+        <dt>İşlenen veri türleri</dt>
+        <dd>Çalışma verileri, araştırmacı verileri, katılımcı verileri, bildirim verileri, bildirim zaman damgaları.</dd>
+        <dt>İlgili kişiler</dt>
+        <dd>Araştırmacılar, katılımcılar.</dd>
+        <dt>İşleme amaçları</dt>
+        <dd>Kimlik doğrulama süreçleri, çevrimiçi hizmetlerimizin sunulması ve kullanılabilirliği, iletişim talepleri ve iletişim, güvenlik önlemleri, soruların yönetilmesi ve yanıtlanması.</dd>
+        <dt>Hukuki dayanak</dt>
+        <dd>Onam (GDPR Madde 6(1)(a)), yasal yükümlülüklere uyum (GDPR Madde 6(1)(c)), hayati menfaatlerin korunması (GDPR Madde 6(1)(d)), meşru menfaatler (GDPR Madde 6(1)(f)).</dd>
+      </dl>
+      <p><strong>Kullanılan hizmetler ve hizmet sağlayıcılar:</strong></p>
+      <ul>
+        <li><strong>Üniversite web sunucusu</strong> — Sağlayıcı: Konstanz Üniversitesi, Universitätsstraße 10, 78464 Konstanz, Almanya. Web sitesi: <a href='https://www.kim.uni-konstanz.de/en/' target='_blank' rel='noreferrer'>https://www.kim.uni-konstanz.de/en/</a>. Gizlilik politikası: <a href='https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/' target='_blank' rel='noreferrer'>https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/</a>.</li>
+        <li><strong>Postmark</strong> — İşlemsel e-posta hizmeti. Sağlayıcı: Wildbit, LLC, 225 Chestnut Street, Philadelphia, PA 19106, Amerika Birleşik Devletleri. Web sitesi: <a href='https://postmarkapp.com/' target='_blank' rel='noreferrer'>https://postmarkapp.com/</a>. Gizlilik politikası: <a href='https://wildbit.com/privacy-policy' target='_blank' rel='noreferrer'>https://wildbit.com/privacy-policy</a>.</li>
+      </ul>
+
+      {/* ── Güvenlik ──────────────────────────────────────── */}
+      <h2 id='m27'>Güvenlik önlemleri</h2>
+      <p>
+        Teknolojinin durumu, uygulama maliyetleri, işlemenin niteliği, kapsamı, koşulları ve amaçları ile gerçek kişilerin haklarına ve özgürlüklerine yönelik olasılığı ve şiddeti farklı riskleri göz önünde bulundurarak, riske uygun bir güvenlik düzeyi sağlamak amacıyla yasal gerekliliklere uygun olarak teknik ve organizasyonel önlemler alıyoruz.
+      </p>
+      <p>
+        Önlemler arasında özellikle, verilere fiziksel ve elektronik erişimi kontrol ederek verilerin gizliliği, bütünlüğü ve kullanılabilirliğinin sağlanması ile verilere erişim, giriş, aktarım, güvenlik ve ayrım yer alır. Ayrıca, veri sahiplerinin haklarının kullanılmasını, verilerin silinmesini ve verilere yönelik tehditlere hızlı yanıt verme yeteneğini garanti edecek prosedürler oluşturduk. Aynı şekilde, tasarım yoluyla ve varsayılan ayarlarla veri koruma ilkesine uygun olarak, donanım, yazılım ve hizmet sağlayıcıların geliştirilmesi veya seçilmesi aşamasından itibaren kişisel verilerin korunmasını göz önünde bulunduruyoruz.
+      </p>
+      <p>
+        <strong>IP adreslerinin maskelenmesi:</strong> Genel olarak, araştırmacıların ve katılımcıların IP adresleri kaydedilmez ve saklanmaz. Gelecekte böyle bir durum söz konusu olursa, IP adresinizi kısaltacak veya kısalttıracağız. IP adresinin kısaltılması, sözde «IP maskeleme» olarak da bilinir; IP adresinin son sekizlisi, yani son iki haneli sayısı silinir. Bu kısaltma, IP adresine dayalı olarak bir bireyin tanımlanmasını önlemeyi veya önemli ölçüde zorlaştırmayı amaçlar.
+      </p>
+      <p>
+        <strong>SSL şifrelemesi (https):</strong> Çevrimiçi hizmetlerimiz aracılığıyla aktardığınız verileri mümkün olduğunca korumak için SSL şifrelemesi kullanıyoruz. Bu şifreli bağlantıları tarayıcınızın adres çubuğundaki https:// önekinden tanıyabilirsiniz.
+      </p>
+
+      {/* ── Aktarım ──────────────────────────────────────── */}
+      <h2 id='m25'>Kişisel verilerin aktarılması ve açıklanması</h2>
+      <p>
+        Kişisel verilerin işlenmesi bağlamında, verilerin başka yerlere, şirketlere veya kişilere aktarılması ya da bunlara açıklanması söz konusu olabilir. Bu verilerin alıcıları arasında, örneğin ödeme işlemleri bağlamında ödeme kuruluşları, BT görevleriyle görevlendirilen hizmet sağlayıcılar veya web sitesine entegre edilen hizmet ve içerik sağlayıcılar yer alabilir. Böyle bir durumda yasal gerekliliklere uyulur ve özellikle verilerinizi alanlarla, verilerinizin korunmasına hizmet eden ilgili sözleşmeler veya anlaşmalar imzalanır.
+      </p>
+
+      {/* ── Üçüncü Ülkeler ──────────────────────────────────────── */}
+      <h2 id='m24'>Üçüncü ülkelerde veri işleme</h2>
+      <p>
+        Verileri üçüncü bir ülkede (yani Avrupa Birliği (AB) veya Avrupa Ekonomik Alanı (AEA) dışında) işlersek veya işleme üçüncü taraf hizmetlerinin kullanımı, başkalarına, kuruluşlara veya şirketlere veri açıklama veya aktarma bağlamında gerçekleşirse, bu yalnızca yasal gerekliliklere uygun olarak yapılır.
+      </p>
+      <p>
+        Açıkça verilen onam veya sözleşmesel ya da yasal olarak gerekli aktarıma tabi olarak, verileri yalnızca tanınmış bir veri koruma düzeyine sahip üçüncü ülkelerde, özel güvenceler temelinde, örneğin Avrupa Komisyonu'nun standart veri koruma maddeleri kapsamındaki sözleşmesel yükümlülükler, sertifikalar veya bağlayıcı iç veri koruma kuralları işlemeyi haklı kıldığı sürece işleriz veya işletiriz (GDPR Madde 44 ila 49).
+      </p>
+
+      {/* ── Çerezler ──────────────────────────────────────── */}
+      <h2 id='m134'>Çerezlerin kullanımı</h2>
+      <p>
+        Üçüncü taraf çerezler veya istatistik, pazarlama ya da kişiselleştirme amaçlı çerezler kullanmıyoruz. Yalnızca web sitesinin işlevselliği için gerekli olan zorunlu çerezleri (vazgeçilmez çerezler) kullanıyoruz (ör. kullanıcı kimlik doğrulaması).
+      </p>
+      <p>
+        Çerezler, ziyaret edilen web sitelerinden veya alan adlarından veri içeren metin dosyalarıdır ve tarayıcı tarafından kullanıcının bilgisayarında saklanır. Çerezler esas olarak, bir çevrimiçi hizmetin ziyareti sırasında veya sonrasında kullanıcı hakkında bilgi saklamak için kullanılır. Saklanan bilgiler arasında, örneğin, web sitesinin dil ayarları, oturum açma durumu, alışveriş sepeti veya bir videonun izlendiği yer yer alabilir.
+      </p>
+      <p><strong>Aşağıdaki çerez türleri ve işlevleri ayırt edilir:</strong></p>
+      <ul>
+        <li><strong>Geçici çerezler (oturum çerezleri olarak da bilinir):</strong> Geçici çerezler en geç kullanıcının çevrimiçi hizmetten ayrılıp tarayıcıyı kapattığı anda silinir.</li>
+        <li><strong>Kalıcı çerezler:</strong> Kalıcı çerezler, tarayıcı kapatıldıktan sonra bile saklanmaya devam eder. Örneğin, oturum açma durumu saklanabilir veya kullanıcı web sitesini tekrar ziyaret ettiğinde tercih edilen içerik doğrudan görüntülenebilir.</li>
+        <li><strong>Birinci taraf çerezler:</strong> Birinci taraf çerezler tarafımızca belirlenir.</li>
+        <li><strong>Üçüncü taraf çerezler:</strong> Üçüncü taraf çerezler, özellikle reklamverenler (sözde üçüncü taraflar) tarafından kullanıcı bilgilerini işlemek için kullanılır.</li>
+        <li><strong>Zorunlu çerezler (vazgeçilmez çerezler olarak da bilinir):</strong> Çerezler web sitesinin işlevselliği için gerekli olabilir (ör. oturum açmaları veya diğer kullanıcı girdilerini kaydetmek için veya güvenlik nedeniyle).</li>
+        <li><strong>İstatistik, pazarlama ve kişiselleştirme çerezleri:</strong> Çerezler ayrıca genellikle bir web sitesinin erişimini ölçmek için ve kullanıcının ilgi alanları veya davranışları bir kullanıcı profilinde saklandığında kullanılır. Bu profiller, örneğin, kullanıcılara potansiyel ilgi alanlarına karşılık gelen içerik göstermek için kullanılır.</li>
+      </ul>
+      <p>
+        <strong>Hukuki dayanak hakkında bilgi:</strong> Kişisel verilerinizi çerezler aracılığıyla işlediğimiz hukuki dayanak, sizden onam isteyip istemediğimize bağlıdır. Eğer durum buysa ve çerezlerin kullanımına onam verirseniz, verilerinizin işlenmesinin hukuki dayanağı verdiğiniz onamdır. Aksi takdirde, çerezler aracılığıyla işlenen veriler, meşru menfaatlerimize dayanarak (ör. çevrimiçi hizmetlerimizin ticari işletimi ve iyileştirilmesi) veya çerezlerin kullanımı sözleşmesel yükümlülüklerimizi yerine getirmek için gerekli olduğunda işlenir.
+      </p>
+      <p>
+        <strong>Saklama süresi:</strong> Kalıcı çerezlerin saklama süresi hakkında açıkça bilgi vermediğimiz sürece, sürenin iki yıla kadar olabileceğini lütfen göz önünde bulundurun.
+      </p>
+      <p>
+        <strong>Onamın geri çekilmesi ve itiraz (vazgeçme) hakkında genel bilgi:</strong>{' '}
+        Çerez teknolojisi aracılığıyla veri işlenmesine karşı istediğiniz zaman itiraz etmek veya onamı geri çekmek mümkündür. İtirazınızı ilk olarak tarayıcınızın ayarları aracılığıyla, örneğin çerezlerin kullanımını devre dışı bırakarak (bu, çevrimiçi hizmetlerimizin işlevselliğini de sınırlayabilir) ifade edebilirsiniz. Çevrimiçi pazarlama amaçlı çerez kullanımına yönelik itiraz, özellikle takip durumunda,{' '}
+        <a href='https://www.aboutads.info/choices/' target='_blank' rel='noreferrer'>https://www.aboutads.info/choices/</a>{' '}
+        ve{' '}
+        <a href='https://www.youronlinechoices.com' target='_blank' rel='noreferrer'>https://www.youronlinechoices.com</a>
+        {' '}web siteleri üzerinden birçok hizmet için kullanılabilir.
+      </p>
+      <dl>
+        <dt>İşlenen veri türleri</dt>
+        <dd>Meta/iletişim verileri (ör. çerezler).</dd>
+        <dt>İlgili kişiler</dt>
+        <dd>Araştırmacılar, katılımcılar.</dd>
+        <dt>Hukuki dayanak</dt>
+        <dd>Onam (GDPR Madde 6(1)(a)), meşru menfaatler (GDPR Madde 6(1)(f)).</dd>
+      </dl>
+
+      {/* ── Ticari Hizmetler ──────────────────────────────────────── */}
+      <h2 id='m317'>Ticari hizmetler</h2>
+      <p>
+        Ticari hizmetlere ilişkin aşağıdaki bilgiler, yalnızca Samply platformu ile Stripe entegrasyonu aracılığıyla katılımcılara ödeme yapmak isteyen araştırmacılar için geçerlidir.
+      </p>
+      <p>
+        Sözleşmesel ilişkiler ve benzer ilişkiler bağlamında, ayrıca ilgili faaliyetler ve sözleşme tarafları ile iletişim veya sözleşme öncesi aşamada, örneğin soruları yanıtlamak için, sözleşme taraflarının ve iş ortaklarının, örneğin müşterilerin ve ilgili tarafların (topluca «sözleşme tarafları») verilerini işliyoruz.
+      </p>
+      <p>
+        Bu verileri, sözleşmesel yükümlülüklerimizi yerine getirmek, haklarımızı korumak ve bu verilerle ve iş organizasyonuyla ilgili idari görevler amacıyla işliyoruz. Sözleşme taraflarının verilerini, yürürlükteki yasa kapsamında, yukarıdaki amaçlar için gerekli olduğu ölçüde, yasal yükümlülüklerin yerine getirilmesi için veya veri sahiplerinin onamı olması durumunda üçüncü taraflara aktarırız.
+      </p>
+      <p>
+        Yasal garanti süreleri ve benzer yükümlülüklerin sona ermesinden sonra, yani prensip olarak 4 yıl geçtikten sonra verileri sileriz, ancak veriler müşteri hesabında saklanmadığı sürece veya yasal arşivleme amacıyla saklanması gerekmediği sürece (örneğin vergi amacıyla genellikle 10 yıl).
+      </p>
+      <dl>
+        <dt>İşlenen veri türleri</dt>
+        <dd>Araştırmacı verileri (ör. ad, kurum, e-posta, dil), katılımcı verileri (ör. e-posta, saat dilimi, zaman tercihleri, katılımcı kodu).</dd>
+        <dt>İlgili kişiler</dt>
+        <dd>Araştırmacılar, katılımcılar.</dd>
+        <dt>İşleme amaçları</dt>
+        <dd>Sözleşmesel hizmetler ve destek, iletişim talepleri ve iletişim, ofis ve organizasyonel prosedürler, soruların yönetilmesi ve yanıtlanması, güvenlik önlemleri.</dd>
+        <dt>Hukuki dayanak</dt>
+        <dd>Sözleşmenin ifası ve sözleşme öncesi talepler (GDPR Madde 6(1)(b)), yasal yükümlülüklere uyum (GDPR Madde 6(1)(c)), meşru menfaatler (GDPR Madde 6(1)(f)).</dd>
+      </dl>
+      <p><strong>Kullanılan hizmetler ve hizmet sağlayıcılar:</strong></p>
+      <ul>
+        <li><strong>Stripe</strong> — Ödeme işleme platformu. Sağlayıcı: Stripe Inc., 354 Oyster Point Blvd, South San Francisco, CA 94080, Amerika Birleşik Devletleri. Web sitesi: <a href='https://stripe.com/' target='_blank' rel='noreferrer'>https://stripe.com/</a>. Gizlilik politikası: <a href='https://stripe.com/en-de/privacy' target='_blank' rel='noreferrer'>https://stripe.com/en-de/privacy</a>.</li>
+      </ul>
+
+      {/* ── Kayıt ──────────────────────────────────────── */}
+      <h2 id='m367'>Kayıt, oturum açma ve kullanıcı hesabı</h2>
+      <p>
+        Kullanıcılar bir kullanıcı hesabı oluşturabilir. Kayıt bağlamında, gerekli zorunlu bilgiler kullanıcılara bildirilir ve sözleşmesel yükümlülüklerin yerine getirilmesi temelinde kullanıcı hesabının sağlanması amacıyla işlenir. İşlenen veriler özellikle oturum açma bilgilerini (ad, parola, e-posta adresi) içerir.
+      </p>
+      <p>
+        Kullanıcılar, teknik değişiklikler gibi kullanıcı hesabıyla ilgili bilgiler hakkında e-posta yoluyla bilgilendirilebilir. Kullanıcılar kullanıcı hesaplarını feshederse, ilgili hesaba ilişkin verileri yasal saklama yükümlülüklerine uygun olarak silinir. Fesih sırasında, sözleşmenin sona ermesinden önce verilerini korumak kullanıcıların sorumluluğundadır. Sözleşme süresi boyunca saklanan tüm kullanıcı verilerini geri alınamaz bir şekilde silme hakkına sahibiz.
+      </p>
+      <p>
+        Kayıt ve oturum açma işlevlerimizin kullanımı ile kullanıcı hesabının kullanımı bağlamında, her bir kullanıcı eyleminin IP adresini ve zamanını saklarız. Bu saklama, meşru menfaatlerimize ve kullanıcıların kötüye kullanım ve diğer yetkisiz kullanımdan korunmasına dayanır. Bu veriler, taleplerimizin takibi için gerekli olmadığı sürece veya bu konuda yasal bir yükümlülük bulunmadığı sürece üçüncü taraflara aktarılmaz.
+      </p>
+      <dl>
+        <dt>İşlenen veri türleri</dt>
+        <dd>Araştırmacı verileri (ör. ad, e-posta), katılımcı verileri (ör. e-posta).</dd>
+        <dt>İlgili kişiler</dt>
+        <dd>Araştırmacılar, katılımcılar.</dd>
+        <dt>İşleme amaçları</dt>
+        <dd>Sözleşmesel hizmetler ve destek, güvenlik önlemleri, soruların yönetilmesi ve yanıtlanması.</dd>
+        <dt>Hukuki dayanak</dt>
+        <dd>Onam (GDPR Madde 6(1)(a)), sözleşmenin ifası ve sözleşme öncesi talepler (GDPR Madde 6(1)(b)), meşru menfaatler (GDPR Madde 6(1)(f)).</dd>
+      </dl>
+
+      {/* ── İletişim ──────────────────────────────────────── */}
+      <h2 id='m182'>İletişim</h2>
+      <p>
+        Bizimle iletişime geçtiğinizde (ör. iletişim formu, e-posta, telefon veya sosyal medya aracılığıyla), iletişim taleplerini yapan kişilerin verileri, iletişim taleplerine ve talep edilen faaliyetlere yanıt vermek için gerekli olduğu ölçüde işlenir.
+      </p>
+      <p>
+        Sözleşmesel veya sözleşme öncesi ilişkiler bağlamında iletişim taleplerine yanıt verilmesi, sözleşmesel yükümlülüklerimizi yerine getirmek veya (sözleşme öncesi) talepleri yanıtlamak için yapılır; diğer durumlarda ise taleplere yanıt verme konusundaki meşru menfaatler temelinde gerçekleştirilir.
+      </p>
+      <dl>
+        <dt>İşlenen veri türleri</dt>
+        <dd>İletişim verileri (ör. e-posta, telefon numaraları).</dd>
+        <dt>İlgili kişiler</dt>
+        <dd>Araştırmacılar, katılımcılar.</dd>
+        <dt>İşleme amaçları</dt>
+        <dd>İletişim talepleri ve iletişim.</dd>
+        <dt>Hukuki dayanak</dt>
+        <dd>Sözleşmenin ifası ve sözleşme öncesi talepler (GDPR Madde 6(1)(b)), meşru menfaatler (GDPR Madde 6(1)(f)).</dd>
+      </dl>
+
+      {/* ── Veri Silme ──────────────────────────────────────── */}
+      <h2 id='m12'>Verilerin silinmesi</h2>
+      <p>
+        Tarafımızca işlenen veriler, işlemeleri iptal edildiğinde veya diğer izinler artık geçerli olmadığında (ör. bu verilerin işlenmesinin amacı artık mevcut olmadığında veya artık bu amaç için gerekli olmadığında) yasal düzenlemelere uygun olarak silinir.
+      </p>
+      <p>
+        Veriler, yasal olarak izin verilen diğer amaçlar için gerekli oldukları için silinmezse, işlenmeleri bu amaçlarla sınırlandırılır. Bu, verilerin kısıtlandığı ve başka amaçlarla işlenmediği anlamına gelir. Bu, örneğin, ticari veya vergisel nedenlerle saklanması gereken veya yasal taleplerin kullanılması, ileri sürülmesi veya savunulması ya da diğer gerçek veya tüzel kişilerin haklarının korunması için saklanması gereken verilere uygulanır.
+      </p>
+
+      {/* ── Değişiklikler ve Güncellemeler ──────────────────────────────────────── */}
+      <h2 id='m15'>Gizlilik politikasında değişiklikler ve güncellemeler</h2>
+      <p>
+        Gizlilik beyanımızın içeriğini düzenli olarak kontrol etmenizi rica ederiz. Veri işleme uygulamalarımızdaki değişiklikler gerektirdiğinde gizlilik politikasını değiştireceğiz. Değişiklikler katılımınızı (ör. onam) veya başka bir bireysel bildirim gerektirdiği anda sizi bilgilendireceğiz.
+      </p>
+      <p>
+        Bu gizlilik politikasında şirketlerin ve kuruluşların adreslerini ve iletişim bilgilerini sağladığımızda, adreslerin zaman içinde değişebileceğini lütfen unutmayın ve bizimle iletişime geçmeden önce bilgileri kontrol etmenizi rica ederiz.
+      </p>
+
+      {/* ── Haklar ──────────────────────────────────────── */}
+      <h2 id='m10'>Veri sahibinin hakları</h2>
+      <p>
+        Veri sahibi olarak, GDPR uyarınca özellikle GDPR'nin 15 ila 21. Maddelerinden kaynaklanan çeşitli haklara sahipsiniz:
+      </p>
+      <ul>
+        <li><strong>İtiraz hakkı:</strong> Özel durumunuza ilişkin nedenlerle, GDPR Madde 6(1)(e) veya (f) temelinde kişisel verilerinizin işlenmesine (bu hükümlere dayalı profilleme dahil) istediğiniz zaman itiraz etme hakkına sahipsiniz.</li>
+        <li><strong>Onamı geri çekme hakkı:</strong> İstediğiniz zaman onamınızı geri çekme hakkına sahipsiniz.</li>
+        <li><strong>Erişim hakkı:</strong> Verilerinizin işlenip işlenmediğinin onaylanmasını isteme, bu veriler hakkında bilgilendirilme ve yasal düzenlemelere uygun olarak ek bilgi ve verilerin bir kopyasını alma hakkına sahipsiniz.</li>
+        <li><strong>Düzeltme hakkı:</strong> Yasalara uygun olarak, sizinle ilgili verilerin tamamlanmasını veya size ait yanlış verilerin düzeltilmesini isteme hakkına sahipsiniz.</li>
+        <li><strong>Silme ve işleme kısıtlama hakkı:</strong> Yasal düzenlemelere uygun olarak, ilgili verilerin derhal silinmesini talep etme veya alternatif olarak yasal düzenlemelere uygun olarak veri işlemenin kısıtlanmasını talep etme hakkına sahipsiniz.</li>
+        <li><strong>Veri taşınabilirliği hakkı:</strong> Yasal gerekliliklere uygun olarak, bize sağladığınız verileri yapılandırılmış, yaygın olarak kullanılan ve makine tarafından okunabilir bir formatta alma veya başka bir veri sorumlusuna aktarılmasını talep etme hakkına sahipsiniz.</li>
+        <li><strong>Denetim makamına şikayet:</strong> Ayrıca, yasada belirtilen koşullar altında, özellikle olağan ikametgâhınızın bulunduğu, çalıştığınız veya iddia edilen ihlalin gerçekleştiği üye devlette, sizinle ilgili kişisel verilerin işlenmesinin GDPR'yi ihlal ettiğini düşünüyorsanız bir denetim makamına şikayette bulunma hakkına sahipsiniz.</li>
+      </ul>
+
+      {/* ── Terimler ve Tanımlar ──────────────────────────────────────── */}
+      <h2 id='m42'>Terimler ve tanımlar</h2>
+      <p>
+        Bu bölüm, bu gizlilik politikasında kullanılan terimlere genel bir bakış sunar. Bu terimlerin çoğu yasadan alınmıştır ve esas olarak GDPR Madde 4'te tanımlanmıştır. Aşağıdaki açıklamalar her şeyden önce anlamayı kolaylaştırmayı amaçlamaktadır.
+      </p>
+      <dl>
+        <dt>Veri sorumlusu</dt>
+        <dd>«Veri sorumlusu», tek başına veya başkalarıyla birlikte, kişisel verilerin işlenmesinin amaçlarını ve araçlarını belirleyen gerçek veya tüzel kişi, kamu kurumu, hizmet veya diğer kuruluş anlamına gelir.</dd>
+        <dt>Kişisel veriler</dt>
+        <dd>«Kişisel veriler», kimliği belirli veya belirlenebilir gerçek bir kişiye («veri sahibi») ilişkin her türlü bilgi anlamına gelir. Kimliği belirlenebilir gerçek kişi, özellikle ad, kimlik numarası, konum verileri, çevrimiçi tanımlayıcı veya söz konusu gerçek kişinin fiziksel, fizyolojik, genetik, zihinsel, ekonomik, kültürel veya sosyal kimliğine özgü bir veya daha fazla unsur gibi bir tanımlayıcıya atıfta bulunularak doğrudan veya dolaylı olarak tanımlanabilen kişidir.</dd>
+        <dt>İşleme</dt>
+        <dd>«İşleme» terimi geniş bir kapsama sahiptir ve verilerin neredeyse her türlü ele alınmasını, yani toplama, değerlendirme, saklama, aktarma veya silme dahil olmak üzere içerir.</dd>
+        <dt>Yeniden pazarlama</dt>
+        <dd>«Yeniden pazarlama» veya «yeniden hedefleme», örneğin kullanıcılara bir web sitesinde ilgilendikleri ürünleri başka web sitelerinde (ör. reklamlarda) hatırlatmak amacıyla reklam amaçlı göstermek için kullanılan bir terimdir.</dd>
+        <dt>Takip</dt>
+        <dd>«Takip» terimi, kullanıcıların davranışlarının birden fazla web sitesinde izlenebildiği durumlarda kullanılır. Genel olarak, kullanılan web siteleriyle ilgili davranış ve ilgi alanları hakkındaki bilgiler çerezlerde veya takip teknolojisi sağlayıcılarının sunucularında saklanır (buna profilleme denir).</dd>
+        <dt>Web analitiği</dt>
+        <dd>Web analitiği, çevrimiçi hizmetlere yapılan ziyaretçi trafiğini değerlendirmeye yardımcı olur ve web sitesi içeriği gibi belirli bilgiler için ziyaretçilerin davranışlarını veya ilgi alanlarını belirleyebilir. Web analitiği sayesinde web sitesi sahipleri, ziyaretçilerin siteyi hangi saatte ziyaret ettiklerini ve hangi içeriklere ilgi duyduklarını belirleyebilir.</dd>
+      </dl>
+    </>
+  );
+}
+
+function PolicyContentPl() {
+  return (
+    <>
+      <p>
+        Za pomocą poniższej polityki prywatności chcielibyśmy poinformować Państwa, jakie rodzaje Państwa danych osobowych (dalej również w skrócie «dane») przetwarzamy, w jakich celach i w jakim zakresie. Oświadczenie o ochronie prywatności ma zastosowanie do wszelkiego przetwarzania danych osobowych przez nas, zarówno w ramach świadczenia naszych usług, jak i w szczególności na naszych stronach internetowych, w aplikacjach mobilnych oraz w zewnętrznych obecnościach online, takich jak nasze profile w mediach społecznościowych (dalej łącznie zwane «usługami online»).
+      </p>
+      <p>Używane terminy nie są specyficzne dla płci.</p>
+      <p><strong>Ostatnia aktualizacja:</strong> 3 grudnia 2024</p>
+
+      {/* ── Administrator danych ──────────────────────────────────────── */}
+      <h2 id='m3'>Administrator danych</h2>
+      <p>
+        Grupa badawcza iScience / Uniwersytet w Konstancji<br />
+        Universitätsstraße 10<br />
+        78464 Konstancja, Niemcy
+      </p>
+      <dl>
+        <dt>Upoważnieni przedstawiciele</dt>
+        <dd>Yury Shevchenko</dd>
+        <dt>Adres e-mail</dt>
+        <dd><a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a></dd>
+        <dt>Telefon</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>Nota prawna</dt>
+        <dd><a href='/docs/legalnotice'>samply.uni-konstanz.de/docs/legalnotice</a></dd>
+      </dl>
+
+      {/* ── Przegląd ──────────────────────────────────────── */}
+      <h2 id='mOverview'>Przegląd operacji przetwarzania</h2>
+      <p>
+        Poniższa tabela podsumowuje rodzaje przetwarzanych danych, cele, w jakich są one przetwarzane, oraz osoby, których dane dotyczą.
+      </p>
+      <h3>Kategorie przetwarzanych danych</h3>
+      <ul>
+        <li>Dane badania (np. wpisy tekstowe, obrazy)</li>
+        <li>Dane badacza (np. imię i nazwisko, instytut, e-mail, język)</li>
+        <li>Dane uczestnika (np. e-mail, strefa czasowa, preferencje czasowe, kod uczestnika)</li>
+        <li>Dane powiadomień (np. tytuł, wiadomość, URL, harmonogram powiadomień)</li>
+        <li>Znaczniki czasowe powiadomień (np. kiedy powiadomienie zostało odebrane w aplikacji, dotknięte w pasku powiadomień, otwarte w aplikacji, usunięte, zdarzenie geofencingu, zdarzenie ukończenia)</li>
+        <li>Dane meta/komunikacyjne (np. pliki cookie)</li>
+        <li>Dane kontaktowe (np. e-mail, numery telefonu)</li>
+      </ul>
+      <h3>Kategorie osób, których dane dotyczą</h3>
+      <ul>
+        <li>Badacze</li>
+        <li>Uczestnicy</li>
+      </ul>
+      <h3>Cele przetwarzania</h3>
+      <ul>
+        <li>Procesy uwierzytelniania</li>
+        <li>Świadczenie naszych usług online i ich użyteczność</li>
+        <li>Procedury biurowe i organizacyjne</li>
+        <li>Informacje zwrotne (np. zbieranie informacji zwrotnych poprzez formularz online)</li>
+        <li>Zapytania kontaktowe i komunikacja</li>
+        <li>Środki bezpieczeństwa</li>
+        <li>Usługi kontraktowe i wsparcie</li>
+        <li>Zarządzanie zapytaniami i odpowiadanie na nie</li>
+      </ul>
+
+      <h3>Okresy przechowywania danych</h3>
+      <p>
+        Rekordy oczekującej kolejki powiadomień są przechowywane przez <strong>30 dni</strong>. Historia powiadomień i rekordy odpowiedzi są przechowywane przez{' '}
+        <strong>12 miesięcy</strong>. Po upływie tych okresów rekordy są automatycznie usuwane przez platformę.
+        Badacze mogą w dowolnym momencie wyeksportować swoje dane badawcze z panelu badania przed upływem tych okresów.
+      </p>
+
+      {/* ── Podstawy prawne ──────────────────────────────────────── */}
+      <h2 id='m13'>Podstawy prawne przetwarzania</h2>
+      <p>
+        Poniżej informujemy Państwa o podstawie prawnej Ogólnego rozporządzenia o ochronie danych (RODO), na podstawie której przetwarzamy dane osobowe. Należy pamiętać, że oprócz przepisów RODO w Państwa kraju lub w kraju naszej siedziby lub miejsca zamieszkania mogą obowiązywać krajowe przepisy o ochronie danych. Jeśli ponadto w indywidualnych przypadkach mają zastosowanie bardziej szczegółowe podstawy prawne, poinformujemy Państwa o nich w oświadczeniu o ochronie danych.
+      </p>
+      <ul>
+        <li><strong>Zgoda (art. 6 ust. 1 lit. a RODO)</strong> — w przypadku gdy osoba, której dane dotyczą, wyraziła zgodę na przetwarzanie swoich danych osobowych w jednym lub większej liczbie określonych celów.</li>
+        <li><strong>Wykonanie umowy i żądania przedumowne (art. 6 ust. 1 lit. b RODO)</strong> — w przypadku gdy przetwarzanie jest niezbędne do wykonania umowy, której stroną jest osoba, której dane dotyczą, lub do podjęcia działań na żądanie osoby, której dane dotyczą, przed zawarciem umowy.</li>
+        <li><strong>Wypełnienie obowiązków prawnych (art. 6 ust. 1 lit. c RODO)</strong> — w przypadku gdy przetwarzanie jest niezbędne do wypełnienia obowiązku prawnego ciążącego na administratorze.</li>
+        <li><strong>Ochrona żywotnych interesów (art. 6 ust. 1 lit. d RODO)</strong> — w przypadku gdy przetwarzanie jest niezbędne do ochrony żywotnych interesów osoby, której dane dotyczą, lub innej osoby fizycznej.</li>
+        <li><strong>Prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO)</strong> — w przypadku gdy przetwarzanie jest niezbędne do celów wynikających z prawnie uzasadnionych interesów realizowanych przez administratora lub stronę trzecią, z wyjątkiem sytuacji, w których nadrzędny charakter wobec tych interesów mają interesy lub podstawowe prawa i wolności osoby, której dane dotyczą, wymagające ochrony danych osobowych.</li>
+      </ul>
+      <p>
+        <strong>Krajowe przepisy o ochronie danych w Niemczech:</strong>{' '}
+        Oprócz przepisów RODO w Niemczech obowiązują krajowe przepisy o ochronie danych. Obejmują one w szczególności Federalną Ustawę o Ochronie Danych (BDSG). Wspomniana ustawa zawiera szczególne przepisy dotyczące prawa dostępu, prawa do usunięcia, prawa do sprzeciwu, przetwarzania szczególnych kategorii danych osobowych, przetwarzania w innych celach i przekazywania, a także zautomatyzowanego podejmowania decyzji w indywidualnych przypadkach, w tym profilowania. Ponadto mogą mieć zastosowanie przepisy o ochronie danych odpowiednich krajów związkowych.
+      </p>
+
+      {/* ── Aplikacja mobilna ──────────────────────────────────────── */}
+      <h2 id='m200'>Udostępnianie aplikacji mobilnej Samply Research</h2>
+      <p>
+        <strong>Informacje udostępniane przez użytkownika:</strong> Nasza aplikacja uzyskuje informacje, które Państwo dostarczają podczas pobierania i rejestracji. Rejestracja jest wymagana do korzystania z podstawowej funkcji aplikacji. Poprzez rejestrację i korzystanie z aplikacji dostarczają Państwo następujące informacje: (a) adres e-mail i hasło, (b) strefę czasową i język smartfona, (c) znaczniki czasowe następujących zdarzeń: odebranie powiadomienia w aplikacji, dotknięcie w pasku powiadomień, otwarcie powiadomienia w aplikacji, usunięcie powiadomienia, ukończenie ankiety, (d) informacje, które Państwo dostarczają, kontaktując się z nami w celu uzyskania wsparcia, (e) informacje, które Państwo wprowadzają do naszych systemów podczas korzystania z aplikacji, na przykład przy dołączaniu do badania, (f) jeśli dołączą Państwo do badania korzystającego z geofencingu, informacje o bieżącej lokalizacji i znaczniki czasowe zdarzeń geofencingu podczas korzystania z aplikacji oraz gdy aplikacja jest zamknięta.
+      </p>
+      <p>
+        <strong>Korzystanie z lokalizacji w tle:</strong>{' '}
+        Niektóre badania mogą wymagać wysłania linku do ankiety online, gdy wchodzą Państwo do określonej lokalizacji (np. miejsca pracy) lub ją opuszczają. Z tego powodu, jeśli dołączą Państwo do badania, które wykorzystuje ten rodzaj komunikacji z uczestnikami, zostaną Państwo poproszeni o wyrażenie zgody na ciągłe śledzenie lokalizacji. Jeśli wyrażą Państwo zgodę, aplikacja będzie ciągle śledzić Państwa lokalizację, nawet gdy aplikacja jest zamknięta. Aplikacja nie udostępnia Państwa danych o lokalizacji usługom stron trzecich ani badaczom. Państwa informacje o lokalizacji są wykorzystywane wyłącznie w celu wysłania powiadomienia z linkiem do ankiety online stworzonej przez badacza. Mogą Państwo w dowolnym momencie włączyć lub wyłączyć śledzenie lokalizacji dla określonego badania w aplikacji. Jeśli nie chcą Państwo, aby Państwa informacje o lokalizacji były wykorzystywane do celu opisanego powyżej, należy wyłączyć usługi lokalizacyjne aplikacji mobilnej w ustawieniach konta, ustawieniach telefonu i/lub w samej aplikacji mobilnej.
+      </p>
+      <p>
+        <strong>Polityka przechowywania danych, zarządzanie Państwa informacjami:</strong>{' '}
+        Mogą Państwo zatrzymać całe zbieranie informacji przez aplikację, usuwając swoje konto (wybierając menu «Inne», następnie «Ustawienia», następnie «Usuń moje konto») i odinstalowując aplikację. Mogą Państwo skorzystać ze standardowych procesów odinstalowywania dostępnych na Państwa urządzeniu mobilnym lub poprzez sklep z aplikacjami mobilnymi albo sieć.
+      </p>
+      <dl>
+        <dt>Rodzaje przetwarzanych danych</dt>
+        <dd>Dane badania, dane badacza, dane uczestnika, dane powiadomień, znaczniki czasowe powiadomień.</dd>
+        <dt>Osoby, których dane dotyczą</dt>
+        <dd>Uczestnicy.</dd>
+        <dt>Cele przetwarzania</dt>
+        <dd>Procesy uwierzytelniania, świadczenie naszych usług online i ich użyteczność, zapytania kontaktowe i komunikacja, środki bezpieczeństwa, zarządzanie zapytaniami i odpowiadanie na nie.</dd>
+        <dt>Podstawa prawna</dt>
+        <dd>Zgoda (art. 6 ust. 1 lit. a RODO), wypełnienie obowiązków prawnych (art. 6 ust. 1 lit. c RODO), ochrona żywotnych interesów (art. 6 ust. 1 lit. d RODO), prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO).</dd>
+      </dl>
+      <p><strong>Wykorzystywane usługi i usługodawcy:</strong></p>
+      <ul>
+        <li><strong>Expo</strong> — zestaw narzędzi i platforma do tworzenia i dystrybucji aplikacji mobilnych dla systemów Android i iOS. Dostawca: Expo. Strona internetowa: <a href='https://expo.dev/' target='_blank' rel='noreferrer'>https://expo.dev/</a>. Polityka prywatności: <a href='https://expo.dev/privacy' target='_blank' rel='noreferrer'>https://expo.dev/privacy</a>.</li>
+        <li><strong>App Store</strong> — platforma dystrybucji aplikacji mobilnych dla iOS i iPadOS. Dostawca: Apple Inc., One Apple Park Way, Cupertino, CA 95014, Stany Zjednoczone Ameryki. Strona internetowa: <a href='https://www.apple.com/app-store/' target='_blank' rel='noreferrer'>https://www.apple.com/app-store/</a>. Polityka prywatności: <a href='https://www.apple.com/privacy/' target='_blank' rel='noreferrer'>https://www.apple.com/privacy/</a>.</li>
+        <li><strong>Google Play</strong> — platforma dystrybucji aplikacji dla urządzeń z systemem Android i Chrome OS. Dostawca: Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, Stany Zjednoczone Ameryki. Strona internetowa: <a href='https://play.google.com/store' target='_blank' rel='noreferrer'>https://play.google.com/store</a>. Polityka prywatności: <a href='https://policies.google.com/privacy' target='_blank' rel='noreferrer'>https://policies.google.com/privacy</a>.</li>
+      </ul>
+
+      {/* ── Hosting internetowy ──────────────────────────────────────── */}
+      <h2 id='m225'>Świadczenie usług online i hosting internetowy</h2>
+      <p>
+        Aby świadczyć usługi online na stronie internetowej Samply (https://samply.uni-konstanz.de/), korzystamy z infrastruktury (serwer internetowy, moc obliczeniowa, pamięć masowa, usługi bazodanowe, usługi bezpieczeństwa i konserwacji technicznej) Uniwersytetu w Konstancji w Niemczech.
+      </p>
+      <p>
+        Dane przetwarzane w kontekście udostępniania strony internetowej obejmują wszystkie informacje dotyczące użytkowników aplikacji mobilnej Samply Research i strony internetowej samply i są gromadzone podczas użytkowania i komunikacji. Dane uczestników i znaczniki czasowe powiadomień są przechowywane w bezpiecznej bazie danych i są dostępne wyłącznie dla badacza danego badania, który je gromadzi. Badacze mogą usunąć te dane za pośrednictwem interfejsu strony internetowej Samply.
+      </p>
+      <p>
+        <strong>Wysyłanie i hosting e-mail:</strong> Wykorzystywane przez nas usługi hostingu internetowego obejmują również wysyłanie, odbieranie i przechowywanie wiadomości e-mail. W tym celu przetwarzane są adresy odbiorców i nadawców, a także inne informacje dotyczące wysyłania wiadomości e-mail (np. zaangażowani dostawcy) oraz treść poszczególnych wiadomości e-mail. Dane te mogą być również przetwarzane w celu wykrywania spamu. Należy pamiętać, że wiadomości e-mail w Internecie zazwyczaj nie są wysyłane w postaci zaszyfrowanej. Z reguły wiadomości e-mail są szyfrowane podczas transmisji, ale nie na serwerach, z których są wysyłane i odbierane (chyba że stosowana jest metoda szyfrowania end-to-end). Dlatego nie możemy ponosić odpowiedzialności za drogę przesyłania wiadomości e-mail między nadawcą a dotarciem do naszych serwerów.
+      </p>
+      <p>
+        <strong>Gromadzenie danych dostępowych i plików dziennika:</strong> My lub nasz dostawca hostingu internetowego gromadzimy dane na podstawie każdego dostępu do serwera (tzw. pliki dziennika serwera). Pliki te mogą zawierać adresy i nazwy stron internetowych i plików, do których uzyskano dostęp, datę i godzinę dostępu, ilość przesłanych danych, powiadomienie o pomyślnym dostępie, typ i wersję przeglądarki, system operacyjny użytkownika, URL odsyłający (poprzednio odwiedzona strona) oraz ogólnie adresy IP i żądającego dostawcę. Pliki dziennika serwera mogą być wykorzystywane do celów bezpieczeństwa, na przykład w celu uniknięcia przeciążenia serwera (zwłaszcza w przypadku złośliwych ataków, takich jak ataki DDoS) oraz zapewnienia stabilności serwerów i optymalnego równoważenia obciążenia.
+      </p>
+      <p>
+        <strong>Polityka przechowywania danych, zarządzanie Państwa informacjami:</strong>{' '}
+        Użytkownicy strony internetowej (badacze i uczestnicy) mogą zarządzać swoimi kontami za pośrednictwem interfejsu strony internetowej Samply. Użytkownicy mogą usunąć swoje konta z menu «Konto», wybierając opcję «Usuń moje konto».
+      </p>
+      <dl>
+        <dt>Rodzaje przetwarzanych danych</dt>
+        <dd>Dane badania, dane badacza, dane uczestnika, dane powiadomień, znaczniki czasowe powiadomień.</dd>
+        <dt>Osoby, których dane dotyczą</dt>
+        <dd>Badacze, uczestnicy.</dd>
+        <dt>Cele przetwarzania</dt>
+        <dd>Procesy uwierzytelniania, świadczenie naszych usług online i ich użyteczność, zapytania kontaktowe i komunikacja, środki bezpieczeństwa, zarządzanie zapytaniami i odpowiadanie na nie.</dd>
+        <dt>Podstawa prawna</dt>
+        <dd>Zgoda (art. 6 ust. 1 lit. a RODO), wypełnienie obowiązków prawnych (art. 6 ust. 1 lit. c RODO), ochrona żywotnych interesów (art. 6 ust. 1 lit. d RODO), prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO).</dd>
+      </dl>
+      <p><strong>Wykorzystywane usługi i usługodawcy:</strong></p>
+      <ul>
+        <li><strong>Serwer internetowy uniwersytetu</strong> — Dostawca: Uniwersytet w Konstancji, Universitätsstraße 10, 78464 Konstancja, Niemcy. Strona internetowa: <a href='https://www.kim.uni-konstanz.de/en/' target='_blank' rel='noreferrer'>https://www.kim.uni-konstanz.de/en/</a>. Polityka prywatności: <a href='https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/' target='_blank' rel='noreferrer'>https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/</a>.</li>
+        <li><strong>Postmark</strong> — usługa transakcyjnej poczty elektronicznej. Dostawca: Wildbit, LLC, 225 Chestnut Street, Philadelphia, PA 19106, Stany Zjednoczone Ameryki. Strona internetowa: <a href='https://postmarkapp.com/' target='_blank' rel='noreferrer'>https://postmarkapp.com/</a>. Polityka prywatności: <a href='https://wildbit.com/privacy-policy' target='_blank' rel='noreferrer'>https://wildbit.com/privacy-policy</a>.</li>
+      </ul>
+
+      {/* ── Bezpieczeństwo ──────────────────────────────────────── */}
+      <h2 id='m27'>Środki bezpieczeństwa</h2>
+      <p>
+        Podejmujemy środki techniczne i organizacyjne zgodnie z wymogami prawa, biorąc pod uwagę stan techniki, koszty wdrożenia, charakter, zakres, okoliczności i cele przetwarzania, a także różne prawdopodobieństwo i nasilenie zagrożeń dla praw i wolności osób fizycznych, w celu zapewnienia poziomu bezpieczeństwa odpowiedniego do ryzyka.
+      </p>
+      <p>
+        Środki obejmują w szczególności zapewnienie poufności, integralności i dostępności danych poprzez kontrolę fizycznego i elektronicznego dostępu do danych, a także dostępu, wprowadzania, przekazywania, bezpieczeństwa i rozdzielenia danych. Ponadto ustanowiliśmy procedury gwarantujące korzystanie z praw osób, których dane dotyczą, usuwanie danych oraz zdolność do szybkiego reagowania na zagrożenia dla danych. Tak samo bierzemy pod uwagę ochronę danych osobowych już na etapie rozwoju lub wyboru sprzętu, oprogramowania i usługodawców, zgodnie z zasadą ochrony danych w fazie projektowania i poprzez ustawienia domyślne.
+      </p>
+      <p>
+        <strong>Maskowanie adresów IP:</strong> Co do zasady adresy IP badaczy i uczestników nie są rejestrowane ani przechowywane. Jeśli w przyszłości tak się stanie, skrócimy lub zlecimy skrócenie Państwa adresu IP. Skrócenie adresu IP, znane również jako «maskowanie IP», polega na usunięciu ostatniego oktetu adresu IP, czyli ostatnich dwóch cyfr. Skrócenie to ma na celu uniemożliwienie lub znaczne utrudnienie identyfikacji osoby na podstawie adresu IP.
+      </p>
+      <p>
+        <strong>Szyfrowanie SSL (https):</strong> Aby maksymalnie chronić dane, które Państwo przekazują za pośrednictwem naszych usług online, stosujemy szyfrowanie SSL. Mogą Państwo rozpoznać te zaszyfrowane połączenia po prefiksie https:// w pasku adresu Państwa przeglądarki.
+      </p>
+
+      {/* ── Przekazywanie ──────────────────────────────────────── */}
+      <h2 id='m25'>Przekazywanie i ujawnianie danych osobowych</h2>
+      <p>
+        W kontekście przetwarzania danych osobowych może dochodzić do przekazywania danych w inne miejsca, firmom lub osobom albo do ich ujawniania. Odbiorcami tych danych mogą być na przykład instytucje płatnicze w kontekście transakcji płatniczych, usługodawcy, którym zlecono zadania informatyczne, lub dostawcy usług i treści zintegrowanych ze stroną internetową. W takim przypadku przestrzegane są wymogi prawne, a w szczególności podpisywane są odpowiednie umowy lub porozumienia, które służą ochronie Państwa danych, z podmiotami otrzymującymi Państwa dane.
+      </p>
+
+      {/* ── Państwa trzecie ──────────────────────────────────────── */}
+      <h2 id='m24'>Przetwarzanie danych w państwach trzecich</h2>
+      <p>
+        Jeśli przetwarzamy dane w państwie trzecim (tj. poza Unią Europejską (UE) lub Europejskim Obszarem Gospodarczym (EOG)), lub jeśli przetwarzanie odbywa się w kontekście korzystania z usług stron trzecich lub ujawniania albo przekazywania danych innym osobom, podmiotom lub firmom, odbywa się to wyłącznie zgodnie z wymogami prawa.
+      </p>
+      <p>
+        Z zastrzeżeniem wyraźnie udzielonej zgody lub przekazywania wymaganego umownie lub prawnie, przetwarzamy lub zlecamy przetwarzanie danych wyłącznie w państwach trzecich z uznanym poziomem ochrony danych, na podstawie specjalnych gwarancji, takich jak zobowiązania umowne wynikające ze standardowych klauzul ochrony danych Komisji Europejskiej, certyfikaty lub wiążące wewnętrzne reguły ochrony danych uzasadniające przetwarzanie (art. 44 do 49 RODO).
+      </p>
+
+      {/* ── Pliki cookie ──────────────────────────────────────── */}
+      <h2 id='m134'>Wykorzystanie plików cookie</h2>
+      <p>
+        Nie korzystamy z plików cookie stron trzecich ani z plików cookie do celów statystycznych, marketingowych lub personalizacji. Korzystamy wyłącznie z plików cookie niezbędnych do funkcjonowania strony internetowej (pliki cookie nieodzowne) (np. uwierzytelnianie użytkownika).
+      </p>
+      <p>
+        Pliki cookie to pliki tekstowe zawierające dane z odwiedzanych stron internetowych lub domen i są przechowywane przez przeglądarkę na komputerze użytkownika. Pliki cookie służą przede wszystkim do przechowywania informacji o użytkowniku podczas lub po wizycie w usłudze online. Przechowywane informacje mogą obejmować na przykład ustawienia językowe strony internetowej, status logowania, zawartość koszyka zakupów lub miejsce, w którym oglądano film.
+      </p>
+      <p><strong>Rozróżnia się następujące typy i funkcje plików cookie:</strong></p>
+      <ul>
+        <li><strong>Tymczasowe pliki cookie (znane również jako pliki cookie sesji):</strong> Tymczasowe pliki cookie są usuwane najpóźniej w momencie, gdy użytkownik opuści usługę online i zamknie przeglądarkę.</li>
+        <li><strong>Trwałe pliki cookie:</strong> Trwałe pliki cookie pozostają przechowywane nawet po zamknięciu przeglądarki. Na przykład status logowania może być zapisany lub preferowana treść może być wyświetlana bezpośrednio, gdy użytkownik ponownie odwiedza stronę internetową.</li>
+        <li><strong>Własne pliki cookie:</strong> Własne pliki cookie są ustawiane przez nas.</li>
+        <li><strong>Pliki cookie stron trzecich:</strong> Pliki cookie stron trzecich są wykorzystywane głównie przez reklamodawców (tzw. strony trzecie) do przetwarzania informacji o użytkowniku.</li>
+        <li><strong>Niezbędne pliki cookie (znane również jako pliki cookie nieodzowne):</strong> Pliki cookie mogą być niezbędne do funkcjonowania strony internetowej (np. do zapisywania loginów lub innych danych wprowadzanych przez użytkownika lub ze względów bezpieczeństwa).</li>
+        <li><strong>Statystyczne, marketingowe i personalizacyjne pliki cookie:</strong> Pliki cookie są również wykorzystywane zazwyczaj do mierzenia zasięgu strony internetowej oraz gdy zainteresowania lub zachowania użytkownika są zapisywane w profilu użytkownika. Profile te są wykorzystywane na przykład do wyświetlania użytkownikom treści odpowiadających ich potencjalnym zainteresowaniom.</li>
+      </ul>
+      <p>
+        <strong>Informacje o podstawach prawnych:</strong> Podstawa prawna, na której przetwarzamy Państwa dane osobowe za pomocą plików cookie, zależy od tego, czy prosimy Państwa o zgodę. Jeśli tak jest i wyrażą Państwo zgodę na wykorzystanie plików cookie, podstawą prawną przetwarzania Państwa danych jest udzielona zgoda. W przeciwnym razie dane przetwarzane za pomocą plików cookie są przetwarzane na podstawie naszych prawnie uzasadnionych interesów (np. komercyjnej eksploatacji i ulepszania naszych usług online) lub gdy wykorzystanie plików cookie jest niezbędne do wypełnienia naszych zobowiązań umownych.
+      </p>
+      <p>
+        <strong>Okres przechowywania:</strong> O ile nie podajemy wyraźnie informacji o okresie przechowywania trwałych plików cookie, prosimy mieć na uwadze, że okres ten może wynosić nawet dwa lata.
+      </p>
+      <p>
+        <strong>Ogólne informacje o wycofaniu zgody i sprzeciwie (opt-out):</strong>{' '}
+        W każdej chwili mogą Państwo sprzeciwić się przetwarzaniu danych za pomocą technologii plików cookie lub wycofać zgodę. Mogą Państwo wyrazić swój sprzeciw przede wszystkim za pośrednictwem ustawień Państwa przeglądarki, na przykład wyłączając korzystanie z plików cookie (co może również ograniczyć funkcjonalność naszych usług online). Sprzeciw wobec wykorzystania plików cookie do celów marketingu online, w szczególności w przypadku śledzenia, można wyrazić w odniesieniu do wielu usług za pośrednictwem stron internetowych{' '}
+        <a href='https://www.aboutads.info/choices/' target='_blank' rel='noreferrer'>https://www.aboutads.info/choices/</a>{' '}
+        oraz{' '}
+        <a href='https://www.youronlinechoices.com' target='_blank' rel='noreferrer'>https://www.youronlinechoices.com</a>
+        {' '}.
+      </p>
+      <dl>
+        <dt>Rodzaje przetwarzanych danych</dt>
+        <dd>Dane meta/komunikacyjne (np. pliki cookie).</dd>
+        <dt>Osoby, których dane dotyczą</dt>
+        <dd>Badacze, uczestnicy.</dd>
+        <dt>Podstawa prawna</dt>
+        <dd>Zgoda (art. 6 ust. 1 lit. a RODO), prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO).</dd>
+      </dl>
+
+      {/* ── Usługi komercyjne ──────────────────────────────────────── */}
+      <h2 id='m317'>Usługi komercyjne</h2>
+      <p>
+        Poniższe informacje dotyczące usług komercyjnych mają zastosowanie wyłącznie do badaczy, którzy chcą dokonywać płatności na rzecz uczestników poprzez integrację platformy Samply z Stripe.
+      </p>
+      <p>
+        W kontekście stosunków umownych i podobnych relacji, a także powiązanych działań i komunikacji ze stronami umowy lub na etapie przedumownym, na przykład w celu odpowiedzi na pytania, przetwarzamy dane stron umowy i partnerów biznesowych, na przykład klientów i zainteresowanych stron (łącznie zwanych «stronami umowy»).
+      </p>
+      <p>
+        Dane te przetwarzamy w celu wypełnienia naszych zobowiązań umownych, ochrony naszych praw oraz w celach administracyjnych związanych z tymi danymi i organizacją działalności. Dane stron umowy przekazujemy stronom trzecim, w ramach obowiązującego prawa, w zakresie niezbędnym do powyższych celów, w celu wypełnienia obowiązków prawnych lub za zgodą osób, których dane dotyczą.
+      </p>
+      <p>
+        Po upływie ustawowych okresów gwarancji i podobnych zobowiązań, czyli co do zasady po 4 latach, usuwamy dane, chyba że są one przechowywane na koncie klienta lub muszą być przechowywane do celów archiwizacji prawnej (na przykład co do zasady przez 10 lat do celów podatkowych).
+      </p>
+      <dl>
+        <dt>Rodzaje przetwarzanych danych</dt>
+        <dd>Dane badacza (np. imię i nazwisko, instytut, e-mail, język), dane uczestnika (np. e-mail, strefa czasowa, preferencje czasowe, kod uczestnika).</dd>
+        <dt>Osoby, których dane dotyczą</dt>
+        <dd>Badacze, uczestnicy.</dd>
+        <dt>Cele przetwarzania</dt>
+        <dd>Usługi kontraktowe i wsparcie, zapytania kontaktowe i komunikacja, procedury biurowe i organizacyjne, zarządzanie zapytaniami i odpowiadanie na nie, środki bezpieczeństwa.</dd>
+        <dt>Podstawa prawna</dt>
+        <dd>Wykonanie umowy i żądania przedumowne (art. 6 ust. 1 lit. b RODO), wypełnienie obowiązków prawnych (art. 6 ust. 1 lit. c RODO), prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO).</dd>
+      </dl>
+      <p><strong>Wykorzystywane usługi i usługodawcy:</strong></p>
+      <ul>
+        <li><strong>Stripe</strong> — platforma przetwarzania płatności. Dostawca: Stripe Inc., 354 Oyster Point Blvd, South San Francisco, CA 94080, Stany Zjednoczone Ameryki. Strona internetowa: <a href='https://stripe.com/' target='_blank' rel='noreferrer'>https://stripe.com/</a>. Polityka prywatności: <a href='https://stripe.com/en-de/privacy' target='_blank' rel='noreferrer'>https://stripe.com/en-de/privacy</a>.</li>
+      </ul>
+
+      {/* ── Rejestracja ──────────────────────────────────────── */}
+      <h2 id='m367'>Rejestracja, logowanie i konto użytkownika</h2>
+      <p>
+        Użytkownicy mogą utworzyć konto użytkownika. W kontekście rejestracji niezbędne obowiązkowe informacje są przekazywane użytkownikom i przetwarzane w celu udostępnienia konta użytkownika na podstawie wypełnienia zobowiązań umownych. Przetwarzane dane obejmują w szczególności informacje logowania (imię i nazwisko, hasło, adres e-mail).
+      </p>
+      <p>
+        Użytkownicy mogą być informowani drogą e-mailową o sprawach dotyczących konta użytkownika, takich jak zmiany techniczne. Jeśli użytkownicy wypowiedzą swoje konto użytkownika, dane dotyczące tego konta są usuwane zgodnie z prawnymi obowiązkami przechowywania. Obowiązkiem użytkowników jest zachowanie swoich danych przed zakończeniem umowy w momencie wypowiedzenia. Mamy prawo do nieodwracalnego usunięcia wszystkich danych użytkownika przechowywanych w okresie obowiązywania umowy.
+      </p>
+      <p>
+        W kontekście korzystania z naszych funkcji rejestracji i logowania oraz z konta użytkownika przechowujemy adres IP i czas każdego działania użytkownika. Przechowywanie to opiera się na naszych prawnie uzasadnionych interesach oraz na ochronie użytkowników przed nadużyciami i innym nieuprawnionym wykorzystaniem. Dane te nie są przekazywane stronom trzecim, chyba że jest to konieczne do dochodzenia naszych roszczeń lub istnieje obowiązek prawny w tym zakresie.
+      </p>
+      <dl>
+        <dt>Rodzaje przetwarzanych danych</dt>
+        <dd>Dane badacza (np. imię i nazwisko, e-mail), dane uczestnika (np. e-mail).</dd>
+        <dt>Osoby, których dane dotyczą</dt>
+        <dd>Badacze, uczestnicy.</dd>
+        <dt>Cele przetwarzania</dt>
+        <dd>Usługi kontraktowe i wsparcie, środki bezpieczeństwa, zarządzanie zapytaniami i odpowiadanie na nie.</dd>
+        <dt>Podstawa prawna</dt>
+        <dd>Zgoda (art. 6 ust. 1 lit. a RODO), wykonanie umowy i żądania przedumowne (art. 6 ust. 1 lit. b RODO), prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO).</dd>
+      </dl>
+
+      {/* ── Kontakt ──────────────────────────────────────── */}
+      <h2 id='m182'>Kontakt</h2>
+      <p>
+        Kiedy się Państwo z nami kontaktują (np. za pośrednictwem formularza kontaktowego, e-maila, telefonu lub mediów społecznościowych), dane osób składających zapytania kontaktowe są przetwarzane w zakresie niezbędnym do odpowiedzi na zapytania kontaktowe i żądane działania.
+      </p>
+      <p>
+        Odpowiadanie na zapytania kontaktowe w kontekście stosunków umownych lub przedumownych odbywa się w celu wypełnienia naszych zobowiązań umownych lub udzielenia odpowiedzi na (przedumowne) zapytania; w innych przypadkach odbywa się na podstawie prawnie uzasadnionych interesów w odpowiedzi na zapytania.
+      </p>
+      <dl>
+        <dt>Rodzaje przetwarzanych danych</dt>
+        <dd>Dane kontaktowe (np. e-mail, numery telefonu).</dd>
+        <dt>Osoby, których dane dotyczą</dt>
+        <dd>Badacze, uczestnicy.</dd>
+        <dt>Cele przetwarzania</dt>
+        <dd>Zapytania kontaktowe i komunikacja.</dd>
+        <dt>Podstawa prawna</dt>
+        <dd>Wykonanie umowy i żądania przedumowne (art. 6 ust. 1 lit. b RODO), prawnie uzasadnione interesy (art. 6 ust. 1 lit. f RODO).</dd>
+      </dl>
+
+      {/* ── Usunięcie danych ──────────────────────────────────────── */}
+      <h2 id='m12'>Usunięcie danych</h2>
+      <p>
+        Dane przetwarzane przez nas są usuwane zgodnie z przepisami prawa, gdy ich przetwarzanie zostanie odwołane lub gdy inne zezwolenia przestaną obowiązywać (np. gdy cel przetwarzania tych danych już nie istnieje lub nie jest już potrzebny do tego celu).
+      </p>
+      <p>
+        Jeśli dane nie są usuwane, ponieważ są niezbędne do innych prawnie dozwolonych celów, ich przetwarzanie jest ograniczone do tych celów. Oznacza to, że dane są ograniczone i nie są przetwarzane w innych celach. Dotyczy to na przykład danych, które muszą być przechowywane z powodów handlowych lub podatkowych albo których przechowywanie jest niezbędne do realizacji, dochodzenia lub obrony roszczeń prawnych albo do ochrony praw innych osób fizycznych lub prawnych.
+      </p>
+
+      {/* ── Zmiany i aktualizacje ──────────────────────────────────────── */}
+      <h2 id='m15'>Zmiany i aktualizacje polityki prywatności</h2>
+      <p>
+        Prosimy o regularne sprawdzanie treści naszego oświadczenia o ochronie prywatności. Będziemy zmieniać politykę prywatności, gdy będą tego wymagały zmiany w naszych praktykach przetwarzania danych. Poinformujemy Państwa, gdy zmiany wymagają Państwa współudziału (np. zgody) lub innego indywidualnego powiadomienia.
+      </p>
+      <p>
+        Gdy w tej polityce prywatności podajemy adresy i dane kontaktowe firm i organizacji, prosimy mieć na uwadze, że adresy mogą się z czasem zmieniać, i prosimy o sprawdzenie informacji przed skontaktowaniem się z nami.
+      </p>
+
+      {/* ── Prawa ──────────────────────────────────────── */}
+      <h2 id='m10'>Prawa osób, których dane dotyczą</h2>
+      <p>
+        Jako osoba, której dane dotyczą, mają Państwo różne prawa na mocy RODO, wynikające w szczególności z art. 15 do 21 RODO:
+      </p>
+      <ul>
+        <li><strong>Prawo do sprzeciwu:</strong> Mają Państwo prawo, z przyczyn związanych z Państwa szczególną sytuacją, w dowolnym momencie wnieść sprzeciw wobec przetwarzania Państwa danych osobowych opartego na art. 6 ust. 1 lit. e lub f RODO (w tym profilowania opartego na tych przepisach).</li>
+        <li><strong>Prawo do wycofania zgody:</strong> Mają Państwo prawo w dowolnym momencie wycofać swoją zgodę.</li>
+        <li><strong>Prawo dostępu:</strong> Mają Państwo prawo żądać potwierdzenia, czy Państwa dane są przetwarzane, oraz uzyskać informacje o tych danych, a także dodatkowe informacje i kopię danych zgodnie z przepisami prawa.</li>
+        <li><strong>Prawo do sprostowania:</strong> Zgodnie z przepisami prawa mają Państwo prawo żądać uzupełnienia danych Państwa dotyczących lub sprostowania nieprawidłowych danych dotyczących Państwa.</li>
+        <li><strong>Prawo do usunięcia i ograniczenia przetwarzania:</strong> Zgodnie z przepisami prawa mają Państwo prawo żądać niezwłocznego usunięcia odpowiednich danych lub, alternatywnie, żądać ograniczenia przetwarzania danych zgodnie z przepisami prawa.</li>
+        <li><strong>Prawo do przenoszenia danych:</strong> Zgodnie z wymogami prawa mają Państwo prawo otrzymać dane, które Państwo nam dostarczyli, w ustrukturyzowanym, powszechnie używanym i nadającym się do odczytu maszynowego formacie lub żądać ich przekazania innemu administratorowi.</li>
+        <li><strong>Skarga do organu nadzorczego:</strong> Mają Państwo również prawo, zgodnie z warunkami określonymi w prawie, wnieść skargę do organu nadzorczego, w szczególności w państwie członkowskim, w którym Państwa zwykłe miejsce zamieszkania się znajduje, w którym Państwo pracują lub w którym miało miejsce domniemane naruszenie, jeśli uważają Państwo, że przetwarzanie danych osobowych dotyczących Państwa narusza RODO.</li>
+      </ul>
+
+      {/* ── Terminy i definicje ──────────────────────────────────────── */}
+      <h2 id='m42'>Terminy i definicje</h2>
+      <p>
+        Niniejsza sekcja zawiera przegląd terminów używanych w tej polityce prywatności. Wiele z tych terminów pochodzi z ustawy i jest zdefiniowanych głównie w art. 4 RODO. Poniższe wyjaśnienia mają przede wszystkim ułatwić zrozumienie.
+      </p>
+      <dl>
+        <dt>Administrator danych</dt>
+        <dd>«Administrator danych» oznacza osobę fizyczną lub prawną, organ publiczny, jednostkę lub inny podmiot, który samodzielnie lub wspólnie z innymi ustala cele i sposoby przetwarzania danych osobowych.</dd>
+        <dt>Dane osobowe</dt>
+        <dd>«Dane osobowe» oznaczają wszelkie informacje o zidentyfikowanej lub możliwej do zidentyfikowania osobie fizycznej («osobie, której dane dotyczą»). Możliwa do zidentyfikowania osoba fizyczna to osoba, którą można bezpośrednio lub pośrednio zidentyfikować, w szczególności na podstawie identyfikatora takiego jak imię i nazwisko, numer identyfikacyjny, dane o lokalizacji, identyfikator internetowy lub jeden bądź kilka szczególnych czynników określających fizyczną, fizjologiczną, genetyczną, psychiczną, ekonomiczną, kulturową lub społeczną tożsamość tej osoby fizycznej.</dd>
+        <dt>Przetwarzanie</dt>
+        <dd>Termin «przetwarzanie» ma szeroki zakres i obejmuje praktycznie każdy sposób postępowania z danymi, tj. zbieranie, ocenę, przechowywanie, przekazywanie lub usuwanie.</dd>
+        <dt>Remarketing</dt>
+        <dd>«Remarketing» lub «retargeting» to termin używany, na przykład, w celu przypomnienia użytkownikom na innych stronach internetowych (np. w reklamach) produktów, którymi byli zainteresowani na stronie internetowej, poprzez wyświetlanie ich w celach reklamowych.</dd>
+        <dt>Śledzenie</dt>
+        <dd>Termin «śledzenie» jest używany, gdy zachowanie użytkowników może być śledzone na wielu stronach internetowych. Ogólnie informacje o zachowaniach i zainteresowaniach dotyczących wykorzystywanych stron internetowych są przechowywane w plikach cookie lub na serwerach dostawców technologii śledzenia (nazywa się to profilowaniem).</dd>
+        <dt>Analityka internetowa</dt>
+        <dd>Analityka internetowa pomaga ocenić ruch odwiedzających usługi online i może określić zachowanie lub zainteresowania odwiedzających w odniesieniu do określonych informacji, takich jak treść strony internetowej. Dzięki analityce internetowej właściciele stron internetowych mogą określić, o jakiej porze odwiedzający odwiedzają stronę i jakie treści ich interesują.</dd>
+      </dl>
+    </>
+  );
+}
+
+function PolicyContentAr() {
+  return (
+    <>
+      <p>
+        من خلال سياسة الخصوصية التالية، نود إعلامكم بأنواع بياناتكم الشخصية (المشار إليها فيما يلي اختصاراً بـ «البيانات») التي نعالجها، ولأي أغراض وبأي نطاق. ينطبق بيان الخصوصية على جميع عمليات معالجة البيانات الشخصية التي نقوم بها، سواء في سياق تقديم خدماتنا، وعلى وجه الخصوص على مواقعنا الإلكترونية، وفي تطبيقات الهاتف المحمول، وضمن الحضور الإلكتروني الخارجي، مثل ملفاتنا الشخصية على وسائل التواصل الاجتماعي (المشار إليها مجتمعةً فيما يلي بـ «الخدمات الإلكترونية»).
+      </p>
+      <p>المصطلحات المستخدمة ليست محددة بنوع الجنس.</p>
+      <p><strong>آخر تحديث:</strong> 3 ديسمبر 2024</p>
+
+      {/* ── المتحكم في البيانات ──────────────────────────────────────── */}
+      <h2 id='m3'>المتحكم في البيانات</h2>
+      <p>
+        مجموعة أبحاث iScience / جامعة كونستانس<br />
+        Universitätsstraße 10<br />
+        78464 كونستانس، ألمانيا
+      </p>
+      <dl>
+        <dt>الممثلون المخولون</dt>
+        <dd>Yury Shevchenko</dd>
+        <dt>عنوان البريد الإلكتروني</dt>
+        <dd><a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a></dd>
+        <dt>الهاتف</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>الإشعار القانوني</dt>
+        <dd><a href='/docs/legalnotice'>samply.uni-konstanz.de/docs/legalnotice</a></dd>
+      </dl>
+
+      {/* ── نظرة عامة ──────────────────────────────────────── */}
+      <h2 id='mOverview'>نظرة عامة على عمليات المعالجة</h2>
+      <p>
+        يلخص الجدول التالي أنواع البيانات التي تتم معالجتها، والأغراض التي تُعالج من أجلها، وأصحاب البيانات المعنيين.
+      </p>
+      <h3>فئات البيانات المعالجة</h3>
+      <ul>
+        <li>بيانات الدراسة (مثل الإدخالات النصية، الصور)</li>
+        <li>بيانات الباحث (مثل الاسم، المعهد، البريد الإلكتروني، اللغة)</li>
+        <li>بيانات المشارك (مثل البريد الإلكتروني، المنطقة الزمنية، تفضيلات الوقت، رمز المشارك)</li>
+        <li>بيانات الإشعارات (مثل العنوان، الرسالة، الرابط، جدول الإشعارات)</li>
+        <li>الطوابع الزمنية للإشعارات (مثل وقت تلقي الإشعار في التطبيق، النقر عليه في شريط الإشعارات، فتحه في التطبيق، حذفه، حدث السياج الجغرافي، حدث الإكمال)</li>
+        <li>البيانات الوصفية/بيانات الاتصال (مثل ملفات تعريف الارتباط)</li>
+        <li>بيانات الاتصال (مثل البريد الإلكتروني، أرقام الهاتف)</li>
+      </ul>
+      <h3>فئات أصحاب البيانات</h3>
+      <ul>
+        <li>الباحثون</li>
+        <li>المشاركون</li>
+      </ul>
+      <h3>أغراض المعالجة</h3>
+      <ul>
+        <li>عمليات المصادقة</li>
+        <li>توفير خدماتنا الإلكترونية وقابلية استخدامها</li>
+        <li>الإجراءات المكتبية والتنظيمية</li>
+        <li>التغذية الراجعة (مثل جمع الملاحظات عبر نموذج إلكتروني)</li>
+        <li>طلبات الاتصال والتواصل</li>
+        <li>تدابير الأمان</li>
+        <li>الخدمات التعاقدية والدعم</li>
+        <li>إدارة الاستفسارات والرد عليها</li>
+      </ul>
+
+      <h3>فترات الاحتفاظ بالبيانات</h3>
+      <p>
+        يتم الاحتفاظ بسجلات قائمة انتظار الإشعارات المعلقة لمدة <strong>30 يوماً</strong>. يتم الاحتفاظ بتاريخ الإشعارات وسجلات الاستجابات لمدة{' '}
+        <strong>12 شهراً</strong>. بعد انقضاء هذه الفترات، تُحذف السجلات تلقائياً بواسطة المنصة.
+        يمكن للباحثين تصدير بيانات دراساتهم في أي وقت من لوحة تحكم الدراسة قبل انقضاء هذه الفترات.
+      </p>
+
+      {/* ── الأسس القانونية ──────────────────────────────────────── */}
+      <h2 id='m13'>الأسس القانونية للمعالجة</h2>
+      <p>
+        فيما يلي نُعلمكم بالأساس القانوني للائحة العامة لحماية البيانات (GDPR)، الذي نعالج البيانات الشخصية بناءً عليه. يرجى ملاحظة أنه بالإضافة إلى أحكام اللائحة العامة لحماية البيانات، قد تنطبق لوائح حماية البيانات الوطنية في بلدكم أو في بلد إقامتنا أو موطننا. علاوة على ذلك، إذا كانت هناك أسس قانونية أكثر تحديداً تنطبق في حالات فردية، فسنُعلمكم بذلك في بيان حماية البيانات.
+      </p>
+      <ul>
+        <li><strong>الموافقة (المادة 6، الفقرة 1، الحرف أ من اللائحة العامة لحماية البيانات)</strong> — في حال أعطى صاحب البيانات موافقته على معالجة بياناته الشخصية لغرض محدد أو أكثر.</li>
+        <li><strong>تنفيذ العقد والطلبات السابقة للتعاقد (المادة 6، الفقرة 1، الحرف ب من اللائحة العامة لحماية البيانات)</strong> — في حال كانت المعالجة ضرورية لتنفيذ عقد يكون صاحب البيانات طرفاً فيه، أو لاتخاذ إجراءات بناءً على طلب صاحب البيانات قبل إبرام العقد.</li>
+        <li><strong>الامتثال للالتزامات القانونية (المادة 6، الفقرة 1، الحرف ج من اللائحة العامة لحماية البيانات)</strong> — في حال كانت المعالجة ضرورية للامتثال لالتزام قانوني يقع على عاتق المتحكم في البيانات.</li>
+        <li><strong>حماية المصالح الحيوية (المادة 6، الفقرة 1، الحرف د من اللائحة العامة لحماية البيانات)</strong> — في حال كانت المعالجة ضرورية لحماية المصالح الحيوية لصاحب البيانات أو لشخص طبيعي آخر.</li>
+        <li><strong>المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات)</strong> — في حال كانت المعالجة ضرورية لتحقيق المصالح المشروعة للمتحكم في البيانات أو لطرف ثالث، ما لم تكن هذه المصالح متجاوزة بمصالح أو حقوق وحريات أساسية لصاحب البيانات تتطلب حماية البيانات الشخصية.</li>
+      </ul>
+      <p>
+        <strong>لوائح حماية البيانات الوطنية في ألمانيا:</strong>{' '}
+        بالإضافة إلى أحكام اللائحة العامة لحماية البيانات، تنطبق في ألمانيا لوائح حماية البيانات الوطنية. وتشمل هذه اللوائح بشكل خاص القانون الاتحادي لحماية البيانات (BDSG). ويتضمن هذا القانون أحكاماً خاصة تتعلق بالحق في الوصول، والحق في الحذف، والحق في الاعتراض، ومعالجة الفئات الخاصة من البيانات الشخصية، والمعالجة لأغراض أخرى ونقلها، فضلاً عن اتخاذ القرارات الآلية في الحالات الفردية، بما في ذلك التنميط. علاوة على ذلك، قد تنطبق لوائح حماية البيانات الخاصة بالولايات الفدرالية ذات الصلة.
+      </p>
+
+      {/* ── تطبيق الهاتف المحمول ──────────────────────────────────────── */}
+      <h2 id='m200'>تقديم تطبيق الهاتف المحمول Samply Research</h2>
+      <p>
+        <strong>المعلومات التي يقدمها المستخدم:</strong> يحصل تطبيقنا على المعلومات التي تقدمونها عند التنزيل والتسجيل. التسجيل مطلوب لاستخدام الوظيفة الأساسية للتطبيق. من خلال التسجيل واستخدام التطبيق، تقدمون المعلومات التالية: (أ) عنوان البريد الإلكتروني وكلمة المرور، (ب) المنطقة الزمنية ولغة الهاتف الذكي، (ج) الطوابع الزمنية للأحداث التالية: تلقي الإشعار في التطبيق، النقر في شريط الإشعارات، فتح الإشعار في التطبيق، حذف الإشعار، إكمال الاستبيان، (د) المعلومات التي تقدمونها عند الاتصال بنا للحصول على الدعم، (هـ) المعلومات التي تدخلونها في أنظمتنا أثناء استخدام التطبيق، على سبيل المثال عند الانضمام إلى دراسة، (و) إذا انضممتم إلى دراسة تستخدم السياج الجغرافي، فإن معلومات الموقع الحالي والطوابع الزمنية لأحداث السياج الجغرافي أثناء استخدام التطبيق وعندما يكون التطبيق مغلقاً.
+      </p>
+      <p>
+        <strong>استخدام الموقع في الخلفية:</strong>{' '}
+        قد تتطلب بعض الدراسات إرسال رابط إلى استبيان إلكتروني عند دخولكم أو مغادرتكم لموقع معين (مثل مكان العمل). لهذا السبب، إذا انضممتم إلى دراسة تستخدم هذا النوع من التواصل مع المشاركين، فسيُطلب منكم تقديم موافقتكم على التتبع المستمر للموقع. إذا وافقتم، فسيقوم التطبيق بتتبع موقعكم باستمرار، حتى عندما يكون التطبيق مغلقاً. لا يشارك التطبيق بيانات موقعكم مع خدمات الطرف الثالث أو مع الباحثين. تُستخدم معلومات موقعكم حصرياً لغرض إرسال إشعار يحتوي على رابط لاستبيان إلكتروني أنشأه الباحث. يمكنكم في أي وقت تشغيل أو إيقاف تتبع الموقع لدراسة معينة داخل التطبيق. إذا كنتم لا ترغبون في استخدام معلومات موقعكم للغرض الموضح أعلاه، فينبغي إيقاف خدمات الموقع لتطبيق الهاتف المحمول في إعدادات الحساب، وإعدادات الهاتف، و/أو في تطبيق الهاتف المحمول نفسه.
+      </p>
+      <p>
+        <strong>سياسة الاحتفاظ بالبيانات، إدارة معلوماتكم:</strong>{' '}
+        يمكنكم إيقاف جميع عمليات جمع المعلومات من قبل التطبيق عن طريق حذف حسابكم (باختيار قائمة «أخرى»، ثم «الإعدادات»، ثم «حذف حسابي») وإلغاء تثبيت التطبيق. يمكنكم استخدام عمليات إلغاء التثبيت القياسية المتاحة على جهازكم المحمول، أو من خلال متجر تطبيقات الهاتف المحمول أو الشبكة.
+      </p>
+      <dl>
+        <dt>أنواع البيانات المعالجة</dt>
+        <dd>بيانات الدراسة، بيانات الباحث، بيانات المشارك، بيانات الإشعارات، الطوابع الزمنية للإشعارات.</dd>
+        <dt>أصحاب البيانات</dt>
+        <dd>المشاركون.</dd>
+        <dt>أغراض المعالجة</dt>
+        <dd>عمليات المصادقة، توفير خدماتنا الإلكترونية وقابلية استخدامها، طلبات الاتصال والتواصل، تدابير الأمان، إدارة الاستفسارات والرد عليها.</dd>
+        <dt>الأساس القانوني</dt>
+        <dd>الموافقة (المادة 6، الفقرة 1، الحرف أ من اللائحة العامة لحماية البيانات)، الامتثال للالتزامات القانونية (المادة 6، الفقرة 1، الحرف ج من اللائحة العامة لحماية البيانات)، حماية المصالح الحيوية (المادة 6، الفقرة 1، الحرف د من اللائحة العامة لحماية البيانات)، المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات).</dd>
+      </dl>
+      <p><strong>الخدمات ومقدمو الخدمات المستخدمون:</strong></p>
+      <ul>
+        <li><strong>Expo</strong> — مجموعة من الأدوات ومنصة لإنشاء وتوزيع تطبيقات الهاتف المحمول لأنظمة Android و iOS. مقدم الخدمة: Expo. الموقع الإلكتروني: <a href='https://expo.dev/' target='_blank' rel='noreferrer'>https://expo.dev/</a>. سياسة الخصوصية: <a href='https://expo.dev/privacy' target='_blank' rel='noreferrer'>https://expo.dev/privacy</a>.</li>
+        <li><strong>App Store</strong> — منصة لتوزيع تطبيقات الهاتف المحمول لنظامي iOS و iPadOS. مقدم الخدمة: Apple Inc., One Apple Park Way, Cupertino, CA 95014, الولايات المتحدة الأمريكية. الموقع الإلكتروني: <a href='https://www.apple.com/app-store/' target='_blank' rel='noreferrer'>https://www.apple.com/app-store/</a>. سياسة الخصوصية: <a href='https://www.apple.com/privacy/' target='_blank' rel='noreferrer'>https://www.apple.com/privacy/</a>.</li>
+        <li><strong>Google Play</strong> — منصة لتوزيع التطبيقات لأجهزة نظامي Android و Chrome OS. مقدم الخدمة: Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, الولايات المتحدة الأمريكية. الموقع الإلكتروني: <a href='https://play.google.com/store' target='_blank' rel='noreferrer'>https://play.google.com/store</a>. سياسة الخصوصية: <a href='https://policies.google.com/privacy' target='_blank' rel='noreferrer'>https://policies.google.com/privacy</a>.</li>
+      </ul>
+
+      {/* ── استضافة الإنترنت ──────────────────────────────────────── */}
+      <h2 id='m225'>تقديم الخدمات الإلكترونية واستضافة الإنترنت</h2>
+      <p>
+        لتقديم الخدمات الإلكترونية على موقع Samply (https://samply.uni-konstanz.de/)، نستخدم البنية التحتية (خادم الإنترنت، قوة الحوسبة، التخزين، خدمات قواعد البيانات، خدمات الأمان والصيانة الفنية) التابعة لجامعة كونستانس في ألمانيا.
+      </p>
+      <p>
+        تشمل البيانات المعالجة في سياق توفير الموقع الإلكتروني جميع المعلومات المتعلقة بمستخدمي تطبيق الهاتف المحمول Samply Research وموقع samply، ويتم جمعها أثناء الاستخدام والتواصل. يتم تخزين بيانات المشاركين والطوابع الزمنية للإشعارات في قاعدة بيانات آمنة، ولا يمكن الوصول إليها إلا من قبل الباحث المسؤول عن الدراسة الذي يجمعها. يمكن للباحثين حذف هذه البيانات عبر واجهة موقع Samply.
+      </p>
+      <p>
+        <strong>إرسال واستضافة البريد الإلكتروني:</strong> تشمل خدمات استضافة الإنترنت التي نستخدمها أيضاً إرسال واستقبال وتخزين رسائل البريد الإلكتروني. ولهذا الغرض، تُعالَج عناوين المستلمين والمرسلين، فضلاً عن المعلومات الأخرى المتعلقة بإرسال رسائل البريد الإلكتروني (مثل مقدمي الخدمة المعنيين) ومحتوى الرسائل الفردية. قد تتم معالجة هذه البيانات أيضاً لأغراض الكشف عن الرسائل غير المرغوب فيها. يرجى ملاحظة أن رسائل البريد الإلكتروني على الإنترنت لا تُرسل عادةً في شكل مشفر. كقاعدة عامة، تُشفَّر رسائل البريد الإلكتروني أثناء النقل، ولكن ليس على الخوادم التي تُرسل وتُستقبل منها (ما لم تُستخدم طريقة التشفير من طرف إلى طرف). لذلك، لا يمكننا تحمل المسؤولية عن مسار نقل رسائل البريد الإلكتروني بين المرسل ووصولها إلى خوادمنا.
+      </p>
+      <p>
+        <strong>جمع بيانات الوصول وملفات السجل:</strong> نحن أو مقدم خدمة استضافة الإنترنت نقوم بجمع البيانات بناءً على كل عملية وصول إلى الخادم (ما يسمى بملفات سجل الخادم). قد تحتوي هذه الملفات على عناوين وأسماء المواقع والملفات التي تم الوصول إليها، وتاريخ ووقت الوصول، وكمية البيانات المنقولة، والإشعار بنجاح الوصول، ونوع وإصدار المتصفح، ونظام تشغيل المستخدم، والرابط المرجعي (الصفحة التي تمت زيارتها سابقاً)، وبشكل عام عناوين IP ومقدم خدمة الإنترنت الطالب. يمكن استخدام ملفات سجل الخادم لأغراض الأمان، على سبيل المثال لتجنب التحميل الزائد على الخادم (لا سيما في حالة الهجمات الخبيثة، مثل هجمات DDoS)، ولضمان استقرار الخوادم وموازنة التحميل المثلى.
+      </p>
+      <p>
+        <strong>سياسة الاحتفاظ بالبيانات، إدارة معلوماتكم:</strong>{' '}
+        يمكن لمستخدمي الموقع الإلكتروني (الباحثين والمشاركين) إدارة حساباتهم عبر واجهة موقع Samply. يمكن للمستخدمين حذف حساباتهم من قائمة «الحساب» باختيار خيار «حذف حسابي».
+      </p>
+      <dl>
+        <dt>أنواع البيانات المعالجة</dt>
+        <dd>بيانات الدراسة، بيانات الباحث، بيانات المشارك، بيانات الإشعارات، الطوابع الزمنية للإشعارات.</dd>
+        <dt>أصحاب البيانات</dt>
+        <dd>الباحثون، المشاركون.</dd>
+        <dt>أغراض المعالجة</dt>
+        <dd>عمليات المصادقة، توفير خدماتنا الإلكترونية وقابلية استخدامها، طلبات الاتصال والتواصل، تدابير الأمان، إدارة الاستفسارات والرد عليها.</dd>
+        <dt>الأساس القانوني</dt>
+        <dd>الموافقة (المادة 6، الفقرة 1، الحرف أ من اللائحة العامة لحماية البيانات)، الامتثال للالتزامات القانونية (المادة 6، الفقرة 1، الحرف ج من اللائحة العامة لحماية البيانات)، حماية المصالح الحيوية (المادة 6، الفقرة 1، الحرف د من اللائحة العامة لحماية البيانات)، المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات).</dd>
+      </dl>
+      <p><strong>الخدمات ومقدمو الخدمات المستخدمون:</strong></p>
+      <ul>
+        <li><strong>خادم الإنترنت الخاص بالجامعة</strong> — مقدم الخدمة: جامعة كونستانس، Universitätsstraße 10, 78464 كونستانس، ألمانيا. الموقع الإلكتروني: <a href='https://www.kim.uni-konstanz.de/en/' target='_blank' rel='noreferrer'>https://www.kim.uni-konstanz.de/en/</a>. سياسة الخصوصية: <a href='https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/' target='_blank' rel='noreferrer'>https://www.uni-konstanz.de/en/university/general-information/information-on-data-protection/</a>.</li>
+        <li><strong>Postmark</strong> — خدمة البريد الإلكتروني المعاملاتية. مقدم الخدمة: Wildbit, LLC, 225 Chestnut Street, Philadelphia, PA 19106, الولايات المتحدة الأمريكية. الموقع الإلكتروني: <a href='https://postmarkapp.com/' target='_blank' rel='noreferrer'>https://postmarkapp.com/</a>. سياسة الخصوصية: <a href='https://wildbit.com/privacy-policy' target='_blank' rel='noreferrer'>https://wildbit.com/privacy-policy</a>.</li>
+      </ul>
+
+      {/* ── الأمان ──────────────────────────────────────── */}
+      <h2 id='m27'>تدابير الأمان</h2>
+      <p>
+        نتخذ التدابير الفنية والتنظيمية وفقاً للمتطلبات القانونية، مع مراعاة حالة التقنية، وتكاليف التنفيذ، وطبيعة المعالجة ونطاقها وظروفها وأغراضها، وكذلك الاحتمالات المختلفة وحدة المخاطر على حقوق وحريات الأشخاص الطبيعيين، وذلك لضمان مستوى من الأمان يتناسب مع المخاطر.
+      </p>
+      <p>
+        تشمل التدابير على وجه الخصوص ضمان سرية البيانات وسلامتها وتوافرها من خلال التحكم في الوصول المادي والإلكتروني إلى البيانات، فضلاً عن التحكم في الوصول والإدخال والنقل والأمان وفصل البيانات. علاوة على ذلك، أنشأنا إجراءات تضمن ممارسة حقوق أصحاب البيانات، وحذف البيانات، والقدرة على الاستجابة السريعة للمخاطر التي تهدد البيانات. كما نأخذ في الاعتبار حماية البيانات الشخصية بالفعل في مرحلة تطوير أو اختيار الأجهزة والبرامج ومقدمي الخدمات، وفقاً لمبدأ حماية البيانات من خلال التصميم والإعدادات الافتراضية.
+      </p>
+      <p>
+        <strong>إخفاء عناوين IP:</strong> كقاعدة عامة، لا تُسجَّل أو تُخزَّن عناوين IP الخاصة بالباحثين والمشاركين. في حال حدث ذلك في المستقبل، فسنقوم بتقصير عنوان IP الخاص بكم أو نطلب تقصيره. يتمثل تقصير عنوان IP، المعروف أيضاً بـ «إخفاء IP»، في إزالة الثُماني الأخير من عنوان IP، أي الرقمين الأخيرين. يهدف هذا التقصير إلى منع أو زيادة صعوبة التعرف على الشخص بناءً على عنوان IP.
+      </p>
+      <p>
+        <strong>تشفير SSL (https):</strong> لحماية البيانات التي تنقلونها عبر خدماتنا الإلكترونية إلى أقصى حد، نستخدم تشفير SSL. يمكنكم التعرف على هذه الاتصالات المشفرة من خلال البادئة https:// في شريط عنوان متصفحكم.
+      </p>
+
+      {/* ── النقل ──────────────────────────────────────── */}
+      <h2 id='m25'>نقل البيانات الشخصية والكشف عنها</h2>
+      <p>
+        في سياق معالجة البيانات الشخصية، قد يتم نقل البيانات إلى أماكن أخرى أو شركات أو أشخاص آخرين، أو الكشف عنها لهم. قد يكون مستلمو هذه البيانات، على سبيل المثال، مؤسسات الدفع في سياق معاملات الدفع، أو مقدمي الخدمات المكلفين بمهام تكنولوجيا المعلومات، أو مقدمي الخدمات والمحتوى المدمج في الموقع الإلكتروني. في هذه الحالة، يتم احترام المتطلبات القانونية، وعلى وجه الخصوص يتم توقيع العقود أو الاتفاقيات المناسبة التي تخدم حماية بياناتكم، مع الجهات التي تتلقى بياناتكم.
+      </p>
+
+      {/* ── الدول الثالثة ──────────────────────────────────────── */}
+      <h2 id='m24'>معالجة البيانات في الدول الثالثة</h2>
+      <p>
+        إذا قمنا بمعالجة البيانات في دولة ثالثة (أي خارج الاتحاد الأوروبي (EU) أو المنطقة الاقتصادية الأوروبية (EEA))، أو إذا تمت المعالجة في سياق استخدام خدمات أطراف ثالثة أو الكشف عن البيانات أو نقلها إلى أشخاص أو جهات أو شركات أخرى، فإن ذلك يتم حصراً وفقاً للمتطلبات القانونية.
+      </p>
+      <p>
+        مع مراعاة الموافقة الصريحة الممنوحة أو النقل المطلوب تعاقدياً أو قانونياً، نقوم بمعالجة البيانات أو نطلب معالجتها فقط في الدول الثالثة ذات المستوى المعترف به لحماية البيانات، استناداً إلى ضمانات خاصة، مثل الالتزامات التعاقدية الناتجة عن البنود القياسية لحماية البيانات الصادرة عن المفوضية الأوروبية، أو الشهادات، أو القواعد الداخلية الملزمة لحماية البيانات التي تبرر المعالجة (المواد 44 إلى 49 من اللائحة العامة لحماية البيانات).
+      </p>
+
+      {/* ── ملفات تعريف الارتباط ──────────────────────────────────────── */}
+      <h2 id='m134'>استخدام ملفات تعريف الارتباط</h2>
+      <p>
+        لا نستخدم ملفات تعريف الارتباط الخاصة بالأطراف الثالثة، ولا ملفات تعريف الارتباط لأغراض الإحصاء أو التسويق أو التخصيص. نستخدم فقط ملفات تعريف الارتباط الضرورية لعمل الموقع الإلكتروني (ملفات تعريف الارتباط الضرورية) (مثل مصادقة المستخدم).
+      </p>
+      <p>
+        ملفات تعريف الارتباط هي ملفات نصية تحتوي على بيانات من المواقع الإلكترونية أو النطاقات التي تتم زيارتها، ويتم تخزينها بواسطة المتصفح على حاسوب المستخدم. تُستخدم ملفات تعريف الارتباط بشكل أساسي لتخزين المعلومات حول المستخدم أثناء أو بعد زيارة خدمة إلكترونية. قد تشمل المعلومات المخزنة، على سبيل المثال، إعدادات لغة الموقع الإلكتروني، وحالة تسجيل الدخول، ومحتويات سلة التسوق، أو المكان الذي تم فيه مشاهدة مقطع فيديو.
+      </p>
+      <p><strong>تُميَّز الأنواع والوظائف التالية لملفات تعريف الارتباط:</strong></p>
+      <ul>
+        <li><strong>ملفات تعريف الارتباط المؤقتة (المعروفة أيضاً بملفات تعريف ارتباط الجلسة):</strong> تُحذف ملفات تعريف الارتباط المؤقتة في موعد أقصاه عندما يغادر المستخدم الخدمة الإلكترونية ويغلق المتصفح.</li>
+        <li><strong>ملفات تعريف الارتباط الدائمة:</strong> تظل ملفات تعريف الارتباط الدائمة مخزنة حتى بعد إغلاق المتصفح. على سبيل المثال، يمكن حفظ حالة تسجيل الدخول أو عرض المحتوى المفضل مباشرةً عند إعادة زيارة المستخدم للموقع الإلكتروني.</li>
+        <li><strong>ملفات تعريف الارتباط الخاصة بنا:</strong> ملفات تعريف الارتباط الخاصة بنا هي تلك التي نضعها بأنفسنا.</li>
+        <li><strong>ملفات تعريف الارتباط الخاصة بالأطراف الثالثة:</strong> تُستخدم ملفات تعريف الارتباط الخاصة بالأطراف الثالثة بشكل رئيسي من قبل المعلنين (ما يسمى بالأطراف الثالثة) لمعالجة معلومات المستخدم.</li>
+        <li><strong>ملفات تعريف الارتباط الضرورية (المعروفة أيضاً بملفات تعريف الارتباط الأساسية):</strong> قد تكون ملفات تعريف الارتباط ضرورية لعمل الموقع الإلكتروني (على سبيل المثال، لحفظ بيانات تسجيل الدخول أو غيرها من البيانات التي يدخلها المستخدم، أو لأسباب أمنية).</li>
+        <li><strong>ملفات تعريف الارتباط الإحصائية والتسويقية والتخصيصية:</strong> تُستخدم ملفات تعريف الارتباط أيضاً عادةً لقياس نطاق وصول الموقع الإلكتروني، وعندما يتم حفظ اهتمامات أو سلوك المستخدم في ملف تعريف المستخدم. تُستخدم هذه الملفات الشخصية، على سبيل المثال، لعرض محتوى للمستخدمين يتناسب مع اهتماماتهم المحتملة.</li>
+      </ul>
+      <p>
+        <strong>معلومات حول الأسس القانونية:</strong> يعتمد الأساس القانوني الذي نعالج بموجبه بياناتكم الشخصية باستخدام ملفات تعريف الارتباط على ما إذا كنا نطلب موافقتكم. إذا كان الأمر كذلك ومنحتم موافقتكم على استخدام ملفات تعريف الارتباط، فإن الأساس القانوني لمعالجة بياناتكم هو الموافقة الممنوحة. وإلا، فإن البيانات المعالجة باستخدام ملفات تعريف الارتباط تُعالج على أساس مصالحنا المشروعة (مثل الاستغلال التجاري وتحسين خدماتنا الإلكترونية)، أو عندما يكون استخدام ملفات تعريف الارتباط ضرورياً للوفاء بالتزاماتنا التعاقدية.
+      </p>
+      <p>
+        <strong>فترة الاحتفاظ:</strong> ما لم نقدم معلومات صريحة حول فترة الاحتفاظ بملفات تعريف الارتباط الدائمة، يرجى مراعاة أن هذه الفترة قد تصل إلى عامين.
+      </p>
+      <p>
+        <strong>معلومات عامة عن سحب الموافقة والاعتراض (إلغاء الاشتراك):</strong>{' '}
+        يمكنكم في أي وقت الاعتراض على معالجة البيانات باستخدام تقنيات ملفات تعريف الارتباط أو سحب موافقتكم. يمكنكم التعبير عن اعتراضكم بشكل أساسي عبر إعدادات متصفحكم، على سبيل المثال عن طريق تعطيل استخدام ملفات تعريف الارتباط (مما قد يحد أيضاً من وظائف خدماتنا الإلكترونية). يمكن التعبير عن الاعتراض على استخدام ملفات تعريف الارتباط لأغراض التسويق الإلكتروني، لا سيما في حالة التتبع، فيما يتعلق بالعديد من الخدمات عبر المواقع الإلكترونية{' '}
+        <a href='https://www.aboutads.info/choices/' target='_blank' rel='noreferrer'>https://www.aboutads.info/choices/</a>{' '}
+        و{' '}
+        <a href='https://www.youronlinechoices.com' target='_blank' rel='noreferrer'>https://www.youronlinechoices.com</a>
+        {' '}.
+      </p>
+      <dl>
+        <dt>أنواع البيانات المعالجة</dt>
+        <dd>البيانات الوصفية/بيانات الاتصال (مثل ملفات تعريف الارتباط).</dd>
+        <dt>أصحاب البيانات</dt>
+        <dd>الباحثون، المشاركون.</dd>
+        <dt>الأساس القانوني</dt>
+        <dd>الموافقة (المادة 6، الفقرة 1، الحرف أ من اللائحة العامة لحماية البيانات)، المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات).</dd>
+      </dl>
+
+      {/* ── الخدمات التجارية ──────────────────────────────────────── */}
+      <h2 id='m317'>الخدمات التجارية</h2>
+      <p>
+        تنطبق المعلومات التالية المتعلقة بالخدمات التجارية حصراً على الباحثين الذين يرغبون في إجراء مدفوعات للمشاركين من خلال دمج منصة Samply مع Stripe.
+      </p>
+      <p>
+        في سياق العلاقات التعاقدية والعلاقات المماثلة، فضلاً عن الأنشطة ذات الصلة والتواصل مع أطراف العقد أو في المرحلة السابقة للتعاقد، على سبيل المثال للرد على الأسئلة، نقوم بمعالجة بيانات أطراف العقد والشركاء التجاريين، مثل العملاء والأطراف المهتمة (يُشار إليهم مجتمعين بـ «أطراف العقد»).
+      </p>
+      <p>
+        نعالج هذه البيانات بهدف الوفاء بالتزاماتنا التعاقدية، وحماية حقوقنا، ولأغراض إدارية تتعلق بهذه البيانات وتنظيم الأنشطة. ننقل بيانات أطراف العقد إلى أطراف ثالثة، في إطار القانون المعمول به، بالقدر اللازم للأغراض المذكورة أعلاه، من أجل الوفاء بالالتزامات القانونية أو بموافقة أصحاب البيانات.
+      </p>
+      <p>
+        بعد انقضاء فترات الضمان القانوني والالتزامات المماثلة، أي كقاعدة عامة بعد 4 سنوات، نقوم بحذف البيانات، ما لم تكن مخزنة في حساب العميل أو يجب الاحتفاظ بها لأغراض الأرشفة القانونية (على سبيل المثال، كقاعدة عامة لمدة 10 سنوات لأغراض الضرائب).
+      </p>
+      <dl>
+        <dt>أنواع البيانات المعالجة</dt>
+        <dd>بيانات الباحث (مثل الاسم، المعهد، البريد الإلكتروني، اللغة)، بيانات المشارك (مثل البريد الإلكتروني، المنطقة الزمنية، تفضيلات الوقت، رمز المشارك).</dd>
+        <dt>أصحاب البيانات</dt>
+        <dd>الباحثون، المشاركون.</dd>
+        <dt>أغراض المعالجة</dt>
+        <dd>الخدمات التعاقدية والدعم، طلبات الاتصال والتواصل، الإجراءات المكتبية والتنظيمية، إدارة الاستفسارات والرد عليها، تدابير الأمان.</dd>
+        <dt>الأساس القانوني</dt>
+        <dd>تنفيذ العقد والطلبات السابقة للتعاقد (المادة 6، الفقرة 1، الحرف ب من اللائحة العامة لحماية البيانات)، الامتثال للالتزامات القانونية (المادة 6، الفقرة 1، الحرف ج من اللائحة العامة لحماية البيانات)، المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات).</dd>
+      </dl>
+      <p><strong>الخدمات ومقدمو الخدمات المستخدمون:</strong></p>
+      <ul>
+        <li><strong>Stripe</strong> — منصة لمعالجة المدفوعات. مقدم الخدمة: Stripe Inc., 354 Oyster Point Blvd, South San Francisco, CA 94080, الولايات المتحدة الأمريكية. الموقع الإلكتروني: <a href='https://stripe.com/' target='_blank' rel='noreferrer'>https://stripe.com/</a>. سياسة الخصوصية: <a href='https://stripe.com/en-de/privacy' target='_blank' rel='noreferrer'>https://stripe.com/en-de/privacy</a>.</li>
+      </ul>
+
+      {/* ── التسجيل ──────────────────────────────────────── */}
+      <h2 id='m367'>التسجيل وتسجيل الدخول وحساب المستخدم</h2>
+      <p>
+        يمكن للمستخدمين إنشاء حساب مستخدم. في سياق التسجيل، يتم إبلاغ المستخدمين بالمعلومات الإلزامية الضرورية، ويتم معالجتها لغرض توفير حساب المستخدم على أساس الوفاء بالالتزامات التعاقدية. تشمل البيانات المعالجة على وجه الخصوص معلومات تسجيل الدخول (الاسم، كلمة المرور، عنوان البريد الإلكتروني).
+      </p>
+      <p>
+        يمكن إبلاغ المستخدمين عن طريق البريد الإلكتروني بأمور تتعلق بحساب المستخدم، مثل التغييرات الفنية. إذا قام المستخدمون بإنهاء حساب المستخدم الخاص بهم، فسيتم حذف البيانات المتعلقة بهذا الحساب وفقاً للالتزامات القانونية بالاحتفاظ. تقع على عاتق المستخدمين مسؤولية الاحتفاظ ببياناتهم قبل إنهاء العقد في وقت الإنهاء. يحق لنا حذف جميع بيانات المستخدم المخزنة خلال فترة سريان العقد بشكل لا رجعة فيه.
+      </p>
+      <p>
+        في سياق استخدام وظائف التسجيل وتسجيل الدخول وحساب المستخدم، نقوم بتخزين عنوان IP ووقت كل إجراء يقوم به المستخدم. يعتمد هذا التخزين على مصالحنا المشروعة وعلى حماية المستخدمين من إساءة الاستخدام والاستخدام غير المصرح به الآخر. لا تُنقل هذه البيانات إلى أطراف ثالثة، ما لم يكن ذلك ضرورياً لإقامة دعاوينا أو كان هناك التزام قانوني بذلك.
+      </p>
+      <dl>
+        <dt>أنواع البيانات المعالجة</dt>
+        <dd>بيانات الباحث (مثل الاسم، البريد الإلكتروني)، بيانات المشارك (مثل البريد الإلكتروني).</dd>
+        <dt>أصحاب البيانات</dt>
+        <dd>الباحثون، المشاركون.</dd>
+        <dt>أغراض المعالجة</dt>
+        <dd>الخدمات التعاقدية والدعم، تدابير الأمان، إدارة الاستفسارات والرد عليها.</dd>
+        <dt>الأساس القانوني</dt>
+        <dd>الموافقة (المادة 6، الفقرة 1، الحرف أ من اللائحة العامة لحماية البيانات)، تنفيذ العقد والطلبات السابقة للتعاقد (المادة 6، الفقرة 1، الحرف ب من اللائحة العامة لحماية البيانات)، المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات).</dd>
+      </dl>
+
+      {/* ── الاتصال ──────────────────────────────────────── */}
+      <h2 id='m182'>الاتصال</h2>
+      <p>
+        عندما تتواصلون معنا (مثلاً عبر نموذج الاتصال، أو البريد الإلكتروني، أو الهاتف، أو وسائل التواصل الاجتماعي)، تُعالَج بيانات الأشخاص الذين يقدمون طلبات الاتصال بالقدر اللازم للرد على طلبات الاتصال والإجراءات المطلوبة.
+      </p>
+      <p>
+        الرد على طلبات الاتصال في سياق العلاقات التعاقدية أو السابقة للتعاقد يتم بهدف الوفاء بالتزاماتنا التعاقدية أو للإجابة على الاستفسارات (السابقة للتعاقد)؛ وفي الحالات الأخرى، يتم على أساس المصالح المشروعة في الرد على الاستفسارات.
+      </p>
+      <dl>
+        <dt>أنواع البيانات المعالجة</dt>
+        <dd>بيانات الاتصال (مثل البريد الإلكتروني، أرقام الهاتف).</dd>
+        <dt>أصحاب البيانات</dt>
+        <dd>الباحثون، المشاركون.</dd>
+        <dt>أغراض المعالجة</dt>
+        <dd>طلبات الاتصال والتواصل.</dd>
+        <dt>الأساس القانوني</dt>
+        <dd>تنفيذ العقد والطلبات السابقة للتعاقد (المادة 6، الفقرة 1، الحرف ب من اللائحة العامة لحماية البيانات)، المصالح المشروعة (المادة 6، الفقرة 1، الحرف و من اللائحة العامة لحماية البيانات).</dd>
+      </dl>
+
+      {/* ── حذف البيانات ──────────────────────────────────────── */}
+      <h2 id='m12'>حذف البيانات</h2>
+      <p>
+        تُحذف البيانات التي نعالجها وفقاً للأحكام القانونية عندما يتم إلغاء معالجتها أو عندما تنتهي صلاحية التراخيص الأخرى (مثلاً عندما لم يعد غرض معالجة هذه البيانات قائماً أو لم يعد ضرورياً لهذا الغرض).
+      </p>
+      <p>
+        إذا لم تُحذف البيانات لكونها ضرورية لأغراض أخرى مسموح بها قانوناً، فإن معالجتها تقتصر على هذه الأغراض. وهذا يعني أن البيانات تكون محدودة ولا تُعالج لأغراض أخرى. وينطبق ذلك، على سبيل المثال، على البيانات التي يجب الاحتفاظ بها لأسباب تجارية أو ضريبية، أو التي يكون الاحتفاظ بها ضرورياً لتحقيق أو ممارسة أو الدفاع عن المطالبات القانونية، أو لحماية حقوق الأشخاص الطبيعيين أو الاعتباريين الآخرين.
+      </p>
+
+      {/* ── التغييرات والتحديثات ──────────────────────────────────────── */}
+      <h2 id='m15'>تغييرات وتحديثات سياسة الخصوصية</h2>
+      <p>
+        نطلب منكم مراجعة محتوى بيان حماية الخصوصية الخاص بنا بانتظام. سنقوم بتعديل سياسة الخصوصية كلما تطلبت التغييرات في ممارسات معالجة البيانات لدينا ذلك. سنُعلمكم عندما تتطلب التغييرات مشاركتكم (مثلاً الموافقة) أو إخطاراً فردياً آخر.
+      </p>
+      <p>
+        عندما نقدم في سياسة الخصوصية هذه عناوين وبيانات اتصال للشركات والمنظمات، يرجى مراعاة أن العناوين قد تتغير بمرور الوقت، ونطلب منكم التحقق من المعلومات قبل الاتصال بنا.
+      </p>
+
+      {/* ── الحقوق ──────────────────────────────────────── */}
+      <h2 id='m10'>حقوق أصحاب البيانات</h2>
+      <p>
+        بصفتكم أصحاب البيانات، لكم حقوق متعددة بموجب اللائحة العامة لحماية البيانات، ولا سيما الناشئة عن المواد 15 إلى 21 من اللائحة العامة لحماية البيانات:
+      </p>
+      <ul>
+        <li><strong>حق الاعتراض:</strong> لكم الحق، لأسباب تتعلق بوضعكم الخاص، في أي وقت في الاعتراض على معالجة بياناتكم الشخصية القائمة على المادة 6، الفقرة 1، الحرف هـ أو و من اللائحة العامة لحماية البيانات (بما في ذلك التنميط القائم على هذه الأحكام).</li>
+        <li><strong>الحق في سحب الموافقة:</strong> لكم الحق في سحب موافقتكم في أي وقت.</li>
+        <li><strong>حق الوصول:</strong> لكم الحق في طلب تأكيد ما إذا كانت بياناتكم تخضع للمعالجة، والحصول على معلومات حول هذه البيانات، فضلاً عن معلومات إضافية ونسخة من البيانات وفقاً للأحكام القانونية.</li>
+        <li><strong>الحق في التصحيح:</strong> وفقاً للأحكام القانونية، لكم الحق في طلب استكمال البيانات المتعلقة بكم أو تصحيح البيانات غير الصحيحة المتعلقة بكم.</li>
+        <li><strong>الحق في الحذف وتقييد المعالجة:</strong> وفقاً للأحكام القانونية، لكم الحق في طلب الحذف الفوري للبيانات ذات الصلة، أو بديلاً عن ذلك، طلب تقييد معالجة البيانات وفقاً للأحكام القانونية.</li>
+        <li><strong>الحق في نقل البيانات:</strong> وفقاً للمتطلبات القانونية، لكم الحق في تلقي البيانات التي قدمتموها لنا في تنسيق منظم ومستخدم على نطاق واسع وقابل للقراءة آلياً، أو طلب نقلها إلى متحكم آخر.</li>
+        <li><strong>الشكوى إلى السلطة الإشرافية:</strong> لكم أيضاً الحق، وفقاً للشروط المحددة في القانون، في تقديم شكوى إلى السلطة الإشرافية، ولا سيما في الدولة العضو التي يقع فيها محل إقامتكم المعتاد، أو حيث تعملون، أو حيث وقع الانتهاك المزعوم، إذا كنتم تعتقدون أن معالجة البيانات الشخصية المتعلقة بكم تنتهك اللائحة العامة لحماية البيانات.</li>
+      </ul>
+
+      {/* ── المصطلحات والتعريفات ──────────────────────────────────────── */}
+      <h2 id='m42'>المصطلحات والتعريفات</h2>
+      <p>
+        يحتوي هذا القسم على نظرة عامة على المصطلحات المستخدمة في سياسة الخصوصية هذه. تأتي العديد من هذه المصطلحات من القانون، وتُعرَّف بشكل رئيسي في المادة 4 من اللائحة العامة لحماية البيانات. تهدف التفسيرات التالية في المقام الأول إلى تسهيل الفهم.
+      </p>
+      <dl>
+        <dt>المتحكم في البيانات</dt>
+        <dd>«المتحكم في البيانات» يعني الشخص الطبيعي أو الاعتباري، أو السلطة العامة، أو الوكالة، أو أي هيئة أخرى، التي تحدد، بمفردها أو بالاشتراك مع آخرين، أغراض ووسائل معالجة البيانات الشخصية.</dd>
+        <dt>البيانات الشخصية</dt>
+        <dd>«البيانات الشخصية» تعني أي معلومات تتعلق بشخص طبيعي محدد أو يمكن تحديده («صاحب البيانات»). الشخص الطبيعي الذي يمكن تحديده هو الشخص الذي يمكن تحديده بشكل مباشر أو غير مباشر، لا سيما عبر معرّف مثل الاسم، أو رقم التعريف، أو بيانات الموقع، أو معرّف عبر الإنترنت، أو واحد أو أكثر من العوامل الخاصة التي تحدد الهوية الجسدية، أو الفسيولوجية، أو الجينية، أو النفسية، أو الاقتصادية، أو الثقافية، أو الاجتماعية لذلك الشخص الطبيعي.</dd>
+        <dt>المعالجة</dt>
+        <dd>مصطلح «المعالجة» له نطاق واسع، ويشمل عملياً كل طريقة للتعامل مع البيانات، أي الجمع، والتقييم، والتخزين، والنقل، أو الحذف.</dd>
+        <dt>إعادة التسويق</dt>
+        <dd>«إعادة التسويق» أو «إعادة الاستهداف» هو مصطلح يُستخدم، على سبيل المثال، لتذكير المستخدمين على مواقع إلكترونية أخرى (مثلاً في الإعلانات) بالمنتجات التي أبدوا اهتماماً بها على موقع إلكتروني، وذلك بعرضها لأغراض إعلانية.</dd>
+        <dt>التتبع</dt>
+        <dd>يُستخدم مصطلح «التتبع» عندما يمكن تتبع سلوك المستخدمين عبر عدة مواقع إلكترونية. بشكل عام، تُخزَّن معلومات حول السلوكيات والاهتمامات المتعلقة بالمواقع الإلكترونية المستخدمة في ملفات تعريف الارتباط أو على خوادم مقدمي تقنيات التتبع (يُسمى ذلك بالتنميط).</dd>
+        <dt>تحليلات الإنترنت</dt>
+        <dd>تساعد تحليلات الإنترنت في تقييم حركة زوار الخدمات الإلكترونية، ويمكن أن تحدد سلوك أو اهتمامات الزوار فيما يتعلق بمعلومات معينة، مثل محتوى الموقع الإلكتروني. بفضل تحليلات الإنترنت، يمكن لأصحاب المواقع الإلكترونية تحديد الأوقات التي يزور فيها الزوار الموقع والمحتوى الذي يثير اهتمامهم.</dd>
       </dl>
     </>
   );

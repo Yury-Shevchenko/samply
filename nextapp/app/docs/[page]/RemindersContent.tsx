@@ -979,6 +979,10 @@ export default function RemindersContent({ baseUrl, locale }: { baseUrl: string;
   if (locale === "fr") return <RemindersContentFr baseUrl={baseUrl} />;
   if (locale === "es") return <RemindersContentEs baseUrl={baseUrl} />;
   if (locale === "pt") return <RemindersContentPt baseUrl={baseUrl} />;
+  if (locale === "ja") return <RemindersContentJa baseUrl={baseUrl} />;
+  if (locale === "ar") return <RemindersContentAr baseUrl={baseUrl} />;
+  if (locale === "pl") return <RemindersContentPl baseUrl={baseUrl} />;
+  if (locale === "tr") return <RemindersContentTr baseUrl={baseUrl} />;
   return <RemindersContentEn baseUrl={baseUrl} />;
 }
 
@@ -1951,6 +1955,757 @@ function RemindersContentPt({ baseUrl }: { baseUrl: string }) {
           Cada linha de lembrete é uma entrada distinta pendente na fila e conta para
           o limite de 50 000 linhas por estudo. Um calendário com 100 participantes e 2
           lembretes por envio gera 3 linhas por envio, não 1.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function RemindersContentJa({ baseUrl }: { baseUrl: string }) {
+  return (
+    <>
+      <p>
+        リマインダーは、元の送信に対する調査完了が検出されなかった場合にSamplyが自動的に送信する
+        フォローアップのプッシュ通知です。リマインダーは任意で、スケジュールごとに設定します。
+        参加者が先に調査を完了しない限り、元の通知から固定オフセットで発火します — 完了した場合、
+        Samplyはその送信に対する保留中のすべてのリマインダーを自動的にキャンセルします。
+      </p>
+
+      {/* ── How reminders work ────────────────────────────────────────────── */}
+      <h2>リマインダーの仕組み</h2>
+      <p>
+        Samplyが元の通知を発送すると、設定されたすべてのリマインダー行をすぐにキューに
+        スケジュールします。各リマインダー行は<strong>保留中</strong>の別個のキュー エントリで、
+        <strong>リマインダー：はい</strong>とマークされています。リマインダーは元の送信と同じ
+        調査URL（置換されたプレースホルダー値をすべて含む）を継承します — リマインダーのリンクを
+        タップした参加者は同じ調査セッションに入ります。
+      </p>
+      <p>
+        リマインダーは2つの方法でキャンセルされます：
+      </p>
+      <ol>
+        <li>
+          Samplyが元の送信に対する<strong>完了イベント</strong>（リダイレクトまたはPOSTリクエスト経由 — 下記参照）
+          を受信します。同じ内部送信IDを共有する保留中のすべてのリマインダーを即座にキャンセルします。
+        </li>
+        <li>
+          スケジュールを手動で削除するか、<a href='/docs/queue'>キュー</a>から行をキャンセルします。
+        </li>
+      </ol>
+      <p>
+        完了イベントがない場合、参加者が実際に調査を完了したかどうかに関わらず、各送信にリマインダーが送られます。
+      </p>
+
+      {/* ── Configuring reminders ─────────────────────────────────────────── */}
+      <h2>スケジュールフォームでリマインダーを設定する</h2>
+      <p>
+        スケジュールフォームのステップ9はリマインダーセクションです。<strong>リマインダーを送信</strong>を
+        オンにして、リマインダープランナーを表示します。送信する各リマインダーについて、次を入力します：
+      </p>
+      <dl>
+        <dt>リマインダータイトル</dt>
+        <dd>参加者のデバイス上のリマインダー プッシュ通知の太字の最初の行。</dd>
+        <dt>リマインダーメッセージ</dt>
+        <dd>通知の本文 — システムトレイに表示される2行目。</dd>
+        <dt>送信後</dt>
+        <dd>
+          元の通知からの遅延：日 + 時間 + 分。0日、1時間、0分に設定されたリマインダーは
+          元の送信から1時間後に発火します。3つのフィールドはすべてデフォルトで0です — 少なくとも
+          1つはゼロ以外の値に設定してください。
+        </dd>
+      </dl>
+      <p>
+        <strong>新しいリマインダーを追加</strong>をクリックして、異なるオフセットで2つ目のリマインダーを
+        追加します。必要な数だけリマインダーをチェーンできます — 例えば、1時間後の最初のリマインダーと
+        4時間後の2番目のリマインダー。完了イベントが到着すると、どれがすでに発火していても、
+        すべてのリマインダーがキャンセルされます。
+      </p>
+
+      {/* ── Completion events ─────────────────────────────────────────────── */}
+      <h2>完了イベントの登録</h2>
+      <p>
+        Samplyは参加者がいつ調査を終えるかを単独で知ることはできません。調査ツールはSamplyの完了
+        エンドポイントを呼び出して完了をシグナルする必要があります。これを行う方法は2つあります。
+      </p>
+      <p>
+        研究のための正確なURL — 正しいスラッグがすでに入力されたもの — は、研究ダッシュボードの
+        <strong>設定</strong>タブの<em>リマインダー — 完了URL</em>の下に表示されます。
+        そこから直接コピーできます。
+      </p>
+
+      <h3>オプション1 — リダイレクト（Qualtrics、LimeSurvey、ほとんどの調査ツール）</h3>
+      <p>
+        調査の最後に、参加者をSamplyの完了URLにリダイレクトします。Samplyは送信を完了済みとして
+        マークし、保留中のリマインダーをキャンセルし、参加者に確認ページを表示します。
+      </p>
+      <p>
+        リダイレクトURLは次のパターンに従います — <em>your-study-slug</em>を研究のURLスラッグに
+        置き換え、<Code>%MESSAGE_ID%</Code>プレースホルダーを使用して、各参加者の完了がその特定の
+        送信に対して記録されるようにします：
+      </p>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Qualtricsでは、これを調査終了時のリダイレクトURLとして設定します。LimeSurveyでは、
+        調査設定パネルの「終了URL」として設定します。調査ツールは<Code>%MESSAGE_ID%</Code>を、
+        通知リンクで渡したURLパラメーターを介して受け取った実際のメッセージIDで置換します
+        （<a href='/docs/placeholders'>URLプレースホルダー</a>を参照）。
+      </p>
+
+      <h3>オプション2 — POSTリクエスト（REDCap、カスタム統合）</h3>
+      <p>
+        同じエンドポイントにHTTP POSTを送信します。これは調査終了ウェブフックをサポートする
+        調査ツール、またはサーバー側で実行されるカスタムコードに適しています。
+      </p>
+      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        <code>200</code>レスポンスは完了が記録され、リマインダーがキャンセルされたことを確認します。
+        <code>400</code>レスポンスは、Samplyがそのメッセージ ID の一致する結果レコードを見つけられなかった
+        ことを意味します — <Code>%MESSAGE_ID%</Code>が正しく置換されて渡されたか確認してください。
+      </p>
+
+      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
+      <h2>なぜMESSAGE_IDが必要か</h2>
+      <p>
+        Samplyは<Code>%MESSAGE_ID%</Code>を使用して、完了イベントを調査をトリガーした正確な
+        通知送信にリンクします。これがないと、Samplyはどの保留中のリマインダーをキャンセルすべきか
+        識別できません。フローは次のとおりです：
+      </p>
+      <ol>
+        <li>
+          通知Webリンクに<Code>%MESSAGE_ID%</Code>をクエリ パラメーターとして入れます — 例えば、
+          <code>?messageid=%MESSAGE_ID%</code>。
+        </li>
+        <li>
+          Samplyは送信時にこのトークンを15文字のユニークIDに置換します。参加者はそのIDが
+          すでに含まれた調査URLを開きます。
+        </li>
+        <li>
+          調査ツールは<code>messageid</code>パラメーターを読み取り、調査終了時のリダイレクトまたは
+          ウェブフックに渡します。
+        </li>
+        <li>
+          Samplyはメッセージ ID とともに完了呼び出しを受信し、リマインダーをキャンセルし、結果
+          レコードを完了済みとしてマークします。
+        </li>
+      </ol>
+      <p>
+        リマインダーを使用する場合は、常に通知URLに<Code>%MESSAGE_ID%</Code>を含め、調査ツールが
+        それを完了エンドポイントに転送することを確認してください。
+      </p>
+
+      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
+      <h2>Qualtricsの設定手順</h2>
+      <ol>
+        <li>
+          通知Webリンクに、<code>?messageid=%MESSAGE_ID%</code>（および必要なその他のプレースホルダー）
+          を追加します。
+        </li>
+        <li>
+          Qualtricsの調査フローで、最初のブロックの前に<strong>埋め込みデータ</strong>要素を追加し、
+          <code>messageid</code>という名前のフィールドを作成します。Qualtricsはクエリ文字列パラメーターを
+          自動的にキャプチャします。
+        </li>
+        <li>
+          <strong>調査オプション → 調査終了</strong>で、リダイレクトURLを次のように設定します：
+        </li>
+      </ol>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Qualtricsは<code>{'{e://Field/messageid}'}</code>をキャプチャした値で置換するため、
+        参加者は正しい完了URLにリダイレクトされます。
+      </p>
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>注意すべき点</h3>
+      <dl>
+        <dt>完了イベントが届かない場合、リマインダーが発火します</dt>
+        <dd>
+          リダイレクトまたはPOSTがSamplyに届かない場合 — 参加者が調査を途中で放棄した、調査ツールの
+          設定が誤っていた、または完了URLにタイプミスがあったため — リマインダーは予定通りに発火します。
+          公開前にテスト参加者でフロー全体をテストしてください。
+        </dd>
+        <dt>リマインダーは元の置換済みURLを継承します</dt>
+        <dd>
+          リマインダー通知に埋め込まれた調査URLは、元の送信から置換済みのURLであり、新しい置換ではありません。
+          同じメッセージID、バッチ番号、タイムスタンプが適用されます。これは意図的なものです：
+          リマインダーは同じ調査セッションを再度開く必要があります。調査ツールがリンクオープンごとに
+          新しい応答を作成する場合、ロジックがこれを処理することを確認してください。
+        </dd>
+        <dt>リマインダー行はキュー制限にカウントされます</dt>
+        <dd>
+          各リマインダー行はキューの別個の保留中エントリであり、研究あたり50,000行の制限に
+          カウントされます。100人の参加者と送信あたり2つのリマインダーを持つスケジュールは、
+          送信ごとに3行ではなく、3行を生成します。
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function RemindersContentPl({ baseUrl }: { baseUrl: string }) {
+  return (
+    <>
+      <p>
+        Przypomnienia to dodatkowe powiadomienia push, które Samply wysyła automatycznie, gdy
+        nie wykryje ukończenia ankiety dla oryginalnej wysyłki. Przypomnienia są opcjonalne i
+        konfigurujesz je dla każdego harmonogramu. Wyzwalają się ze stałymi przesunięciami od
+        oryginalnego powiadomienia, chyba że uczestnik wcześniej ukończy ankietę — w takim
+        przypadku Samply automatycznie anuluje wszystkie oczekujące przypomnienia dla tej wysyłki.
+      </p>
+
+      {/* ── How reminders work ────────────────────────────────────────────── */}
+      <h2>Jak działają przypomnienia</h2>
+      <p>
+        Gdy Samply wysyła oryginalne powiadomienie, natychmiast planuje wszystkie skonfigurowane
+        wiersze przypomnień w kolejce. Każdy wiersz przypomnienia jest osobnym wpisem kolejki w
+        stanie <strong>oczekuje</strong>, oznaczonym jako{' '}
+        <strong>Przypomnienie: tak</strong>. Przypomnienia dziedziczą ten sam URL ankiety co
+        oryginalna wysyłka (ze wszystkimi zastąpionymi wartościami placeholderów) — uczestnicy,
+        którzy stukną w link przypomnienia, wejdą w tę samą sesję ankiety.
+      </p>
+      <p>
+        Przypomnienia są anulowane na dwa sposoby:
+      </p>
+      <ol>
+        <li>
+          Samply otrzymuje <strong>zdarzenie ukończenia</strong> dla oryginalnej wysyłki (przez
+          przekierowanie lub żądanie POST — patrz poniżej). Natychmiast anuluje wszystkie
+          oczekujące przypomnienia, które dzielą ten sam wewnętrzny identyfikator wysyłki.
+        </li>
+        <li>
+          Ręcznie usuwasz harmonogram lub anulujesz wiersz z{' '}
+          <a href='/docs/queue'>Kolejki</a>.
+        </li>
+      </ol>
+      <p>
+        Bez zdarzenia ukończenia przypomnienia są wysyłane dla każdej wysyłki, niezależnie od
+        tego, czy uczestnik faktycznie ukończył ankietę.
+      </p>
+
+      {/* ── Configuring reminders ─────────────────────────────────────────── */}
+      <h2>Konfigurowanie przypomnień w formularzu harmonogramu</h2>
+      <p>
+        Krok 9 w formularzu harmonogramu to sekcja przypomnień. Włącz{' '}
+        <strong>Wysyłaj przypomnienia</strong>, aby wyświetlić planer przypomnień. Dla każdego
+        przypomnienia, które chcesz wysłać, wprowadź:
+      </p>
+      <dl>
+        <dt>Tytuł przypomnienia</dt>
+        <dd>Pogrubiona pierwsza linia powiadomienia push przypomnienia na urządzeniu uczestnika.</dd>
+        <dt>Wiadomość przypomnienia</dt>
+        <dd>Treść powiadomienia — druga linia widoczna w zasobniku systemowym.</dd>
+        <dt>Wyślij po</dt>
+        <dd>
+          Opóźnienie od oryginalnego powiadomienia: dni + godziny + minuty. Przypomnienie
+          ustawione na 0 dni, 1 godzinę i 0 minut wyzwala się 1 godzinę po oryginalnej wysyłce.
+          Wszystkie trzy pola domyślnie wynoszą 0 — ustaw przynajmniej jedno na wartość różną od zera.
+        </dd>
+      </dl>
+      <p>
+        Kliknij <strong>Dodaj nowe przypomnienie</strong>, aby dodać drugie przypomnienie z
+        innym przesunięciem. Możesz połączyć łańcuchowo dowolną liczbę przypomnień — na
+        przykład pierwsze przypomnienie po 1 godzinie i drugie po 4 godzinach. Gdy nadejdzie
+        zdarzenie ukończenia, wszystkie przypomnienia są anulowane, niezależnie od tego,
+        które już zostały wyzwolone.
+      </p>
+
+      {/* ── Completion events ─────────────────────────────────────────────── */}
+      <h2>Rejestrowanie zdarzeń ukończenia</h2>
+      <p>
+        Samply nie może samodzielnie wiedzieć, kiedy uczestnik kończy ankietę. Narzędzie do
+        ankiety musi wywołać punkt końcowy ukończenia Samply, aby zasygnalizować ukończenie.
+        Istnieją dwa sposoby, aby to zrobić.
+      </p>
+      <p>
+        Dokładny URL dla Twojego badania — z już wypełnionym poprawnym slugiem — jest
+        wyświetlany w panelu badania w zakładce <strong>Ustawienia</strong> pod{' '}
+        <em>Przypomnienia — URL ukończenia</em>. Możesz go skopiować bezpośrednio stamtąd.
+      </p>
+
+      <h3>Opcja 1 — Przekierowanie (Qualtrics, LimeSurvey, większość narzędzi ankietowych)</h3>
+      <p>
+        Na końcu ankiety przekieruj uczestnika na URL ukończenia Samply. Samply oznaczy
+        wysyłkę jako ukończoną, anuluje oczekujące przypomnienia i pokaże uczestnikowi
+        stronę potwierdzenia.
+      </p>
+      <p>
+        URL przekierowania ma następujący wzór — zastąp <em>your-study-slug</em> slugiem URL
+        swojego badania i użyj placeholdera <Code>%MESSAGE_ID%</Code>, aby ukończenie każdego
+        uczestnika było rejestrowane dla tej konkretnej wysyłki:
+      </p>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        W Qualtrics ustaw to jako URL przekierowania końca ankiety. W LimeSurvey ustaw to jako
+        «URL końcowy» w panelu ustawień ankiety. Narzędzie do ankiety zastąpi{' '}
+        <Code>%MESSAGE_ID%</Code> rzeczywistym identyfikatorem wiadomości, który otrzymało
+        przez parametr URL, który przekazałeś w linku powiadomienia (zobacz{' '}
+        <a href='/docs/placeholders'>Placeholdery URL</a>).
+      </p>
+
+      <h3>Opcja 2 — Żądanie POST (REDCap, integracje niestandardowe)</h3>
+      <p>
+        Wyślij HTTP POST do tego samego punktu końcowego. Jest to odpowiednie dla narzędzi
+        ankietowych, które obsługują webhooki końca ankiety, lub niestandardowego kodu
+        działającego po stronie serwera.
+      </p>
+      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Odpowiedź <code>200</code> potwierdza, że ukończenie zostało zarejestrowane, a
+        przypomnienia anulowane. Odpowiedź <code>400</code> oznacza, że Samply nie mógł
+        znaleźć pasującego rekordu wyniku dla tego identyfikatora wiadomości — sprawdź, czy{' '}
+        <Code>%MESSAGE_ID%</Code> został poprawnie zastąpiony i przekazany.
+      </p>
+
+      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
+      <h2>Dlaczego MESSAGE_ID jest wymagany</h2>
+      <p>
+        Samply używa <Code>%MESSAGE_ID%</Code>, aby powiązać zdarzenie ukończenia z dokładną
+        wysyłką powiadomienia, która wyzwoliła ankietę. Bez niego Samply nie może
+        zidentyfikować, które oczekujące przypomnienia anulować. Przepływ wygląda następująco:
+      </p>
+      <ol>
+        <li>
+          Umieść <Code>%MESSAGE_ID%</Code> w linku internetowym powiadomienia jako parametr
+          zapytania — na przykład <code>?messageid=%MESSAGE_ID%</code>.
+        </li>
+        <li>
+          Samply zastępuje ten Token unikalnym 15-znakowym ID w momencie wysłania. Uczestnik
+          otwiera URL ankiety z już wbudowanym tym ID.
+        </li>
+        <li>
+          Narzędzie do ankiety odczytuje parametr <code>messageid</code> i przekazuje go w
+          przekierowaniu końca ankiety lub webhooku.
+        </li>
+        <li>
+          Samply otrzymuje wywołanie ukończenia wraz z identyfikatorem wiadomości, anuluje
+          przypomnienia i oznacza rekord wyniku jako ukończony.
+        </li>
+      </ol>
+      <p>
+        Zawsze dołączaj <Code>%MESSAGE_ID%</Code> w URL powiadomienia, gdy używasz
+        przypomnień, i upewnij się, że narzędzie do ankiety przekazuje go do punktu końcowego ukończenia.
+      </p>
+
+      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
+      <h2>Kroki konfiguracji Qualtrics</h2>
+      <ol>
+        <li>
+          Dodaj <code>?messageid=%MESSAGE_ID%</code> (oraz wszelkie inne placeholdery, których
+          potrzebujesz) do linku internetowego powiadomienia.
+        </li>
+        <li>
+          W przepływie ankiety Qualtrics dodaj element <strong>Embedded Data</strong> przed
+          pierwszym blokiem i utwórz pole o nazwie <code>messageid</code>. Qualtrics
+          automatycznie przechwyci parametry ciągu zapytania.
+        </li>
+        <li>
+          W <strong>Opcjach ankiety → Koniec ankiety</strong>, ustaw URL przekierowania na:
+        </li>
+      </ol>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Qualtrics zastąpi <code>{'{e://Field/messageid}'}</code> przechwyconą wartością,
+        więc uczestnik zostanie przekierowany na poprawny URL ukończenia.
+      </p>
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>O czym należy pamiętać</h3>
+      <dl>
+        <dt>Jeśli zdarzenie ukończenia nie dotrze, przypomnienia są wyzwalane</dt>
+        <dd>
+          Jeśli przekierowanie lub POST nie dotrze do Samply — ponieważ uczestnik porzucił
+          ankietę w połowie, narzędzie do ankiety zostało nieprawidłowo skonfigurowane lub URL
+          ukończenia miał literówkę — przypomnienia wyzwolą się zgodnie z planem. Przetestuj
+          cały przepływ z uczestnikami testowymi przed uruchomieniem.
+        </dd>
+        <dt>Przypomnienia dziedziczą oryginalny zastąpiony URL</dt>
+        <dd>
+          URL ankiety osadzony w powiadomieniu przypomnienia jest tym samym zastąpionym URL
+          z oryginalnej wysyłki, a nie nowo zastąpionym. Stosuje się ten sam identyfikator
+          wiadomości, numer partii i znacznik czasu. Jest to celowe: przypomnienie musi
+          ponownie otworzyć tę samą sesję ankiety. Jeśli Twoje narzędzie do ankiety tworzy
+          nową odpowiedź dla każdego otwarcia linku, upewnij się, że Twoja logika to obsłuży.
+        </dd>
+        <dt>Wiersze przypomnień liczą się do limitu kolejki</dt>
+        <dd>
+          Każdy wiersz przypomnienia jest osobnym oczekującym wpisem w kolejce i liczy się
+          do limitu 50 000 wierszy na badanie. Harmonogram ze 100 uczestnikami i 2
+          przypomnieniami na wysyłkę generuje 3 wiersze na wysyłkę, a nie 1.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function RemindersContentAr({ baseUrl }: { baseUrl: string }) {
+  return (
+    <>
+      <p>
+        التذكيرات هي إشعارات فورية إضافية يرسلها Samply تلقائياً عندما لا يكتشف إكمال
+        الاستطلاع للإرسال الأصلي. التذكيرات اختيارية وتُكوَّن لكل جدول. تُطلَق بإزاحات
+        ثابتة من الإشعار الأصلي، إلا إذا أكمل المشارك الاستطلاع مسبقاً — في هذه الحالة
+        يقوم Samply تلقائياً بإلغاء جميع التذكيرات المعلقة لهذا الإرسال.
+      </p>
+
+      {/* ── How reminders work ────────────────────────────────────────────── */}
+      <h2>كيف تعمل التذكيرات</h2>
+      <p>
+        عندما يرسل Samply الإشعار الأصلي، يجدول فوراً جميع صفوف التذكيرات المُكوَّنة في
+        الطابور. كل صف تذكير هو إدخال طابور منفصل في حالة <strong>قيد الانتظار</strong>،
+        ومُعلَّم بـ <strong>تذكير: نعم</strong>. ترث التذكيرات نفس URL الاستطلاع من
+        الإرسال الأصلي (مع استبدال جميع قيم العناصر النائبة) — المشاركون الذين ينقرون
+        على رابط التذكير يدخلون نفس جلسة الاستطلاع.
+      </p>
+      <p>
+        تُلغى التذكيرات بطريقتين:
+      </p>
+      <ol>
+        <li>
+          يتلقى Samply <strong>حدث إكمال</strong> للإرسال الأصلي (عبر إعادة توجيه أو طلب
+          POST — انظر أدناه). يقوم فوراً بإلغاء جميع التذكيرات المعلقة التي تتشارك نفس
+          معرّف الإرسال الداخلي.
+        </li>
+        <li>
+          تقوم يدوياً بحذف الجدول أو إلغاء الصف من{' '}
+          <a href='/docs/queue'>الطابور</a>.
+        </li>
+      </ol>
+      <p>
+        بدون حدث إكمال، تُرسَل التذكيرات لكل إرسال، بصرف النظر عما إذا كان المشارك قد
+        أكمل الاستطلاع فعلاً.
+      </p>
+
+      {/* ── Configuring reminders ─────────────────────────────────────────── */}
+      <h2>إعداد التذكيرات في نموذج الجدول</h2>
+      <p>
+        الخطوة 9 في نموذج الجدول هي قسم التذكيرات. فعِّل <strong>إرسال التذكيرات</strong>{' '}
+        لعرض مخطط التذكيرات. لكل تذكير ترغب في إرساله، أدخل:
+      </p>
+      <dl>
+        <dt>عنوان التذكير</dt>
+        <dd>السطر الأول بخط عريض من الإشعار الفوري للتذكير على جهاز المشارك.</dd>
+        <dt>رسالة التذكير</dt>
+        <dd>نص الإشعار — السطر الثاني المرئي في درج النظام.</dd>
+        <dt>الإرسال بعد</dt>
+        <dd>
+          التأخير من الإشعار الأصلي: أيام + ساعات + دقائق. تذكير مضبوط على 0 يوم و1
+          ساعة و0 دقيقة يُطلَق بعد ساعة واحدة من الإرسال الأصلي. جميع الحقول الثلاثة
+          افتراضياً 0 — اضبط حقلاً واحداً على الأقل على قيمة غير صفرية.
+        </dd>
+      </dl>
+      <p>
+        انقر <strong>إضافة تذكير جديد</strong> لإضافة تذكير ثانٍ بإزاحة مختلفة. يمكنك
+        ربط أي عدد من التذكيرات — على سبيل المثال، تذكير أول بعد ساعة وتذكير ثانٍ بعد
+        4 ساعات. عند وصول حدث إكمال، تُلغى جميع التذكيرات، بصرف النظر عن أيّها قد أُطلق.
+      </p>
+
+      {/* ── Completion events ─────────────────────────────────────────────── */}
+      <h2>تسجيل أحداث الإكمال</h2>
+      <p>
+        لا يمكن لـ Samply أن يعرف وحده متى ينتهي مشارك من استطلاع. يجب على أداة الاستطلاع
+        استدعاء نقطة نهاية الإكمال في Samply للإشارة إلى الإكمال. هناك طريقتان للقيام بذلك.
+      </p>
+      <p>
+        يُعرض الـ URL الدقيق لدراستك — مع تعبئة slug الصحيح تلقائياً — في لوحة الدراسة
+        ضمن علامة التبويب <strong>إعدادات</strong> تحت <em>التذكيرات — URL الإكمال</em>.
+        يمكنك نسخه مباشرةً من هناك.
+      </p>
+
+      <h3>الخيار 1 — إعادة التوجيه (Qualtrics وLimeSurvey ومعظم أدوات الاستطلاع)</h3>
+      <p>
+        في نهاية الاستطلاع، أعد توجيه المشارك إلى URL الإكمال في Samply. سيُعلِّم Samply
+        الإرسال على أنه مكتمل، ويلغي التذكيرات المعلقة، ويعرض للمشارك صفحة تأكيد.
+      </p>
+      <p>
+        URL إعادة التوجيه على النمط التالي — استبدل <em>your-study-slug</em> بـ slug
+        دراستك في الـ URL، واستخدم العنصر النائب <Code>%MESSAGE_ID%</Code> ليُسجَّل
+        إكمال كل مشارك لذلك الإرسال المحدد:
+      </p>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        في Qualtrics، اضبط هذا كـ URL إعادة توجيه نهاية الاستطلاع. في LimeSurvey، اضبط
+        هذا كـ «URL النهاية» في لوحة إعدادات الاستطلاع. ستستبدل أداة الاستطلاع{' '}
+        <Code>%MESSAGE_ID%</Code> بمعرّف الرسالة الفعلي الذي تلقَّتْه من خلال معامل الـ
+        URL الذي مرَّرته في رابط الإشعار (انظر{' '}
+        <a href='/docs/placeholders'>العناصر النائبة في URL</a>).
+      </p>
+
+      <h3>الخيار 2 — طلب POST (REDCap والتكاملات المخصصة)</h3>
+      <p>
+        أرسل HTTP POST إلى نقطة النهاية ذاتها. هذا مناسب لأدوات الاستطلاع التي تدعم
+        webhooks نهاية الاستطلاع، أو للأكواد المخصصة التي تعمل من جانب الخادم.
+      </p>
+      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        تؤكد استجابة <code>200</code> أنه تم تسجيل الإكمال، وأن التذكيرات قد أُلغيت.
+        تعني استجابة <code>400</code> أن Samply لم يتمكن من العثور على سجل نتيجة مطابق
+        لمعرّف الرسالة هذا — تحقق من أن <Code>%MESSAGE_ID%</Code> قد استُبدل ومُرِّر بشكل صحيح.
+      </p>
+
+      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
+      <h2>لماذا يُعدّ MESSAGE_ID مطلوباً</h2>
+      <p>
+        يستخدم Samply <Code>%MESSAGE_ID%</Code> لربط حدث الإكمال بإرسال الإشعار الدقيق
+        الذي أطلق الاستطلاع. بدونه، لا يستطيع Samply تحديد التذكيرات المعلقة التي يجب
+        إلغاؤها. التدفق على النحو التالي:
+      </p>
+      <ol>
+        <li>
+          ضع <Code>%MESSAGE_ID%</Code> في رابط ويب الإشعار كمعامل استعلام — على سبيل
+          المثال <code>?messageid=%MESSAGE_ID%</code>.
+        </li>
+        <li>
+          يستبدل Samply هذا الـ Token بمعرّف فريد من 15 حرفاً وقت الإرسال. يفتح
+          المشارك URL الاستطلاع مع تضمين هذا المعرّف بالفعل.
+        </li>
+        <li>
+          تقرأ أداة الاستطلاع المعامل <code>messageid</code> وتمرّره في إعادة توجيه
+          نهاية الاستطلاع أو في webhook.
+        </li>
+        <li>
+          يتلقى Samply استدعاء الإكمال مع معرّف الرسالة، ويلغي التذكيرات، ويُعلِّم سجل
+          النتيجة على أنه مكتمل.
+        </li>
+      </ol>
+      <p>
+        أدرج دائماً <Code>%MESSAGE_ID%</Code> في URL الإشعار عند استخدام التذكيرات،
+        وتأكد من أن أداة الاستطلاع تُمرّرها إلى نقطة نهاية الإكمال.
+      </p>
+
+      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
+      <h2>خطوات إعداد Qualtrics</h2>
+      <ol>
+        <li>
+          أضف <code>?messageid=%MESSAGE_ID%</code> (وأي عناصر نائبة أخرى تحتاجها) إلى
+          رابط ويب الإشعار.
+        </li>
+        <li>
+          في تدفق استطلاع Qualtrics، أضف عنصر <strong>Embedded Data</strong> قبل الكتلة
+          الأولى وأنشئ حقلاً باسم <code>messageid</code>. سيلتقط Qualtrics معاملات سلسلة
+          الاستعلام تلقائياً.
+        </li>
+        <li>
+          في <strong>خيارات الاستطلاع ← نهاية الاستطلاع</strong>، اضبط URL إعادة التوجيه على:
+        </li>
+      </ol>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        سيستبدل Qualtrics <code>{'{e://Field/messageid}'}</code> بالقيمة الملتقطة، لذا
+        ستعاد توجيه المشارك إلى URL الإكمال الصحيح.
+      </p>
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>أمور يجب أن تأخذها في الحسبان</h3>
+      <dl>
+        <dt>إذا لم يصل حدث الإكمال، تُطلَق التذكيرات</dt>
+        <dd>
+          إذا لم تصل إعادة التوجيه أو POST إلى Samply — لأن المشارك ترك الاستطلاع في
+          منتصفه، أو لأن أداة الاستطلاع كانت مُعَدّة بشكل غير صحيح، أو لأن URL الإكمال
+          به خطأ مطبعي — فستُطلَق التذكيرات وفق الجدول. اختبر التدفق بأكمله بمشاركين
+          تجريبيين قبل الإطلاق.
+        </dd>
+        <dt>ترث التذكيرات الـ URL الأصلي المُستبدَل</dt>
+        <dd>
+          URL الاستطلاع المضمَّن في إشعار التذكير هو نفس الـ URL المُستبدَل من الإرسال
+          الأصلي، وليس استبدالاً جديداً. تنطبق معرّفات الرسالة ورقم الدفعة والطابع الزمني
+          ذاتها. هذا مقصود: يجب على التذكير إعادة فتح جلسة الاستطلاع ذاتها. إذا كانت
+          أداة الاستطلاع تنشئ استجابة جديدة عند كل فتح للرابط، فتأكد من أن منطقك يعالج ذلك.
+        </dd>
+        <dt>تُحتسب صفوف التذكيرات ضمن حد الطابور</dt>
+        <dd>
+          كل صف تذكير هو إدخال طابور معلق منفصل ويُحتسب ضمن حد الـ 50,000 صف لكل دراسة.
+          جدول يضم 100 مشارك مع تذكيرَين لكل إرسال يولّد 3 صفوف لكل إرسال، وليس 1.
+        </dd>
+      </dl>
+    </>
+  );
+}
+
+function RemindersContentTr({ baseUrl }: { baseUrl: string }) {
+  return (
+    <>
+      <p>
+        Hatırlatma, orijinal gönderim için bir anket tamamlama olayı algılanmadığında Samply'nin
+        otomatik olarak gönderdiği bir takip push bildirimidir. Hatırlatmalar isteğe bağlıdır ve
+        her program için ayrı yapılandırılır. Orijinal bildirimden sabit bir gecikme sonra
+        tetiklenirler — katılımcı anketi daha önce tamamlamadıysa, bu durumda Samply o gönderim
+        için bekleyen tüm hatırlatmaları otomatik olarak iptal eder.
+      </p>
+
+      {/* ── How reminders work ────────────────────────────────────────────── */}
+      <h2>Hatırlatmalar nasıl çalışır</h2>
+      <p>
+        Samply orijinal bir bildirimi gönderdiğinde, yapılandırılmış hatırlatma satırlarını
+        anında kuyruğa planlar. Her hatırlatma satırı, ayrı bir <strong>bekleyen</strong> kuyruk
+        girişidir ve <strong>Hatırlatma: evet</strong> olarak işaretlenir. Hatırlatma, orijinal
+        gönderimle aynı anket URL'sini (tüm yer tutucu değerleri yerine konmuş hâliyle) miras
+        alır — hatırlatma bağlantısına dokunan katılımcılar aynı anket oturumuna girer.
+      </p>
+      <p>Hatırlatmalar iki yolla iptal edilir:</p>
+      <ol>
+        <li>
+          Samply, orijinal gönderim için (yönlendirme veya POST isteği yoluyla — aşağıya bakın)
+          bir <strong>tamamlama olayı</strong> alır. Aynı dahili gönderim kimliğini paylaşan
+          bekleyen tüm hatırlatmaları anında iptal eder.
+        </li>
+        <li>
+          Programı manuel olarak silersiniz veya satırları <a href='/docs/queue'>kuyruktan</a>{' '}
+          iptal edersiniz.
+        </li>
+      </ol>
+      <p>
+        Bir tamamlama olayı olmadan, katılımcının anketi gerçekten tamamlayıp tamamlamadığına
+        bakılmaksızın her gönderim bir hatırlatma alır.
+      </p>
+
+      {/* ── Configuring reminders ─────────────────────────────────────────── */}
+      <h2>Program formunda hatırlatmaları yapılandırma</h2>
+      <p>
+        Program formunun 9. adımı hatırlatma bölümüdür. Hatırlatma planlayıcısını görmek için{' '}
+        <strong>Hatırlatma gönder</strong> seçeneğini açın. Göndermek istediğiniz her hatırlatma
+        için aşağıdakileri doldurun:
+      </p>
+      <dl>
+        <dt>Hatırlatma başlığı</dt>
+        <dd>Katılımcı cihazındaki hatırlatma push bildiriminin kalın yazılmış ilk satırı.</dd>
+        <dt>Hatırlatma mesajı</dt>
+        <dd>Bildirim gövdesi — sistem tepsisinde görünen ikinci satır.</dd>
+        <dt>Şu kadar sonra gönder</dt>
+        <dd>
+          Orijinal bildirimden gecikme: gün + saat + dakika. 0 gün, 1 saat, 0 dakikaya ayarlanan
+          bir hatırlatma orijinal gönderimden bir saat sonra tetiklenir. Üç alan da varsayılan
+          olarak 0'dır — en az birini sıfır olmayan bir değere ayarlayın.
+        </dd>
+      </dl>
+      <p>
+        Farklı bir gecikmede ikinci bir hatırlatma eklemek için{' '}
+        <strong>Yeni hatırlatma ekle</strong>'ye tıklayın. İhtiyaç duyduğunuz kadar hatırlatma
+        zincirleyebilirsiniz — örneğin, 1 saatte ilk, 4 saatte ikinci. Bir tamamlama olayı
+        geldiğinde, halihazırda hangilerinin tetiklendiğine bakılmaksızın tüm hatırlatmalar iptal edilir.
+      </p>
+
+      {/* ── Completion events ─────────────────────────────────────────────── */}
+      <h2>Tamamlama olayını kaydetme</h2>
+      <p>
+        Samply, bir katılımcının anketi ne zaman bitirdiğini kendi başına bilemez. Anket
+        aracınızın Samply tamamlama uç noktasını çağırarak tamamlamayı sinyallemesi gerekir.
+        Bunu yapmanın iki yolu vardır.
+      </p>
+      <p>
+        Çalışmanız için tam URL'ler — doğru slug zaten doldurulmuş olarak — çalışma panonuzun{' '}
+        <strong>Ayarlar</strong> sekmesinde, <em>Hatırlatmalar — tamamlama URL'si</em> altında
+        gösterilir. Doğrudan oradan kopyalayabilirsiniz.
+      </p>
+
+      <h3>Seçenek 1 — yönlendirme (Qualtrics, LimeSurvey, çoğu anket aracı)</h3>
+      <p>
+        Anketinizin sonunda katılımcıyı Samply tamamlama URL'sine yönlendirin. Samply gönderimi
+        tamamlanmış olarak işaretler, bekleyen hatırlatmaları iptal eder ve katılımcıya bir
+        onay sayfası gösterir.
+      </p>
+      <p>
+        Yönlendirme URL'si şu kalıbı izler — <em>your-study-slug</em>'i çalışmanızın URL
+        slug'ıyla değiştirin ve her katılımcının tamamlaması belirli gönderimine karşı
+        kaydedilsin diye <Code>%MESSAGE_ID%</Code> yer tutucusunu kullanın:
+      </p>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Qualtrics'te bunu anket sonu yönlendirme URL'si olarak ayarlayın. LimeSurvey'de anket
+        ayarları panelinde "End URL" olarak ayarlayın. Anket aracı,{' '}
+        <Code>%MESSAGE_ID%</Code>'yi bildirim bağlantısında ilettiğiniz URL parametresi
+        aracılığıyla aldığı gerçek mesaj kimliğiyle değiştirir ({' '}
+        <a href='/docs/placeholders'>URL yer tutucuları</a>'na bakın).
+      </p>
+
+      <h3>Seçenek 2 — POST isteği (REDCap, özel entegrasyonlar)</h3>
+      <p>
+        Aynı uç noktaya bir HTTP POST gönderin. Bu, anket sonu webhook'larını destekleyen
+        anket araçları veya sunucu tarafında çalışan özel kod için uygundur.
+      </p>
+      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Bir <code>200</code> yanıtı, tamamlamanın kaydedildiğini ve hatırlatmaların iptal
+        edildiğini onaylar. <code>400</code> yanıtı, Samply'nin o mesaj kimliği için eşleşen
+        bir sonuç kaydı bulamadığı anlamına gelir — <Code>%MESSAGE_ID%</Code>'nin doğru şekilde
+        değiştirilip iletildiğinden emin olun.
+      </p>
+
+      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
+      <h2>MESSAGE_ID neden gerekli</h2>
+      <p>
+        Samply, bir tamamlama olayını anketi tetikleyen tam bildirim gönderimine bağlamak için{' '}
+        <Code>%MESSAGE_ID%</Code>'yi kullanır. Onsuz, Samply hangi bekleyen hatırlatmaların
+        iptal edileceğini belirleyemez. Akış şöyledir:
+      </p>
+      <ol>
+        <li>
+          Bildirim Web Bağlantısına <Code>%MESSAGE_ID%</Code>'yi bir sorgu parametresi olarak
+          koyun — örneğin, <code>?messageid=%MESSAGE_ID%</code>.
+        </li>
+        <li>
+          Samply, gönderme anında bu jetonu benzersiz 15 karakterli bir kimlikle değiştirir.
+          Katılımcı anket URL'sini bu kimlik zaten içinde olarak açar.
+        </li>
+        <li>
+          Anket aracınız <code>messageid</code> parametresini okur ve anket sonu yönlendirmesine
+          veya webhook'una iletir.
+        </li>
+        <li>
+          Samply, mesaj kimliğiyle tamamlama çağrısını alır, hatırlatmaları iptal eder ve sonuç
+          kaydını tamamlanmış olarak işaretler.
+        </li>
+      </ol>
+      <p>
+        Hatırlatmalar kullanıyorsanız, bildirim URL'nizde her zaman{' '}
+        <Code>%MESSAGE_ID%</Code> yer alsın ve anket aracınızın bunu tamamlama uç noktasına
+        ilettiğini doğrulayın.
+      </p>
+
+      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
+      <h2>Qualtrics kurulum adımları</h2>
+      <ol>
+        <li>
+          Bildirim Web Bağlantısına <code>?messageid=%MESSAGE_ID%</code>'yi (ve ihtiyaç
+          duyduğunuz diğer yer tutucuları) ekleyin.
+        </li>
+        <li>
+          Qualtrics anket akışınızda, ilk bloktan önce bir <strong>Embedded Data</strong> ögesi
+          ekleyin ve <code>messageid</code> adlı bir alan oluşturun. Qualtrics sorgu dizisi
+          parametrelerini otomatik olarak yakalar.
+        </li>
+        <li>
+          <strong>Survey Options → Survey Termination</strong> bölümünde yönlendirme URL'sini
+          şu şekilde ayarlayın:
+        </li>
+      </ol>
+      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
+      <p style={{ marginTop: '1.4rem' }}>
+        Qualtrics <code>{'{e://Field/messageid}'}</code>'yi yakalanan değerle değiştirir, böylece
+        katılımcılar doğru tamamlama URL'sine yönlendirilir.
+      </p>
+
+      {/* ── Caveats ───────────────────────────────────────────────────────── */}
+      <h3>Dikkat edilecekler</h3>
+      <dl>
+        <dt>Tamamlama olayı gelmezse hatırlatmalar tetiklenir</dt>
+        <dd>
+          Yönlendirme veya POST Samply'ye hiç ulaşmazsa — katılımcı anketi yarıda bıraktı,
+          anket aracı yanlış yapılandırıldı veya tamamlama URL'sinde yazım hatası var — hatırlatma
+          planlandığı gibi tetiklenir. Canlıya almadan önce tam akışı bir test katılımcısıyla deneyin.
+        </dd>
+        <dt>Hatırlatmalar orijinal değiştirilmiş URL'yi miras alır</dt>
+        <dd>
+          Hatırlatma bildirimlerine gömülü anket URL'si, orijinal gönderimden zaten değiştirilmiş
+          URL'dir — yeni bir değiştirme değil. Aynı mesaj kimliği, parti numarası ve zaman damgaları
+          uygulanır. Bu kasıtlıdır: hatırlatma aynı anket oturumunu yeniden açmalıdır. Anket
+          aracınız her bağlantı açılışında yeni bir yanıt oluşturuyorsa, mantığınızın bunu
+          işlediğinden emin olun.
+        </dd>
+        <dt>Hatırlatma satırları kuyruk sınırına dahildir</dt>
+        <dd>
+          Her hatırlatma satırı kuyrukta ayrı bir bekleyen kayıttır ve çalışma başına 50.000
+          satır sınırına dahildir. 100 katılımcısı ve gönderim başına 2 hatırlatması olan bir
+          program, gönderim başına 1 değil 3 satır oluşturur.
         </dd>
       </dl>
     </>

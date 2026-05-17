@@ -10,6 +10,10 @@ export default function IrbContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <IrbContentFr />;
   if (locale === "es") return <IrbContentEs />;
   if (locale === "pt") return <IrbContentPt />;
+  if (locale === "ja") return <IrbContentJa />;
+  if (locale === "ar") return <IrbContentAr />;
+  if (locale === "pl") return <IrbContentPl />;
+  if (locale === "tr") return <IrbContentTr />;
   return <IrbContentEn />;
 }
 
@@ -1675,6 +1679,670 @@ function IrbContentPt() {
         respondidas aqui, escreva para{" "}
         <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>. Temos prazer em
         fornecer documentação adicional ou conversar diretamente com seu avaliador de ética.
+      </p>
+    </>
+  );
+}
+
+function IrbContentJa() {
+  return (
+    <>
+      <p>
+        この文書は、倫理審査委員会（IRB）、倫理委員会、またはデータ保護担当者にSamplyを
+        説明する必要がある研究者を対象としています。Samplyがどのようなデータを収集し、
+        どこに送られ、どのように保護されているかを、定型的な法律用語を使わずに平易な言葉で
+        説明します。
+      </p>
+      <p><strong>最終更新:</strong> 2025年5月</p>
+      <p><strong>連絡先:</strong>{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>
+        {" "}— Yury Shevchenko、iScience研究グループ、コンスタンツ大学、ドイツ。
+      </p>
+
+      <h2>Samplyとは</h2>
+      <p>
+        Samplyは、経験サンプリング法（ESM）研究と日記研究のための通知スケジューリング
+        プラットフォームです。研究者はSamplyのウェブサイトで通知スケジュールを設定します。
+        参加者はSamply Researchアプリを電話にインストールし、研究に参加し、研究者が
+        設定した時刻にプッシュ通知を受け取ります。通知をタップすると、研究者の外部調査
+        リンクが開きます — Samplyは調査回答をホストしたり収集したりしません。
+      </p>
+
+      <h2>参加者から収集されるデータ</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>データ</th>
+            <th>目的</th>
+            <th>Samplyに保存</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>メールアドレスとハッシュ化されたパスワード</td>
+            <td>アカウント認証</td>
+            <td>はい</td>
+          </tr>
+          <tr>
+            <td>プッシュ通知トークン</td>
+            <td>デバイスへの通知配信</td>
+            <td>はい</td>
+          </tr>
+          <tr>
+            <td>内部参加者ID（Samply ID）</td>
+            <td>研究者が回答を紐づけられるよう調査URLに渡される仮名識別子</td>
+            <td>はい</td>
+          </tr>
+          <tr>
+            <td>通知受信タイムスタンプ</td>
+            <td>遵守追跡 — 通知が送信されたタイミングと開封されたかどうかを記録</td>
+            <td>はい</td>
+          </tr>
+          <tr>
+            <td>タイムゾーンと静音時間帯の設定</td>
+            <td>参加者の希望時間内に通知をスケジュールする</td>
+            <td>はい</td>
+          </tr>
+          <tr>
+            <td>地理位置情報（ジオフェンシング研究のみ）</td>
+            <td>参加者が定義されたエリアに入ったり出たりしたときに位置ベースの通知をトリガーする。研究者や第三者と共有されない</td>
+            <td>デバイス上のみ — 座標はローカルで処理され、サーバーには送信されない</td>
+          </tr>
+          <tr>
+            <td>調査回答</td>
+            <td>該当なし</td>
+            <td>いいえ — 回答は研究者の調査プラットフォーム（Qualtrics、LimeSurveyなど）に直接送信される</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>研究者から収集されるデータ</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>データ</th>
+            <th>目的</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>メールアドレスとハッシュ化されたパスワード</td>
+            <td>アカウント認証</td>
+          </tr>
+          <tr>
+            <td>研究設定（タイトル、説明、スケジュール、調査URL）</td>
+            <td>研究管理</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Samplyが行わないこと</h2>
+      <ul>
+        <li>Samplyは参加者の調査回答を収集、保存、またはアクセスしません。回答は参加者のブラウザから研究者の調査ツールに直接送信されます。</li>
+        <li>Samplyは、メールアドレス以外に、参加者の氏名、電話番号、その他の自由形式の個人情報を収集しません。</li>
+        <li>Samplyは、参加者のデータを第三者、広告主、または他の研究者と共有しません。</li>
+        <li>Samplyは、参加者が参加した研究のスケジュールされた通知を配信する以外の目的で、参加者のデータを使用しません。</li>
+        <li>SamplyはGPS座標をサーバーに保持しません。ジオフェンシング計算は参加者のデバイス上で実行されます。</li>
+      </ul>
+
+      <h2>参加者の仮名性</h2>
+      <p>
+        各参加者には内部Samply ID — ランダムな英数字文字列が割り当てられます。このIDは
+        参加者が通知をタップしたときに調査URLに追加されます（例:{" "}
+        <code>https://your-survey.com/?pid=a3f9b2c1</code>）。研究者は調査データでこのIDを
+        受け取り、参加者のメールアドレスを知ることなく、異なる測定時点間で同じ参加者の
+        回答を紐づけるために使用できます。
+      </p>
+      <p>
+        研究者はSamplyのダッシュボードで参加者のメールアドレスを見ることはありません。
+        メールアドレスとSamply IDの紐づけはSamplyのデータベース内にのみ存在し、エクスポート
+        されません。
+      </p>
+
+      <h2>参加者の権利</h2>
+      <ul>
+        <li><strong>撤回:</strong> 参加者はいつでもアプリから研究を離脱できます。離脱すると、今後のすべての通知が直ちに停止します。</li>
+        <li><strong>アカウント削除:</strong> 参加者はアプリの設定でアカウントを削除できます。これにより、メールアドレス、Samply ID、プッシュトークン、関連するすべての記録がSamplyのデータベースから完全に削除されます。削除は元に戻せません。</li>
+        <li><strong>データアクセス:</strong> 参加者は<a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>に連絡することで、自分のデータのコピーを要求できます。</li>
+      </ul>
+
+      <h2>データの保存とセキュリティ</h2>
+      <ul>
+        <li>Samplyプラットフォームはドイツのコンスタンツ大学のiScience研究グループによって運営されています。</li>
+        <li>データはコンスタンツ大学が運営するサーバーに保存されます。</li>
+        <li>パスワードはbcryptハッシュとして保存され、平文で保存または送信されることはありません。</li>
+        <li>アプリ、ウェブサイト、サーバー間のすべての通信はHTTPS/TLS暗号化を使用します。</li>
+        <li>プッシュ通知はApple Push Notification Service（APNS）とGoogle Firebase Cloud Messaging（FCM）を介して配信されます。通知ペイロードには研究者が定義した研究タイトルとアラートテキストのみが含まれます — 個人データは含まれません。</li>
+      </ul>
+
+      <h2>データ保持</h2>
+      <p>
+        参加者のデータは、研究期間中、および参加者がアカウントを削除するまで保持されます。
+        研究者はいつでもダッシュボードから個々の参加者の記録または研究全体のデータを削除
+        できます。自動削除スケジュールはありません。
+      </p>
+
+      <h2>IRB向けの推奨される説明</h2>
+      <p>
+        以下の段落は、倫理承認申請またはインフォームドコンセントフォームでの使用のために
+        適応させることができます:
+      </p>
+      <blockquote>
+        <p>
+          通知はSamply Researchアプリ（samply.uni-konstanz.de）を介して配信されます。
+          このアプリはドイツのコンスタンツ大学のiScience研究グループによって開発・運営
+          されています。Samplyは、スケジュールされた通知を配信する目的で、あなたのメール
+          アドレス、プッシュ通知トークン、仮名の参加者IDを保存します。Samplyはあなたの
+          調査回答を収集しません。これらの回答は[調査プラットフォーム名]に直接送信されます。
+          いつでもアプリから研究を離脱し、Samplyアカウントを削除することができます。
+          データ保護に関する質問については、yury.shevchenko@uni.knに連絡してください。
+        </p>
+      </blockquote>
+
+      <h2>質問</h2>
+      <p>
+        あなたのIRBまたはデータ保護担当者が、ここで回答されていない具体的な質問がある場合は、{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>までご連絡ください。
+        追加の文書を提供したり、倫理審査担当者と直接お話しすることを喜んでいたします。
+      </p>
+    </>
+  );
+}
+
+function IrbContentTr() {
+  return (
+    <>
+      <p>
+        Bu belge, Samply'ı bir Etik Kurula (IRB), etik komitesine veya
+        veri koruma görevlisine açıklaması gereken araştırmacılar içindir.
+        Samply'ın hangi verileri topladığını, nereye gönderildiğini ve nasıl korunduğunu,
+        kalıplaşmış hukuki dil kullanmadan sade bir şekilde açıklar.
+      </p>
+      <p><strong>Son güncelleme:</strong> Mayıs 2025</p>
+      <p><strong>İletişim:</strong>{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>
+        {" "}— Yury Shevchenko, iScience Araştırma Grubu, Konstanz Üniversitesi, Almanya.
+      </p>
+
+      <h2>Samply nedir</h2>
+      <p>
+        Samply, deneyim örnekleme yöntemi (ESM) ve günlük çalışmaları için bir bildirim
+        zamanlama platformudur. Araştırmacılar bildirim programlarını Samply web sitesinde
+        oluşturur. Katılımcılar Samply Research uygulamasını telefonlarına yükler, bir çalışmaya
+        katılır ve araştırmacı tarafından planlanan zamanlarda push bildirimleri alır.
+        Bildirime dokunulduğunda araştırmacının harici anket bağlantısı açılır — Samply anket
+        yanıtlarını barındırmaz veya toplamaz.
+      </p>
+
+      <h2>Katılımcılardan toplanan veriler</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Veri</th>
+            <th>Amaç</th>
+            <th>Samply'da saklanır</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>E-posta adresi ve hash'lenmiş parola</td>
+            <td>Hesap kimlik doğrulaması</td>
+            <td>Evet</td>
+          </tr>
+          <tr>
+            <td>Push bildirim belirteci</td>
+            <td>Cihaza bildirim teslimatı</td>
+            <td>Evet</td>
+          </tr>
+          <tr>
+            <td>Dahili katılımcı kimliği (Samply ID)</td>
+            <td>Araştırmacının yanıtları eşleştirebilmesi için anket URL'sine iletilen takma adlı tanımlayıcı</td>
+            <td>Evet</td>
+          </tr>
+          <tr>
+            <td>Bildirim alındı zaman damgaları</td>
+            <td>Uyum takibi — bir bildirimin ne zaman gönderildiğini ve açılıp açılmadığını kaydeder</td>
+            <td>Evet</td>
+          </tr>
+          <tr>
+            <td>Saat dilimi ve sessiz saatler tercihleri</td>
+            <td>Bildirimleri katılımcının tercih ettiği saatler içinde planlamak</td>
+            <td>Evet</td>
+          </tr>
+          <tr>
+            <td>Coğrafi konum (yalnızca geofencing çalışmaları)</td>
+            <td>Katılımcı tanımlanmış bir alana girdiğinde veya çıktığında konum tabanlı bildirimleri tetikler. Araştırmacılarla veya üçüncü taraflarla paylaşılmaz</td>
+            <td>Yalnızca cihazda — koordinatlar yerel olarak işlenir, sunucuya gönderilmez</td>
+          </tr>
+          <tr>
+            <td>Anket yanıtları</td>
+            <td>Uygulanamaz</td>
+            <td>Hayır — yanıtlar doğrudan araştırmacının anket platformuna (Qualtrics, LimeSurvey vb.) gönderilir</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Araştırmacılardan toplanan veriler</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Veri</th>
+            <th>Amaç</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>E-posta adresi ve hash'lenmiş parola</td>
+            <td>Hesap kimlik doğrulaması</td>
+          </tr>
+          <tr>
+            <td>Çalışma yapılandırması (başlık, açıklama, programlar, anket URL'leri)</td>
+            <td>Çalışma yönetimi</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Samply'ın yapmadıkları</h2>
+      <ul>
+        <li>Samply, katılımcıların anket yanıtlarını toplamaz, saklamaz veya bunlara erişmez. Yanıtlar katılımcının tarayıcısından doğrudan araştırmacının anket aracına gönderilir.</li>
+        <li>Samply, e-posta adresinin ötesinde katılımcının adını, telefon numarasını veya diğer serbest biçimli kişisel bilgilerini toplamaz.</li>
+        <li>Samply, katılımcı verilerini üçüncü taraflarla, reklamverenlerle veya diğer araştırmacılarla paylaşmaz.</li>
+        <li>Samply, katılımcı verilerini, katılımcının katıldığı çalışma için planlanmış bildirimleri teslim etmenin dışında herhangi bir amaçla kullanmaz.</li>
+        <li>Samply, GPS koordinatlarını sunucularında tutmaz. Geofencing hesaplamaları katılımcının cihazında çalışır.</li>
+      </ul>
+
+      <h2>Katılımcı takma adlılığı</h2>
+      <p>
+        Her katılımcıya dahili bir Samply ID — rastgele bir alfanümerik dize — atanır. Bu kimlik,
+        katılımcı bir bildirime dokunduğunda anket URL'sine eklenir (ör.{" "}
+        <code>https://your-survey.com/?pid=a3f9b2c1</code>). Araştırmacı bu kimliği anket verilerinde
+        alır ve katılımcının e-posta adresini öğrenmeden farklı ölçüm zamanlarındaki yanıtları
+        aynı katılımcıyla eşleştirmek için kullanabilir.
+      </p>
+      <p>
+        Araştırmacılar, Samply panelinde katılımcı e-posta adreslerini görmezler.
+        E-posta adresi ile Samply ID arasındaki eşleşme yalnızca Samply'ın veritabanında bulunur ve
+        dışa aktarılmaz.
+      </p>
+
+      <h2>Katılımcı hakları</h2>
+      <ul>
+        <li><strong>Geri çekilme:</strong> Katılımcılar uygulamadan istedikleri zaman bir çalışmadan ayrılabilir. Ayrılma, gelecekteki tüm bildirimleri derhal durdurur.</li>
+        <li><strong>Hesap silme:</strong> Katılımcılar uygulama ayarlarından hesaplarını silebilir. Bu, e-posta adreslerini, Samply Kimliklerini, push belirtecini ve ilgili tüm kayıtları Samply'ın veritabanından kalıcı olarak kaldırır. Silme geri alınamaz.</li>
+        <li><strong>Veri erişimi:</strong> Katılımcılar <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a> adresine yazarak verilerinin bir kopyasını talep edebilir.</li>
+      </ul>
+
+      <h2>Veri depolama ve güvenliği</h2>
+      <ul>
+        <li>Samply platformu, Almanya'daki Konstanz Üniversitesi iScience Araştırma Grubu tarafından işletilmektedir.</li>
+        <li>Veriler Konstanz Üniversitesi tarafından işletilen sunucularda saklanır.</li>
+        <li>Parolalar bcrypt hash'leri olarak saklanır, asla düz metin olarak saklanmaz veya iletilmez.</li>
+        <li>Uygulama, web sitesi ve sunucu arasındaki tüm iletişim HTTPS/TLS şifrelemesi kullanır.</li>
+        <li>Push bildirimleri Apple Push Notification Service (APNS) ve Google Firebase Cloud Messaging (FCM) aracılığıyla teslim edilir. Bildirim yükü yalnızca araştırmacı tarafından tanımlanan çalışma başlığını ve uyarı metnini içerir — kişisel veri içermez.</li>
+      </ul>
+
+      <h2>Veri saklama</h2>
+      <p>
+        Katılımcı verileri, çalışmanın süresince ve katılımcı hesabını silene kadar tutulur.
+        Araştırmacılar, panelden bireysel katılımcı kayıtlarını veya tüm çalışma verilerini istedikleri zaman
+        silebilir. Otomatik bir silme programı yoktur.
+      </p>
+
+      <h2>IRB'ler için önerilen formülasyon</h2>
+      <p>
+        Aşağıdaki paragraf, etik onay başvurularında veya bilgilendirilmiş onam formlarında
+        kullanılmak üzere uyarlanabilir:
+      </p>
+      <blockquote>
+        <p>
+          Bildirimler, Almanya'daki Konstanz Üniversitesi iScience Araştırma Grubu tarafından
+          geliştirilen ve işletilen Samply Research uygulaması (samply.uni-konstanz.de)
+          aracılığıyla teslim edilecektir. Samply, planlanan bildirimleri size teslim etme amacıyla
+          e-posta adresinizi, push bildirim belirtecinizi ve takma adlı bir katılımcı kimliği saklar.
+          Samply anket yanıtlarınızı toplamaz; bu yanıtlar doğrudan [anket platformu adı] adresine
+          gönderilir. Uygulamadan istediğiniz zaman çalışmadan ayrılabilir ve Samply hesabınızı
+          silebilirsiniz. Veri koruma ile ilgili sorular için yury.shevchenko@uni.kn adresine
+          yazabilirsiniz.
+        </p>
+      </blockquote>
+
+      <h2>Sorular</h2>
+      <p>
+        IRB'nizin veya veri koruma görevlinizin burada yanıtlanmayan belirli soruları varsa, lütfen{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a> adresine yazın.
+        Ek belgeler sağlamaktan veya doğrudan etik gözden geçirenlerle konuşmaktan memnuniyet duyarım.
+      </p>
+    </>
+  );
+}
+
+function IrbContentPl() {
+  return (
+    <>
+      <p>
+        Niniejszy dokument jest przeznaczony dla badaczy, którzy muszą wyjaśnić Samply
+        komisji etycznej (IRB), komisji ds. etyki lub inspektorowi ochrony danych.
+        W prosty sposób, bez szablonowego języka prawniczego, opisuje, jakie dane Samply gromadzi,
+        dokąd są wysyłane i jak są chronione.
+      </p>
+      <p><strong>Ostatnia aktualizacja:</strong> maj 2025</p>
+      <p><strong>Kontakt:</strong>{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>
+        {" "}— Yury Shevchenko, Grupa Badawcza iScience, Uniwersytet w Konstancji, Niemcy.
+      </p>
+
+      <h2>Czym jest Samply</h2>
+      <p>
+        Samply to platforma do planowania powiadomień dla badań metodą próbkowania doświadczeń (ESM)
+        i badań dziennikowych. Badacze tworzą harmonogramy powiadomień na stronie internetowej Samply.
+        Uczestnicy instalują aplikację Samply Research na swoich telefonach, dołączają do badania
+        i otrzymują powiadomienia push w czasach zaplanowanych przez badacza.
+        Dotknięcie powiadomienia otwiera zewnętrzny link ankiety badacza — Samply nie hostuje ani
+        nie gromadzi odpowiedzi ankietowych.
+      </p>
+
+      <h2>Dane gromadzone od uczestników</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dane</th>
+            <th>Cel</th>
+            <th>Przechowywane w Samply</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Adres e-mail i zahaszowane hasło</td>
+            <td>Uwierzytelnianie konta</td>
+            <td>Tak</td>
+          </tr>
+          <tr>
+            <td>Token powiadomień push</td>
+            <td>Dostarczanie powiadomień na urządzenie</td>
+            <td>Tak</td>
+          </tr>
+          <tr>
+            <td>Wewnętrzny identyfikator uczestnika (Samply ID)</td>
+            <td>Pseudonimizowany identyfikator przekazywany do adresu URL ankiety, aby badacz mógł dopasować odpowiedzi</td>
+            <td>Tak</td>
+          </tr>
+          <tr>
+            <td>Znaczniki czasu odbioru powiadomień</td>
+            <td>Śledzenie zgodności — rejestruje, kiedy powiadomienie zostało wysłane i czy zostało otwarte</td>
+            <td>Tak</td>
+          </tr>
+          <tr>
+            <td>Strefa czasowa i preferencje cichych godzin</td>
+            <td>Planowanie powiadomień w preferowanych godzinach uczestnika</td>
+            <td>Tak</td>
+          </tr>
+          <tr>
+            <td>Lokalizacja geograficzna (tylko badania z geofencingiem)</td>
+            <td>Wyzwala powiadomienia oparte na lokalizacji, gdy uczestnik wchodzi lub opuszcza zdefiniowany obszar. Nie jest udostępniana badaczom ani stronom trzecim</td>
+            <td>Tylko na urządzeniu — współrzędne są przetwarzane lokalnie, nie są wysyłane na serwer</td>
+          </tr>
+          <tr>
+            <td>Odpowiedzi ankietowe</td>
+            <td>Nie dotyczy</td>
+            <td>Nie — odpowiedzi są wysyłane bezpośrednio do platformy ankietowej badacza (Qualtrics, LimeSurvey itp.)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Dane gromadzone od badaczy</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Dane</th>
+            <th>Cel</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Adres e-mail i zahaszowane hasło</td>
+            <td>Uwierzytelnianie konta</td>
+          </tr>
+          <tr>
+            <td>Konfiguracja badania (tytuł, opis, harmonogramy, adresy URL ankiet)</td>
+            <td>Zarządzanie badaniem</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Czego Samply nie robi</h2>
+      <ul>
+        <li>Samply nie gromadzi, nie przechowuje ani nie ma dostępu do odpowiedzi ankietowych uczestników. Odpowiedzi są wysyłane bezpośrednio z przeglądarki uczestnika do narzędzia ankietowego badacza.</li>
+        <li>Samply nie gromadzi imienia uczestnika, numeru telefonu ani innych dowolnych informacji osobistych poza adresem e-mail.</li>
+        <li>Samply nie udostępnia danych uczestników stronom trzecim, reklamodawcom ani innym badaczom.</li>
+        <li>Samply nie wykorzystuje danych uczestników do żadnego celu poza dostarczaniem zaplanowanych powiadomień dla badania, do którego uczestnik dołączył.</li>
+        <li>Samply nie przechowuje współrzędnych GPS na swoich serwerach. Obliczenia geofencingu działają na urządzeniu uczestnika.</li>
+      </ul>
+
+      <h2>Pseudonimizacja uczestników</h2>
+      <p>
+        Każdemu uczestnikowi przypisuje się wewnętrzny Samply ID — losowy ciąg alfanumeryczny. Identyfikator ten
+        jest dołączany do adresu URL ankiety, gdy uczestnik dotknie powiadomienia (np.{" "}
+        <code>https://your-survey.com/?pid=a3f9b2c1</code>). Badacz otrzymuje ten identyfikator w danych ankietowych
+        i może go używać do dopasowywania odpowiedzi z różnych momentów pomiaru do tego samego uczestnika
+        bez konieczności poznawania jego adresu e-mail.
+      </p>
+      <p>
+        Badacze nie widzą adresów e-mail uczestników w panelu Samply.
+        Powiązanie między adresem e-mail a Samply ID istnieje wyłącznie w bazie danych Samply i
+        nie jest eksportowane.
+      </p>
+
+      <h2>Prawa uczestników</h2>
+      <ul>
+        <li><strong>Wycofanie:</strong> Uczestnicy mogą opuścić badanie w dowolnym momencie z poziomu aplikacji. Opuszczenie natychmiast zatrzymuje wszystkie przyszłe powiadomienia.</li>
+        <li><strong>Usunięcie konta:</strong> Uczestnicy mogą usunąć swoje konto z ustawień aplikacji. Trwale usuwa to ich adres e-mail, Samply ID, token push i wszystkie powiązane zapisy z bazy danych Samply. Usunięcie jest nieodwracalne.</li>
+        <li><strong>Dostęp do danych:</strong> Uczestnicy mogą poprosić o kopię swoich danych, pisząc na adres <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>.</li>
+      </ul>
+
+      <h2>Przechowywanie i bezpieczeństwo danych</h2>
+      <ul>
+        <li>Platforma Samply jest prowadzona przez Grupę Badawczą iScience na Uniwersytecie w Konstancji w Niemczech.</li>
+        <li>Dane są przechowywane na serwerach prowadzonych przez Uniwersytet w Konstancji.</li>
+        <li>Hasła są przechowywane jako skróty bcrypt, nigdy nie są przechowywane ani przesyłane w postaci zwykłego tekstu.</li>
+        <li>Cała komunikacja między aplikacją, stroną internetową a serwerem wykorzystuje szyfrowanie HTTPS/TLS.</li>
+        <li>Powiadomienia push są dostarczane za pośrednictwem Apple Push Notification Service (APNS) i Google Firebase Cloud Messaging (FCM). Ładunek powiadomienia zawiera wyłącznie tytuł badania i tekst alertu zdefiniowane przez badacza — żadnych danych osobowych.</li>
+      </ul>
+
+      <h2>Przechowywanie danych</h2>
+      <p>
+        Dane uczestników są przechowywane przez czas trwania badania oraz dopóki uczestnik nie usunie swojego konta.
+        Badacze mogą w dowolnym momencie usunąć pojedyncze rekordy uczestników lub całe dane badania
+        z poziomu panelu. Nie ma automatycznego harmonogramu usuwania.
+      </p>
+
+      <h2>Sugerowane sformułowanie dla IRB</h2>
+      <p>
+        Poniższy akapit może zostać dostosowany do użycia we wnioskach o zatwierdzenie etyczne
+        lub w formularzach świadomej zgody:
+      </p>
+      <blockquote>
+        <p>
+          Powiadomienia będą dostarczane za pośrednictwem aplikacji Samply Research (samply.uni-konstanz.de),
+          opracowanej i prowadzonej przez Grupę Badawczą iScience na Uniwersytecie w Konstancji w Niemczech.
+          Samply przechowuje Twój adres e-mail, token powiadomień push i pseudonimizowany identyfikator uczestnika
+          wyłącznie w celu dostarczania zaplanowanych powiadomień. Samply nie gromadzi Twoich odpowiedzi ankietowych;
+          są one wysyłane bezpośrednio do [nazwa platformy ankietowej]. Możesz w każdej chwili
+          opuścić badanie i usunąć swoje konto Samply z poziomu aplikacji.
+          W sprawach dotyczących ochrony danych pisz na adres yury.shevchenko@uni.kn.
+        </p>
+      </blockquote>
+
+      <h2>Pytania</h2>
+      <p>
+        Jeśli Twoja komisja etyczna lub inspektor ochrony danych ma konkretne pytania, na które nie ma tu odpowiedzi, prosimy napisać na adres{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>.
+        Z przyjemnością dostarczę dodatkową dokumentację lub porozmawiam bezpośrednio z osobami opiniującymi etycznie.
+      </p>
+    </>
+  );
+}
+
+function IrbContentAr() {
+  return (
+    <>
+      <p>
+        هذه الوثيقة مخصصة للباحثين الذين يحتاجون إلى شرح Samply
+        للجنة الأخلاقيات (IRB) أو لجنة الأخلاقيات أو مسؤول حماية البيانات.
+        تصف بأسلوب مباشر ودون لغة قانونية مكرّرة البيانات التي يجمعها Samply،
+        وأين تُرسَل، وكيف تُحمى.
+      </p>
+      <p><strong>آخر تحديث:</strong> مايو 2025</p>
+      <p><strong>جهة الاتصال:</strong>{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>
+        {" "}— Yury Shevchenko، مجموعة iScience البحثية، جامعة كونستانس، ألمانيا.
+      </p>
+
+      <h2>ما هو Samply</h2>
+      <p>
+        Samply منصة لجدولة الإشعارات لأبحاث منهج أخذ عيّنات الخبرة (ESM)
+        والدراسات اليومية. ينشئ الباحثون جداول الإشعارات على موقع Samply الإلكتروني.
+        يقوم المشاركون بتثبيت تطبيق Samply Research على هواتفهم، وينضمون إلى دراسة،
+        ويستقبلون إشعارات push في الأوقات التي يحددها الباحث.
+        يفتح النقر على الإشعار رابط استطلاع خارجيًا تابعًا للباحث — لا يستضيف Samply
+        إجابات الاستطلاع ولا يجمعها.
+      </p>
+
+      <h2>البيانات التي تُجمع من المشاركين</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>البيانات</th>
+            <th>الغرض</th>
+            <th>مخزنة في Samply</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>عنوان البريد الإلكتروني وكلمة المرور المُشفَّرة</td>
+            <td>مصادقة الحساب</td>
+            <td>نعم</td>
+          </tr>
+          <tr>
+            <td>رمز إشعارات Push</td>
+            <td>تسليم الإشعارات إلى الجهاز</td>
+            <td>نعم</td>
+          </tr>
+          <tr>
+            <td>معرّف المشارك الداخلي (Samply ID)</td>
+            <td>معرّف باسم مستعار يُمرَّر إلى رابط الاستطلاع حتى يتمكن الباحث من مطابقة الإجابات</td>
+            <td>نعم</td>
+          </tr>
+          <tr>
+            <td>الطوابع الزمنية لاستلام الإشعارات</td>
+            <td>تتبع الالتزام — يسجّل وقت إرسال الإشعار وما إذا كان قد فُتح</td>
+            <td>نعم</td>
+          </tr>
+          <tr>
+            <td>المنطقة الزمنية وتفضيلات ساعات الهدوء</td>
+            <td>جدولة الإشعارات في الساعات التي يفضّلها المشارك</td>
+            <td>نعم</td>
+          </tr>
+          <tr>
+            <td>الموقع الجغرافي (دراسات Geofencing فقط)</td>
+            <td>يُحفّز الإشعارات المعتمدة على الموقع عند دخول المشارك أو مغادرته منطقة محددة. لا يُشارَك مع الباحثين ولا مع أطراف ثالثة</td>
+            <td>على الجهاز فقط — تُعالَج الإحداثيات محليًا ولا تُرسَل إلى الخادم</td>
+          </tr>
+          <tr>
+            <td>إجابات الاستطلاع</td>
+            <td>لا ينطبق</td>
+            <td>لا — تُرسَل الإجابات مباشرة إلى منصة الاستطلاع الخاصة بالباحث (Qualtrics وLimeSurvey وغيرها)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>البيانات التي تُجمع من الباحثين</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>البيانات</th>
+            <th>الغرض</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>عنوان البريد الإلكتروني وكلمة المرور المُشفَّرة</td>
+            <td>مصادقة الحساب</td>
+          </tr>
+          <tr>
+            <td>تكوين الدراسة (العنوان، الوصف، الجداول، روابط الاستطلاعات)</td>
+            <td>إدارة الدراسة</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>ما لا يفعله Samply</h2>
+      <ul>
+        <li>لا يجمع Samply إجابات الاستطلاعات الخاصة بالمشاركين ولا يخزّنها ولا يطّلع عليها. تُرسَل الإجابات مباشرة من متصفح المشارك إلى أداة الاستطلاع الخاصة بالباحث.</li>
+        <li>لا يجمع Samply اسم المشارك أو رقم هاتفه أو أي معلومات شخصية اعتباطية أخرى بخلاف عنوان البريد الإلكتروني.</li>
+        <li>لا يشارك Samply بيانات المشاركين مع أطراف ثالثة أو معلنين أو باحثين آخرين.</li>
+        <li>لا يستخدم Samply بيانات المشاركين لأي غرض بخلاف تسليم الإشعارات المجدولة للدراسة التي انضم إليها المشارك.</li>
+        <li>لا يخزّن Samply إحداثيات GPS على خوادمه. تعمل حسابات Geofencing على جهاز المشارك.</li>
+      </ul>
+
+      <h2>إخفاء هوية المشاركين</h2>
+      <p>
+        يُعطى كل مشارك Samply ID داخلي — سلسلة عشوائية من الأحرف والأرقام. يُلحَق هذا المعرّف
+        برابط الاستطلاع عند النقر على الإشعار (مثال:{" "}
+        <code>https://your-survey.com/?pid=a3f9b2c1</code>). يستلم الباحث هذا المعرّف ضمن بيانات الاستطلاع،
+        ويمكنه استخدامه لمطابقة الإجابات من نقاط القياس المختلفة لنفس المشارك
+        دون الحاجة إلى معرفة بريده الإلكتروني.
+      </p>
+      <p>
+        لا يرى الباحثون عناوين البريد الإلكتروني للمشاركين في لوحة Samply.
+        يبقى الربط بين البريد الإلكتروني وSamply ID موجودًا فقط داخل قاعدة بيانات Samply
+        ولا يُصدَّر.
+      </p>
+
+      <h2>حقوق المشاركين</h2>
+      <ul>
+        <li><strong>الانسحاب:</strong> يمكن للمشاركين مغادرة الدراسة في أي وقت من داخل التطبيق. توقف المغادرة فورًا جميع الإشعارات المستقبلية.</li>
+        <li><strong>حذف الحساب:</strong> يمكن للمشاركين حذف حسابهم من إعدادات التطبيق. يؤدي ذلك إلى الإزالة الدائمة لعنوان بريدهم الإلكتروني وSamply ID ورمز push وجميع السجلات المرتبطة من قاعدة بيانات Samply. الحذف لا رجعة فيه.</li>
+        <li><strong>الوصول إلى البيانات:</strong> يمكن للمشاركين طلب نسخة من بياناتهم بمراسلة <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>.</li>
+      </ul>
+
+      <h2>تخزين البيانات وأمنها</h2>
+      <ul>
+        <li>تُدير منصة Samply مجموعة iScience البحثية في جامعة كونستانس بألمانيا.</li>
+        <li>تُخزَّن البيانات على خوادم تديرها جامعة كونستانس.</li>
+        <li>تُخزَّن كلمات المرور كملخّصات bcrypt، ولا تُخزَّن أو تُنقَل أبدًا كنص عادي.</li>
+        <li>تستخدم جميع الاتصالات بين التطبيق والموقع والخادم تشفير HTTPS/TLS.</li>
+        <li>تُسلَّم إشعارات Push عبر Apple Push Notification Service (APNS) و Google Firebase Cloud Messaging (FCM). تحتوي حمولة الإشعار فقط على عنوان الدراسة ونص التنبيه الذي حدّده الباحث — لا توجد بيانات شخصية.</li>
+      </ul>
+
+      <h2>الاحتفاظ بالبيانات</h2>
+      <p>
+        تُحفَظ بيانات المشاركين طوال مدة الدراسة وحتى يحذف المشارك حسابه.
+        يمكن للباحثين حذف سجلات المشاركين الفردية أو بيانات الدراسة بأكملها في أي وقت
+        من لوحة التحكم. لا يوجد جدول حذف تلقائي.
+      </p>
+
+      <h2>صياغة مقترحة لـ IRB</h2>
+      <p>
+        يمكن تكييف الفقرة التالية لاستخدامها في طلبات الموافقة الأخلاقية
+        أو في نماذج الموافقة المستنيرة:
+      </p>
+      <blockquote>
+        <p>
+          سوف تُسلَّم الإشعارات عبر تطبيق Samply Research (samply.uni-konstanz.de)،
+          الذي طوّرته وتديره مجموعة iScience البحثية في جامعة كونستانس بألمانيا.
+          يخزّن Samply عنوان بريدك الإلكتروني، ورمز إشعارات push، ومعرّفًا باسم مستعار للمشارك
+          فقط لأغراض تسليم الإشعارات المجدولة. لا يجمع Samply إجابات الاستطلاع الخاصة بك؛
+          فهي تُرسَل مباشرة إلى [اسم منصة الاستطلاع]. يمكنك مغادرة الدراسة
+          وحذف حساب Samply الخاص بك في أي وقت من داخل التطبيق.
+          للاستفسارات المتعلقة بحماية البيانات، راسل yury.shevchenko@uni.kn.
+        </p>
+      </blockquote>
+
+      <h2>الأسئلة</h2>
+      <p>
+        إذا كانت لجنة الأخلاقيات أو مسؤول حماية البيانات لديك لديه أسئلة محددة لم تُجَب هنا، يُرجى المراسلة على{" "}
+        <a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a>.
+        يسعدني تقديم وثائق إضافية أو التحدث مباشرة مع مراجعي الأخلاقيات.
       </p>
     </>
   );

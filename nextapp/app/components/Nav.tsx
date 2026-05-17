@@ -8,9 +8,10 @@ import { SUPPORTED_LOCALES, LOCALE_TO_DB_LANG, type Locale } from "@/lib/i18n";
 import { getLocale } from "@/lib/i18n.server";
 import NavClient from "./NavClient";
 
-async function signOutAction() {
+async function signOutAction(formData: FormData) {
   "use server";
-  await signOut({ redirectTo: "/login" });
+  const redirectTo = (formData.get("redirectTo") as string) || "/login";
+  await signOut({ redirectTo });
 }
 
 async function setLocaleAction(formData: FormData) {
@@ -40,7 +41,9 @@ async function setLocaleAction(formData: FormData) {
 export default async function Nav() {
   const session = await auth();
   const isLoggedIn = !!session;
-  const isAdmin = (session?.user?.level ?? 0) > 100;
+  const level = session?.user?.level ?? 0;
+  const isAdmin = level > 100;
+  const isParticipant = isLoggedIn && level < 11;
 
   await connectDB();
   const { showDonation } = await getSiteSettings();
@@ -57,6 +60,7 @@ export default async function Nav() {
     <NavClient
       isLoggedIn={isLoggedIn}
       isAdmin={isAdmin}
+      isParticipant={isParticipant}
       userName={userName}
       signOutAction={signOutAction}
       setLocaleAction={setLocaleAction}

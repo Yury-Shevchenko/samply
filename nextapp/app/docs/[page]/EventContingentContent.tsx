@@ -686,6 +686,10 @@ export default function EventContingentContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <EventContingentContentFr />;
   if (locale === "es") return <EventContingentContentEs />;
   if (locale === "pt") return <EventContingentContentPt />;
+  if (locale === "ja") return <EventContingentContentJa />;
+  if (locale === "ar") return <EventContingentContentAr />;
+  if (locale === "pl") return <EventContingentContentPl />;
+  if (locale === "tr") return <EventContingentContentTr />;
   return <EventContingentContentEn />;
 }
 
@@ -1372,6 +1376,406 @@ function EventContingentContentPt() {
         e dispara uma notificação sem ação do participante. Use geofencing quando o evento-alvo
         tiver uma assinatura GPS precisa; use o design evento-contingente quando o evento for de
         natureza psicológica, social ou não detectável por sensores.
+      </p>
+    </>
+  );
+}
+
+function EventContingentContentJa() {
+  return (
+    <>
+      <p>
+        シグナル連動型のデザインでは、Samplyが参加者にいつ通知するかを決定します。イベント連動型のデザインでは、<em>参加者</em>が決定します。参加者は、自身の生活でターゲットイベントが発生した直後に、自発的にレポートを開始します。Samplyは、Samply Researchアプリに表示される名前付きイベントタイプを通じて、イベント連動型デザインをサポートします。
+      </p>
+
+      {/* ── Setting up ────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>イベント連動型プロトコルの設定</h2>
+      <p>
+        研究のダッシュボードを開き、<strong>設定</strong>タブに移動して、<strong>イベント連動型プロトコル</strong>を有効にします。2つの設定フィールドが表示されます：
+      </p>
+      <dl>
+        <dt>参加者への指示</dt>
+        <dd>
+          参加後にSamplyアプリで参加者に表示されるテキストブロックです。どのようなイベントを記録すべきか、リンクをどのように使用するかを説明してください。例：「職場でストレスを感じる出来事が起きるたびに、下のボタンをタップしてください。」
+        </dd>
+        <dt>イベントタイプ（最大5つ）</dt>
+        <dd>
+          各イベントタイプには<strong>タイトル</strong>（参加者がアプリで見るラベル）と<strong>URL</strong>（参加者がそのタイトルをタップしたときに開く調査のリンク）があります。1から5つまでの異なるイベントタイプを定義できます。研究に自己報告が1種類しかない場合は、1つのイベントタイプを定義します。参加者がさまざまなカテゴリーの体験（例：ポジティブイベント、ネガティブイベント、ニュートラルイベント）を報告できる場合は、カテゴリーごとに1つのタイプを定義し、それぞれが異なる調査を指すか、異なるパラメータを渡すようにします。
+        </dd>
+      </dl>
+      <p>
+        保存後、イベントタイプはSamplyアプリの参加者の研究画面に表示されます。タイトルをタップすると、対応するURLが即座に開きます。通知は必要ありません。
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>イベントタイプリンクのURLプレースホルダー</h2>
+      <p>
+        各イベントタイプのURLは、スケジュールされた通知と同じ<Code>%TOKEN%</Code>プレースホルダーをサポートしています。Samplyは、参加者がリンクをタップした瞬間にこれらを置き換えます：
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>トークン</th>
+            <th>置換内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>%SAMPLY_ID%</Code></td>
+            <td>参加者の匿名Samply ID。</td>
+          </tr>
+          <tr>
+            <td><Code>%PARTICIPANT_CODE%</Code></td>
+            <td>登録時に入力されたカスタムコード（コードがない場合は置換せずに保持されます）。</td>
+          </tr>
+          <tr>
+            <td><Code>%GROUP_ID%</Code></td>
+            <td>参加者のグループID（グループがない場合は置換せずに保持されます）。</td>
+          </tr>
+          <tr>
+            <td><Code>%TIMESTAMP%</Code></td>
+            <td>リンクがタップされた瞬間のUnixタイムスタンプ（ミリ秒）。</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>典型的なイベントタイプのURLは次のような形式になります：</p>
+      <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%' />
+      <p style={{ marginTop: '1.4rem' }}>
+        <Code>%TIMESTAMP%</Code>はタップの瞬間（参加者が記録することを決定した瞬間）を捉え、サーバーの送信タイムスタンプではありません。分析時にはイベントのタイムスタンプとして使用してください。トークンの完全なリファレンスについては、{' '}
+        <a href='/docs/placeholders'>URLプレースホルダー</a>を参照してください。
+      </p>
+
+      {/* ── When to use ───────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>イベント連動型サンプリングを使用するタイミング</h2>
+      <dl>
+        <dt>純粋なイベント連動型</dt>
+        <dd>
+          参加者は、ターゲットイベント（対立、欲求、社会的相互作用）が発生するたびにイベントタイプをタップします。スケジュールされた通知は必要ありません。研究全体が自発的なレポートで構成されます。
+        </dd>
+        <dt>ハイブリッドプロトコル</dt>
+        <dd>
+          スケジュールされた通知（シグナル連動型）とイベントタイプ（イベント連動型）を組み合わせます。参加者はスケジュールされたリマインダーを受け取り<em>かつ</em>、いつでも自発的に開始できます。両方の種類のレポートが記録履歴に表示されます。
+        </dd>
+        <dt>複数のイベントカテゴリー</dt>
+        <dd>
+          最大5つのイベントタイプを使用して、体験のカテゴリーを区別します。各タイプは、異なる調査条件に向けたり、異なる識別子を渡したりして、回答がデータ内で自動的に分類されるようにできます。
+        </dd>
+      </dl>
+
+      {/* ── Tracking ──────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>自発的レポートの追跡</h2>
+      <p>
+        イベントタイプリンクのタップは、タップのタイムスタンプとともに履歴に記録されます。CSVエクスポートには、イベントタイムスタンプ列にタップ時刻が含まれており、スケジュールされた送信と自発的レポートを区別できます。
+      </p>
+      <p>
+        自発的レポートとトリガーイベントを関連付けるには、<Code>%TIMESTAMP%</Code>を調査ツールに渡し、埋め込みデータフィールドとして保存します。これにより、ネットワーク遅延や調査の読み込み時間とは無関係に、参加者がいつ記録することを決定したかの研究者独立の記録が得られます。
+      </p>
+
+      {/* ── Compared to geofencing ────────────────────────────────────────── */}
+      <h3>イベント連動型 vs ジオフェンシング</h3>
+      <p>
+        イベントタイプリンクは、参加者がターゲットイベントを認識し記録することに依存します。主観的かつ自発的なものです。{' '}
+        <a href='/docs/geofencing'>ジオフェンシング</a>は、参加者の操作なしに位置イベントを自動的に検出し、通知をトリガーします。ターゲットイベントが正確なGPSシグネチャを持つ場合はジオフェンシングを使用し、イベントが心理的、社会的、またはセンサーで検出できない性質のものである場合はイベント連動型デザインを使用してください。
+      </p>
+    </>
+  );
+}
+
+function EventContingentContentTr() {
+  return (
+    <>
+      <p>
+        Sinyal bağlı tasarımlarda Samply, katılımcılara ne zaman bildirim gönderileceğine karar verir. Olay bağlı tasarımlarda ise <em>katılımcı</em> karar verir. Katılımcılar, hayatlarında hedef olay gerçekleşir gerçekleşmez kendiliğinden bir rapor başlatır. Samply, Samply Research uygulamasında görünen adlandırılmış olay türleri aracılığıyla olay bağlı tasarımları destekler.
+      </p>
+
+      {/* ── Setting up ────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Olay bağlı protokol kurulumu</h2>
+      <p>
+        Çalışmanızın panelini açın, <strong>Ayarlar</strong> sekmesine gidin ve <strong>Olay bağlı protokol</strong> seçeneğini etkinleştirin. İki yapılandırma alanı görünecektir:
+      </p>
+      <dl>
+        <dt>Katılımcı talimatları</dt>
+        <dd>
+          Katıldıktan sonra Samply uygulamasında katılımcılara gösterilen metin bloğu. Hangi olayların kaydedilmesi gerektiğini ve bağlantıların nasıl kullanılacağını açıklayın. Örnek: «İş yerinde stresli bir olay yaşadığınızda aşağıdaki düğmeye dokunun.»
+        </dd>
+        <dt>Olay türleri (en fazla 5)</dt>
+        <dd>
+          Her olay türünün bir <strong>başlığı</strong> (katılımcının uygulamada gördüğü etiket) ve bir <strong>URL’si</strong> (katılımcı başlığa dokunduğunda açılan anket bağlantısı) vardır. 1 ila 5 farklı olay türü tanımlayabilirsiniz. Çalışmanız tek tür bir öz bildirim içeriyorsa, tek bir olay türü tanımlayın. Katılımcılar farklı deneyim kategorilerini (örneğin olumlu olaylar, olumsuz olaylar, nötr olaylar) bildirebiliyorsa, her kategori için bir tür tanımlayın ve her biri farklı bir anketi gösterecek veya farklı parametreler iletecek şekilde ayarlayın.
+        </dd>
+      </dl>
+      <p>
+        Kaydettikten sonra olay türleri Samply uygulamasında katılımcının çalışma ekranında görünür. Bir başlığa dokunmak ilgili URL’yi anında açar; bildirime gerek yoktur.
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Olay türü bağlantıları için URL yer tutucuları</h2>
+      <p>
+        Her olay türünün URL’si, planlanmış bildirimlerle aynı <Code>%TOKEN%</Code> yer tutucularını destekler. Samply, katılımcı bağlantıya dokunduğu anda bunları değiştirir:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Belirteç</th>
+            <th>Değiştirilen içerik</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>%SAMPLY_ID%</Code></td>
+            <td>Katılımcının anonim Samply kimliği.</td>
+          </tr>
+          <tr>
+            <td><Code>%PARTICIPANT_CODE%</Code></td>
+            <td>Kayıt sırasında girilen özel kod (kod yoksa değiştirilmeden kalır).</td>
+          </tr>
+          <tr>
+            <td><Code>%GROUP_ID%</Code></td>
+            <td>Katılımcının grup kimliği (grup yoksa değiştirilmeden kalır).</td>
+          </tr>
+          <tr>
+            <td><Code>%TIMESTAMP%</Code></td>
+            <td>Bağlantıya dokunulduğu anın Unix zaman damgası (milisaniye).</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Tipik bir olay türü URL’si şu biçimde olur:</p>
+      <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%' />
+      <p style={{ marginTop: '1.4rem' }}>
+        <Code>%TIMESTAMP%</Code> dokunma anını (katılımcının kaydetmeye karar verdiği anı) yakalar; sunucunun gönderim zaman damgası değildir. Analiz sırasında olay zaman damgası olarak kullanın. Belirteçlerin tam referansı için{' '}
+        <a href='/docs/placeholders'>URL yer tutucuları</a> bölümüne bakın.
+      </p>
+
+      {/* ── When to use ───────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Olay bağlı örneklemeyi ne zaman kullanmalı</h2>
+      <dl>
+        <dt>Saf olay bağlı</dt>
+        <dd>
+          Katılımcılar, hedef olay (çatışma, istek, sosyal etkileşim) her gerçekleştiğinde bir olay türüne dokunur. Planlanmış bildirimlere gerek yoktur; çalışmanın tamamı kendiliğinden raporlardan oluşur.
+        </dd>
+        <dt>Karma protokol</dt>
+        <dd>
+          Planlanmış bildirimleri (sinyal bağlı) ve olay türlerini (olay bağlı) birleştirin. Katılımcılar planlanmış hatırlatıcılar alır <em>ve</em> istedikleri zaman kendiliğinden raporlar başlatabilir. Her iki tür rapor da kayıt geçmişinde görünür.
+        </dd>
+        <dt>Birden fazla olay kategorisi</dt>
+        <dd>
+          Deneyim kategorilerini ayırt etmek için en fazla beş olay türü kullanın. Her tür farklı bir anket koşuluna yönlendirebilir veya farklı bir tanımlayıcı iletebilir; böylece yanıtlar verilerinizde otomatik olarak sınıflandırılır.
+        </dd>
+      </dl>
+
+      {/* ── Tracking ──────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Kendiliğinden gönderilen raporları izleme</h2>
+      <p>
+        Olay türü bağlantılarına yapılan dokunuşlar, dokunma zaman damgalarıyla birlikte geçmişe kaydedilir. CSV dışa aktarımı, olay zaman damgası sütununda dokunma zamanını içerir; bu sayede planlanmış gönderimleri kendiliğinden raporlardan ayırt edebilirsiniz.
+      </p>
+      <p>
+        Kendiliğinden raporları tetikleyici olayla ilişkilendirmek için <Code>%TIMESTAMP%</Code> değerini anket aracınıza iletin ve gömülü veri alanı olarak saklayın. Bu, ağ gecikmesinden veya anket yükleme sürelerinden bağımsız olarak, katılımcının kaydetmeye ne zaman karar verdiğine dair araştırmacıdan bağımsız bir kayıt sağlar.
+      </p>
+
+      {/* ── Compared to geofencing ────────────────────────────────────────── */}
+      <h3>Olay bağlı vs Geofencing</h3>
+      <p>
+        Olay türü bağlantıları, katılımcının hedef olayı fark etmesine ve kaydetmesine bağlıdır; öznel ve kendiliğindendir.{' '}
+        <a href='/docs/geofencing'>Geofencing</a> ise konum olaylarını katılımcı etkileşimi olmadan otomatik olarak algılar ve bildirimleri tetikler. Hedef olay net bir GPS imzasına sahipse Geofencing’i, olay psikolojik, sosyal veya sensörle algılanamayan nitelikte ise olay bağlı tasarımı kullanın.
+      </p>
+    </>
+  );
+}
+
+function EventContingentContentPl() {
+  return (
+    <>
+      <p>
+        W projektach sygnałowo-warunkowych to Samply decyduje, kiedy uczestnicy otrzymają powiadomienia. W projektach zdarzeniowo-warunkowych decyduje <em>uczestnik</em>. Uczestnicy spontanicznie inicjują raport, gdy tylko docelowe zdarzenie wystąpi w ich życiu. Samply obsługuje projekty zdarzeniowo-warunkowe poprzez nazwane typy zdarzeń wyświetlane w aplikacji Samply Research.
+      </p>
+
+      {/* ── Setting up ────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Konfiguracja protokołu zdarzeniowo-warunkowego</h2>
+      <p>
+        Otwórz panel swojego badania, przejdź do zakładki <strong>Ustawienia</strong> i włącz opcję <strong>Protokół zdarzeniowo-warunkowy</strong>. Pojawią się dwa pola konfiguracyjne:
+      </p>
+      <dl>
+        <dt>Instrukcje dla uczestników</dt>
+        <dd>
+          Blok tekstu wyświetlany uczestnikom w aplikacji Samply po dołączeniu. Wyjaśnij, jakie zdarzenia powinny być rejestrowane i jak korzystać z linków. Przykład: «Naciśnij poniższy przycisk, gdy doświadczysz stresującego zdarzenia w pracy.»
+        </dd>
+        <dt>Typy zdarzeń (maks. 5)</dt>
+        <dd>
+          Każdy typ zdarzenia ma <strong>tytuł</strong> (etykietę, którą uczestnik widzi w aplikacji) oraz <strong>URL</strong> (link do ankiety, który otwiera się po naciśnięciu tytułu przez uczestnika). Możesz zdefiniować od 1 do 5 różnych typów zdarzeń. Jeśli Twoje badanie obejmuje pojedynczy rodzaj raportu własnego, zdefiniuj jeden typ zdarzenia. Jeśli uczestnicy mogą raportować różne kategorie doświadczeń (np. zdarzenia pozytywne, zdarzenia negatywne, zdarzenia neutralne), zdefiniuj jeden typ dla każdej kategorii i skonfiguruj każdy tak, aby otwierał inną ankietę lub przekazywał inne parametry.
+        </dd>
+      </dl>
+      <p>
+        Po zapisaniu typy zdarzeń pojawią się na ekranie badania w aplikacji Samply uczestnika. Naciśnięcie tytułu natychmiast otwiera odpowiedni URL; powiadomienie nie jest potrzebne.
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Symbole zastępcze URL dla linków typów zdarzeń</h2>
+      <p>
+        URL każdego typu zdarzenia obsługuje te same symbole zastępcze <Code>%TOKEN%</Code> co zaplanowane powiadomienia. Samply zastępuje je w momencie, gdy uczestnik naciska link:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Zastępowana zawartość</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>%SAMPLY_ID%</Code></td>
+            <td>Anonimowy identyfikator Samply uczestnika.</td>
+          </tr>
+          <tr>
+            <td><Code>%PARTICIPANT_CODE%</Code></td>
+            <td>Niestandardowy kod wprowadzony podczas rejestracji (pozostaje niezastąpiony, jeśli kod nie istnieje).</td>
+          </tr>
+          <tr>
+            <td><Code>%GROUP_ID%</Code></td>
+            <td>Identyfikator grupy uczestnika (pozostaje niezastąpiony, jeśli grupa nie istnieje).</td>
+          </tr>
+          <tr>
+            <td><Code>%TIMESTAMP%</Code></td>
+            <td>Znacznik czasu Unix (w milisekundach) w momencie naciśnięcia linku.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>Typowy URL typu zdarzenia ma następującą postać:</p>
+      <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%' />
+      <p style={{ marginTop: '1.4rem' }}>
+        <Code>%TIMESTAMP%</Code> rejestruje moment naciśnięcia (moment, w którym uczestnik zdecydował się zarejestrować zdarzenie); nie jest to znacznik czasu wysłania przez serwer. Użyj go jako znacznika czasu zdarzenia podczas analizy. Pełną dokumentację tokenów znajdziesz w sekcji{' '}
+        <a href='/docs/placeholders'>Symbole zastępcze URL</a>.
+      </p>
+
+      {/* ── When to use ───────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Kiedy stosować próbkowanie zdarzeniowo-warunkowe</h2>
+      <dl>
+        <dt>Czysto zdarzeniowo-warunkowe</dt>
+        <dd>
+          Uczestnicy naciskają typ zdarzenia za każdym razem, gdy występuje docelowe zdarzenie (konflikt, pragnienie, interakcja społeczna). Zaplanowane powiadomienia nie są potrzebne; całe badanie składa się ze spontanicznych raportów.
+        </dd>
+        <dt>Protokół mieszany</dt>
+        <dd>
+          Łączą zaplanowane powiadomienia (sygnałowo-warunkowe) i typy zdarzeń (zdarzeniowo-warunkowe). Uczestnicy otrzymują zaplanowane przypomnienia <em>oraz</em> mogą w dowolnym momencie inicjować spontaniczne raporty. Oba rodzaje raportów pojawiają się w historii zapisów.
+        </dd>
+        <dt>Wiele kategorii zdarzeń</dt>
+        <dd>
+          Użyj maksymalnie pięciu typów zdarzeń, aby rozróżnić kategorie doświadczeń. Każdy typ może prowadzić do innej gałęzi ankiety lub przekazywać inny identyfikator, dzięki czemu odpowiedzi są automatycznie klasyfikowane w Twoich danych.
+        </dd>
+      </dl>
+
+      {/* ── Tracking ──────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>Śledzenie spontanicznych raportów</h2>
+      <p>
+        Naciśnięcia linków typów zdarzeń są zapisywane w historii wraz ze znacznikami czasu naciśnięcia. Eksport CSV zawiera czas naciśnięcia w kolumnie znacznika czasu zdarzenia, dzięki czemu można odróżnić zaplanowane wysyłki od spontanicznych raportów.
+      </p>
+      <p>
+        Aby powiązać spontaniczne raporty z wyzwalającym zdarzeniem, przekaż wartość <Code>%TIMESTAMP%</Code> do swojego narzędzia ankietowego i zapisz ją jako osadzone pole danych. Zapewnia to niezależny od badacza zapis tego, kiedy uczestnik zdecydował się zarejestrować zdarzenie, niezależnie od opóźnień sieciowych lub czasu ładowania ankiety.
+      </p>
+
+      {/* ── Compared to geofencing ────────────────────────────────────────── */}
+      <h3>Zdarzeniowo-warunkowe vs Geofencing</h3>
+      <p>
+        Linki typów zdarzeń opierają się na tym, że uczestnik zauważa i rejestruje docelowe zdarzenie; są subiektywne i spontaniczne.{' '}
+        <a href='/docs/geofencing'>Geofencing</a> automatycznie wykrywa zdarzenia lokalizacyjne i wyzwala powiadomienia bez interakcji uczestnika. Użyj Geofencing, jeśli docelowe zdarzenie ma wyraźny ślad GPS; użyj projektu zdarzeniowo-warunkowego, jeśli zdarzenie ma charakter psychologiczny, społeczny lub niewykrywalny przez czujniki.
+      </p>
+    </>
+  );
+}
+
+function EventContingentContentAr() {
+  return (
+    <>
+      <p>
+        في الدراسات المشروطة بالإشارة، تقرر Samply متى يتلقى المشاركون الإشعارات. أما في الدراسات المشروطة بالحدث، فيقرر <em>المشارك</em>. يبدأ المشاركون التقرير بشكل عفوي بمجرد وقوع الحدث المستهدف في حياتهم. تدعم Samply الدراسات المشروطة بالحدث من خلال أنواع أحداث مسماة تُعرض في تطبيق Samply Research.
+      </p>
+
+      {/* ── Setting up ────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>إعداد بروتوكول مشروط بالحدث</h2>
+      <p>
+        افتح لوحة التحكم الخاصة بدراستك، وانتقل إلى علامة التبويب <strong>الإعدادات</strong>، وقم بتفعيل خيار <strong>البروتوكول المشروط بالحدث</strong>. سيظهر حقلا تكوين:
+      </p>
+      <dl>
+        <dt>تعليمات للمشاركين</dt>
+        <dd>
+          كتلة نصية تُعرض للمشاركين في تطبيق Samply بعد انضمامهم. اشرح ما هي الأحداث التي يجب تسجيلها وكيفية استخدام الروابط. مثال: «اضغط على الزر أدناه عندما تواجه حدثًا مرهقًا في العمل.»
+        </dd>
+        <dt>أنواع الأحداث (5 كحد أقصى)</dt>
+        <dd>
+          يحتوي كل نوع حدث على <strong>عنوان</strong> (التسمية التي يراها المشارك في التطبيق) و<strong>URL</strong> (رابط الاستطلاع الذي يُفتح عندما يضغط المشارك على العنوان). يمكنك تعريف من 1 إلى 5 أنواع أحداث مختلفة. إذا كانت دراستك تشمل نوعًا واحدًا من التقارير الذاتية، فعرّف نوع حدث واحدًا. إذا كان المشاركون يمكنهم الإبلاغ عن فئات مختلفة من الخبرات (مثل الأحداث الإيجابية، الأحداث السلبية، الأحداث المحايدة)، فعرّف نوعًا لكل فئة وقم بتكوين كل نوع لفتح استطلاع مختلف أو لتمرير معاملات مختلفة.
+        </dd>
+      </dl>
+      <p>
+        بعد الحفظ، ستظهر أنواع الأحداث في شاشة الدراسة داخل تطبيق Samply الخاص بالمشارك. الضغط على العنوان يفتح URL المقابل على الفور؛ ليست هناك حاجة إلى إشعار.
+      </p>
+
+      {/* ── URL placeholders ──────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>العناصر النائبة لـ URL لروابط أنواع الأحداث</h2>
+      <p>
+        يدعم URL كل نوع حدث نفس العناصر النائبة <Code>%TOKEN%</Code> التي تدعمها الإشعارات المجدولة. تستبدلها Samply في اللحظة التي يضغط فيها المشارك على الرابط:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>الرمز</th>
+            <th>المحتوى المستبدل</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><Code>%SAMPLY_ID%</Code></td>
+            <td>مُعرّف Samply المجهول للمشارك.</td>
+          </tr>
+          <tr>
+            <td><Code>%PARTICIPANT_CODE%</Code></td>
+            <td>الرمز المخصص المُدخل أثناء التسجيل (يبقى دون استبدال إذا لم يكن هناك رمز).</td>
+          </tr>
+          <tr>
+            <td><Code>%GROUP_ID%</Code></td>
+            <td>مُعرّف مجموعة المشارك (يبقى دون استبدال إذا لم تكن هناك مجموعة).</td>
+          </tr>
+          <tr>
+            <td><Code>%TIMESTAMP%</Code></td>
+            <td>طابع زمني Unix (بالمللي ثانية) عند الضغط على الرابط.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>عادةً ما يكون URL نوع الحدث على الشكل التالي:</p>
+      <UrlBox url='https://survey.example.com/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&group=%GROUP_ID%&time=%TIMESTAMP%' />
+      <p style={{ marginTop: '1.4rem' }}>
+        يُسجّل <Code>%TIMESTAMP%</Code> لحظة الضغط (اللحظة التي قرر فيها المشارك تسجيل الحدث)؛ وليس الطابع الزمني للإرسال من جانب الخادم. استخدمه كطابع زمني للحدث أثناء التحليل. للحصول على التوثيق الكامل للرموز، راجع قسم{' '}
+        <a href='/docs/placeholders'>العناصر النائبة لـ URL</a>.
+      </p>
+
+      {/* ── When to use ───────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>متى يُستخدم أخذ العينات المشروط بالحدث</h2>
+      <dl>
+        <dt>مشروط بالحدث بحت</dt>
+        <dd>
+          يضغط المشاركون على نوع الحدث في كل مرة يقع فيها الحدث المستهدف (نزاع، رغبة، تفاعل اجتماعي). لا حاجة لإشعارات مجدولة؛ تتكون الدراسة بأكملها من تقارير عفوية.
+        </dd>
+        <dt>بروتوكول مختلط</dt>
+        <dd>
+          يجمع بين الإشعارات المجدولة (المشروطة بالإشارة) وأنواع الأحداث (المشروطة بالحدث). يتلقى المشاركون تذكيرات مجدولة <em>ويمكنهم</em> أيضًا بدء تقارير عفوية في أي وقت. يظهر كلا النوعين من التقارير في سجل التسجيلات.
+        </dd>
+        <dt>فئات أحداث متعددة</dt>
+        <dd>
+          استخدم ما يصل إلى خمسة أنواع أحداث للتمييز بين فئات الخبرات. يمكن أن يؤدي كل نوع إلى فرع استطلاع مختلف أو يمرر مُعرّفًا مختلفًا، بحيث تُصنَّف الإجابات تلقائيًا في بياناتك.
+        </dd>
+      </dl>
+
+      {/* ── Tracking ──────────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: '3.6rem' }}>تتبع التقارير العفوية</h2>
+      <p>
+        تُسجَّل ضغطات روابط أنواع الأحداث في السجل مع الطوابع الزمنية للضغط. يحتوي تصدير CSV على وقت الضغط في عمود الطابع الزمني للحدث، مما يتيح التمييز بين الإرسالات المجدولة والتقارير العفوية.
+      </p>
+      <p>
+        لربط التقارير العفوية بالحدث المُشغِّل، مرّر قيمة <Code>%TIMESTAMP%</Code> إلى أداة الاستطلاع الخاصة بك واحفظها كحقل بيانات مضمّن. يوفر ذلك سجلًا مستقلًا عن الباحث للحظة التي قرر فيها المشارك تسجيل الحدث، بصرف النظر عن تأخيرات الشبكة أو أوقات تحميل الاستطلاع.
+      </p>
+
+      {/* ── Compared to geofencing ────────────────────────────────────────── */}
+      <h3>المشروط بالحدث مقابل Geofencing</h3>
+      <p>
+        تعتمد روابط أنواع الأحداث على ملاحظة المشارك للحدث المستهدف وتسجيله؛ فهي ذاتية وعفوية.{' '}
+        <a href='/docs/geofencing'>Geofencing</a> يكتشف تلقائيًا أحداث الموقع ويُشغّل الإشعارات دون تدخل المشارك. استخدم Geofencing إذا كان للحدث المستهدف بصمة GPS واضحة؛ واستخدم الدراسة المشروطة بالحدث إذا كان الحدث ذا طبيعة نفسية أو اجتماعية أو غير قابل للاكتشاف بواسطة المستشعرات.
       </p>
     </>
   );

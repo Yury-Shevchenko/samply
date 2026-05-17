@@ -50,9 +50,6 @@ const config: NextAuthConfig = {
         if (!user || !user.local?.password) return null;
         if (!user.validPassword(credentials.password as string)) return null;
 
-        // Only researchers and admins can log in via the dashboard.
-        if (user.level < 11) return null;
-
         return {
           id: user._id.toString(),
           email: user.email,
@@ -105,30 +102,59 @@ const config: NextAuthConfig = {
     authorized({ auth, request }) {
       const { pathname } = request.nextUrl;
       const isLoggedIn = !!auth?.user;
+      const level = auth?.user?.level ?? 0;
+      const isParticipant = isLoggedIn && level < 11;
+      const isResearcher = isLoggedIn && level >= 11;
+      const isAdmin = level > 100;
 
-      // Protected researcher routes — redirect to /login if not authenticated.
-      const protectedPrefixes = [
+      // Researcher/admin-only routes.
+      const researcherPrefixes = [
+        "/dashboard",
         "/projects",
         "/notifications",
         "/scheduled",
         "/participants",
         "/groups",
         "/invitations",
-        "/account",
         "/messages",
-        "/history",
         "/receipts",
         "/payout",
         "/help",
-        "/admin",
       ];
-      const isProtected = protectedPrefixes.some((p) => pathname.startsWith(p));
-      if (isProtected && !isLoggedIn) return false;
+      const isResearcherRoute = researcherPrefixes.some((p) => pathname.startsWith(p));
+      if (isResearcherRoute) {
+        if (!isLoggedIn) return false;
+        if (isParticipant) {
+          return Response.redirect(new URL("/participant/home", request.nextUrl));
+        }
+      }
 
-      // Admin-only routes — redirect to /login if not admin.
-      const adminPrefixes = ["/admin"];
-      const isAdmin = auth?.user?.level != null && auth.user.level > 100;
-      if (adminPrefixes.some((p) => pathname.startsWith(p)) && !isAdmin) return false;
+      // Participant-only routes.
+      if (pathname.startsWith("/participant")) {
+        // Allow the unauthenticated login/forgot pages.
+        const publicParticipantPaths = ["/participant/login", "/participant/forgot"];
+        if (publicParticipantPaths.some((p) => pathname.startsWith(p))) {
+          if (isParticipant) {
+            return Response.redirect(new URL("/participant/home", request.nextUrl));
+          }
+          if (isResearcher) {
+            return Response.redirect(new URL("/dashboard", request.nextUrl));
+          }
+          return true;
+        }
+        if (!isLoggedIn) {
+          return Response.redirect(new URL("/participant/login", request.nextUrl));
+        }
+        if (isResearcher) {
+          return Response.redirect(new URL("/dashboard", request.nextUrl));
+        }
+      }
+
+      // /account is shared but requires login.
+      if (pathname.startsWith("/account") && !isLoggedIn) return false;
+
+      // Admin-only routes.
+      if (pathname.startsWith("/admin") && !isAdmin) return false;
 
       return true;
     },

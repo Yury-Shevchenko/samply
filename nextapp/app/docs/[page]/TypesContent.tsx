@@ -469,6 +469,10 @@ export default function TypesContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <TypesContentFr />;
   if (locale === "es") return <TypesContentEs />;
   if (locale === "pt") return <TypesContentPt />;
+  if (locale === "ja") return <TypesContentJa />;
+  if (locale === "ar") return <TypesContentAr />;
+  if (locale === "pl") return <TypesContentPl />;
+  if (locale === "tr") return <TypesContentTr />;
   return <TypesContentEn />;
 }
 
@@ -1934,6 +1938,778 @@ function TypesContentPt() {
         <a href="/docs/form">Criar um calendário</a> percorre o formulário completo seção por seção.
         Para calendários Pessoais em particular, <a href="/docs/personal">Calendário pessoal</a> cobre
         em detalhes a lógica dos deslocamentos em dias.
+      </p>
+    </>
+  );
+}
+
+const TYPES_JA = [
+  {
+    n: "01",
+    name: "ワンタイム",
+    tag: "固定カレンダー",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "カレンダーで選択した1つまたは複数の特定の日時に送信します。すべての参加者が同じ実時間に通知を受け取ります。",
+    anchor: "one-time",
+    use: [
+      "既知の日付における研究開始またはデブリーフィングメッセージ。",
+      "すべての参加者が同時にオンラインになるラボ管理セッション。",
+      "固定締切のある単一ウェーブの調査。",
+    ],
+    avoid: [
+      "参加者が異なる日に参加するローリング登録 — 全員が参加日に関係なく同じ瞬間に受信します。",
+      "数週間または数か月続く研究 — 代わりに周期的を使用してください。",
+    ],
+    timing: "ステップ2 → 特定の時点 + ステップ3 → 特定の日付。",
+  },
+  {
+    n: "02",
+    name: "周期的",
+    tag: "繰り返しパターン",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "開始日と終了日の間で繰り返しパターンに従って発火します — 毎日、N日ごと、特定の曜日、または月の特定日。すべての参加者が各発火日の同じ時刻に受信します。",
+    anchor: "repeating",
+    use: [
+      "すべての参加者が同じ時刻に回答する日記式研究。",
+      "固定の曜日に行う毎週のチェックイン。",
+      "特定のカレンダー日付におけるバースト・プロトコル。",
+    ],
+    avoid: [
+      "各参加者が独自の初日アンカーを必要とするローリング登録の研究 — 代わりに個人を使用してください。",
+      "毎日異なる通知時刻が必要な研究 — 代わりにランダムを使用してください。",
+    ],
+    timing: "ステップ2 → 繰り返し + ステップ3/4/5/6 → 繰り返しパターンおよび開始/終了日。",
+  },
+  {
+    n: "03",
+    name: "ランダム",
+    tag: "ウィンドウ内のランダム",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "1つまたは複数の時間ウィンドウ（例：09:00–12:00および14:00–18:00）を定義し、各参加者ごとに各ウィンドウ内のランダムな瞬間を選びます。各参加者は異なる時間を受け取り、ウィンドウの境界は共有されます。",
+    anchor: "randomized",
+    use: [
+      "制約されたウィンドウ内で1日に複数のランダムな通知を希望するESM研究。",
+      "生態学的妥当性が必要な設計 — 参加者が予測可能な固定時刻の通知を避けるため。",
+      "1日にN個のサンプルを最小間隔で抽出する必要があるバーストサンプリング。",
+    ],
+    avoid: [
+      "すべての参加者が同時に通知を受け取る必要がある場合 — ワンタイムまたは周期的を使用してください。",
+    ],
+    timing: "ステップ2 → 時間ウィンドウ。ウィンドウの開始/終了、抽出するランダムポイント数、通知間の最小間隔を設定します。",
+  },
+  {
+    n: "04",
+    name: "個人",
+    tag: "登録基準",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "各参加者の登録日にアンカーします。初日はカレンダーに関係なく、その人が参加した日です。1週間離れて参加した2人の参加者は、それぞれ自分の初日を開始します。",
+    anchor: "personal",
+    use: [
+      "ローリング登録と参加者ごとの固定研究期間を持つ縦断研究（例：14日間プロトコル）。",
+      "初日 = 治療日となる介入研究。",
+      "カレンダー日付よりも参加からの経過日数が重要なすべての設計。",
+    ],
+    avoid: [
+      "すべての参加者が同じカレンダー日付で同期する必要がある研究 — 周期的またはワンタイムを使用してください。",
+    ],
+    timing: "ステップ5 → 登録基準の開始（参加後N日目）。ステップ6 → 登録基準の終了。",
+    more: "/docs/personal",
+  },
+];
+
+const COMPARISON_JA: {
+  q: string;
+  onetime: boolean;
+  repeating: boolean;
+  randomized: boolean;
+  personal: boolean;
+}[] = [
+  { q: "すべての参加者が同じ実時間に通知を受け取る？", onetime: true,  repeating: true,  randomized: false, personal: false },
+  { q: "各参加者の参加日基準のタイミング？",            onetime: false, repeating: false, randomized: false, personal: true  },
+  { q: "1日に複数回送信できる？",                       onetime: true,  repeating: true,  randomized: true,  personal: true  },
+  { q: "ローリング登録で機能する？",                    onetime: false, repeating: false, randomized: false, personal: true  },
+];
+
+function TypesContentJa() {
+  const TYPES = TYPES_JA;
+  const COMPARISON = COMPARISON_JA;
+  return (
+    <>
+      <p>
+        タイプは通知が<em>いつ</em>発火するか、そしてそのタイミングがカレンダーまたは各参加者と
+        <em>どのように</em>関連するかを決定します。他の何かに触れる前に、これを正しく設定してください。
+      </p>
+
+      {/* ── Type cards ────────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "2.4rem", margin: "2.4rem 0 4rem" }}>
+        {TYPES.map((t) => (
+          <div
+            key={t.n}
+            id={t.anchor}
+            style={{ background: "var(--surface)", border: `1px solid ${t.color}`, borderLeft: `4px solid ${t.color}`, borderRadius: "1rem", padding: "2rem 2.4rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.6rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, fontWeight: 600, letterSpacing: "0.08em" }}>{t.n}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 700, color: "var(--ink)" }}>{t.name}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, background: t.colorSoft, padding: "2px 8px", borderRadius: "0.4rem", letterSpacing: "0.06em" }}>{t.tag}</span>
+            </div>
+
+            <p style={{ margin: "0 0 1.4rem", fontSize: "1.4rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{t.summary}</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem", marginBottom: "1.4rem" }}>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>使用する場合</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.use.map((u, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{u}</li>)}
+                </ul>
+              </div>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>避ける場合</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.avoid.map((a, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{a}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.5rem", padding: "0.7rem 1rem" }}>
+              <span style={{ color: "var(--ink-40)", marginRight: "0.6rem" }}>フォーム：</span>{t.timing}
+              {t.more && <>{" "}<a href={t.more} style={{ color: "var(--coral)", marginLeft: "0.6rem" }}>完全ガイド →</a></>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Comparison table ──────────────────────────────────────────────── */}
+      <h2>並列比較</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th style={{ width: "40%" }}>プロパティ</th>
+            <th style={{ textAlign: "center" }}>ワンタイム</th>
+            <th style={{ textAlign: "center" }}>周期的</th>
+            <th style={{ textAlign: "center" }}>ランダム</th>
+            <th style={{ textAlign: "center" }}>個人</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COMPARISON.map((row) => (
+            <tr key={row.q}>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-60)" }}>{row.q}</td>
+              <td style={{ textAlign: "center" }}><Tick v={row.onetime} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.repeating} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.randomized} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.personal} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Combining types ───────────────────────────────────────────────── */}
+      <h2>タイプの組み合わせ</h2>
+      <p>
+        1つの研究は、異なるタイプの複数のスケジュールを持つことができます。一般的なデザインは、固定の毎日調査用の{" "}
+        <strong>周期的</strong>スケジュールと、生態学的瞬時通知用の<strong>ランダム</strong>{" "}
+        スケジュールを組み合わせます — すべて同じ研究で、同じ参加者を対象とします。
+      </p>
+      <p>
+        個人スケジュールも各日内でランダムな送信時刻を使用できます。その場合、開始日と終了日が
+        各参加者の参加日にアンカーされていることが定義要素であるため、スケジュールは引き続き
+        <strong>個人</strong>として分類されます。ランダムなタイミングは、そのアンカー内の
+        副次的なプロパティです。
+      </p>
+
+      {/* ── What's next ───────────────────────────────────────────────────── */}
+      <h3>次に読むもの</h3>
+      <p>
+        研究にどのタイプが適しているかわかったら：{" "}
+        <a href="/docs/form">スケジュールの作成</a>はフォーム全体をセクションごとに案内します。
+        個人スケジュールについては、<a href="/docs/personal">個人スケジューリング</a>が
+        日のオフセット論理を詳しく解説します。
+      </p>
+    </>
+  );
+}
+
+const TYPES_TR = [
+  {
+    n: "01",
+    name: "Tek seferlik",
+    tag: "sabit takvim",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "Takvimde seçtiğiniz bir veya daha fazla belirli tarih ve saatte gönderilir. Tüm katılımcılar bildirimi aynı duvar saati zamanında alır.",
+    anchor: "one-time",
+    use: [
+      "Bilinen bir tarihteki çalışma başlangıcı veya bilgilendirme mesajları.",
+      "Tüm katılımcıların aynı anda çevrimiçi olduğu laboratuvar ortamı oturumları.",
+      "Sabit son tarihli tek dalga anketler.",
+    ],
+    avoid: [
+      "Katılımcıların farklı günlerde katıldığı yuvarlanan kayıt — herkes katılım gününden bağımsız olarak aynı anda alır.",
+      "Haftalar veya aylar süren çalışmalar — bunun yerine periyodik kullanın.",
+    ],
+    timing: "Adım 2 → belirli zaman noktası + Adım 3 → belirli tarihler.",
+  },
+  {
+    n: "02",
+    name: "Periyodik",
+    tag: "tekrarlanan örüntü",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "Bir başlangıç ve bitiş tarihi arasında tekrarlanan bir örüntü takip eder — her gün, her N günde bir, belirli haftanın günleri veya ayın belirli günlerinde. Tüm katılımcılar her tetikleme gününde aynı saatte alır.",
+    anchor: "repeating",
+    use: [
+      "Tüm katılımcıların aynı saatte yanıt verdiği günlük çalışmalar.",
+      "Sabit haftanın günlerinde haftalık kontroller.",
+      "Belirli takvim tarihlerinde patlama protokolleri.",
+    ],
+    avoid: [
+      "Her katılımcının kendi 1. gün başlangıcına ihtiyaç duyduğu yuvarlanan kayıt çalışmaları — bunun yerine kişisel kullanın.",
+      "Günden güne farklı bildirim saatleri gerektiren çalışmalar — bunun yerine rastgele kullanın.",
+    ],
+    timing: "Adım 2 → tekrarlanan + Adım 3/4/5/6 → tekrarlama örüntüsü ve başlangıç/bitiş tarihleri.",
+  },
+  {
+    n: "03",
+    name: "Rastgele",
+    tag: "bir pencere içinde rastgele",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "Bir veya daha fazla zaman penceresi tanımlarsınız (örn. 09:00–12:00 ve 14:00–18:00) ve Samply, her katılımcı için her pencere içinde rastgele bir an seçer. Her katılımcı farklı bir saat alır; yalnızca pencere sınırları paylaşılır.",
+    anchor: "randomized",
+    use: [
+      "Kısıtlı bir pencere içinde günde birden fazla rastgele bildirim isteyen ESM çalışmaları.",
+      "Ekolojik geçerliliğin gerekli olduğu tasarımlar — katılımcıların öngörülebilir, sabit saatli bildirimlerden kaçınmaları için.",
+      "Bir gün içinde minimum aralıkla N örnek alınması gereken patlama örneklemesi.",
+    ],
+    avoid: [
+      "Tüm katılımcıların aynı anda bildirim alması gerektiğinde — tek seferlik veya periyodik kullanın.",
+    ],
+    timing: "Adım 2 → zaman penceresi. Pencere başlangıcı/bitişi, çekilecek rastgele nokta sayısı ve bildirimler arasındaki minimum aralık ayarlanır.",
+  },
+  {
+    n: "04",
+    name: "Kişisel",
+    tag: "kayıt göreceli",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "Her katılımcının kayıt tarihine sabitlenir. 1. Gün, takvimden bağımsız olarak o kişinin katıldığı gündür. Bir hafta arayla katılan iki katılımcı kendi 1. Günlerini ayrı ayrı başlatır.",
+    anchor: "personal",
+    use: [
+      "Yuvarlanan kayıt ve katılımcı başına sabit çalışma süresine sahip uzunlamasına çalışmalar (örn. 14 günlük protokol).",
+      "1. Gün = tedavi günü olan müdahale çalışmaları.",
+      "Takvim tarihinin değil, katılımdan beri geçen günlerin önemli olduğu herhangi bir tasarım.",
+    ],
+    avoid: [
+      "Tüm katılımcıların aynı takvim tarihinde senkronize olması gereken çalışmalar — periyodik veya tek seferlik kullanın.",
+    ],
+    timing: "Adım 5 → kayda göreceli başlangıç (katılımdan sonraki N. gün). Adım 6 → kayda göreceli bitiş.",
+    more: "/docs/personal",
+  },
+];
+
+const COMPARISON_TR: {
+  q: string;
+  onetime: boolean;
+  repeating: boolean;
+  randomized: boolean;
+  personal: boolean;
+}[] = [
+  { q: "Tüm katılımcılar aynı duvar saati zamanında bildirim alır mı?", onetime: true,  repeating: true,  randomized: false, personal: false },
+  { q: "Zamanlama her katılımcının katılım tarihine göredir mi?",       onetime: false, repeating: false, randomized: false, personal: true  },
+  { q: "Günde birden fazla gönderim olabilir mi?",                       onetime: true,  repeating: true,  randomized: true,  personal: true  },
+  { q: "Yuvarlanan kayıtla çalışır mı?",                                  onetime: false, repeating: false, randomized: false, personal: true  },
+];
+
+function TypesContentTr() {
+  const TYPES = TYPES_TR;
+  const COMPARISON = COMPARISON_TR;
+  return (
+    <>
+      <p>
+        Tür, bildirimlerin <em>ne zaman</em> tetikleneceğini ve bu zamanlamanın takvim veya
+        her katılımcıyla <em>nasıl</em> ilişkili olduğunu belirler. Başka bir şeye dokunmadan
+        önce bunu doğru yapın.
+      </p>
+
+      {/* ── Type cards ────────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "2.4rem", margin: "2.4rem 0 4rem" }}>
+        {TYPES.map((t) => (
+          <div
+            key={t.n}
+            id={t.anchor}
+            style={{ background: "var(--surface)", border: `1px solid ${t.color}`, borderLeft: `4px solid ${t.color}`, borderRadius: "1rem", padding: "2rem 2.4rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.6rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, fontWeight: 600, letterSpacing: "0.08em" }}>{t.n}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 700, color: "var(--ink)" }}>{t.name}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, background: t.colorSoft, padding: "2px 8px", borderRadius: "0.4rem", letterSpacing: "0.06em" }}>{t.tag}</span>
+            </div>
+
+            <p style={{ margin: "0 0 1.4rem", fontSize: "1.4rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{t.summary}</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem", marginBottom: "1.4rem" }}>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>Şu durumlarda kullanın</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.use.map((u, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{u}</li>)}
+                </ul>
+              </div>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>Şu durumlarda kaçının</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.avoid.map((a, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{a}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.5rem", padding: "0.7rem 1rem" }}>
+              <span style={{ color: "var(--ink-40)", marginRight: "0.6rem" }}>Form:</span>{t.timing}
+              {t.more && <>{" "}<a href={t.more} style={{ color: "var(--coral)", marginLeft: "0.6rem" }}>tam kılavuz →</a></>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Comparison table ──────────────────────────────────────────────── */}
+      <h2>Yan yana karşılaştırma</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th style={{ width: "40%" }}>Özellik</th>
+            <th style={{ textAlign: "center" }}>Tek seferlik</th>
+            <th style={{ textAlign: "center" }}>Periyodik</th>
+            <th style={{ textAlign: "center" }}>Rastgele</th>
+            <th style={{ textAlign: "center" }}>Kişisel</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COMPARISON.map((row) => (
+            <tr key={row.q}>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-60)" }}>{row.q}</td>
+              <td style={{ textAlign: "center" }}><Tick v={row.onetime} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.repeating} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.randomized} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.personal} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Combining types ───────────────────────────────────────────────── */}
+      <h2>Türleri birleştirme</h2>
+      <p>
+        Bir çalışmanın farklı türlerde birden fazla programı olabilir. Yaygın bir tasarım,
+        sabit günlük bir anket için bir <strong>periyodik</strong> program ile ekolojik
+        anlık bildirimler için bir <strong>rastgele</strong> programı birleştirir — hepsi
+        aynı çalışmada, aynı katılımcıları hedefler.
+      </p>
+      <p>
+        Kişisel bir program ayrıca her gün içinde rastgele gönderim zamanları da kullanabilir.
+        Bu durumda, başlangıç ve bitiş tarihinin her katılımcının katılım tarihine sabitlenmesi
+        tanımlayıcı özellik olduğu için program yine <strong>kişisel</strong> olarak
+        sınıflandırılır. Rastgele zamanlama, o sabitlemenin içinde ikincil bir özelliktir.
+      </p>
+
+      {/* ── What's next ───────────────────────────────────────────────────── */}
+      <h3>Sırada ne okumalı</h3>
+      <p>
+        Çalışmanız için hangi tür(ler)in uygun olduğunu bildiğinizde:{" "}
+        <a href="/docs/form">Program oluşturma</a> sizi tüm formda bölüm bölüm yönlendirir.
+        Kişisel programlar için, <a href="/docs/personal">Kişisel programlama</a> günlük ofset
+        mantığını ayrıntılı olarak ele alır.
+      </p>
+    </>
+  );
+}
+
+const TYPES_PL = [
+  {
+    n: "01",
+    name: "Jednorazowy",
+    tag: "stały kalendarz",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "Wysyłany w jednej lub kilku wybranych przez Ciebie konkretnych datach i godzinach kalendarzowych. Wszyscy uczestnicy otrzymują powiadomienie o tej samej godzinie zegarowej.",
+    anchor: "one-time",
+    use: [
+      "Komunikaty otwierające badanie lub informacyjne w znanej dacie.",
+      "Sesje laboratoryjne, w których wszyscy uczestnicy są jednocześnie online.",
+      "Jednofazowe ankiety ze stałym terminem.",
+    ],
+    avoid: [
+      "Rejestracja kroczącą — uczestnicy dołączający w różne dni — wszyscy otrzymają o tym samym czasie niezależnie od dnia dołączenia.",
+      "Badania trwające tygodnie lub miesiące — zamiast tego użyj okresowego.",
+    ],
+    timing: "Krok 2 → konkretny moment + Krok 3 → konkretne daty.",
+  },
+  {
+    n: "02",
+    name: "Okresowy",
+    tag: "powtarzający się wzorzec",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "Podąża za powtarzającym się wzorcem między datą rozpoczęcia a zakończenia — codziennie, co N dni, w wybrane dni tygodnia lub konkretne dni miesiąca. Wszyscy uczestnicy otrzymują o tej samej godzinie w każdym dniu wyzwolenia.",
+    anchor: "repeating",
+    use: [
+      "Codzienne badania, w których wszyscy uczestnicy odpowiadają o tej samej godzinie.",
+      "Cotygodniowe sprawdzenia w stałe dni tygodnia.",
+      "Protokoły wybuchowe w konkretnych datach kalendarzowych.",
+    ],
+    avoid: [
+      "Badania z rejestracją kroczącą, w których każdy uczestnik potrzebuje własnego startu w Dniu 1 — zamiast tego użyj osobistego.",
+      "Badania wymagające różnych godzin powiadomień z dnia na dzień — zamiast tego użyj losowego.",
+    ],
+    timing: "Krok 2 → powtarzający się + Krok 3/4/5/6 → wzorzec powtarzania oraz daty rozpoczęcia/zakończenia.",
+  },
+  {
+    n: "03",
+    name: "Losowy",
+    tag: "losowo w obrębie okna",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "Definiujesz jedno lub więcej okien czasowych (np. 09:00–12:00 i 14:00–18:00), a Samply wybiera losowy moment w obrębie każdego okna dla każdego uczestnika. Każdy uczestnik otrzymuje o innej godzinie; wspólne są tylko granice okna.",
+    anchor: "randomized",
+    use: [
+      "Badania ESM, które chcą wielu losowych powiadomień dziennie w obrębie ograniczonego okna.",
+      "Projekty, w których konieczna jest trafność ekologiczna — aby uczestnicy unikali przewidywalnych, stałych godzin powiadomień.",
+      "Próbkowanie wybuchowe, w którym N próbek musi zostać pobrane w ciągu jednego dnia z minimalnym odstępem.",
+    ],
+    avoid: [
+      "Gdy wszyscy uczestnicy muszą otrzymać powiadomienie jednocześnie — użyj jednorazowego lub okresowego.",
+    ],
+    timing: "Krok 2 → okno czasowe. Ustawiany jest początek/koniec okna, liczba losowych punktów do wylosowania oraz minimalny odstęp między powiadomieniami.",
+  },
+  {
+    n: "04",
+    name: "Osobisty",
+    tag: "względem rejestracji",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "Zakotwiczony w dacie rejestracji każdego uczestnika. Dzień 1 to dzień, w którym ta osoba dołączyła, niezależnie od kalendarza. Dwóch uczestników dołączających w odstępie tygodnia rozpoczyna swój Dzień 1 oddzielnie.",
+    anchor: "personal",
+    use: [
+      "Badania podłużne z rejestracją kroczącą i stałym czasem trwania badania na uczestnika (np. protokół 14-dniowy).",
+      "Badania interwencyjne, w których Dzień 1 = dzień terapii.",
+      "Każdy projekt, w którym liczy się liczba dni od dołączenia, a nie data kalendarzowa.",
+    ],
+    avoid: [
+      "Badania, w których wszyscy uczestnicy muszą być zsynchronizowani w tej samej dacie kalendarzowej — użyj okresowego lub jednorazowego.",
+    ],
+    timing: "Krok 5 → początek względem rejestracji (N-ty dzień po dołączeniu). Krok 6 → zakończenie względem rejestracji.",
+    more: "/docs/personal",
+  },
+];
+
+const COMPARISON_PL: {
+  q: string;
+  onetime: boolean;
+  repeating: boolean;
+  randomized: boolean;
+  personal: boolean;
+}[] = [
+  { q: "Czy wszyscy uczestnicy otrzymują powiadomienie o tej samej godzinie zegarowej?", onetime: true,  repeating: true,  randomized: false, personal: false },
+  { q: "Czy harmonogram jest względny do daty dołączenia każdego uczestnika?",            onetime: false, repeating: false, randomized: false, personal: true  },
+  { q: "Czy może wystąpić wiele wysyłek dziennie?",                                       onetime: true,  repeating: true,  randomized: true,  personal: true  },
+  { q: "Czy działa z rejestracją kroczącą?",                                              onetime: false, repeating: false, randomized: false, personal: true  },
+];
+
+function TypesContentPl() {
+  const TYPES = TYPES_PL;
+  const COMPARISON = COMPARISON_PL;
+  return (
+    <>
+      <p>
+        Typ określa, <em>kiedy</em> powiadomienie zostanie wyzwolone i <em>jak</em> to wyzwolenie
+        odnosi się do kalendarza i do każdego uczestnika. Ustaw to poprawnie, zanim dotkniesz
+        czegokolwiek innego.
+      </p>
+
+      {/* ── Type cards ────────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "2.4rem", margin: "2.4rem 0 4rem" }}>
+        {TYPES.map((t) => (
+          <div
+            key={t.n}
+            id={t.anchor}
+            style={{ background: "var(--surface)", border: `1px solid ${t.color}`, borderLeft: `4px solid ${t.color}`, borderRadius: "1rem", padding: "2rem 2.4rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.6rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, fontWeight: 600, letterSpacing: "0.08em" }}>{t.n}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 700, color: "var(--ink)" }}>{t.name}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, background: t.colorSoft, padding: "2px 8px", borderRadius: "0.4rem", letterSpacing: "0.06em" }}>{t.tag}</span>
+            </div>
+
+            <p style={{ margin: "0 0 1.4rem", fontSize: "1.4rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{t.summary}</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem", marginBottom: "1.4rem" }}>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>Użyj, gdy</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.use.map((u, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{u}</li>)}
+                </ul>
+              </div>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>Unikaj, gdy</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.avoid.map((a, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{a}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.5rem", padding: "0.7rem 1rem" }}>
+              <span style={{ color: "var(--ink-40)", marginRight: "0.6rem" }}>Formularz:</span>{t.timing}
+              {t.more && <>{" "}<a href={t.more} style={{ color: "var(--coral)", marginLeft: "0.6rem" }}>pełny przewodnik →</a></>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Comparison table ──────────────────────────────────────────────── */}
+      <h2>Porównanie obok siebie</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th style={{ width: "40%" }}>Funkcja</th>
+            <th style={{ textAlign: "center" }}>Jednorazowy</th>
+            <th style={{ textAlign: "center" }}>Okresowy</th>
+            <th style={{ textAlign: "center" }}>Losowy</th>
+            <th style={{ textAlign: "center" }}>Osobisty</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COMPARISON.map((row) => (
+            <tr key={row.q}>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-60)" }}>{row.q}</td>
+              <td style={{ textAlign: "center" }}><Tick v={row.onetime} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.repeating} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.randomized} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.personal} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Combining types ───────────────────────────────────────────────── */}
+      <h2>Łączenie typów</h2>
+      <p>
+        Badanie może mieć wiele harmonogramów różnych typów. Częstym projektem jest połączenie{' '}
+        <strong>okresowego</strong> harmonogramu dla stałej codziennej ankiety z{' '}
+        <strong>losowym</strong> harmonogramem dla ekologicznych powiadomień typu momentum —
+        wszystko w tym samym badaniu, kierowane do tych samych uczestników.
+      </p>
+      <p>
+        Osobisty harmonogram może również używać losowych czasów wysyłki w obrębie każdego dnia.
+        W takim przypadku harmonogram jest nadal klasyfikowany jako <strong>osobisty</strong>,
+        ponieważ zakotwiczenie daty rozpoczęcia i zakończenia do daty dołączenia każdego
+        uczestnika jest cechą definiującą. Losowy harmonogram jest cechą drugorzędną w obrębie tego zakotwiczenia.
+      </p>
+
+      {/* ── What's next ───────────────────────────────────────────────────── */}
+      <h3>Co czytać dalej</h3>
+      <p>
+        Gdy wiesz, który typ (typy) jest odpowiedni dla Twojego badania:{" "}
+        <a href="/docs/form">Tworzenie harmonogramu</a> przeprowadzi Cię przez cały formularz
+        sekcja po sekcji. W przypadku harmonogramów osobistych{' '}
+        <a href="/docs/personal">Harmonogram osobisty</a> omawia szczegółowo logikę przesunięcia dni.
+      </p>
+    </>
+  );
+}
+
+const TYPES_AR = [
+  {
+    n: "01",
+    name: "لمرة واحدة",
+    tag: "تقويم ثابت",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "يُرسَل في تاريخ ووقت محددين أو أكثر تختارها على التقويم. يستلم جميع المشاركين الإشعار في اللحظة الزمنية ذاتها وفق ساعة الحائط.",
+    anchor: "one-time",
+    use: [
+      "رسائل افتتاح الدراسة أو الختام في تاريخ معروف.",
+      "جلسات معملية يكون فيها جميع المشاركين متصلين في الوقت ذاته.",
+      "استطلاعات بموجة واحدة بموعد نهائي ثابت.",
+    ],
+    avoid: [
+      "التسجيل المتدرج حيث ينضم المشاركون في أيام مختلفة — يستلم الجميع الإشعار في اللحظة نفسها بصرف النظر عن وقت انضمامهم.",
+      "الدراسات التي تستمر أسابيع أو أشهر — استخدم الدوري بدلاً من ذلك.",
+    ],
+    timing: "الخطوة 2 ← نقطة (نقاط) زمنية محددة + الخطوة 3 ← التاريخ (التواريخ) المحددة.",
+  },
+  {
+    n: "02",
+    name: "دوري",
+    tag: "نمط متكرر",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "يُطلَق وفق نمط متكرر بين تاريخ بداية ونهاية — كل يوم، أو كل يوم رقم N، أو أيام أسبوع محددة، أو أيام محددة من الشهر. يستلم جميع المشاركين الإشعار في الوقت ذاته من الساعة في كل يوم إطلاق.",
+    anchor: "repeating",
+    use: [
+      "دراسات اليوميات اليومية التي يجيب فيها جميع المشاركين في الوقت نفسه من الساعة.",
+      "تفقدات أسبوعية في يوم أسبوع ثابت.",
+      "بروتوكولات الفورة في تواريخ تقويمية محددة.",
+    ],
+    avoid: [
+      "الدراسات ذات التسجيل المتدرج التي يحتاج فيها كل مشارك إلى مرساه الخاصة لليوم 1 — استخدم الشخصي بدلاً من ذلك.",
+      "الدراسات التي تحتاج إلى أوقات إشعار مختلفة كل يوم — استخدم العشوائي بدلاً من ذلك.",
+    ],
+    timing: "الخطوة 2 ← التكرار + الخطوة 3/4/5/6 ← نمط التكرار وتواريخ البداية/النهاية.",
+  },
+  {
+    n: "03",
+    name: "عشوائي",
+    tag: "عشوائي ضمن نوافذ",
+    color: "var(--sage)",
+    colorSoft: "var(--sage-soft)",
+    summary: "يُعرِّف نافذة زمنية واحدة أو أكثر (مثل 09:00–12:00 و14:00–18:00) ويختار لحظة عشوائية داخل كل نافذة لكل مشارك. يستلم كل مشارك وقتاً مختلفاً؛ تكون حدود النافذة مشتركة.",
+    anchor: "randomized",
+    use: [
+      "دراسات ESM حيث تريد إشعارات عشوائية متعددة في اليوم ضمن نوافذ مقيَّدة.",
+      "أي تصميم يتطلب صلاحية بيئية — لتجنّب الإشعارات بأوقات ثابتة يمكن للمشاركين توقعها.",
+      "أخذ عيّنات الفورة حيث يجب سحب N عيّنة في اليوم مع فجوة دنيا بينها.",
+    ],
+    avoid: [
+      "المواقف التي يجب أن يستلم فيها جميع المشاركين الإشعار في الوقت ذاته — استخدم لمرة واحدة أو الدوري.",
+    ],
+    timing: "الخطوة 2 ← نافذة زمنية. اضبط بداية/نهاية النافذة وعدد النقاط العشوائية التي ستُسحَب والفجوة الدنيا بين الإشعارات.",
+  },
+  {
+    n: "04",
+    name: "شخصي",
+    tag: "بالنسبة إلى التسجيل",
+    color: "var(--coral)",
+    colorSoft: "var(--coral-soft)",
+    summary: "يرتكز على تاريخ انضمام كل مشارك. اليوم 1 هو يوم انضمامه، بصرف النظر عن التقويم. مشاركان ينضمان بفارق أسبوع يبدأ كلٌّ منهما اليوم 1 الخاص به.",
+    anchor: "personal",
+    use: [
+      "الدراسات الطولية بتسجيل متدرج ومدة دراسة ثابتة لكل شخص (مثل بروتوكول 14 يوماً).",
+      "دراسات التدخل التي يكون فيها اليوم 1 = يوم العلاج.",
+      "أي تصميم تكون فيه الأيام المنقضية منذ الانضمام أهم من التاريخ التقويمي.",
+    ],
+    avoid: [
+      "الدراسات التي يجب أن يكون فيها جميع المشاركين متزامنين على نفس التاريخ التقويمي — استخدم الدوري أو لمرة واحدة.",
+    ],
+    timing: "الخطوة 5 ← البداية بالنسبة إلى التسجيل (اليوم N بعد الانضمام). الخطوة 6 ← التوقف بالنسبة إلى التسجيل.",
+    more: "/docs/personal",
+  },
+];
+
+const COMPARISON_AR: {
+  q: string;
+  onetime: boolean;
+  repeating: boolean;
+  randomized: boolean;
+  personal: boolean;
+}[] = [
+  { q: "هل يستلم جميع المشاركين الإشعار في الوقت ذاته من الساعة؟",            onetime: true,  repeating: true,  randomized: false, personal: false },
+  { q: "هل الجدول نسبي إلى تاريخ انضمام كل مشارك؟",                              onetime: false, repeating: false, randomized: false, personal: true  },
+  { q: "هل يمكن أن تحدث عدة عمليات إرسال في اليوم؟",                              onetime: true,  repeating: true,  randomized: true,  personal: true  },
+  { q: "هل يعمل مع التسجيل المتدرج؟",                                              onetime: false, repeating: false, randomized: false, personal: true  },
+];
+
+function TypesContentAr() {
+  const TYPES = TYPES_AR;
+  const COMPARISON = COMPARISON_AR;
+  return (
+    <>
+      <p>
+        يحدد النوع <em>متى</em> يُطلَق الإشعار و<em>كيف</em> يرتبط هذا التوقيت بالتقويم
+        مقابل كل مشارك. اضبط هذا بشكل صحيح قبل أن تلمس أي شيء آخر.
+      </p>
+
+      {/* ── Type cards ────────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "2.4rem", margin: "2.4rem 0 4rem" }}>
+        {TYPES.map((t) => (
+          <div
+            key={t.n}
+            id={t.anchor}
+            style={{ background: "var(--surface)", border: `1px solid ${t.color}`, borderLeft: `4px solid ${t.color}`, borderRadius: "1rem", padding: "2rem 2.4rem" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: "1.2rem", marginBottom: "0.6rem", flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, fontWeight: 600, letterSpacing: "0.08em" }}>{t.n}</span>
+              <span style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", fontWeight: 700, color: "var(--ink)" }}>{t.name}</span>
+              <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: t.color, background: t.colorSoft, padding: "2px 8px", borderRadius: "0.4rem", letterSpacing: "0.06em" }}>{t.tag}</span>
+            </div>
+
+            <p style={{ margin: "0 0 1.4rem", fontSize: "1.4rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{t.summary}</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.2rem", marginBottom: "1.4rem" }}>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>استخدم عندما</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.use.map((u, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{u}</li>)}
+                </ul>
+              </div>
+              <div>
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>تجنّب عندما</div>
+                <ul style={{ margin: 0, paddingLeft: "1.6rem" }}>
+                  {t.avoid.map((a, i) => <li key={i} style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{a}</li>)}
+                </ul>
+              </div>
+            </div>
+
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.5rem", padding: "0.7rem 1rem" }}>
+              <span style={{ color: "var(--ink-40)", marginRight: "0.6rem" }}>النموذج:</span>{t.timing}
+              {t.more && <>{" "}<a href={t.more} style={{ color: "var(--coral)", marginLeft: "0.6rem" }}>الدليل الكامل ←</a></>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Comparison table ──────────────────────────────────────────────── */}
+      <h2>مقارنة جنباً إلى جنب</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th style={{ width: "40%" }}>الخاصية</th>
+            <th style={{ textAlign: "center" }}>لمرة واحدة</th>
+            <th style={{ textAlign: "center" }}>دوري</th>
+            <th style={{ textAlign: "center" }}>عشوائي</th>
+            <th style={{ textAlign: "center" }}>شخصي</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COMPARISON.map((row) => (
+            <tr key={row.q}>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-60)" }}>{row.q}</td>
+              <td style={{ textAlign: "center" }}><Tick v={row.onetime} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.repeating} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.randomized} /></td>
+              <td style={{ textAlign: "center" }}><Tick v={row.personal} /></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Combining types ───────────────────────────────────────────────── */}
+      <h2>دمج الأنواع</h2>
+      <p>
+        يمكن لدراسة واحدة أن تحتوي على عدة جداول من أنواع مختلفة. تصميم شائع يجمع بين
+        جدول <strong>دوري</strong> لاستطلاع يومي ثابت مع جدول <strong>عشوائي</strong>{' '}
+        لإشعارات لحظية بيئية — كل ذلك في الدراسة ذاتها، ويستهدف المشاركين أنفسهم.
+      </p>
+      <p>
+        يمكن لجدول شخصي أيضاً استخدام أوقات إرسال عشوائية ضمن كل يوم. في هذه الحالة، يظل
+        الجدول مصنفاً على أنه <strong>شخصي</strong>، لأن ما يميزه هو أن يومي البداية
+        والنهاية يرتكزان على تاريخ انضمام كل مشارك. التوقيت العشوائي خاصية ثانوية ضمن
+        هذه المرساة.
+      </p>
+
+      {/* ── What's next ───────────────────────────────────────────────────── */}
+      <h3>ما الذي يجب قراءته بعد ذلك</h3>
+      <p>
+        بعد أن تعرف النوع الذي يناسب دراستك:{" "}
+        <a href="/docs/form">إنشاء جدول</a> يرشدك عبر النموذج بالكامل قسماً بقسم. بالنسبة
+        للجداول الشخصية، يشرح{' '}
+        <a href="/docs/personal">الجدول الشخصي</a> منطق إزاحة الأيام بالتفصيل.
       </p>
     </>
   );

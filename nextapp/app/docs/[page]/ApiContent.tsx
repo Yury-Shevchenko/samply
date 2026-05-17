@@ -44,6 +44,10 @@ export default function ApiContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <ApiContentFr />;
   if (locale === "es") return <ApiContentEs />;
   if (locale === "pt") return <ApiContentPt />;
+  if (locale === "ja") return <ApiContentJa />;
+  if (locale === "ar") return <ApiContentAr />;
+  if (locale === "pl") return <ApiContentPl />;
+  if (locale === "tr") return <ApiContentTr />;
   return <ApiContentEn />;
 }
 
@@ -2743,6 +2747,1097 @@ function ApiContentPt() {
           <tr><td><Code>401</Code></td><td>Cabeçalho <Code>x-auth-token</Code> ausente ou expirado.</td></tr>
           <tr><td><Code>429</Code></td><td>Limite de taxa excedido. Aguarde um momento e tente novamente.</td></tr>
           <tr><td><Code>500</Code></td><td>Erro interno do servidor. O corpo da resposta contém a string fixa <Code>"Internal server error"</Code>; os diagnósticos detalhados são registrados apenas no servidor.</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function ApiContentJa() {
+  return (
+    <>
+      <p>
+        Samplyは2つのAPI表面を公開しています。プログラムによる研究管理のためのREST API
+        （<strong>研究者API</strong>）と、調査ツールが完了を通知したりアドホック通知を
+        トリガーしたりするために使用する2つの統合フックです。両方ともダッシュボードと
+        同じホスト上で動作します。
+      </p>
+
+      {/* ── Base URL ──────────────────────────────────────────────────────── */}
+      <h2>ベースURL</h2>
+      <p>
+        研究者REST APIは <Code>/webapi/v1</Code> にマウントされています。以下にリストされている
+        すべてのエンドポイントはこのプレフィックスからの相対パスです。完了および通知
+        エンドポイントはルートに直接マウントされており、別途文書化されています。
+      </p>
+
+      {/* ── Authentication ────────────────────────────────────────────────── */}
+      <h2>認証</h2>
+      <p>
+        すべての研究者APIエンドポイント（トークンエンドポイント自体を除く）には、
+        <Code>x-auth-token</Code> リクエストヘッダーで渡されるJWTが必要です。研究者の
+        認証情報を送信してトークンを取得します：
+      </p>
+
+      <EndpointGroup title='Token'>
+        <Method verb='POST' path='/webapi/v1/auth' desc='メールアドレスとパスワードをJWTと交換します。' />
+      </EndpointGroup>
+
+      <p><strong>リクエストボディ</strong></p>
+      <table>
+        <thead><tr><th>フィールド</th><th>型</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><Code>email</Code></td><td>string</td><td>研究者アカウントのメールアドレス。</td></tr>
+          <tr><td><Code>password</Code></td><td>string</td><td>研究者アカウントのパスワード。</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>レスポンス</strong></p>
+      <table>
+        <thead><tr><th>フィールド</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>14日間有効なJWT。後続のリクエストでは <Code>x-auth-token</Code> として渡してください。</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Rate limits ───────────────────────────────────────────────────── */}
+      <h2>レート制限</h2>
+      <p>
+        すべてのAPIパスはレート制限の対象となります。制限を超えるリクエストには
+        <Code>429 Too Many Requests</Code> レスポンスが返されます。3つの
+        レベルは以下のとおりです：
+      </p>
+      <table>
+        <thead><tr><th>制限</th><th>パス</th></tr></thead>
+        <tbody>
+          <tr><td>20リクエスト / 15分</td><td><Code>/webapi/v1/auth</Code>、ログイン、アカウント作成、パスワードリセットエンドポイント</td></tr>
+          <tr><td>30リクエスト / 1分</td><td><Code>/api/notify</Code></td></tr>
+          <tr><td>100リクエスト / 15分</td><td>その他すべての <Code>/api/*</Code> および <Code>/webapi/*</Code> パス</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Active study concept ──────────────────────────────────────────── */}
+      <h2>アクティブな研究</h2>
+      <p>
+        ほとんどの研究者APIエンドポイントは <em>アクティブな研究</em> 上で動作します—
+        研究者アカウントで選択された単一の研究です。参加者、通知、またはタスクの
+        エンドポイントを呼び出す前に、作業する研究を選択してください：
+      </p>
+
+      <EndpointGroup title="研究の選択">
+        <Method verb='GET'  path='/webapi/v1/auth/studies'          desc="あなたが所有者またはメンバーであるすべての研究をリストします。" />
+        <Method verb='GET'  path='/webapi/v1/auth/studies/selected'  desc="現在のアクティブな研究を返します。" />
+        <Method verb='POST' path='/webapi/v1/auth/select/study'      desc="アクティブな研究を設定します。" />
+        <Method verb='GET'  path='/webapi/v1/auth/study/:id'         desc="MongoDB IDで特定の研究を取得します。" />
+        <Method verb='PATCH' path='/webapi/v1/auth/study/:id'        desc="研究のフィールドを更新します。" />
+      </EndpointGroup>
+
+      <p>
+        <Code>POST /webapi/v1/auth/select/study</Code> はリクエストボディに <Code>{'{ "id": "<study_id>" }'}</Code>{' '}
+        を期待します。選択は研究者アカウントに保存され、変更されるまで
+        リクエスト間で維持されます。
+      </p>
+
+      <p><strong>PATCHボディ</strong>（研究の更新）</p>
+      <p>以下のフィールドのみが受け入れられ、他はすべて無視されます：</p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        name, description, currentlyActive, public, welcomeMessage, codeMessage,
+        groupMessage, messageAfterJoin, completionMessage, geofencingInstruction, settings
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2>参加者</h2>
+      <p>
+        これらのエンドポイントは、アクティブな研究の参加者を管理します。APIを通じて
+        作成された参加者は最初は無効化されており—Samply Researchアプリを開いたときに
+        アカウントをアクティブ化する招待JWTトークンを受け取ります。
+      </p>
+
+      <EndpointGroup title='参加者 — /webapi/v1/participants'>
+        <Method verb='GET'    path='/webapi/v1/participants'      desc="アクティブな研究のすべての参加者をリストします。" />
+        <Method verb='GET'    path='/webapi/v1/participants/:id'  desc="Samply IDで参加者を取得します。" />
+        <Method verb='POST'   path='/webapi/v1/participants'      desc="参加者を作成して登録します。" />
+        <Method verb='PATCH'  path='/webapi/v1/participants/:id'  desc="参加者のフィールドを更新します。" />
+        <Method verb='DELETE' path='/webapi/v1/participants/:id'  desc="研究から参加者を削除します。" />
+      </EndpointGroup>
+
+      <p><strong>POSTボディ</strong>（参加者の作成）</p>
+      <table>
+        <thead><tr><th>フィールド</th><th>必須</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><Code>name</Code></td><td>はい</td><td>表示名—他の参加者には表示されません。</td></tr>
+          <tr><td><Code>email</Code></td><td>はい</td><td>Samplyアカウントの作成に使用されるメールアドレス。</td></tr>
+          <tr><td><Code>code</Code></td><td>いいえ</td><td><Code>username</Code> として保存され、<Code>%PARTICIPANT_CODE%</Code> 経由で利用可能な参加者コード。</td></tr>
+          <tr><td><Code>expiresIn</Code></td><td>いいえ</td><td>招待JWTの有効期間（例：<Code>"7d"</Code>）。最大30日—それより大きい値は黙ってクランプされます。</td></tr>
+          <tr><td><Code>information</Code></td><td>いいえ</td><td>任意の参加者メタデータのための自由形式のJSONオブジェクト。</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>レスポンス</strong>（参加者の作成）</p>
+      <table>
+        <thead><tr><th>フィールド</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><Code>samplyid</Code></td><td>新しい参加者のために自動生成されたSamply ID。</td></tr>
+          <tr><td><Code>token</Code></td><td>招待JWTトークン。参加者に送信してください。アプリはこれを使用してアカウントをアクティブ化します。</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>PATCHボディ</strong>（参加者の更新）</p>
+      <table>
+        <thead><tr><th>フィールド</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><Code>username</Code></td><td>参加者コード / 表示名。</td></tr>
+          <tr><td><Code>deactivated</Code></td><td>ブール値—この参加者への通知を停止するには <Code>true</Code> に設定します。</td></tr>
+          <tr><td><Code>group</Code></td><td>グループ割り当て文字列。</td></tr>
+        </tbody>
+      </table>
+      <p>ボディに送信された他のすべてのフィールドは無視されます。</p>
+
+      {/* ── Notifications ─────────────────────────────────────────────────── */}
+      <h2>スケジュール（通知）</h2>
+      <p>
+        通知エンドポイントはスケジュール定義を管理します—キュー行に展開される
+        ルールです。APIを通じてスケジュールを作成すると、ダッシュボードフォームを
+        送信したときと同じキュー展開がトリガーされます。
+      </p>
+
+      <EndpointGroup title='スケジュール — /webapi/v1/notifications'>
+        <Method verb='GET'    path='/webapi/v1/notifications'      desc="アクティブな研究のすべてのスケジュール定義をリストします。" />
+        <Method verb='GET'    path='/webapi/v1/notifications/:id'  desc="スケジュール定義を取得します。" />
+        <Method verb='POST'   path='/webapi/v1/notifications'      desc="スケジュールを作成し、キューに展開します。" />
+        <Method verb='PATCH'  path='/webapi/v1/notifications/:id'  desc="スケジュール定義を更新します。" />
+        <Method verb='DELETE' path='/webapi/v1/notifications/:id'  desc="スケジュールを削除し、保留中のキュー行をキャンセルします。" />
+      </EndpointGroup>
+
+      <p>
+        <Code>POST</Code> ボディはスケジュールフォームのフィールドを反映します。ルーティングキーは
+        <Code>schedule</Code>（<Code>one-time</Code> または <Code>repeat</Code>）と
+        <Code>target</Code>（<Code>fixed-times</Code>、<Code>fixed-intervals</Code>、
+        または <Code>user-specific</Code>）の組み合わせで、ダッシュボードフォームで
+        使用されているのと同じ内部ハンドラーに対応します。
+      </p>
+
+      <p><strong>PATCHボディ</strong>（スケジュールの更新）</p>
+      <p>
+        以下のフィールドのみが受け入れられ、他はすべて無視されます：
+      </p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        title, message, url, schedule, target, randomize, startDate, endDate, startTime,
+        endTime, interval, intervalMax, timezone, expireIn, reminders, userid, groupid
+      </p>
+
+      {/* ── Jobs ──────────────────────────────────────────────────────────── */}
+      <h2>キュー（ジョブ）</h2>
+      <p>
+        ジョブエンドポイントは個別のキュー行を公開します—スケジュール定義から
+        生成された展開済みの送信です。
+      </p>
+
+      <EndpointGroup title="キュー行 — /webapi/v1/jobs">
+        <Method verb='GET'    path='/webapi/v1/jobs'                              desc="アクティブな研究のすべてのキュー行をリストします。" />
+        <Method verb='GET'    path='/webapi/v1/jobs/:notificationid'              desc="特定のスケジュールのキュー行をリストします。" />
+        <Method verb='GET'    path='/webapi/v1/jobs/:notificationid/:jobid'       desc="特定のキュー行を取得します。" />
+        <Method verb='PATCH'  path='/webapi/v1/jobs/:notificationid/:jobid'       desc="キュー行を更新します。" />
+        <Method verb='DELETE' path='/webapi/v1/jobs/:notificationid/:jobid'       desc="キュー行を削除します。" />
+      </EndpointGroup>
+
+      {/* ── Completion ────────────────────────────────────────────────────── */}
+      <h2>完了コールバック</h2>
+      <p>
+        これらのエンドポイントは調査ツールによって呼び出され、完了イベントを記録します。
+        成功すると、Samplyは結果を完了としてマークし、その送信の保留中の
+        リマインダーをすべてキャンセルします。認証は不要です—
+        メッセージ識別子が共有秘密として機能します。
+      </p>
+
+      <EndpointGroup title='完了 — 認証不要'>
+        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='完了を記録し、確認ページを表示します（調査の最後のリダイレクトとして使用）。' />
+        <Method verb='POST' path='/studies/:study/done/:messageid' desc='完了をサイレントに記録します（調査ツールからのWebhookとして使用）。' />
+      </EndpointGroup>
+
+      <dl>
+        <dt><Code>:study</Code></dt>
+        <dd>ダッシュボードのアドレスバーに表示される研究のURLスラッグ。</dd>
+        <dt><Code>:messageid</Code></dt>
+        <dd>
+          <Code>%MESSAGE_ID%</Code> プレースホルダーから取得したメッセージ識別子で、
+          調査URLによって調査終了のリダイレクトまたはWebhookに渡されます。完全な設定ガイドについては{' '}
+          <a href='/docs/reminders'>リマインダー</a> を参照してください。
+        </dd>
+      </dl>
+
+      <p>
+        <Code>POST</Code> エンドポイントは成功時に <Code>200</Code> を返し、
+        指定されたメッセージ識別子に一致する結果レコードが見つからない場合は
+        <Code>400</Code> を返します。
+      </p>
+
+      {/* ── Notify hook ───────────────────────────────────────────────────── */}
+      <h2>通知フック</h2>
+      <p>
+        通知フックは、研究の参加者に即時のアドホックプッシュ通知を送信します—
+        スケジュールやキュー行を作成することなく。外部システムのイベントによって
+        トリガーされる通知（REDCapアラート、ラボシステムイベントなど）を意図しています。
+        認証は研究者のJWTではなく、研究固有の通知トークンを使用します。
+      </p>
+
+      <EndpointGroup title='アドホック通知 — トークン認証'>
+        <Method verb='POST' path='/api/notify' desc="研究の参加者に即時通知を送信します。" />
+      </EndpointGroup>
+
+      <p><strong>リクエストボディ</strong></p>
+      <table>
+        <thead><tr><th>フィールド</th><th>必須</th><th>説明</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>はい</td><td>研究の通知トークン。研究の編集 → Notify tokenで再生成します。</td></tr>
+          <tr><td><Code>projectID</Code></td><td>はい</td><td>研究のMongoDB ID。</td></tr>
+          <tr><td><Code>title</Code></td><td>はい</td><td>通知のタイトル。</td></tr>
+          <tr><td><Code>message</Code></td><td>はい</td><td>通知のボディテキスト。</td></tr>
+          <tr><td><Code>url</Code></td><td>いいえ</td><td>調査URL。スケジュールされた通知と同じ <Code>%TOKEN%</Code> プレースホルダーをサポートします。</td></tr>
+          <tr><td><Code>participantID</Code></td><td>いいえ</td><td>特定の参加者（Samply ID）に送信します。全員に送信する場合は省略してください。</td></tr>
+          <tr><td><Code>groupID</Code></td><td>いいえ</td><td>トリガーとなる参加者を除くグループのすべてのメンバーに送信します。通常、参加者のアクションがグループに通知すべき場合に使用されます。</td></tr>
+          <tr><td><Code>expireIn</Code></td><td>いいえ</td><td>送信時点からのリンク有効期限（ミリ秒）。</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        <Code>groupID</Code> と <Code>participantID</Code> の両方が指定された場合、Samplyは
+        指定された参加者を除くグループのすべてのメンバーに送信します。
+        <Code>participantID</Code> のみが指定された場合、その参加者のみが通知を受け取ります。
+        どちらも指定されない場合、研究のすべての参加者が通知を受け取ります。
+      </p>
+
+      {/* ── Errors ────────────────────────────────────────────────────────── */}
+      <h2>エラーレスポンス</h2>
+      <table>
+        <thead><tr><th>ステータス</th><th>意味</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code></td><td>成功。</td></tr>
+          <tr><td><Code>400</Code></td><td>不正なリクエスト—フィールドが欠落または無効、またはアカウントにアクティブな研究が設定されていません。</td></tr>
+          <tr><td><Code>401</Code></td><td><Code>x-auth-token</Code> ヘッダーが欠落しているか期限切れです。</td></tr>
+          <tr><td><Code>429</Code></td><td>レート制限を超過しました。しばらく待ってから再試行してください。</td></tr>
+          <tr><td><Code>500</Code></td><td>内部サーバーエラー。レスポンスボディには固定文字列 <Code>"Internal server error"</Code> が含まれます。詳細な診断情報はサーバー側にのみ記録されます。</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function ApiContentTr() {
+  return (
+    <>
+      <p>
+        Samply iki API yüzeyi sunar: programatik çalışma yönetimi için bir REST API
+        (<strong>Araştırmacı API</strong>) ve anket araçlarının tamamlanmayı bildirmek
+        veya ad hoc bildirimleri tetiklemek için kullandığı iki entegrasyon kancası.
+        Her ikisi de panel ile aynı sunucuda çalışır.
+      </p>
+
+      {/* ── Base URL ──────────────────────────────────────────────────────── */}
+      <h2>Temel URL</h2>
+      <p>
+        Araştırmacı REST API'si <Code>/webapi/v1</Code> altında bulunur. Aşağıda listelenen
+        tüm uç noktalar bu ön eke görelidir. Tamamlanma ve bildirim uç noktaları
+        doğrudan kök dizine bağlıdır ve ayrı olarak belgelenmiştir.
+      </p>
+
+      {/* ── Authentication ────────────────────────────────────────────────── */}
+      <h2>Kimlik doğrulama</h2>
+      <p>
+        Tüm Araştırmacı API uç noktaları (token uç noktasının kendisi hariç),
+        <Code>x-auth-token</Code> istek başlığında iletilen bir JWT gerektirir.
+        Bir token almak için araştırmacı kimlik bilgilerinizi gönderin:
+      </p>
+
+      <EndpointGroup title="Token">
+        <Method verb="POST" path="/webapi/v1/auth" desc="E-posta ve parolayı bir JWT ile değiştirir." />
+      </EndpointGroup>
+
+      <p><strong>İstek gövdesi</strong></p>
+      <table>
+        <thead><tr><th>Alan</th><th>Tür</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><Code>email</Code></td><td>string</td><td>Araştırmacı hesabının e-posta adresi.</td></tr>
+          <tr><td><Code>password</Code></td><td>string</td><td>Araştırmacı hesabının parolası.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Yanıt</strong></p>
+      <table>
+        <thead><tr><th>Alan</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>14 gün geçerli bir JWT. Sonraki isteklerde <Code>x-auth-token</Code> olarak iletin.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Rate limits ───────────────────────────────────────────────────── */}
+      <h2>Hız sınırları</h2>
+      <p>
+        Tüm API yolları hız sınırlarına tabidir. Sınırı aşan istekler bir
+        <Code>429 Too Many Requests</Code> yanıtı alır. Üç seviye vardır:
+      </p>
+      <table>
+        <thead><tr><th>Sınır</th><th>Yol</th></tr></thead>
+        <tbody>
+          <tr><td>20 istek / 15 dakika</td><td><Code>/webapi/v1/auth</Code>, oturum açma, hesap oluşturma ve parola sıfırlama uç noktaları</td></tr>
+          <tr><td>30 istek / 1 dakika</td><td><Code>/api/notify</Code></td></tr>
+          <tr><td>100 istek / 15 dakika</td><td>Diğer tüm <Code>/api/*</Code> ve <Code>/webapi/*</Code> yolları</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Active study concept ──────────────────────────────────────────── */}
+      <h2>Aktif çalışma</h2>
+      <p>
+        Çoğu Araştırmacı API uç noktası <em>aktif çalışma</em> üzerinde çalışır —
+        araştırmacı hesabınızda seçili olan tek çalışma. Katılımcı, bildirim veya
+        görev uç noktalarını çağırmadan önce çalışmak istediğiniz çalışmayı seçin:
+      </p>
+
+      <EndpointGroup title="Çalışma seçimi">
+        <Method verb="GET"  path="/webapi/v1/auth/studies"          desc="Sahibi veya üyesi olduğunuz tüm çalışmaları listeler." />
+        <Method verb="GET"  path="/webapi/v1/auth/studies/selected"  desc="Geçerli aktif çalışmayı döndürür." />
+        <Method verb="POST" path="/webapi/v1/auth/select/study"      desc="Aktif çalışmayı ayarlar." />
+        <Method verb="GET"  path="/webapi/v1/auth/study/:id"         desc="MongoDB kimliğine göre belirli bir çalışmayı getirir." />
+        <Method verb="PATCH" path="/webapi/v1/auth/study/:id"        desc="Bir çalışmadaki alanları günceller." />
+      </EndpointGroup>
+
+      <p>
+        <Code>POST /webapi/v1/auth/select/study</Code> istek gövdesinde <Code>{'{ "id": "<study_id>" }'}</Code>{' '}
+        bekler. Seçim araştırmacı hesabınızda saklanır ve değiştirilene kadar
+        istekler arasında kalıcı olur.
+      </p>
+
+      <p><strong>PATCH gövdesi</strong> (çalışma güncelleme)</p>
+      <p>Yalnızca aşağıdaki alanlar kabul edilir, diğerlerinin tümü göz ardı edilir:</p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        name, description, currentlyActive, public, welcomeMessage, codeMessage,
+        groupMessage, messageAfterJoin, completionMessage, geofencingInstruction, settings
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2>Katılımcılar</h2>
+      <p>
+        Bu uç noktalar aktif çalışmadaki katılımcıları yönetir. API üzerinden
+        oluşturulan katılımcılar başlangıçta devre dışıdır — Samply Research
+        uygulamasını açtıklarında hesaplarını etkinleştiren bir davet JWT tokenı alırlar.
+      </p>
+
+      <EndpointGroup title="Katılımcılar — /webapi/v1/participants">
+        <Method verb="GET"    path="/webapi/v1/participants"      desc="Aktif çalışmadaki tüm katılımcıları listeler." />
+        <Method verb="GET"    path="/webapi/v1/participants/:id"  desc="Samply kimliğine göre bir katılımcıyı getirir." />
+        <Method verb="POST"   path="/webapi/v1/participants"      desc="Bir katılımcı oluşturur ve kaydeder." />
+        <Method verb="PATCH"  path="/webapi/v1/participants/:id"  desc="Katılımcı alanlarını günceller." />
+        <Method verb="DELETE" path="/webapi/v1/participants/:id"  desc="Katılımcıyı çalışmadan kaldırır." />
+      </EndpointGroup>
+
+      <p><strong>POST gövdesi</strong> (katılımcı oluşturma)</p>
+      <table>
+        <thead><tr><th>Alan</th><th>Gerekli</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><Code>name</Code></td><td>Evet</td><td>Görünen ad — diğer katılımcılara gösterilmez.</td></tr>
+          <tr><td><Code>email</Code></td><td>Evet</td><td>Samply hesabını oluşturmak için kullanılan e-posta adresi.</td></tr>
+          <tr><td><Code>code</Code></td><td>Hayır</td><td><Code>username</Code> olarak saklanan ve <Code>%PARTICIPANT_CODE%</Code> aracılığıyla kullanılabilen katılımcı kodu.</td></tr>
+          <tr><td><Code>expiresIn</Code></td><td>Hayır</td><td>Davet JWT'sinin geçerlilik süresi (ör. <Code>«7d»</Code>). En fazla 30 gün — daha büyük değerler sessizce kırpılır.</td></tr>
+          <tr><td><Code>information</Code></td><td>Hayır</td><td>İsteğe bağlı katılımcı meta verileri için serbest biçimli bir JSON nesnesi.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Yanıt</strong> (katılımcı oluşturma)</p>
+      <table>
+        <thead><tr><th>Alan</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><Code>samplyid</Code></td><td>Yeni katılımcı için otomatik olarak oluşturulan Samply kimliği.</td></tr>
+          <tr><td><Code>token</Code></td><td>Davet JWT tokenı. Katılımcıya iletin; uygulama hesabı etkinleştirmek için bunu kullanır.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>PATCH gövdesi</strong> (katılımcı güncelleme)</p>
+      <table>
+        <thead><tr><th>Alan</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><Code>username</Code></td><td>Katılımcı kodu / görünen ad.</td></tr>
+          <tr><td><Code>deactivated</Code></td><td>Boolean — bu katılımcıya bildirim gönderimini durdurmak için <Code>true</Code> olarak ayarlayın.</td></tr>
+          <tr><td><Code>group</Code></td><td>Grup atama dizesi.</td></tr>
+        </tbody>
+      </table>
+      <p>Gövdede gönderilen diğer tüm alanlar göz ardı edilir.</p>
+
+      {/* ── Notifications ─────────────────────────────────────────────────── */}
+      <h2>Programlar (bildirimler)</h2>
+      <p>
+        Bildirim uç noktaları program tanımlarını yönetir — kuyruk satırlarına
+        genişletilen kurallardır. API üzerinden bir program oluşturmak, panel
+        formunu gönderdiğinizde olduğu gibi aynı kuyruk genişletmesini tetikler.
+      </p>
+
+      <EndpointGroup title="Programlar — /webapi/v1/notifications">
+        <Method verb="GET"    path="/webapi/v1/notifications"      desc="Aktif çalışmadaki tüm program tanımlarını listeler." />
+        <Method verb="GET"    path="/webapi/v1/notifications/:id"  desc="Bir program tanımını getirir." />
+        <Method verb="POST"   path="/webapi/v1/notifications"      desc="Bir program oluşturur ve kuyruğa genişletir." />
+        <Method verb="PATCH"  path="/webapi/v1/notifications/:id"  desc="Bir program tanımını günceller." />
+        <Method verb="DELETE" path="/webapi/v1/notifications/:id"  desc="Bir programı siler ve bekleyen kuyruk satırlarını iptal eder." />
+      </EndpointGroup>
+
+      <p>
+        <Code>POST</Code> gövdesi, program formundaki alanları yansıtır. Yönlendirme anahtarları
+        <Code>schedule</Code> (<Code>one-time</Code> veya <Code>repeat</Code>) ve
+        <Code>target</Code> (<Code>fixed-times</Code>, <Code>fixed-intervals</Code>,
+        veya <Code>user-specific</Code>) kombinasyonudur ve panel formunda
+        kullanılan aynı dahili işleyicilere karşılık gelir.
+      </p>
+
+      <p><strong>PATCH gövdesi</strong> (program güncelleme)</p>
+      <p>
+        Yalnızca aşağıdaki alanlar kabul edilir, diğerlerinin tümü göz ardı edilir:
+      </p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        title, message, url, schedule, target, randomize, startDate, endDate, startTime,
+        endTime, interval, intervalMax, timezone, expireIn, reminders, userid, groupid
+      </p>
+
+      {/* ── Jobs ──────────────────────────────────────────────────────────── */}
+      <h2>Kuyruk (işler)</h2>
+      <p>
+        İş uç noktaları, tek tek kuyruk satırlarını ortaya çıkarır — program
+        tanımlarından oluşturulan genişletilmiş gönderimlerdir.
+      </p>
+
+      <EndpointGroup title="Kuyruk satırları — /webapi/v1/jobs">
+        <Method verb="GET"    path="/webapi/v1/jobs"                              desc="Aktif çalışmadaki tüm kuyruk satırlarını listeler." />
+        <Method verb="GET"    path="/webapi/v1/jobs/:notificationid"              desc="Belirli bir programa ait kuyruk satırlarını listeler." />
+        <Method verb="GET"    path="/webapi/v1/jobs/:notificationid/:jobid"       desc="Belirli bir kuyruk satırını getirir." />
+        <Method verb="PATCH"  path="/webapi/v1/jobs/:notificationid/:jobid"       desc="Bir kuyruk satırını günceller." />
+        <Method verb="DELETE" path="/webapi/v1/jobs/:notificationid/:jobid"       desc="Bir kuyruk satırını siler." />
+      </EndpointGroup>
+
+      {/* ── Completion ────────────────────────────────────────────────────── */}
+      <h2>Tamamlanma geri çağrıları</h2>
+      <p>
+        Bu uç noktalar, tamamlanma olaylarını kaydetmek için anket araçları
+        tarafından çağrılır. Başarılı olduğunda Samply, sonucu tamamlandı
+        olarak işaretler ve o gönderim için tüm bekleyen hatırlatıcıları iptal eder.
+        Kimlik doğrulama gerekli değildir — mesaj tanımlayıcısı paylaşılan
+        bir gizli anahtar görevi görür.
+      </p>
+
+      <EndpointGroup title="Tamamlanma — kimlik doğrulama gerekmez">
+        <Method verb="GET"  path="/studies/:study/done/:messageid" desc="Tamamlanmayı kaydeder ve bir onay sayfası gösterir (anketin son yönlendirmesi olarak kullanılır)." />
+        <Method verb="POST" path="/studies/:study/done/:messageid" desc="Tamamlanmayı sessizce kaydeder (anket aracından bir webhook olarak kullanılır)." />
+      </EndpointGroup>
+
+      <dl>
+        <dt><Code>:study</Code></dt>
+        <dd>Panelin adres çubuğunda görünen çalışmanın URL kısaltması.</dd>
+        <dt><Code>:messageid</Code></dt>
+        <dd>
+          <Code>%MESSAGE_ID%</Code> yer tutucusundan alınan ve anket URL'si tarafından
+          anket sonu yönlendirmesine veya webhook'a iletilen mesaj tanımlayıcısı. Tam
+          yapılandırma kılavuzu için{' '}
+          <a href="/docs/reminders">Hatırlatıcılar</a> sayfasına bakın.
+        </dd>
+      </dl>
+
+      <p>
+        <Code>POST</Code> uç noktası başarı durumunda <Code>200</Code> döndürür ve
+        verilen mesaj tanımlayıcısıyla eşleşen bir sonuç kaydı bulunamazsa
+        <Code>400</Code> döndürür.
+      </p>
+
+      {/* ── Notify hook ───────────────────────────────────────────────────── */}
+      <h2>Bildirim kancası</h2>
+      <p>
+        Bildirim kancası, bir çalışmadaki katılımcılara anında ad hoc anlık bildirim
+        gönderir — program veya kuyruk satırı oluşturmadan. Harici sistemlerdeki
+        olaylar tarafından tetiklenen bildirimler için tasarlanmıştır (REDCap uyarıları,
+        laboratuvar sistemi olayları vb.). Kimlik doğrulama, araştırmacı JWT'si
+        yerine çalışmaya özgü bir bildirim tokenı kullanır.
+      </p>
+
+      <EndpointGroup title="Ad hoc bildirim — token kimlik doğrulaması">
+        <Method verb="POST" path="/api/notify" desc="Bir çalışmadaki katılımcılara anında bildirim gönderir." />
+      </EndpointGroup>
+
+      <p><strong>İstek gövdesi</strong></p>
+      <table>
+        <thead><tr><th>Alan</th><th>Gerekli</th><th>Açıklama</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>Evet</td><td>Çalışmanın bildirim tokenı. Çalışmayı düzenle → Notify token bölümünde yeniden oluşturun.</td></tr>
+          <tr><td><Code>projectID</Code></td><td>Evet</td><td>Çalışmanın MongoDB kimliği.</td></tr>
+          <tr><td><Code>title</Code></td><td>Evet</td><td>Bildirim başlığı.</td></tr>
+          <tr><td><Code>message</Code></td><td>Evet</td><td>Bildirim gövde metni.</td></tr>
+          <tr><td><Code>url</Code></td><td>Hayır</td><td>Anket URL'si. Programlanmış bildirimlerle aynı <Code>%TOKEN%</Code> yer tutucularını destekler.</td></tr>
+          <tr><td><Code>participantID</Code></td><td>Hayır</td><td>Belirli bir katılımcıya (Samply kimliğine) gönderir. Herkese göndermek için atlayın.</td></tr>
+          <tr><td><Code>groupID</Code></td><td>Hayır</td><td>Tetikleyici katılımcı dışında, bir grubun tüm üyelerine gönderir. Genellikle bir katılımcının eyleminin gruba bildirilmesi gerektiğinde kullanılır.</td></tr>
+          <tr><td><Code>expireIn</Code></td><td>Hayır</td><td>Gönderim anından itibaren bağlantının geçerlilik süresi, milisaniye cinsinden.</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Hem <Code>groupID</Code> hem de <Code>participantID</Code> verildiğinde, Samply
+        belirtilen katılımcı hariç grubun tüm üyelerine gönderir.
+        Yalnızca <Code>participantID</Code> verildiğinde, bildirimi yalnızca o katılımcı alır.
+        Hiçbiri verilmezse, çalışmadaki tüm katılımcılar bildirimi alır.
+      </p>
+
+      {/* ── Errors ────────────────────────────────────────────────────────── */}
+      <h2>Hata yanıtları</h2>
+      <table>
+        <thead><tr><th>Durum</th><th>Anlamı</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code></td><td>Başarılı.</td></tr>
+          <tr><td><Code>400</Code></td><td>Hatalı istek — eksik veya geçersiz alanlar ya da hesapta aktif bir çalışma ayarlanmamış.</td></tr>
+          <tr><td><Code>401</Code></td><td><Code>x-auth-token</Code> başlığı eksik veya süresi dolmuş.</td></tr>
+          <tr><td><Code>429</Code></td><td>Hız sınırı aşıldı. Yeniden denemeden önce bekleyin.</td></tr>
+          <tr><td><Code>500</Code></td><td>Dahili sunucu hatası. Yanıt gövdesi sabit <Code>«Internal server error»</Code> dizesini içerir. Ayrıntılı tanılama yalnızca sunucu tarafında kaydedilir.</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function ApiContentPl() {
+  return (
+    <>
+      <p>
+        Samply udostępnia dwa interfejsy API: REST API do programowego zarządzania
+        badaniami (<strong>API Badacza</strong>) oraz dwa haki integracyjne,
+        z których korzystają narzędzia ankietowe, aby zgłaszać ukończenie
+        lub wyzwalać powiadomienia ad hoc. Oba działają na tym samym serwerze
+        co Panel.
+      </p>
+
+      {/* ── Base URL ──────────────────────────────────────────────────────── */}
+      <h2>Bazowy URL</h2>
+      <p>
+        REST API Badacza jest zamontowane pod <Code>/webapi/v1</Code>. Wszystkie
+        endpointy wymienione poniżej są względne wobec tego prefiksu. Endpointy
+        ukończenia i powiadomień są zamontowane bezpośrednio w katalogu głównym
+        i są udokumentowane osobno.
+      </p>
+
+      {/* ── Authentication ────────────────────────────────────────────────── */}
+      <h2>Uwierzytelnianie</h2>
+      <p>
+        Wszystkie endpointy API Badacza (z wyjątkiem samego endpointu tokena)
+        wymagają tokenu JWT przekazanego w nagłówku żądania <Code>x-auth-token</Code>.
+        Aby uzyskać token, prześlij swoje dane uwierzytelniające badacza:
+      </p>
+
+      <EndpointGroup title="Token">
+        <Method verb="POST" path="/webapi/v1/auth" desc="Wymienia adres e-mail i hasło na token JWT." />
+      </EndpointGroup>
+
+      <p><strong>Treść żądania</strong></p>
+      <table>
+        <thead><tr><th>Pole</th><th>Typ</th><th>Opis</th></tr></thead>
+        <tbody>
+          <tr><td><Code>email</Code></td><td>string</td><td>Adres e-mail konta badacza.</td></tr>
+          <tr><td><Code>password</Code></td><td>string</td><td>Hasło konta badacza.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Odpowiedź</strong></p>
+      <table>
+        <thead><tr><th>Pole</th><th>Opis</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>Token JWT ważny przez 14 dni. Przekazuj go jako <Code>x-auth-token</Code> w kolejnych żądaniach.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Rate limits ───────────────────────────────────────────────────── */}
+      <h2>Limity żądań</h2>
+      <p>
+        Wszystkie ścieżki API podlegają limitom żądań. Żądania przekraczające limit
+        otrzymują odpowiedź <Code>429 Too Many Requests</Code>. Istnieją trzy poziomy:
+      </p>
+      <table>
+        <thead><tr><th>Limit</th><th>Ścieżka</th></tr></thead>
+        <tbody>
+          <tr><td>20 żądań / 15 minut</td><td><Code>/webapi/v1/auth</Code>, endpointy logowania, tworzenia konta i resetowania hasła</td></tr>
+          <tr><td>30 żądań / 1 minuta</td><td><Code>/api/notify</Code></td></tr>
+          <tr><td>100 żądań / 15 minut</td><td>Wszystkie pozostałe ścieżki <Code>/api/*</Code> i <Code>/webapi/*</Code></td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Active study concept ──────────────────────────────────────────── */}
+      <h2>Aktywne badanie</h2>
+      <p>
+        Większość endpointów API Badacza działa na <em>aktywnym badaniu</em> —
+        pojedynczym badaniu wybranym na Twoim koncie badacza. Zanim wywołasz
+        endpointy uczestników, powiadomień lub zadań, wybierz badanie, na którym
+        chcesz pracować:
+      </p>
+
+      <EndpointGroup title="Wybór badania">
+        <Method verb="GET"  path="/webapi/v1/auth/studies"          desc="Wymienia wszystkie badania, których jesteś właścicielem lub członkiem." />
+        <Method verb="GET"  path="/webapi/v1/auth/studies/selected"  desc="Zwraca bieżące aktywne badanie." />
+        <Method verb="POST" path="/webapi/v1/auth/select/study"      desc="Ustawia aktywne badanie." />
+        <Method verb="GET"  path="/webapi/v1/auth/study/:id"         desc="Pobiera konkretne badanie po identyfikatorze MongoDB." />
+        <Method verb="PATCH" path="/webapi/v1/auth/study/:id"        desc="Aktualizuje pola w badaniu." />
+      </EndpointGroup>
+
+      <p>
+        <Code>POST /webapi/v1/auth/select/study</Code> oczekuje w treści żądania <Code>{'{ "id": "<study_id>" }'}</Code>{' '}
+        Wybór jest przechowywany na Twoim koncie badacza i pozostaje aktywny
+        między żądaniami, dopóki nie zostanie zmieniony.
+      </p>
+
+      <p><strong>Treść PATCH</strong> (aktualizacja badania)</p>
+      <p>Akceptowane są tylko poniższe pola, wszystkie inne są ignorowane:</p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        name, description, currentlyActive, public, welcomeMessage, codeMessage,
+        groupMessage, messageAfterJoin, completionMessage, geofencingInstruction, settings
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2>Uczestnicy</h2>
+      <p>
+        Te endpointy zarządzają uczestnikami w aktywnym badaniu. Uczestnicy
+        utworzeni za pośrednictwem API są początkowo nieaktywni — otrzymują
+        token JWT zaproszenia, który aktywuje ich konto, gdy otwierają aplikację
+        Samply Research.
+      </p>
+
+      <EndpointGroup title="Uczestnicy — /webapi/v1/participants">
+        <Method verb="GET"    path="/webapi/v1/participants"      desc="Wymienia wszystkich uczestników w aktywnym badaniu." />
+        <Method verb="GET"    path="/webapi/v1/participants/:id"  desc="Pobiera uczestnika po identyfikatorze Samply." />
+        <Method verb="POST"   path="/webapi/v1/participants"      desc="Tworzy i rejestruje uczestnika." />
+        <Method verb="PATCH"  path="/webapi/v1/participants/:id"  desc="Aktualizuje pola uczestnika." />
+        <Method verb="DELETE" path="/webapi/v1/participants/:id"  desc="Usuwa uczestnika z badania." />
+      </EndpointGroup>
+
+      <p><strong>Treść POST</strong> (tworzenie uczestnika)</p>
+      <table>
+        <thead><tr><th>Pole</th><th>Wymagane</th><th>Opis</th></tr></thead>
+        <tbody>
+          <tr><td><Code>name</Code></td><td>Tak</td><td>Wyświetlana nazwa — nie jest pokazywana innym uczestnikom.</td></tr>
+          <tr><td><Code>email</Code></td><td>Tak</td><td>Adres e-mail używany do utworzenia konta Samply.</td></tr>
+          <tr><td><Code>code</Code></td><td>Nie</td><td>Kod uczestnika przechowywany jako <Code>username</Code> i dostępny przez <Code>%PARTICIPANT_CODE%</Code>.</td></tr>
+          <tr><td><Code>expiresIn</Code></td><td>Nie</td><td>Okres ważności tokena JWT zaproszenia (np. <Code>«7d»</Code>). Maksymalnie 30 dni — większe wartości są po cichu obcinane.</td></tr>
+          <tr><td><Code>information</Code></td><td>Nie</td><td>Dowolny obiekt JSON dla opcjonalnych metadanych uczestnika.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Odpowiedź</strong> (tworzenie uczestnika)</p>
+      <table>
+        <thead><tr><th>Pole</th><th>Opis</th></tr></thead>
+        <tbody>
+          <tr><td><Code>samplyid</Code></td><td>Automatycznie wygenerowany identyfikator Samply dla nowego uczestnika.</td></tr>
+          <tr><td><Code>token</Code></td><td>Token JWT zaproszenia. Przekaż go uczestnikowi; aplikacja używa go do aktywacji konta.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Treść PATCH</strong> (aktualizacja uczestnika)</p>
+      <table>
+        <thead><tr><th>Pole</th><th>Opis</th></tr></thead>
+        <tbody>
+          <tr><td><Code>username</Code></td><td>Kod uczestnika / wyświetlana nazwa.</td></tr>
+          <tr><td><Code>deactivated</Code></td><td>Wartość logiczna — ustaw na <Code>true</Code>, aby zatrzymać wysyłanie powiadomień do tego uczestnika.</td></tr>
+          <tr><td><Code>group</Code></td><td>Ciąg przypisania grupy.</td></tr>
+        </tbody>
+      </table>
+      <p>Wszystkie inne pola wysłane w treści są ignorowane.</p>
+
+      {/* ── Notifications ─────────────────────────────────────────────────── */}
+      <h2>Harmonogramy (powiadomienia)</h2>
+      <p>
+        Endpointy powiadomień zarządzają definicjami harmonogramów — regułami,
+        które są rozwijane w wiersze kolejki. Utworzenie harmonogramu przez API
+        wyzwala dokładnie to samo rozwinięcie kolejki, co przesłanie formularza
+        w Panelu.
+      </p>
+
+      <EndpointGroup title="Harmonogramy — /webapi/v1/notifications">
+        <Method verb="GET"    path="/webapi/v1/notifications"      desc="Wymienia wszystkie definicje harmonogramów w aktywnym badaniu." />
+        <Method verb="GET"    path="/webapi/v1/notifications/:id"  desc="Pobiera definicję harmonogramu." />
+        <Method verb="POST"   path="/webapi/v1/notifications"      desc="Tworzy harmonogram i rozwija go do kolejki." />
+        <Method verb="PATCH"  path="/webapi/v1/notifications/:id"  desc="Aktualizuje definicję harmonogramu." />
+        <Method verb="DELETE" path="/webapi/v1/notifications/:id"  desc="Usuwa harmonogram i anuluje oczekujące wiersze kolejki." />
+      </EndpointGroup>
+
+      <p>
+        Treść <Code>POST</Code> odzwierciedla pola w formularzu harmonogramu. Kluczami
+        kierującymi są kombinacja <Code>schedule</Code> (<Code>one-time</Code> lub <Code>repeat</Code>) oraz
+        <Code>target</Code> (<Code>fixed-times</Code>, <Code>fixed-intervals</Code>,
+        lub <Code>user-specific</Code>) i odpowiadają tym samym wewnętrznym
+        handlerom, których używa formularz w Panelu.
+      </p>
+
+      <p><strong>Treść PATCH</strong> (aktualizacja harmonogramu)</p>
+      <p>
+        Akceptowane są tylko poniższe pola, wszystkie inne są ignorowane:
+      </p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        title, message, url, schedule, target, randomize, startDate, endDate, startTime,
+        endTime, interval, intervalMax, timezone, expireIn, reminders, userid, groupid
+      </p>
+
+      {/* ── Jobs ──────────────────────────────────────────────────────────── */}
+      <h2>Kolejka (zadania)</h2>
+      <p>
+        Endpointy zadań udostępniają poszczególne wiersze kolejki — rozwinięte
+        wysyłki utworzone z definicji harmonogramów.
+      </p>
+
+      <EndpointGroup title="Wiersze kolejki — /webapi/v1/jobs">
+        <Method verb="GET"    path="/webapi/v1/jobs"                              desc="Wymienia wszystkie wiersze kolejki w aktywnym badaniu." />
+        <Method verb="GET"    path="/webapi/v1/jobs/:notificationid"              desc="Wymienia wiersze kolejki należące do konkretnego harmonogramu." />
+        <Method verb="GET"    path="/webapi/v1/jobs/:notificationid/:jobid"       desc="Pobiera konkretny wiersz kolejki." />
+        <Method verb="PATCH"  path="/webapi/v1/jobs/:notificationid/:jobid"       desc="Aktualizuje wiersz kolejki." />
+        <Method verb="DELETE" path="/webapi/v1/jobs/:notificationid/:jobid"       desc="Usuwa wiersz kolejki." />
+      </EndpointGroup>
+
+      {/* ── Completion ────────────────────────────────────────────────────── */}
+      <h2>Wywołania zwrotne ukończenia</h2>
+      <p>
+        Te endpointy są wywoływane przez narzędzia ankietowe w celu zarejestrowania
+        zdarzeń ukończenia. Po sukcesie Samply oznacza wynik jako ukończony
+        i anuluje wszystkie oczekujące przypomnienia dla tej wysyłki.
+        Uwierzytelnianie nie jest wymagane — identyfikator wiadomości pełni rolę
+        wspólnego klucza tajnego.
+      </p>
+
+      <EndpointGroup title="Ukończenie — uwierzytelnianie nie jest wymagane">
+        <Method verb="GET"  path="/studies/:study/done/:messageid" desc="Rejestruje ukończenie i wyświetla stronę potwierdzenia (używane jako końcowe przekierowanie ankiety)." />
+        <Method verb="POST" path="/studies/:study/done/:messageid" desc="Rejestruje ukończenie po cichu (używane jako webhook z narzędzia ankietowego)." />
+      </EndpointGroup>
+
+      <dl>
+        <dt><Code>:study</Code></dt>
+        <dd>Skrót URL badania, który pojawia się w pasku adresu Panelu.</dd>
+        <dt><Code>:messageid</Code></dt>
+        <dd>
+          Identyfikator wiadomości pochodzący z symbolu zastępczego <Code>%MESSAGE_ID%</Code>
+          i przekazywany przez URL ankiety do przekierowania końca ankiety lub webhooka.
+          Pełną instrukcję konfiguracji znajdziesz na stronie{' '}
+          <a href="/docs/reminders">Przypomnienia</a>.
+        </dd>
+      </dl>
+
+      <p>
+        Endpoint <Code>POST</Code> zwraca <Code>200</Code> w przypadku sukcesu
+        i <Code>400</Code>, jeśli żaden rekord wyniku nie pasuje do podanego
+        identyfikatora wiadomości.
+      </p>
+
+      {/* ── Notify hook ───────────────────────────────────────────────────── */}
+      <h2>Hak powiadomień</h2>
+      <p>
+        Hak powiadomień wysyła natychmiastowe powiadomienia push ad hoc do
+        uczestników badania — bez tworzenia harmonogramu ani wiersza kolejki.
+        Jest przeznaczony dla powiadomień wyzwalanych przez zdarzenia w systemach
+        zewnętrznych (alerty REDCap, zdarzenia systemu laboratoryjnego itp.).
+        Uwierzytelnianie wykorzystuje token powiadomień specyficzny dla badania
+        zamiast tokenu JWT badacza.
+      </p>
+
+      <EndpointGroup title="Powiadomienie ad hoc — uwierzytelnianie tokenem">
+        <Method verb="POST" path="/api/notify" desc="Wysyła natychmiastowe powiadomienie do uczestników badania." />
+      </EndpointGroup>
+
+      <p><strong>Treść żądania</strong></p>
+      <table>
+        <thead><tr><th>Pole</th><th>Wymagane</th><th>Opis</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>Tak</td><td>Token powiadomień badania. Wygeneruj go ponownie w Edytuj badanie → Notify token.</td></tr>
+          <tr><td><Code>projectID</Code></td><td>Tak</td><td>Identyfikator MongoDB badania.</td></tr>
+          <tr><td><Code>title</Code></td><td>Tak</td><td>Tytuł powiadomienia.</td></tr>
+          <tr><td><Code>message</Code></td><td>Tak</td><td>Treść powiadomienia.</td></tr>
+          <tr><td><Code>url</Code></td><td>Nie</td><td>URL ankiety. Obsługuje te same symbole zastępcze <Code>%TOKEN%</Code> co zaplanowane powiadomienia.</td></tr>
+          <tr><td><Code>participantID</Code></td><td>Nie</td><td>Wysyła do konkretnego uczestnika (identyfikator Samply). Pomiń, aby wysłać do wszystkich.</td></tr>
+          <tr><td><Code>groupID</Code></td><td>Nie</td><td>Wysyła do wszystkich członków grupy z wyjątkiem uczestnika wyzwalającego. Zazwyczaj używane, gdy akcja jednego uczestnika powinna zostać zgłoszona grupie.</td></tr>
+          <tr><td><Code>expireIn</Code></td><td>Nie</td><td>Czas ważności linku od momentu wysłania, w milisekundach.</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Gdy podane są zarówno <Code>groupID</Code>, jak i <Code>participantID</Code>, Samply
+        wysyła do wszystkich członków grupy z wyjątkiem określonego uczestnika.
+        Gdy podany jest tylko <Code>participantID</Code>, powiadomienie otrzymuje tylko ten uczestnik.
+        Jeśli nie podano żadnego, powiadomienie otrzymują wszyscy uczestnicy badania.
+      </p>
+
+      {/* ── Errors ────────────────────────────────────────────────────────── */}
+      <h2>Odpowiedzi błędów</h2>
+      <table>
+        <thead><tr><th>Status</th><th>Znaczenie</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code></td><td>Sukces.</td></tr>
+          <tr><td><Code>400</Code></td><td>Nieprawidłowe żądanie — brakujące lub niepoprawne pola, albo na koncie nie ustawiono aktywnego badania.</td></tr>
+          <tr><td><Code>401</Code></td><td>Brak lub wygasły nagłówek <Code>x-auth-token</Code>.</td></tr>
+          <tr><td><Code>429</Code></td><td>Przekroczono limit żądań. Poczekaj przed ponowną próbą.</td></tr>
+          <tr><td><Code>500</Code></td><td>Wewnętrzny błąd serwera. Treść odpowiedzi zawiera stały ciąg <Code>«Internal server error»</Code>. Szczegółowa diagnostyka jest rejestrowana tylko po stronie serwera.</td></tr>
+        </tbody>
+      </table>
+    </>
+  );
+}
+
+function ApiContentAr() {
+  return (
+    <>
+      <p>
+        يوفّر Samply واجهتي API: واجهة REST API لإدارة الدراسات برمجيًا
+        (<strong>API الباحث</strong>) إضافة إلى خطّافَي تكامل تستخدمهما
+        أدوات الاستطلاع للإبلاغ عن الإكمال أو لتشغيل إشعارات مخصّصة.
+        كلاهما يعمل على الخادم نفسه الذي تعمل عليه لوحة التحكم.
+      </p>
+
+      {/* ── Base URL ──────────────────────────────────────────────────────── */}
+      <h2>عنوان URL الأساسي</h2>
+      <p>
+        تُركَّب واجهة REST API الخاصة بالباحث تحت <Code>/webapi/v1</Code>. جميع
+        نقاط النهاية المذكورة أدناه نسبية إلى هذه البادئة. أمّا نقاط نهاية
+        الإكمال والإشعار فهي مركّبة مباشرة في الجذر وموثّقة بشكل منفصل.
+      </p>
+
+      {/* ── Authentication ────────────────────────────────────────────────── */}
+      <h2>المصادقة</h2>
+      <p>
+        جميع نقاط نهاية API الباحث (باستثناء نقطة نهاية الـ Token نفسها)
+        تتطلّب رمز JWT يُمرَّر في ترويسة الطلب <Code>x-auth-token</Code>.
+        للحصول على Token، أرسل بيانات اعتماد الباحث الخاصة بك:
+      </p>
+
+      <EndpointGroup title="Token">
+        <Method verb="POST" path="/webapi/v1/auth" desc="يستبدل البريد الإلكتروني وكلمة المرور برمز JWT." />
+      </EndpointGroup>
+
+      <p><strong>جسم الطلب</strong></p>
+      <table>
+        <thead><tr><th>الحقل</th><th>النوع</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><Code>email</Code></td><td>string</td><td>البريد الإلكتروني لحساب الباحث.</td></tr>
+          <tr><td><Code>password</Code></td><td>string</td><td>كلمة مرور حساب الباحث.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>الاستجابة</strong></p>
+      <table>
+        <thead><tr><th>الحقل</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>رمز JWT صالح لمدّة 14 يومًا. مرّره عبر <Code>x-auth-token</Code> في الطلبات اللاحقة.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Rate limits ───────────────────────────────────────────────────── */}
+      <h2>حدود معدّل الطلبات</h2>
+      <p>
+        تخضع جميع مسارات API لحدود معدّل الطلبات. الطلبات التي تتجاوز الحدّ
+        تستقبل استجابة <Code>429 Too Many Requests</Code>. توجد ثلاثة مستويات:
+      </p>
+      <table>
+        <thead><tr><th>الحدّ</th><th>المسار</th></tr></thead>
+        <tbody>
+          <tr><td>20 طلبًا / 15 دقيقة</td><td><Code>/webapi/v1/auth</Code>، نقاط نهاية تسجيل الدخول وإنشاء الحساب وإعادة تعيين كلمة المرور</td></tr>
+          <tr><td>30 طلبًا / دقيقة واحدة</td><td><Code>/api/notify</Code></td></tr>
+          <tr><td>100 طلب / 15 دقيقة</td><td>سائر مسارات <Code>/api/*</Code> و<Code>/webapi/*</Code></td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Active study concept ──────────────────────────────────────────── */}
+      <h2>الدراسة النشطة</h2>
+      <p>
+        تعمل معظم نقاط نهاية API الباحث على <em>الدراسة النشطة</em> —
+        وهي دراسة واحدة محدّدة في حساب الباحث الخاص بك. قبل استدعاء
+        نقاط نهاية المشاركين أو الإشعارات أو المهام، اختر الدراسة التي
+        تريد العمل عليها:
+      </p>
+
+      <EndpointGroup title="اختيار الدراسة">
+        <Method verb="GET"  path="/webapi/v1/auth/studies"          desc="يعرض جميع الدراسات التي تملكها أو أنت عضو فيها." />
+        <Method verb="GET"  path="/webapi/v1/auth/studies/selected"  desc="يعيد الدراسة النشطة الحالية." />
+        <Method verb="POST" path="/webapi/v1/auth/select/study"      desc="يضبط الدراسة النشطة." />
+        <Method verb="GET"  path="/webapi/v1/auth/study/:id"         desc="يجلب دراسة محدّدة بواسطة معرّف MongoDB." />
+        <Method verb="PATCH" path="/webapi/v1/auth/study/:id"        desc="يحدّث حقول الدراسة." />
+      </EndpointGroup>
+
+      <p>
+        <Code>POST /webapi/v1/auth/select/study</Code> يتوقّع في جسم الطلب <Code>{'{ "id": "<study_id>" }'}</Code>{' '}
+        يُخزَّن الاختيار في حساب الباحث ويبقى نشطًا بين الطلبات إلى أن
+        يُغيَّر.
+      </p>
+
+      <p><strong>جسم PATCH</strong> (تحديث الدراسة)</p>
+      <p>تُقبَل الحقول التالية فقط، ويُتجاهَل ما عداها:</p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        name, description, currentlyActive, public, welcomeMessage, codeMessage,
+        groupMessage, messageAfterJoin, completionMessage, geofencingInstruction, settings
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2>المشاركون</h2>
+      <p>
+        تتيح هذه النقاط إدارة المشاركين في الدراسة النشطة. المشاركون
+        المُنشَأون عبر API يكونون غير نشطين في البداية — يحصلون على
+        رمز JWT للدعوة يُفعِّل حسابهم عندما يفتحون تطبيق Samply Research.
+      </p>
+
+      <EndpointGroup title="المشاركون — /webapi/v1/participants">
+        <Method verb="GET"    path="/webapi/v1/participants"      desc="يعرض جميع المشاركين في الدراسة النشطة." />
+        <Method verb="GET"    path="/webapi/v1/participants/:id"  desc="يجلب مشاركًا بواسطة معرّف Samply." />
+        <Method verb="POST"   path="/webapi/v1/participants"      desc="ينشئ مشاركًا ويُسجّله." />
+        <Method verb="PATCH"  path="/webapi/v1/participants/:id"  desc="يحدّث حقول المشارك." />
+        <Method verb="DELETE" path="/webapi/v1/participants/:id"  desc="يحذف مشاركًا من الدراسة." />
+      </EndpointGroup>
+
+      <p><strong>جسم POST</strong> (إنشاء مشارك)</p>
+      <table>
+        <thead><tr><th>الحقل</th><th>مطلوب</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><Code>name</Code></td><td>نعم</td><td>الاسم المعروض — لا يظهر للمشاركين الآخرين.</td></tr>
+          <tr><td><Code>email</Code></td><td>نعم</td><td>البريد الإلكتروني المستخدم لإنشاء حساب Samply.</td></tr>
+          <tr><td><Code>code</Code></td><td>لا</td><td>رمز المشارك يُخزَّن بوصفه <Code>username</Code> ويتاح عبر <Code>%PARTICIPANT_CODE%</Code>.</td></tr>
+          <tr><td><Code>expiresIn</Code></td><td>لا</td><td>مدّة صلاحية رمز JWT للدعوة (مثلاً <Code>«7d»</Code>). الحدّ الأقصى 30 يومًا — تُقتطَع القيم الأكبر بصمت.</td></tr>
+          <tr><td><Code>information</Code></td><td>لا</td><td>كائن JSON اختياري لبيانات وصفية إضافية عن المشارك.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>الاستجابة</strong> (إنشاء مشارك)</p>
+      <table>
+        <thead><tr><th>الحقل</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><Code>samplyid</Code></td><td>معرّف Samply مُولَّد تلقائيًا للمشارك الجديد.</td></tr>
+          <tr><td><Code>token</Code></td><td>رمز JWT للدعوة. سلّمه إلى المشارك؛ يستخدمه التطبيق لتفعيل الحساب.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>جسم PATCH</strong> (تحديث المشارك)</p>
+      <table>
+        <thead><tr><th>الحقل</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><Code>username</Code></td><td>رمز المشارك / الاسم المعروض.</td></tr>
+          <tr><td><Code>deactivated</Code></td><td>قيمة منطقية — اضبطها على <Code>true</Code> لإيقاف إرسال الإشعارات إلى هذا المشارك.</td></tr>
+          <tr><td><Code>group</Code></td><td>سلسلة تعيين المجموعة.</td></tr>
+        </tbody>
+      </table>
+      <p>يُتجاهَل أيّ حقل آخر يُرسَل في الجسم.</p>
+
+      {/* ── Notifications ─────────────────────────────────────────────────── */}
+      <h2>الجداول (الإشعارات)</h2>
+      <p>
+        تتولّى نقاط نهاية الإشعارات إدارة تعريفات الجداول — وهي القواعد
+        التي تتوسّع إلى صفوف الطابور. إنشاء جدول عبر API يُشغِّل توسيع
+        الطابور نفسه تمامًا كإرسال النموذج في لوحة التحكم.
+      </p>
+
+      <EndpointGroup title="الجداول — /webapi/v1/notifications">
+        <Method verb="GET"    path="/webapi/v1/notifications"      desc="يعرض جميع تعريفات الجداول في الدراسة النشطة." />
+        <Method verb="GET"    path="/webapi/v1/notifications/:id"  desc="يجلب تعريف الجدول." />
+        <Method verb="POST"   path="/webapi/v1/notifications"      desc="ينشئ جدولًا ويوسّعه إلى الطابور." />
+        <Method verb="PATCH"  path="/webapi/v1/notifications/:id"  desc="يحدّث تعريف الجدول." />
+        <Method verb="DELETE" path="/webapi/v1/notifications/:id"  desc="يحذف الجدول ويلغي صفوف الطابور المعلّقة." />
+      </EndpointGroup>
+
+      <p>
+        جسم <Code>POST</Code> يعكس الحقول الموجودة في نموذج الجدول. المفاتيح
+        المُوجِّهة هي تركيبة <Code>schedule</Code> (<Code>one-time</Code> أو <Code>repeat</Code>) و
+        <Code>target</Code> (<Code>fixed-times</Code>، <Code>fixed-intervals</Code>،
+        أو <Code>user-specific</Code>) وتقابل المعالجات الداخلية نفسها التي
+        يستخدمها نموذج لوحة التحكم.
+      </p>
+
+      <p><strong>جسم PATCH</strong> (تحديث الجدول)</p>
+      <p>
+        تُقبَل الحقول التالية فقط، ويُتجاهَل ما عداها:
+      </p>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>
+        title, message, url, schedule, target, randomize, startDate, endDate, startTime,
+        endTime, interval, intervalMax, timezone, expireIn, reminders, userid, groupid
+      </p>
+
+      {/* ── Jobs ──────────────────────────────────────────────────────────── */}
+      <h2>الطابور (المهام)</h2>
+      <p>
+        تكشف نقاط نهاية المهام عن صفوف الطابور الفردية — وهي الإرساليات
+        الموسَّعة المُولَّدة من تعريفات الجداول.
+      </p>
+
+      <EndpointGroup title="صفوف الطابور — /webapi/v1/jobs">
+        <Method verb="GET"    path="/webapi/v1/jobs"                              desc="يعرض جميع صفوف الطابور في الدراسة النشطة." />
+        <Method verb="GET"    path="/webapi/v1/jobs/:notificationid"              desc="يعرض صفوف الطابور التابعة لجدول محدّد." />
+        <Method verb="GET"    path="/webapi/v1/jobs/:notificationid/:jobid"       desc="يجلب صفًّا محدّدًا من الطابور." />
+        <Method verb="PATCH"  path="/webapi/v1/jobs/:notificationid/:jobid"       desc="يحدّث صفًّا في الطابور." />
+        <Method verb="DELETE" path="/webapi/v1/jobs/:notificationid/:jobid"       desc="يحذف صفًّا من الطابور." />
+      </EndpointGroup>
+
+      {/* ── Completion ────────────────────────────────────────────────────── */}
+      <h2>استدعاءات الإكمال</h2>
+      <p>
+        تُستدعى هذه النقاط من أدوات الاستطلاع لتسجيل أحداث الإكمال.
+        عند النجاح يُعلِّم Samply النتيجة بأنّها مُكتمَلة ويُلغي
+        جميع التذكيرات المعلّقة لتلك الإرسالية. لا تتطلّب مصادقة —
+        إذ يعمل معرّف الرسالة بمثابة سرّ مشترك.
+      </p>
+
+      <EndpointGroup title="الإكمال — لا تلزم المصادقة">
+        <Method verb="GET"  path="/studies/:study/done/:messageid" desc="يسجّل الإكمال ويعرض صفحة تأكيد (يُستخدم كإعادة توجيه في نهاية الاستطلاع)." />
+        <Method verb="POST" path="/studies/:study/done/:messageid" desc="يسجّل الإكمال بصمت (يُستخدم كـ webhook من أداة الاستطلاع)." />
+      </EndpointGroup>
+
+      <dl>
+        <dt><Code>:study</Code></dt>
+        <dd>اختصار رابط URL الخاص بالدراسة كما يظهر في شريط عنوان لوحة التحكم.</dd>
+        <dt><Code>:messageid</Code></dt>
+        <dd>
+          معرّف الرسالة الناتج عن العنصر النائب <Code>%MESSAGE_ID%</Code>
+          والمُمرَّر عبر رابط الاستطلاع إلى إعادة توجيه نهاية الاستطلاع أو الـ webhook.
+          راجع التعليمات الكاملة للإعداد في صفحة{' '}
+          <a href="/docs/reminders">التذكيرات</a>.
+        </dd>
+      </dl>
+
+      <p>
+        نقطة نهاية <Code>POST</Code> تعيد <Code>200</Code> عند النجاح
+        و<Code>400</Code> إذا لم يطابق أيّ سجلّ نتيجة معرّف الرسالة المعطى.
+      </p>
+
+      {/* ── Notify hook ───────────────────────────────────────────────────── */}
+      <h2>خطّاف الإشعار</h2>
+      <p>
+        يُرسل خطّاف الإشعار إشعارات push فورية ومخصّصة إلى المشاركين في
+        الدراسة — دون إنشاء جدول أو صفّ في الطابور. وهو مُعدّ للإشعارات
+        التي تُشغِّلها أحداث في أنظمة خارجية (تنبيهات REDCap، أحداث نظام
+        المختبر، إلخ.). تستخدم المصادقة Token إشعار خاص بالدراسة بدلًا من
+        Token الـ JWT الخاص بالباحث.
+      </p>
+
+      <EndpointGroup title="إشعار مخصّص — المصادقة بـ Token">
+        <Method verb="POST" path="/api/notify" desc="يرسل إشعارًا فوريًا إلى المشاركين في الدراسة." />
+      </EndpointGroup>
+
+      <p><strong>جسم الطلب</strong></p>
+      <table>
+        <thead><tr><th>الحقل</th><th>مطلوب</th><th>الوصف</th></tr></thead>
+        <tbody>
+          <tr><td><Code>token</Code></td><td>نعم</td><td>Token إشعار الدراسة. يمكن إعادة توليده من تعديل الدراسة ← Notify token.</td></tr>
+          <tr><td><Code>projectID</Code></td><td>نعم</td><td>معرّف MongoDB الخاص بالدراسة.</td></tr>
+          <tr><td><Code>title</Code></td><td>نعم</td><td>عنوان الإشعار.</td></tr>
+          <tr><td><Code>message</Code></td><td>نعم</td><td>نصّ جسم الإشعار.</td></tr>
+          <tr><td><Code>url</Code></td><td>لا</td><td>رابط الاستطلاع. يدعم العناصر النائبة نفسها <Code>%TOKEN%</Code> مثل الإشعارات المجدوَلة.</td></tr>
+          <tr><td><Code>participantID</Code></td><td>لا</td><td>يُرسل إلى مشارك محدّد (معرّف Samply). اتركه فارغًا للإرسال إلى الجميع.</td></tr>
+          <tr><td><Code>groupID</Code></td><td>لا</td><td>يُرسل إلى جميع أعضاء المجموعة باستثناء المشارك المُشغِّل. يُستخدم عادةً عندما يجب إبلاغ المجموعة بإجراء قام به أحد المشاركين.</td></tr>
+          <tr><td><Code>expireIn</Code></td><td>لا</td><td>مدّة صلاحية الرابط منذ لحظة الإرسال، بالمللي ثانية.</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        عند تقديم كلٍّ من <Code>groupID</Code> و<Code>participantID</Code>، يُرسل Samply
+        إلى جميع أعضاء المجموعة باستثناء المشارك المحدّد.
+        وعند تقديم <Code>participantID</Code> فقط، يستلم الإشعار ذلك المشارك وحده.
+        وإذا لم يُقدَّم أيّ منهما، يستلم الإشعار جميع المشاركين في الدراسة.
+      </p>
+
+      {/* ── Errors ────────────────────────────────────────────────────────── */}
+      <h2>استجابات الأخطاء</h2>
+      <table>
+        <thead><tr><th>الحالة</th><th>المعنى</th></tr></thead>
+        <tbody>
+          <tr><td><Code>200</Code></td><td>نجاح.</td></tr>
+          <tr><td><Code>400</Code></td><td>طلب غير صالح — حقول مفقودة أو غير صحيحة، أو لم تُضبط دراسة نشطة في الحساب.</td></tr>
+          <tr><td><Code>401</Code></td><td>ترويسة <Code>x-auth-token</Code> مفقودة أو منتهية الصلاحية.</td></tr>
+          <tr><td><Code>429</Code></td><td>تجاوز حدّ معدّل الطلبات. انتظر قبل إعادة المحاولة.</td></tr>
+          <tr><td><Code>500</Code></td><td>خطأ داخلي في الخادم. جسم الاستجابة يحتوي على السلسلة الثابتة <Code>«Internal server error»</Code>. تُسجَّل التشخيصات التفصيلية على جانب الخادم فقط.</td></tr>
         </tbody>
       </table>
     </>

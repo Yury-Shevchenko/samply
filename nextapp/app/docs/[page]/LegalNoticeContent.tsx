@@ -10,6 +10,10 @@ export default function LegalNoticeContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <LegalNoticeContentFr />;
   if (locale === "es") return <LegalNoticeContentEs />;
   if (locale === "pt") return <LegalNoticeContentPt />;
+  if (locale === "ja") return <LegalNoticeContentJa />;
+  if (locale === "ar") return <LegalNoticeContentAr />;
+  if (locale === "pl") return <LegalNoticeContentPl />;
+  if (locale === "tr") return <LegalNoticeContentTr />;
   return <LegalNoticeContentEn />;
 }
 
@@ -297,6 +301,122 @@ function LegalNoticeContentPt() {
       <h2>Representantes</h2>
       <dl>
         <dt>Desenvolvedor</dt>
+        <dd>Yury Shevchenko</dd>
+      </dl>
+    </>
+  );
+}
+
+function LegalNoticeContentJa() {
+  return (
+    <>
+      <h2>提供者</h2>
+      <p>iScience 研究グループ</p>
+      <p>コンスタンツ大学</p>
+      <p>Universitätsstraße 10</p>
+      <p>78464 Konstanz</p>
+      <p>ドイツ</p>
+
+      <h2>連絡先</h2>
+      <dl>
+        <dt>E-Mail</dt>
+        <dd><a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a></dd>
+        <dt>電話</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>ウェブサイト</dt>
+        <dd><a href="https://iscience.uni-konstanz.de/" target="_blank" rel="noreferrer">https://iscience.uni-konstanz.de/</a></dd>
+      </dl>
+
+      <h2>代表者</h2>
+      <dl>
+        <dt>開発者</dt>
+        <dd>Yury Shevchenko</dd>
+      </dl>
+    </>
+  );
+}
+
+function LegalNoticeContentTr() {
+  return (
+    <>
+      <h2>Sağlayıcı</h2>
+      <p>iScience araştırma grubu</p>
+      <p>Konstanz Üniversitesi</p>
+      <p>Universitätsstraße 10</p>
+      <p>78464 Konstanz</p>
+      <p>Almanya</p>
+
+      <h2>İletişim</h2>
+      <dl>
+        <dt>E-posta</dt>
+        <dd><a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a></dd>
+        <dt>Telefon</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>Web sitesi</dt>
+        <dd><a href="https://iscience.uni-konstanz.de/" target="_blank" rel="noreferrer">https://iscience.uni-konstanz.de/</a></dd>
+      </dl>
+
+      <h2>Temsilciler</h2>
+      <dl>
+        <dt>Geliştirici</dt>
+        <dd>Yury Shevchenko</dd>
+      </dl>
+    </>
+  );
+}
+
+function LegalNoticeContentPl() {
+  return (
+    <>
+      <h2>Dostawca</h2>
+      <p>Grupa badawcza iScience</p>
+      <p>Uniwersytet w Konstancji</p>
+      <p>Universitätsstraße 10</p>
+      <p>78464 Konstanz</p>
+      <p>Niemcy</p>
+
+      <h2>Kontakt</h2>
+      <dl>
+        <dt>E-mail</dt>
+        <dd><a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a></dd>
+        <dt>Telefon</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>Strona internetowa</dt>
+        <dd><a href="https://iscience.uni-konstanz.de/" target="_blank" rel="noreferrer">https://iscience.uni-konstanz.de/</a></dd>
+      </dl>
+
+      <h2>Przedstawiciele</h2>
+      <dl>
+        <dt>Programista</dt>
+        <dd>Yury Shevchenko</dd>
+      </dl>
+    </>
+  );
+}
+
+function LegalNoticeContentAr() {
+  return (
+    <>
+      <h2>المزود</h2>
+      <p>مجموعة أبحاث iScience</p>
+      <p>جامعة كونستانس</p>
+      <p>Universitätsstraße 10</p>
+      <p>78464 Konstanz</p>
+      <p>ألمانيا</p>
+
+      <h2>الاتصال</h2>
+      <dl>
+        <dt>البريد الإلكتروني</dt>
+        <dd><a href="mailto:yury.shevchenko@uni.kn">yury.shevchenko@uni.kn</a></dd>
+        <dt>الهاتف</dt>
+        <dd>+49 178 418 81 54</dd>
+        <dt>الموقع الإلكتروني</dt>
+        <dd><a href="https://iscience.uni-konstanz.de/" target="_blank" rel="noreferrer">https://iscience.uni-konstanz.de/</a></dd>
+      </dl>
+
+      <h2>الممثلون</h2>
+      <dl>
+        <dt>المطور</dt>
         <dd>Yury Shevchenko</dd>
       </dl>
     </>

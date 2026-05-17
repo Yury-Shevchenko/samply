@@ -3,9 +3,11 @@ import { cookies } from "next/headers";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
+import stripe from "@/lib/stripe";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { DB_LANG_TO_LOCALE } from "@/lib/i18n";
 import { getT } from "@/lib/i18n.server";
+import { fetchStudyContactsByProjectIds } from "@/lib/data/studies";
 
 export const metadata = { title: "Account — Samply" };
 
@@ -38,16 +40,81 @@ async function updateAccountAction(formData: FormData) {
   redirect("/account?notice=" + encodeURIComponent("Profile updated."));
 }
 
+function stripeErrorMessage(err: unknown, fallback: string): string {
+  // Surface Stripe's own message when available — much more actionable than a
+  // generic "try again". Truncate to keep the URL sane.
+  const msg = err instanceof Error ? err.message : fallback;
+  return msg.slice(0, 240);
+}
+
+async function createPayableAccountAction() {
+  "use server";
+  const session = await auth();
+  if (!session) redirect("/login");
+
+  await connectDB();
+  const user = await User.findById(session.user.id);
+  if (!user) redirect("/login");
+  if (user.level >= 11) redirect("/dashboard");
+  if (!user.emailIsConfirmed) {
+    redirect("/account?error=" + encodeURIComponent("Please confirm your email first."));
+  }
+
+  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
+
+  let accountId = user.stripeAccountId;
+  if (!accountId) {
+    try {
+      const account = await stripe.accounts.create({
+        type: "express",
+        email: user.email,
+      });
+      accountId = account.id;
+      user.stripeAccountId = accountId;
+      await user.save();
+    } catch (err) {
+      console.error("[payable-account] stripe.accounts.create failed:", err);
+      redirect("/account?error=" + encodeURIComponent(
+        stripeErrorMessage(err, "Could not create Stripe account."),
+      ));
+    }
+  }
+
+  let url: string;
+  try {
+    const accountLink = await stripe.accountLinks.create({
+      account: accountId,
+      refresh_url: `${appBaseUrl}/account`,
+      return_url: `${appBaseUrl}/account`,
+      type: "account_onboarding",
+    });
+    url = accountLink.url;
+  } catch (err) {
+    console.error("[payable-account] stripe.accountLinks.create failed:", err);
+    redirect("/account?error=" + encodeURIComponent(
+      stripeErrorMessage(err, "Could not create Stripe onboarding link."),
+    ));
+  }
+
+  redirect(url);
+}
+
 async function resendConfirmationAction(formData: FormData) {
   "use server";
   const session = await auth();
   if (!session) redirect("/login");
 
-  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
-  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
   const email = formData.get("email") as string;
   if (!email || email !== session.user.email) redirect("/account");
 
+  await sendConfirmationEmail(email);
+
+  redirect("/account?notice=" + encodeURIComponent("Confirmation email sent. Check your inbox."));
+}
+
+async function sendConfirmationEmail(email: string) {
+  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
+  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
   await fetch(`${expressUrl}/account/confirm`, {
     method: "POST",
     headers: {
@@ -58,8 +125,43 @@ async function resendConfirmationAction(formData: FormData) {
     body: new URLSearchParams({ email }).toString(),
     redirect: "manual",
   });
+}
 
-  redirect("/account?notice=" + encodeURIComponent("Confirmation email sent. Check your inbox."));
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+async function changeEmailAction(formData: FormData) {
+  "use server";
+  const session = await auth();
+  if (!session) redirect("/login");
+
+  const raw = (formData.get("email") as string | null) ?? "";
+  const newEmail = raw.toLowerCase().trim();
+
+  if (!newEmail || !EMAIL_RE.test(newEmail)) {
+    redirect("/account?error=" + encodeURIComponent("Please enter a valid email address."));
+  }
+
+  if (newEmail === session.user.email.toLowerCase()) {
+    redirect("/account?notice=" + encodeURIComponent("Email unchanged."));
+  }
+
+  await connectDB();
+
+  const taken = await User.findOne({ email: newEmail, _id: { $ne: session.user.id } }, { _id: 1 }).lean();
+  if (taken) {
+    redirect("/account?error=" + encodeURIComponent("That email is already in use by another account."));
+  }
+
+  const user = await User.findById(session.user.id);
+  if (!user) redirect("/login");
+
+  user.email = newEmail;
+  user.emailIsConfirmed = false;
+  await user.save();
+
+  await sendConfirmationEmail(newEmail);
+
+  redirect("/account?notice=" + encodeURIComponent("Email updated. Check your new inbox to confirm it."));
 }
 
 const inputStyle: React.CSSProperties = {
@@ -96,6 +198,14 @@ export default async function AccountPage({
     ? new Date(user.created).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
     : null;
 
+  // For participants, look up the researcher contact for each enrolled study.
+  const participantStudies = (!isResearcher && user.participant_projects) || [];
+  const contactByProject = participantStudies.length
+    ? await fetchStudyContactsByProjectIds(
+        participantStudies.map((p: { _id: unknown }) => String(p._id)),
+      )
+    : new Map();
+
   return (
     <main
       className="min-h-screen"
@@ -106,11 +216,11 @@ export default async function AccountPage({
         {/* Breadcrumb */}
         <div style={{ marginBottom: "2.8rem" }}>
           <a
-            href="/dashboard"
+            href={isResearcher ? "/dashboard" : "/participant/home"}
             style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}
             className="hover:opacity-70 transition-opacity"
           >
-            {t("account.breadcrumb")}
+            {isResearcher ? t("account.breadcrumb") : t("participant.account.breadcrumb")}
           </a>
         </div>
 
@@ -194,44 +304,82 @@ export default async function AccountPage({
             </div>
           </div>
 
-          {/* Email confirmation */}
+          {/* Email — editable + confirmation status */}
           <div style={{ padding: "1.8rem 3.2rem", borderBottom: "1px solid var(--ink-10)" }}>
-            <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
+            <div
+              style={{
+                fontSize: "1.1rem",
+                fontWeight: 600,
+                color: "var(--ink-40)",
+                letterSpacing: "0.08em",
+                textTransform: "uppercase",
+                marginBottom: "1rem",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.8rem",
+              }}
+            >
               {t("account.sectionEmail")}
-            </div>
-            {user.emailIsConfirmed ? (
-              <div className="flex items-center gap-[8px]">
-                <span style={{ fontSize: "1.35rem", color: "var(--ink)" }}>{user.email}</span>
-                <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--sage)", background: "rgba(61,115,107,.1)", padding: "0.2rem 0.8rem", borderRadius: "9999px" }}>
+              {user.emailIsConfirmed ? (
+                <span style={{ fontSize: "1.05rem", fontWeight: 600, color: "var(--sage)", background: "rgba(61,115,107,.1)", padding: "0.2rem 0.7rem", borderRadius: "9999px", textTransform: "none", letterSpacing: 0 }}>
                   {t("account.emailConfirmed")}
                 </span>
+              ) : (
+                <span style={{ fontSize: "1.05rem", fontWeight: 600, color: "var(--coral)", background: "rgba(214,90,48,.1)", padding: "0.2rem 0.7rem", borderRadius: "9999px", textTransform: "none", letterSpacing: 0 }}>
+                  {t("account.emailNotConfirmed")}
+                </span>
+              )}
+            </div>
+
+            <form action={changeEmailAction} style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+              <input
+                type="email"
+                name="email"
+                defaultValue={user.email || ""}
+                required
+                autoComplete="email"
+                style={inputStyle}
+              />
+              <p style={{ fontSize: "1.15rem", color: "var(--ink-40)", margin: 0, lineHeight: 1.5 }}>
+                {t("account.emailChangeHint")}
+              </p>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.8rem", flexWrap: "wrap" }}>
+                <SubmitButton
+                  pendingLabel={t("account.emailSavePending")}
+                  style={{
+                    fontSize: "1.25rem",
+                    padding: "0.7rem 1.4rem",
+                    background: "var(--ink)",
+                    color: "var(--paper)",
+                    border: "none",
+                    borderRadius: "9999px",
+                    fontFamily: "var(--font-body)",
+                    fontWeight: 500,
+                  }}
+                >
+                  {t("account.emailSave")}
+                </SubmitButton>
               </div>
-            ) : (
-              <div>
-                <div className="flex items-center gap-[8px]" style={{ marginBottom: "1rem" }}>
-                  <span style={{ fontSize: "1.35rem", color: "var(--ink)" }}>{user.email}</span>
-                  <span style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--coral)", background: "rgba(214,90,48,.1)", padding: "0.2rem 0.8rem", borderRadius: "9999px" }}>
-                    {t("account.emailNotConfirmed")}
-                  </span>
-                </div>
-                <form action={resendConfirmationAction}>
-                  <input type="hidden" name="email" value={user.email} />
-                  <SubmitButton
-                    pendingLabel={t("account.resendPending")}
-                    style={{
-                      fontSize: "1.25rem",
-                      padding: "0.7rem 1.4rem",
-                      background: "none",
-                      border: "1px solid var(--ink-20)",
-                      borderRadius: "9999px",
-                      color: "var(--ink-60)",
-                      fontFamily: "var(--font-body)",
-                    }}
-                  >
-                    {t("account.resendConfirmation")}
-                  </SubmitButton>
-                </form>
-              </div>
+            </form>
+
+            {!user.emailIsConfirmed && (
+              <form action={resendConfirmationAction} style={{ marginTop: "1rem" }}>
+                <input type="hidden" name="email" value={user.email} />
+                <SubmitButton
+                  pendingLabel={t("account.resendPending")}
+                  style={{
+                    fontSize: "1.2rem",
+                    padding: "0.55rem 1.2rem",
+                    background: "none",
+                    border: "1px solid var(--ink-20)",
+                    borderRadius: "9999px",
+                    color: "var(--ink-60)",
+                    fontFamily: "var(--font-body)",
+                  }}
+                >
+                  {t("account.resendConfirmation")}
+                </SubmitButton>
+              </form>
             )}
           </div>
 
@@ -266,6 +414,15 @@ export default async function AccountPage({
                   <option value="dutch">Nederlands</option>
                   <option value="russian">Русский</option>
                   <option value="chinese">中文</option>
+                  <option value="korean">한국어</option>
+                  <option value="italian">Italiano</option>
+                  <option value="french">Français</option>
+                  <option value="spanish">Español</option>
+                  <option value="portuguese">Português</option>
+                  <option value="japanese">日本語</option>
+                  <option value="turkish">Türkçe</option>
+                  <option value="polish">Polski</option>
+                  <option value="arabic">العربية</option>
                 </select>
               </label>
             </div>
@@ -301,17 +458,33 @@ export default async function AccountPage({
                 </div>
               )}
               {(user.participant_projects?.length ?? 0) > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  {(user.participant_projects ?? []).map((p: { _id: unknown; slug?: string; name?: string }) => (
-                    <a
-                      key={String(p._id)}
-                      href={`/studies/${p.slug}`}
-                      style={{ fontSize: "1.35rem", color: "var(--ink)", textDecoration: "none" }}
-                      className="hover:opacity-70 transition-opacity"
-                    >
-                      {p.name} →
-                    </a>
-                  ))}
+                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                  {(user.participant_projects ?? []).map((p: { _id: unknown; slug?: string; name?: string }) => {
+                    const contact = contactByProject.get(String(p._id));
+                    return (
+                      <div key={String(p._id)} style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                        <a
+                          href={`/studies/${p.slug}`}
+                          style={{ fontSize: "1.35rem", color: "var(--ink)", textDecoration: "none" }}
+                          className="hover:opacity-70 transition-opacity"
+                        >
+                          {p.name} →
+                        </a>
+                        {contact?.email && (
+                          <div style={{ fontSize: "1.2rem", color: "var(--ink-60)" }}>
+                            {t("participant.home.contactLabel")}{" "}
+                            <a
+                              href={`mailto:${contact.email}`}
+                              style={{ color: "var(--ink)", textDecoration: "none" }}
+                              className="hover:opacity-70 transition-opacity"
+                            >
+                              {contact.name ? `${contact.name} <${contact.email}>` : contact.email}
+                            </a>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: 0 }}>
@@ -320,23 +493,110 @@ export default async function AccountPage({
               )}
             </div>
           )}
+
+          {/* Payable account (Stripe Connect) — participants only */}
+          {!isResearcher && (
+            <div style={{ padding: "1.8rem 3.2rem", borderTop: "1px solid var(--ink-10)" }}>
+              <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
+                {t("participant.payable.title")}
+              </div>
+              <p style={{ fontSize: "1.3rem", color: "var(--ink-60)", margin: "0 0 1.4rem", lineHeight: 1.55 }}>
+                {t("participant.payable.intro")}
+              </p>
+
+              {user.stripeAccountId && (
+                <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "0.6rem 1.4rem", marginBottom: "1.4rem", fontSize: "1.3rem" }}>
+                  <span style={{ color: "var(--ink-60)" }}>{t("participant.payable.statusCharges")}</span>
+                  <span style={{ color: user.stripeInformation?.charges_enabled ? "var(--sage)" : "var(--ink-60)" }}>
+                    {user.stripeInformation?.charges_enabled
+                      ? "✓ " + t("participant.payable.enabled")
+                      : t("participant.payable.disabled")}
+                  </span>
+                  <span style={{ color: "var(--ink-60)" }}>{t("participant.payable.statusDetails")}</span>
+                  <span style={{ color: user.stripeInformation?.details_submitted ? "var(--sage)" : "var(--ink-60)" }}>
+                    {user.stripeInformation?.details_submitted
+                      ? "✓ " + t("participant.payable.submitted")
+                      : t("participant.payable.notSubmitted")}
+                  </span>
+                  <span style={{ color: "var(--ink-60)" }}>{t("participant.payable.statusPayouts")}</span>
+                  <span style={{ color: user.stripeInformation?.payouts_enabled ? "var(--sage)" : "var(--ink-60)" }}>
+                    {user.stripeInformation?.payouts_enabled
+                      ? "✓ " + t("participant.payable.enabled")
+                      : t("participant.payable.disabled")}
+                  </span>
+                </div>
+              )}
+
+              {user.emailIsConfirmed ? (
+                <form action={createPayableAccountAction}>
+                  <SubmitButton
+                    pendingLabel="…"
+                    style={{
+                      fontSize: "1.3rem",
+                      padding: "0.9rem 1.8rem",
+                      background: "var(--ink)",
+                      color: "var(--paper)",
+                      border: "none",
+                      borderRadius: "9999px",
+                      fontFamily: "var(--font-body)",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {user.stripeAccountId
+                      ? t("participant.payable.editButton")
+                      : t("participant.payable.createButton")}
+                  </SubmitButton>
+                </form>
+              ) : (
+                <p style={{ fontSize: "1.25rem", color: "var(--coral)", margin: 0 }}>
+                  {t("participant.payable.confirmEmailFirst")}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Danger zone */}
+        {/* Privacy & Data (researchers only) */}
         {isResearcher && (
           <div style={{ marginTop: "2.8rem", paddingTop: "2rem", borderTop: "1px solid var(--ink-10)" }}>
             <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
-              {t("account.dangerZone")}
+              {t("account.privacyTitle")}
             </div>
-            <a
-              href="/account/delete"
-              style={{ fontSize: "1.3rem", color: "var(--coral)", textDecoration: "none", fontWeight: 500 }}
-              className="hover:opacity-70 transition-opacity"
-            >
-              {t("account.deleteAccount")}
-            </a>
+            <p style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.55, margin: "0 0 0.8rem" }}>
+              {t("account.privacyIntro")}
+            </p>
+            <ul style={{ margin: "0 0 1rem", paddingLeft: "1.6rem", display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+              <li style={{ fontSize: "1.25rem", color: "var(--ink)", lineHeight: 1.55 }}>{t("account.privacyPending")}</li>
+              <li style={{ fontSize: "1.25rem", color: "var(--ink)", lineHeight: 1.55 }}>{t("account.privacyResults")}</li>
+            </ul>
+            <p style={{ fontSize: "1.2rem", color: "var(--ink-60)", lineHeight: 1.55, margin: "0 0 1rem" }}>
+              {t("account.privacyExport")}
+            </p>
+            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+              <a href="/docs/policy" style={{ fontSize: "1.2rem", color: "var(--ink-60)", textDecoration: "underline" }}>{t("account.privacyPolicy")}</a>
+              <a href="/docs/terms"  style={{ fontSize: "1.2rem", color: "var(--ink-60)", textDecoration: "underline" }}>{t("account.privacyTerms")}</a>
+            </div>
           </div>
         )}
+
+        {/* Danger zone */}
+        <div style={{ marginTop: "2.8rem", paddingTop: "2rem", borderTop: "1px solid var(--ink-10)" }}>
+          <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
+            {t("account.dangerZone")}
+          </div>
+          {!isResearcher && (
+            <p style={{ fontSize: "1.25rem", color: "var(--ink-60)", lineHeight: 1.55, margin: "0 0 1rem" }}>
+              {t("participant.account.deleteIntro")}
+            </p>
+          )}
+          <a
+            href="/account/delete"
+            style={{ fontSize: "1.3rem", color: "var(--coral)", textDecoration: "none", fontWeight: 500 }}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {isResearcher ? t("account.deleteAccount") : t("participant.account.deleteAccount")}
+          </a>
+        </div>
       </div>
     </main>
   );

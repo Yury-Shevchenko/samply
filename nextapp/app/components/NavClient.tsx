@@ -8,15 +8,16 @@ import { useT } from "./TranslationProvider";
 interface NavClientProps {
   isLoggedIn: boolean;
   isAdmin: boolean;
+  isParticipant: boolean;
   userName: string;
-  signOutAction: () => Promise<void>;
+  signOutAction: (formData: FormData) => Promise<void>;
   setLocaleAction: (formData: FormData) => Promise<void>;
   showDonation: boolean;
   currentLocale: Locale;
 }
 
-const Logo = ({ isLoggedIn }: { isLoggedIn: boolean }) => (
-  <a href={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-[1rem] no-underline">
+const Logo = ({ homeHref }: { homeHref: string }) => (
+  <a href={homeHref} className="flex items-center gap-[1rem] no-underline">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" style={{ width: "3rem", height: "3rem", flexShrink: 0 }}>
       <rect width="120" height="120" rx="22" fill="#23201a" />
       <g fill="#d65a30">
@@ -245,6 +246,7 @@ function LanguageSwitcher({
 export default function NavClient({
   isLoggedIn,
   isAdmin,
+  isParticipant,
   userName,
   signOutAction,
   setLocaleAction,
@@ -260,6 +262,15 @@ export default function NavClient({
 
   const closeMenu = () => setMenuOpen(false);
 
+  const isParticipantPath = path.startsWith("/participant");
+
+  const homeHref = isParticipant
+    ? "/participant/home"
+    : isParticipantPath && !isLoggedIn
+      ? "/participant/login"
+      : isLoggedIn ? "/dashboard" : "/";
+  const signOutRedirect = isParticipant ? "/participant/login" : "/login";
+
   return (
     <header
       className="sticky top-0 z-50 bg-[var(--paper)] border-b border-[var(--ink-10)]"
@@ -270,11 +281,32 @@ export default function NavClient({
         style={{ padding: "0 var(--nav-px)", height: "6rem" }}
       >
         {/* Left: logo */}
-        <Logo isLoggedIn={isLoggedIn} />
+        <Logo homeHref={homeHref} />
 
         {/* Right: desktop links */}
         <div className="nav-desktop-links">
-          {isLoggedIn ? (
+          {isParticipant ? (
+            <>
+              <NavLink href="/participant/home"    isActive={active("/participant/home")}>{t("participant.nav.home")}</NavLink>
+              <NavLink href="/participant/history" isActive={active("/participant/history")}>{t("participant.nav.history")}</NavLink>
+              <a
+                href="/account"
+                className="font-[family-name:var(--font-body)] font-medium text-[1.3rem] text-[var(--ink)] hover:opacity-70 transition-opacity"
+                style={{ color: active("/account") ? "var(--coral)" : undefined }}
+              >
+                {userName || t("participant.nav.account")}
+              </a>
+              <form action={signOutAction}>
+                <input type="hidden" name="redirectTo" value={signOutRedirect} />
+                <button
+                  type="submit"
+                  className="font-[family-name:var(--font-body)] text-[1.3rem] text-[var(--ink-60)] hover:text-[var(--ink)] transition-colors cursor-pointer bg-transparent border-none p-0"
+                >
+                  {t("participant.nav.signOut")}
+                </button>
+              </form>
+            </>
+          ) : isLoggedIn ? (
             <>
               <NavLink href="/dashboard" isActive={active("/dashboard")}>{t("nav.dashboard")}</NavLink>
               <NavLink href="/forum"     isActive={active("/forum")}>{t("nav.forum")}</NavLink>
@@ -290,6 +322,7 @@ export default function NavClient({
                 {userName || t("nav.dashboard")}
               </a>
               <form action={signOutAction}>
+                <input type="hidden" name="redirectTo" value={signOutRedirect} />
                 <button
                   type="submit"
                   className="font-[family-name:var(--font-body)] text-[1.3rem] text-[var(--ink-60)] hover:text-[var(--ink)] transition-colors cursor-pointer bg-transparent border-none p-0"
@@ -297,6 +330,15 @@ export default function NavClient({
                   {t("nav.signOut")}
                 </button>
               </form>
+            </>
+          ) : isParticipantPath ? (
+            <>
+              <a
+                href="/participant/login"
+                className="inline-flex items-center justify-center px-[1.4rem] py-[0.8rem] rounded-[999rem] text-[1.2rem] font-medium font-[family-name:var(--font-body)] bg-[var(--ink)] text-[var(--paper)] hover:opacity-90 transition-opacity"
+              >
+                {t("participant.nav.signIn")}
+              </a>
             </>
           ) : (
             <>
@@ -329,7 +371,17 @@ export default function NavClient({
 
       {/* Mobile dropdown menu */}
       <div className={`nav-mobile-menu${menuOpen ? " open" : ""}`}>
-        {isLoggedIn ? (
+        {isParticipant ? (
+          <>
+            <a href="/participant/home"    className="nav-mobile-link" style={{ color: active("/participant/home")    ? "var(--coral)" : undefined }} onClick={closeMenu}>{t("participant.nav.home")}</a>
+            <a href="/participant/history" className="nav-mobile-link" style={{ color: active("/participant/history") ? "var(--coral)" : undefined }} onClick={closeMenu}>{t("participant.nav.history")}</a>
+            <a href="/account"             className="nav-mobile-link" style={{ color: active("/account")             ? "var(--coral)" : undefined }} onClick={closeMenu}>{userName || t("participant.nav.account")}</a>
+            <form action={signOutAction} style={{ borderBottom: "none" }}>
+              <input type="hidden" name="redirectTo" value={signOutRedirect} />
+              <button type="submit" className="nav-mobile-link" style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: "1.4rem 0", width: "100%", color: "var(--ink-60)", fontSize: "1.6rem", fontFamily: "var(--font-body)", fontWeight: 500 }}>{t("participant.nav.signOut")}</button>
+            </form>
+          </>
+        ) : isLoggedIn ? (
           <>
             <a href="/dashboard" className="nav-mobile-link" style={{ color: active("/dashboard") ? "var(--coral)" : undefined }} onClick={closeMenu}>{t("nav.dashboard")}</a>
             <a href="/forum"     className="nav-mobile-link" style={{ color: active("/forum")     ? "var(--coral)" : undefined }} onClick={closeMenu}>{t("nav.forum")}</a>
@@ -342,8 +394,13 @@ export default function NavClient({
             )}
             <a href="/account" className="nav-mobile-link" onClick={closeMenu}>{userName || t("nav.dashboard")}</a>
             <form action={signOutAction} style={{ borderBottom: "none" }}>
+              <input type="hidden" name="redirectTo" value={signOutRedirect} />
               <button type="submit" className="nav-mobile-link" style={{ background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: "1.4rem 0", width: "100%", color: "var(--ink-60)", fontSize: "1.6rem", fontFamily: "var(--font-body)", fontWeight: 500 }}>{t("nav.signOut")}</button>
             </form>
+          </>
+        ) : isParticipantPath ? (
+          <>
+            <a href="/participant/login" className="nav-mobile-link" style={{ color: "var(--coral)", fontWeight: 600 }} onClick={closeMenu}>{t("participant.nav.signIn")}</a>
           </>
         ) : (
           <>

@@ -195,6 +195,10 @@ export default function PersonalContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <PersonalContentFr />;
   if (locale === "es") return <PersonalContentEs />;
   if (locale === "pt") return <PersonalContentPt />;
+  if (locale === "ja") return <PersonalContentJa />;
+  if (locale === "ar") return <PersonalContentAr />;
+  if (locale === "pl") return <PersonalContentPl />;
+  if (locale === "tr") return <PersonalContentTr />;
   return <PersonalContentEn />;
 }
 
@@ -2123,6 +2127,827 @@ function PersonalContentPt() {
       <p>
         Depois de salvar um calendário, o Samply o expande em uma fila de envios por participante.
         Consulte <a href="/docs/queue">A fila agendada</a> para entender como lê-la e gerenciá-la.
+      </p>
+    </>
+  );
+}
+
+const DAY_ROWS_JA = [
+  { day: '1日目', anchor: '登録の瞬間（プラス約1分）。', note: '1日目に設定された通知は、登録直後にほぼ即座に発火します。' },
+  { day: '2日目', anchor: '選択したタイムゾーンの翌カレンダー日の真夜中。', note: '月曜日の21:00に参加した参加者は、火曜日に2日目の通知を受け取ります。' },
+  { day: 'N日目', anchor: '登録日からN番目のカレンダー日の真夜中。', note: '14日目 = 参加日から数えて14日目の真夜中。' },
+];
+
+const EXAMPLES_JA = [
+  {
+    title: '14日間日記研究',
+    config: [
+      '開始：登録後1日目。',
+      '終了：登録後15日目（14日目の終了）。',
+      '間隔：毎日20:00。',
+      '受信者：現在および将来のすべての参加者。',
+    ],
+    result: '各参加者は、他の人がいつ登録したかに関わらず、参加した日から14回の夜の通知を受け取ります。',
+  },
+  {
+    title: 'バーストプロトコル — 第1週と第3週のみ',
+    config: [
+      'スケジュールA — 開始：1日目、終了：8日目。間隔：毎日12:00。',
+      'スケジュールB — 開始：15日目、終了：22日目。間隔：毎日12:00。',
+      '両方のスケジュールは同じ参加者を対象とします。',
+    ],
+    result: '2つの独立した個人スケジュールが2つの別々の週をカバーします。間の静かな週にはスケジュールは不要です。',
+  },
+  {
+    title: '介入研究 — 3日目から活動フェーズ',
+    config: [
+      '開始：登録後3日目。',
+      '終了：登録後10日目。',
+      '間隔：1日3回（09:00、13:00、18:00） — 3つの別々の間隔を追加します。',
+    ],
+    result: '参加者は、3日目に介入通知が始まる前に、2日間のベースライン（1〜2日目）を完了します。',
+  },
+];
+
+function PersonalContentJa() {
+  return (
+    <>
+      <p>
+        個人スケジュールは固定のカレンダー日付では発火しません。代わりに、各参加者が研究に参加した
+        瞬間を基準として発火します。1週間離れて登録した2人の参加者は、同じ月曜日ではなく、それぞれ
+        自分の1日目に1日目の通知を受け取ります。
+      </p>
+
+      {/* ── The mental model ─────────────────────────────────────────────── */}
+      <h2>N日目の意味</h2>
+      <p>
+        個人スケジュールを設定するときは、カレンダー日付ではなく<em>登録後の日数</em>で開始と終了を
+        指定します。Samplyは各参加者の登録時に、このオフセットを実際のタイムスタンプに変換します。
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>日のラベル</th>
+            <th>実際のアンカーポイント</th>
+            <th>実用上の注意</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DAY_ROWS_JA.map((r) => (
+            <tr key={r.day}>
+              <td>{r.day}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.anchor}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem', color: 'var(--ink-40)' }}>{r.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        選択した繰り返しパターン（毎日、特定の曜日、隔日）は、これら2つのアンカータイムスタンプ間で
+        実行されます。Samplyは各参加者の個人ウィンドウに従ってスケジュールを展開し、各発火時刻に
+        キューエントリを書き込みます。
+      </p>
+
+      {/* ── Form walkthrough ──────────────────────────────────────────────── */}
+      <h2>フォームで個人スケジュールを作成する</h2>
+      <p>
+        個人スケジュールは他のすべてのタイプと同じフォームを使用します。標準的な周期スケジュールと
+        異なるセクションは、ステップ6（開始）とステップ7（終了）です。
+      </p>
+
+      <h3>ステップ6 — いつ開始するか</h3>
+      <p>2つの相対的な開始オプションのいずれかを選択します：</p>
+      <dl>
+        <dt>登録後のN日目</dt>
+        <dd>
+          Samplyは登録日からNカレンダー日を数え、その日の真夜中に最初の通知を送信します。
+          登録直後に開始するには<em>N = 1</em>を設定します。スケジュールが始まる前に2日間の
+          バッファを残すには<em>N = 3</em>を設定します。
+        </dd>
+        <dt>登録後X日 / 時間 / 分</dt>
+        <dd>
+          登録タイムスタンプからの正確な期間オフセット。日未満の精度が必要な場合に使用します —
+          たとえば、次の真夜中を待つのではなく、登録から4時間後に開始します。
+        </dd>
+      </dl>
+      <p>
+        開始として固定のカレンダー日付を選択することもできます。これによりスケジュールはハイブリッド
+        になります：個人終了アンカーポイントは引き続き使用されますが、開始は全員にとって同じになります。
+      </p>
+
+      <h3>ステップ7 — いつ停止するか</h3>
+      <p>
+        同じ2つのオプションが適用されます：登録後N日目に停止するか、正確な期間後に停止します。
+        終了は排他的です — 15日目に停止するように設定されたスケジュールは、14日目の終わりに
+        最後の通知を送信します。
+      </p>
+
+      <h3>ステップ2 — 繰り返し間隔</h3>
+      <p>
+        個人ウィンドウ内で、繰り返しパターンを選択します：毎日、特定の曜日、隔日など。同じスケジュールに
+        複数の間隔を追加することもできます — たとえば、1日に3回通知を送信するために、3つの別々の
+        時間行（09:00、13:00、18:00）。
+      </p>
+      <p>
+        固定時刻ではなく毎日のウィンドウ内のランダムな時刻に送信するには、特定の時刻ではなく
+        <strong>時間ウィンドウ</strong>を選択します。これによりスケジュールは個人かつランダムになります。
+        ウィンドウコントロールについては{' '}
+        <a href="/docs/types#randomized">ランダムスケジュール</a>を参照してください。
+      </p>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2>タイムゾーン管理</h2>
+      <p>
+        デフォルトでは、個人スケジュールのすべての時刻は、フォームの上部で選択したタイムゾーンで
+        解釈されます。<strong>参加者のタイムゾーンに合わせる</strong>を有効にすると、Samplyは各参加者の
+        時刻をそのデバイスのタイムゾーンに再アンカーします。
+      </p>
+      <p>
+        参加者のタイムゾーン調整がアクティブなとき、20:00の通知は、ベルリンの参加者には
+        ベルリンの20:00に、東京の参加者には東京の20:00に発火します — それぞれが自分のローカル
+        夕方に。デバイスのタイムゾーンは登録時に記録され、参加者はアプリ設定で更新できます。
+      </p>
+
+      {/* ── Future participants ───────────────────────────────────────────── */}
+      <h2>将来の参加者</h2>
+      <p>
+        フォームの<strong>受信者</strong>セクションでは、現在の参加者のみ、またはすべての将来の
+        参加者も選択できます。<em>すべての将来の参加者</em>がオンになっている場合、Samplyは
+        新しい登録ごとに個人スケジュールを自動的に適用します — 手動操作は不要です。
+      </p>
+      <p>
+        これは、参加者が数週間または数か月にわたって継続的に参加する公開リクルートメント研究で
+        有効にする設定です。これがないと、スケジュール作成後に参加した参加者はそこからの通知を
+        まったく受け取りません。
+      </p>
+
+      {/* ── Examples ─────────────────────────────────────────────────────── */}
+      <h2>サンプル設定</h2>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 4rem' }}>
+        {EXAMPLES_JA.map((ex) => (
+          <div
+            key={ex.title}
+            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
+          >
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{ex.title}</div>
+            <ul style={{ margin: '0 0 1rem', paddingLeft: '1.6rem' }}>
+              {ex.config.map((c, i) => (
+                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.3rem' }}>{c}</li>
+              ))}
+            </ul>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--coral)', background: 'var(--coral-soft)', padding: '0.6rem 1rem', borderRadius: '0.5rem' }}>
+              結果：{ex.result}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>よくある間違い</h3>
+      <dl>
+        <dt>相対終了の代わりに固定カレンダー終了日を設定する</dt>
+        <dd>
+          終了を過去の特定の日付に設定すると、その日以降に登録した人には通知が送信されません。
+          参加者が異なる日に参加する場合は、相対終了（N日目）を使用してください。
+        </dd>
+        <dt>将来の参加者をチェックし忘れる</dt>
+        <dd>
+          現在の参加者のみが選択された個人スケジュールは、後で参加する人を静かに無視します。
+          公開リクルートメント研究では、常に<em>すべての将来の参加者</em>をチェックしてください。
+        </dd>
+        <dt>1日目が分析で異なる意味を持つ</dt>
+        <dd>
+          Samplyは登録日を1日目として数えます。プロトコルが1日目を登録後の最初の完全なカレンダー日
+          として定義する場合は、フォームで開始を2日目に設定してください。
+        </dd>
+      </dl>
+
+      <h3>次に読むもの</h3>
+      <p>
+        スケジュールを保存すると、Samplyはそれを参加者ごとの送信キューに展開します。読み方や
+        管理方法を理解するには、<a href="/docs/queue">スケジュールされたキュー</a>を参照してください。
+      </p>
+    </>
+  );
+}
+
+const DAY_ROWS_TR = [
+  { day: "1. Gün", anchor: "Kayıt anı (yaklaşık bir dakikalık ekleme ile).", note: "1. güne ayarlanan bildirimler, kayıttan hemen sonra neredeyse anında tetiklenir." },
+  { day: "2. Gün", anchor: "Seçilen saat diliminde sonraki takvim gününün gece yarısı.", note: "Pazartesi 21:00'da katılan bir katılımcı 2. gün bildirimini Salı günü alır." },
+  { day: "N. Gün", anchor: "Kayıt gününden itibaren N'inci takvim gününün gece yarısı.", note: "14. gün = katılım gününden itibaren sayılan 14. günün gece yarısı." },
+];
+
+const EXAMPLES_TR = [
+  {
+    title: "14 günlük günlük çalışması",
+    config: [
+      "Başlangıç: kayıttan sonra 1. gün.",
+      "Bitiş: kayıttan sonra 15. gün (14. günün sonu).",
+      "Aralık: her gün 20:00.",
+      "Alıcılar: mevcut ve gelecekteki tüm katılımcılar.",
+    ],
+    result: "Her katılımcı, başkalarının ne zaman kaydolduğundan bağımsız olarak, katıldığı günden itibaren 14 akşam bildirimi alır.",
+  },
+  {
+    title: "Patlama protokolü — yalnızca 1. ve 3. haftalar",
+    config: [
+      "Program A — Başlangıç: 1. gün, Bitiş: 8. gün. Aralık: her gün 12:00.",
+      "Program B — Başlangıç: 15. gün, Bitiş: 22. gün. Aralık: her gün 12:00.",
+      "Her iki program da aynı katılımcıları hedefler.",
+    ],
+    result: "İki bağımsız kişisel program iki ayrı haftayı kapsar. Aradaki sessiz hafta için bir programa gerek yoktur.",
+  },
+  {
+    title: "Müdahale çalışması — 3. günden itibaren etkin faz",
+    config: [
+      "Başlangıç: kayıttan sonra 3. gün.",
+      "Bitiş: kayıttan sonra 10. gün.",
+      "Aralık: günde 3 kez (09:00, 13:00, 18:00) — üç ayrı aralık eklenir.",
+    ],
+    result: "Katılımcılar, müdahale bildirimleri 3. günde başlamadan önce iki günlük bir taban çizgisini (1-2. günler) tamamlar.",
+  },
+];
+
+function PersonalContentTr() {
+  return (
+    <>
+      <p>
+        Kişisel programlar sabit takvim tarihlerinde tetiklenmez. Bunun yerine, her katılımcı için
+        çalışmaya katıldığı ana göre tetiklenirler. Bir hafta arayla kaydolan iki katılımcı, aynı
+        Pazartesi günü değil, her biri kendi 1. gününde 1. gün bildirimini alır.
+      </p>
+
+      {/* ── The mental model ─────────────────────────────────────────────── */}
+      <h2>N. gün ne anlama gelir</h2>
+      <p>
+        Bir kişisel program ayarladığınızda, başlangıç ve bitişi takvim tarihleriyle değil,
+        <em>kayıttan sonraki gün sayısıyla</em> belirtirsiniz. Samply, her katılımcı kaydedildiğinde
+        bu ofseti gerçek zaman damgalarına dönüştürür.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Gün etiketi</th>
+            <th>Gerçek bağlantı noktası</th>
+            <th>Pratik not</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DAY_ROWS_TR.map((r) => (
+            <tr key={r.day}>
+              <td>{r.day}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.anchor}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-40)" }}>{r.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        Seçtiğiniz tekrar deseni (her gün, belirli haftanın günleri, gün aşırı), bu iki bağlantı zaman
+        damgası arasında çalışır. Samply, her katılımcının kişisel penceresine göre programı açar
+        ve her tetikleme zamanı için bir kuyruk girişi yazar.
+      </p>
+
+      {/* ── Form walkthrough ──────────────────────────────────────────────── */}
+      <h2>Formda bir kişisel program oluşturma</h2>
+      <p>
+        Kişisel programlar diğer tüm türlerle aynı formu kullanır. Standart bir periyodik programdan
+        farklı olan bölümler 6. adım (başlangıç) ve 7. adımdır (bitiş).
+      </p>
+
+      <h3>Adım 6 — Ne zaman başlasın</h3>
+      <p>İki göreli başlangıç seçeneğinden birini seçin:</p>
+      <dl>
+        <dt>Kayıttan N gün sonra</dt>
+        <dd>
+          Samply, kayıt gününden itibaren N takvim günü sayar ve o günün gece yarısı ilk bildirimi
+          gönderir. Kayıttan hemen sonra başlamak için <em>N = 1</em> ayarlayın. Program başlamadan
+          önce iki günlük tampon bırakmak için <em>N = 3</em> ayarlayın.
+        </dd>
+        <dt>Kayıttan X gün / saat / dakika sonra</dt>
+        <dd>
+          Kayıt zaman damgasından tam süre ofseti. Bir günden daha hassas bir ayar gerektiğinde
+          kullanın — örneğin, bir sonraki gece yarısını beklemek yerine kayıttan dört saat sonra başlamak için.
+        </dd>
+      </dl>
+      <p>
+        Başlangıç olarak sabit bir takvim tarihi de seçebilirsiniz. Bu, programı hibrit hale getirir:
+        kişisel bitiş bağlantı noktası kullanılmaya devam eder, ancak başlangıç herkes için aynıdır.
+      </p>
+
+      <h3>Adım 7 — Ne zaman dursun</h3>
+      <p>
+        Aynı iki seçenek geçerlidir: kayıttan N gün sonra durdurmak veya tam bir süre sonra durdurmak.
+        Bitiş hariçtir — 15. günde durmaya ayarlanmış bir program, son bildirimini 14. günün sonunda gönderir.
+      </p>
+
+      <h3>Adım 2 — Tekrarlama aralığı</h3>
+      <p>
+        Kişisel pencere içinde tekrar desenini seçin: her gün, belirli haftanın günleri, gün aşırı, vb.
+        Aynı programa birden çok aralık da ekleyebilirsiniz — örneğin günde üç bildirim göndermek için
+        üç ayrı saat satırı (09:00, 13:00, 18:00).
+      </p>
+      <p>
+        Sabit zamanlar yerine günlük pencere içinde rastgele zamanlarda göndermek için belirli zamanlar yerine
+        bir <strong>zaman penceresi</strong> seçin. Bu, programı hem kişisel hem rastgele hale getirir.
+        Pencere kontrolleri için <a href="/docs/types#randomized">Rastgele programlar</a> bölümüne bakın.
+      </p>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2>Saat dilimi yönetimi</h2>
+      <p>
+        Varsayılan olarak, kişisel programdaki tüm zamanlar formun üst kısmında seçtiğiniz saat
+        diliminde yorumlanır. <strong>Katılımcının saat dilimine uyarla</strong> seçeneğini
+        etkinleştirirseniz, Samply her katılımcının zamanlarını cihazının saat dilimine yeniden bağlar.
+      </p>
+      <p>
+        Katılımcı saat dilimi ayarı etkinken, 20:00 bildirimi Berlin'deki katılımcı için Berlin saatiyle
+        20:00'da, Tokyo'daki katılımcı için Tokyo saatiyle 20:00'da tetiklenir — her biri kendi yerel
+        akşamında. Cihaz saat dilimi kayıt sırasında kaydedilir ve katılımcılar uygulama ayarlarından güncelleyebilir.
+      </p>
+
+      {/* ── Future participants ───────────────────────────────────────────── */}
+      <h2>Gelecekteki katılımcılar</h2>
+      <p>
+        Formun <strong>Alıcılar</strong> bölümünde yalnızca mevcut katılımcıları veya tüm gelecekteki
+        katılımcıları da seçebilirsiniz. <em>Tüm gelecekteki katılımcılar</em> açıkken, Samply her yeni
+        kayıt için kişisel programı otomatik olarak uygular — elle bir işlem gerekmez.
+      </p>
+      <p>
+        Bu, katılımcıların haftalar veya aylar boyunca sürekli olarak katıldığı açık katılımcı çağrısı
+        çalışmaları için açmanız gereken ayardır. Bu olmadan, program oluşturulduktan sonra katılan
+        katılımcılar oradan hiçbir bildirim almazlar.
+      </p>
+
+      {/* ── Examples ─────────────────────────────────────────────────────── */}
+      <h2>Örnek yapılandırmalar</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 4rem" }}>
+        {EXAMPLES_TR.map((ex) => (
+          <div
+            key={ex.title}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
+          >
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{ex.title}</div>
+            <ul style={{ margin: "0 0 1rem", paddingLeft: "1.6rem" }}>
+              {ex.config.map((c, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{c}</li>
+              ))}
+            </ul>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.6rem 1rem", borderRadius: "0.5rem" }}>
+              Sonuç: {ex.result}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>Sık yapılan hatalar</h3>
+      <dl>
+        <dt>Göreli bitiş yerine sabit bir takvim bitiş tarihi ayarlamak</dt>
+        <dd>
+          Bitişi geçmişte belirli bir tarihe ayarlarsanız, o tarihten sonra kaydolan kişiye hiçbir
+          bildirim gönderilmez. Katılımcılar farklı günlerde katılıyorsa göreli bitiş (N. gün) kullanın.
+        </dd>
+        <dt>Gelecekteki katılımcıları işaretlemeyi unutmak</dt>
+        <dd>
+          Yalnızca mevcut katılımcıların seçildiği bir kişisel program, daha sonra katılan kişileri
+          sessizce göz ardı eder. Açık katılımcı çağrısı çalışmaları için her zaman <em>tüm gelecekteki
+          katılımcılar</em> seçeneğini işaretleyin.
+        </dd>
+        <dt>1. günün analizde farklı anlam taşıması</dt>
+        <dd>
+          Samply, kayıt gününü 1. gün olarak sayar. Protokolünüz 1. günü kayıttan sonraki ilk tam
+          takvim günü olarak tanımlıyorsa, formda başlangıcı 2. güne ayarlayın.
+        </dd>
+      </dl>
+
+      <h3>Sırada ne okumalı</h3>
+      <p>
+        Programı kaydettiğinizde, Samply onu katılımcı başına gönderim kuyruğuna açar. Nasıl
+        okunacağını ve yönetileceğini anlamak için <a href="/docs/queue">Planlanmış kuyruk</a> bölümüne bakın.
+      </p>
+    </>
+  );
+}
+
+const DAY_ROWS_PL = [
+  { day: "Dzień 1", anchor: "Moment rejestracji (z dodaniem około jednej minuty).", note: "Powiadomienia ustawione na dzień 1 wyzwalają się prawie natychmiast po rejestracji." },
+  { day: "Dzień 2", anchor: "Północ następnego dnia kalendarzowego w wybranej strefie czasowej.", note: "Uczestnik, który dołączył w poniedziałek o 21:00, otrzyma powiadomienie z dnia 2 we wtorek." },
+  { day: "Dzień N", anchor: "Północ N-tego dnia kalendarzowego od dnia rejestracji.", note: "Dzień 14 = północ 14. dnia liczonego od dnia dołączenia." },
+];
+
+const EXAMPLES_PL = [
+  {
+    title: "14-dniowe badanie dzienniczkowe",
+    config: [
+      "Początek: dzień 1 po rejestracji.",
+      "Koniec: dzień 15 po rejestracji (koniec dnia 14).",
+      "Interwał: codziennie o 20:00.",
+      "Odbiorcy: wszyscy obecni i przyszli uczestnicy.",
+    ],
+    result: "Każdy uczestnik otrzymuje 14 wieczornych powiadomień, licząc od dnia, w którym dołączył, niezależnie od tego, kiedy zarejestrowali się inni.",
+  },
+  {
+    title: "Protokół wybuchowy — tylko tydzień 1 i 3",
+    config: [
+      "Harmonogram A — Początek: dzień 1, Koniec: dzień 8. Interwał: codziennie o 12:00.",
+      "Harmonogram B — Początek: dzień 15, Koniec: dzień 22. Interwał: codziennie o 12:00.",
+      "Oba harmonogramy celują w tych samych uczestników.",
+    ],
+    result: "Dwa niezależne osobiste harmonogramy obejmują dwa osobne tygodnie. Cisza w środkowym tygodniu nie wymaga harmonogramu.",
+  },
+  {
+    title: "Badanie interwencyjne — faza aktywna od dnia 3",
+    config: [
+      "Początek: dzień 3 po rejestracji.",
+      "Koniec: dzień 10 po rejestracji.",
+      "Interwał: 3 razy dziennie (09:00, 13:00, 18:00) — dodawane są trzy osobne interwały.",
+    ],
+    result: "Uczestnicy kończą dwudniową fazę bazową (dni 1–2), zanim w dniu 3 zaczną się powiadomienia interwencyjne.",
+  },
+];
+
+function PersonalContentPl() {
+  return (
+    <>
+      <p>
+        Osobiste harmonogramy nie wyzwalają się w stałych datach kalendarzowych. Zamiast tego
+        wyzwalają się względem momentu, w którym każdy uczestnik dołączył do badania. Dwóch
+        uczestników, którzy zarejestrowali się w odstępie tygodnia, otrzyma swoje powiadomienia
+        z dnia 1 każdy w swoim własnym dniu 1, a nie w ten sam poniedziałek.
+      </p>
+
+      {/* ── The mental model ─────────────────────────────────────────────── */}
+      <h2>Co oznacza Dzień N</h2>
+      <p>
+        Gdy ustawiasz osobisty harmonogram, definiujesz początek i koniec za pomocą{' '}
+        <em>liczby dni od rejestracji</em>, a nie dat kalendarzowych. Samply tłumaczy to
+        przesunięcie na rzeczywiste znaczniki czasu indywidualnie dla każdego uczestnika w
+        chwili, gdy się zarejestruje.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Etykieta dnia</th>
+            <th>Rzeczywista kotwica</th>
+            <th>Uwaga praktyczna</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DAY_ROWS_PL.map((r) => (
+            <tr key={r.day}>
+              <td>{r.day}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.anchor}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-40)" }}>{r.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        Wybrany wzorzec powtarzania (codziennie, konkretne dni tygodnia, co drugi dzień)
+        działa między tymi dwoma kotwicowymi znacznikami czasu. Samply rozwija harmonogram
+        względem osobistego okna każdego uczestnika i zapisuje wpis kolejki dla każdego czasu wyzwolenia.
+      </p>
+
+      {/* ── Form walkthrough ──────────────────────────────────────────────── */}
+      <h2>Tworzenie osobistego harmonogramu w formularzu</h2>
+      <p>
+        Osobiste harmonogramy używają tego samego formularza co wszystkie inne typy. Sekcje,
+        które różnią się od standardowego okresowego harmonogramu, to krok 6 (początek) i krok 7 (koniec).
+      </p>
+
+      <h3>Krok 6 — Kiedy zacząć</h3>
+      <p>Wybierz jedną z dwóch względnych opcji rozpoczęcia:</p>
+      <dl>
+        <dt>N dni po rejestracji</dt>
+        <dd>
+          Samply odlicza N dni kalendarzowych od dnia rejestracji i wysyła pierwsze
+          powiadomienie o północy tego dnia. Ustaw <em>N = 1</em>, aby rozpocząć tuż po
+          rejestracji. Ustaw <em>N = 3</em>, aby pozostawić dwudniowy bufor przed rozpoczęciem harmonogramu.
+        </dd>
+        <dt>X dni / godzin / minut po rejestracji</dt>
+        <dd>
+          Dokładne przesunięcie czasowe od znacznika czasu rejestracji. Użyj, gdy potrzebujesz
+          precyzji większej niż dzień — na przykład, aby rozpocząć cztery godziny po
+          rejestracji zamiast czekać na następną północ.
+        </dd>
+      </dl>
+      <p>
+        Możesz również wybrać stałą datę kalendarzową jako początek. To czyni harmonogram
+        hybrydowym: osobista kotwica końcowa nadal obowiązuje, ale początek jest taki sam dla wszystkich.
+      </p>
+
+      <h3>Krok 7 — Kiedy zakończyć</h3>
+      <p>
+        Obowiązują te same dwie opcje: zakończ N dni po rejestracji lub po dokładnym czasie
+        trwania. Koniec jest wyłączny — harmonogram ustawiony na zakończenie w dniu 15 wysyła
+        ostatnie powiadomienie na końcu dnia 14.
+      </p>
+
+      <h3>Krok 2 — Interwał powtarzania</h3>
+      <p>
+        Wybierz wzorzec powtarzania w obrębie osobistego okna: codziennie, konkretne dni
+        tygodnia, co drugi dzień itd. Możesz również dodać wiele interwałów do tego samego
+        harmonogramu — na przykład trzy osobne wiersze czasów (09:00, 13:00, 18:00), aby
+        wysłać trzy powiadomienia dziennie.
+      </p>
+      <p>
+        Aby wysyłać o losowych porach w obrębie codziennego okna zamiast o stałych godzinach,
+        wybierz <strong>okno czasowe</strong> zamiast konkretnych czasów. To czyni
+        harmonogram zarówno osobistym, jak i losowym. Zobacz{' '}
+        <a href="/docs/types#randomized">Losowe harmonogramy</a>, aby uzyskać szczegóły dotyczące sterowania oknem.
+      </p>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2>Obsługa strefy czasowej</h2>
+      <p>
+        Domyślnie wszystkie czasy w osobistym harmonogramie są interpretowane w strefie
+        czasowej wybranej u góry formularza. Jeśli włączysz opcję{' '}
+        <strong>Dostosuj do strefy czasowej uczestnika</strong>, Samply ponownie zakotwiczy
+        czasy każdego uczestnika do strefy czasowej jego urządzenia.
+      </p>
+      <p>
+        Gdy ustawienie strefy czasowej uczestnika jest włączone, powiadomienie z 20:00
+        wyzwala się o 20:00 czasu berlińskiego dla uczestnika w Berlinie i o 20:00 czasu
+        tokijskiego dla uczestnika w Tokio — każdy we własny lokalny wieczór. Strefa czasowa
+        urządzenia jest zapisywana podczas rejestracji, a uczestnicy mogą ją zaktualizować w ustawieniach aplikacji.
+      </p>
+
+      {/* ── Future participants ───────────────────────────────────────────── */}
+      <h2>Przyszli uczestnicy</h2>
+      <p>
+        W sekcji <strong>Odbiorcy</strong> formularza możesz wybrać tylko obecnych
+        uczestników lub także wszystkich przyszłych uczestników. Gdy włączone jest{' '}
+        <em>wszyscy przyszli uczestnicy</em>, Samply automatycznie stosuje osobisty
+        harmonogram do każdej nowej rejestracji — bez ręcznej interwencji.
+      </p>
+      <p>
+        Jest to ustawienie, które musisz włączyć dla badań z otwartą rekrutacją, gdzie
+        uczestnicy dołączają w sposób ciągły przez tygodnie lub miesiące. Bez niego
+        uczestnicy, którzy dołączą po utworzeniu harmonogramu, nie otrzymają z niego żadnych powiadomień.
+      </p>
+
+      {/* ── Examples ─────────────────────────────────────────────────────── */}
+      <h2>Przykładowe konfiguracje</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 4rem" }}>
+        {EXAMPLES_PL.map((ex) => (
+          <div
+            key={ex.title}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
+          >
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{ex.title}</div>
+            <ul style={{ margin: "0 0 1rem", paddingLeft: "1.6rem" }}>
+              {ex.config.map((c, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{c}</li>
+              ))}
+            </ul>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.6rem 1rem", borderRadius: "0.5rem" }}>
+              Wynik: {ex.result}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>Częste błędy</h3>
+      <dl>
+        <dt>Ustawianie stałej daty kalendarzowej końca zamiast względnego końca</dt>
+        <dd>
+          Jeśli ustawisz koniec na konkretną datę w przeszłości, każdy, kto zarejestruje się
+          po tej dacie, nie otrzyma żadnych powiadomień. Użyj względnego końca (Dzień N),
+          jeśli uczestnicy dołączają w różne dni.
+        </dd>
+        <dt>Zapomnienie o zaznaczeniu przyszłych uczestników</dt>
+        <dd>
+          Osobisty harmonogram z wybranymi tylko obecnymi uczestnikami po cichu pomija osoby,
+          które dołączają później. W przypadku badań z otwartą rekrutacją zawsze zaznaczaj{' '}
+          <em>wszyscy przyszli uczestnicy</em>.
+        </dd>
+        <dt>Dzień 1 ma w analizie inne znaczenie</dt>
+        <dd>
+          Samply liczy dzień rejestracji jako Dzień 1. Jeśli Twój protokół definiuje Dzień 1
+          jako pierwszy pełny dzień kalendarzowy po rejestracji, ustaw początek w formularzu na Dzień 2.
+        </dd>
+      </dl>
+
+      <h3>Co czytać dalej</h3>
+      <p>
+        Gdy zapiszesz harmonogram, Samply rozwija go w kolejkę wysyłek na uczestnika.
+        Zobacz <a href="/docs/queue">Zaplanowana kolejka</a>, aby zrozumieć, jak ją czytać i zarządzać nią.
+      </p>
+    </>
+  );
+}
+
+const DAY_ROWS_AR = [
+  { day: "اليوم 1", anchor: "لحظة التسجيل (مع إضافة دقيقة واحدة تقريباً).", note: "تُطلَق إشعارات اليوم 1 بُعَيد التسجيل مباشرةً تقريباً." },
+  { day: "اليوم 2", anchor: "منتصف ليل اليوم التقويمي التالي في المنطقة الزمنية المختارة.", note: "مشارك انضم يوم الاثنين الساعة 21:00 يستلم إشعار اليوم 2 يوم الثلاثاء." },
+  { day: "اليوم N", anchor: "منتصف ليل اليوم التقويمي رقم N من يوم التسجيل.", note: "اليوم 14 = منتصف ليل اليوم الـ14 محسوباً من يوم الانضمام." },
+];
+
+const EXAMPLES_AR = [
+  {
+    title: "دراسة يوميات لمدة 14 يوماً",
+    config: [
+      "البداية: اليوم 1 بعد التسجيل.",
+      "النهاية: اليوم 15 بعد التسجيل (نهاية اليوم 14).",
+      "الفاصل: يومياً الساعة 20:00.",
+      "المستلمون: جميع المشاركين الحاليين والمستقبليين.",
+    ],
+    result: "يستلم كل مشارك 14 إشعاراً مسائياً، تُحتسب من اليوم الذي انضم فيه، بصرف النظر عن وقت تسجيل الآخرين.",
+  },
+  {
+    title: "بروتوكول الفورة — الأسبوع 1 و3 فقط",
+    config: [
+      "الجدول A — البداية: اليوم 1، النهاية: اليوم 8. الفاصل: يومياً الساعة 12:00.",
+      "الجدول B — البداية: اليوم 15، النهاية: اليوم 22. الفاصل: يومياً الساعة 12:00.",
+      "يستهدف كلا الجدولَين المشاركين أنفسهم.",
+    ],
+    result: "يغطي جدولان شخصيان مستقلان أسبوعَين منفصلَين. الصمت في الأسبوع الأوسط لا يتطلب جدولاً.",
+  },
+  {
+    title: "دراسة تدخل — مرحلة نشطة من اليوم 3",
+    config: [
+      "البداية: اليوم 3 بعد التسجيل.",
+      "النهاية: اليوم 10 بعد التسجيل.",
+      "الفاصل: 3 مرات يومياً (09:00 و13:00 و18:00) — تُضاف ثلاثة فواصل منفصلة.",
+    ],
+    result: "يكمل المشاركون مرحلة قاعدية لمدة يومَين (الأيام 1–2) قبل أن تبدأ إشعارات التدخل في اليوم 3.",
+  },
+];
+
+function PersonalContentAr() {
+  return (
+    <>
+      <p>
+        لا تُطلَق الجداول الشخصية في تواريخ تقويمية ثابتة. بل تُطلَق بالنسبة إلى اللحظة
+        التي انضم فيها كل مشارك إلى الدراسة. مشاركان سجّلا بفارق أسبوع سيستلم كل منهما
+        إشعارات اليوم 1 في يوم 1 الخاص به، لا في يوم الاثنين ذاته.
+      </p>
+
+      {/* ── The mental model ─────────────────────────────────────────────── */}
+      <h2>ماذا يعني اليوم N</h2>
+      <p>
+        عندما تُعدّ جدولاً شخصياً، تُعرِّف البداية والنهاية بـ <em>عدد الأيام منذ التسجيل</em>،
+        لا بتواريخ تقويمية. يترجم Samply هذه الإزاحة إلى طوابع زمنية فعلية لكل مشارك
+        على حدة في اللحظة التي يسجّل فيها.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>تسمية اليوم</th>
+            <th>المرساة الفعلية</th>
+            <th>ملاحظة عملية</th>
+          </tr>
+        </thead>
+        <tbody>
+          {DAY_ROWS_AR.map((r) => (
+            <tr key={r.day}>
+              <td>{r.day}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.anchor}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem", color: "var(--ink-40)" }}>{r.note}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <p>
+        يعمل نمط التكرار الذي تختاره (يومياً، أيام أسبوع محددة، كل يومَين) بين هاتَين
+        المرساتَين الزمنيتَين. يوسّع Samply الجدول بالنسبة إلى النافذة الشخصية لكل مشارك
+        ويكتب إدخالاً في الطابور لكل وقت إطلاق.
+      </p>
+
+      {/* ── Form walkthrough ──────────────────────────────────────────────── */}
+      <h2>إنشاء جدول شخصي في النموذج</h2>
+      <p>
+        تستخدم الجداول الشخصية نفس النموذج الذي تستخدمه جميع الأنواع الأخرى. الأقسام
+        التي تختلف عن الجدول الدوري القياسي هي الخطوة 6 (البداية) والخطوة 7 (النهاية).
+      </p>
+
+      <h3>الخطوة 6 — متى تبدأ</h3>
+      <p>اختر أحد الخيارَين النسبيَّين للبداية:</p>
+      <dl>
+        <dt>N يوماً بعد التسجيل</dt>
+        <dd>
+          يَعُدّ Samply N من الأيام التقويمية من يوم التسجيل ويرسل أول إشعار عند منتصف
+          ليل ذلك اليوم. اضبط <em>N = 1</em> للبدء بُعَيد التسجيل مباشرةً. اضبط{' '}
+          <em>N = 3</em> لترك مهلة يومَين قبل بدء الجدول.
+        </dd>
+        <dt>X يوم / ساعة / دقيقة بعد التسجيل</dt>
+        <dd>
+          إزاحة زمنية دقيقة من طابع التسجيل الزمني. استخدمها عندما تحتاج إلى دقة أعلى
+          من اليوم — مثلاً، للبدء بعد أربع ساعات من التسجيل بدلاً من انتظار منتصف الليل التالي.
+        </dd>
+      </dl>
+      <p>
+        يمكنك أيضاً اختيار تاريخ تقويمي ثابت كبداية. هذا يجعل الجدول هجيناً: تبقى مرساة
+        النهاية الشخصية سارية، لكن البداية ذاتها للجميع.
+      </p>
+
+      <h3>الخطوة 7 — متى تنتهي</h3>
+      <p>
+        ينطبق الخياران ذاتهما: انتهاء بعد N يوماً من التسجيل، أو بعد مدة دقيقة. النهاية
+        حصرية — جدول مضبوط لينتهي في اليوم 15 يرسل آخر إشعار في نهاية اليوم 14.
+      </p>
+
+      <h3>الخطوة 2 — فاصل التكرار</h3>
+      <p>
+        اختر نمط التكرار ضمن النافذة الشخصية: يومياً، أيام أسبوع محددة، كل يومَين، إلخ.
+        يمكنك أيضاً إضافة عدة فواصل إلى نفس الجدول — على سبيل المثال، ثلاثة صفوف زمنية
+        منفصلة (09:00 و13:00 و18:00) لإرسال ثلاثة إشعارات يومياً.
+      </p>
+      <p>
+        للإرسال في أوقات عشوائية ضمن نافذة يومية بدلاً من أوقات ثابتة، اختر{' '}
+        <strong>نافذة زمنية</strong> بدلاً من أوقات محددة. هذا يجعل الجدول شخصياً
+        وعشوائياً معاً. انظر <a href="/docs/types#randomized">الجداول العشوائية</a>{' '}
+        للاطلاع على تفاصيل التحكم في النافذة.
+      </p>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2>معالجة المنطقة الزمنية</h2>
+      <p>
+        افتراضياً، تُفسَّر جميع الأوقات في الجدول الشخصي بالمنطقة الزمنية المختارة في
+        أعلى النموذج. إذا فعّلت خيار <strong>التكيّف مع المنطقة الزمنية للمشارك</strong>،
+        فإن Samply يعيد ربط أوقات كل مشارك بالمنطقة الزمنية لجهازه.
+      </p>
+      <p>
+        عندما يكون إعداد المنطقة الزمنية للمشارك مفعّلاً، يُطلَق إشعار الساعة 20:00 عند
+        20:00 بتوقيت برلين لمشارك في برلين، وعند 20:00 بتوقيت طوكيو لمشارك في طوكيو —
+        كل في مساءه المحلي. تُسجَّل المنطقة الزمنية للجهاز عند التسجيل، ويمكن للمشاركين
+        تحديثها في إعدادات التطبيق.
+      </p>
+
+      {/* ── Future participants ───────────────────────────────────────────── */}
+      <h2>المشاركون المستقبليون</h2>
+      <p>
+        في قسم <strong>المستلمين</strong> من النموذج، يمكنك اختيار المشاركين الحاليين
+        فقط أو جميع المشاركين المستقبليين أيضاً. عند تفعيل خيار <em>جميع المشاركين
+        المستقبليين</em>، يطبّق Samply الجدول الشخصي تلقائياً على كل تسجيل جديد — دون
+        تدخل يدوي.
+      </p>
+      <p>
+        هذا إعداد يجب تفعيله للدراسات ذات التجنيد المفتوح، حيث ينضم المشاركون باستمرار
+        على مدى أسابيع أو أشهر. بدونه، لن يستلم المشاركون الذين ينضمون بعد إنشاء الجدول
+        أي إشعارات منه.
+      </p>
+
+      {/* ── Examples ─────────────────────────────────────────────────────── */}
+      <h2>أمثلة على الإعدادات</h2>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 4rem" }}>
+        {EXAMPLES_AR.map((ex) => (
+          <div
+            key={ex.title}
+            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
+          >
+            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{ex.title}</div>
+            <ul style={{ margin: "0 0 1rem", paddingLeft: "1.6rem" }}>
+              {ex.config.map((c, i) => (
+                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.3rem" }}>{c}</li>
+              ))}
+            </ul>
+            <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", background: "var(--coral-soft)", padding: "0.6rem 1rem", borderRadius: "0.5rem" }}>
+              النتيجة: {ex.result}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Common mistakes ───────────────────────────────────────────────── */}
+      <h3>أخطاء شائعة</h3>
+      <dl>
+        <dt>تعيين تاريخ تقويمي ثابت كنهاية بدلاً من نهاية نسبية</dt>
+        <dd>
+          إذا عيَّنت النهاية على تاريخ محدد في الماضي، فلن يستلم أي شخص يسجّل بعد ذلك
+          التاريخ أي إشعارات. استخدم نهاية نسبية (اليوم N) إذا كان المشاركون ينضمون في
+          أيام مختلفة.
+        </dd>
+        <dt>نسيان تحديد المشاركين المستقبليين</dt>
+        <dd>
+          الجدول الشخصي مع تحديد المشاركين الحاليين فقط يتخطى بصمت من ينضمون لاحقاً.
+          للدراسات ذات التجنيد المفتوح، حدِّد دائماً <em>جميع المشاركين المستقبليين</em>.
+        </dd>
+        <dt>اليوم 1 يحمل معنى مختلفاً في التحليل</dt>
+        <dd>
+          يَعُدّ Samply يوم التسجيل على أنه اليوم 1. إذا كان بروتوكولك يعرّف اليوم 1
+          باعتباره أول يوم تقويمي كامل بعد التسجيل، فاضبط البداية في النموذج على اليوم 2.
+        </dd>
+      </dl>
+
+      <h3>ما الذي يجب قراءته بعد ذلك</h3>
+      <p>
+        عند حفظ الجدول، يوسّعه Samply إلى طابور من عمليات الإرسال لكل مشارك. انظر{' '}
+        <a href="/docs/queue">الطابور المجدول</a> لفهم كيفية قراءته وإدارته.
       </p>
     </>
   );

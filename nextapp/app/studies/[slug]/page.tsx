@@ -21,17 +21,6 @@ export default async function StudyDetailPage({
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
       <div style={{ maxWidth: "82rem", margin: "0 auto", padding: "4.8rem var(--page-px) 8rem" }}>
 
-        {/* Breadcrumb */}
-        <div style={{ marginBottom: "2.8rem" }}>
-          <a
-            href="/studies"
-            className="font-medium no-underline hover:opacity-70 transition-opacity"
-            style={{ fontSize: "1.3rem", color: "var(--ink-60)", textDecoration: "none" }}
-          >
-            {t("studyDetail.allStudies")}
-          </a>
-        </div>
-
         {/* Two-column layout */}
         <div
           className="grid items-start"

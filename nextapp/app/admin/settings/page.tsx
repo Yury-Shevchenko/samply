@@ -2,8 +2,9 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import { getSiteSettings } from "@/lib/models/siteSettings";
+import { getRetentionCounts, PENDING_TTL_SECONDS, RESULTS_TTL_SECONDS } from "@/lib/data/retention";
 import { AdminPage } from "../shared";
-import { setShowDonation, setShowSmaat, setShowTestimonials } from "./actions";
+import { setShowDonation, setShowSmaat, setShowTestimonials, setRetentionEnabled } from "./actions";
 
 export const metadata = { title: "Admin: Settings — Samply" };
 
@@ -108,7 +109,13 @@ export default async function AdminSettingsPage() {
   if (!session || session.user.level <= 100) redirect("/login");
 
   await connectDB();
-  const settings = await getSiteSettings();
+  const [settings, retentionCounts] = await Promise.all([
+    getSiteSettings(),
+    getRetentionCounts(),
+  ]);
+
+  const pendingDays = Math.round(PENDING_TTL_SECONDS / 86400);
+  const resultsDays = Math.round(RESULTS_TTL_SECONDS / 86400);
 
   return (
     <AdminPage title="Site settings">
@@ -131,6 +138,83 @@ export default async function AdminSettingsPage() {
           enabled={settings.showTestimonials}
           action={setShowTestimonials}
         />
+
+        {/* ── Data Retention ──────────────────────────────────────────────── */}
+        <div style={{ marginTop: "1.2rem", borderTop: "1px solid var(--ink-10)", paddingTop: "1.6rem" }}>
+          <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1.2rem" }}>
+            Data Retention
+          </div>
+        </div>
+
+        <Toggle
+          label="Automatic data deletion"
+          description={`When enabled, MongoDB automatically expires records beyond the retention windows below. Changes take effect within ~60 seconds. Default is OFF — enable only after confirming you have exported any data you wish to preserve.`}
+          enabled={settings.retentionEnabled}
+          action={setRetentionEnabled}
+        />
+
+        {/* Stats + period summary */}
+        <div
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--ink-10)",
+            borderRadius: "1rem",
+            padding: "1.6rem 2.4rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
+            Retention periods &amp; eligible counts
+          </div>
+
+          {[
+            {
+              label: "Pending notification queue",
+              period: `${pendingDays} days`,
+              eligible: retentionCounts.pendingEligible,
+            },
+            {
+              label: "Notification history &amp; responses",
+              period: `${resultsDays} days (12 months)`,
+              eligible: retentionCounts.resultsEligible,
+            },
+          ].map(({ label, period, eligible }) => (
+            <div
+              key={label}
+              style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2rem", flexWrap: "wrap" }}
+            >
+              <div>
+                <div style={{ fontSize: "1.3rem", fontWeight: 500, color: "var(--ink)" }} dangerouslySetInnerHTML={{ __html: label }} />
+                <div style={{ fontSize: "1.15rem", color: "var(--ink-40)", fontFamily: "var(--font-mono)", marginTop: "0.2rem" }}>
+                  limit: {period}
+                </div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div
+                  style={{
+                    fontSize: "1.6rem",
+                    fontWeight: 700,
+                    color: eligible > 0 && settings.retentionEnabled ? "var(--coral)" : "var(--ink)",
+                    fontFamily: "var(--font-mono)",
+                  }}
+                >
+                  {eligible.toLocaleString()}
+                </div>
+                <div style={{ fontSize: "1.05rem", color: "var(--ink-40)", marginTop: "0.1rem" }}>
+                  {eligible === 1 ? "record" : "records"} eligible for deletion
+                </div>
+              </div>
+            </div>
+          ))}
+
+          <div style={{ marginTop: "0.4rem", fontSize: "1.15rem", color: "var(--ink-40)", lineHeight: 1.55 }}>
+            {settings.retentionEnabled
+              ? "Automatic deletion is active. MongoDB TTL indexes expire records on a ~60-second cycle."
+              : "Automatic deletion is disabled. Records accumulate until you enable this setting."}
+          </div>
+        </div>
       </div>
     </AdminPage>
   );

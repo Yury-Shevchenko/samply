@@ -345,6 +345,10 @@ export default function HomeContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <HomeContentFr />;
   if (locale === "es") return <HomeContentEs />;
   if (locale === "pt") return <HomeContentPt />;
+  if (locale === "ja") return <HomeContentJa />;
+  if (locale === "ar") return <HomeContentAr />;
+  if (locale === "pl") return <HomeContentPl />;
+  if (locale === "tr") return <HomeContentTr />;
   return <HomeContentEn />;
 }
 
@@ -1565,6 +1569,626 @@ function HomeContentPt() {
         <a href="/docs/placeholders">Personalização de URL</a>,{" "}
         <a href="/docs/groups">Grupos</a> ou{" "}
         <a href="/docs/reminders">Lembretes</a> na seção de Funcionalidades avançadas.
+      </p>
+    </>
+  );
+}
+
+const GOALS_JA = [
+  {
+    slug: "first-study",
+    label: "初めての研究を設定する",
+    body: "コンテナを作成します — 参加者、スケジュール、回答履歴はすべて一つの研究の中にあります。",
+    cta: "初めての研究 →",
+  },
+  {
+    slug: "invite",
+    label: "参加者を招待する",
+    body: "参加者はリンクをタップするか、QRコードをスキャンして参加します。連絡先情報を見ることはありません。",
+    cta: "参加者を招待する →",
+  },
+  {
+    slug: "types",
+    label: "スケジュールタイプを選ぶ",
+    body: "一回のみ、繰り返し、ランダム、または個別 — 4つのタイプがあり、それぞれ異なる研究デザインに適しています。",
+    cta: "4つのタイプ →",
+  },
+  {
+    slug: "form",
+    label: "スケジュールを作成する",
+    body: "スケジュールフォームは、コンテンツ、タイプ、対象者、オプションの順に案内します。",
+    cta: "スケジュールの作成 →",
+  },
+  {
+    slug: "placeholders",
+    label: "調査URLをパーソナライズする",
+    body: "Samplyは、参加者ID、研究ID、またはカスタムコードで各通知リンクをパーソナライズできます — 調査ツールが誰が回答したかを正確に把握できます。",
+    cta: "URLパーソナライズ →",
+  },
+  {
+    slug: "reminders",
+    label: "リマインダーを送る",
+    body: "設定した時間内に参加者が回答しなかった場合、自動的にフォローアップします。",
+    cta: "リマインダー →",
+  },
+];
+
+const STEPS_JA = [
+  {
+    n: "01",
+    title: "研究を作成する",
+    body: "研究は最上位のコンテナです。名前と同意書を付けてください — 始めるのに必要なのはそれだけです。",
+  },
+  {
+    n: "02",
+    title: "スケジュールを追加する",
+    body: "スケジュールタイプ（一回のみ、繰り返し、ランダム、または個別）を選び、通知テキストを書き、タイミングを設定し、受信者を選択します。",
+  },
+  {
+    n: "03",
+    title: "参加者を登録する",
+    body: "QRコードまたは参加リンクを共有します。参加者はSamply Researchアプリでタップすると、すぐに登録されます。",
+  },
+  {
+    n: "04",
+    title: "Samplyが通知を送信する",
+    body: "ダッシュボードは各スケジュールを参加者ごとのキューに展開し、適切なタイミングで各通知を配信します。",
+  },
+  {
+    n: "05",
+    title: "参加者が回答する",
+    body: "通知をタップすると、調査リンクが開きます。Samplyが回答を検出すると、完了が自動的に記録されます。",
+  },
+];
+
+function HomeContentJa() {
+  return (
+    <>
+      {/* ── Start here ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>ここから始める</h2>
+      <p>現在のステップに合ったタスクを選択してください。</p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(27rem, 1fr))", gap: "1.2rem", margin: "2.4rem 0 4rem" }}>
+        {GOALS_JA.map((g) => (
+          <a
+            key={g.slug}
+            href={`/docs/${g.slug}`}
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem", padding: "1.8rem 2rem", background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", textDecoration: "none", transition: "border-color 0.12s, box-shadow 0.12s" }}
+          >
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1.2 }}>{g.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.55, flex: 1 }}>{g.body}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", marginTop: "0.6rem" }}>{g.cta}</span>
+          </a>
+        ))}
+      </div>
+
+      {/* ── How it works ────────────────────────────────────────────────── */}
+      <h2>Samplyの仕組み</h2>
+      <p>登録から回答データまでの5つのステップ。</p>
+
+      <ol style={{ listStyle: "none", padding: 0, margin: "2.4rem 0 4rem", display: "flex", flexDirection: "column", gap: "0" }}>
+        {STEPS_JA.map((s, i) => (
+          <li
+            key={s.n}
+            style={{ display: "flex", gap: "2rem", alignItems: "flex-start", paddingBottom: "2.4rem", borderBottom: i < STEPS_JA.length - 1 ? "1px solid var(--ink-10)" : "none", marginBottom: i < STEPS_JA.length - 1 ? "2.4rem" : 0 }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", fontWeight: 600, letterSpacing: "0.08em", flexShrink: 0, paddingTop: "0.3rem", width: "2.8rem" }}>{s.n}</span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>{s.title}</div>
+              <div style={{ fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{s.body}</div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {/* ── Key concepts ────────────────────────────────────────────────── */}
+      <h2>主要概念の概要</h2>
+      <p>始める前の簡単な用語集です。完全な定義は<a href="/docs/glossary">用語集</a>にあります。</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>用語</th>
+            <th>説明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>研究</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>最上位のコンテナ。すべて — 参加者、スケジュール、結果 — は1つの研究に属します。</td></tr>
+          <tr><td>スケジュール</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}><em>誰が</em>通知を受け取り、<em>いつ</em>、<em>何が含まれるか</em>を定義するルール。1つの研究に複数のスケジュールを設定できます。</td></tr>
+          <tr><td>キュー</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>スケジュールから生成された個別の送信の展開リスト — 1参加者×1送信時刻ごとに1行。</td></tr>
+          <tr><td>参加者</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Researchアプリを通じて研究に登録した人。連絡先情報ではなく匿名のIDで識別されます。</td></tr>
+          <tr><td>完了</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samplyは、その送信に紐づく調査回答を検出すると、通知を完了としてマークします。</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Cite Samply ─────────────────────────────────────────────────── */}
+      <h2>Samplyの引用方法</h2>
+      <p>
+        研究でSamplyを使用する場合は、元の出版物を引用してください:
+      </p>
+      <div style={{ background: 'var(--coral-soft)', borderLeft: '3px solid var(--coral)', borderRadius: '0 0.8rem 0.8rem 0', padding: '1.4rem 1.6rem', margin: '0.4rem 0 1.6rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.95rem', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--coral)', marginBottom: '0.7rem' }}>Publication</div>
+        <p style={{ margin: '0 0 0.8rem', fontSize: '1.3rem', lineHeight: 1.6, color: 'var(--ink)', fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href='https://doi.org/10.3758/s13428-020-01527-9' target='_blank' rel='noopener noreferrer' style={{ fontFamily: 'var(--font-mono)', fontSize: '1.15rem', color: 'var(--coral)', wordBreak: 'break-all' }}>https://doi.org/10.3758/s13428-020-01527-9</a>
+      </div>
+
+      {/* ── Where next ──────────────────────────────────────────────────── */}
+      <h3>次に進む場所</h3>
+      <p>
+        初めての場合: <a href="/docs/first-study">初めての研究</a>をお読みください — 研究の作成、スケジュールの追加、最初の参加者の登録までステップごとに案内します。
+      </p>
+      <p>
+        すでに研究があり、さらに多くのことを行いたい場合: 高度な機能セクションの{" "}
+        <a href="/docs/placeholders">URLパーソナライズ</a>、{" "}
+        <a href="/docs/groups">グループ</a>、または{" "}
+        <a href="/docs/reminders">リマインダー</a>にアクセスしてください。
+      </p>
+    </>
+  );
+}
+
+const GOALS_TR = [
+  {
+    slug: "first-study",
+    label: "İlk çalışmamı kur",
+    body: "Konteyneri oluşturun — katılımcılar, programlar ve yanıt geçmişi tek bir çalışmanın içinde yer alır.",
+    cta: "İlk çalışmanız →",
+  },
+  {
+    slug: "invite",
+    label: "Katılımcıları davet et",
+    body: "Katılımcılar bir bağlantıya dokunarak veya QR kodu tarayarak katılır. İletişim bilgilerini asla görmezsiniz.",
+    cta: "Katılımcıları davet etme →",
+  },
+  {
+    slug: "types",
+    label: "Bir program türü seç",
+    body: "Tek seferlik, tekrar eden, rastgele veya kişisel — dört tür, her biri farklı bir araştırma tasarımına uygundur.",
+    cta: "Dört tür →",
+  },
+  {
+    slug: "form",
+    label: "Bir program oluştur",
+    body: "Program formu sizi sırasıyla İçerik, Tür, Hedef Kitle ve Seçenekler aşamalarından geçirir.",
+    cta: "Program oluşturma →",
+  },
+  {
+    slug: "placeholders",
+    label: "Anket URL'lerini kişiselleştir",
+    body: "Samply, her bildirim bağlantısını katılımcının kimliği, çalışma kimliği veya özel bir kodla kişiselleştirebilir — böylece anket aracınız kimin yanıt verdiğini tam olarak bilir.",
+    cta: "URL kişiselleştirme →",
+  },
+  {
+    slug: "reminders",
+    label: "Hatırlatıcılar gönder",
+    body: "Bir katılımcı belirlenen zaman aralığı içinde yanıt vermediğinde otomatik olarak takip edin.",
+    cta: "Hatırlatıcılar →",
+  },
+];
+
+const STEPS_TR = [
+  {
+    n: "01",
+    title: "Bir çalışma oluşturun",
+    body: "Çalışma en üst düzey konteynerdir. Ona bir ad ve bir onam formu verin — başlamak için ihtiyacınız olan tek şey budur.",
+  },
+  {
+    n: "02",
+    title: "Bir program ekleyin",
+    body: "Bir program türü seçin (tek seferlik, tekrar eden, rastgele veya kişisel), bildirim metnini yazın, zamanlamayı ayarlayın ve kimin alacağını seçin.",
+  },
+  {
+    n: "03",
+    title: "Katılımcıları kaydedin",
+    body: "QR kodunu veya katılım bağlantısını paylaşın. Katılımcılar Samply Research uygulamasında ona dokunduklarında anında kaydedilir.",
+  },
+  {
+    n: "04",
+    title: "Samply bildirimleri gönderir",
+    body: "Panel, her programı katılımcı başına bir kuyruğa genişletir ve her bildirimi doğru zamanda iletir.",
+  },
+  {
+    n: "05",
+    title: "Katılımcılar yanıt verir",
+    body: "Bildirime dokunmak anket bağlantınızı açar. Samply yanıtı algıladığında tamamlanmalar otomatik olarak kaydedilir.",
+  },
+];
+
+function HomeContentTr() {
+  return (
+    <>
+      {/* ── Start here ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Buradan başla</h2>
+      <p>Şu anda bulunduğunuz aşamaya uygun görevi seçin.</p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(27rem, 1fr))", gap: "1.2rem", margin: "2.4rem 0 4rem" }}>
+        {GOALS_TR.map((g) => (
+          <a
+            key={g.slug}
+            href={`/docs/${g.slug}`}
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem", padding: "1.8rem 2rem", background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", textDecoration: "none", transition: "border-color 0.12s, box-shadow 0.12s" }}
+          >
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1.2 }}>{g.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.55, flex: 1 }}>{g.body}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", marginTop: "0.6rem" }}>{g.cta}</span>
+          </a>
+        ))}
+      </div>
+
+      {/* ── How it works ────────────────────────────────────────────────── */}
+      <h2>Samply nasıl çalışır</h2>
+      <p>Kayıttan yanıt verilerine kadar beş adım.</p>
+
+      <ol style={{ listStyle: "none", padding: 0, margin: "2.4rem 0 4rem", display: "flex", flexDirection: "column", gap: "0" }}>
+        {STEPS_TR.map((s, i) => (
+          <li
+            key={s.n}
+            style={{ display: "flex", gap: "2rem", alignItems: "flex-start", paddingBottom: "2.4rem", borderBottom: i < STEPS_TR.length - 1 ? "1px solid var(--ink-10)" : "none", marginBottom: i < STEPS_TR.length - 1 ? "2.4rem" : 0 }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", fontWeight: 600, letterSpacing: "0.08em", flexShrink: 0, paddingTop: "0.3rem", width: "2.8rem" }}>{s.n}</span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>{s.title}</div>
+              <div style={{ fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{s.body}</div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {/* ── Key concepts ────────────────────────────────────────────────── */}
+      <h2>Temel kavramlara bir bakış</h2>
+      <p>Başlamadan önce kısa bir sözlük. Tam tanımlar için <a href="/docs/glossary">sözlüğe</a> bakın.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Terim</th>
+            <th>Açıklama</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Çalışma</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>En üst düzey konteyner. Her şey — katılımcılar, programlar, sonuçlar — tek bir çalışmaya aittir.</td></tr>
+          <tr><td>Program</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}><em>Kimin</em> bildirim alacağını, <em>ne zaman</em> ve <em>ne yazacağını</em> belirten bir kural. Bir çalışmanın birden fazla programı olabilir.</td></tr>
+          <tr><td>Kuyruk</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Bir programdan üretilen tek tek gönderilerin genişletilmiş listesi — her katılımcı için her gönderim zamanına bir satır.</td></tr>
+          <tr><td>Katılımcı</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Research uygulaması aracılığıyla çalışmanıza kayıtlı kişi. İletişim bilgileri yerine anonim bir kimlikle tanımlanır.</td></tr>
+          <tr><td>Tamamlanma</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply, o gönderime bağlı bir anket yanıtını algıladığında bildirimi tamamlanmış olarak işaretler.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Cite Samply ─────────────────────────────────────────────────── */}
+      <h2>Samply nasıl alıntılanır</h2>
+      <p>
+        Araştırmanızda Samply kullanıyorsanız, lütfen orijinal yayını alıntılayın:
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 1.6rem" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publication</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>https://doi.org/10.3758/s13428-020-01527-9</a>
+      </div>
+
+      {/* ── Where next ──────────────────────────────────────────────────── */}
+      <h3>Sonraki adım</h3>
+      <p>
+        İlk kez buradaysanız: <a href="/docs/first-study">İlk çalışmanız</a> sayfasını okuyun — bir çalışmanın oluşturulması, bir programın eklenmesi ve ilk katılımcının kaydedilmesi süreçlerinde size adım adım rehberlik eder.
+      </p>
+      <p>
+        Mevcut bir çalışmanız varsa ve daha fazlasını yapmak istiyorsanız: Gelişmiş özellikler bölümündeki{" "}
+        <a href="/docs/placeholders">URL kişiselleştirme</a>,{" "}
+        <a href="/docs/groups">Gruplar</a> veya{" "}
+        <a href="/docs/reminders">Hatırlatıcılar</a> sayfalarına geçin.
+      </p>
+    </>
+  );
+}
+
+const GOALS_PL = [
+  {
+    slug: "first-study",
+    label: "Skonfiguruj moje pierwsze badanie",
+    body: "Utwórz kontener — uczestnicy, harmonogramy i historia odpowiedzi znajdują się wewnątrz pojedynczego badania.",
+    cta: "Twoje pierwsze badanie →",
+  },
+  {
+    slug: "invite",
+    label: "Zaproś uczestników",
+    body: "Uczestnicy dołączają, dotykając linku lub skanując kod QR. Nigdy nie widzisz ich danych kontaktowych.",
+    cta: "Zapraszanie uczestników →",
+  },
+  {
+    slug: "types",
+    label: "Wybierz typ harmonogramu",
+    body: "Jednorazowy, powtarzalny, losowy lub osobisty — cztery typy, każdy dopasowany do innego projektu badawczego.",
+    cta: "Cztery typy →",
+  },
+  {
+    slug: "form",
+    label: "Utwórz harmonogram",
+    body: "Formularz harmonogramu prowadzi Cię kolejno przez Treść, Typ, Odbiorców i Opcje.",
+    cta: "Tworzenie harmonogramu →",
+  },
+  {
+    slug: "placeholders",
+    label: "Personalizuj adresy URL ankiet",
+    body: "Samply potrafi spersonalizować każdy link powiadomienia za pomocą identyfikatora uczestnika, identyfikatora badania lub niestandardowego kodu — dzięki czemu Twoje narzędzie ankietowe wie dokładnie, kto odpowiada.",
+    cta: "Personalizacja adresów URL →",
+  },
+  {
+    slug: "reminders",
+    label: "Wysyłaj przypomnienia",
+    body: "Automatycznie ponawiaj kontakt, gdy uczestnik nie odpowie w wyznaczonym oknie czasowym.",
+    cta: "Przypomnienia →",
+  },
+];
+
+const STEPS_PL = [
+  {
+    n: "01",
+    title: "Utwórz badanie",
+    body: "Badanie jest kontenerem najwyższego poziomu. Nadaj mu nazwę i formularz zgody — to wszystko, czego potrzebujesz, aby zacząć.",
+  },
+  {
+    n: "02",
+    title: "Dodaj harmonogram",
+    body: "Wybierz typ harmonogramu (jednorazowy, powtarzalny, losowy lub osobisty), napisz tekst powiadomienia, ustaw czas i wybierz, kto ma je otrzymać.",
+  },
+  {
+    n: "03",
+    title: "Zarejestruj uczestników",
+    body: "Udostępnij kod QR lub link zapraszający. Uczestnicy są zapisywani natychmiast, gdy dotkną go w aplikacji Samply Research.",
+  },
+  {
+    n: "04",
+    title: "Samply wysyła powiadomienia",
+    body: "Panel rozwija każdy harmonogram w kolejkę na uczestnika i dostarcza każde powiadomienie we właściwym momencie.",
+  },
+  {
+    n: "05",
+    title: "Uczestnicy odpowiadają",
+    body: "Dotknięcie powiadomienia otwiera Twój link ankiety. Ukończenia są rejestrowane automatycznie, gdy Samply wykryje odpowiedź.",
+  },
+];
+
+function HomeContentPl() {
+  return (
+    <>
+      {/* ── Start here ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>Zacznij tutaj</h2>
+      <p>Wybierz zadanie pasujące do etapu, na którym aktualnie się znajdujesz.</p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(27rem, 1fr))", gap: "1.2rem", margin: "2.4rem 0 4rem" }}>
+        {GOALS_PL.map((g) => (
+          <a
+            key={g.slug}
+            href={`/docs/${g.slug}`}
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem", padding: "1.8rem 2rem", background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", textDecoration: "none", transition: "border-color 0.12s, box-shadow 0.12s" }}
+          >
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1.2 }}>{g.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.55, flex: 1 }}>{g.body}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", marginTop: "0.6rem" }}>{g.cta}</span>
+          </a>
+        ))}
+      </div>
+
+      {/* ── How it works ────────────────────────────────────────────────── */}
+      <h2>Jak działa Samply</h2>
+      <p>Pięć kroków od rejestracji do danych odpowiedzi.</p>
+
+      <ol style={{ listStyle: "none", padding: 0, margin: "2.4rem 0 4rem", display: "flex", flexDirection: "column", gap: "0" }}>
+        {STEPS_PL.map((s, i) => (
+          <li
+            key={s.n}
+            style={{ display: "flex", gap: "2rem", alignItems: "flex-start", paddingBottom: "2.4rem", borderBottom: i < STEPS_PL.length - 1 ? "1px solid var(--ink-10)" : "none", marginBottom: i < STEPS_PL.length - 1 ? "2.4rem" : 0 }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", fontWeight: 600, letterSpacing: "0.08em", flexShrink: 0, paddingTop: "0.3rem", width: "2.8rem" }}>{s.n}</span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>{s.title}</div>
+              <div style={{ fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{s.body}</div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {/* ── Key concepts ────────────────────────────────────────────────── */}
+      <h2>Spojrzenie na kluczowe pojęcia</h2>
+      <p>Krótki słowniczek przed rozpoczęciem. Pełne definicje znajdziesz w <a href="/docs/glossary">słowniku</a>.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Termin</th>
+            <th>Opis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Badanie</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Kontener najwyższego poziomu. Wszystko — uczestnicy, harmonogramy, wyniki — należy do pojedynczego badania.</td></tr>
+          <tr><td>Harmonogram</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Reguła określająca, <em>kto</em> otrzymuje powiadomienie, <em>kiedy</em> i <em>z jaką treścią</em>. Badanie może mieć wiele harmonogramów.</td></tr>
+          <tr><td>Kolejka</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Rozwinięta lista pojedynczych wysyłek wygenerowanych z harmonogramu — jeden wiersz dla każdego czasu wysyłki dla każdego uczestnika.</td></tr>
+          <tr><td>Uczestnik</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Osoba zapisana do Twojego badania za pośrednictwem aplikacji Samply Research. Identyfikowana anonimowym identyfikatorem zamiast danymi kontaktowymi.</td></tr>
+          <tr><td>Ukończenie</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply oznacza powiadomienie jako ukończone, gdy wykryje odpowiedź ankiety powiązaną z tą wysyłką.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Cite Samply ─────────────────────────────────────────────────── */}
+      <h2>Jak cytować Samply</h2>
+      <p>
+        Jeśli używasz Samply w swoich badaniach, prosimy o cytowanie oryginalnej publikacji:
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 1.6rem" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publikacja</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>https://doi.org/10.3758/s13428-020-01527-9</a>
+      </div>
+
+      {/* ── Where next ──────────────────────────────────────────────────── */}
+      <h3>Następny krok</h3>
+      <p>
+        Jeśli jesteś tu po raz pierwszy: przeczytaj stronę <a href="/docs/first-study">Twoje pierwsze badanie</a> — przeprowadzi Cię krok po kroku przez tworzenie badania, dodawanie harmonogramu i rejestrację pierwszego uczestnika.
+      </p>
+      <p>
+        Jeśli masz już istniejące badanie i chcesz zrobić więcej: przejdź do stron{" "}
+        <a href="/docs/placeholders">personalizacja adresów URL</a>,{" "}
+        <a href="/docs/groups">Grupy</a> lub{" "}
+        <a href="/docs/reminders">Przypomnienia</a> w sekcji funkcji zaawansowanych.
+      </p>
+    </>
+  );
+}
+
+const GOALS_AR = [
+  {
+    slug: "first-study",
+    label: "إعداد دراستي الأولى",
+    body: "أنشئ الحاوية — يوجد المشاركون والجداول وسجل الإجابات جميعًا داخل دراسة واحدة.",
+    cta: "دراستك الأولى ←",
+  },
+  {
+    slug: "invite",
+    label: "دعوة المشاركين",
+    body: "ينضم المشاركون بالنقر على رابط أو بمسح رمز QR. لا ترى أبدًا تفاصيل الاتصال الخاصة بهم.",
+    cta: "دعوة المشاركين ←",
+  },
+  {
+    slug: "types",
+    label: "اختيار نوع الجدول",
+    body: "لمرة واحدة، أو متكرر، أو عشوائي، أو شخصي — أربعة أنواع، كل منها مناسب لتصميم بحثي مختلف.",
+    cta: "الأنواع الأربعة ←",
+  },
+  {
+    slug: "form",
+    label: "إنشاء جدول",
+    body: "يرشدك نموذج الجدول عبر المحتوى والنوع والجمهور والخيارات بهذا الترتيب.",
+    cta: "إنشاء جدول ←",
+  },
+  {
+    slug: "placeholders",
+    label: "تخصيص روابط الاستطلاع",
+    body: "يستطيع Samply تخصيص كل رابط إشعار بمعرّف المشارك أو معرّف الدراسة أو رمز مخصص — حتى تعرف أداة الاستطلاع لديك تحديدًا من قام بالإجابة.",
+    cta: "تخصيص الروابط ←",
+  },
+  {
+    slug: "reminders",
+    label: "إرسال التذكيرات",
+    body: "متابعة تلقائية إذا لم يستجب المشارك خلال نافذة زمنية محددة.",
+    cta: "التذكيرات ←",
+  },
+];
+
+const STEPS_AR = [
+  {
+    n: "01",
+    title: "أنشئ دراسة",
+    body: "الدراسة هي الحاوية الأعلى مستوى. امنحها اسمًا ونموذج موافقة — هذا كل ما تحتاجه للبدء.",
+  },
+  {
+    n: "02",
+    title: "أضف جدولًا",
+    body: "اختر نوع الجدول (لمرة واحدة، متكرر، عشوائي أو شخصي)، واكتب نص الإشعار، وحدد التوقيت، واختر من يستقبله.",
+  },
+  {
+    n: "03",
+    title: "سجّل المشاركين",
+    body: "شارك رمز QR أو رابط الانضمام. ينضم المشاركون فور النقر عليه في تطبيق Samply Research.",
+  },
+  {
+    n: "04",
+    title: "يرسل Samply الإشعارات",
+    body: "تقوم لوحة التحكم بتوسيع كل جدول إلى طابور لكل مشارك وتسليم كل إشعار في الوقت المناسب.",
+  },
+  {
+    n: "05",
+    title: "يجيب المشاركون",
+    body: "يفتح النقر على الإشعار رابط الاستطلاع الخاص بك. تُسجَّل عمليات الإكمال تلقائيًا عندما يكتشف Samply الإجابة.",
+  },
+];
+
+function HomeContentAr() {
+  return (
+    <>
+      {/* ── Start here ──────────────────────────────────────────────────── */}
+      <h2 style={{ marginTop: 0 }}>ابدأ هنا</h2>
+      <p>اختر المهمة التي تتوافق مع المرحلة التي أنت فيها حاليًا.</p>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(27rem, 1fr))", gap: "1.2rem", margin: "2.4rem 0 4rem" }}>
+        {GOALS_AR.map((g) => (
+          <a
+            key={g.slug}
+            href={`/docs/${g.slug}`}
+            style={{ display: "flex", flexDirection: "column", gap: "0.6rem", padding: "1.8rem 2rem", background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", textDecoration: "none", transition: "border-color 0.12s, box-shadow 0.12s" }}
+          >
+            <span style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", lineHeight: 1.2 }}>{g.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.55, flex: 1 }}>{g.body}</span>
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", marginTop: "0.6rem" }}>{g.cta}</span>
+          </a>
+        ))}
+      </div>
+
+      {/* ── How it works ────────────────────────────────────────────────── */}
+      <h2>كيف يعمل Samply</h2>
+      <p>خمس خطوات من التسجيل إلى بيانات الإجابات.</p>
+
+      <ol style={{ listStyle: "none", padding: 0, margin: "2.4rem 0 4rem", display: "flex", flexDirection: "column", gap: "0" }}>
+        {STEPS_AR.map((s, i) => (
+          <li
+            key={s.n}
+            style={{ display: "flex", gap: "2rem", alignItems: "flex-start", paddingBottom: "2.4rem", borderBottom: i < STEPS_AR.length - 1 ? "1px solid var(--ink-10)" : "none", marginBottom: i < STEPS_AR.length - 1 ? "2.4rem" : 0 }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", fontWeight: 600, letterSpacing: "0.08em", flexShrink: 0, paddingTop: "0.3rem", width: "2.8rem" }}>{s.n}</span>
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "0.5rem" }}>{s.title}</div>
+              <div style={{ fontSize: "1.35rem", color: "var(--ink-60)", lineHeight: 1.6 }}>{s.body}</div>
+            </div>
+          </li>
+        ))}
+      </ol>
+
+      {/* ── Key concepts ────────────────────────────────────────────────── */}
+      <h2>المفاهيم الرئيسية في لمحة</h2>
+      <p>مفردات موجزة قبل الانطلاق. تجد التعريفات الكاملة في <a href="/docs/glossary">المسرد</a>.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>المصطلح</th>
+            <th>الوصف</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>الدراسة</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>الحاوية الأعلى مستوى. كل شيء — المشاركون والجداول والنتائج — ينتمي إلى دراسة واحدة.</td></tr>
+          <tr><td>الجدول</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>قاعدة تحدد <em>من</em> يستقبل الإشعار و<em>متى</em> و<em>ما يحتوي عليه</em>. يمكن أن تحتوي الدراسة الواحدة على عدة جداول.</td></tr>
+          <tr><td>الطابور</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>القائمة الموسعة لعمليات الإرسال الفردية الناتجة عن جدول — صف واحد لكل مشارك في كل وقت إرسال.</td></tr>
+          <tr><td>المشارك</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>شخص مسجَّل في دراستك عبر تطبيق Samply Research. يُحدَّد بمعرّف مجهول الهوية وليس ببيانات اتصال.</td></tr>
+          <tr><td>الإكمال</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>يعتبر Samply الإشعار مكتملًا عندما يكتشف إجابة استطلاع مرتبطة بعملية الإرسال تلك.</td></tr>
+        </tbody>
+      </table>
+
+      {/* ── Cite Samply ─────────────────────────────────────────────────── */}
+      <h2>كيفية الاستشهاد بـ Samply</h2>
+      <p>
+        إذا كنت تستخدم Samply في بحثك، يُرجى الاستشهاد بالمنشور الأصلي:
+      </p>
+      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 1.6rem" }}>
+        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>المنشور</div>
+        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
+          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
+        </p>
+        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>https://doi.org/10.3758/s13428-020-01527-9</a>
+      </div>
+
+      {/* ── Where next ──────────────────────────────────────────────────── */}
+      <h3>الخطوة التالية</h3>
+      <p>
+        إذا كانت هذه زيارتك الأولى: اقرأ صفحة <a href="/docs/first-study">دراستك الأولى</a> — فهي ترشدك خطوة بخطوة في إنشاء دراسة وإضافة جدول وتسجيل أول مشارك.
+      </p>
+      <p>
+        إذا كانت لديك بالفعل دراسة وتريد توسيع نطاقها: انتقل إلى{" "}
+        <a href="/docs/placeholders">تخصيص الروابط</a>،{" "}
+        <a href="/docs/groups">المجموعات</a> أو{" "}
+        <a href="/docs/reminders">التذكيرات</a> في قسم الميزات المتقدمة.
       </p>
     </>
   );

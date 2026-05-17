@@ -4,6 +4,7 @@ import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import { getSiteSettings } from "@/lib/models/siteSettings";
 import { submitTestimonial } from "./actions";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Share your experience — Samply" };
 
@@ -38,6 +39,7 @@ export default async function TestimonialPage({
 }) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   await connectDB();
   const { showTestimonials } = await getSiteSettings();
@@ -56,16 +58,16 @@ export default async function TestimonialPage({
           <div style={{ fontSize: "3.2rem", marginBottom: "1.2rem" }}>✉</div>
           <h1 className="font-[family-name:var(--font-display)]"
             style={{ fontSize: "3rem", fontWeight: 700, letterSpacing: "-0.025em", margin: "0 0 1rem" }}>
-            Thank you.
+            {t("testimonial.submittedTitle")}
           </h1>
           <p style={{ fontSize: "1.4rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "2.4rem" }}>
-            Your testimonial has been submitted and will appear on the site after review.
+            {t("testimonial.submittedBody")}
           </p>
           <a
             href="/dashboard"
             style={{ fontSize: "1.3rem", color: "var(--coral)", textDecoration: "none", fontFamily: "var(--font-mono)" }}
           >
-            ← Back to dashboard
+            {t("testimonial.submittedBack")}
           </a>
         </div>
       </main>
@@ -77,66 +79,65 @@ export default async function TestimonialPage({
       <div style={{ maxWidth: "60rem", margin: "0 auto", padding: "6rem var(--page-px) 10rem" }}>
 
         <a href="/dashboard" style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", textDecoration: "none", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-          ← dashboard
+          {t("testimonial.breadcrumb")}
         </a>
 
         <div style={{ marginTop: "3.2rem", marginBottom: "3.6rem" }}>
           <div className="font-[family-name:var(--font-hand)]"
             style={{ fontSize: "1.8rem", color: "var(--coral)", marginBottom: "0.4rem", transform: "rotate(-0.5deg)", display: "inline-block" }}>
-            your words
+            {t("testimonial.eyebrow")}
           </div>
           <h1 className="font-[family-name:var(--font-display)]"
             style={{ fontSize: "3.6rem", fontWeight: 700, letterSpacing: "-0.03em", margin: "0 0 1rem", lineHeight: 1.05 }}>
-            Share your experience.
+            {t("testimonial.title")}
           </h1>
           <p style={{ fontSize: "1.45rem", color: "var(--ink-60)", lineHeight: 1.6, margin: 0, maxWidth: "44rem" }}>
-            Tell us how you use Samply and what it has enabled in your research.
-            Approved testimonials appear on the Samply homepage.
+            {t("testimonial.subtitle")}
           </p>
         </div>
 
         <form action={submitTestimonial} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
           <div>
-            <label style={labelStyle}>Your testimonial *</label>
+            <label style={labelStyle}>{t("testimonial.fieldText")}</label>
             <textarea
               name="text"
               required
               rows={5}
-              placeholder="We used Samply to run a 14-day ESM study across three countries..."
+              placeholder={t("testimonial.fieldTextPlaceholder")}
               style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }}
             />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.4rem" }}>
             <div>
-              <label style={labelStyle}>Display name *</label>
+              <label style={labelStyle}>{t("testimonial.fieldName")}</label>
               <input
                 name="name"
                 type="text"
                 required
                 defaultValue={user?.name ?? ""}
-                placeholder="Dr. Jane Smith"
+                placeholder={t("testimonial.fieldNamePlaceholder")}
                 style={inputStyle}
               />
             </div>
             <div>
-              <label style={labelStyle}>Role / title</label>
+              <label style={labelStyle}>{t("testimonial.fieldRole")}</label>
               <input
                 name="role"
                 type="text"
-                placeholder="Associate Professor"
+                placeholder={t("testimonial.fieldRolePlaceholder")}
                 style={inputStyle}
               />
             </div>
           </div>
 
           <div>
-            <label style={labelStyle}>Institution</label>
+            <label style={labelStyle}>{t("testimonial.fieldInstitute")}</label>
             <input
               name="institute"
               type="text"
               defaultValue={user?.institute ?? ""}
-              placeholder="University of Example"
+              placeholder={t("testimonial.fieldInstitutePlaceholder")}
               style={inputStyle}
             />
           </div>
@@ -156,7 +157,7 @@ export default async function TestimonialPage({
                 fontFamily: "var(--font-body)",
               }}
             >
-              Submit testimonial →
+              {t("testimonial.submit")}
             </button>
           </div>
         </form>

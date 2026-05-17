@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import SubmitButton from "@/app/components/ui/SubmitButton";
+import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Set new password — Samply" };
 
@@ -21,6 +22,7 @@ const inputStyle: React.CSSProperties = {
 async function resetAction(token: string, formData: FormData) {
   "use server";
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
+  const { t } = await getT();
 
   const res = await fetch(`${expressUrl}/account/reset/${token}`, {
     method: "POST",
@@ -33,9 +35,9 @@ async function resetAction(token: string, formData: FormData) {
   });
 
   if (res.status === 302 || res.status === 301) {
-    redirect("/login?notice=" + encodeURIComponent("Password updated. Please log in."));
+    redirect("/login?notice=" + encodeURIComponent(t("resetPassword.passwordUpdated")));
   }
-  redirect(`/account/reset/${token}?error=` + encodeURIComponent("Reset failed. The link may have expired."));
+  redirect(`/account/reset/${token}?error=` + encodeURIComponent(t("resetPassword.resetFailed")));
 }
 
 export default async function ResetPage({
@@ -47,6 +49,7 @@ export default async function ResetPage({
 }) {
   const { token } = await params;
   const { error } = await searchParams;
+  const { t } = await getT();
 
   // Reject tokens that don't look like hex(randomBytes(20)) — 40 hex chars.
   if (!/^[0-9a-f]{40}$/i.test(token)) return notFound();
@@ -110,10 +113,10 @@ export default async function ResetPage({
                 className="font-[family-name:var(--font-display)] font-bold"
                 style={{ fontSize: "2rem", letterSpacing: "-0.02em", color: "var(--coral)", marginBottom: "1rem" }}
               >
-                Link expired
+                {t("resetPassword.linkExpired")}
               </div>
               <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 2.8rem", lineHeight: 1.6 }}>
-                This password reset link is invalid or has expired. Request a new one.
+                {t("resetPassword.linkExpiredBody")}
               </p>
               <a
                 href="/forgot"
@@ -130,7 +133,7 @@ export default async function ResetPage({
                   textDecoration: "none",
                 }}
               >
-                Request new link
+                {t("resetPassword.requestNewLink")}
               </a>
             </div>
           ) : (
@@ -141,10 +144,10 @@ export default async function ResetPage({
                   className="font-[family-name:var(--font-display)] font-bold"
                   style={{ fontSize: "2rem", letterSpacing: "-0.02em", color: "var(--ink)", marginBottom: "0.6rem" }}
                 >
-                  Set new password
+                  {t("resetPassword.setNewPassword")}
                 </div>
                 <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: 0 }}>
-                  Choose a strong password for your account.
+                  {t("resetPassword.setNewPasswordSub")}
                 </p>
               </div>
 
@@ -156,7 +159,7 @@ export default async function ResetPage({
                 )}
 
                 <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>New password</span>
+                  <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("resetPassword.newPassword")}</span>
                   <input
                     type="password"
                     name="password"
@@ -167,7 +170,7 @@ export default async function ResetPage({
                 </label>
 
                 <label style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>Confirm new password</span>
+                  <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("resetPassword.confirmPassword")}</span>
                   <input
                     type="password"
                     name="password-confirm"
@@ -178,7 +181,7 @@ export default async function ResetPage({
                 </label>
 
                 <SubmitButton
-                  pendingLabel="Resetting…"
+                  pendingLabel={t("resetPassword.resetPending")}
                   style={{
                     marginTop: "0.4rem",
                     padding: "1rem 2.4rem",
@@ -192,7 +195,7 @@ export default async function ResetPage({
                     alignSelf: "flex-start",
                   }}
                 >
-                  Reset password
+                  {t("resetPassword.resetButton")}
                 </SubmitButton>
               </form>
             </>

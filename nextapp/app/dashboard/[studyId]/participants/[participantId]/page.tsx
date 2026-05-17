@@ -9,6 +9,7 @@ import { DeleteForm } from "./DeleteForm";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import CodeEditor from "./CodeEditor";
 import { fetchPendingNotifications } from "@/lib/data/scheduled";
+import { getT } from "@/lib/i18n.server";
 
 interface Props {
   params: Promise<{ studyId: string; participantId: string }>;
@@ -87,6 +88,7 @@ export default async function ParticipantDetailPage({ params }: Props) {
 
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
+  const { t } = await getT();
 
   const [project, allParticipants] = await Promise.all([
     fetchProjectById(studyId, session.user.id),
@@ -120,7 +122,7 @@ export default async function ParticipantDetailPage({ params }: Props) {
         <a href={`/dashboard/${studyId}/participants`}
           style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".04em", color: "var(--ink-40)", textDecoration: "none" }}
           className="hover:text-[var(--ink)] transition-colors">
-          ← Participants
+          {t("participants.backToParticipants")}
         </a>
       </div>
 
@@ -129,7 +131,7 @@ export default async function ParticipantDetailPage({ params }: Props) {
         <div style={{ padding: "1.8rem 2.4rem 1.6rem", borderBottom: "1px solid var(--ink-10)", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1.6rem" }}>
           <div>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".16em", textTransform: "uppercase", color: "var(--ink-40)", marginBottom: "0.6rem" }}>
-              participant
+              {t("participants.detailEyebrow")}
             </div>
             <div className="font-[family-name:var(--font-display)] font-bold"
               style={{ fontSize: "2.6rem", letterSpacing: "-0.02em", lineHeight: 1, color: "var(--ink)" }}>
@@ -150,47 +152,46 @@ export default async function ParticipantDetailPage({ params }: Props) {
             flexShrink: 0,
             marginTop: "0.6rem",
           }}>
-            {isDeactivated ? "deactivated" : "active"}
+            {isDeactivated ? t("participants.statusDeactivated") : t("participants.statusActive")}
           </span>
         </div>
 
         <div style={{ padding: "0.4rem 2.4rem 1.2rem" }}>
           <CodeEditor current={participant.username} action={updateCodeAction} />
           {participant.group?.name && (
-            <MetaRow label="Group">
+            <MetaRow label={t("participants.labelGroup")}>
               <span style={{ padding: "0.2rem 0.8rem", borderRadius: "9999px", background: "var(--ink-10)", color: "var(--ink-60)" }}>
                 {participant.group.name}
               </span>
             </MetaRow>
           )}
-          <MetaRow label="Enrolled">
+          <MetaRow label={t("participants.labelEnrolled")}>
             {participant.created ? new Date(participant.created).toLocaleString() : "—"}
           </MetaRow>
           {participant.token ? (
-            <MetaRow label="Push token">
+            <MetaRow label={t("participants.labelPushToken")}>
               <span style={{ color: "var(--ink-40)", fontSize: "1.1rem" }}>
                 {participant.token.slice(0, 32)}…
               </span>
             </MetaRow>
           ) : (
-            <MetaRow label="Push token">
-              <span style={{ color: "var(--coral)", fontSize: "1.2rem", fontWeight: 500 }}>No token</span>
+            <MetaRow label={t("participants.labelPushToken")}>
+              <span style={{ color: "var(--coral)", fontSize: "1.2rem", fontWeight: 500 }}>{t("participants.detailNoToken")}</span>
               <span style={{ display: "block", fontSize: "1.15rem", color: "var(--ink-60)", marginTop: "0.3rem", lineHeight: 1.5 }}>
-                This participant has not granted notification permission, so their Expo push token was never registered.
-                Ask them to allow notifications in their device settings and then re-join the study by scanning the QR code or opening the invitation link again.
+                {t("participants.detailNoTokenHint")}
               </span>
             </MetaRow>
           )}
           {participant.stripe?.account && (
-            <MetaRow label="Stripe account">
+            <MetaRow label={t("participants.labelStripeAccount")}>
               <span style={{ color: "var(--ink-40)", fontSize: "1.1rem" }}>{participant.stripe.account}</span>
             </MetaRow>
           )}
           {userInfo.timezone && (
-            <MetaRow label="Timezone">{userInfo.timezone}</MetaRow>
+            <MetaRow label={t("participants.labelTimezone")}>{userInfo.timezone}</MetaRow>
           )}
           {(userInfo.timeWindowFrom || userInfo.timeWindowTo) && (
-            <MetaRow label="Time window">
+            <MetaRow label={t("participants.labelTimeWindow")}>
               {userInfo.timeWindowFrom ?? "—"} – {userInfo.timeWindowTo ?? "—"}
             </MetaRow>
           )}
@@ -211,15 +212,15 @@ export default async function ParticipantDetailPage({ params }: Props) {
         <a href={`/dashboard/${studyId}/schedule/new?participantId=${participantId}`}
           style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 1.8rem", background: "var(--coral)", color: "#fff", borderRadius: "9999px", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em", textDecoration: "none" }}
           className="hover:opacity-90 transition-opacity">
-          + Schedule notification
+          {t("participants.scheduleNotification")}
         </a>
 
         <form action={toggleAction}>
           <SubmitButton
-            pendingLabel={isDeactivated ? "Enabling…" : "Disabling…"}
+            pendingLabel={isDeactivated ? t("participants.enabling") : t("participants.disabling")}
             style={{ display: "inline-flex", alignItems: "center", gap: "0.6rem", padding: "0.9rem 1.8rem", border: isDeactivated ? "1px solid rgba(61,115,107,.3)" : "1px solid var(--ink-20)", borderRadius: "9999px", background: isDeactivated ? "rgba(61,115,107,.06)" : "transparent", color: isDeactivated ? "var(--sage)" : "var(--ink-60)", fontFamily: "var(--font-mono)", fontSize: "1.1rem", letterSpacing: ".06em" }}
             className="hover:opacity-70 transition-opacity">
-            {isDeactivated ? "⏵ Enable notifications" : "⏸ Disable notifications"}
+            {isDeactivated ? t("participants.enableNotifications") : t("participants.disableNotifications")}
           </SubmitButton>
         </form>
       </div>
@@ -227,19 +228,19 @@ export default async function ParticipantDetailPage({ params }: Props) {
       {/* Upcoming notifications preview */}
       <section>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "1.2rem" }}>
-          <SectionLabel>upcoming notifications</SectionLabel>
+          <SectionLabel>{t("participants.upcomingHeading")}</SectionLabel>
           <a
             href={`/scheduled/${studyId}?pnUser=${participantId}`}
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", letterSpacing: ".04em", color: "var(--ink-40)", textDecoration: "none" }}
             className="hover:text-[var(--ink)] transition-colors"
           >
-            see all →
+            {t("participants.seeAll")}
           </a>
         </div>
         {upcoming.length === 0 ? (
           <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "2.4rem 2rem", textAlign: "center" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink-40)", margin: 0 }}>
-              No upcoming notifications scheduled.
+              {t("participants.noUpcoming")}
             </p>
           </div>
         ) : (
@@ -247,9 +248,9 @@ export default async function ParticipantDetailPage({ params }: Props) {
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                  <th style={TH}>Scheduled for</th>
-                  <th style={TH}>Title</th>
-                  <th style={TH}>Rem.</th>
+                  <th style={TH}>{t("participants.thScheduledFor")}</th>
+                  <th style={TH}>{t("participants.thTitle")}</th>
+                  <th style={TH}>{t("participants.thRem")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -280,19 +281,19 @@ export default async function ParticipantDetailPage({ params }: Props) {
       {/* Sent notifications preview */}
       <section>
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: "1.2rem" }}>
-          <SectionLabel>notifications sent · {sentCount.toLocaleString()}</SectionLabel>
+          <SectionLabel>{t("participants.sentHeading", { n: sentCount.toLocaleString() })}</SectionLabel>
           <a
             href={`/dashboard/${studyId}/data?participant=${participantId}`}
             style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", letterSpacing: ".04em", color: "var(--ink-40)", textDecoration: "none" }}
             className="hover:text-[var(--ink)] transition-colors"
           >
-            see all →
+            {t("participants.seeAll")}
           </a>
         </div>
         {recentSent.length === 0 ? (
           <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "2.4rem 2rem", textAlign: "center" }}>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink-40)", margin: 0 }}>
-              No notifications sent yet.
+              {t("participants.noSent")}
             </p>
           </div>
         ) : (
@@ -300,9 +301,9 @@ export default async function ParticipantDetailPage({ params }: Props) {
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                  <th style={TH}>Notification</th>
-                  <th style={TH}>Sent</th>
-                  <th style={TH}>Status</th>
+                  <th style={TH}>{t("participants.thNotification")}</th>
+                  <th style={TH}>{t("participants.thSent")}</th>
+                  <th style={TH}>{t("participants.thStatus")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -332,16 +333,16 @@ export default async function ParticipantDetailPage({ params }: Props) {
       {/* Receipts */}
       {receipts.length > 0 && (
         <section>
-          <SectionLabel>payouts · {receipts.length}</SectionLabel>
+          <SectionLabel>{t("participants.payoutsHeading", { n: receipts.length })}</SectionLabel>
           <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
             <table style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                  <th style={TH}>Date</th>
-                  <th style={TH}>Amount</th>
-                  <th style={TH}>Currency</th>
-                  <th style={TH}>Status</th>
-                  <th style={TH}>Receipt</th>
+                  <th style={TH}>{t("participants.thDate")}</th>
+                  <th style={TH}>{t("participants.thAmount")}</th>
+                  <th style={TH}>{t("participants.thCurrency")}</th>
+                  <th style={TH}>{t("participants.thStatus")}</th>
+                  <th style={TH}>{t("participants.thReceipt")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -368,7 +369,7 @@ export default async function ParticipantDetailPage({ params }: Props) {
                         <a href={rec.paymentInfo.url} target="_blank" rel="noreferrer"
                           style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
                           className="hover:opacity-70 transition-opacity">
-                          open →
+                          {t("participants.openReceipt")}
                         </a>
                       ) : "—"}
                     </td>
@@ -383,14 +384,14 @@ export default async function ParticipantDetailPage({ params }: Props) {
       {/* Danger zone */}
       <section>
         <div style={{ height: "0.1rem", backgroundImage: "radial-gradient(circle, var(--ink-40) 1px, transparent 1.2px)", backgroundSize: "0.8rem 0.1rem", backgroundRepeat: "repeat-x", opacity: 0.2, marginBottom: "2rem" }} />
-        <SectionLabel>danger zone</SectionLabel>
+        <SectionLabel>{t("participants.dangerZoneHeading")}</SectionLabel>
         <div style={{ background: "rgba(214,90,48,.04)", border: "1px solid rgba(214,90,48,.15)", borderRadius: "0.8rem", padding: "1.8rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1.6rem", flexWrap: "wrap" }}>
           <div>
             <div style={{ fontSize: "1.35rem", fontWeight: 600, color: "var(--ink)", marginBottom: "0.3rem" }}>
-              Remove participant
+              {t("participants.removeParticipant")}
             </div>
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.55 }}>
-              Removes this participant from the study. Their notification history is preserved.
+              {t("participants.removeParticipantHint")}
             </p>
           </div>
           <DeleteForm action={deleteAction} />

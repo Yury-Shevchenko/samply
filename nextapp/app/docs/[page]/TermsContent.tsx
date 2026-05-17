@@ -10,6 +10,10 @@ export default function TermsContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <TermsContentFr />;
   if (locale === "es") return <TermsContentEs />;
   if (locale === "pt") return <TermsContentPt />;
+  if (locale === "ja") return <TermsContentJa />;
+  if (locale === "ar") return <TermsContentAr />;
+  if (locale === "pl") return <TermsContentPl />;
+  if (locale === "tr") return <TermsContentTr />;
   return <TermsContentEn />;
 }
 
@@ -266,7 +270,16 @@ function TermsContentEn() {
       </p>
 
       {/* 15 */}
-      <h2>15. Contact information</h2>
+      <h2>15. Data retention</h2>
+      <p>
+        Samply retains pending notification queue records for <strong>30 days</strong> and
+        notification history (response records) for <strong>12 months</strong>. After these
+        retention periods, records are automatically deleted by the platform. Researchers are
+        responsible for exporting any study data they wish to preserve before these periods expire.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Contact information</h2>
       <p>
         You can reach us by sending an email to{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
@@ -546,7 +559,16 @@ function TermsContentNl() {
       </p>
 
       {/* 15 */}
-      <h2>15. Contactinformatie</h2>
+      <h2>15. Gegevensbewaring</h2>
+      <p>
+        Samply bewaart records in de wachtrij voor openstaande meldingen gedurende <strong>30 dagen</strong> en
+        meldingsgeschiedenissen (responsrecords) gedurende <strong>12 maanden</strong>. Na deze
+        bewaartermijnen worden records automatisch verwijderd. Onderzoekers zijn zelf verantwoordelijk voor
+        het exporteren van studiegegevens vóór het verstrijken van deze termijnen.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Contactinformatie</h2>
       <p>
         U kunt ons bereiken door een e-mail te sturen naar{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
@@ -839,7 +861,16 @@ function TermsContentDe() {
       </p>
 
       {/* 15 */}
-      <h2>15. Kontaktinformationen</h2>
+      <h2>15. Datenspeicherfristen</h2>
+      <p>
+        Samply speichert Warteschlangen-Datensätze für ausstehende Benachrichtigungen <strong>30 Tage</strong> und
+        Benachrichtigungsverläufe (Antwortdatensätze) <strong>12 Monate</strong> lang. Nach Ablauf dieser Fristen
+        werden die Datensätze automatisch gelöscht. Forschende sind selbst verantwortlich dafür, alle Studiendaten
+        zu exportieren, die sie vor Ablauf dieser Fristen aufbewahren möchten.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Kontaktinformationen</h2>
       <p>
         Sie können uns erreichen, indem Sie eine E-Mail an{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a> senden.
@@ -1100,7 +1131,15 @@ function TermsContentRu() {
       </p>
 
       {/* 15 */}
-      <h2>15. Контактная информация</h2>
+      <h2>15. Сроки хранения данных</h2>
+      <p>
+        Samply хранит записи в очереди ожидающих уведомлений <strong>30 дней</strong>, а историю уведомлений
+        (записи ответов) — <strong>12 месяцев</strong>. По истечении этих сроков записи автоматически
+        удаляются. Исследователи несут ответственность за экспорт данных исследования до истечения этих сроков.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Контактная информация</h2>
       <p>
         Вы можете связаться с нами, отправив письмо на адрес{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
@@ -1306,7 +1345,14 @@ function TermsContentZh() {
       </p>
 
       {/* 15 */}
-      <h2>15. 联系方式</h2>
+      <h2>15. 数据保留</h2>
+      <p>
+        Samply 将待处理通知队列记录保留 <strong>30 天</strong>，将通知历史记录（响应记录）保留{' '}
+        <strong>12 个月</strong>。超过这些保留期后，记录将由平台自动删除。研究人员有责任在这些期限到期前导出任何希望保存的研究数据。
+      </p>
+
+      {/* 16 */}
+      <h2>16. 联系方式</h2>
       <p>
         您可以通过发送电子邮件至{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a> 与我们联系。
@@ -1534,7 +1580,15 @@ function TermsContentKo() {
       </p>
 
       {/* 15 */}
-      <h2>15. 연락처</h2>
+      <h2>15. 데이터 보존</h2>
+      <p>
+        Samply는 대기 중인 알림 큐 기록을 <strong>30일</strong> 동안, 알림 기록(응답 기록)을{' '}
+        <strong>12개월</strong> 동안 보관합니다. 이 보존 기간이 지나면 기록이 플랫폼에 의해 자동으로
+        삭제됩니다. 연구자는 이 기간이 만료되기 전에 보존하고자 하는 연구 데이터를 내보낼 책임이 있습니다.
+      </p>
+
+      {/* 16 */}
+      <h2>16. 연락처</h2>
       <p>
         당사에 연락하시려면{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>으로 이메일을 보내 주십시오.
@@ -1810,7 +1864,16 @@ function TermsContentIt() {
       </p>
 
       {/* 15 */}
-      <h2>15. Informazioni di contatto</h2>
+      <h2>15. Conservazione dei dati</h2>
+      <p>
+        Samply conserva i record della coda delle notifiche in sospeso per <strong>30 giorni</strong> e
+        la cronologia delle notifiche (record delle risposte) per <strong>12 mesi</strong>. Al termine di
+        questi periodi, i record vengono eliminati automaticamente. I ricercatori sono responsabili
+        dell&apos;esportazione dei dati dello studio prima della scadenza di questi periodi.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Informazioni di contatto</h2>
       <p>
         È possibile contattarci inviando un&apos;e-mail a{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
@@ -2096,7 +2159,16 @@ function TermsContentFr() {
       </p>
 
       {/* 15 */}
-      <h2>15. Coordonnées</h2>
+      <h2>15. Conservation des données</h2>
+      <p>
+        Samply conserve les enregistrements de la file d&apos;attente des notifications en attente pendant{' '}
+        <strong>30 jours</strong> et l&apos;historique des notifications (enregistrements de réponses) pendant{' '}
+        <strong>12 mois</strong>. Après ces périodes, les enregistrements sont supprimés automatiquement.
+        Les chercheurs sont responsables de l&apos;exportation des données avant l&apos;expiration de ces délais.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Coordonnées</h2>
       <p>
         Vous pouvez nous contacter en envoyant un e-mail à{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
@@ -2366,7 +2438,16 @@ function TermsContentEs() {
       </p>
 
       {/* 15 */}
-      <h2>15. Información de contacto</h2>
+      <h2>15. Retención de datos</h2>
+      <p>
+        Samply conserva los registros de la cola de notificaciones pendientes durante <strong>30 días</strong> y
+        el historial de notificaciones (registros de respuestas) durante <strong>12 meses</strong>. Tras estos
+        períodos, los registros se eliminan automáticamente. Los investigadores son responsables de exportar
+        los datos del estudio antes de que expiren estos plazos.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Información de contacto</h2>
       <p>
         Puede ponerse en contacto con nosotros enviando un correo electrónico a{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
@@ -2632,9 +2713,657 @@ function TermsContentPt() {
       </p>
 
       {/* 15 */}
-      <h2>15. Informações de contato</h2>
+      <h2>15. Retenção de dados</h2>
+      <p>
+        A Samply mantém os registros da fila de notificações pendentes por <strong>30 dias</strong> e
+        o histórico de notificações (registros de respostas) por <strong>12 meses</strong>. Após esses
+        períodos, os registros são excluídos automaticamente. Os pesquisadores são responsáveis por exportar
+        os dados do estudo antes que esses prazos expirem.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Informações de contato</h2>
       <p>
         Você pode entrar em contato conosco enviando um e-mail para{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
+      </p>
+    </>
+  );
+}
+
+function TermsContentJa() {
+  return (
+    <>
+      {/* 1 */}
+      <h2>1. はじめに</h2>
+      <p>
+        Samplyは、モバイルアプリケーションSamply Researchを通じて、オンライン実験や調査への参加を管理するためのプラットフォームです。Samplyは
+        https://samply.uni-konstanz.de （以下「本サイト」）でホストされており、通知のスケジュール設定および管理のためのサービス（総称して「本サービス」）を提供しています。お客様が本サービスを利用し、当社がお客様に本サービスを提供することは、本利用規約に定められた条件に拘束されることについて、お客様と Samply の間で合意したものとみなされます。
+      </p>
+      <p>
+        Samplyは、非営利の研究目的では無料でご利用いただけます。Samplyの商用利用については、{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>までお問い合わせください。
+      </p>
+      <p>
+        本利用規約をよくお読みください。本サービスに登録すること、またはその他の方法で本サービスを利用することにより、お客様は本利用規約および当社の{' '}
+        <a href='/docs/policy'>プライバシーポリシー</a>（総称して「本規約」）を読み、理解し、これらに拘束されることに同意したものとみなされます。本規約で当社が提案する内容に同意されない場合は、本サービスのいかなる部分もご利用にならないでください。
+      </p>
+
+      {/* 2 */}
+      <h2>2. 利用資格</h2>
+      <p>
+        本サービスは、18歳以上の方のご利用を想定しています。18歳未満の方は本サービスをご利用いただけません。18歳以上の方は、本サービスから停止処分を受けたことがないこと、および本サービスの利用がいかなる法律や規制にも違反しないことをご確認ください。会社、組織、その他の事業体を代表して本サービスを利用される場合、当該事業体を本規約に拘束する権限を有することを当社に確約するものとします。
+      </p>
+
+      {/* 3 */}
+      <h2>3. アカウントと登録</h2>
+      <p>
+        本サービスをご利用になる際は、アカウントを登録するという選択肢があります。本サービスでアカウントを作成すると、オンライン研究（実験または調査）への参加や、ご自身の研究の作成に関する特別な機能をご利用いただけるため、アカウントの登録をお勧めいたします。アカウント登録の際には、登録プロセスの一環として、いくつかの個人情報をご提供いただきます。その一部はアカウント登録に必須です。お客様は、提供されるすべての情報が正確であること、および将来にわたって正確かつ最新の状態に保つことを約束するものとします。また、アカウントの安全を守るためにパスワードの設定をお願いいたします。お客様は、パスワードを安全かつ機密に保つ責任を負います。お客様のアカウントで発生したあらゆる活動は、お客様の責任となります。お客様のアカウントの安全が損なわれている可能性があると思われる場合は、直ちに{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>までご連絡ください。また、https://samply.uni-konstanz.de/researcher/forgot からパスワードをリセットすることもできます。
+      </p>
+
+      {/* 4 */}
+      <h2>4. 本サービスの利用ライセンス</h2>
+      <p>
+        お客様が本規約を遵守し続ける限り、当社はお客様に対し、個人的な利用に限り本サービスへのアクセスを許可します。本サービスでは、研究（以下「研究」）を作成したり、他のSamplyユーザー（以下「研究者」）が作成した研究に参加したりすることができます。
+      </p>
+      <p>このライセンスには、以下を使用する権利は含まれませんのでご注意ください：</p>
+      <ol>
+        <li>研究内に表示される商標、ロゴ、またはマーク</li>
+        <li>研究内で識別可能な人物の画像</li>
+        <li>研究内に登場する芸術作品または著作物</li>
+      </ol>
+
+      {/* 5 */}
+      <h2>5. ユーザーコンテンツ</h2>
+      <p>お客様は、本サイト上で作成した研究を含む、すべてのユーザーコンテンツの所有者です。</p>
+      <dl>
+        <dt>一般条件</dt>
+        <dd>
+          本サービスでは、お客様の研究を作成・公開できるほか、文章、画像、ウェブリンク、位置情報、その他のコンテンツ（以下「ユーザーコンテンツ」）を作成・公開することができます。お客様が本サービス上で提供するすべてのユーザーコンテンツは、お客様またはそのライセンサーが所有します。当社はお客様のユーザーコンテンツの所有権を主張しません。それは完全にお客様に帰属します。
+        </dd>
+        <dt>限定ライセンス</dt>
+        <dd>
+          お客様が研究を公開する場合、お客様は当社に対して、本サイト上でお客様のユーザーコンテンツ（全部または一部）をホスト、保存、送信、表示、配布するための、世界的、非独占的、ロイヤリティフリーのライセンス（サブライセンス権付き）を付与するものとします。お客様は、当社が研究の使用について支払い義務を負わないこと、および研究が帰属表示や報酬なしに一般に公開されることを認めます。お客様が研究を一般公開したくない場合でも、制限なく本サービスのすべての機能をご利用いただけます。
+        </dd>
+        <dt>表明および保証</dt>
+        <dd>
+          お客様は、お客様のユーザーコンテンツ、および本サービスへのユーザーコンテンツのアップロードまたは公開によるすべての結果について、単独で責任を負います。ユーザーコンテンツをアップロードまたは公開するたびに、お客様は次のことを表明し保証するものとします：(a)お客様がユーザーコンテンツの作成者かつ所有者であるか、本セクションに定めるとおり本サービスでお客様のユーザーコンテンツを使用し、他のユーザーに使用を許可するために必要なすべての権利を他者または事業体から取得していること、(b)お客様のユーザーコンテンツが、著作権その他の知的財産権、プライバシー権、パブリシティ権、人格権を含む第三者の権利を侵害もしくは不正使用せず、また誰かを誹謗中傷、名誉毀損、侮辱するものでないこと。
+        </dd>
+        <dt>免責事項</dt>
+        <dd>
+          本サービスにアップロードまたは投稿されるすべてのユーザーコンテンツを監視することは、当社にとって合理的に不可能であり、当社は、お客様および他のユーザーが本サービスにアップロードまたは投稿するユーザーコンテンツを監視、編集、または管理する義務を、お客様または他のユーザーに対して負いません。これは、当社が本サービス上のユーザーコンテンツについて責任を負わないことを意味し、お客様はユーザーコンテンツに基づき当社に対して請求を行わないことに同意します。ただし、ユーザーコンテンツが本規約に違反する場合、またはその他の方法で不快であると判断される場合には、当社はいつでも本サービスからユーザーコンテンツを削除、編集、検索、またはブロックすることができます。
+        </dd>
+      </dl>
+
+      {/* 6 */}
+      <h2>6. 禁止行為</h2>
+      <p>本サービスをご利用になる際、お客様は以下を行わないことに同意します：</p>
+      <ol type='a'>
+        <li>違法な目的、またはいかなる法律もしくは規制に違反する形で本サービスを利用すること；</li>
+        <li>知的財産権の侵害や不正使用を含め、第三者の権利を侵害すること、または他者にその侵害を促すこと；</li>
+        <li>違法、誹謗中傷、虐待的、わいせつ、卑猥、ポルノ的、嫌がらせ、脅迫、憎悪、その他不適切なユーザーコンテンツをアップロード、公開、または流布すること；</li>
+        <li>本サービスのセキュリティ機能を改ざんすること（例：非公開の研究やユーザーコンテンツにアクセスするための機能を無効化もしくは回避すること、本サービスをリバースエンジニアリングしてソースコードを取得すること）；</li>
+        <li>当社による本サービスの運営、または他のユーザーによる本サービスの利用を妨害すること（つまり、ウイルス、アドウェア、スパイウェアのアップロードや配布、勧誘や宣伝の送信、第三者の個人情報の収集、当社が本サービスを提供するために使用するネットワークやデバイスへの干渉を行わないこと）；</li>
+        <li>他人になりすますなどの不正行為に関与すること；</li>
+        <li>ボット、スパイダー、スクリプト、クローラー、スクレイパー、その他の自動化されたツールやアプリケーション（ウェブブラウザや当社が公開する可能性のあるその他のモバイルアプリケーションを除く）を通じて本サービスにアクセスすること；</li>
+        <li>本サイトの外観を模倣すること、または類似もしくは競合するサービスを作成する目的で研究にアクセス、ダウンロード、コピー、変更、配布、実行、または使用すること；</li>
+        <li>本サービスを利用する権利、または本資料の閲覧、アクセス、もしくは使用する権利を譲渡すること；あるいは</li>
+        <li>これらのいずれかを試みること、または他人がそれを行うのを手助けすること。</li>
+      </ol>
+
+      {/* 7 */}
+      <h2>7. 第三者のサービスとリンク先サイト</h2>
+      <p>
+        本サービスでは、お客様のアカウントを他のサービスのアカウントに接続できる機能など、ユーザーコンテンツを含む情報を他社のサービスに送信できるツールを見つけることがあります。これらのツールを使用すると、お客様はこの情報を他社のサービスに送信することを当社に許可することになります。また、当社はこれらの情報を他社がどのように使用するかについて、いかなる方法でも制御していないため、責任を負わないことを認めるものとします。また、本サービス上で当社が運営していない他のサイトへのリンクを見つけることもあります。これらのサイトも当社の管理下にはありませんので、本サービスを離れる際はお客様自身の裁量で判断してください。
+      </p>
+
+      {/* 8 */}
+      <h2>8. アカウントの終了</h2>
+      <p>
+        お客様が本規約のいずれかに違反した場合、お客様の本サービス利用許可は自動的に終了します。お客様は、{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>までメールを送信することで、本サービスのアカウントを解約することができます。
+      </p>
+
+      {/* 9 */}
+      <h2>9. プライバシーポリシーおよび追加要件</h2>
+      <p>
+        当社は、お客様からどのような情報を収集し、どのように使用するかを、お客様に知っていただきたいと考えています。当社の<a href='/docs/policy'>プライバシーポリシー</a>をよくお読みください。プライバシーポリシーは、本規約の一部として本規約に組み込まれます。さらに、本サービスのご利用にあたってお客様が遵守すべき追加要件についてお知らせすることがあります。当社が本サービス上で公開する、または本サービスにリンクする追加のガイドラインは、本同意の一部として本規約に組み込まれます。
+      </p>
+
+      {/* 10 */}
+      <h2>10. 本規約の変更</h2>
+      <p>
+        当社は、1ヶ月の事前通知をもって、本規約を変更することがあります。その場合、当社は変更内容についてお客様に通知するための合理的な努力を行います。これらの通知は、ポップアップバナー、本サービスのアカウントに関連付けられたメールアドレスへの送信、またはその他の手段により提供される場合があり、新バージョンの本規約が発効する際にはお客様に通知いたします。当社が提案する新しい規約に同意されない場合、当社は直ちにお客様のアカウントを停止し、本サービスへのアクセスを終了することがあります。本サービスに関連する紛争は、当該紛争が発生した時点で有効な本規約のバージョンに従って解決されます。
+      </p>
+
+      {/* 11 */}
+      <h2>11. 本サービスの所有権</h2>
+      <p>
+        当社が提供する本サービスのすべてのソフトウェア、ビジュアルインターフェース、グラフィック、デザイン、情報、その他の要素（以下「本資料」）は、知的財産およびその他の法律によって保護されています。当社または当社のライセンサーは、本サービスに含まれるすべての本資料の所有者であり、お客様は本規約で明示的に許可されている場合を除き、本資料を使用することはできません。
+      </p>
+
+      {/* 12 */}
+      <h2>12. 免責；無保証</h2>
+      <p>
+        当社は、本サービスおよび本サービスを通じて利用可能なすべてのコンテンツを「現状のまま」および「利用可能な範囲で」、明示または黙示を問わずいかなる種類の保証もなく提供します。適用される法律で認められる範囲内で、当社は、商品性、特定目的への適合性、第三者の権利の非侵害、所有権、ならびに取引慣行、利用または商慣習から生じるあらゆる保証を含む、あらゆる種類の保証を明示的に放棄します。当社は、本サービスが中断されないこと、安全であること、エラーや有害なコンポーネントがないこと、またはエラーや有害なコンポーネントを修正することを保証または表明しません。
+      </p>
+      <p>
+        以下の第13条に規定される場合を除き、お客様は自己の責任で本サービスを利用し、本サービスの利用またはアクセス、本サービスの他のユーザーとのやり取り、および本サービスを通じて利用可能なコンテンツから生じる損害のすべてのリスクを負うものとします。
+      </p>
+      <p>
+        一部の地域では法律により保証の除外が禁止されており、お客様の居住地によって異なる権利を有する場合があります。当社は、それが違法である場合には、お客様に対する当社の責任をいかなる方法でも除外または制限しません。英国および欧州連合では、これには当社の過失、当社の従業員、代理人または下請業者の過失による死亡または人身傷害に対する責任、詐欺または不正な表示に対する責任、本サービスを合理的な注意と技術をもって提供する義務に対する責任、または当社もしくは本サービスに関して提供された情報に従って本サービスを提供しなかったことに対する責任が含まれます。
+      </p>
+
+      {/* 13 */}
+      <h2>13. 一般条項</h2>
+      <p>
+        本規約は、プライバシーポリシーおよび本規約に組み込まれたその他のポリシーとともに、本サービスのお客様による利用に関するお客様と当社との間の完全な同意を構成します。上記の第12条に基づき本規約を更新する当社の権利を除き、本規約は両当事者によって署名された書面による合意によってのみ変更することができます。お客様は、当社の同意なしに本規約を他の個人または事業体に譲渡または移転することはできず、本サービスのアカウントを譲渡することもできません。当社は、お客様への通知の有無にかかわらず、本規約を譲渡することができます。
+      </p>
+      <p>
+        お客様の側で本利用規約に基づく権利の行使または本利用規約の遵守の要求が遅延または欠落しても、その後にそのような権利を行使し、または遵守を要求する当社の権利には影響しません。お客様による本利用規約の違反を当社が放棄したとしても、その後の違反、またはお客様が違反した規約を遵守する義務を放棄するものではありません。
+      </p>
+      <p>
+        本規約のいずれかの部分が裁判官または仲裁人によって執行不能と判断された場合、その執行不能な部分は可能な最大限の範囲で適用され、残りの部分は引き続き完全に有効に存続します。
+      </p>
+
+      {/* 14 */}
+      <h2>14. 電子通信への同意</h2>
+      <p>
+        お客様は、当社のプライバシーポリシーに記載されているとおり、当社からの電子通信を受信することに同意するものとします。電子通信に関する当社の方針についての選択肢を理解するために、当社の{' '}
+        <a href='/docs/policy'>プライバシーポリシー</a>をお読みください。当社は、通知、同意書、開示、その他の通信を電子的にお客様に送信する場合があります。
+      </p>
+
+      {/* 15 */}
+      <h2>15. データ保持</h2>
+      <p>
+        Samplyは、保留中の通知キューのレコードを <strong>30日間</strong>、通知履歴（回答レコード）を{' '}
+        <strong>12ヶ月間</strong> 保持します。これらの保持期間が過ぎると、記録はプラットフォームによって
+        自動的に削除されます。研究者は、期限が切れる前に保存したいスタディデータをエクスポートする責任があります。
+      </p>
+
+      {/* 16 */}
+      <h2>16. お問い合わせ</h2>
+      <p>
+        お問い合わせは、{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>までメールでご連絡ください。
+      </p>
+    </>
+  );
+}
+
+function TermsContentTr() {
+  return (
+    <>
+      {/* 1 */}
+      <h2>1. Giriş</h2>
+      <p>
+        Samply, Samply Research mobil uygulaması aracılığıyla çevrimiçi deneylere ve anketlere katılımı yönetmek için bir platformdur. Samply, https://samply.uni-konstanz.de adresinde barındırılır (bundan sonra «Site» olarak anılacaktır) ve bildirimlerin planlanması ve yönetilmesi için hizmetler (topluca «Hizmetler») sunar. Hizmetleri kullanmanız ve bizim Hizmetleri size sunmamız, bu Kullanım Şartlarında belirtilen koşullara bağlı kalacağınız konusunda sizinle Samply arasında bir anlaşma olarak kabul edilir.
+      </p>
+      <p>
+        Samply, ticari olmayan araştırma amaçları için ücretsiz olarak kullanılabilir. Samply’nin ticari kullanımıyla ilgili olarak lütfen{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a> adresinden bizimle iletişime geçin.
+      </p>
+      <p>
+        Lütfen bu Kullanım Şartlarını dikkatlice okuyun. Hizmetlere kaydolarak veya başka bir şekilde Hizmetleri kullanarak, bu Kullanım Şartlarını ve{' '}
+        <a href='/docs/policy'>Gizlilik Politikamızı</a> (topluca «Şartlar») okuduğunuzu, anladığınızı ve bunlara bağlı kalmayı kabul ettiğinizi beyan etmiş olursunuz. Şartlarda önerdiklerimizi kabul etmiyorsanız, lütfen Hizmetlerin hiçbir bölümünü kullanmayın.
+      </p>
+
+      {/* 2 */}
+      <h2>2. Kullanım Uygunluğu</h2>
+      <p>
+        Hizmetler, 18 yaşında veya daha büyük kişilerin kullanımı için tasarlanmıştır. 18 yaşının altındaki kişiler Hizmetleri kullanamaz. 18 yaşında veya daha büyükseniz, lütfen Hizmetlerden askıya alınmamış olduğunuzdan ve Hizmetleri kullanmanızın herhangi bir yasa veya yönetmeliği ihlal etmediğinden emin olun. Hizmetleri bir şirket, kuruluş veya başka bir tüzel kişilik adına kullanıyorsanız, söz konusu tüzel kişiliği bu Şartlara bağlama yetkisine sahip olduğunuzu bize beyan etmiş olursunuz.
+      </p>
+
+      {/* 3 */}
+      <h2>3. Hesap ve Kayıt</h2>
+      <p>
+        Hizmetleri kullanırken bir hesap kaydetme seçeneğiniz vardır. Hizmetlerde bir hesap oluşturmak, çevrimiçi araştırmalara (deneyler veya anketler) katılım veya kendi araştırmanızı oluşturma ile ilgili özel işlevlere erişmenizi sağladığından bir hesap kaydetmenizi öneririz. Bir hesap kaydederken, kayıt sürecinin bir parçası olarak bize bazı kişisel bilgiler verirsiniz; bunlardan bazıları hesap kaydı için zorunludur. Sağlanan tüm bilgilerin doğru olduğuna ve bu bilgilerin gelecekte de doğru ve güncel kalacağına söz verirsiniz. Ayrıca hesabınızı güvende tutmak için bir şifre belirlemenizi rica ediyoruz. Şifrenizi güvenli ve gizli tutmaktan siz sorumlusunuz. Hesabınızda gerçekleşen tüm etkinliklerden sorumlusunuz. Hesabınızın güvenliğinin tehlikeye girmiş olabileceğini düşünüyorsanız, lütfen derhal{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a> adresinden bizimle iletişime geçin. Şifrenizi https://samply.uni-konstanz.de/researcher/forgot adresinden de sıfırlayabilirsiniz.
+      </p>
+
+      {/* 4 */}
+      <h2>4. Hizmetleri Kullanım Lisansı</h2>
+      <p>
+        Şartlara uymaya devam ettiğiniz sürece, yalnızca kişisel kullanımınız için size Hizmetlere erişim izni veriyoruz. Hizmetlerde araştırmalar (bundan sonra «araştırma») oluşturabilir veya diğer Samply kullanıcıları (bundan sonra «araştırmacılar») tarafından oluşturulan araştırmalara katılabilirsiniz.
+      </p>
+      <p>Bu lisansın aşağıdakileri kullanma hakkını içermediğini unutmayın:</p>
+      <ol>
+        <li>Bir araştırmada görünen ticari markalar, logolar veya işaretler;</li>
+        <li>Bir araştırmada tanınabilen kişilerin görüntüleri;</li>
+        <li>Bir araştırmada yer alan sanat eserleri veya telif hakkıyla korunan eserler.</li>
+      </ol>
+
+      {/* 5 */}
+      <h2>5. Kullanıcı İçeriği</h2>
+      <p>Sitede oluşturduğunuz araştırmalar dahil olmak üzere tüm Kullanıcı İçeriğinin sahibi sizsiniz.</p>
+      <dl>
+        <dt>Genel hükümler</dt>
+        <dd>
+          Hizmetlerde araştırmalarınızı oluşturup yayımlayabilir ve ayrıca metin, görüntü, web bağlantısı, konum bilgisi ve diğer içerikleri (bundan sonra «Kullanıcı İçeriği») oluşturup yayımlayabilirsiniz. Hizmetlerde sağladığınız tüm Kullanıcı İçeriği size veya lisans verenlerinize aittir. Kullanıcı İçeriğiniz üzerinde herhangi bir mülkiyet iddiasında bulunmuyoruz; tamamı size aittir.
+        </dd>
+        <dt>Sınırlı Lisans</dt>
+        <dd>
+          Bir araştırma yayımladığınızda, bize Sitede Kullanıcı İçeriğinizi (tamamen veya kısmen) barındırmak, depolamak, iletmek, görüntülemek ve dağıtmak için dünya çapında, münhasır olmayan, telifsiz bir lisans (alt lisans verme hakkıyla birlikte) vermiş olursunuz. Araştırmanın kullanımı için herhangi bir ödeme yapmakla yükümlü olmadığımızı ve araştırmanın atıf veya tazminat olmaksızın halka açık hale getirileceğini kabul edersiniz. Araştırmanızın halka açık olmasını istemiyorsanız, herhangi bir kısıtlama olmaksızın Hizmetlerin tüm özelliklerinden yararlanabilirsiniz.
+        </dd>
+        <dt>Beyanlar ve Garantiler</dt>
+        <dd>
+          Kullanıcı İçeriğinizden ve Kullanıcı İçeriğinizi Hizmetlere yükleyerek veya yayımlayarak doğan tüm sonuçlardan yalnızca siz sorumlusunuz. Kullanıcı İçeriğini her yüklediğinizde veya yayımladığınızda şunları beyan ve taahhüt edersiniz: (a) Kullanıcı İçeriğinin yaratıcısı ve sahibi olduğunuz ya da bu bölümde belirtildiği şekilde Kullanıcı İçeriğinizi Hizmetlerde kullanmak ve diğer kullanıcıların kullanmasına izin vermek için gerekli tüm haklara diğer kişilerden veya kuruluşlardan sahip olduğunuz; (b) Kullanıcı İçeriğinizin, telif hakları veya diğer fikri mülkiyet hakları, gizlilik hakları, kişilik hakları, manevi haklar dahil olmak üzere üçüncü tarafların haklarını ihlal etmediği veya kötüye kullanmadığı ve hiç kimseyi karalamadığı, iftira atmadığı veya hakaret etmediği.
+        </dd>
+        <dt>Sorumluluk Reddi</dt>
+        <dd>
+          Hizmetlere yüklenen veya gönderilen tüm Kullanıcı İçeriğini izlememizin makul ölçüde mümkün olmadığını ve sizin veya diğer kullanıcıların Hizmetlere yükleyebileceği veya gönderebileceği Kullanıcı İçeriğini size veya diğer kullanıcılara karşı izleme, düzenleme veya yönetme yükümlülüğümüz olmadığını bilmenizi isteriz. Bu, Hizmetlerdeki Kullanıcı İçeriği için sorumluluk üstlenmediğimiz ve Kullanıcı İçeriği temelinde bize karşı talepte bulunmamayı kabul ettiğiniz anlamına gelir. Yine de, Şartları ihlal ettiğini veya başka bir şekilde sakıncalı olduğunu düşündüğümüz Kullanıcı İçeriğini istediğimiz zaman Hizmetlerden kaldırma, düzenleme, tarama veya engelleme hakkımızı saklı tutarız.
+        </dd>
+      </dl>
+
+      {/* 6 */}
+      <h2>6. Yasaklı Davranışlar</h2>
+      <p>Hizmetleri kullanırken aşağıdakileri yapmamayı kabul edersiniz:</p>
+      <ol type='a'>
+        <li>Hizmetleri yasadışı amaçlarla veya herhangi bir yasa veya yönetmeliği ihlal eden bir şekilde kullanmak;</li>
+        <li>Fikri mülkiyet haklarının ihlali veya kötüye kullanılması dahil olmak üzere üçüncü tarafların haklarını ihlal etmek veya başkalarını bunu yapmaya teşvik etmek;</li>
+        <li>Yasadışı, karalayıcı, taciz edici, müstehcen, açık saçık, pornografik, tehdit edici, nefret dolu veya başka şekilde uygunsuz Kullanıcı İçeriği yüklemek, yayımlamak veya dağıtmak;</li>
+        <li>Hizmetlerin güvenlik özelliklerini kurcalamak (örneğin, herkese açık olmayan araştırmalara veya Kullanıcı İçeriğine erişmek için özellikleri devre dışı bırakmak veya atlatmak ya da kaynak kodunu elde etmek için Hizmetlerin tersine mühendisliğini yapmak);</li>
+        <li>Hizmetleri sunmamızı veya diğer kullanıcıların Hizmetleri kullanmasını engellemek (yani virüs, reklam yazılımı veya casus yazılım yüklememek veya dağıtmamak, talepler veya tanıtımlar göndermemek, üçüncü tarafların kişisel verilerini toplamamak ve Hizmetleri sağlamak için kullandığımız ağlara veya cihazlara müdahale etmemek);</li>
+        <li>Başka biri gibi davranmak gibi sahtekarlık eylemlerinde bulunmak;</li>
+        <li>Hizmetlere bot, örümcek, betik, tarayıcı, kazıyıcı veya diğer otomatik araç veya uygulamalar (web tarayıcıları ve yayımlayabileceğimiz diğer mobil uygulamalar hariç) aracılığıyla erişmek;</li>
+        <li>Sitenin görünümünü taklit etmek veya benzer ya da rakip bir hizmet oluşturmak amacıyla araştırmalara erişmek, indirmek, kopyalamak, değiştirmek, dağıtmak, yürütmek veya kullanmak;</li>
+        <li>Hizmetleri kullanma hakkınızı veya Materyalleri görüntüleme, erişme veya kullanma hakkınızı devretmek; veya</li>
+        <li>Bunlardan herhangi birini denemek veya başka birinin yapmasına yardım etmek.</li>
+      </ol>
+
+      {/* 7 */}
+      <h2>7. Üçüncü Taraf Hizmetleri ve Bağlantılı Siteler</h2>
+      <p>
+        Hizmetlerde, hesabınızı diğer hizmetlerdeki hesaplara bağlama özelliği gibi Kullanıcı İçeriği dahil bilgileri başka şirketlerin hizmetlerine göndermenize olanak tanıyan araçlar bulabilirsiniz. Bu araçları kullanırsanız, bu bilgileri diğer şirketlerin hizmetlerine göndermemize izin vermiş olursunuz. Ayrıca, bu bilgileri başka şirketlerin nasıl kullanacağı üzerinde hiçbir kontrolümüz olmadığını ve bu nedenle hiçbir şekilde sorumlu olmadığımızı kabul edersiniz. Ayrıca Hizmetlerde, işletmediğimiz diğer sitelere bağlantılar bulabilirsiniz. Bu siteler de bizim kontrolümüz altında değildir, bu nedenle Hizmetleri terk ettiğinizde lütfen kendi takdirinize göre hareket edin.
+      </p>
+
+      {/* 8 */}
+      <h2>8. Hesabın Sonlandırılması</h2>
+      <p>
+        Şartlardan herhangi birini ihlal etmeniz durumunda Hizmetleri kullanma izniniz otomatik olarak sona erer. Hizmetlerdeki hesabınızı{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a> adresine bir e-posta göndererek iptal edebilirsiniz.
+      </p>
+
+      {/* 9 */}
+      <h2>9. Gizlilik Politikası ve Ek Gereklilikler</h2>
+      <p>
+        Sizden hangi bilgileri topladığımızı ve bunları nasıl kullandığımızı bilmenizi istiyoruz. Lütfen <a href='/docs/policy'>Gizlilik Politikamızı</a> dikkatlice okuyun. Gizlilik Politikası, Şartların bir parçası olarak Şartlara dahil edilmiştir. Ayrıca, Hizmetleri kullanırken uymanız gereken ek gereklilikler hakkında sizi bilgilendirebiliriz. Hizmetlerde yayımladığımız veya Hizmetlerden bağlantı verdiğimiz herhangi bir ek yönerge, bu anlaşmanın bir parçası olarak Şartlara dahil edilmiştir.
+      </p>
+
+      {/* 10 */}
+      <h2>10. Şartlarda Değişiklikler</h2>
+      <p>
+        Şartları, bir aylık önceden bildirimle değiştirebiliriz. Bu durumda, değişiklikler hakkında sizi bilgilendirmek için makul çabayı göstereceğiz. Bu bildirimler, açılır pencereler aracılığıyla, Hizmetlerdeki hesabınıza bağlı e-posta adresine gönderilerek veya başka yollarla sağlanabilir ve Şartların yeni sürümü yürürlüğe girdiğinde size haber verilir. Önerdiğimiz yeni şartları kabul etmiyorsanız, hesabınızı derhal askıya alabilir ve Hizmetlere erişiminizi sonlandırabiliriz. Hizmetlerle ilgili anlaşmazlıklar, anlaşmazlığın ortaya çıktığı tarihte yürürlükte olan Şartların sürümüne göre çözülecektir.
+      </p>
+
+      {/* 11 */}
+      <h2>11. Hizmetlerin Sahipliği</h2>
+      <p>
+        Sağladığımız Hizmetlerin tüm yazılımı, görsel arayüzleri, grafikleri, tasarımı, bilgileri ve diğer unsurları (bundan sonra «Materyaller») fikri mülkiyet ve diğer yasalarla korunmaktadır. Hizmetlerde bulunan tüm Materyallerin sahibi biz veya lisans verenlerimiziz ve bu Şartlarda açıkça izin verilenler dışında Materyalleri kullanamazsınız.
+      </p>
+
+      {/* 12 */}
+      <h2>12. Sorumluluk Reddi; Garanti Verilmemesi</h2>
+      <p>
+        Hizmetleri ve Hizmetler aracılığıyla erişilebilen tüm içeriği «olduğu gibi» ve «mevcut olduğu şekilde», açık veya zımni hiçbir garanti olmaksızın sağlıyoruz. Yürürlükteki yasaların izin verdiği ölçüde, ticari elverişlilik, belirli bir amaca uygunluk, üçüncü taraf haklarının ihlal edilmemesi, mülkiyet ve ticari işlem akışı, kullanım veya ticari uygulamadan doğan tüm garantiler dahil olmak üzere her türlü garantiyi açıkça reddediyoruz. Hizmetlerin kesintisiz, güvenli, hatasız veya zararlı bileşenlerden arındırılmış olacağını veya hataların ya da zararlı bileşenlerin düzeltileceğini garanti etmiyor veya beyan etmiyoruz.
+      </p>
+      <p>
+        Aşağıdaki 13. maddede belirtilen durumlar dışında, Hizmetleri kendi sorumluluğunuzda kullanır ve Hizmetleri kullanmaktan veya bunlara erişmekten, Hizmetlerin diğer kullanıcılarıyla etkileşimde bulunmaktan ve Hizmetler aracılığıyla erişilebilen içerikten kaynaklanan zararların tüm riskini üstlenirsiniz.
+      </p>
+      <p>
+        Bazı bölgelerde yasalar garantilerin hariç tutulmasını yasaklar ve ikamet ettiğiniz yere bağlı olarak farklı haklara sahip olabilirsiniz. Yasalara aykırı olduğu durumlarda size karşı sorumluluğumuzu hiçbir şekilde hariç tutmaz veya sınırlamayız. Birleşik Krallık ve Avrupa Birliği’nde bu, ihmalimiz veya çalışanlarımızın, temsilcilerimizin ya da yüklenicilerimizin ihmali nedeniyle oluşan ölüm veya kişisel yaralanma sorumluluğunu, dolandırıcılık veya hileli beyan sorumluluğunu, Hizmetleri makul özen ve beceri ile sağlama yükümlülüğüne dair sorumluluğu veya hakkımızda ya da Hizmetler hakkında sağlanan bilgilere uygun olarak Hizmetleri sağlamamamızdan kaynaklanan sorumluluğu içerir.
+      </p>
+
+      {/* 13 */}
+      <h2>13. Genel Hükümler</h2>
+      <p>
+        Bu Şartlar, Gizlilik Politikası ve Şartlara dahil edilen diğer politikalarla birlikte, Hizmetleri kullanımınıza ilişkin sizinle bizim aramızdaki tüm anlaşmayı oluşturur. Yukarıdaki 12. madde uyarınca Şartları güncelleme hakkımız haricinde, Şartlar yalnızca her iki tarafça imzalanmış yazılı bir anlaşma ile değiştirilebilir. Onayımız olmadan bu Şartları başka bir kişiye veya tüzel kişiliğe devredemez veya aktaramaz, Hizmetlerdeki hesabınızı da devredemezsiniz. Biz ise size bildirimde bulunarak veya bulunmaksızın bu Şartları devredebiliriz.
+      </p>
+      <p>
+        Bu Kullanım Şartları kapsamındaki bir hakkı kullanmada veya bu Şartlara uyulmasını talep etmede sizin tarafınızdan herhangi bir gecikme veya başarısızlık, daha sonra söz konusu hakkı kullanma veya uyumu talep etme hakkımızı etkilemez. Bu Kullanım Şartlarının ihlal edilmesinden feragat etmemiz, herhangi bir sonraki ihlalden veya ihlal ettiğiniz şartlara uyma yükümlülüğünden feragat anlamına gelmez.
+      </p>
+      <p>
+        Bu Şartların herhangi bir bölümünün bir yargıç veya hakem tarafından uygulanamaz olduğuna karar verilirse, söz konusu uygulanamaz bölüm mümkün olan en geniş ölçüde uygulanacak ve geri kalan bölüm tam olarak yürürlükte kalmaya devam edecektir.
+      </p>
+
+      {/* 14 */}
+      <h2>14. Elektronik İletişimlere Onay</h2>
+      <p>
+        Gizlilik Politikamızda açıklandığı üzere bizden elektronik iletişimler almayı kabul edersiniz. Elektronik iletişimler konusundaki politikamıza ilişkin seçeneklerinizi anlamak için lütfen{' '}
+        <a href='/docs/policy'>Gizlilik Politikamızı</a> okuyun. Size bildirimleri, onay formlarını, açıklamaları ve diğer iletişimleri elektronik olarak gönderebiliriz.
+      </p>
+
+      {/* 15 */}
+      <h2>15. Veri Saklama</h2>
+      <p>
+        Samply, bekleyen bildirim kuyruğunun kayıtlarını <strong>30 gün</strong> ve bildirim geçmişini (yanıt kayıtları){' '}
+        <strong>12 ay</strong> saklar. Bu saklama süreleri dolduktan sonra kayıtlar platform tarafından
+        otomatik olarak silinir. Araştırmacılar, süresi dolmadan önce saklamak istedikleri çalışma verilerini dışa aktarmaktan sorumludur.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Bize Ulaşın</h2>
+      <p>
+        Sorularınız için lütfen{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a> adresinden e-posta ile bizimle iletişime geçin.
+      </p>
+    </>
+  );
+}
+
+function TermsContentPl() {
+  return (
+    <>
+      {/* 1 */}
+      <h2>1. Wprowadzenie</h2>
+      <p>
+        Samply to platforma do zarządzania udziałem w eksperymentach i ankietach online za pośrednictwem aplikacji mobilnej Samply Research. Samply jest hostowane pod adresem https://samply.uni-konstanz.de (dalej zwane «Witryną») i oferuje usługi planowania i zarządzania powiadomieniami (łącznie zwane «Usługami»). Korzystanie przez Ciebie z Usług oraz świadczenie przez nas Usług na Twoją rzecz jest uważane za umowę między Tobą a Samply, na mocy której zobowiązujesz się przestrzegać warunków określonych w niniejszym Regulaminie.
+      </p>
+      <p>
+        Samply może być używane bezpłatnie do niekomercyjnych celów badawczych. W sprawie komercyjnego wykorzystania Samply prosimy o kontakt pod adresem{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
+      </p>
+      <p>
+        Prosimy o uważne zapoznanie się z niniejszym Regulaminem. Rejestrując się w Usługach lub w inny sposób korzystając z Usług, oświadczasz, że przeczytałeś, zrozumiałeś i zgadzasz się przestrzegać niniejszego Regulaminu oraz naszej{' '}
+        <a href='/docs/policy'>Polityki Prywatności</a> (łącznie zwanych «Warunkami»). Jeśli nie akceptujesz tego, co proponujemy w Warunkach, prosimy nie korzystać z żadnej części Usług.
+      </p>
+
+      {/* 2 */}
+      <h2>2. Kwalifikowalność do korzystania</h2>
+      <p>
+        Usługi są przeznaczone do użytku przez osoby w wieku 18 lat lub starsze. Osoby poniżej 18 roku życia nie mogą korzystać z Usług. Jeśli masz 18 lat lub więcej, upewnij się, że nie zostałeś zawieszony z Usług i że korzystanie z Usług nie narusza żadnego prawa ani regulacji. Jeśli korzystasz z Usług w imieniu firmy, organizacji lub innego podmiotu prawnego, oświadczasz nam, że masz uprawnienia do związania tego podmiotu prawnego niniejszymi Warunkami.
+      </p>
+
+      {/* 3 */}
+      <h2>3. Konto i rejestracja</h2>
+      <p>
+        Podczas korzystania z Usług masz możliwość zarejestrowania konta. Zalecamy zarejestrowanie konta, ponieważ utworzenie konta w Usługach umożliwia dostęp do specjalnych funkcji związanych z uczestnictwem w badaniach online (eksperymentach lub ankietach) lub tworzeniem własnych badań. Podczas rejestracji konta przekazujesz nam pewne dane osobowe w ramach procesu rejestracji, z których niektóre są obowiązkowe dla rejestracji konta. Obiecujesz, że wszystkie podane informacje są prawdziwe oraz że informacje te pozostaną prawdziwe i aktualne również w przyszłości. Prosimy również o ustawienie hasła w celu zabezpieczenia konta. Jesteś odpowiedzialny za zachowanie bezpieczeństwa i poufności swojego hasła. Jesteś odpowiedzialny za wszelkie działania, które mają miejsce na Twoim koncie. Jeśli uważasz, że bezpieczeństwo Twojego konta mogło zostać naruszone, prosimy o niezwłoczny kontakt pod adresem{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>. Możesz również zresetować hasło pod adresem https://samply.uni-konstanz.de/researcher/forgot.
+      </p>
+
+      {/* 4 */}
+      <h2>4. Licencja na korzystanie z Usług</h2>
+      <p>
+        Tak długo jak nadal przestrzegasz Warunków, udzielamy Ci dostępu do Usług wyłącznie do Twojego osobistego użytku. Możesz tworzyć badania (dalej zwane «badaniem») w Usługach lub uczestniczyć w badaniach tworzonych przez innych użytkowników Samply (dalej zwanych «badaczami»).
+      </p>
+      <p>Należy pamiętać, że niniejsza licencja nie obejmuje prawa do korzystania z:</p>
+      <ol>
+        <li>znaków towarowych, logo lub oznaczeń pojawiających się w badaniu;</li>
+        <li>obrazów osób rozpoznawalnych w badaniu;</li>
+        <li>dzieł sztuki lub utworów chronionych prawem autorskim zawartych w badaniu.</li>
+      </ol>
+
+      {/* 5 */}
+      <h2>5. Treści użytkownika</h2>
+      <p>Jesteś właścicielem wszystkich Treści użytkownika, w tym badań tworzonych przez Ciebie w Witrynie.</p>
+      <dl>
+        <dt>Postanowienia ogólne</dt>
+        <dd>
+          W Usługach możesz tworzyć i publikować swoje badania, a także tworzyć i publikować teksty, obrazy, linki internetowe, informacje o lokalizacji i inne treści (dalej zwane «Treściami użytkownika»). Wszystkie Treści użytkownika, które dostarczasz w Usługach, należą do Ciebie lub Twoich licencjodawców. Nie rościmy sobie żadnych praw własności do Twoich Treści użytkownika; należą one wyłącznie do Ciebie.
+        </dd>
+        <dt>Ograniczona licencja</dt>
+        <dd>
+          Publikując badanie, udzielasz nam ogólnoświatowej, niewyłącznej, nieodpłatnej licencji (z prawem do sublicencjonowania) do hostowania, przechowywania, przekazywania, wyświetlania i dystrybucji (w całości lub w części) Twoich Treści użytkownika w Witrynie. Zgadzasz się, że nie jesteśmy zobowiązani do dokonywania jakichkolwiek płatności za korzystanie z badania i że badanie zostanie udostępnione publicznie bez przypisania autorstwa ani wynagrodzenia. Jeśli nie chcesz, aby Twoje badanie było publicznie dostępne, możesz korzystać ze wszystkich funkcji Usług bez żadnych ograniczeń.
+        </dd>
+        <dt>Oświadczenia i gwarancje</dt>
+        <dd>
+          Jesteś wyłącznie odpowiedzialny za swoje Treści użytkownika oraz za wszelkie konsekwencje wynikające z przesłania lub opublikowania Twoich Treści użytkownika w Usługach. Za każdym razem, gdy przesyłasz lub publikujesz Treści użytkownika, oświadczasz i gwarantujesz, że: (a) jesteś twórcą i właścicielem Treści użytkownika lub posiadasz wszelkie niezbędne prawa od innych osób lub podmiotów do korzystania z Twoich Treści użytkownika i zezwalania innym użytkownikom na korzystanie z nich w Usługach zgodnie z niniejszym punktem; (b) Twoje Treści użytkownika nie naruszają ani nie wykorzystują w sposób nieuprawniony praw osób trzecich, w tym praw autorskich lub innych praw własności intelektualnej, praw do prywatności, praw do wizerunku, praw osobistych, oraz nie zniesławiają, nie pomawiają ani nie obrażają nikogo.
+        </dd>
+        <dt>Wyłączenie odpowiedzialności</dt>
+        <dd>
+          Chcielibyśmy, abyś wiedział, że monitorowanie wszystkich Treści użytkownika przesyłanych lub publikowanych w Usługach nie jest racjonalnie możliwe i nie mamy obowiązku monitorowania, edytowania ani zarządzania Treściami użytkownika, które Ty lub inni użytkownicy mogą przesyłać lub publikować w Usługach, ani wobec Ciebie, ani wobec innych użytkowników. Oznacza to, że nie ponosimy odpowiedzialności za Treści użytkownika w Usługach i zgadzasz się nie wnosić wobec nas żadnych roszczeń na podstawie Treści użytkownika. Niemniej jednak zastrzegamy sobie prawo do usuwania, edytowania, skanowania lub blokowania w dowolnym momencie Treści użytkownika z Usług, które uznamy za naruszające Warunki lub w inny sposób niewłaściwe.
+        </dd>
+      </dl>
+
+      {/* 6 */}
+      <h2>6. Zakazane zachowania</h2>
+      <p>Korzystając z Usług, zgadzasz się nie:</p>
+      <ol type='a'>
+        <li>używać Usług do nielegalnych celów lub w sposób naruszający jakiekolwiek prawo lub regulację;</li>
+        <li>naruszać praw osób trzecich, w tym naruszania lub nieuprawnionego wykorzystywania praw własności intelektualnej, ani zachęcać innych do tego;</li>
+        <li>przesyłać, publikować lub rozpowszechniać nielegalnych, zniesławiających, nękających, obscenicznych, jednoznacznie seksualnych, pornograficznych, groźnych, nienawistnych lub w inny sposób niewłaściwych Treści użytkownika;</li>
+        <li>manipulować funkcjami bezpieczeństwa Usług (na przykład wyłączać lub omijać funkcje w celu uzyskania dostępu do niepublicznych badań lub Treści użytkownika ani dokonywać inżynierii wstecznej Usług w celu uzyskania kodu źródłowego);</li>
+        <li>uniemożliwiać nam świadczenia Usług lub innym użytkownikom korzystania z Usług (tj. nie przesyłać i nie rozpowszechniać wirusów, oprogramowania reklamowego ani szpiegującego, nie wysyłać próśb ani promocji, nie zbierać danych osobowych osób trzecich i nie zakłócać działania sieci lub urządzeń, których używamy do świadczenia Usług);</li>
+        <li>angażować się w działania oszukańcze, takie jak podszywanie się pod inną osobę;</li>
+        <li>uzyskiwać dostępu do Usług za pośrednictwem botów, pająków, skryptów, robotów indeksujących, scraperów lub innych zautomatyzowanych narzędzi lub aplikacji (z wyjątkiem przeglądarek internetowych i innych aplikacji mobilnych, które możemy publikować);</li>
+        <li>uzyskiwać dostępu, pobierać, kopiować, modyfikować, dystrybuować, wykonywać ani korzystać z badań w celu naśladowania wyglądu Witryny lub tworzenia podobnej lub konkurencyjnej usługi;</li>
+        <li>przenosić swojego prawa do korzystania z Usług ani prawa do przeglądania, dostępu lub korzystania z Materiałów; ani</li>
+        <li>podejmować prób któregokolwiek z powyższych ani pomagać innym w ich wykonaniu.</li>
+      </ol>
+
+      {/* 7 */}
+      <h2>7. Usługi osób trzecich i witryny z odnośnikami</h2>
+      <p>
+        W Usługach możesz znaleźć narzędzia, które umożliwiają wysyłanie informacji, w tym Treści użytkownika, do usług innych firm, takich jak funkcja łączenia konta z kontami w innych usługach. Korzystając z tych narzędzi, zezwalasz nam na przekazywanie tych informacji do usług innych firm. Zgadzasz się również, że nie mamy żadnej kontroli nad tym, jak inne firmy wykorzystają te informacje i w związku z tym nie ponosimy za to żadnej odpowiedzialności. Możesz również znaleźć w Usługach linki do innych witryn, których nie obsługujemy. Witryny te również nie są pod naszą kontrolą, dlatego prosimy o zachowanie własnej oceny po opuszczeniu Usług.
+      </p>
+
+      {/* 8 */}
+      <h2>8. Zakończenie konta</h2>
+      <p>
+        Twoje pozwolenie na korzystanie z Usług wygasa automatycznie w przypadku naruszenia któregokolwiek z Warunków. Możesz anulować swoje konto w Usługach, wysyłając wiadomość e-mail na adres{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
+      </p>
+
+      {/* 9 */}
+      <h2>9. Polityka Prywatności i dodatkowe wymagania</h2>
+      <p>
+        Chcemy, abyś wiedział, jakie informacje od Ciebie zbieramy i jak je wykorzystujemy. Prosimy o uważne zapoznanie się z naszą <a href='/docs/policy'>Polityką Prywatności</a>. Polityka Prywatności jest włączona do Warunków jako ich część. Możemy również informować Cię o dodatkowych wymaganiach, których musisz przestrzegać podczas korzystania z Usług. Wszelkie dodatkowe wytyczne, które publikujemy w Usługach lub do których prowadzą linki w Usługach, są włączone do Warunków jako część niniejszej umowy.
+      </p>
+
+      {/* 10 */}
+      <h2>10. Zmiany w Warunkach</h2>
+      <p>
+        Możemy zmienić Warunki za miesięcznym wyprzedzeniem. W takim przypadku dołożymy uzasadnionych starań, aby poinformować Cię o zmianach. Te powiadomienia mogą być dostarczane poprzez okna pop-up, wysyłane na adres e-mail powiązany z Twoim kontem w Usługach lub w inny sposób, i powiadomimy Cię, gdy nowa wersja Warunków wejdzie w życie. Jeśli nie akceptujesz proponowanych nowych warunków, możemy natychmiast zawiesić Twoje konto i zakończyć Twój dostęp do Usług. Wszelkie spory dotyczące Usług będą rozstrzygane zgodnie z wersją Warunków obowiązującą w dniu powstania sporu.
+      </p>
+
+      {/* 11 */}
+      <h2>11. Własność Usług</h2>
+      <p>
+        Całe oprogramowanie, interfejsy wizualne, grafika, projekt, informacje i inne elementy świadczonych Usług (dalej zwane «Materiałami») są chronione własnością intelektualną i innymi prawami. Jesteśmy właścicielem lub naszymi licencjodawcami wszystkich Materiałów zawartych w Usługach i nie możesz korzystać z Materiałów w inny sposób niż wyraźnie dozwolony w niniejszych Warunkach.
+      </p>
+
+      {/* 12 */}
+      <h2>12. Wyłączenie odpowiedzialności; brak gwarancji</h2>
+      <p>
+        Świadczymy Usługi i wszelkie treści dostępne za pośrednictwem Usług «w stanie, w jakim są» i «w miarę dostępności», bez żadnych gwarancji, wyraźnych ani dorozumianych. W zakresie dozwolonym przez obowiązujące prawo wyraźnie wyłączamy wszelkie gwarancje, w tym wszelkie gwarancje przydatności handlowej, przydatności do określonego celu, nienaruszania praw osób trzecich, własności oraz wynikające z przebiegu transakcji handlowych, użytkowania lub praktyki handlowej. Nie gwarantujemy ani nie oświadczamy, że Usługi będą nieprzerwane, bezpieczne, bezbłędne ani wolne od szkodliwych komponentów, ani że błędy lub szkodliwe komponenty zostaną poprawione.
+      </p>
+      <p>
+        Z wyjątkiem przypadków określonych w punkcie 13 poniżej, korzystasz z Usług na własną odpowiedzialność i ponosisz całe ryzyko szkód wynikających z korzystania z Usług lub uzyskiwania do nich dostępu, interakcji z innymi użytkownikami Usług oraz treści dostępnych za pośrednictwem Usług.
+      </p>
+      <p>
+        W niektórych regionach prawo zakazuje wyłączania gwarancji i w zależności od miejsca zamieszkania możesz mieć różne prawa. W żadnym wypadku nie wyłączamy ani nie ograniczamy naszej odpowiedzialności wobec Ciebie tam, gdzie byłoby to niezgodne z prawem. W Wielkiej Brytanii i Unii Europejskiej obejmuje to odpowiedzialność za śmierć lub obrażenia ciała spowodowane naszym zaniedbaniem lub zaniedbaniem naszych pracowników, agentów lub wykonawców, odpowiedzialność za oszustwo lub świadome wprowadzenie w błąd, odpowiedzialność za obowiązek świadczenia Usług z należytą starannością i umiejętnościami lub odpowiedzialność za niedostarczenie Usług zgodnie z informacjami dostarczonymi na nasz temat lub w odniesieniu do Usług.
+      </p>
+
+      {/* 13 */}
+      <h2>13. Postanowienia ogólne</h2>
+      <p>
+        Niniejszy Regulamin, wraz z Polityką Prywatności i innymi politykami włączonymi do Warunków, stanowi całość umowy między Tobą a nami dotyczącą Twojego korzystania z Usług. Z wyjątkiem naszego prawa do aktualizacji Warunków zgodnie z punktem 12 powyżej, Warunki mogą być zmieniane wyłącznie pisemną umową podpisaną przez obie strony. Bez naszej zgody nie możesz przenosić ani cedować niniejszych Warunków na inną osobę lub podmiot prawny ani przenosić swojego konta w Usługach. My ze swojej strony możemy przenosić niniejsze Warunki na inne podmioty z powiadomieniem lub bez powiadomienia Ciebie.
+      </p>
+      <p>
+        Wszelkie opóźnienia lub niepowodzenia z Twojej strony w korzystaniu z prawa wynikającego z niniejszego Regulaminu lub żądaniu zgodności z niniejszymi Warunkami nie wpływają na nasze prawo do późniejszego korzystania z tego prawa lub żądania zgodności. Nasze odstąpienie od jakiegokolwiek naruszenia niniejszego Regulaminu nie stanowi odstąpienia od jakiegokolwiek późniejszego naruszenia ani od obowiązku przestrzegania warunków, które naruszyłeś.
+      </p>
+      <p>
+        Jeśli sędzia lub arbiter uzna, że jakakolwiek część niniejszych Warunków jest niewykonalna, ta niewykonalna część będzie egzekwowana w najszerszym możliwym zakresie, a pozostała część pozostanie w mocy w pełnym zakresie.
+      </p>
+
+      {/* 14 */}
+      <h2>14. Zgoda na komunikację elektroniczną</h2>
+      <p>
+        Zgadzasz się na otrzymywanie od nas komunikacji elektronicznej zgodnie z opisem w naszej Polityce Prywatności. Aby zrozumieć swoje wybory dotyczące naszej polityki w zakresie komunikacji elektronicznej, prosimy o zapoznanie się z naszą{' '}
+        <a href='/docs/policy'>Polityką Prywatności</a>. Możemy wysyłać Ci powiadomienia, formularze zgody, ujawnienia i inne komunikaty drogą elektroniczną.
+      </p>
+
+      {/* 15 */}
+      <h2>15. Przechowywanie danych</h2>
+      <p>
+        Samply przechowuje zapisy oczekującej kolejki powiadomień przez <strong>30 dni</strong>, a historię powiadomień (rejestry odpowiedzi) przez{' '}
+        <strong>12 miesięcy</strong>. Po upływie tych okresów przechowywania zapisy są automatycznie usuwane przez platformę. Badacze są odpowiedzialni za eksportowanie danych badawczych, które chcą zachować, przed upływem terminu.
+      </p>
+
+      {/* 16 */}
+      <h2>16. Skontaktuj się z nami</h2>
+      <p>
+        W razie pytań prosimy o kontakt e-mailowy pod adresem{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
+      </p>
+    </>
+  );
+}
+
+function TermsContentAr() {
+  return (
+    <>
+      {/* 1 */}
+      <h2>1. مقدمة</h2>
+      <p>
+        Samply هي منصة لإدارة المشاركة في التجارب والاستطلاعات عبر الإنترنت من خلال تطبيق Samply Research للهاتف المحمول. تُستضاف Samply على https://samply.uni-konstanz.de (يُشار إليه فيما يلي بـ «الموقع») وتقدم خدمات جدولة وإدارة الإشعارات (يُشار إليها مجتمعةً بـ «الخدمات»). يُعتبر استخدامك للخدمات وتقديمنا للخدمات لك اتفاقية بينك وبين Samply، تتعهد بموجبها بالالتزام بالأحكام المنصوص عليها في هذه الشروط والأحكام.
+      </p>
+      <p>
+        يمكن استخدام Samply مجانًا للأغراض البحثية غير التجارية. للاستفسار عن الاستخدام التجاري لـ Samply، يُرجى التواصل معنا على{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
+      </p>
+      <p>
+        يُرجى قراءة هذه الشروط والأحكام بعناية. بتسجيلك في الخدمات أو استخدامك للخدمات بأي طريقة أخرى، فإنك تُقرّ بأنك قرأت وفهمت ووافقت على الالتزام بهذه الشروط والأحكام وسياسة{' '}
+        <a href='/docs/policy'>الخصوصية</a> الخاصة بنا (يُشار إليها مجتمعةً بـ «الشروط»). إذا كنت لا توافق على ما نقترحه في الشروط، فيُرجى عدم استخدام أي جزء من الخدمات.
+      </p>
+
+      {/* 2 */}
+      <h2>2. أهلية الاستخدام</h2>
+      <p>
+        الخدمات مخصصة للاستخدام من قِبل الأشخاص الذين تبلغ أعمارهم 18 عامًا أو أكثر. لا يُسمح للأشخاص دون سن 18 عامًا باستخدام الخدمات. إذا كان عمرك 18 عامًا أو أكثر، فتأكد من عدم تعليقك من الخدمات وأن استخدامك للخدمات لا ينتهك أي قانون أو لائحة. إذا كنت تستخدم الخدمات نيابةً عن شركة أو منظمة أو أي كيان قانوني آخر، فإنك تُقرّ لنا بأن لديك السلطة لإلزام هذا الكيان القانوني بهذه الشروط.
+      </p>
+
+      {/* 3 */}
+      <h2>3. الحساب والتسجيل</h2>
+      <p>
+        أثناء استخدام الخدمات، تتاح لك إمكانية تسجيل حساب. نوصي بتسجيل حساب لأن إنشاء حساب في الخدمات يتيح الوصول إلى ميزات خاصة تتعلق بالمشاركة في الدراسات عبر الإنترنت (التجارب أو الاستطلاعات) أو إنشاء دراساتك الخاصة. عند تسجيل حساب، فإنك تُزوّدنا ببعض البيانات الشخصية كجزء من عملية التسجيل، وبعضها إلزامي لتسجيل الحساب. أنت تتعهد بأن جميع المعلومات المقدمة صحيحة وأن هذه المعلومات ستظل صحيحة ومحدّثة في المستقبل أيضًا. كما نطلب منك تعيين كلمة مرور لتأمين الحساب. أنت مسؤول عن الحفاظ على أمان كلمة مرورك وسريّتها. أنت مسؤول عن جميع الأنشطة التي تجري في حسابك. إذا اعتقدت أن أمان حسابك قد يكون قد تعرض للاختراق، فيُرجى الاتصال بنا على الفور على{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>. يمكنك أيضًا إعادة تعيين كلمة المرور على https://samply.uni-konstanz.de/researcher/forgot.
+      </p>
+
+      {/* 4 */}
+      <h2>4. ترخيص استخدام الخدمات</h2>
+      <p>
+        طالما أنك تستمر في الالتزام بالشروط، فإننا نمنحك حق الوصول إلى الخدمات لاستخدامك الشخصي فقط. يمكنك إنشاء دراسات (يُشار إليها فيما يلي بـ «الدراسة») في الخدمات أو المشاركة في دراسات أنشأها مستخدمو Samply الآخرون (يُشار إليهم فيما يلي بـ «الباحثون»).
+      </p>
+      <p>يُرجى ملاحظة أن هذا الترخيص لا يشمل الحق في استخدام:</p>
+      <ol>
+        <li>العلامات التجارية أو الشعارات أو العلامات الظاهرة في الدراسة؛</li>
+        <li>صور الأشخاص القابلين للتعرف عليهم في الدراسة؛</li>
+        <li>الأعمال الفنية أو الأعمال المحمية بحقوق النشر المضمّنة في الدراسة.</li>
+      </ol>
+
+      {/* 5 */}
+      <h2>5. محتوى المستخدم</h2>
+      <p>أنت تملك كل محتوى المستخدم، بما في ذلك الدراسات التي تنشئها على الموقع.</p>
+      <dl>
+        <dt>الأحكام العامة</dt>
+        <dd>
+          في الخدمات، يمكنك إنشاء ونشر دراساتك، وكذلك إنشاء ونشر نصوص وصور وروابط إنترنت ومعلومات موقع ومحتوى آخر (يُشار إليه فيما يلي بـ «محتوى المستخدم»). جميع محتوى المستخدم الذي تقدمه في الخدمات يخصك أو يخص مرخصيك. نحن لا نطالب بأي حقوق ملكية لمحتوى المستخدم الخاص بك؛ فهو يخصك وحدك.
+        </dd>
+        <dt>ترخيص محدود</dt>
+        <dd>
+          بنشر دراسة، فإنك تمنحنا ترخيصًا عالميًا غير حصري ومجاني (مع الحق في الترخيص من الباطن) لاستضافة وتخزين ونقل وعرض وتوزيع (كليًا أو جزئيًا) محتوى المستخدم الخاص بك على الموقع. أنت توافق على أننا لسنا ملزمين بإجراء أي مدفوعات مقابل استخدام الدراسة وأن الدراسة ستكون متاحة للعموم دون نسبتها إلى مؤلف أو تعويض. إذا كنت لا ترغب في أن تكون دراستك متاحة للعموم، فيمكنك استخدام جميع ميزات الخدمات دون أي قيود.
+        </dd>
+        <dt>الإقرارات والضمانات</dt>
+        <dd>
+          أنت المسؤول الوحيد عن محتوى المستخدم الخاص بك وعن أي عواقب تنشأ عن إرسال أو نشر محتوى المستخدم الخاص بك في الخدمات. في كل مرة ترسل أو تنشر فيها محتوى مستخدم، فإنك تُقرّ وتضمن أن: (أ) أنت منشئ ومالك محتوى المستخدم أو تمتلك جميع الحقوق اللازمة من أشخاص أو كيانات أخرى لاستخدام محتوى المستخدم الخاص بك والسماح للمستخدمين الآخرين باستخدامه في الخدمات وفقًا لهذا البند؛ (ب) محتوى المستخدم الخاص بك لا ينتهك أو يستخدم بشكل غير مصرّح به حقوق أطراف ثالثة، بما في ذلك حقوق النشر أو حقوق الملكية الفكرية الأخرى، أو حقوق الخصوصية، أو حقوق الصورة، أو الحقوق الشخصية، ولا يُشهّر أو يفتري أو يُهين أي شخص.
+        </dd>
+        <dt>إخلاء المسؤولية</dt>
+        <dd>
+          نود إعلامك بأن مراقبة جميع محتوى المستخدم المُرسل أو المنشور في الخدمات ليس ممكنًا بشكل معقول، ولسنا ملزمين بمراقبة أو تحرير أو إدارة محتوى المستخدم الذي قد ترسله أو ينشره أنت أو المستخدمون الآخرون في الخدمات، لا تجاهك ولا تجاه المستخدمين الآخرين. وهذا يعني أننا لا نتحمل المسؤولية عن محتوى المستخدم في الخدمات وأنت توافق على عدم تقديم أي مطالبات ضدنا استنادًا إلى محتوى المستخدم. ومع ذلك، نحتفظ بالحق في إزالة أو تحرير أو فحص أو حجب محتوى المستخدم في أي وقت من الخدمات الذي نعتبره منتهكًا للشروط أو غير لائق بأي شكل آخر.
+        </dd>
+      </dl>
+
+      {/* 6 */}
+      <h2>6. السلوكيات المحظورة</h2>
+      <p>عند استخدام الخدمات، فإنك توافق على عدم:</p>
+      <ol type='a'>
+        <li>استخدام الخدمات لأغراض غير قانونية أو بطريقة تنتهك أي قانون أو لائحة؛</li>
+        <li>انتهاك حقوق أطراف ثالثة، بما في ذلك التعدي على حقوق الملكية الفكرية أو استخدامها بشكل غير مصرّح به، أو تشجيع الآخرين على ذلك؛</li>
+        <li>إرسال أو نشر أو توزيع محتوى مستخدم غير قانوني أو تشهيري أو مضايق أو فاحش أو جنسي صريح أو إباحي أو تهديدي أو يحض على الكراهية أو غير لائق بأي شكل آخر؛</li>
+        <li>التلاعب بميزات أمان الخدمات (على سبيل المثال، تعطيل أو تجاوز الميزات للوصول إلى دراسات غير علنية أو محتوى مستخدم، أو إجراء هندسة عكسية للخدمات للحصول على الشيفرة المصدرية)؛</li>
+        <li>منعنا من تقديم الخدمات أو منع المستخدمين الآخرين من استخدام الخدمات (أي عدم إرسال وتوزيع فيروسات أو برامج إعلانية أو برامج تجسس، وعدم إرسال طلبات أو ترويج، وعدم جمع البيانات الشخصية لأطراف ثالثة وعدم تعطيل عمل الشبكات أو الأجهزة التي نستخدمها لتقديم الخدمات)؛</li>
+        <li>الانخراط في أنشطة احتيالية، مثل انتحال شخصية شخص آخر؛</li>
+        <li>الوصول إلى الخدمات عبر الروبوتات أو العناكب أو البرامج النصية أو زواحف الفهرسة أو أدوات الاستخراج أو أي أدوات أو تطبيقات آلية أخرى (باستثناء متصفحات الإنترنت وتطبيقات الهاتف المحمول الأخرى التي قد ننشرها)؛</li>
+        <li>الوصول إلى الدراسات أو تنزيلها أو نسخها أو تعديلها أو توزيعها أو تنفيذها أو استخدامها لمحاكاة مظهر الموقع أو إنشاء خدمة مماثلة أو منافسة؛</li>
+        <li>نقل حقك في استخدام الخدمات أو حقك في عرض المواد أو الوصول إليها أو استخدامها؛ أو</li>
+        <li>محاولة القيام بأي مما سبق أو مساعدة الآخرين على القيام به.</li>
+      </ol>
+
+      {/* 7 */}
+      <h2>7. خدمات الأطراف الثالثة والمواقع المرتبطة</h2>
+      <p>
+        في الخدمات، قد تجد أدوات تتيح لك إرسال معلومات، بما في ذلك محتوى المستخدم، إلى خدمات الأطراف الأخرى، مثل ميزة ربط الحساب بحسابات في خدمات أخرى. باستخدامك لهذه الأدوات، فإنك تأذن لنا بنقل هذه المعلومات إلى خدمات الأطراف الأخرى. كما توافق على أنه ليس لدينا أي سيطرة على كيفية استخدام الشركات الأخرى لهذه المعلومات، وبالتالي لا نتحمل أي مسؤولية في هذا الشأن. قد تجد أيضًا في الخدمات روابط إلى مواقع أخرى لا نديرها. هذه المواقع أيضًا ليست تحت سيطرتنا، لذا يُرجى استخدام تقديرك الخاص بعد مغادرة الخدمات.
+      </p>
+
+      {/* 8 */}
+      <h2>8. الإنهاء الحساب</h2>
+      <p>
+        تنتهي صلاحية إذنك باستخدام الخدمات تلقائيًا في حالة انتهاك أي من الشروط. يمكنك إلغاء حسابك في الخدمات بإرسال بريد إلكتروني إلى{' '}
+        <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
+      </p>
+
+      {/* 9 */}
+      <h2>9. سياسة الخصوصية والمتطلبات الإضافية</h2>
+      <p>
+        نريدك أن تعرف ما هي المعلومات التي نجمعها منك وكيف نستخدمها. يُرجى قراءة سياسة <a href='/docs/policy'>الخصوصية</a> الخاصة بنا بعناية. سياسة الخصوصية مُدمجة في الشروط كجزء منها. قد نُعلمك أيضًا بمتطلبات إضافية يجب عليك الالتزام بها أثناء استخدامك للخدمات. أي إرشادات إضافية ننشرها في الخدمات أو نرتبط بها من الخدمات مدمجة في الشروط كجزء من هذه الاتفاقية.
+      </p>
+
+      {/* 10 */}
+      <h2>10. التغييرات في الشروط</h2>
+      <p>
+        قد نُغيّر الشروط بإشعار مسبق مدته شهر واحد. في هذه الحالة، سنبذل جهودًا معقولة لإعلامك بالتغييرات. قد تُسلَّم هذه الإشعارات عبر نوافذ منبثقة، أو تُرسل إلى عنوان البريد الإلكتروني المرتبط بحسابك في الخدمات، أو بطرق أخرى، وسنُعلمك عندما تدخل النسخة الجديدة من الشروط حيز التنفيذ. إذا كنت لا توافق على الشروط الجديدة المقترحة، فقد نُعلّق حسابك على الفور وننهي وصولك إلى الخدمات. ستُحلّ أي نزاعات تتعلق بالخدمات وفقًا لنسخة الشروط السارية في تاريخ نشوء النزاع.
+      </p>
+
+      {/* 11 */}
+      <h2>11. ملكية الخدمات</h2>
+      <p>
+        جميع البرامج والواجهات المرئية والرسومات والتصاميم والمعلومات والعناصر الأخرى للخدمات المُقدَّمة (يُشار إليها فيما يلي بـ «المواد») محمية بالملكية الفكرية وحقوق أخرى. نحن أو مرخصونا نملك جميع المواد المضمّنة في الخدمات ولا يجوز لك استخدام المواد بأي طريقة أخرى غير المسموح بها صراحةً في هذه الشروط.
+      </p>
+
+      {/* 12 */}
+      <h2>12. إخلاء المسؤولية؛ عدم الضمان</h2>
+      <p>
+        نحن نقدم الخدمات وأي محتوى متاح عبر الخدمات «كما هو» و«حسب التوفر»، دون أي ضمانات صريحة أو ضمنية. إلى الحد الذي يسمح به القانون المعمول به، فإننا نتنصل صراحةً من جميع الضمانات، بما في ذلك أي ضمانات للقابلية للتسويق، والملاءمة لغرض معين، وعدم انتهاك حقوق أطراف ثالثة، والملكية، وتلك الناشئة عن مسار التعامل أو الاستخدام أو الممارسة التجارية. نحن لا نضمن ولا نُقرّ بأن الخدمات ستكون غير منقطعة أو آمنة أو خالية من الأخطاء أو خالية من المكونات الضارة، أو أن الأخطاء أو المكونات الضارة سيتم تصحيحها.
+      </p>
+      <p>
+        باستثناء ما هو منصوص عليه في البند 13 أدناه، فإنك تستخدم الخدمات على مسؤوليتك الخاصة وتتحمل كامل مخاطر الأضرار الناتجة عن استخدامك أو وصولك إلى الخدمات، والتفاعل مع المستخدمين الآخرين للخدمات، والمحتوى المتاح عبر الخدمات.
+      </p>
+      <p>
+        في بعض المناطق، يحظر القانون إخلاء الضمانات، وقد يكون لديك حقوق مختلفة اعتمادًا على مكان إقامتك. لا نستثني أو نُقيّد بأي حال من الأحوال مسؤوليتنا تجاهك حيثما يكون ذلك مخالفًا للقانون. في المملكة المتحدة والاتحاد الأوروبي، يشمل ذلك المسؤولية عن الوفاة أو الإصابة الشخصية الناجمة عن إهمالنا أو إهمال موظفينا أو وكلائنا أو متعاقدينا، والمسؤولية عن الاحتيال أو التضليل المتعمد، والمسؤولية عن الالتزام بتقديم الخدمات بعناية ومهارة معقولة، أو المسؤولية عن عدم تقديم الخدمات وفقًا للمعلومات المقدمة عنا أو فيما يتعلق بالخدمات.
+      </p>
+
+      {/* 13 */}
+      <h2>13. الأحكام العامة</h2>
+      <p>
+        تُشكّل هذه الشروط والأحكام، مع سياسة الخصوصية والسياسات الأخرى المُدمجة في الشروط، الاتفاقية الكاملة بينك وبيننا فيما يتعلق باستخدامك للخدمات. باستثناء حقنا في تحديث الشروط وفقًا للبند 12 أعلاه، لا يمكن تعديل الشروط إلا باتفاقية مكتوبة موقعة من قبل الطرفين. لا يجوز لك نقل أو التنازل عن هذه الشروط لشخص أو كيان قانوني آخر أو نقل حسابك في الخدمات دون موافقتنا. ومن جانبنا، قد ننقل هذه الشروط إلى كيانات أخرى مع إشعارك أو بدون إشعار.
+      </p>
+      <p>
+        لن تؤثر أي تأخيرات أو إخفاقات من جانبك في ممارسة حق ينشأ عن هذه الشروط والأحكام أو في طلب الامتثال لهذه الشروط على حقنا في ممارسة هذا الحق لاحقًا أو في طلب الامتثال. لن يُشكّل تنازلنا عن أي انتهاك لهذه الشروط والأحكام تنازلًا عن أي انتهاك لاحق أو عن الالتزام بالامتثال للأحكام التي انتهكتها.
+      </p>
+      <p>
+        إذا قرر قاضٍ أو محكم أن أي جزء من هذه الشروط غير قابل للتنفيذ، فسيتم تنفيذ هذا الجزء غير القابل للتنفيذ إلى أقصى حد ممكن، وسيظل الجزء المتبقي ساري المفعول بالكامل.
+      </p>
+
+      {/* 14 */}
+      <h2>14. الموافقة على الاتصالات الإلكترونية</h2>
+      <p>
+        أنت توافق على تلقي اتصالات إلكترونية منا كما هو موضح في سياسة الخصوصية الخاصة بنا. لفهم خياراتك بشأن سياستنا الخاصة بالاتصالات الإلكترونية، يُرجى الاطلاع على سياسة{' '}
+        <a href='/docs/policy'>الخصوصية</a> الخاصة بنا. قد نُرسل إليك إشعارات ونماذج موافقة وإفصاحات واتصالات أخرى إلكترونيًا.
+      </p>
+
+      {/* 15 */}
+      <h2>15. الاحتفاظ بالبيانات</h2>
+      <p>
+        تحتفظ Samply بسجلات قائمة انتظار الإشعارات المعلقة لمدة <strong>30 يومًا</strong>، وسجل الإشعارات (سجلات الاستجابة) لمدة{' '}
+        <strong>12 شهرًا</strong>. بعد انتهاء فترات الاحتفاظ هذه، تُحذف السجلات تلقائيًا بواسطة المنصة. الباحثون مسؤولون عن تصدير بيانات البحث التي يرغبون في الاحتفاظ بها قبل انتهاء الموعد النهائي.
+      </p>
+
+      {/* 16 */}
+      <h2>16. اتصل بنا</h2>
+      <p>
+        إذا كان لديك أي أسئلة، يُرجى التواصل معنا عبر البريد الإلكتروني على{' '}
         <a href='mailto:yury.shevchenko@uni.kn'>yury.shevchenko@uni.kn</a>.
       </p>
     </>

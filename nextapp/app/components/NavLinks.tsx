@@ -40,7 +40,7 @@ export default function NavLinks({ isLoggedIn, isAdmin }: NavLinksProps) {
     );
   }
 
-  const notifActive = path.startsWith("/notifications") || path.startsWith("/scheduled") || path.startsWith("/history") || path.startsWith("/createschedule");
+  const notifActive = path.startsWith("/notifications") || path.startsWith("/scheduled") || path.startsWith("/createschedule");
   const participantsActive = path.startsWith("/participants") || path.startsWith("/groups") || path.startsWith("/invitations") || path.startsWith("/users");
 
   return (
@@ -70,7 +70,6 @@ export default function NavLinks({ isLoggedIn, isAdmin }: NavLinksProps) {
             <ul>
               <li><a className={`nav__link ${a("/notifications")}`} href="/notifications">{t("nav.new")}</a></li>
               <li><a className={`nav__link ${a("/scheduled")}`} href="/scheduled">{t("nav.scheduled")}</a></li>
-              <li><a className={`nav__link ${a("/history")}`} href="/history">{t("nav.sent")}</a></li>
             </ul>
           </li>
           <li>

@@ -675,6 +675,52 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
             )}
         </section>
 
+        {/* Retention notice */}
+        <div
+          style={{
+            marginTop: "0.4rem",
+            padding: "1.4rem 1.8rem",
+            border: "1px dashed var(--ink-20)",
+            borderRadius: "0.8rem",
+            background: "var(--surface)",
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: "1.6rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1.05rem",
+              lineHeight: 1.6,
+              color: "var(--ink-60)",
+              margin: 0,
+              maxWidth: "60rem",
+            }}
+          >
+            {t("scheduled.retentionNote")}
+          </p>
+          <a
+            href={`/dashboard/${studyId}/data`}
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1rem",
+              letterSpacing: ".04em",
+              color: "var(--ink-60)",
+              textDecoration: "none",
+              padding: "0.4rem 1rem",
+              border: "1px solid var(--ink-20)",
+              borderRadius: "9999px",
+              flexShrink: 0,
+            }}
+            className="hover:text-[var(--ink)] transition-colors"
+          >
+            {t("scheduled.retentionHistoryLink")}
+          </a>
+        </div>
+
       </div>
     </div>
   );

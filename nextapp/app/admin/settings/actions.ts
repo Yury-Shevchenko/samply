@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath, refresh } from "next/cache";
 import connectDB from "@/lib/db";
 import { setSiteSetting } from "@/lib/models/siteSettings";
+import { applyTTLIndexes } from "@/lib/data/retention";
 
 async function requireAdmin() {
   const session = await auth();
@@ -37,5 +38,15 @@ export async function setShowTestimonials(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/dashboard");
   revalidatePath("/testimonial");
+  refresh();
+}
+
+export async function setRetentionEnabled(formData: FormData) {
+  await requireAdmin();
+  await connectDB();
+  const value = formData.get("value") === "true";
+  await setSiteSetting("retentionEnabled", value);
+  await applyTTLIndexes(value);
+  revalidatePath("/admin/settings");
   refresh();
 }

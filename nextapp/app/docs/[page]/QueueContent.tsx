@@ -215,6 +215,10 @@ export default function QueueContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <QueueContentFr />;
   if (locale === "es") return <QueueContentEs />;
   if (locale === "pt") return <QueueContentPt />;
+  if (locale === "ja") return <QueueContentJa />;
+  if (locale === "ar") return <QueueContentAr />;
+  if (locale === "pl") return <QueueContentPl />;
+  if (locale === "tr") return <QueueContentTr />;
   return <QueueContentEn />;
 }
 
@@ -339,7 +343,7 @@ function QueueContentRu() {
       <h2>После отправки: история</h2>
       <p>
         Как только строка переходит в статус <em>отправлено</em>, событие доставки также
-        записывается в журнал истории исследования по адресу <strong>/history</strong>.
+        записывается во вкладку <strong>История</strong> исследования.
         Журнал истории фиксирует дополнительные сигналы помимо очереди: получил ли участник
         уведомление при открытом приложении, нажал ли он на уведомление в панели, и открыл
         ли ссылку на опрос.
@@ -472,8 +476,8 @@ function QueueContentZh() {
       {/* ── Sent history ──────────────────────────────────────────────────── */}
       <h2>发送后：历史记录</h2>
       <p>
-        一旦某行转为<em>已发送</em>状态，投递事件也会同步写入位于 <strong>/history</strong>{' '}
-        的研究历史日志。历史日志除队列信息外还记录额外信号：参与者在应用打开时是否收到
+        一旦某行转为<em>已发送</em>状态，投递事件也会同步写入研究的{' '}
+        <strong>历史</strong> 选项卡。历史日志除队列信息外还记录额外信号：参与者在应用打开时是否收到
         通知、是否点击了通知栏，以及是否打开了问卷链接。
       </p>
       <p>
@@ -609,7 +613,7 @@ function QueueContentEn() {
       <h2>After a send: the history</h2>
       <p>
         Once a row transitions to <em>sent</em>, the delivery event is also written to the
-        study history log at <strong>/history</strong>. The history log records additional
+        study&apos;s <strong>History</strong> tab. The history log records additional
         signal beyond the queue: whether the participant received the notification while the
         app was open, whether they tapped the notification bar, and whether they opened the
         survey link.
@@ -756,7 +760,7 @@ function QueueContentNl() {
       <h2>Na een verzending: de geschiedenis</h2>
       <p>
         Zodra een rij overgaat naar <em>verzonden</em>, wordt de bezorgingsgebeurtenis ook
-        geschreven naar het studiegeschiedenislogboek op <strong>/history</strong>. Het
+        geschreven naar het <strong>Geschiedenis</strong>-tabblad van de studie. Het
         geschiedenis­logboek registreert aanvullende signalen naast de wachtrij: of de deelnemer
         de melding heeft ontvangen terwijl de app open was, of ze op de meldingsbalk hebben
         getikt, en of ze de enquêtelink hebben geopend.
@@ -906,8 +910,8 @@ function QueueContentDe() {
       {/* ── Sent history ──────────────────────────────────────────────────── */}
       <h2>Nach einer Sendung: der Verlauf</h2>
       <p>
-        Sobald eine Zeile zu <em>gesendet</em> wechselt, wird das Zustellungsereignis auch in das
-        Studien-Verlaufsprotokoll unter <strong>/history</strong> geschrieben. Das Verlaufsprotokoll
+        Sobald eine Zeile zu <em>gesendet</em> wechselt, wird das Zustellungsereignis auch in den
+        <strong>Verlauf</strong>-Tab der Studie geschrieben. Das Verlaufsprotokoll
         zeichnet zusätzliche Signale über die Warteschlange hinaus auf: ob die teilnehmende Person
         die Benachrichtigung erhalten hat, während die App geöffnet war, ob sie auf die
         Benachrichtigungsleiste getippt hat und ob sie den Befragungslink geöffnet hat.
@@ -1128,8 +1132,8 @@ function QueueContentKo() {
       {/* ── Sent history ──────────────────────────────────────────────────── */}
       <h2>전송 후: 기록</h2>
       <p>
-        행이 <em>전송됨</em>으로 전환되면 전달 이벤트도 <strong>/history</strong>의 연구
-        기록 로그에 기록됩니다. 기록 로그는 큐 이외의 추가 신호를 기록합니다: 앱이 열려 있는
+        행이 <em>전송됨</em>으로 전환되면 전달 이벤트도 연구의 <strong>기록</strong> 탭에
+        기록됩니다. 기록 로그는 큐 이외의 추가 신호를 기록합니다: 앱이 열려 있는
         동안 참여자가 알림을 받았는지, 알림 표시줄을 탭했는지, 설문 링크를 열었는지 여부.
       </p>
       <p>
@@ -1276,7 +1280,7 @@ function QueueContentIt() {
       <h2>Dopo un invio: la cronologia</h2>
       <p>
         Una volta che una riga passa a <em>inviato</em>, l&apos;evento di consegna viene scritto anche
-        nel registro della cronologia dello studio in <strong>/history</strong>. Il registro della
+        nella scheda <strong>Cronologia</strong> dello studio. Il registro della
         cronologia registra segnali aggiuntivi oltre alla coda: se il partecipante ha ricevuto la
         notifica mentre l&apos;app era aperta, se ha toccato la barra delle notifiche e se ha aperto
         il link del sondaggio.
@@ -1513,7 +1517,7 @@ function QueueContentFr() {
       <h2>Après un envoi : l&apos;historique</h2>
       <p>
         Une fois qu&apos;une ligne passe à <em>envoyé</em>, l&apos;événement de livraison est également
-        écrit dans le journal d&apos;historique de l&apos;étude à l&apos;adresse <strong>/history</strong>.
+        écrit dans l&apos;onglet <strong>Historique</strong> de l&apos;étude.
         Le journal d&apos;historique enregistre des signaux supplémentaires au-delà de la file
         d&apos;attente : si le participant a reçu la notification pendant que l&apos;application était
         ouverte, s&apos;il a appuyé sur la barre de notification, et s&apos;il a ouvert le lien du
@@ -1666,7 +1670,7 @@ function QueueContentEs() {
       <h2>Tras un envío: el historial</h2>
       <p>
         Una vez que una fila pasa a <em>enviado</em>, el evento de entrega también se escribe
-        en el registro de historial del estudio en <strong>/history</strong>. El registro de
+        en la pestaña <strong>Historial</strong> del estudio. El registro de
         historial captura señales adicionales más allá de la cola: si el participante recibió
         la notificación mientras la aplicación estaba abierta, si tocó la barra de
         notificación, y si abrió el enlace de la encuesta.
@@ -1858,7 +1862,7 @@ function QueueContentPt() {
       <h2>Após um envio: o histórico</h2>
       <p>
         Assim que uma linha passa para <em>enviado</em>, o evento de entrega também é gravado
-        no registro de histórico do estudo em <strong>/history</strong>. O registro de
+        na aba <strong>Histórico</strong> do estudo. O registro de
         histórico captura sinais adicionais além da fila: se o participante recebeu a
         notificação enquanto o aplicativo estava aberto, se tocou na barra de
         notificação, e se abriu o link da pesquisa.
@@ -1882,6 +1886,748 @@ function QueueContentPt() {
         Os lembretes não concluídos são enviados normalmente. Consulte{' '}
         <a href='/docs/reminders'>Lembretes</a> para a configuração da detecção de
         conclusões.
+      </p>
+    </>
+  );
+}
+
+const STATUSES_JA = [
+  {
+    status: 'pending',
+    color: 'var(--ink-40)',
+    label: '保留中',
+    desc: 'スケジュール済みで待機中です。通知は「スケジュール日時」に表示された時刻に送信されます。',
+  },
+  {
+    status: 'processing',
+    color: 'var(--sage)',
+    label: '処理中',
+    desc: 'ディスパッチャーが受け取り、現在配信を試みています。',
+  },
+  {
+    status: 'sent',
+    color: 'var(--sage)',
+    label: '送信済み',
+    desc: 'プッシュ通知サービスに配信されました。デバイスがオンラインになり次第受信されます。',
+  },
+  {
+    status: 'failed',
+    color: 'var(--coral)',
+    label: '失敗',
+    desc: '配信試行に失敗しました — 通常、参加者がアプリをアンインストールしたか、トークンが古くなっているためです。失敗した行は調査できるよう表示されたまま残ります。',
+  },
+  {
+    status: 'cancelled',
+    color: 'var(--ink-40)',
+    label: 'キャンセル',
+    desc: '送信前に削除されました。完了イベントによりリマインダーのキャンセルがトリガーされた場合や、手動でキャンセルした場合に発生します。',
+  },
+];
+
+const COLUMNS_JA = [
+  { col: 'スケジュール日時', desc: '通知が送信される予定の正確な日時。ブラウザのローカルタイムで表示されます。' },
+  { col: 'ステータス',       desc: 'この送信の現在のライフサイクル状態（上記の表を参照）。' },
+  { col: 'タイトル',         desc: '参加者のデバイスに表示される通知のタイトル。' },
+  { col: 'リマ.',            desc: 'この行が元の通知ではなくリマインダー送信である場合、Rとマークされます。' },
+  { col: '宛先',             desc: 'この送信の宛先。スケジュールがグループを対象とする場合はグループ名のピル、特定の参加者を対象とする場合は個別の参加者コード、すべての現在の参加者を対象とする場合は「全員」を表示します。' },
+];
+
+function QueueContentJa() {
+  return (
+    <>
+      <p>
+        スケジュールを送信すると、Samplyは単にルールを保存して実行時にチェックするだけではありません。
+        スケジュールを即座に個別送信のフラットなリストに展開し — 参加者ごと・送信時刻ごとに1行 —
+        各行をキューに書き込みます。キューは配信の真実の源です：Samplyが送信するすべての通知はキューの
+        行として表現され、その行が存在する場合にのみ送信が行われます。
+      </p>
+
+      {/* ── Where to find it ──────────────────────────────────────────────── */}
+      <h2>キューの場所</h2>
+      <p>
+        研究から<strong>スケジュール</strong>に移動し、右上隅の{' '}
+        <strong>キューを表示 →</strong>{" "}
+        をクリックすると、すべてのスケジュールの送信を確認できます。または、個別のスケジュール定義の
+        横にあるリンクをクリックすると、そのスケジュールのみをフィルタリングできます。キューページの
+        上部には、行を生成したルールであるスケジュール定義が表示されます。その下には、個別の送信
+        ごとの行単位の表があります。
+      </p>
+
+      {/* ── Columns ───────────────────────────────────────────────────────── */}
+      <h2>キューの列</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>列</th>
+            <th>内容</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COLUMNS_JA.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Statuses ──────────────────────────────────────────────────────── */}
+      <h2>行のステータス</h2>
+      <p>
+        各行はライフサイクルを通過します。デフォルトではすべての行が表示されます —
+        関心のあるステータスに表示を絞り込むには、ステータスフィルターピルを使用してください。
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0', margin: '1.6rem 0 3.2rem', border: '1px solid var(--ink-10)', borderRadius: '1rem', overflow: 'hidden', background: 'var(--surface)' }}>
+        {STATUSES_JA.map((s, i) => (
+          <div
+            key={s.status}
+            style={{ display: 'flex', gap: '1.6rem', padding: '1rem 1.6rem', borderBottom: i < STATUSES_JA.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'flex-start' }}
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: s.color, flexShrink: 0, width: '8rem', paddingTop: '0.15rem' }}>{s.label}</span>
+            <span style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6 }}>{s.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Filtering ─────────────────────────────────────────────────────── */}
+      <h2>フィルタリング</h2>
+      <p>
+        キューのテーブルの上に2つのフィルターが表示され、組み合わせて使用できます。
+      </p>
+      <dl>
+        <dt>ステータスでフィルター</dt>
+        <dd>
+          切り替え可能な5つのピル：<strong>保留中</strong>、<strong>処理中</strong>、{' '}
+          <strong>送信済み</strong>、<strong>失敗</strong>、<strong>キャンセル</strong>。
+          各ピルは独立しています — クリックしてオン・オフを切り替えます。何も選択されていない
+          場合、すべての行が表示されます。任意の組み合わせを選択して表示を絞り込みます：たとえば、
+          <strong>保留中</strong>と<strong>失敗</strong>を一緒にオンにすると、まだ配信されていない
+          すべてが表示されます。いずれかのピルがアクティブな場合に<strong>クリア</strong>リンクが
+          表示され、すべてのステータスフィルターを一度にリセットします。
+        </dd>
+        <dt>参加者でフィルター</dt>
+        <dd>
+          登録されたすべての参加者をSamply ID（コードが設定されている場合はそのコード）で
+          リストするドロップダウン。参加者を選択すると、その参加者の送信のみが表示されます。
+          ステータスフィルターと組み合わせて、「参加者Xにはまだどの保留中の通知があるか？」
+          などの質問に答えることができます。
+        </dd>
+      </dl>
+      <p>
+        テーブルにはアクティブなフィルターに一致するページあたり最大50行が表示されます。
+        より大きな結果セットを移動するにはページネーションを使用するか、ステータスまたは
+        参加者フィルターで表示を絞り込みます。
+      </p>
+
+      {/* ── How expansion works ───────────────────────────────────────────── */}
+      <h2>キューが満たされる仕組み</h2>
+      <p>
+        展開は<strong>通知をスケジュール</strong>をクリックした瞬間に同期的に行われます。
+        50人の参加者を対象に14日間毎日送信するスケジュールの場合、Samplyは即座に700行
+        （50 × 14）をキューに書き込みます。個人スケジュールの場合、Samplyはスケジュール作成後に
+        参加するすべての新しい参加者についても、登録時にその行を書き込みます。
+      </p>
+      <p>
+        キューには<strong>研究あたり50,000件の保留中の行</strong>という厳格な制限があります。
+        この制限に達した場合、新しいスケジュール定義を追加する前に、古いスケジュール定義
+        （保留中の行を含む）を削除する必要があります。送信済みおよびキャンセルされた行は
+        制限にカウントされません。
+      </p>
+
+      {/* ── Deleting / cancelling ─────────────────────────────────────────── */}
+      <h2>スケジュールの削除</h2>
+      <p>
+        スケジュールタブからスケジュール定義を削除すると、定義が削除され、保留中のすべての
+        キュー行が一度にキャンセルされます。すでに送信された行は影響を受けません — それらは
+        <em>送信済み</em>ステータスで表示されたままになり、応答履歴に含まれます。
+      </p>
+
+      {/* ── Sent history ──────────────────────────────────────────────────── */}
+      <h2>送信後：履歴</h2>
+      <p>
+        行が<em>送信済み</em>に遷移すると、配信イベントは研究の <strong>履歴</strong>
+        タブにも書き込まれます。履歴ログはキュー以外の追加シグナルを記録します：アプリが
+        開いている間に参加者が通知を受信したかどうか、通知バーをタップしたかどうか、
+        調査リンクを開いたかどうか。
+      </p>
+      <p>
+        履歴はページ分けされ、オフライン分析用にCSVとしてダウンロードできます。CSVの各行
+        には、Samply ID、通知のタイトルとメッセージ、URL、サーバー側の送信時刻、および受信・
+        タップ・オープンの各イベントのタイムスタンプが含まれます。
+      </p>
+
+      {/* ── Reminders in the queue ────────────────────────────────────────── */}
+      <h2>キュー内のリマインダー</h2>
+      <p>
+        スケジュールにリマインダーが設定されている場合、各元の送信は定義したオフセットで1つ以上の
+        リマインダー行を生成します。これらの行は<em>リマ.</em>列に<strong>R</strong>バッジで
+        マークされ、同じスケジュールタイトルを共有します。Samplyが元の送信の完了イベントを検出
+        するとすぐに、リマインダー行は自動的にキャンセルされます — したがって、調査を時間通りに
+        完了した参加者はリマインダーを見ることはありません。完了していないリマインダーは通常通り
+        送信されます。完了検出の設定については{' '}
+        <a href='/docs/reminders'>リマインダー</a>を参照してください。
+      </p>
+    </>
+  );
+}
+
+const STATUSES_TR = [
+  {
+    status: 'pending',
+    color: 'var(--ink-40)',
+    label: 'Beklemede',
+    desc: 'Zamanlanmış ve bekliyor. Bildirim, «Zamanlanma» altında gösterilen saatte tetiklenecektir.',
+  },
+  {
+    status: 'processing',
+    color: 'var(--sage)',
+    label: 'İşleniyor',
+    desc: 'Gönderici onu aldı ve şu anda teslim etmeye çalışıyor.',
+  },
+  {
+    status: 'sent',
+    color: 'var(--sage)',
+    label: 'Gönderildi',
+    desc: 'Anlık bildirim hizmetine teslim edildi. Cihaz çevrimiçi olur olmaz alacaktır.',
+  },
+  {
+    status: 'failed',
+    color: 'var(--coral)',
+    label: 'Başarısız',
+    desc: 'Teslim girişimi başarısız oldu — genellikle katılımcının uygulamayı kaldırması veya token süresinin dolması nedeniyle. Başarısız satırlar, araştırma yapabilmeniz için görünür kalır.',
+  },
+  {
+    status: 'cancelled',
+    color: 'var(--ink-40)',
+    label: 'İptal edildi',
+    desc: 'Tetiklenmeden önce kaldırıldı. Bir tamamlanma olayı hatırlatıcı iptalini tetiklediğinde veya manuel olarak iptal ettiğinizde gerçekleşir.',
+  },
+];
+
+const COLUMNS_TR = [
+  { col: 'Zamanlanma', desc: 'Bildirimin tetiklenmek üzere ayarlandığı tam tarih ve saat, tarayıcınızın yerel saatinde gösterilir.' },
+  { col: 'Durum',      desc: 'Bu göndermenin mevcut yaşam döngüsü durumu (yukarıdaki tabloya bakınız).' },
+  { col: 'Başlık',     desc: 'Bildirim başlığı, katılımcı cihazında göründüğü şekliyle.' },
+  { col: 'Hat.',       desc: 'Bu satır orijinal bildirim yerine bir hatırlatıcı gönderimiyse R ile işaretlenir.' },
+  { col: 'Kime',       desc: 'Bu göndermenin hedefi. Program grupları hedeflediğinde grup adı etiketlerini, belirli katılımcıları hedeflediğinde bireysel katılımcı kodlarını veya tüm mevcut katılımcıları hedeflediğinde «tümü» değerini gösterir.' },
+];
+
+function QueueContentTr() {
+  return (
+    <>
+      <p>
+        Bir program gönderdiğinizde, Samply yalnızca bir kuralı kaydedip çalışma zamanında
+        kontrol etmez. Programı anında düz bir bireysel gönderim listesine genişletir — her
+        katılımcı için her gönderim zamanı başına bir satır — ve her satırı kuyruğa yazar.
+        Kuyruk, teslimin gerçek kaynağıdır: Samply'nin gönderdiği her bildirim kuyrukta bir
+        satır olarak temsil edilir ve yalnızca bir satır varsa gönderim gerçekleşir.
+      </p>
+
+      {/* ── Where to find it ──────────────────────────────────────────────── */}
+      <h2>Kuyruğu nerede bulabilirsiniz</h2>
+      <p>
+        Çalışmanızda <strong>Program</strong> bölümüne gidin ve tüm programlardaki tüm
+        gönderimleri görmek için sağ üst köşedeki <strong>Kuyruğu görüntüle →</strong>{" "}
+        bağlantısına tıklayın. Veya yalnızca o programın gönderimlerini filtrelemek için
+        bireysel bir program tanımının yanındaki bağlantıya tıklayın. Kuyruk sayfasının
+        üst kısmı program tanımlarını gösterir — satırları üreten kurallar. Altında her
+        bireysel gönderimin satır satır tablosu bulunur.
+      </p>
+
+      {/* ── Columns ───────────────────────────────────────────────────────── */}
+      <h2>Kuyruk sütunları</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Sütun</th>
+            <th>İçerik</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COLUMNS_TR.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Statuses ──────────────────────────────────────────────────────── */}
+      <h2>Satır durumları</h2>
+      <p>
+        Her satır bir yaşam döngüsünden geçer. Varsayılan olarak tüm satırlar gösterilir —
+        görüntülemeyi ilgilendiğiniz durumlara daraltmak için durum filtre etiketlerini
+        kullanın.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0', margin: '1.6rem 0 3.2rem', border: '1px solid var(--ink-10)', borderRadius: '1rem', overflow: 'hidden', background: 'var(--surface)' }}>
+        {STATUSES_TR.map((s, i) => (
+          <div
+            key={s.status}
+            style={{ display: 'flex', gap: '1.6rem', padding: '1rem 1.6rem', borderBottom: i < STATUSES_TR.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'flex-start' }}
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: s.color, flexShrink: 0, width: '8rem', paddingTop: '0.15rem' }}>{s.label}</span>
+            <span style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6 }}>{s.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Filtering ─────────────────────────────────────────────────────── */}
+      <h2>Filtreleme</h2>
+      <p>
+        Kuyruk tablosunun üzerinde, birleştirilebilecek iki filtre vardır.
+      </p>
+      <dl>
+        <dt>Duruma göre filtrele</dt>
+        <dd>
+          Beş geçişli etiket: <strong>Beklemede</strong>, <strong>İşleniyor</strong>,{' '}
+          <strong>Gönderildi</strong>, <strong>Başarısız</strong> ve{' '}
+          <strong>İptal edildi</strong>. Her etiket bağımsızdır — açıp kapatmak için
+          tıklayın. Hiçbiri seçili değilse, tüm satırlar gösterilir. Görüntülemeyi
+          daraltmak için herhangi bir kombinasyonu seçin: örneğin, henüz teslim edilmemiş
+          her şeyi görmek için <strong>Beklemede</strong> ve <strong>Başarısız</strong>
+          {' '}öğelerini birlikte açın. Herhangi bir etiket etkin olduğunda{' '}
+          <strong>temizle</strong> bağlantısı görünür ve tüm durum filtrelerini bir kerede
+          sıfırlar.
+        </dd>
+        <dt>Katılımcıya göre filtrele</dt>
+        <dd>
+          Kayıtlı tüm katılımcıları Samply ID (veya kod ayarlanmışsa kodları) ile listeleyen
+          bir açılır menü. Yalnızca o katılımcının gönderimlerini görmek için bir katılımcı
+          seçin. «X katılımcısının hâlâ hangi bekleyen bildirimleri var?» gibi soruları
+          yanıtlamak için durum filtresiyle birleştirin.
+        </dd>
+      </dl>
+      <p>
+        Tablo, etkin filtrelerle eşleşen sayfa başına en fazla 50 satır gösterir. Daha büyük
+        sonuç kümelerinde gezinmek için sayfalandırmayı kullanın veya görüntülemeyi durum ya
+        da katılımcı filtresiyle daraltın.
+      </p>
+
+      {/* ── How expansion works ───────────────────────────────────────────── */}
+      <h2>Kuyruk nasıl doldurulur</h2>
+      <p>
+        Genişletme, <strong>Bildirimleri zamanla</strong> düğmesine tıkladığınız anda eşzamanlı
+        olarak gerçekleşir. 14 gün boyunca günlük gönderimlerle 50 katılımcıdan oluşan bir
+        program için Samply, kuyruğa anında 700 satır (50 × 14) yazar. Kişisel programlar için
+        Samply, program oluşturulduktan sonra katılan her yeni katılımcı için de kayıt anında
+        satırlar yazar.
+      </p>
+      <p>
+        Kuyruğun, çalışma başına <strong>50.000 bekleyen satır</strong> şeklinde kesin bir
+        sınırı vardır. Sınıra ulaşıldığında, yenilerini eklemeden önce eski program tanımlarını
+        silmeniz gerekir (bu, bekleyen satırlarını da siler). Gönderilmiş ve iptal edilmiş
+        satırlar sınıra dahil edilmez.
+      </p>
+
+      {/* ── Deleting / cancelling ─────────────────────────────────────────── */}
+      <h2>Bir programı silme</h2>
+      <p>
+        Programlar sekmesinden bir program tanımını silmek, tanımı kaldırır ve bekleyen tüm
+        kuyruk satırlarını aynı anda iptal eder. Zaten gönderilmiş satırlar etkilenmez —
+        görünür kalır, <em>gönderildi</em> durumunda kalırlar ve yanıt geçmişine dahil edilirler.
+      </p>
+
+      {/* ── Sent history ──────────────────────────────────────────────────── */}
+      <h2>Gönderildikten sonra: geçmiş</h2>
+      <p>
+        Bir satır <em>gönderildi</em> durumuna geçtiğinde, teslim olayı çalışmanın{' '}
+        <strong>Geçmiş</strong> sekmesine de yazılır. Geçmiş
+        günlüğü, kuyruğun ötesinde ek sinyalleri yakalar: katılımcının uygulama açıkken
+        bildirimi alıp almadığı, bildirim çubuğundaki bildirime dokunup dokunmadığı ve
+        anket bağlantısını açıp açmadığı.
+      </p>
+      <p>
+        Geçmiş sayfalandırılır ve çevrimdışı analiz için CSV olarak indirilebilir. Her CSV
+        satırı Samply ID'sini, bildirim başlığını ve mesajını, URL'yi, sunucu tarafı gönderim
+        zamanını ve alma, dokunma ve açma olaylarının zaman damgalarını içerir.
+      </p>
+
+      {/* ── Reminders in the queue ────────────────────────────────────────── */}
+      <h2>Kuyruktaki hatırlatıcılar</h2>
+      <p>
+        Bir program hatırlatıcılarla yapılandırılmışsa, her orijinal gönderim, tanımladığınız
+        ofsetlerde bir veya daha fazla hatırlatıcı satırı oluşturur. Bu satırlar{' '}
+        <em>Hat.</em> sütununda bir <strong>R</strong> rozetiyle işaretlenir ve aynı program
+        başlığını paylaşır. Samply orijinal gönderim için bir tamamlanma olayı tespit eder
+        etmez bir hatırlatıcı satırı otomatik olarak iptal edilir — bu nedenle ankete zamanında
+        cevap veren katılımcılar asla hatırlatıcı görmez. Tamamlanmamış hatırlatıcılar normal
+        şekilde gönderilir. Tamamlanma algılamasını yapılandırma hakkında daha fazla bilgi
+        için{' '}
+        <a href='/docs/reminders'>Hatırlatıcılar</a> bölümüne bakın.
+      </p>
+    </>
+  );
+}
+
+const STATUSES_PL = [
+  {
+    status: 'pending',
+    color: 'var(--ink-40)',
+    label: 'Oczekuje',
+    desc: 'Zaplanowane i oczekuje. Powiadomienie zostanie wyzwolone o godzinie wskazanej w kolumnie «Zaplanowano».',
+  },
+  {
+    status: 'processing',
+    color: 'var(--sage)',
+    label: 'Przetwarzanie',
+    desc: 'Nadawca odebrał wpis i właśnie próbuje go dostarczyć.',
+  },
+  {
+    status: 'sent',
+    color: 'var(--sage)',
+    label: 'Wysłano',
+    desc: 'Dostarczono do usługi powiadomień push. Urządzenie odbierze je, gdy tylko będzie online.',
+  },
+  {
+    status: 'failed',
+    color: 'var(--coral)',
+    label: 'Niepowodzenie',
+    desc: 'Próba dostarczenia nie powiodła się — zwykle dlatego, że uczestnik odinstalował aplikację lub token wygasł. Wiersze z niepowodzeniem pozostają widoczne, abyś mógł je zbadać.',
+  },
+  {
+    status: 'cancelled',
+    color: 'var(--ink-40)',
+    label: 'Anulowano',
+    desc: 'Usunięte przed wyzwoleniem. Dzieje się tak, gdy zdarzenie ukończenia uruchamia anulowanie przypomnienia lub gdy anulujesz ręcznie.',
+  },
+];
+
+const COLUMNS_PL = [
+  { col: 'Zaplanowano', desc: 'Dokładna data i godzina, na które powiadomienie zostało ustawione do wyzwolenia, pokazywane w lokalnej strefie czasowej Twojej przeglądarki.' },
+  { col: 'Status',      desc: 'Aktualny stan cyklu życia tej wysyłki (zobacz tabelę powyżej).' },
+  { col: 'Tytuł',       desc: 'Tytuł powiadomienia, tak jak pojawia się na urządzeniu uczestnika.' },
+  { col: 'Przyp.',      desc: 'Oznaczone literą R, jeśli ten wiersz jest wysyłką przypomnienia, a nie oryginalnym powiadomieniem.' },
+  { col: 'Do',          desc: 'Cel tej wysyłki. Pokazuje etykiety nazw grup, gdy harmonogram celuje w grupy, indywidualne kody uczestników, gdy celuje w konkretnych uczestników, lub «wszyscy», gdy celuje we wszystkich obecnych uczestników.' },
+];
+
+function QueueContentPl() {
+  return (
+    <>
+      <p>
+        Gdy przesyłasz harmonogram, Samply nie tylko zapisuje regułę i sprawdza ją w czasie
+        wykonywania. System natychmiast rozwija harmonogram w płaską listę pojedynczych
+        wysyłek — jeden wiersz na uczestnika na każdy czas wysyłki — i zapisuje każdy wiersz
+        w kolejce. Kolejka jest źródłem prawdy dla dostarczania: każde powiadomienie, które
+        Samply wysyła, jest reprezentowane w kolejce jako wiersz, a wysyłka następuje
+        wtedy i tylko wtedy, gdy istnieje dla niej wiersz.
+      </p>
+
+      {/* ── Where to find it ──────────────────────────────────────────────── */}
+      <h2>Gdzie znaleźć kolejkę</h2>
+      <p>
+        W swoim badaniu przejdź do sekcji <strong>Harmonogram</strong> i kliknij{" "}
+        <strong>Zobacz kolejkę →</strong> w prawym górnym rogu, aby zobaczyć wszystkie
+        wysyłki ze wszystkich harmonogramów. Możesz też kliknąć link obok pojedynczej
+        definicji harmonogramu, aby przefiltrować widok tylko do wysyłek tego harmonogramu.
+        Górna część strony kolejki pokazuje definicje harmonogramów — reguły, które
+        generują wiersze. Poniżej znajduje się tabela wiersz po wierszu każdej pojedynczej wysyłki.
+      </p>
+
+      {/* ── Columns ───────────────────────────────────────────────────────── */}
+      <h2>Kolumny kolejki</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Kolumna</th>
+            <th>Zawartość</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COLUMNS_PL.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Statuses ──────────────────────────────────────────────────────── */}
+      <h2>Statusy wierszy</h2>
+      <p>
+        Każdy wiersz przechodzi przez cykl życia. Domyślnie pokazywane są wszystkie wiersze —
+        użyj etykiet filtra statusu, aby zawęzić widok do statusów, które Cię interesują.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0', margin: '1.6rem 0 3.2rem', border: '1px solid var(--ink-10)', borderRadius: '1rem', overflow: 'hidden', background: 'var(--surface)' }}>
+        {STATUSES_PL.map((s, i) => (
+          <div
+            key={s.status}
+            style={{ display: 'flex', gap: '1.6rem', padding: '1rem 1.6rem', borderBottom: i < STATUSES_PL.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'flex-start' }}
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: s.color, flexShrink: 0, width: '8rem', paddingTop: '0.15rem' }}>{s.label}</span>
+            <span style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6 }}>{s.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Filtering ─────────────────────────────────────────────────────── */}
+      <h2>Filtrowanie</h2>
+      <p>
+        Nad tabelą kolejki znajdują się dwa filtry, które można łączyć.
+      </p>
+      <dl>
+        <dt>Filtruj według statusu</dt>
+        <dd>
+          Pięć przełączalnych etykiet: <strong>Oczekuje</strong>, <strong>Przetwarzanie</strong>,{' '}
+          <strong>Wysłano</strong>, <strong>Niepowodzenie</strong> i{' '}
+          <strong>Anulowano</strong>. Każda etykieta jest niezależna — kliknij, aby
+          włączyć lub wyłączyć. Jeśli żadna nie jest wybrana, pokazywane są wszystkie
+          wiersze. Wybierz dowolną kombinację, aby zawęzić widok: na przykład włącz razem{' '}
+          <strong>Oczekuje</strong> i <strong>Niepowodzenie</strong>, aby zobaczyć wszystko,
+          co nie zostało jeszcze dostarczone. Link <strong>wyczyść</strong> pojawia się,
+          gdy aktywna jest dowolna etykieta i resetuje wszystkie filtry statusu jednocześnie.
+        </dd>
+        <dt>Filtruj według uczestnika</dt>
+        <dd>
+          Lista rozwijana zawierająca wszystkich zarejestrowanych uczestników według ich
+          Samply ID (lub kodów, jeśli kody są ustawione). Wybierz uczestnika, aby zobaczyć
+          tylko wysyłki dla tego uczestnika. Połącz z filtrem statusu, aby odpowiedzieć na
+          pytania typu «jakie oczekujące powiadomienia ma jeszcze uczestnik X?».
+        </dd>
+      </dl>
+      <p>
+        Tabela pokazuje do 50 wierszy na stronę pasujących do aktywnych filtrów. Użyj
+        paginacji, aby poruszać się po większych zestawach wyników, lub zawęź widok za
+        pomocą filtra statusu lub uczestnika.
+      </p>
+
+      {/* ── How expansion works ───────────────────────────────────────────── */}
+      <h2>Jak kolejka jest wypełniana</h2>
+      <p>
+        Rozszerzanie odbywa się synchronicznie w chwili kliknięcia przycisku{' '}
+        <strong>Zaplanuj powiadomienia</strong>. Dla harmonogramu z 50 uczestnikami i
+        codziennymi wysyłkami przez 14 dni Samply natychmiast zapisuje 700 wierszy (50 × 14)
+        do kolejki. W przypadku harmonogramów osobistych Samply zapisuje wiersze również
+        w momencie rejestracji każdego nowego uczestnika, który dołącza po utworzeniu harmonogramu.
+      </p>
+      <p>
+        Kolejka ma sztywny limit <strong>50 000 oczekujących wierszy</strong> na badanie.
+        Po osiągnięciu limitu musisz usunąć stare definicje harmonogramów (co usuwa również
+        ich oczekujące wiersze) przed dodaniem nowych. Wysłane i anulowane wiersze nie
+        liczą się do limitu.
+      </p>
+
+      {/* ── Deleting / cancelling ─────────────────────────────────────────── */}
+      <h2>Usuwanie harmonogramu</h2>
+      <p>
+        Usunięcie definicji harmonogramu z karty Harmonogramy usuwa definicję i jednocześnie
+        anuluje wszystkie oczekujące wiersze kolejki. Wiersze, które już zostały wysłane,
+        pozostają nienaruszone — pozostają widoczne, w statusie <em>wysłano</em> i są
+        wliczane do historii odpowiedzi.
+      </p>
+
+      {/* ── Sent history ──────────────────────────────────────────────────── */}
+      <h2>Po wysłaniu: historia</h2>
+      <p>
+        Gdy wiersz przechodzi do statusu <em>wysłano</em>, zdarzenie dostarczenia jest
+        również zapisywane w zakładce <strong>Historia</strong> badania.
+        Dziennik historii rejestruje dodatkowe sygnały wykraczające poza kolejkę: czy
+        uczestnik otrzymał powiadomienie przy otwartej aplikacji, czy stuknął w
+        powiadomienie na pasku powiadomień i czy otworzył link do ankiety.
+      </p>
+      <p>
+        Historia jest stronicowana i można ją pobrać jako CSV do analizy offline. Każdy
+        wiersz CSV zawiera Samply ID, tytuł i treść powiadomienia, URL, czas wysłania po
+        stronie serwera oraz znaczniki czasu zdarzeń odebrania, stuknięcia i otwarcia.
+      </p>
+
+      {/* ── Reminders in the queue ────────────────────────────────────────── */}
+      <h2>Przypomnienia w kolejce</h2>
+      <p>
+        Jeśli harmonogram jest skonfigurowany z przypomnieniami, każda oryginalna wysyłka
+        tworzy jeden lub więcej wierszy przypomnień przy zdefiniowanych przez Ciebie
+        przesunięciach. Te wiersze są oznaczone znaczkiem <strong>R</strong> w kolumnie{' '}
+        <em>Przyp.</em> i mają ten sam tytuł harmonogramu. Wiersz przypomnienia jest
+        automatycznie anulowany, gdy tylko Samply wykryje zdarzenie ukończenia dla
+        oryginalnej wysyłki — więc uczestnicy, którzy odpowiadają na ankietę na czas,
+        nigdy nie widzą przypomnienia. Nieukończone przypomnienia są wysyłane normalnie.
+        Aby uzyskać więcej informacji na temat konfigurowania wykrywania ukończenia,
+        zobacz sekcję{' '}
+        <a href='/docs/reminders'>Przypomnienia</a>.
+      </p>
+    </>
+  );
+}
+
+const STATUSES_AR = [
+  {
+    status: 'pending',
+    color: 'var(--ink-40)',
+    label: 'قيد الانتظار',
+    desc: 'مجدول وفي انتظار التنفيذ. سيتم إطلاق الإشعار في الوقت المشار إليه في عمود «مجدول لـ».',
+  },
+  {
+    status: 'processing',
+    color: 'var(--sage)',
+    label: 'قيد المعالجة',
+    desc: 'استلم المُرسِل الإدخال ويحاول حالياً تسليمه.',
+  },
+  {
+    status: 'sent',
+    color: 'var(--sage)',
+    label: 'تم الإرسال',
+    desc: 'تم التسليم إلى خدمة الإشعارات الفورية. سيستلمها الجهاز بمجرد أن يكون متصلاً بالإنترنت.',
+  },
+  {
+    status: 'failed',
+    color: 'var(--coral)',
+    label: 'فشل',
+    desc: 'فشلت محاولة التسليم — عادةً لأن المشارك قام بإلغاء تثبيت التطبيق أو انتهت صلاحية الـ Token. تظل الصفوف الفاشلة مرئية حتى تتمكن من التحقيق فيها.',
+  },
+  {
+    status: 'cancelled',
+    color: 'var(--ink-40)',
+    label: 'تم الإلغاء',
+    desc: 'تمت إزالته قبل إطلاقه. يحدث هذا عندما يُشغِّل حدث الإكمال إلغاء التذكير، أو عندما تقوم بالإلغاء يدوياً.',
+  },
+];
+
+const COLUMNS_AR = [
+  { col: 'مجدول لـ',  desc: 'التاريخ والوقت الدقيقان اللذان تم تعيين الإشعار للإطلاق فيهما، معروضاً بالمنطقة الزمنية المحلية لمتصفحك.' },
+  { col: 'الحالة',     desc: 'الحالة الحالية لدورة حياة هذا الإرسال (انظر الجدول أعلاه).' },
+  { col: 'العنوان',    desc: 'عنوان الإشعار كما سيظهر على جهاز المشارك.' },
+  { col: 'تذكير',      desc: 'يُعلَّم بحرف R إذا كان هذا الصف عملية إرسال تذكير وليس الإشعار الأصلي.' },
+  { col: 'إلى',        desc: 'هدف هذا الإرسال. يعرض شارات أسماء المجموعات عندما يستهدف الجدول مجموعات، أو رموز المشاركين الفردية عند استهداف مشاركين محددين، أو «الكل» عند استهداف جميع المشاركين الحاليين.' },
+];
+
+function QueueContentAr() {
+  return (
+    <>
+      <p>
+        عندما تقوم بإرسال جدول، لا يكتفي Samply بحفظ القاعدة والتحقق منها عند وقت التنفيذ.
+        بل يقوم النظام فوراً بتوسيع الجدول إلى قائمة مسطحة من عمليات الإرسال الفردية — صف
+        واحد لكل مشارك لكل وقت إرسال — ويكتب كل صف في طابور. يُعدّ الطابور المصدر الوحيد
+        للحقيقة فيما يخص التسليم: كل إشعار يرسله Samply يُمثَّل في الطابور كصف، ولا يحدث
+        الإرسال إلا إذا كان هناك صف له.
+      </p>
+
+      {/* ── Where to find it ──────────────────────────────────────────────── */}
+      <h2>أين تجد الطابور</h2>
+      <p>
+        في دراستك، اذهب إلى قسم <strong>الجدول</strong> وانقر على{" "}
+        <strong>عرض الطابور →</strong> في الزاوية اليمنى العليا لرؤية جميع عمليات الإرسال
+        من جميع الجداول. يمكنك أيضاً النقر على الرابط بجوار تعريف جدول واحد لتصفية العرض
+        فقط لعمليات إرسال ذلك الجدول. يعرض الجزء العلوي من صفحة الطابور تعريفات الجداول —
+        القواعد التي تولّد الصفوف. يوجد أدناه جدول صف بصف لكل عملية إرسال فردية.
+      </p>
+
+      {/* ── Columns ───────────────────────────────────────────────────────── */}
+      <h2>أعمدة الطابور</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>العمود</th>
+            <th>المحتوى</th>
+          </tr>
+        </thead>
+        <tbody>
+          {COLUMNS_AR.map((r) => (
+            <tr key={r.col}>
+              <td>{r.col}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Statuses ──────────────────────────────────────────────────────── */}
+      <h2>حالات الصفوف</h2>
+      <p>
+        يمر كل صف بدورة حياة. افتراضياً، تُعرض جميع الصفوف — استخدم شارات تصفية الحالة
+        لتضييق العرض على الحالات التي تهمك.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0', margin: '1.6rem 0 3.2rem', border: '1px solid var(--ink-10)', borderRadius: '1rem', overflow: 'hidden', background: 'var(--surface)' }}>
+        {STATUSES_AR.map((s, i) => (
+          <div
+            key={s.status}
+            style={{ display: 'flex', gap: '1.6rem', padding: '1rem 1.6rem', borderBottom: i < STATUSES_AR.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'flex-start' }}
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: s.color, flexShrink: 0, width: '8rem', paddingTop: '0.15rem' }}>{s.label}</span>
+            <span style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6 }}>{s.desc}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Filtering ─────────────────────────────────────────────────────── */}
+      <h2>التصفية</h2>
+      <p>
+        فوق جدول الطابور توجد عوامل تصفية اثنان يمكن دمجهما.
+      </p>
+      <dl>
+        <dt>التصفية حسب الحالة</dt>
+        <dd>
+          خمس شارات قابلة للتبديل: <strong>قيد الانتظار</strong>،{' '}
+          <strong>قيد المعالجة</strong>، <strong>تم الإرسال</strong>،{' '}
+          <strong>فشل</strong>، و <strong>تم الإلغاء</strong>. كل شارة مستقلة — انقر
+          لتفعيلها أو تعطيلها. إذا لم يتم تحديد أي منها، تُعرض جميع الصفوف. اختر أي مجموعة
+          لتضييق العرض: على سبيل المثال، فعِّل <strong>قيد الانتظار</strong> و{' '}
+          <strong>فشل</strong> معاً لرؤية كل ما لم يُسلَّم بعد. يظهر رابط{' '}
+          <strong>مسح</strong> عند تنشيط أي شارة، ويعيد ضبط جميع عوامل تصفية الحالة دفعة واحدة.
+        </dd>
+        <dt>التصفية حسب المشارك</dt>
+        <dd>
+          قائمة منسدلة تحتوي على جميع المشاركين المسجلين حسب معرّف Samply (أو الرموز إذا
+          تم تعيين الرموز). اختر مشاركاً لرؤية عمليات الإرسال لهذا المشارك فقط. ادمج مع
+          مرشح الحالة للإجابة عن أسئلة مثل «ما الإشعارات المعلقة التي لا يزال لدى المشارك X؟».
+        </dd>
+      </dl>
+      <p>
+        يعرض الجدول حتى 50 صفاً في الصفحة تطابق عوامل التصفية النشطة. استخدم الترقيم
+        للتنقل بين مجموعات النتائج الأكبر، أو ضيِّق العرض باستخدام مرشح الحالة أو المشارك.
+      </p>
+
+      {/* ── How expansion works ───────────────────────────────────────────── */}
+      <h2>كيف يتم ملء الطابور</h2>
+      <p>
+        يتم التوسيع بشكل متزامن في اللحظة التي تنقر فيها على زر{' '}
+        <strong>جدولة الإشعارات</strong>. لجدول يضم 50 مشاركاً مع إرسالات يومية لمدة
+        14 يوماً، يكتب Samply فوراً 700 صف (50 × 14) إلى الطابور. بالنسبة للجداول
+        الشخصية، يكتب Samply الصفوف أيضاً وقت تسجيل كل مشارك جديد ينضم بعد إنشاء الجدول.
+      </p>
+      <p>
+        للطابور حد صارم قدره <strong>50,000 صف معلق</strong> لكل دراسة. عند الوصول إلى
+        الحد، يجب عليك حذف تعريفات الجداول القديمة (وهذا يحذف أيضاً صفوفها المعلقة) قبل
+        إضافة جداول جديدة. لا تُحتسب الصفوف المُرسَلة والملغاة ضمن الحد.
+      </p>
+
+      {/* ── Deleting / cancelling ─────────────────────────────────────────── */}
+      <h2>حذف جدول</h2>
+      <p>
+        حذف تعريف جدول من علامة تبويب الجداول يزيل التعريف ويلغي في الوقت نفسه جميع صفوف
+        الطابور المعلقة. الصفوف التي أُرسلت بالفعل تبقى سليمة — تظل مرئية، وفي حالة{' '}
+        <em>تم الإرسال</em>، وتُحتسب ضمن سجل الردود.
+      </p>
+
+      {/* ── Sent history ──────────────────────────────────────────────────── */}
+      <h2>بعد الإرسال: السجل</h2>
+      <p>
+        عندما ينتقل صف إلى حالة <em>تم الإرسال</em>، يُكتب حدث التسليم أيضاً في
+        علامة تبويب <strong>السجل</strong> للدراسة. يلتقط سجل التاريخ إشارات
+        إضافية تتجاوز الطابور: ما إذا كان المشارك قد استلم الإشعار والتطبيق مفتوح، وما
+        إذا كان قد نقر على الإشعار في شريط الإشعارات، وما إذا كان قد فتح رابط الاستطلاع.
+      </p>
+      <p>
+        السجل مرقَّم ويمكن تنزيله بصيغة CSV للتحليل دون اتصال. يحتوي كل صف CSV على معرّف
+        Samply، وعنوان الإشعار ونصه، والـ URL، ووقت الإرسال من جانب الخادم، وطوابع
+        زمنية لأحداث الاستلام والنقر والفتح.
+      </p>
+
+      {/* ── Reminders in the queue ────────────────────────────────────────── */}
+      <h2>التذكيرات في الطابور</h2>
+      <p>
+        إذا تم إعداد جدول بتذكيرات، فإن كل عملية إرسال أصلية تُنشئ صف تذكير واحد أو أكثر
+        عند الإزاحات التي تحددها. تُعلَّم هذه الصفوف بشارة <strong>R</strong> في عمود{' '}
+        <em>تذكير</em>، وتشترك في عنوان الجدول نفسه. يتم إلغاء صف التذكير تلقائياً بمجرد
+        أن يكتشف Samply حدث إكمال للإرسال الأصلي — لذلك لا يرى المشاركون الذين يجيبون
+        عن الاستطلاع في الوقت المحدد التذكير أبداً. تُرسَل التذكيرات غير المكتملة بشكل
+        طبيعي. لمزيد من المعلومات حول إعداد اكتشاف الإكمال، انظر قسم{' '}
+        <a href='/docs/reminders'>التذكيرات</a>.
       </p>
     </>
   );

@@ -1,6 +1,9 @@
 import connectDB from "@/lib/db";
 import Project, { type PublicProject, type ProjectDetail } from "@/lib/models/project";
 import User from "@/lib/models/user";
+import type mongoose from "mongoose";
+
+export type StudyContact = { name?: string; email?: string };
 
 const LIMIT = 20;
 
@@ -67,4 +70,38 @@ export async function fetchStudyBySlug(slug: string): Promise<{
     project: p,
     author: author as unknown as { name: string; institute: string } | null,
   };
+}
+
+/**
+ * Resolve the creator (researcher) contact info for a set of project IDs.
+ * Returned as a Map keyed by stringified projectId so callers don't need to
+ * worry about ObjectId equality. Missing projects or missing creators map to
+ * an empty object so the caller can decide whether to render a contact line.
+ */
+export async function fetchStudyContactsByProjectIds(
+  projectIds: Array<string | mongoose.Types.ObjectId>,
+): Promise<Map<string, StudyContact>> {
+  const result = new Map<string, StudyContact>();
+  if (!projectIds.length) return result;
+
+  await connectDB();
+
+  const projects = await Project
+    .find({ _id: { $in: projectIds } }, { _id: 1, creator: 1 })
+    .lean() as Array<{ _id: mongoose.Types.ObjectId; creator?: mongoose.Types.ObjectId }>;
+
+  const creatorIds = projects.map((p) => p.creator).filter(Boolean) as mongoose.Types.ObjectId[];
+  if (!creatorIds.length) return result;
+
+  const creators = await User
+    .find({ _id: { $in: creatorIds } }, { _id: 1, name: 1, email: 1 })
+    .lean() as Array<{ _id: mongoose.Types.ObjectId; name?: string; email?: string }>;
+
+  const creatorById = new Map(creators.map((c) => [String(c._id), c]));
+
+  for (const p of projects) {
+    const c = p.creator ? creatorById.get(String(p.creator)) : undefined;
+    if (c) result.set(String(p._id), { name: c.name, email: c.email });
+  }
+  return result;
 }

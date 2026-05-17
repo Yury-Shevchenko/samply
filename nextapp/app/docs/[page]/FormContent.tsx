@@ -115,6 +115,10 @@ export default function FormContent({ locale }: { locale: Locale }) {
   if (locale === "fr") return <FormContentFr />;
   if (locale === "es") return <FormContentEs />;
   if (locale === "pt") return <FormContentPt />;
+  if (locale === "ja") return <FormContentJa />;
+  if (locale === "ar") return <FormContentAr />;
+  if (locale === "pl") return <FormContentPl />;
+  if (locale === "tr") return <FormContentTr />;
   return <FormContentEn />;
 }
 
@@ -1720,6 +1724,48 @@ const TYPE_MATRIX_PT = [
   { time: 'Janela de tempo',       date: 'Repetir + início/fim relativos ao cadastro',                          type: 'Pessoal aleatório',      link: '/docs/types#randomized' },
 ];
 
+const SECTIONS_JA = [
+  { id: 'content',    label: 'コンテンツ',          summary: 'タイトル、メッセージ、調査 URL。' },
+  { id: 'timezone',  label: '1. タイムゾーン',     summary: 'どの時計を使うか、各参加者のタイムゾーンに合わせるかどうか。' },
+  { id: 'audience',  label: '2. 参加者',           summary: 'このスケジュールを受け取る対象。' },
+  { id: 'time',      label: '3. 時刻',             summary: '固定時刻、ランダムなウィンドウ、または分単位の繰り返し。' },
+  { id: 'date',      label: '4. 日付',             summary: '特定の日付または繰り返しの日パターン。' },
+  { id: 'month',     label: '5. 月',               summary: '繰り返し送信を特定の月に限定する。繰り返しのみ。' },
+  { id: 'start',     label: '6. 開始',             summary: '繰り返しスケジュールが開始するタイミング。繰り返しのみ。' },
+  { id: 'stop',      label: '7. 終了',             summary: '繰り返しスケジュールが終了するタイミング。繰り返しのみ。' },
+  { id: 'expiry',    label: '8. 有効期限',         summary: '配信後に調査リンクが有効である期間。' },
+  { id: 'reminders', label: '9. リマインダー',     summary: '完了が検出されなかった場合のフォローアップ通知。' },
+];
+
+const TYPE_MATRIX_JA = [
+  { time: '特定の時刻',       date: '特定の日付',                                                                type: '一回限り',             link: '/docs/types#one-time' },
+  { time: '特定の時刻',       date: 'N 日ごと / 曜日 / 日付ごとに繰り返す',                                       type: '繰り返し',             link: '/docs/types#repeating' },
+  { time: '特定の時刻',       date: '繰り返し + 登録に対する相対的な開始/終了',                                   type: 'パーソナル',           link: '/docs/personal' },
+  { time: '時間ウィンドウ',   date: '特定の日付',                                                                type: 'ランダム一回限り',     link: '/docs/types#randomized' },
+  { time: '時間ウィンドウ',   date: '繰り返し + 登録に対する相対的な開始/終了',                                   type: 'ランダムパーソナル',   link: '/docs/types#randomized' },
+];
+
+const SECTIONS_TR = [
+  { id: 'content',    label: 'İçerik',           summary: 'Başlık, mesaj ve anket URL si.' },
+  { id: 'timezone',  label: '1. Saat dilimi',    summary: 'Hangi saatin kullanılacağı ve her katılımcının saat dilimine uyulup uyulmayacağı.' },
+  { id: 'audience',  label: '2. Katılımcılar',   summary: 'Bu programı kimin alacağı.' },
+  { id: 'time',      label: '3. Zaman',          summary: 'Sabit saatler, rastgele pencereler veya dakika düzeyinde tekrar.' },
+  { id: 'date',      label: '4. Tarih',          summary: 'Belirli bir tarih veya tekrarlayan bir gün deseni.' },
+  { id: 'month',     label: '5. Ay',             summary: 'Tekrarlayan gönderimleri belirli aylarla sınırla. Yalnızca tekrarlayanlar.' },
+  { id: 'start',     label: '6. Başlangıç',      summary: 'Tekrarlayan programın ne zaman başladığı. Yalnızca tekrarlayanlar.' },
+  { id: 'stop',      label: '7. Bitiş',          summary: 'Tekrarlayan programın ne zaman sona erdiği. Yalnızca tekrarlayanlar.' },
+  { id: 'expiry',    label: '8. Son kullanma',   summary: 'Anket bağlantısının teslimden sonra ne kadar süre aktif kaldığı.' },
+  { id: 'reminders', label: '9. Hatırlatıcılar', summary: 'Tamamlanma tespit edilmezse takip bildirimleri.' },
+];
+
+const TYPE_MATRIX_TR = [
+  { time: 'Belirli zaman noktası/noktaları', date: 'Belirli tarih(ler)',                                              type: 'Tek seferlik',                  link: '/docs/types#one-time' },
+  { time: 'Belirli zaman noktası/noktaları', date: 'Her N gün / hafta günleri / ayın günleri tekrar',                 type: 'Tekrarlayan',                   link: '/docs/types#repeating' },
+  { time: 'Belirli zaman noktası/noktaları', date: 'Kayda göre tekrar + başlangıç/bitiş',                              type: 'Kişisel',                       link: '/docs/personal' },
+  { time: 'Zaman penceresi',                 date: 'Belirli tarih(ler)',                                              type: 'Tek seferlik rastgele',         link: '/docs/types#randomized' },
+  { time: 'Zaman penceresi',                 date: 'Kayda göre tekrar + başlangıç/bitiş',                              type: 'Kişisel rastgele',              link: '/docs/types#randomized' },
+];
+
 function FormContentFr() {
   return (
     <>
@@ -2782,6 +2828,1056 @@ function FormContentPt() {
         Um calendário não pode ser editado após o envio. Para alterar os horários ou o
         conteúdo, exclua o calendário e crie um novo. Excluir um calendário também remove
         todos os seus envios pendentes da fila.
+      </p>
+    </>
+  );
+}
+
+function FormContentJa() {
+  return (
+    <>
+      <p>
+        4 つのスケジュールタイプはすべて同じフォームで作成します。セクションの順序は固定で、
+        常に上から下へ進みます。ほとんどのセクションはステップ 4 で選択を行った後にのみ
+        関連するようになります — フォームは関連のないセクションを自動的に非表示にします。
+      </p>
+
+      {/* ── Section index ─────────────────────────────────────────────────── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0', margin: '2rem 0 3.6rem', border: '1px solid var(--ink-10)', borderRadius: '1rem', overflow: 'hidden', background: 'var(--surface)' }}>
+        {SECTIONS_JA.map((s, i) => (
+          <div
+            key={s.id}
+            style={{ display: 'flex', gap: '1.6rem', padding: '1rem 1.6rem', borderBottom: i < SECTIONS_JA.length - 1 ? '1px solid var(--ink-10)' : 'none', alignItems: 'baseline' }}
+          >
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.05rem', color: 'var(--coral)', flexShrink: 0, width: '10rem' }}>{s.label}</span>
+            <span style={{ fontSize: '1.3rem', color: 'var(--ink-60)' }}>{s.summary}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Content ───────────────────────────────────────────────────────── */}
+      <h2 id='content'>コンテンツ</h2>
+      <p>
+        これら 3 つのフィールドはフォームの上部、番号付きステップの前に表示され、
+        このスケジュールから生成されるすべての送信に適用されます。
+      </p>
+      <dl>
+        <dt>タイトル</dt>
+        <dd>
+          参加者のデバイス上のプッシュ通知の最初の太字行。同じタイトルを共有する通知は、
+          システムバーで積み重ならずにお互いを置き換えます。一度に 1 つの通知だけを
+          表示させたい場合は研究全体で一貫したタイトルを使用し、共存させたい場合は
+          異なるタイトルを使用してください。
+        </dd>
+        <dt>メッセージ</dt>
+        <dd>通知の本文 — システムバーに表示される 2 番目の行です。</dd>
+        <dt>ウェブリンク</dt>
+        <dd>
+          参加者が通知をタップしたときに開く URL。通常は Qualtrics、REDCap、または
+          その他の調査リンクです。アクションのない通知だけが必要な場合は URL を省略します。
+          参加者固有の値（ID など）を自動的に埋め込むには、
+          <a href='/docs/placeholders'>URL プレースホルダー</a>を参照してください。
+        </dd>
+      </dl>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2 id='timezone'>ステップ 1 — タイムゾーン</h2>
+      <p>
+        ステップ 3、6、7 で入力するすべての時刻は、このタイムゾーンで解釈されます。
+        研究が実施されているタイムゾーン — 通常は研究グループの所在地 — を選択してください。
+      </p>
+      <p>
+        <strong>参加者のタイムゾーンに合わせる</strong>は、各参加者ごとに個別に研究の
+        タイムゾーンを上書きします。有効にすると、20:00 の送信は研究のタイムゾーンの
+        20:00 ではなく、各参加者のデバイスのタイムゾーンの 20:00 に発火します。
+        Samply アプリが参加者のタイムゾーンを記録している限り、これは現在および将来の
+        参加者に対して機能します。
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2 id='audience'>ステップ 2 — 参加者</h2>
+      <p>このスケジュールから通知を受け取る人を選択します。オプションを組み合わせることができます。</p>
+      <dl>
+        <dt>すべての将来の参加者（現在の参加者を除く）</dt>
+        <dd>
+          このスケジュールを保存した後の新しい登録は自動的に含まれます。オープン登録の
+          研究には不可欠です。スケジュールを作成した時点ですでに登録されている参加者は、
+          このオプションだけでは<em>含まれません</em>。
+        </dd>
+        <dt>現在の参加者 — すべて</dt>
+        <dd>「通知をスケジュール」をクリックした時点で登録されているすべての人。</dd>
+        <dt>現在の参加者 — 特定の個人</dt>
+        <dd>登録済みの Samply ID のリストから選択します。一回限りの送信やテストに使用します。</dd>
+        <dt>グループ</dt>
+        <dd>
+          1 つ以上の名前付きグループを対象とします。すべてのグループを選択することも、
+          特定のグループを選択することもできます。グループの作成方法については
+          <a href='/docs/groups'>グループ</a>を参照してください。
+        </dd>
+      </dl>
+
+      {/* ── Time ──────────────────────────────────────────────────────────── */}
+      <h2 id='time'>ステップ 3 — 時刻</h2>
+      <p>
+        これはフォーム上で最も決定的な選択です。送信時刻が固定か、ランダムか、または
+        非常に短い繰り返し周期に設定されるかを決定します。
+      </p>
+
+      <h3>特定の時刻</h3>
+      <p>
+        HH:MM 形式で 1 つ以上の時刻を入力します。各時刻はアクティブな各日における
+        個別の送信になります。<strong>別の時刻を追加</strong>をクリックして追加の時刻を
+        追加します — 例えば、1 日 3 回の送信のために 09:00、13:00、18:00 のように。
+      </p>
+
+      <h3>時間ウィンドウ</h3>
+      <p>
+        開始時刻、終了時刻、ウィンドウ内で行うランダム送信の数、およびそれらの間の最小間隔
+        を持つウィンドウを定義します。Samply はアクティブな各日において、このウィンドウ内で
+        各参加者ごとに異なるランダムな時刻を選択します。
+      </p>
+      <p>
+        <strong>別の時間ウィンドウを追加</strong>をクリックして、1 日に複数のウィンドウを
+        定義します（例: 朝 08:00–11:00 と午後 14:00–17:00、それぞれ 2 通の通知）。
+      </p>
+
+      <h3>繰り返し（高頻度）</h3>
+      <p>
+        非常に短いサイクルで発火: 1 分ごと、2 分、5 分、10 分、15 分、または 30 分ごと。
+        日常的な ESM プロトコルではなく、実験室セッション内のリアルタイムプロンプト用です。
+      </p>
+
+      {/* ── Date ──────────────────────────────────────────────────────────── */}
+      <h2 id='date'>ステップ 4 — 日付</h2>
+      <p>
+        ステップ 3 の選択と組み合わせて、スケジュールタイプを決定します。特定の日付を
+        選択すると一回限り（またはランダム一回限り）スケジュールになります。繰り返し
+        オプションを選択すると開始と終了のステップが表示され、繰り返しまたはパーソナル
+        スケジュールになります。
+      </p>
+
+      <dl>
+        <dt>特定の日付</dt>
+        <dd>
+          カレンダーから日、月、年を選択します。通知はその正確な日付のステップ 3 の時刻に
+          発火します。複数波の一回限りスケジュールのために日付を追加します。
+        </dd>
+        <dt>N 日ごとに繰り返す</dt>
+        <dd>
+          毎日（N = 1）、1 日おき（N = 2）、3 日おき（N = 3）、というように。
+        </dd>
+        <dt>特定の曜日に繰り返す</dt>
+        <dd>月曜日から日曜日までの任意の組み合わせを選択します。</dd>
+        <dt>特定の日付（月内）に繰り返す</dt>
+        <dd>1 から 31 までの任意の組み合わせを選択します。</dd>
+      </dl>
+
+      {/* ── Type matrix ───────────────────────────────────────────────────── */}
+      <h3>ステップ 3 + ステップ 4 = スケジュールタイプ</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>ステップ 3 — 時刻</th>
+            <th>ステップ 4 — 日付</th>
+            <th>結果のタイプ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TYPE_MATRIX_JA.map((r) => (
+            <tr key={r.type}>
+              <td>{r.time}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>{r.date}</td>
+              <td style={{ fontFamily: 'var(--font-body)', fontSize: '1.3rem' }}>
+                <a href={r.link}>{r.type}</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Month ─────────────────────────────────────────────────────────── */}
+      <h2 id='month'>ステップ 5 — 月</h2>
+      <p>
+        ステップ 4 が繰り返しオプションの場合にのみ表示されます。スケジュールを特定の月に
+        限定します。<strong>毎月繰り返す</strong>（デフォルト）は、スケジュールを一年中
+        実行し続けます。特定の月を選択することは、季節的なプロトコルや、夏と冬に休止する
+        研究に便利です。
+      </p>
+
+      {/* ── Start / Stop ──────────────────────────────────────────────────── */}
+      <h2 id='start'>ステップ 6 — 開始タイミング</h2>
+      <p>
+        ステップ 4 が繰り返しオプションの場合にのみ表示されます。スケジュールが送信の
+        生成を開始する日付を定義します。3 つのオプション:
+      </p>
+      <dl>
+        <dt>特定の日時に開始する</dt>
+        <dd>
+          スケジュールはすべての参加者にとって同じ絶対的な瞬間に開始します。
+          研究に固定された開始日がある場合に使用します。
+        </dd>
+        <dt>登録から X 日 / 時間 / 分後に開始する（または現在から）</dt>
+        <dd>
+          各参加者の参加タイムスタンプに追加される正確な時間。スケジュールウィンドウは
+          参加者ごとに異なる時刻に開始します。基準として<em>現在</em>を選択すると、登録ではなく
+          「通知をスケジュール」をクリックした瞬間に固定されます。
+        </dd>
+        <dt>登録後の N 日目に開始する（または現在から）</dt>
+        <dd>
+          Samply は参加日から N 暦日をカウントし、その日の真夜中にスケジュールを開始します。
+          1 日目 = 参加日そのもの。2 日目 = 次の暦の真夜中。詳細については
+          <a href='/docs/personal'>パーソナルスケジュール</a>を参照してください。
+        </dd>
+      </dl>
+
+      <h2 id='stop'>ステップ 7 — 終了タイミング</h2>
+      <p>
+        開始と同じ 3 つのオプション。終了は排他的です: 14 日目の終わりに終了する
+        スケジュールは、15 日目の開始ではなく 14 日目の間に最後の送信を行います。
+      </p>
+      <p>
+        終了をすでに過ぎた日付のままにすると、スケジュールは送信を生成しません。継続的な
+        登録のある研究では、遅れて参加した参加者が完全なプロトコルウィンドウを得られるよう、
+        常に相対的な終了（N 日目または時間オフセット）を使用してください。
+      </p>
+
+      {/* ── Expiry ────────────────────────────────────────────────────────── */}
+      <h2 id='expiry'>ステップ 8 — リンクの有効期限</h2>
+      <p>
+        通知内の調査リンクがプッシュ配信後に有効である期間を制御します。参加者が有効期限
+        ウィンドウの後に通知をタップすると、リンクはもはや調査を開きません。
+      </p>
+      <p>
+        調査が狭いウィンドウ内で完了する必要がある場合に有効期限を設定します — 例えば、
+        遅延した回答がデータをバイアスする可能性のある瞬間評価で。時間プレッシャーのない
+        調査には未設定（デフォルト）のままにしておきます。
+      </p>
+
+      {/* ── Reminders ─────────────────────────────────────────────────────── */}
+      <h2 id='reminders'>ステップ 9 — リマインダー</h2>
+      <p>
+        リマインダーは、Samply が調査の完了を検出しなかった場合に自動的に送信される
+        フォローアップ通知です。スケジュールごとに 1 つ以上のリマインダーを追加でき、
+        それぞれに独自のタイトル、メッセージ、遅延（元の通知後の日数 + 時間 + 分）を
+        持ちます。
+      </p>
+      <p>
+        リマインダーが正しく機能するには、参加者が調査を完了したときに調査ツールが
+        Samply に通知する必要があります — そうでなければ、実際の完了状況に関わらず、
+        すべての送信がリマインダーを受け取ります。完全な設定手順は
+        <a href='/docs/reminders'>リマインダー</a>にあります。
+      </p>
+
+      {/* ── Submitting ────────────────────────────────────────────────────── */}
+      <h2>送信</h2>
+      <p>
+        フォームの下部にある<strong>通知をスケジュール</strong>をクリックします。
+        Samply は直ちにスケジュールを送信のキューに展開します — 参加者ごと、送信時刻ごとに
+        1 行 — そして各々をバックグラウンドジョブマネージャでスケジュールします。
+        完全なキューは<a href='/docs/queue'>スケジュールキュー</a>で確認できます。
+      </p>
+      <p>
+        スケジュールは送信後に編集できません。時刻またはコンテンツを変更するには、
+        スケジュールを削除して新しいものを作成してください。スケジュールを削除すると、
+        その保留中の送信もすべてキューから削除されます。
+      </p>
+    </>
+  );
+}
+
+function FormContentTr() {
+  return (
+    <>
+      <p>
+        Dört program türünün tümü aynı formda oluşturulur. Bölümlerin sırası sabittir, her zaman
+        yukarıdan aşağıya doğru ilerlersiniz. Çoğu bölüm yalnızca 4. Adımda seçimler yaptıktan sonra
+        anlamlı hale gelir — form, alakasız bölümleri otomatik olarak gizler.
+      </p>
+
+      {/* ── Section index ─────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0", margin: "2rem 0 3.6rem", border: "1px solid var(--ink-10)", borderRadius: "1rem", overflow: "hidden", background: "var(--surface)" }}>
+        {SECTIONS_TR.map((s, i) => (
+          <div
+            key={s.id}
+            style={{ display: "flex", gap: "1.6rem", padding: "1rem 1.6rem", borderBottom: i < SECTIONS_TR.length - 1 ? "1px solid var(--ink-10)" : "none", alignItems: "baseline" }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--coral)", flexShrink: 0, width: "10rem" }}>{s.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)" }}>{s.summary}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Content ───────────────────────────────────────────────────────── */}
+      <h2 id="content">İçerik</h2>
+      <p>
+        Bu üç alan, numaralandırılmış adımlardan önce formun üst kısmında görünür ve bu programdan
+        üretilen tüm gönderimlere uygulanır.
+      </p>
+      <dl>
+        <dt>Başlık</dt>
+        <dd>
+          Katılımcının cihazındaki push bildiriminin ilk kalın satırı. Aynı başlığı paylaşan
+          bildirimler sistem çubuğunda üst üste yığılmaz, birbirinin yerini alır. Tek seferde
+          yalnızca bir bildirimin görüntülenmesini istiyorsanız çalışma boyunca tutarlı bir
+          başlık kullanın; bir arada bulunmalarını istiyorsanız farklı başlıklar kullanın.
+        </dd>
+        <dt>Mesaj</dt>
+        <dd>Bildirim gövdesi — sistem çubuğundaki ikinci satır.</dd>
+        <dt>Web Bağlantısı</dt>
+        <dd>
+          Katılımcı bildirime dokunduğunda açılan URL. Genellikle Qualtrics, REDCap veya
+          başka bir anket bağlantısı. Yalnızca eylemsiz bir bildirim istiyorsanız URL yi
+          boş bırakın. Katılımcıya özgü değerleri (ID gibi) otomatik olarak yerleştirmek için
+          <a href="/docs/placeholders">URL yer tutucuları</a> sayfasına bakın.
+        </dd>
+      </dl>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2 id="timezone">1. Adım — Saat dilimi</h2>
+      <p>
+        3, 6 ve 7. Adımlarda girdiğiniz tüm saatler bu saat diliminde yorumlanır.
+        Çalışmanın yürütüldüğü saat dilimini — genellikle araştırma grubunuzun bulunduğu yeri —
+        seçin.
+      </p>
+      <p>
+        <strong>Katılımcının saat dilimini takip et</strong> seçeneği, her katılımcı için çalışmanın
+        saat dilimini bireysel olarak geçersiz kılar. Etkinleştirildiğinde, 20:00 te yapılan bir
+        gönderim, çalışmanın saat diliminde 20:00 te değil, her katılımcının cihazının saat diliminde
+        20:00 te tetiklenir. Samply uygulaması katılımcının saat dilimini kaydettiği sürece bu hem
+        mevcut hem de gelecekteki katılımcılar için çalışır.
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2 id="audience">2. Adım — Katılımcılar</h2>
+      <p>Bu programdan bildirimleri kimin alacağını seçin. Seçenekleri birleştirebilirsiniz.</p>
+      <dl>
+        <dt>Gelecekteki tüm katılımcılar (mevcutlar hariç)</dt>
+        <dd>
+          Bu programı kaydettikten sonra yapılan yeni kayıtlar otomatik olarak dahil edilir.
+          Açık katılımlı çalışmalar için kritik öneme sahiptir. Programı oluştururken zaten kayıtlı
+          olan katılımcılar yalnızca bu seçenekle <em>dahil edilmez</em>.
+        </dd>
+        <dt>Mevcut katılımcılar — tümü</dt>
+        <dd>«Bildirimleri programla» seçeneğine tıkladığınızda kayıtlı olan herkes.</dd>
+        <dt>Mevcut katılımcılar — belirli kişiler</dt>
+        <dd>Kayıtlı Samply ID lerinin bir listesinden seçim yapın. Tek seferlik gönderimler veya testler için kullanışlıdır.</dd>
+        <dt>Gruplar</dt>
+        <dd>
+          Bir veya daha fazla adlandırılmış grubu hedefleyin. Tüm grupları veya belirli grupları
+          seçebilirsiniz. Grupların nasıl oluşturulacağı için
+          <a href="/docs/groups">Gruplar</a> sayfasına bakın.
+        </dd>
+      </dl>
+
+      {/* ── Time ──────────────────────────────────────────────────────────── */}
+      <h2 id="time">3. Adım — Zaman</h2>
+      <p>
+        Bu, formdaki en belirleyici seçimdir. Gönderim zamanlarının sabit mi, rastgele mi
+        olduğunu veya çok kısa bir tekrar döngüsüne mi ayarlandığını belirler.
+      </p>
+
+      <h3>Belirli zaman noktaları</h3>
+      <p>
+        HH:MM biçiminde bir veya daha fazla saat girin. Her saat, her etkin gündeki ayrı bir
+        gönderim olur. Ek saatler eklemek için <strong>Başka bir saat ekle</strong> seçeneğine
+        tıklayın — örneğin, günde üç gönderim için 09:00, 13:00 ve 18:00.
+      </p>
+
+      <h3>Zaman penceresi</h3>
+      <p>
+        Başlangıç saati, bitiş saati, pencere içinde yapılacak rastgele gönderim sayısı ve aralarındaki
+        minimum aralık ile bir pencere tanımlayın. Samply her etkin gün için bu pencere içinde
+        her katılımcı için farklı rastgele bir saat seçer.
+      </p>
+      <p>
+        Bir günde birden fazla pencere tanımlamak için <strong>Başka bir zaman penceresi ekle</strong>
+        seçeneğine tıklayın (örn. sabah 08:00–11:00 ve öğleden sonra 14:00–17:00, her birinde 2 bildirim).
+      </p>
+
+      <h3>Tekrar (yüksek frekans)</h3>
+      <p>
+        Çok kısa döngülerde tetikle: her 1, 2, 5, 10, 15 veya 30 dakikada bir.
+        Günlük ESM protokolleri için değil, laboratuvar oturumları içinde gerçek zamanlı yönlendirmeler içindir.
+      </p>
+
+      {/* ── Date ──────────────────────────────────────────────────────────── */}
+      <h2 id="date">4. Adım — Tarih</h2>
+      <p>
+        3. Adım seçiminizle birleştirilerek program türünü belirler. Belirli bir tarih seçmek,
+        tek seferlik (veya tek seferlik rastgele) bir program oluşturur. Bir tekrar seçeneği
+        seçmek başlangıç ve bitiş adımlarını ortaya çıkarır ve tekrarlayan veya kişisel bir
+        program oluşturur.
+      </p>
+
+      <dl>
+        <dt>Belirli tarih(ler)</dt>
+        <dd>
+          Takvimden bir gün, ay ve yıl seçin. Bildirim, o kesin tarihte 3. Adımdaki saatlerde
+          tetiklenir. Çok dalgalı tek seferlik programlar için tarih ekleyin.
+        </dd>
+        <dt>Her N günde bir tekrarla</dt>
+        <dd>
+          Her gün (N = 1), gün aşırı (N = 2), her üç günde bir (N = 3) vb.
+        </dd>
+        <dt>Belirli hafta günlerinde tekrarla</dt>
+        <dd>Pazartesiden Pazara kadar herhangi bir kombinasyonu seçin.</dd>
+        <dt>Ayın belirli günlerinde tekrarla</dt>
+        <dd>1 ile 31 arasında herhangi bir kombinasyonu seçin.</dd>
+      </dl>
+
+      {/* ── Type matrix ───────────────────────────────────────────────────── */}
+      <h3>3. Adım + 4. Adım = Program türü</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>3. Adım — Zaman</th>
+            <th>4. Adım — Tarih</th>
+            <th>Sonuç türü</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TYPE_MATRIX_TR.map((r) => (
+            <tr key={r.type}>
+              <td>{r.time}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.date}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>
+                <a href={r.link}>{r.type}</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Month ─────────────────────────────────────────────────────────── */}
+      <h2 id="month">5. Adım — Ay</h2>
+      <p>
+        Yalnızca 4. Adım bir tekrar seçeneği olduğunda görünür. Programı belirli aylarla sınırlar.
+        <strong>Her ay tekrarla</strong> (varsayılan) programı yıl boyunca çalışır durumda tutar.
+        Belirli aylar seçmek mevsimsel protokoller veya yaz/kış aylarında duraklayan çalışmalar için kullanışlıdır.
+      </p>
+
+      {/* ── Start / Stop ──────────────────────────────────────────────────── */}
+      <h2 id="start">6. Adım — Başlangıç zamanı</h2>
+      <p>
+        Yalnızca 4. Adım bir tekrar seçeneği olduğunda görünür. Programın gönderim üretmeye başlayacağı
+        tarihi tanımlar. Üç seçenek:
+      </p>
+      <dl>
+        <dt>Belirli bir tarih ve saatte başla</dt>
+        <dd>
+          Program, tüm katılımcılar için aynı mutlak anda başlar.
+          Çalışmanızın sabit bir başlangıç tarihi olduğunda kullanın.
+        </dd>
+        <dt>Kayıttan (veya şimdiden) X gün / saat / dakika sonra başla</dt>
+        <dd>
+          Her katılımcının katılım zaman damgasına eklenen kesin bir süre. Program penceresi
+          her katılımcı için farklı bir saatte başlar. Referans olarak <em>şimdi</em>yi seçmek,
+          kaydı değil «Bildirimleri programla» seçeneğine tıkladığınız anı sabitler.
+        </dd>
+        <dt>Kayıttan sonraki N. günde başla (veya şimdiden)</dt>
+        <dd>
+          Samply, katılım gününden itibaren N takvim gününü sayar ve programı o günün gece yarısında
+          başlatır. 1. Gün = katılım gününün kendisi. 2. Gün = bir sonraki takvim gece yarısı. Ayrıntılar için
+          <a href="/docs/personal">Kişisel programlar</a> sayfasına bakın.
+        </dd>
+      </dl>
+
+      <h2 id="stop">7. Adım — Bitiş zamanı</h2>
+      <p>
+        Başlangıçla aynı üç seçenek. Bitiş dışlayıcıdır: 14. Günün sonunda biten bir program,
+        15. Günün başlangıcında değil 14. Gün içinde son gönderimini yapar.
+      </p>
+      <p>
+        Bitişi geçmiş bir tarihe bırakırsanız program herhangi bir gönderim üretmez. Sürekli kayıtlı
+        çalışmalar için, geç katılan katılımcıların tam protokol penceresini almasını sağlamak amacıyla
+        her zaman göreli bir bitiş (N. Gün veya zaman farkı) kullanın.
+      </p>
+
+      {/* ── Expiry ────────────────────────────────────────────────────────── */}
+      <h2 id="expiry">8. Adım — Bağlantının son kullanma süresi</h2>
+      <p>
+        Bildirimdeki anket bağlantısının push iletildikten sonra ne kadar süre geçerli kalacağını kontrol eder.
+        Bir katılımcı son kullanma penceresinden sonra bildirime dokunursa, bağlantı artık anketi açmaz.
+      </p>
+      <p>
+        Anketin dar bir pencerede tamamlanması gerekiyorsa son kullanma süresi belirleyin — örneğin,
+        gecikmiş yanıtların verileri yanlı hale getirebileceği anlık değerlendirmeler için.
+        Zaman baskısı olmayan anketler için ayarlanmamış (varsayılan) bırakın.
+      </p>
+
+      {/* ── Reminders ─────────────────────────────────────────────────────── */}
+      <h2 id="reminders">9. Adım — Hatırlatıcılar</h2>
+      <p>
+        Hatırlatıcılar, Samply anket tamamlanmasını tespit etmediğinde otomatik olarak gönderilen
+        takip bildirimleridir. Program başına bir veya daha fazla hatırlatıcı ekleyebilirsiniz,
+        her biri kendi başlığı, mesajı ve gecikmesi (orijinal bildirimden sonraki gün + saat + dakika)
+        ile birlikte.
+      </p>
+      <p>
+        Hatırlatıcıların doğru çalışması için, bir katılımcı anketi tamamladığında anket aracınızın
+        Samply yi bilgilendirmesi gerekir — aksi takdirde, gerçek tamamlanma durumundan bağımsız olarak,
+        her gönderim bir hatırlatıcı alır. Tam kurulum talimatları için
+        <a href="/docs/reminders">Hatırlatıcılar</a> sayfasına bakın.
+      </p>
+
+      {/* ── Submitting ────────────────────────────────────────────────────── */}
+      <h2>Gönderme</h2>
+      <p>
+        Formun altındaki <strong>Bildirimleri programla</strong> seçeneğine tıklayın.
+        Samply, programı hemen gönderim kuyruğuna açar — katılımcı başına, gönderim zamanı başına
+        bir satır — ve her birini arka plan iş yöneticisi ile programlar.
+        Tam kuyruğu <a href="/docs/queue">Program kuyruğu</a> sayfasında görebilirsiniz.
+      </p>
+      <p>
+        Programlar gönderildikten sonra düzenlenemez. Zamanları veya içeriği değiştirmek için
+        programı silin ve yeni bir tane oluşturun. Bir programı silmek, bekleyen gönderimlerini de
+        kuyruktan kaldırır.
+      </p>
+    </>
+  );
+}
+
+const SECTIONS_PL = [
+  { id: 'content',    label: 'Treść',              summary: 'Tytuł, wiadomość i URL ankiety.' },
+  { id: 'timezone',  label: '1. Strefa czasowa',  summary: 'Który zegar stosować i czy podążać za strefą każdego uczestnika.' },
+  { id: 'audience',  label: '2. Uczestnicy',      summary: 'Kto otrzymuje ten harmonogram.' },
+  { id: 'time',      label: '3. Czas',            summary: 'Stałe godziny, losowe okna lub powtarzanie co kilka minut.' },
+  { id: 'date',      label: '4. Data',            summary: 'Konkretna data lub powtarzający się wzorzec dni.' },
+  { id: 'month',     label: '5. Miesiąc',         summary: 'Ogranicz powtarzające się wysyłki do wybranych miesięcy. Tylko powtarzające się.' },
+  { id: 'start',     label: '6. Start',           summary: 'Kiedy zaczyna się powtarzający harmonogram. Tylko powtarzające się.' },
+  { id: 'stop',      label: '7. Koniec',          summary: 'Kiedy kończy się powtarzający harmonogram. Tylko powtarzające się.' },
+  { id: 'expiry',    label: '8. Wygaśnięcie',     summary: 'Jak długo link do ankiety pozostaje aktywny po dostarczeniu.' },
+  { id: 'reminders', label: '9. Przypomnienia',   summary: 'Powiadomienia kontrolne, jeśli nie wykryto ukończenia.' },
+];
+
+const TYPE_MATRIX_PL = [
+  { time: 'Konkretny moment / momenty',    date: 'Konkretne daty',                                              type: 'Jednorazowe',                  link: '/docs/types#one-time' },
+  { time: 'Konkretny moment / momenty',    date: 'Powtarzanie co N dni / dni tygodnia / dni miesiąca',          type: 'Powtarzające się',             link: '/docs/types#repeating' },
+  { time: 'Konkretny moment / momenty',    date: 'Powtarzanie + start/koniec względem rejestracji',             type: 'Osobiste',                     link: '/docs/personal' },
+  { time: 'Okno czasowe',                  date: 'Konkretne daty',                                              type: 'Jednorazowe losowe',           link: '/docs/types#randomized' },
+  { time: 'Okno czasowe',                  date: 'Powtarzanie + start/koniec względem rejestracji',             type: 'Osobiste losowe',              link: '/docs/types#randomized' },
+];
+
+function FormContentPl() {
+  return (
+    <>
+      <p>
+        Wszystkie cztery typy harmonogramów tworzy się w tym samym formularzu. Kolejność sekcji
+        jest stała — zawsze przechodzisz od góry do dołu. Większość sekcji nabiera sensu dopiero
+        po dokonaniu wyborów w kroku 4 — formularz automatycznie ukrywa nieistotne sekcje.
+      </p>
+
+      {/* ── Section index ─────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0", margin: "2rem 0 3.6rem", border: "1px solid var(--ink-10)", borderRadius: "1rem", overflow: "hidden", background: "var(--surface)" }}>
+        {SECTIONS_PL.map((s, i) => (
+          <div
+            key={s.id}
+            style={{ display: "flex", gap: "1.6rem", padding: "1rem 1.6rem", borderBottom: i < SECTIONS_PL.length - 1 ? "1px solid var(--ink-10)" : "none", alignItems: "baseline" }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--coral)", flexShrink: 0, width: "10rem" }}>{s.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)" }}>{s.summary}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Content ───────────────────────────────────────────────────────── */}
+      <h2 id="content">Treść</h2>
+      <p>
+        Te trzy pola pojawiają się u góry formularza przed ponumerowanymi krokami i dotyczą
+        wszystkich powiadomień wygenerowanych z tego harmonogramu.
+      </p>
+      <dl>
+        <dt>Tytuł</dt>
+        <dd>
+          Pierwsza pogrubiona linia powiadomienia push na urządzeniu uczestnika. Powiadomienia
+          o tym samym tytule nie stosują się na pasku systemowym — zastępują się nawzajem.
+          Użyj spójnego tytułu w całym badaniu, jeśli chcesz, aby widoczne było tylko jedno
+          powiadomienie naraz; użyj różnych tytułów, jeśli mają współistnieć.
+        </dd>
+        <dt>Wiadomość</dt>
+        <dd>Treść powiadomienia — druga linia na pasku systemowym.</dd>
+        <dt>Link internetowy</dt>
+        <dd>
+          URL otwierany, gdy uczestnik dotknie powiadomienia. Zazwyczaj link do Qualtrics,
+          REDCap lub innego narzędzia ankietowego. Pozostaw URL pusty, jeśli chcesz tylko
+          powiadomienia bez akcji. Aby automatycznie wstawić wartości specyficzne dla uczestnika
+          (np. ID), zobacz stronę <a href="/docs/placeholders">symbole zastępcze URL</a>.
+        </dd>
+      </dl>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2 id="timezone">Krok 1 — Strefa czasowa</h2>
+      <p>
+        Wszystkie godziny wprowadzone w krokach 3, 6 i 7 są interpretowane w tej strefie czasowej.
+        Wybierz strefę, w której prowadzone jest badanie — zazwyczaj miejsce siedziby zespołu badawczego.
+      </p>
+      <p>
+        Opcja <strong>Podążaj za strefą czasową uczestnika</strong> indywidualnie zastępuje strefę
+        badania dla każdego uczestnika. Gdy jest włączona, wysyłka zaplanowana na 20:00 nie zostanie
+        wywołana o 20:00 w strefie badania, lecz o 20:00 w strefie czasowej urządzenia każdego
+        uczestnika. Działa to zarówno dla obecnych, jak i przyszłych uczestników, o ile aplikacja
+        Samply zarejestrowała ich strefę czasową.
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2 id="audience">Krok 2 — Uczestnicy</h2>
+      <p>Wybierz, kto otrzyma powiadomienia z tego harmonogramu. Można łączyć opcje.</p>
+      <dl>
+        <dt>Wszyscy przyszli uczestnicy (z wyłączeniem obecnych)</dt>
+        <dd>
+          Nowe rejestracje dokonane po zapisaniu tego harmonogramu są automatycznie włączane.
+          Kluczowe dla badań z rekrutacją ciągłą. Tylko ta opcja <em>wyklucza</em> uczestników
+          zarejestrowanych w momencie tworzenia harmonogramu.
+        </dd>
+        <dt>Obecni uczestnicy — wszyscy</dt>
+        <dd>Wszyscy zarejestrowani w chwili kliknięcia «Zaplanuj powiadomienia».</dd>
+        <dt>Obecni uczestnicy — konkretne osoby</dt>
+        <dd>Wybierz z listy zarejestrowane identyfikatory Samply. Przydatne do wysyłek jednorazowych lub testów.</dd>
+        <dt>Grupy</dt>
+        <dd>
+          Wybierz jedną lub więcej nazwanych grup. Możesz wskazać wszystkie grupy lub wybrane.
+          Aby dowiedzieć się, jak tworzyć grupy, zobacz stronę
+          <a href="/docs/groups">Grupy</a>.
+        </dd>
+      </dl>
+
+      {/* ── Time ──────────────────────────────────────────────────────────── */}
+      <h2 id="time">Krok 3 — Czas</h2>
+      <p>
+        To najbardziej decydujący wybór w formularzu. Określa, czy godziny wysyłek są stałe,
+        losowe, czy ustawione na bardzo krótką pętlę powtórzeń.
+      </p>
+
+      <h3>Konkretne momenty</h3>
+      <p>
+        Wprowadź jedną lub więcej godzin w formacie HH:MM. Każda godzina staje się oddzielną
+        wysyłką w każdym aktywnym dniu. Aby dodać kolejne godziny, kliknij
+        <strong>Dodaj kolejną godzinę</strong> — np. 09:00, 13:00 i 18:00 dla trzech wysyłek dziennie.
+      </p>
+
+      <h3>Okno czasowe</h3>
+      <p>
+        Zdefiniuj okno przez godzinę początkową, godzinę końcową, liczbę losowych wysyłek
+        w oknie oraz minimalny odstęp między nimi. Samply wybiera inną losową godzinę
+        w tym oknie dla każdego uczestnika w każdym aktywnym dniu.
+      </p>
+      <p>
+        Aby zdefiniować wiele okien w ciągu dnia, kliknij <strong>Dodaj kolejne okno czasowe</strong>
+        (np. poranne 08:00–11:00 i popołudniowe 14:00–17:00, po 2 powiadomienia w każdym).
+      </p>
+
+      <h3>Powtarzanie (wysoka częstotliwość)</h3>
+      <p>
+        Wyzwala w bardzo krótkich cyklach: co 1, 2, 5, 10, 15 lub 30 minut.
+        Przeznaczone do podpowiedzi w czasie rzeczywistym podczas sesji laboratoryjnych,
+        a nie do codziennych protokołów ESM.
+      </p>
+
+      {/* ── Date ──────────────────────────────────────────────────────────── */}
+      <h2 id="date">Krok 4 — Data</h2>
+      <p>
+        W połączeniu z wyborem z kroku 3 określa typ harmonogramu. Wybranie konkretnej daty
+        tworzy harmonogram jednorazowy (lub jednorazowy losowy). Wybranie opcji powtarzania
+        odsłania kroki startu i końca oraz tworzy harmonogram powtarzający się lub osobisty.
+      </p>
+
+      <dl>
+        <dt>Konkretne daty</dt>
+        <dd>
+          Wybierz dzień, miesiąc i rok z kalendarza. Powiadomienie zostanie wyzwolone w tej
+          dokładnej dacie o godzinach z kroku 3. Dodaj daty dla harmonogramów jednorazowych
+          z wieloma falami.
+        </dd>
+        <dt>Powtarzaj co N dni</dt>
+        <dd>
+          Codziennie (N = 1), co drugi dzień (N = 2), co trzeci dzień (N = 3) itd.
+        </dd>
+        <dt>Powtarzaj w wybrane dni tygodnia</dt>
+        <dd>Wybierz dowolną kombinację od poniedziałku do niedzieli.</dd>
+        <dt>Powtarzaj w wybrane dni miesiąca</dt>
+        <dd>Wybierz dowolną kombinację od 1 do 31.</dd>
+      </dl>
+
+      {/* ── Type matrix ───────────────────────────────────────────────────── */}
+      <h3>Krok 3 + Krok 4 = Typ harmonogramu</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Krok 3 — Czas</th>
+            <th>Krok 4 — Data</th>
+            <th>Typ wynikowy</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TYPE_MATRIX_PL.map((r) => (
+            <tr key={r.type}>
+              <td>{r.time}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.date}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>
+                <a href={r.link}>{r.type}</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Month ─────────────────────────────────────────────────────────── */}
+      <h2 id="month">Krok 5 — Miesiąc</h2>
+      <p>
+        Widoczny tylko, gdy w kroku 4 wybrano opcję powtarzania. Ogranicza harmonogram do
+        wybranych miesięcy. <strong>Powtarzaj co miesiąc</strong> (domyślne) utrzymuje
+        harmonogram aktywny przez cały rok. Wybór konkretnych miesięcy jest przydatny dla
+        protokołów sezonowych lub badań wstrzymywanych latem/zimą.
+      </p>
+
+      {/* ── Start / Stop ──────────────────────────────────────────────────── */}
+      <h2 id="start">Krok 6 — Czas startu</h2>
+      <p>
+        Widoczny tylko, gdy w kroku 4 wybrano opcję powtarzania. Określa datę, w której
+        harmonogram zaczyna generować wysyłki. Trzy opcje:
+      </p>
+      <dl>
+        <dt>Rozpocznij w konkretnej dacie i godzinie</dt>
+        <dd>
+          Harmonogram zaczyna się w tym samym bezwzględnym momencie dla wszystkich uczestników.
+          Użyj, gdy badanie ma stałą datę rozpoczęcia.
+        </dd>
+        <dt>Rozpocznij X dni / godzin / minut po rejestracji (lub od teraz)</dt>
+        <dd>
+          Dokładny czas dodawany do znacznika zapisu każdego uczestnika. Okno harmonogramu
+          zaczyna się o innej godzinie dla każdego uczestnika. Wybranie <em>teraz</em> jako
+          punktu odniesienia kotwiczy moment kliknięcia «Zaplanuj powiadomienia», a nie rejestracji.
+        </dd>
+        <dt>Rozpocznij w dniu N po rejestracji (lub od teraz)</dt>
+        <dd>
+          Samply liczy N dni kalendarzowych od dnia zapisu i uruchamia harmonogram o północy
+          tego dnia. Dzień 1 = sam dzień zapisu. Dzień 2 = następna kalendarzowa północ.
+          Szczegóły znajdziesz na stronie
+          <a href="/docs/personal">Osobiste harmonogramy</a>.
+        </dd>
+      </dl>
+
+      <h2 id="stop">Krok 7 — Czas zakończenia</h2>
+      <p>
+        Te same trzy opcje co dla startu. Koniec jest wyłączający: harmonogram kończący się
+        na koniec dnia 14 wykonuje ostatnią wysyłkę w dniu 14, a nie na początku dnia 15.
+      </p>
+      <p>
+        Jeśli koniec pozostawisz w przeszłości, harmonogram nie wygeneruje żadnych wysyłek.
+        W przypadku badań z ciągłą rekrutacją zawsze używaj względnego końca (dzień N lub
+        odstęp czasowy), aby zapewnić uczestnikom dołączającym później pełne okno protokołu.
+      </p>
+
+      {/* ── Expiry ────────────────────────────────────────────────────────── */}
+      <h2 id="expiry">Krok 8 — Wygaśnięcie linku</h2>
+      <p>
+        Kontroluje, jak długo link do ankiety w powiadomieniu pozostaje ważny po dostarczeniu push.
+        Jeśli uczestnik dotknie powiadomienia po upływie okna wygaśnięcia, link nie otworzy ankiety.
+      </p>
+      <p>
+        Ustaw wygaśnięcie, jeśli ankieta musi być wypełniona w wąskim oknie — np. dla ocen
+        chwilowych, w których spóźnione odpowiedzi mogą zniekształcać dane. W przypadku ankiet
+        bez presji czasu pozostaw nieustawione (wartość domyślna).
+      </p>
+
+      {/* ── Reminders ─────────────────────────────────────────────────────── */}
+      <h2 id="reminders">Krok 9 — Przypomnienia</h2>
+      <p>
+        Przypomnienia to powiadomienia kontrolne wysyłane automatycznie, gdy Samply nie wykryje
+        ukończenia ankiety. Możesz dodać jedno lub więcej przypomnień na harmonogram, każde
+        z własnym tytułem, wiadomością i opóźnieniem (dni + godziny + minuty po pierwotnym
+        powiadomieniu).
+      </p>
+      <p>
+        Aby przypomnienia działały poprawnie, narzędzie ankietowe musi informować Samply,
+        gdy uczestnik ukończy ankietę — w przeciwnym razie każda wysyłka otrzyma przypomnienie
+        niezależnie od faktycznego ukończenia. Pełne instrukcje konfiguracji znajdziesz na stronie
+        <a href="/docs/reminders">Przypomnienia</a>.
+      </p>
+
+      {/* ── Submitting ────────────────────────────────────────────────────── */}
+      <h2>Wysyłanie</h2>
+      <p>
+        Kliknij <strong>Zaplanuj powiadomienia</strong> na dole formularza.
+        Samply natychmiast rozwija harmonogram do kolejki wysyłek — jeden wiersz na uczestnika
+        i godzinę wysyłki — i planuje każdą z nich w menedżerze zadań w tle.
+        Całą kolejkę zobaczysz na stronie <a href="/docs/queue">Kolejka harmonogramów</a>.
+      </p>
+      <p>
+        Po wysłaniu harmonogramów nie można ich edytować. Aby zmienić godziny lub treść,
+        usuń harmonogram i utwórz nowy. Usunięcie harmonogramu usuwa również jego oczekujące
+        wysyłki z kolejki.
+      </p>
+    </>
+  );
+}
+
+const SECTIONS_AR = [
+  { id: 'content',   label: 'المحتوى',           summary: 'العنوان والرسالة ورابط الاستطلاع.' },
+  { id: 'timezone',  label: '1. المنطقة الزمنية', summary: 'أي ساعة يجب استخدامها وما إذا كان يجب اتباع المنطقة الزمنية لكل مشارك.' },
+  { id: 'audience',  label: '2. المشاركون',      summary: 'من يتلقى هذا الجدول.' },
+  { id: 'time',      label: '3. الوقت',          summary: 'أوقات ثابتة أو نوافذ عشوائية أو تكرار كل بضع دقائق.' },
+  { id: 'date',      label: '4. التاريخ',        summary: 'تاريخ محدد أو نمط أيام متكرر.' },
+  { id: 'month',     label: '5. الشهر',          summary: 'تقييد عمليات الإرسال المتكررة بأشهر محددة. للمتكررة فقط.' },
+  { id: 'start',     label: '6. البداية',        summary: 'متى يبدأ الجدول المتكرر. للمتكررة فقط.' },
+  { id: 'stop',      label: '7. النهاية',        summary: 'متى ينتهي الجدول المتكرر. للمتكررة فقط.' },
+  { id: 'expiry',    label: '8. انتهاء الصلاحية', summary: 'كم من الوقت يظل رابط الاستطلاع نشطاً بعد التسليم.' },
+  { id: 'reminders', label: '9. التذكيرات',      summary: 'إشعارات المتابعة في حالة عدم اكتشاف الإكمال.' },
+];
+
+const TYPE_MATRIX_AR = [
+  { time: 'لحظة / لحظات محددة',  date: 'تواريخ محددة',                                              type: 'لمرة واحدة',                  link: '/docs/types#one-time' },
+  { time: 'لحظة / لحظات محددة',  date: 'التكرار كل N أيام / أيام الأسبوع / أيام الشهر',              type: 'متكرر',                       link: '/docs/types#repeating' },
+  { time: 'لحظة / لحظات محددة',  date: 'التكرار + البداية/النهاية بالنسبة للتسجيل',                   type: 'شخصي',                        link: '/docs/personal' },
+  { time: 'نافذة زمنية',          date: 'تواريخ محددة',                                              type: 'لمرة واحدة عشوائي',           link: '/docs/types#randomized' },
+  { time: 'نافذة زمنية',          date: 'التكرار + البداية/النهاية بالنسبة للتسجيل',                   type: 'شخصي عشوائي',                 link: '/docs/types#randomized' },
+];
+
+function FormContentAr() {
+  return (
+    <>
+      <p>
+        جميع أنواع الجداول الأربعة يتم إنشاؤها في نفس النموذج. ترتيب الأقسام ثابت — فأنت
+        دائماً تنتقل من الأعلى إلى الأسفل. معظم الأقسام تصبح ذات صلة فقط بعد اختياراتك في
+        الخطوة 4 — يخفي النموذج تلقائياً الأقسام غير ذات الصلة.
+      </p>
+
+      {/* ── Section index ─────────────────────────────────────────────────── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "0", margin: "2rem 0 3.6rem", border: "1px solid var(--ink-10)", borderRadius: "1rem", overflow: "hidden", background: "var(--surface)" }}>
+        {SECTIONS_AR.map((s, i) => (
+          <div
+            key={s.id}
+            style={{ display: "flex", gap: "1.6rem", padding: "1rem 1.6rem", borderBottom: i < SECTIONS_AR.length - 1 ? "1px solid var(--ink-10)" : "none", alignItems: "baseline" }}
+          >
+            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--coral)", flexShrink: 0, width: "10rem" }}>{s.label}</span>
+            <span style={{ fontSize: "1.3rem", color: "var(--ink-60)" }}>{s.summary}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Content ───────────────────────────────────────────────────────── */}
+      <h2 id="content">المحتوى</h2>
+      <p>
+        تظهر هذه الحقول الثلاثة في أعلى النموذج قبل الخطوات المرقمة وتنطبق على جميع
+        الإشعارات الناتجة عن هذا الجدول.
+      </p>
+      <dl>
+        <dt>العنوان</dt>
+        <dd>
+          السطر الأول العريض لإشعار الدفع على جهاز المشارك. الإشعارات التي تحمل نفس
+          العنوان لا تتراكم في شريط النظام — بل تحل محل بعضها البعض. استخدم عنواناً
+          متسقاً عبر الدراسة إذا كنت تريد ظهور إشعار واحد فقط في كل مرة؛ استخدم عناوين
+          مختلفة إذا كان من المفترض أن تتعايش.
+        </dd>
+        <dt>الرسالة</dt>
+        <dd>نص الإشعار — السطر الثاني في شريط النظام.</dd>
+        <dt>رابط الويب</dt>
+        <dd>
+          عنوان URL الذي يُفتح عندما ينقر المشارك على الإشعار. عادةً ما يكون رابطاً إلى
+          Qualtrics أو REDCap أو أداة استطلاع أخرى. اترك عنوان URL فارغاً إذا كنت تريد
+          فقط الإشعار دون إجراء. لإدراج قيم خاصة بالمشارك تلقائياً (مثل المعرف)، راجع
+          صفحة <a href="/docs/placeholders">العناصر النائبة لعنوان URL</a>.
+        </dd>
+      </dl>
+
+      {/* ── Timezone ──────────────────────────────────────────────────────── */}
+      <h2 id="timezone">الخطوة 1 — المنطقة الزمنية</h2>
+      <p>
+        جميع الأوقات المُدخلة في الخطوات 3 و6 و7 يتم تفسيرها في هذه المنطقة الزمنية.
+        اختر المنطقة الزمنية التي تجرى فيها الدراسة — عادةً موقع فريق البحث.
+      </p>
+      <p>
+        خيار <strong>اتبع المنطقة الزمنية للمشارك</strong> يتجاوز بشكل فردي منطقة
+        الدراسة لكل مشارك. عند تفعيله، فإن الإرسال المُجدوَل للساعة 20:00 لن يتم إطلاقه
+        الساعة 20:00 في منطقة الدراسة، بل الساعة 20:00 في المنطقة الزمنية لجهاز كل
+        مشارك. يعمل هذا للمشاركين الحاليين والمستقبليين، بشرط أن يكون تطبيق Samply قد
+        سجل منطقتهم الزمنية.
+      </p>
+
+      {/* ── Participants ──────────────────────────────────────────────────── */}
+      <h2 id="audience">الخطوة 2 — المشاركون</h2>
+      <p>اختر من سيتلقى الإشعارات من هذا الجدول. يمكن دمج الخيارات.</p>
+      <dl>
+        <dt>جميع المشاركين المستقبليين (باستثناء الحاليين)</dt>
+        <dd>
+          التسجيلات الجديدة التي تتم بعد حفظ هذا الجدول يتم تضمينها تلقائياً. ضروري
+          للدراسات ذات التوظيف المستمر. هذا الخيار فقط <em>يستثني</em> المشاركين
+          المسجلين في وقت إنشاء الجدول.
+        </dd>
+        <dt>المشاركون الحاليون — الجميع</dt>
+        <dd>جميع المسجلين في لحظة النقر على «جدولة الإشعارات».</dd>
+        <dt>المشاركون الحاليون — أشخاص محددون</dt>
+        <dd>اختر معرفات Samply المسجلة من القائمة. مفيد للإرسال لمرة واحدة أو الاختبار.</dd>
+        <dt>المجموعات</dt>
+        <dd>
+          اختر مجموعة واحدة أو أكثر مسماة. يمكنك تحديد كل المجموعات أو المختارة منها.
+          لمعرفة كيفية إنشاء المجموعات، راجع صفحة
+          <a href="/docs/groups">المجموعات</a>.
+        </dd>
+      </dl>
+
+      {/* ── Time ──────────────────────────────────────────────────────────── */}
+      <h2 id="time">الخطوة 3 — الوقت</h2>
+      <p>
+        هذا هو الاختيار الأكثر حسماً في النموذج. يحدد ما إذا كانت أوقات الإرسال ثابتة
+        أم عشوائية أم مضبوطة على حلقة تكرار قصيرة جداً.
+      </p>
+
+      <h3>لحظات محددة</h3>
+      <p>
+        أدخل وقتاً واحداً أو أكثر بتنسيق HH:MM. يصبح كل وقت إرسالاً منفصلاً في كل يوم
+        نشط. لإضافة المزيد من الأوقات، انقر على
+        <strong>أضف وقتاً آخر</strong> — مثلاً 09:00 و13:00 و18:00 لثلاث إرساليات يومياً.
+      </p>
+
+      <h3>نافذة زمنية</h3>
+      <p>
+        حدد نافذة بوقت بداية ووقت نهاية وعدد الإرساليات العشوائية في النافذة والحد
+        الأدنى للفاصل بينها. يختار Samply وقتاً عشوائياً مختلفاً في هذه النافذة لكل
+        مشارك في كل يوم نشط.
+      </p>
+      <p>
+        لتحديد عدة نوافذ خلال اليوم، انقر على <strong>أضف نافذة زمنية أخرى</strong>
+        (مثلاً صباحاً 08:00–11:00 وبعد الظهر 14:00–17:00، بإشعارين في كل نافذة).
+      </p>
+
+      <h3>التكرار (تردد عالٍ)</h3>
+      <p>
+        يُطلق في دورات قصيرة جداً: كل 1 أو 2 أو 5 أو 10 أو 15 أو 30 دقيقة. مخصص
+        للتلميحات الفورية أثناء الجلسات المخبرية، وليس لبروتوكولات ESM اليومية.
+      </p>
+
+      {/* ── Date ──────────────────────────────────────────────────────────── */}
+      <h2 id="date">الخطوة 4 — التاريخ</h2>
+      <p>
+        بالاقتران مع اختيارك في الخطوة 3، تحدد نوع الجدول. اختيار تاريخ محدد ينشئ
+        جدولاً لمرة واحدة (أو لمرة واحدة عشوائي). اختيار خيار تكرار يكشف عن خطوات
+        البداية والنهاية وينشئ جدولاً متكرراً أو شخصياً.
+      </p>
+
+      <dl>
+        <dt>تواريخ محددة</dt>
+        <dd>
+          اختر اليوم والشهر والسنة من التقويم. سيتم إطلاق الإشعار في ذلك التاريخ
+          المحدد في الأوقات من الخطوة 3. أضف تواريخ للجداول لمرة واحدة بموجات متعددة.
+        </dd>
+        <dt>التكرار كل N أيام</dt>
+        <dd>
+          يومياً (N = 1)، كل يومين (N = 2)، كل ثلاثة أيام (N = 3) وهكذا.
+        </dd>
+        <dt>التكرار في أيام محددة من الأسبوع</dt>
+        <dd>اختر أي مجموعة من الإثنين إلى الأحد.</dd>
+        <dt>التكرار في أيام محددة من الشهر</dt>
+        <dd>اختر أي مجموعة من 1 إلى 31.</dd>
+      </dl>
+
+      {/* ── Type matrix ───────────────────────────────────────────────────── */}
+      <h3>الخطوة 3 + الخطوة 4 = نوع الجدول</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>الخطوة 3 — الوقت</th>
+            <th>الخطوة 4 — التاريخ</th>
+            <th>النوع الناتج</th>
+          </tr>
+        </thead>
+        <tbody>
+          {TYPE_MATRIX_AR.map((r) => (
+            <tr key={r.type}>
+              <td>{r.time}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>{r.date}</td>
+              <td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>
+                <a href={r.link}>{r.type}</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ── Month ─────────────────────────────────────────────────────────── */}
+      <h2 id="month">الخطوة 5 — الشهر</h2>
+      <p>
+        مرئي فقط عند اختيار خيار تكرار في الخطوة 4. يقيد الجدول بأشهر محددة.
+        <strong>التكرار كل شهر</strong> (الافتراضي) يحافظ على الجدول نشطاً طوال السنة.
+        اختيار أشهر محددة مفيد للبروتوكولات الموسمية أو الدراسات التي تتوقف في
+        الصيف/الشتاء.
+      </p>
+
+      {/* ── Start / Stop ──────────────────────────────────────────────────── */}
+      <h2 id="start">الخطوة 6 — وقت البدء</h2>
+      <p>
+        مرئي فقط عند اختيار خيار تكرار في الخطوة 4. يحدد التاريخ الذي يبدأ فيه الجدول
+        بإنشاء الإرساليات. ثلاثة خيارات:
+      </p>
+      <dl>
+        <dt>ابدأ في تاريخ ووقت محددين</dt>
+        <dd>
+          يبدأ الجدول في نفس اللحظة المطلقة لجميع المشاركين. استخدمه عندما يكون للدراسة
+          تاريخ بدء ثابت.
+        </dd>
+        <dt>ابدأ بعد X أيام / ساعات / دقائق من التسجيل (أو من الآن)</dt>
+        <dd>
+          مقدار زمني دقيق يُضاف إلى طابع تسجيل كل مشارك. تبدأ نافذة الجدول في وقت
+          مختلف لكل مشارك. اختيار <em>الآن</em> كمرجع يربط لحظة النقر على «جدولة
+          الإشعارات» بدلاً من التسجيل.
+        </dd>
+        <dt>ابدأ في اليوم N بعد التسجيل (أو من الآن)</dt>
+        <dd>
+          يحسب Samply N من الأيام التقويمية من يوم التسجيل ويطلق الجدول في منتصف ليل
+          ذلك اليوم. اليوم 1 = يوم التسجيل نفسه. اليوم 2 = منتصف الليل التالي. للمزيد
+          من التفاصيل راجع صفحة
+          <a href="/docs/personal">الجداول الشخصية</a>.
+        </dd>
+      </dl>
+
+      <h2 id="stop">الخطوة 7 — وقت الانتهاء</h2>
+      <p>
+        نفس الخيارات الثلاثة كالبداية. النهاية حصرية: الجدول الذي ينتهي في نهاية اليوم
+        14 يقوم بآخر إرسال في اليوم 14، وليس في بداية اليوم 15.
+      </p>
+      <p>
+        إذا تركت النهاية في الماضي، فلن يولّد الجدول أي إرساليات. للدراسات ذات التوظيف
+        المستمر، استخدم دائماً نهاية نسبية (اليوم N أو فاصل زمني) لضمان نافذة بروتوكول
+        كاملة للمشاركين الذين ينضمون لاحقاً.
+      </p>
+
+      {/* ── Expiry ────────────────────────────────────────────────────────── */}
+      <h2 id="expiry">الخطوة 8 — انتهاء صلاحية الرابط</h2>
+      <p>
+        يتحكم في مدة بقاء رابط الاستطلاع في الإشعار صالحاً بعد تسليم الدفع. إذا نقر
+        المشارك على الإشعار بعد انقضاء نافذة انتهاء الصلاحية، فلن يفتح الرابط الاستطلاع.
+      </p>
+      <p>
+        اضبط انتهاء الصلاحية إذا كان يجب إكمال الاستطلاع في نافذة ضيقة — مثلاً للتقييمات
+        اللحظية حيث يمكن للردود المتأخرة أن تشوه البيانات. للاستطلاعات غير الحساسة للوقت
+        اتركه غير مضبوط (القيمة الافتراضية).
+      </p>
+
+      {/* ── Reminders ─────────────────────────────────────────────────────── */}
+      <h2 id="reminders">الخطوة 9 — التذكيرات</h2>
+      <p>
+        التذكيرات هي إشعارات متابعة تُرسل تلقائياً عندما لا يكتشف Samply اكتمال
+        الاستطلاع. يمكنك إضافة تذكير واحد أو أكثر لكل جدول، لكل منها عنوانه ورسالته
+        وتأخيره الخاص (أيام + ساعات + دقائق بعد الإشعار الأصلي).
+      </p>
+      <p>
+        لكي تعمل التذكيرات بشكل صحيح، يجب أن تُبلغ أداة الاستطلاع Samply عندما يُكمل
+        المشارك الاستطلاع — وإلا فسيتلقى كل إرسال تذكيراً بغض النظر عن الإكمال الفعلي.
+        للحصول على تعليمات الإعداد الكاملة، راجع صفحة
+        <a href="/docs/reminders">التذكيرات</a>.
+      </p>
+
+      {/* ── Submitting ────────────────────────────────────────────────────── */}
+      <h2>الإرسال</h2>
+      <p>
+        انقر على <strong>جدولة الإشعارات</strong> في أسفل النموذج. يقوم Samply على
+        الفور بتوسيع الجدول إلى طابور إرسال — صف واحد لكل مشارك ولكل وقت إرسال —
+        ويجدول كلاً منها في مدير المهام في الخلفية. ستجد الطابور بأكمله في صفحة
+        <a href="/docs/queue">طابور الجدول</a>.
+      </p>
+      <p>
+        بعد إرسال الجداول لا يمكن تحريرها. لتغيير الأوقات أو المحتوى، احذف الجدول وأنشئ
+        جدولاً جديداً. حذف الجدول يزيل أيضاً الإرساليات المعلقة من الطابور.
       </p>
     </>
   );
