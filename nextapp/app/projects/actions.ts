@@ -52,7 +52,10 @@ async function handleImageUpload(formData: FormData): Promise<string | null> {
 
   const safeExt = ext === "jpeg" ? "jpg" : ext;
   const filename = `${nanoid(12)}.${safeExt}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+  // Share storage with the legacy Express app (Website/public/uploads/), one level
+  // above the Next.js cwd. The /uploads/[filename] route handler reads from this
+  // shared directory, so files uploaded here are visible from both apps.
+  const uploadDir = path.join(process.cwd(), "..", "public", "uploads");
   await mkdir(uploadDir, { recursive: true });
   await writeFile(path.join(uploadDir, filename), buffer);
   return `/uploads/${filename}`;
