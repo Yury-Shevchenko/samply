@@ -736,6 +736,7 @@ exports.getPublicStudy = async (req, res) => {
     { _id: study.creator },
     {
       name: 1,
+      email: 1,
       institute: 1,
     },
   );

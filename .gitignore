@@ -6,3 +6,5 @@ package-lock.json
 public/uploads
 public/dist/App.bundle.js
 public/dist/App.bundle.js.map
+
+nextapp/public/uploads

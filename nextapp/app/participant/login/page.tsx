@@ -25,14 +25,14 @@ async function loginAction(formData: FormData) {
 export default async function ParticipantLoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; notice?: string }>;
+  searchParams: Promise<{ error?: string; notice?: string; email?: string }>;
 }) {
   const session = await auth();
   if (session) {
     redirect(session.user.level >= 11 ? "/dashboard" : "/participant/home");
   }
 
-  const { error, notice } = await searchParams;
+  const { error, notice, email: prefilledEmail } = await searchParams;
   const { t } = await getT();
 
   return (
@@ -120,6 +120,7 @@ export default async function ParticipantLoginPage({
               placeholder={t("participant.login.emailPlaceholder")}
               required
               autoComplete="email"
+              defaultValue={prefilledEmail ?? ""}
               style={inputStyle}
             />
           </label>
