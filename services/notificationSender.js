@@ -131,6 +131,7 @@ async function sendMobileNotification({
               data: chunk[i].data,
               ticket,
               messageId: chunk[i].data.messageId,
+              notificationConfigId,
               events: [{ status: "sent", created: timestampSent }],
               batch: chunk[i].batch,
               finid: chunk[i].finid,

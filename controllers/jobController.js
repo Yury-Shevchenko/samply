@@ -1451,6 +1451,7 @@ async function sendToSomeProjectUsers({
     tokens,
     project_id: project_id,
     project_name: project.name,
+    notificationConfigId: notification_id,
     reminders,
     finishid: finid,
     openStudyScreenFallback: project.settings && project.settings.enableActions,
@@ -1526,6 +1527,7 @@ async function sendToAllProjectUsers({
     tokens,
     project_id,
     project_name: project.name,
+    notificationConfigId: notification_id,
     reminders,
     openStudyScreenFallback: project.settings && project.settings.enableActions,
   });
@@ -1538,6 +1540,7 @@ async function sendMobileNotification({
   tokens,
   project_id,
   project_name,
+  notificationConfigId,
   reminders,
   finishid,
   openStudyScreenFallback,
@@ -1659,6 +1662,7 @@ async function sendMobileNotification({
             data: chunk[i].data,
             ticket: ticket,
             messageId: chunk[i].data.messageId,
+            notificationConfigId,
             events: [{ status: "sent", created: timestampSent }],
             batch: chunk[i].batch,
             finid: chunk[i].finid, // the schedule id of all job reminders

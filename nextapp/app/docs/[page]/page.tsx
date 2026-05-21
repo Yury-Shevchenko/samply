@@ -23,6 +23,7 @@ import EventContingentContent from "./EventContingentContent";
 import GeofencingContent from "./GeofencingContent";
 import StreamContent from "./StreamContent";
 import AboutContent from "./AboutContent";
+import AnalyticsContent from "./AnalyticsContent";
 import DocsMobileNav from "./DocsMobileNav";
 
 /* ── Route config ─────────────────────────────────────────────────────────── */
@@ -32,6 +33,7 @@ const SIDEBAR_PAGES = [
   "types", "personal", "form", "queue",
   "placeholders", "groups", "reminders",
   "event-contingent", "geofencing", "stream",
+  "analytics",
   "glossary", "api", "changelog", "about",
 ] as const;
 const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb"] as const;
@@ -51,6 +53,7 @@ const NAV_LABELS: Record<DocsPage, string> = {
   "event-contingent":  "Event-contingent design",
   geofencing:          "Geofencing",
   stream:              "Stream API",
+  analytics:           "Analytics",
   glossary:            "Glossary",
   api:                 "API",
   changelog:           "Changelog",
@@ -75,6 +78,7 @@ const PAGE_TITLES: Record<DocsPage, string> = {
   "event-contingent":  "Event-contingent design",
   geofencing:          "Geofencing",
   stream:              "Stream API",
+  analytics:           "Analytics — monitoring a study while it runs",
   glossary:            "Glossary",
   api:                 "API",
   changelog:           "Changelog",
@@ -99,6 +103,7 @@ const PAGE_META: Record<string, { eyebrow: string; lede: string; section: string
   "event-contingent":  { section: "Advanced features",     eyebrow: "participant-initiated reports",                     lede: "Event-contingent designs let participants self-initiate a report the moment a target event occurs, rather than waiting for a scheduled ping." },
   geofencing:          { section: "Advanced features",     eyebrow: "location as the trigger",                          lede: "Geofencing sends a notification automatically when a participant enters or leaves a defined geographic area — no clock, no cron." },
   stream:              { section: "Advanced features",     eyebrow: "your systems, in real time",                       lede: "The Stream API delivers participant events to your infrastructure as they happen, via outbound webhooks." },
+  analytics:           { section: "Advanced features",     eyebrow: "the study, while it's still running",               lede: "Compliance, response times, dropout, and per-participant engagement — built around documented threats to ESM validity, not generic product-analytics templates." },
   glossary:            { section: "Reference",             eyebrow: "the vocabulary",                                   lede: "Key terms used throughout Samply and this documentation." },
   api:          { section: "Reference",              eyebrow: "for the builders",                                  lede: "Samply exposes a REST API for programmatic study management and advanced integrations." },
   changelog:    { section: "Reference",              eyebrow: "what changed",                                      lede: "A running record of meaningful changes to the Samply platform." },
@@ -109,7 +114,7 @@ const NAV_GROUPS: { label: string; sectionKey: string; pages: (typeof SIDEBAR_PA
   { label: "Get started",            sectionKey: "getStarted",            pages: ["home", "first-study", "invite"] },
   { label: "Notification schedules", sectionKey: "notificationSchedules", pages: ["types", "form", "personal", "queue"] },
   { label: "Power features",         sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders"] },
-  { label: "Advanced features",      sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream"] },
+  { label: "Advanced features",      sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream", "analytics"] },
   { label: "Reference",              sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about"] },
 ];
 
@@ -282,6 +287,8 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
                   <GeofencingContent locale={locale} />
                 ) : currentPage === "stream" ? (
                   <StreamContent locale={locale} />
+                ) : currentPage === "analytics" ? (
+                  <AnalyticsContent locale={locale} />
                 ) : currentPage === "changelog" ? (
                   <ChangelogContent locale={locale} />
                 ) : currentPage === "about" ? (

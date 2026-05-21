@@ -333,16 +333,20 @@ function ScheduleTable({ data, notifications }: { data: SchedulePerformanceRow[]
               </tr>
             </thead>
             <tbody>
-              {data.map((row) => (
-                <tr key={row.messageId} style={{ borderBottom: "1px solid var(--ink-05)" }}>
-                  <td style={{ padding: "0.7rem 0.8rem", color: "var(--ink)", maxWidth: "22rem" }}>
-                    <span className="truncate" style={{ display: "block" }}>{nameMap.get(row.messageId) ?? row.messageId}</span>
-                  </td>
-                  <td style={{ padding: "0.7rem 0.8rem", textAlign: "right", color: "var(--ink-60)" }}>{row.sent}</td>
-                  <td style={{ padding: "0.7rem 0.8rem", textAlign: "right", color: "var(--ink-60)" }}>{row.responded}</td>
-                  <td style={{ padding: "0.7rem 0.8rem" }}><ComplianceBar pct={row.pct} /></td>
-                </tr>
-              ))}
+              {data.map((row) => {
+                const id = row.notificationConfigId;
+                const label = id ? (nameMap.get(id) ?? id) : t("analytics.scheduleUntracked");
+                return (
+                  <tr key={id ?? "__untracked__"} style={{ borderBottom: "1px solid var(--ink-05)" }}>
+                    <td style={{ padding: "0.7rem 0.8rem", color: id ? "var(--ink)" : "var(--ink-40)", maxWidth: "22rem", fontStyle: id ? "normal" : "italic" }}>
+                      <span className="truncate" style={{ display: "block" }}>{label}</span>
+                    </td>
+                    <td style={{ padding: "0.7rem 0.8rem", textAlign: "right", color: "var(--ink-60)" }}>{row.sent}</td>
+                    <td style={{ padding: "0.7rem 0.8rem", textAlign: "right", color: "var(--ink-60)" }}>{row.responded}</td>
+                    <td style={{ padding: "0.7rem 0.8rem" }}><ComplianceBar pct={row.pct} /></td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

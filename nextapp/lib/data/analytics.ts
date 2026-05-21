@@ -113,12 +113,18 @@ export async function fetchDeliveryFunnel(
   const oid = new mongoose.Types.ObjectId(projectId);
   const since = sinceDate(days);
 
+  // We do not include a "Received" stage. The mobile OS does not surface push
+  // delivery to us; the only "received" signal Samply has is `received-in-app`,
+  // which fires solely when the app is open in the foreground at arrival time
+  // — typically a small minority of pings. Counting it as the delivery stage
+  // would understate delivery dramatically. The honest funnel is Sent → Opened
+  // → Completed; loss between Sent and Opened mixes delivery failure and
+  // engagement failure, and the dashboard explains that explicitly.
   const [agg] = await Result.aggregate([
     { $match: { project: oid, created: { $gte: since } } },
     {
       $project: {
         hasSent: { $literal: 1 },
-        hasReceived: { $cond: [{ $in: ["received-in-app", "$events.status"] }, 1, 0] },
         hasTapped: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] },
         hasCompleted: { $cond: [{ $in: ["completed", "$events.status"] }, 1, 0] },
       },
@@ -127,7 +133,6 @@ export async function fetchDeliveryFunnel(
       $group: {
         _id: null,
         sent: { $sum: "$hasSent" },
-        received: { $sum: "$hasReceived" },
         tapped: { $sum: "$hasTapped" },
         completed: { $sum: "$hasCompleted" },
       },
@@ -137,7 +142,6 @@ export async function fetchDeliveryFunnel(
   if (!agg) {
     return [
       { status: "sent", label: "Sent", count: 0 },
-      { status: "received", label: "Received", count: 0 },
       { status: "tapped", label: "Opened", count: 0 },
       { status: "completed", label: "Completed", count: 0 },
     ];
@@ -145,7 +149,6 @@ export async function fetchDeliveryFunnel(
 
   return [
     { status: "sent", label: "Sent", count: agg.sent },
-    { status: "received", label: "Received", count: agg.received },
     { status: "tapped", label: "Opened", count: agg.tapped },
     { status: "completed", label: "Completed", count: agg.completed },
   ];
@@ -299,7 +302,7 @@ export async function fetchParticipantCompliance(
 }
 
 export interface SchedulePerformanceRow {
-  messageId: string;
+  notificationConfigId: string | null;
   sent: number;
   responded: number;
   pct: number;
@@ -313,11 +316,11 @@ export async function fetchSchedulePerformance(
   const oid = new mongoose.Types.ObjectId(projectId);
   const since = sinceDate(days);
 
-  const rows: { _id: string; sent: number; responded: number }[] = await Result.aggregate([
+  const rows: { _id: string | null; sent: number; responded: number }[] = await Result.aggregate([
     { $match: { project: oid, created: { $gte: since } } },
     {
       $group: {
-        _id: "$messageId",
+        _id: { $ifNull: ["$notificationConfigId", null] },
         sent: { $sum: 1 },
         responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
       },
@@ -326,7 +329,7 @@ export async function fetchSchedulePerformance(
   ]);
 
   return rows.map((r) => ({
-    messageId: r._id,
+    notificationConfigId: r._id,
     sent: r.sent,
     responded: r.responded,
     pct: r.sent > 0 ? Math.round((r.responded / r.sent) * 100) : 0,

@@ -42,12 +42,18 @@ exports.forgot = async (req, res) => {
     await user.save();
     const resetURL = `${process.env.APP_URL || `https://${req.headers.host}`}/account/reset/${user.resetPasswordToken}`;
     const subject = res.locals.layout.flash_password_reset;
-    await mail.send({
-      participant: user,
-      subject,
-      resetURL,
-      filename: "password-reset-" + res.locals.locale_language,
-    }).catch(() => {});
+    try {
+      await mail.send({
+        participant: user,
+        subject,
+        resetURL,
+        filename: "password-reset-" + res.locals.locale_language,
+      });
+    } catch (err) {
+      console.error("Failed to send password reset email to:", user.email, err.message);
+    }
+  } else if (process.env.NODE_ENV !== "production") {
+    console.log("[forgot] No account found for email:", req.body.email);
   }
   req.flash("success", genericMessage);
   res.redirect("back");

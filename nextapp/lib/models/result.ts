@@ -6,6 +6,7 @@ export interface IResult {
   samplyid: string;
   batch?: string;
   messageId?: string;
+  notificationConfigId?: string;
   created: Date;
   data?: {
     title?: string;
