@@ -40,6 +40,9 @@ const INTEGRATIONS = ["Qualtrics", "REDCap", "LimeSurvey", "SurveyMonkey", "Your
 // Method acronyms — kept in English as internationally recognised codes
 const METHOD_CODES = ["ESM", "EMA", "DIARY", "AMBL", "BURST", "DCE"];
 
+const SAMPLY_RESEARCH_APP_STORE = "https://apps.apple.com/app/samply-research/id1511062019";
+const SAMPLY_RESEARCH_GOOGLE_PLAY = "https://play.google.com/store/apps/details?id=org.js.samply";
+
 export default async function RootPage() {
   const session = await auth();
   if (session?.user) redirect("/dashboard");
@@ -177,13 +180,51 @@ export default async function RootPage() {
         <div className="home-phone-grid" style={{ marginTop: "6.4rem" }}>
           <div>
             <SectionLabel>{t("home.mobileSection.sectionLabel")}</SectionLabel>
+
+            {/* Product wordmark — Samply Research brand prominence */}
+            <div className="font-[family-name:var(--font-display)] font-bold"
+              style={{ fontSize: "clamp(3.6rem, 6vw, 5.2rem)", letterSpacing: "-0.035em", lineHeight: 1, color: "var(--coral)", marginTop: "0.4rem" }}>
+              {t("home.mobileSection.productName")}
+            </div>
+            <Hand size={17} className="block" style={{ marginTop: "0.6rem", marginBottom: "1.4rem" }}>
+              {t("home.mobileSection.productTagline")}
+            </Hand>
+
             <h2 className="font-[family-name:var(--font-display)] font-bold"
-              style={{ fontSize: "3.6rem", lineHeight: 1.05, letterSpacing: "-0.025em", margin: "0 0 0" }}>
+              style={{ fontSize: "2.6rem", lineHeight: 1.1, letterSpacing: "-0.02em", margin: "0 0 0" }}>
               {t("home.mobileSection.heading")}
             </h2>
             <p style={{ fontSize: "1.45rem", lineHeight: 1.55, marginTop: "1.2rem", maxWidth: "38rem", color: "var(--ink-60)" }}>
               {t("home.mobileSection.body")}
             </p>
+
+            {/* App-store buttons */}
+            <div className="flex gap-[1.2rem] flex-wrap" style={{ marginTop: "2rem" }}>
+              {[
+                { label: t("home.mobileSection.downloadAppStore"), href: SAMPLY_RESEARCH_APP_STORE },
+                { label: t("home.mobileSection.downloadGooglePlay"), href: SAMPLY_RESEARCH_GOOGLE_PLAY },
+              ].map(({ label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center font-medium no-underline transition-opacity hover:opacity-70"
+                  style={{
+                    fontSize: "1.35rem",
+                    color: "var(--ink)",
+                    background: "var(--surface)",
+                    border: "1px solid var(--ink-20)",
+                    borderRadius: "0.8rem",
+                    padding: "0.9rem 1.6rem",
+                    textDecoration: "none",
+                  }}
+                >
+                  ↓ {label}
+                </a>
+              ))}
+            </div>
+
             <div className="flex gap-[0.8rem] flex-wrap" style={{ marginTop: "1.6rem" }}>
               {[t("home.mobileSection.badgePlatforms"), t("home.mobileSection.badgeTZ")].map((badge) => (
                 <span key={badge} className="text-[1.1rem] px-[1.1rem] py-[0.5rem] rounded-[999rem]"

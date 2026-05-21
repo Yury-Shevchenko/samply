@@ -140,8 +140,15 @@ export default async function StudyOverviewPage({ params }: Props) {
   const { t } = await getT();
 
   // Localised schedule type badge label
-  const typeLabel = (type: string) =>
-    t(`studyOverview.type${type.charAt(0).toUpperCase() + type.slice(1).replace("-", "")}` as Parameters<typeof t>[0]) || type;
+  const typeLabel = (type: string) => {
+    switch (type) {
+      case "one-time":   return t("studyOverview.typeOneTime");
+      case "repeating":  return t("studyOverview.typeRepeating");
+      case "randomized": return t("studyOverview.typeRandomized");
+      case "personal":   return t("studyOverview.typePersonal");
+      default:           return type;
+    }
+  };
 
   return (
     <div className="flex flex-col gap-[3.2rem]">

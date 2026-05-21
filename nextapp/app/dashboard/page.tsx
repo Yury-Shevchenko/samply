@@ -46,7 +46,7 @@ function StudyCard({
   t: ReturnType<typeof import("@/lib/i18n").createT>;
 }) {
   const id = String(project._id);
-  const participantCount = project.members?.length ?? 0;
+  const participantCount = project.participantCount ?? 0;
   const tilt = TILTS[index % TILTS.length];
   const isLow = compliance.sent > 0 && compliance.pct < 60;
 

@@ -13,6 +13,7 @@ export interface ProjectListItem {
   requestedForApproval?: boolean;
   creator: string;
   members: string[];
+  participantCount: number;
 }
 
 export interface GeoLocation {
@@ -68,7 +69,7 @@ export interface ProjectFull extends ProjectListItem {
   };
 }
 
-const PROJECT_FIELDS = {
+const PROJECT_LIST_PROJECTION = {
   name: 1,
   description: 1,
   members: 1,
@@ -77,7 +78,16 @@ const PROJECT_FIELDS = {
   slug: 1,
   public: 1,
   requestedForApproval: 1,
+  participantCount: { $size: { $ifNull: ["$mobileUsers", []] } },
 };
+
+async function fetchProjectList(match: Record<string, unknown>): Promise<ProjectListItem[]> {
+  const docs = await Project.aggregate([
+    { $match: match },
+    { $project: PROJECT_LIST_PROJECTION },
+  ]);
+  return docs as unknown as ProjectListItem[];
+}
 
 export async function fetchUserProjects(userId: string): Promise<{
   projects: ProjectListItem[];
@@ -87,14 +97,11 @@ export async function fetchUserProjects(userId: string): Promise<{
   const oid = new mongoose.Types.ObjectId(userId);
 
   const [projects, invitedProjects] = await Promise.all([
-    Project.find({ creator: oid }, PROJECT_FIELDS).lean(),
-    Project.find({ members: oid }, PROJECT_FIELDS).lean(),
+    fetchProjectList({ creator: oid }),
+    fetchProjectList({ members: oid }),
   ]);
 
-  return {
-    projects: projects as unknown as ProjectListItem[],
-    invitedProjects: invitedProjects as unknown as ProjectListItem[],
-  };
+  return { projects, invitedProjects };
 }
 
 export async function fetchProjectById(id: string, userId: string): Promise<ProjectFull | null> {
@@ -110,9 +117,13 @@ export async function fetchProjectById(id: string, userId: string): Promise<Proj
   const isMember = membersArr.some((m) => m === userId);
   if (!isOwner && !isMember) return null;
 
+  const participantCount = ((p.mobileUsers as unknown[]) ?? []).length;
+
   // Use JSON round-trip to convert all BSON ObjectIds to plain strings
   // so the result can be safely passed to Client Components.
-  return JSON.parse(JSON.stringify(project)) as ProjectFull;
+  const plain = JSON.parse(JSON.stringify(project)) as ProjectFull;
+  plain.participantCount = participantCount;
+  return plain;
 }
 
 export async function fetchMemberEmails(memberIds: string[]): Promise<string[]> {

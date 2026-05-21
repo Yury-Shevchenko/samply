@@ -142,8 +142,15 @@ const en = {
 
     mobileSection: {
       sectionLabel: "steps 02 + 03 · in detail",
+      /** @context Brand name of the participant mobile app. Do NOT translate. */
+      productName:    "Samply Research",
+      /** Short tagline shown beneath the product wordmark. */
+      productTagline: "The participant app.",
       heading:      "The phone is the easy part.",
       body:         "The Samply Research app on the participant’s phone receives the schedule and shows the prompt. Tap it, and they land in your survey with their ID attached.",
+      /** App-store button labels. Brand names — do NOT translate. */
+      downloadAppStore:  "App Store",
+      downloadGooglePlay: "Google Play",
       /** Platform badge */
       badgePlatforms: "iOS · Android",
       /** Timezone badge */

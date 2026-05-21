@@ -36,7 +36,7 @@ export default async function DeleteProjectPage({
   if (project.creator.toString() !== session.user.id) redirect("/projects");
 
   const resultsCount = await countResults(id);
-  const hasData = resultsCount > 0 || project.members.length > 0;
+  const hasData = resultsCount > 0 || project.participantCount > 0;
   const boundAction = deleteProjectAction.bind(null, id);
 
   return (
@@ -121,7 +121,7 @@ export default async function DeleteProjectPage({
             {/* Stats */}
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
               {[
-                { label: t("deleteStudy.statParticipants"), value: project.members.length },
+                { label: t("deleteStudy.statParticipants"), value: project.participantCount },
                 { label: t("deleteStudy.statResponses"), value: resultsCount },
               ].map(({ label, value }) => (
                 <div key={label} style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "0.9rem 1.2rem" }}>
