@@ -398,6 +398,57 @@ export default async function RootPage() {
           </div>
         )}
 
+        {/* ── Collaborate teaser ───────────────────────────────── */}
+        <div
+          style={{
+            marginTop: "6.4rem",
+            padding: "2.4rem 2.6rem",
+            borderRadius: "1.2rem",
+            border: "1px solid var(--ink-10)",
+            background: "var(--surface)",
+            display: "flex",
+            alignItems: "center",
+            gap: "2.4rem",
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ flex: 1, minWidth: "26rem" }}>
+            <Hand size={16} className="block" style={{ marginBottom: "0.6rem" }}>
+              {t("home.collaborate.eyebrow")}
+            </Hand>
+            <div
+              className="font-[family-name:var(--font-display)] font-bold"
+              style={{ fontSize: "2.2rem", letterSpacing: "-0.02em", lineHeight: 1.15, color: "var(--ink)", marginBottom: "0.6rem" }}
+            >
+              {t("home.collaborate.heading")}
+            </div>
+            <p style={{ margin: 0, fontSize: "1.3rem", lineHeight: 1.55, color: "var(--ink-60)", maxWidth: "52rem" }}>
+              {t("home.collaborate.body")}
+            </p>
+          </div>
+          <a
+            href="/docs/collaborate"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.6rem",
+              padding: "1rem 2rem",
+              borderRadius: "9999px",
+              border: "1px solid var(--coral)",
+              color: "var(--coral)",
+              fontSize: "1.3rem",
+              fontWeight: 500,
+              fontFamily: "var(--font-body)",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+              flexShrink: 0,
+            }}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {t("home.collaborate.link")}
+          </a>
+        </div>
+
         {/* ── CTA band ──────────────────────────────────────────── */}
         <div className="home-cta-band flex justify-between items-center relative overflow-hidden"
           style={{ marginTop: "6.4rem", background: "var(--ink)", color: "var(--paper)", borderRadius: "1.4rem", padding: "3.2rem" }}>

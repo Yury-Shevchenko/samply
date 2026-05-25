@@ -28,6 +28,7 @@ const INDEX: Entry[] = [
   { slug: "glossary",      label: "Glossary",               section: "Reference",              title: "Glossary",                                       lede: "Key terms used throughout Samply and this documentation." },
   { slug: "api",           label: "API",                    section: "Reference",              title: "API",                                            lede: "Samply exposes a REST API for programmatic study management and advanced integrations." },
   { slug: "changelog",     label: "Changelog",              section: "Reference",              title: "Changelog",                                      lede: "A running record of meaningful changes to the Samply platform." },
+  { slug: "collaborate",   label: "Collaborate",            section: "Reference",              title: "Collaborate with the Samply team",               lede: "Samply offers co-authorship to research teams in exchange for help running their study or building the features they need." },
 ];
 
 function hl(text: string, q: string) {

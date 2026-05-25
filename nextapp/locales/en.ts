@@ -226,6 +226,14 @@ const en = {
       heading: "Researchers who use Samply.",
     },
 
+    collaborate: {
+      /** Handwritten eyebrow above the teaser */
+      eyebrow:  "got an idea?",
+      heading:  "Collaborate with the Samply team.",
+      body:     "If you're running an ESM study and want help with the protocol, the platform, or a feature you wish existed — we're open to co-authorship in exchange for support. Bring the question, we'll bring the tooling.",
+      link:     "How collaboration works →",
+    },
+
     cta: {
       /** Bottom call-to-action band at the bottom of the landing page */
       heading: "See it in your own protocol.",
@@ -1195,6 +1203,7 @@ const en = {
       api:                "API",
       changelog:          "Changelog",
       about:              "About Samply",
+      collaborate:        "Collaborate",
       legalnotice:        "Legal Notice",
       policy:             "Privacy Policy",
       terms:              "Terms & Conditions",
@@ -1228,6 +1237,7 @@ const en = {
       api:                "API",
       changelog:          "Changelog",
       about:              "History & motivation",
+      collaborate:        "Collaborate with the Samply team",
       legalnotice:        "Legal Notice",
       policy:             "Privacy Policy",
       terms:              "Terms & Conditions",
@@ -1253,6 +1263,7 @@ const en = {
       api:                "for the builders",
       changelog:          "what changed",
       about:              "where it came from",
+      collaborate:        "papers in return for support",
     },
     /** First paragraph shown below the H1 — the page lede */
     pageLedes: {
@@ -1270,6 +1281,7 @@ const en = {
       geofencing:         "Geofencing sends a notification automatically when a participant enters or leaves a defined geographic area — no clock, no cron.",
       stream:             "The Stream API delivers participant events to your infrastructure as they happen, via outbound webhooks.",
       analytics:          "Compliance, response times, dropout, and per-participant engagement — built around documented threats to ESM validity, not generic product-analytics templates.",
+      collaborate:        "Samply offers co-authorship to research teams in exchange for help running their study or building the features they need.",
       glossary:           "Key terms used throughout Samply and this documentation.",
       api:                "Samply exposes a REST API for programmatic study management and advanced integrations.",
       changelog:          "A running record of meaningful changes to the Samply platform.",

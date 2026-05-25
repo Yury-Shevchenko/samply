@@ -24,6 +24,7 @@ import GeofencingContent from "./GeofencingContent";
 import StreamContent from "./StreamContent";
 import AboutContent from "./AboutContent";
 import AnalyticsContent from "./AnalyticsContent";
+import CollaborateContent from "./CollaborateContent";
 import DocsMobileNav from "./DocsMobileNav";
 
 /* ── Route config ─────────────────────────────────────────────────────────── */
@@ -34,7 +35,7 @@ const SIDEBAR_PAGES = [
   "placeholders", "groups", "reminders",
   "event-contingent", "geofencing", "stream",
   "analytics",
-  "glossary", "api", "changelog", "about",
+  "glossary", "api", "changelog", "about", "collaborate",
 ] as const;
 const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb"] as const;
 type DocsPage = (typeof ALL_PAGES)[number];
@@ -58,6 +59,7 @@ const NAV_LABELS: Record<DocsPage, string> = {
   api:                 "API",
   changelog:           "Changelog",
   about:               "About Samply",
+  collaborate:         "Collaborate",
   legalnotice:         "Legal Notice",
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
@@ -83,6 +85,7 @@ const PAGE_TITLES: Record<DocsPage, string> = {
   api:                 "API",
   changelog:           "Changelog",
   about:               "History & motivation",
+  collaborate:         "Collaborate with the Samply team",
   legalnotice:         "Legal Notice",
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
@@ -104,6 +107,7 @@ const PAGE_META: Record<string, { eyebrow: string; lede: string; section: string
   geofencing:          { section: "Advanced features",     eyebrow: "location as the trigger",                          lede: "Geofencing sends a notification automatically when a participant enters or leaves a defined geographic area — no clock, no cron." },
   stream:              { section: "Advanced features",     eyebrow: "your systems, in real time",                       lede: "The Stream API delivers participant events to your infrastructure as they happen, via outbound webhooks." },
   analytics:           { section: "Advanced features",     eyebrow: "the study, while it's still running",               lede: "Compliance, response times, dropout, and per-participant engagement — built around documented threats to ESM validity, not generic product-analytics templates." },
+  collaborate:         { section: "Reference",              eyebrow: "papers in return for support",                      lede: "Samply offers co-authorship to research teams in exchange for help running their study or building the features they need." },
   glossary:            { section: "Reference",             eyebrow: "the vocabulary",                                   lede: "Key terms used throughout Samply and this documentation." },
   api:          { section: "Reference",              eyebrow: "for the builders",                                  lede: "Samply exposes a REST API for programmatic study management and advanced integrations." },
   changelog:    { section: "Reference",              eyebrow: "what changed",                                      lede: "A running record of meaningful changes to the Samply platform." },
@@ -115,7 +119,7 @@ const NAV_GROUPS: { label: string; sectionKey: string; pages: (typeof SIDEBAR_PA
   { label: "Notification schedules", sectionKey: "notificationSchedules", pages: ["types", "form", "personal", "queue"] },
   { label: "Power features",         sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders"] },
   { label: "Advanced features",      sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream", "analytics"] },
-  { label: "Reference",              sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about"] },
+  { label: "Reference",              sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about", "collaborate"] },
 ];
 
 // Maps each docs page to its sidebar section key
@@ -293,6 +297,8 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
                   <ChangelogContent locale={locale} />
                 ) : currentPage === "about" ? (
                   <AboutContent locale={locale} />
+                ) : currentPage === "collaborate" ? (
+                  <CollaborateContent locale={locale} />
                 ) : (
                   <p style={{ fontSize: "1.4rem", lineHeight: 1.65, color: "var(--ink-60)" }}>
                     Content for this section is being written. Check back soon.
