@@ -44,6 +44,7 @@ const RATE_LIMIT_RULES: Array<{
   maxRequests: number;
   windowMs: number;
   prefix: string;
+  scope?: "ip" | "global";
 }> = [
   // Credential login — 20 attempts per IP per 15 min
   {
@@ -59,12 +60,21 @@ const RATE_LIMIT_RULES: Array<{
     windowMs: 15 * 60 * 1000,
     prefix: "reset",
   },
-  // Registration — 10 per IP per hour
+  // Registration — 3 per IP per hour, plus a global cap so a botnet rotating
+  // IPs can't flood the signup queue (Turnstile + honeypot are the primary
+  // defenses; these limits are a backstop).
   {
     test: (p, m) => m === "POST" && p === "/register",
-    maxRequests: 10,
+    maxRequests: 3,
     windowMs: 60 * 60 * 1000,
     prefix: "register",
+  },
+  {
+    test: (p, m) => m === "POST" && p === "/register",
+    maxRequests: 60,
+    windowMs: 60 * 60 * 1000,
+    prefix: "register-global",
+    scope: "global",
   },
   // Donation session — 30 per IP per hour
   {
@@ -89,8 +99,7 @@ export async function proxy(req: NextRequest) {
 
   for (const rule of RATE_LIMIT_RULES) {
     if (rule.test(pathname, method)) {
-      const ip = getClientIp(req);
-      const key = `${rule.prefix}:${ip}`;
+      const key = rule.scope === "global" ? rule.prefix : `${rule.prefix}:${getClientIp(req)}`;
       if (!rateLimit(key, rule.maxRequests, rule.windowMs)) {
         return NextResponse.json(
           { error: "Too many requests. Please try again later." },

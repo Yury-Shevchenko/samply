@@ -1,12 +1,49 @@
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import Script from "next/script";
 import { auth, signIn } from "@/lib/auth";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { getT } from "@/lib/i18n.server";
+import { verifyTurnstile } from "@/lib/turnstile";
 
 export const metadata = { title: "Create account — Samply" };
 
+// Cloudflare Turnstile public test sitekey — always passes, used when the env
+// var is missing so dev/CI work without setup. Replace via env in production.
+const TEST_SITEKEY = "1x00000000000000000000AA";
+
 async function registerAction(formData: FormData) {
   "use server";
+
+  const hdrs = await headers();
+
+  // Origin / Referer check — server actions in Next.js post to the current URL,
+  // so a legitimate submission always carries an Origin from our own host.
+  // Reject anything else (bots posting directly bypass the browser fetch wrapper).
+  const expectedOrigin = (process.env.NEXTAUTH_URL ?? "").replace(/\/$/, "");
+  const origin = hdrs.get("origin") ?? "";
+  const referer = hdrs.get("referer") ?? "";
+  const refererOrigin = referer ? new URL(referer).origin : "";
+  if (expectedOrigin && origin !== expectedOrigin && refererOrigin !== expectedOrigin) {
+    redirect("/register?error=" + encodeURIComponent("Invalid request."));
+  }
+
+  // Honeypot — field is visually hidden and aria-hidden, real users leave it empty.
+  if (((formData.get("website") as string) ?? "").trim() !== "") {
+    redirect("/register?error=" + encodeURIComponent("Invalid request."));
+  }
+
+  // Cloudflare Turnstile verification.
+  const ip =
+    hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    hdrs.get("x-real-ip") ??
+    undefined;
+  const turnstileToken = formData.get("cf-turnstile-response") as string | null;
+  const ok = await verifyTurnstile(turnstileToken, ip);
+  if (!ok) {
+    redirect("/register?error=" + encodeURIComponent("Captcha check failed. Please try again."));
+  }
+
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
   const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
@@ -48,12 +85,14 @@ export default async function RegisterPage({
 
   const { error, notice } = await searchParams;
   const { t } = await getT();
+  const sitekey = process.env.NEXT_PUBLIC_TURNSTILE_SITEKEY || TEST_SITEKEY;
 
   return (
     <main
       className="min-h-screen flex flex-col items-center justify-center"
       style={{ background: "var(--paper)", padding: "4rem 2rem" }}
     >
+      <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" async defer />
       {/* Card */}
       <div
         style={{
@@ -131,6 +170,14 @@ export default async function RegisterPage({
 
         {/* Form */}
         <form action={registerAction} className="flex flex-col gap-[10px]">
+          {/* Honeypot — must stay empty. Hidden visually, accessible to bots that parse the form. */}
+          <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: "1px", height: "1px", overflow: "hidden" }}>
+            <label>
+              Website
+              <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+            </label>
+          </div>
+
           <label className="flex flex-col gap-[5px]">
             <span style={{ fontSize: "1.2rem", fontWeight: 500, color: "var(--ink-60)" }}>{t("register.nameLabel")}</span>
             <input
@@ -178,6 +225,9 @@ export default async function RegisterPage({
               style={inputStyle}
             />
           </label>
+
+          {/* Turnstile widget — auto-rendered by the Cloudflare script. */}
+          <div className="cf-turnstile" data-sitekey={sitekey} style={{ marginTop: "0.6rem" }} />
 
           <SubmitButton
             pendingLabel={t("register.submitting")}

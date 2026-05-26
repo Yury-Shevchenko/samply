@@ -35,12 +35,12 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,    // unsafe-inline needed for Next.js inline scripts; unsafe-eval dev-only for Turbopack/React call-stack reconstruction
+      `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com${isDev ? " 'unsafe-eval'" : ""}`,    // unsafe-inline needed for Next.js inline scripts; unsafe-eval dev-only for Turbopack/React call-stack reconstruction
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self' data:",
-      "connect-src 'self' https://api.postmarkapp.com https://exp.host https://api.stripe.com",
-      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
+      "connect-src 'self' https://api.postmarkapp.com https://exp.host https://api.stripe.com https://challenges.cloudflare.com",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
