@@ -41,6 +41,10 @@ require("./services/notificationCron").start();
 // Start the app
 const app = require("./app");
 app.set("port", process.env.PORT || 80);
-const server = app.listen(app.get("port"), () => {
+// Bind to loopback only — Express is fronted by nginx in prod and called from
+// the Next.js server action via localhost in dev. Keeping port 3000 off the
+// public interface ensures endpoints like /auth/researcher/email/register
+// can't be reached even if a firewall rule is missing.
+const server = app.listen(app.get("port"), "127.0.0.1", () => {
   console.log(`Express running → PORT ${server.address().port}`);
 });

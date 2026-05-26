@@ -12,6 +12,15 @@ export const metadata = { title: "Create account — Samply" };
 // var is missing so dev/CI work without setup. Replace via env in production.
 const TEST_SITEKEY = "1x00000000000000000000AA";
 
+// Disposable / throwaway email providers seen in past abuse waves. Add domains
+// as they appear in cleanup runs; for broader coverage pull from
+// https://github.com/disposable-email-domains/disposable-email-domains.
+const DISPOSABLE_DOMAINS = new Set([
+  "immenseignite.info",
+  "cutemails.online",
+  "spheremail.net",
+]);
+
 async function registerAction(formData: FormData) {
   "use server";
 
@@ -49,6 +58,11 @@ async function registerAction(formData: FormData) {
 
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
+
+  const domain = email.split("@")[1]?.toLowerCase() ?? "";
+  if (DISPOSABLE_DOMAINS.has(domain)) {
+    redirect("/register?error=" + encodeURIComponent("Please use your institutional email."));
+  }
 
   const body = new URLSearchParams({
     name: formData.get("name") as string,
