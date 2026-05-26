@@ -7,7 +7,10 @@
 module.exports = {
   apps: [
     {
-      name: "samply",
+      // Distinct from the old PM2 entry "samply" so rollback is just
+      // `pm2 stop samply-combined && pm2 start samply`. After Stage 3c
+      // stability, you can rename to "samply" (or just leave as-is).
+      name: "samply-combined",
       cwd: __dirname,
       script: "server.js",
       instances: 1,
