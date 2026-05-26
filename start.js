@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Agenda = require("agenda");
-const Agendash = require("agendash");
 
 // Make sure node 7.6+
 const [major, minor] = process.versions.node.split(".").map(parseFloat);

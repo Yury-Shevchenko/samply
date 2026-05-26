@@ -1,6 +1,5 @@
 import type { NextConfig } from "next";
 
-const EXPRESS_URL = process.env.EXPRESS_URL ?? "http://localhost";
 const isDev = process.env.NODE_ENV === "development";
 
 const securityHeaders = [
@@ -74,18 +73,6 @@ const nextConfig: NextConfig = {
       // Bare /docs → welcome page
       { source: "/docs", destination: "/docs/home", permanent: false },
     ];
-  },
-  async rewrites() {
-    return {
-      // Next.js handles its own /api/auth/* (Auth.js) and any future
-      // /api/* Route Handlers. Everything else falls through to Express.
-      fallback: [
-        {
-          source: "/:path*",
-          destination: `${EXPRESS_URL}/:path*`,
-        },
-      ],
-    };
   },
 };
 

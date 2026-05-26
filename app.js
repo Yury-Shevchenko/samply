@@ -50,8 +50,6 @@ const hookLimiter = rateLimit({
   message: { message: "Too many requests, please try again later." },
 });
 
-const Agendash = require("agendash");
-
 const app = express();
 app.set("views", path.join(__dirname, "views")); // this is the folder where we keep our pug files
 app.set("view engine", "pug"); // we use the engine pug, mustache or EJS work great too
@@ -157,12 +155,6 @@ app.use((req, res, next) => {
   }
   next();
 });
-
-app.use(
-  "/dash",
-  authController.isSuperAdminLoggedIn,
-  Agendash(jobController.agenda)
-);
 
 app.use((req, res, next) => {
   req.login = promisify(req.login, req);
