@@ -21,12 +21,15 @@ const inputStyle: React.CSSProperties = {
 
 async function resetAction(token: string, formData: FormData) {
   "use server";
-  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
+  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost:3000";
   const { t } = await getT();
 
   const res = await fetch(`${expressUrl}/account/reset/${token}`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Accept-Language": "en",
+    },
     body: new URLSearchParams({
       password: formData.get("password") as string,
       "password-confirm": formData.get("password-confirm") as string,

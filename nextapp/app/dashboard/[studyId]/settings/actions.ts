@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
@@ -13,6 +14,29 @@ async function requireResearcher(): Promise<Session> {
   const session = await auth();
   if (!session || (session as Session).user.level <= 10) redirect("/login");
   return session as Session;
+}
+
+// Allows a collaborator to remove themselves from a study they don't own.
+// Creators can't "leave" — they delete the study instead.
+export async function leaveStudyAction(studyId: string) {
+  const session = await requireResearcher();
+  await connectDB();
+
+  const project = await Project.findById(studyId, { creator: 1 }).lean();
+  if (!project) redirect("/dashboard");
+
+  const creatorId = String((project as unknown as { creator: unknown }).creator);
+  if (creatorId === session.user.id) {
+    // Owner — nothing to leave; send back to settings.
+    redirect(`/dashboard/${studyId}/settings`);
+  }
+
+  await Project.findByIdAndUpdate(studyId, {
+    $pull: { members: new mongoose.Types.ObjectId(session.user.id) },
+  });
+
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 async function resolveMemberIds(

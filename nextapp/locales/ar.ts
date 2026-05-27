@@ -958,7 +958,7 @@ const ar: DeepLoose<Messages> = {
     featureComparison:  "مقارنة الميزات",
     colFeature:         "الميزة",
     colSamply:          "Samply",
-    smaatDescription:   "منصة ESM تجارية مع استطلاعات مدمجة ومهام معرفية وجمع بيانات المستشعرات وألعاب تحفيزية. مستوى مجاني متاح للاختبار مع ما يصل إلى 10 مشاركين.",
+    smaatDescription:   "منصة ESM تجارية مع استطلاعات مدمجة ومهام معرفية وجمع بيانات المستشعرات وألعاب تحفيزية. مستوى مجاني متاح للاختبار مع ما يصل إلى 5 مشاركين.",
     backToDashboard:    "← العودة إلى لوحة التحكم",
     useSamplyTitle:     "استخدم Samply عندما…",
     considerSmaatTitle: "فكِّر في SMAAT عندما…",

@@ -21,10 +21,10 @@ const ROWS: { feature: string; samply: React.ReactNode; smaat: React.ReactNode }
   { feature: "Gamification",               samply: false, smaat: "Points, badges, progress — to boost compliance" },
   { feature: "Participant app",            samply: <><a href="https://apps.apple.com/us/app/samply-research/id1511062019" target="_blank" rel="noopener noreferrer" style={linkStyle}>iOS</a> · <a href="https://play.google.com/store/apps/details?id=org.js.samply" target="_blank" rel="noopener noreferrer" style={linkStyle}>Android</a></>, smaat: <><a href="https://apps.apple.com/us/app/smaat-research/id6746647722" target="_blank" rel="noopener noreferrer" style={linkStyle}>iOS</a> · <a href="https://play.google.com/store/apps/details?id=com.shevchenkoyury.smaat" target="_blank" rel="noopener noreferrer" style={linkStyle}>Android</a></> },
   { feature: "Open-source",               samply: true,  smaat: false },
-  { feature: "Free to use",               samply: "Fully free",  smaat: "Free tier (up to 10 participants, for testing)" },
+  { feature: "Free to use",               samply: "Fully free",  smaat: "Free tier (up to 5 participants, for testing)" },
   { feature: "Paid plans",                samply: false, smaat: "Yes — for studies with larger cohorts" },
   { feature: "Self-host",                 samply: true,  smaat: false },
-  { feature: "Max participants (free)",   samply: "Unlimited", smaat: "10 (free tier)" },
+  { feature: "Max participants (free)",   samply: "Unlimited", smaat: "5 (free tier)" },
 ];
 
 function Check() {

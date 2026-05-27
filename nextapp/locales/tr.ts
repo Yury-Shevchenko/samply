@@ -958,7 +958,7 @@ const tr: DeepLoose<Messages> = {
     featureComparison:  "özellik karşılaştırması",
     colFeature:         "Özellik",
     colSamply:          "Samply",
-    smaatDescription:   "Entegre anketler, bilişsel görevler, sensör veri toplama ve oyunlaştırma içeren ticari bir ESM platformu. En fazla 10 katılımcıyla test için kullanılabilen ücretsiz katman.",
+    smaatDescription:   "Entegre anketler, bilişsel görevler, sensör veri toplama ve oyunlaştırma içeren ticari bir ESM platformu. En fazla 5 katılımcıyla test için kullanılabilen ücretsiz katman.",
     backToDashboard:    "← panele geri dön",
     useSamplyTitle:     "Samply'ı şu durumlarda kullanın…",
     considerSmaatTitle: "SMAAT'ı şu durumlarda değerlendirin…",

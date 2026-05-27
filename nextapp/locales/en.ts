@@ -524,6 +524,12 @@ const en = {
     collabRemoveAriaLabel: "Remove",
     collabAdd:           "+ Add collaborator",
 
+    /* ── Collaborator (non-owner) view ── */
+    collaboratorSubtitle: "You have collaborator access to this study.",
+    collaboratorBody:     "As a collaborator you can view and edit the notification schedule and see the history. Only the study owner can change these settings. If you no longer need access, you can leave the study.",
+    leaveButton:          "Leave study",
+    leavingButton:        "Leaving…",
+
     /* ── Section 2: Reminders — completion URL ── */
     secReminders:        "Reminders — completion URL",
     remindersHintPre:    "To cancel pending reminders when a participant completes a survey, your survey tool must call the completion endpoint below with the",
@@ -1305,7 +1311,7 @@ const en = {
     featureComparison:  "feature comparison",
     colFeature:         "Feature",
     colSamply:          "Samply",
-    smaatDescription:   "A commercial ESM platform with built-in surveys, cognitive tasks, sensor data collection, and gamification. Free tier available for testing with up to 10 participants.",
+    smaatDescription:   "A commercial ESM platform with built-in surveys, cognitive tasks, sensor data collection, and gamification. Free tier available for testing with up to 5 participants.",
     backToDashboard:    "← back to dashboard",
     useSamplyTitle:     "Use Samply when…",
     considerSmaatTitle: "Consider SMAAT when…",

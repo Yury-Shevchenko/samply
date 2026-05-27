@@ -975,7 +975,7 @@ const ko: DeepLoose<Messages> = {
     featureComparison:  '기능 비교',
     colFeature:         '기능',
     colSamply:          'Samply',
-    smaatDescription:   '내장 설문, 인지 과제, 센서 데이터 수집, 게이미피케이션을 갖춘 상업용 ESM 플랫폼. 최대 10명 참가자로 테스트할 수 있는 무료 티어 제공.',
+    smaatDescription:   '내장 설문, 인지 과제, 센서 데이터 수집, 게이미피케이션을 갖춘 상업용 ESM 플랫폼. 최대 5명 참가자로 테스트할 수 있는 무료 티어 제공.',
     backToDashboard:    '← 대시보드로',
     useSamplyTitle:     '다음의 경우 Samply 사용…',
     considerSmaatTitle: '다음의 경우 SMAAT 고려…',

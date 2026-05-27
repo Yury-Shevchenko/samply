@@ -975,7 +975,7 @@ const zh: DeepLoose<Messages> = {
     featureComparison:  '功能对比',
     colFeature:         '功能',
     colSamply:          'Samply',
-    smaatDescription:   '一个商业 ESM 平台，内置问卷、认知任务、传感器数据收集和游戏化功能。免费层可用最多 10 名参与者进行测试。',
+    smaatDescription:   '一个商业 ESM 平台，内置问卷、认知任务、传感器数据收集和游戏化功能。免费层可用最多 5 名参与者进行测试。',
     backToDashboard:    '← 返回控制台',
     useSamplyTitle:     '在以下情况使用 Samply…',
     considerSmaatTitle: '在以下情况考虑 SMAAT…',

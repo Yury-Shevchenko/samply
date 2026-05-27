@@ -958,7 +958,7 @@ const ja: DeepLoose<Messages> = {
     featureComparison:  "機能比較",
     colFeature:         "機能",
     colSamply:          "サンプリー",
-    smaatDescription:   "統合された調査、認知タスク、センサーデータ収集、ゲーミフィケーションを備えた商用ESMプラットフォーム。最大10名の参加者でテストできる無料層あり。",
+    smaatDescription:   "統合された調査、認知タスク、センサーデータ収集、ゲーミフィケーションを備えた商用ESMプラットフォーム。最大5名の参加者でテストできる無料層あり。",
     backToDashboard:    "← ダッシュボードに戻る",
     useSamplyTitle:     "サンプリーを使うべきとき…",
     considerSmaatTitle: "SMAATを検討すべきとき…",

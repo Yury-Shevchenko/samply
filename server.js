@@ -16,8 +16,10 @@ const http = require("http");
 const dotenv = require("dotenv");
 
 // ── Env loading ───────────────────────────────────────────────────────────────
-// Canonical file first; legacy variables.env loaded second to fill gaps during
-// the migration. dotenv does not override values already in process.env.
+// Canonical file is nextapp/.env.{production,local}. The legacy variables.env
+// is loaded second only as a fallback for any value not yet migrated; dotenv
+// no-ops if the file is absent and never overrides values already set. Once
+// every var lives in the canonical file, variables.env can be deleted safely.
 const isProd = process.env.NODE_ENV === "production";
 const canonicalEnv = isProd ? "nextapp/.env.production" : "nextapp/.env.local";
 dotenv.config({ path: path.join(__dirname, canonicalEnv) });
@@ -71,7 +73,7 @@ const nextHandle = nextApp.getRequestHandler();
 // ── Path dispatch ────────────────────────────────────────────────────────────
 // Returns true iff the request should be served by Express (not Next.js).
 // Carve-outs for Next.js-owned /api/* sub-prefixes MUST come first.
-function isExpressPath(url) {
+function isExpressPath(url, method) {
   const p = (url || "/").split("?")[0];
   if (p.startsWith("/api/auth/")) return false;
   if (p.startsWith("/api/stripe/")) return false;
@@ -79,6 +81,19 @@ function isExpressPath(url) {
   if (p.startsWith("/api/")) return true;
   if (p.startsWith("/webapi/")) return true;
   if (p === "/save") return true;
+  // Legacy Stripe webhook for participant payouts (Connect account.updated,
+  // charge.succeeded → Receipt). Distinct from Next.js /api/stripe/webhook,
+  // which handles donations. Must stay on Express.
+  if (p === "/payment/webhook") return true;
+  // Auth/account backends the Next.js app POSTs to server-side (register,
+  // password reset, email confirmation). The matching GET pages (reset/confirm
+  // forms) live in Next.js, so only POSTs are routed to Express here.
+  if (method === "POST") {
+    if (p === "/auth/researcher/email/register") return true;
+    if (p === "/account/forgot") return true;
+    if (p === "/account/confirm") return true;
+    if (p.startsWith("/account/reset/")) return true;
+  }
   return false;
 }
 
@@ -87,7 +102,7 @@ async function main() {
   await nextApp.prepare();
 
   const server = http.createServer((req, res) => {
-    if (isExpressPath(req.url)) {
+    if (isExpressPath(req.url, req.method)) {
       return expressApp(req, res);
     }
     return nextHandle(req, res);

@@ -51,8 +51,6 @@ const hookLimiter = rateLimit({
 });
 
 const app = express();
-app.set("views", path.join(__dirname, "views")); // this is the folder where we keep our pug files
-app.set("view engine", "pug"); // we use the engine pug, mustache or EJS work great too
 app.use(express.static("public"));
 
 // webhook for payment events with stripe

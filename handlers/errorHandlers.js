@@ -1,3 +1,7 @@
+// Error handlers for the Express side of the combined server.
+// Express now serves only JSON API clients (/api/*, /webapi/*, /save),
+// so all error responses are JSON — no Pug rendering.
+
 exports.catchErrors = (fn) => {
   return function(req, res, next) {
     return fn(req, res, next).catch(next);
@@ -10,33 +14,24 @@ exports.notFound = (req, res, next) => {
   next(err);
 };
 
+// Mongoose/validator validation errors → 400 JSON.
 exports.flashValidationErrors = (err, req, res, next) => {
   if (!err.errors) return next(err);
-  const errorKeys = Object.keys(err.errors);
-  errorKeys.forEach(key => req.flash('error', err.errors[key].message));
-  res.redirect('back');
+  const errors = Object.keys(err.errors).map((key) => err.errors[key].message);
+  res.status(err.status || 400).json({ errors });
 };
 
 exports.developmentErrors = (err, req, res, next) => {
   err.stack = err.stack || '';
-  const errorDetails = {
+  res.status(err.status || 500).json({
     message: err.message,
     status: err.status,
-    stackHighlighted: err.stack.replace(/[a-z_-\d]+.js:\d+:\d+/gi, '<mark>$&</mark>')
-  };
-  res.status(err.status || 500);
-  res.format({
-    'text/html': () => {
-      res.render('error', errorDetails);
-    },
-    'application/json': () => res.json(errorDetails)
+    stack: err.stack,
   });
 };
 
 exports.productionErrors = (err, req, res, next) => {
-  res.status(err.status || 500);
-  res.render('error', {
+  res.status(err.status || 500).json({
     message: err.message,
-    error: {}
   });
 };

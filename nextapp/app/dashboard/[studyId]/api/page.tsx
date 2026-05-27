@@ -8,8 +8,14 @@ import { CopyButton } from "./CopyButton";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { getT } from "@/lib/i18n.server";
 
-const BASE_URL = process.env.EXPRESS_URL ?? "https://samply.uni-konstanz.de";
-const STREAM_ENDPOINT = `${BASE_URL}/api/notify`;
+// Public-facing origin researchers POST to — NOT the internal EXPRESS_URL
+// (http://localhost:3000), which is only for server-to-server calls.
+const PUBLIC_ORIGIN =
+  process.env.NEXTAUTH_URL ??
+  (process.env.EXPRESS_PUBLIC_HOST
+    ? `https://${process.env.EXPRESS_PUBLIC_HOST}`
+    : "https://samply.uni-konstanz.de");
+const STREAM_ENDPOINT = `${PUBLIC_ORIGIN}/api/notify`;
 
 function fmt(d: string | Date) {
   return new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });

@@ -971,7 +971,7 @@ const nl: DeepLoose<Messages> = {
     featureComparison:  "functievergelijking",
     colFeature:         "Functie",
     colSamply:          "Samply",
-    smaatDescription:   "Een commercieel ESM-platform met ingebouwde vragenlijsten, cognitieve taken, sensordataverzameling en gamification. Gratis versie beschikbaar voor tests met maximaal 10 deelnemers.",
+    smaatDescription:   "Een commercieel ESM-platform met ingebouwde vragenlijsten, cognitieve taken, sensordataverzameling en gamification. Gratis versie beschikbaar voor tests met maximaal 5 deelnemers.",
     backToDashboard:    "← terug naar dashboard",
     useSamplyTitle:     "Gebruik Samply wanneer…",
     considerSmaatTitle: "Overweeg SMAAT wanneer…",

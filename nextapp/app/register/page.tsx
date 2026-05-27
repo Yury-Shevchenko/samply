@@ -53,7 +53,7 @@ async function registerAction(formData: FormData) {
     redirect("/register?error=" + encodeURIComponent("Captcha check failed. Please try again."));
   }
 
-  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
+  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost:3000";
   const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
 
   const email = formData.get("email") as string;

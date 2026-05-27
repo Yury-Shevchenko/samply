@@ -113,7 +113,7 @@ async function resendConfirmationAction(formData: FormData) {
 }
 
 async function sendConfirmationEmail(email: string) {
-  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost";
+  const expressUrl = process.env.EXPRESS_URL ?? "http://localhost:3000";
   const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
   await fetch(`${expressUrl}/account/confirm`, {
     method: "POST",

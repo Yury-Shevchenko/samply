@@ -242,7 +242,7 @@ function SmaatBanner({ t }: { t: ReturnType<typeof import("@/lib/i18n").createT>
         flexWrap: "wrap",
       }}
     >
-      <div style={{ flex: 1, minWidth: 260 }}>
+      <div style={{ flex: 1, minWidth: 260, textAlign: "left" }}>
         <span style={{ fontSize: "1.25rem", color: "var(--ink)", fontWeight: 500 }}>
           {t("dashboard.smaatText")}
         </span>
