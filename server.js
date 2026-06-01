@@ -73,7 +73,7 @@ const nextHandle = nextApp.getRequestHandler();
 // ── Path dispatch ────────────────────────────────────────────────────────────
 // Returns true iff the request should be served by Express (not Next.js).
 // Carve-outs for Next.js-owned /api/* sub-prefixes MUST come first.
-function isExpressPath(url, method) {
+function isExpressPath(url, method, headers) {
   const p = (url || "/").split("?")[0];
   if (p.startsWith("/api/auth/")) return false;
   if (p.startsWith("/api/stripe/")) return false;
@@ -88,7 +88,16 @@ function isExpressPath(url, method) {
   // Auth/account backends the Next.js app POSTs to server-side (register,
   // password reset, email confirmation). The matching GET pages (reset/confirm
   // forms) live in Next.js, so only POSTs are routed to Express here.
-  if (method === "POST") {
+  //
+  // A Next.js Server Action submits from the browser as a POST to the SAME URL
+  // as its page, tagged with a `next-action` header. The reset page lives at
+  // /account/reset/[token], so its action POST collides with the Express
+  // backend path below. Such action POSTs MUST stay on Next.js — only the plain
+  // server-to-server form POSTs the Next action makes (no `next-action` header)
+  // belong to Express. Without this guard the browser's action submission is
+  // handed to Express, which redirects with HTML and the client throws
+  // "An unexpected response was received from the server." (Next error E394).
+  if (method === "POST" && !(headers && headers["next-action"])) {
     if (p === "/auth/researcher/email/register") return true;
     if (p === "/account/forgot") return true;
     if (p === "/account/confirm") return true;
@@ -102,7 +111,7 @@ async function main() {
   await nextApp.prepare();
 
   const server = http.createServer((req, res) => {
-    if (isExpressPath(req.url, req.method)) {
+    if (isExpressPath(req.url, req.method, req.headers)) {
       return expressApp(req, res);
     }
     return nextHandle(req, res);
