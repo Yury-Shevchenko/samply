@@ -744,6 +744,7 @@ const en = {
     resetButton:       "Reset password",
     resetPending:      "Resetting…",
     passwordUpdated:   "Password updated. Please log in.",
+    passwordsMismatch: "The passwords do not match.",
     resetFailed:       "Reset failed. The link may have expired.",
   },
 

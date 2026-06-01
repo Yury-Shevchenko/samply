@@ -1476,6 +1476,7 @@ const de: DeepLoose<Messages> = {
     resetButton: "Passwort zurücksetzen",
     resetPending: "Wird zurückgesetzt…",
     passwordUpdated: "Passwort aktualisiert. Bitte melden Sie sich an.",
+    passwordsMismatch: "Die Passwörter stimmen nicht überein.",
     resetFailed: "Zurücksetzen fehlgeschlagen. Der Link ist möglicherweise abgelaufen.",
   },
 

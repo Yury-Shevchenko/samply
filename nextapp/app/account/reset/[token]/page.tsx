@@ -1,6 +1,8 @@
 import { redirect, notFound } from "next/navigation";
+import { AuthError } from "next-auth";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
+import { signIn } from "@/lib/auth";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { getT } from "@/lib/i18n.server";
 
@@ -23,6 +25,24 @@ async function resetAction(token: string, formData: FormData) {
   "use server";
   const expressUrl = process.env.EXPRESS_URL ?? "http://localhost:3000";
   const { t } = await getT();
+  const password = formData.get("password") as string;
+  const passwordConfirm = formData.get("password-confirm") as string;
+
+  const failUrl = `/account/reset/${token}?error=`;
+
+  if (password !== passwordConfirm) {
+    redirect(failUrl + encodeURIComponent(t("resetPassword.passwordsMismatch")));
+  }
+
+  // Read the email while the token is still valid — the update below consumes it.
+  await connectDB();
+  const user = await User.findOne({
+    resetPasswordToken: token,
+    resetPasswordExpires: { $gt: Date.now() },
+  });
+  if (!user?.email) {
+    redirect(failUrl + encodeURIComponent(t("resetPassword.resetFailed")));
+  }
 
   const res = await fetch(`${expressUrl}/account/reset/${token}`, {
     method: "POST",
@@ -31,16 +51,31 @@ async function resetAction(token: string, formData: FormData) {
       "Accept-Language": "en",
     },
     body: new URLSearchParams({
-      password: formData.get("password") as string,
-      "password-confirm": formData.get("password-confirm") as string,
+      password,
+      "password-confirm": passwordConfirm,
     }).toString(),
     redirect: "manual",
   });
 
-  if (res.status === 302 || res.status === 301) {
-    redirect("/login?notice=" + encodeURIComponent(t("resetPassword.passwordUpdated")));
+  if (res.status !== 302 && res.status !== 301) {
+    redirect(failUrl + encodeURIComponent(t("resetPassword.resetFailed")));
   }
-  redirect(`/account/reset/${token}?error=` + encodeURIComponent(t("resetPassword.resetFailed")));
+
+  // Password updated — sign the user in with the new credentials so they land
+  // on the dashboard already authenticated. signIn throws a redirect on success;
+  // on an auth failure fall back to the login page with a success notice.
+  try {
+    await signIn("credentials", {
+      email: user.email,
+      password,
+      redirectTo: "/dashboard",
+    });
+  } catch (err) {
+    if (err instanceof AuthError) {
+      redirect("/login?notice=" + encodeURIComponent(t("resetPassword.passwordUpdated")));
+    }
+    throw err;
+  }
 }
 
 export default async function ResetPage({
