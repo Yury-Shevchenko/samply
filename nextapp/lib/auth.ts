@@ -150,8 +150,12 @@ const config: NextAuthConfig = {
         }
       }
 
-      // /account is shared but requires login.
-      if (pathname.startsWith("/account") && !isLoggedIn) return false;
+      // /account is shared but requires login — except the password-reset and
+      // email-confirmation pages, which are reached from email links while
+      // logged out. Without this exemption the link bounces to /login.
+      const publicAccountPaths = ["/account/reset", "/account/confirm"];
+      const isPublicAccount = publicAccountPaths.some((p) => pathname.startsWith(p));
+      if (pathname.startsWith("/account") && !isPublicAccount && !isLoggedIn) return false;
 
       // Admin-only routes.
       if (pathname.startsWith("/admin") && !isAdmin) return false;
