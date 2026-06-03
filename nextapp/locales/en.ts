@@ -551,6 +551,10 @@ const en = {
     eventsColHeader:     "Caption (shown in app) / URL",
     eventsColNum:        "#",
     eventCaptionPlaceholder: "e.g. Stressful event",
+    legacyLinkLabel:     "Permanent link (legacy)",
+    legacyLinkHint:      "This study was set up with the older single permanent-link design. It still works in the app, but is no longer part of the configuration above. You can edit it here, or clear it and save to remove it permanently.",
+    legacyLinkRemove:    "Remove",
+    legacyLinkClearedHint: "The permanent link will be removed when you save.",
 
     /* ── Section 4: Action buttons ── */
     secActions:          "Action buttons",

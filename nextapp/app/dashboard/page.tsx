@@ -246,7 +246,7 @@ function SmaatBanner({ t }: { t: ReturnType<typeof import("@/lib/i18n").createT>
         <span style={{ fontSize: "1.25rem", color: "var(--ink)", fontWeight: 500 }}>
           {t("dashboard.smaatText")}
         </span>
-        <span style={{ fontSize: "1.2rem", color: "var(--ink-60)", marginLeft: "0.5rem" }}>
+        <span style={{ fontSize: "1.2rem", color: "var(--ink-60)" }}>
           {t("dashboard.smaatDetail")}
         </span>
       </div>

@@ -82,7 +82,15 @@ function Section({
       >
         {title}
       </div>
-      <div className="settings-section-body" style={{ padding: "2.4rem", display: "flex", flexDirection: "column", gap: "1.6rem" }}>
+      <div
+        className="settings-section-body"
+        style={{
+          padding: "2.4rem",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.6rem",
+        }}
+      >
         {children}
       </div>
     </div>
@@ -109,7 +117,15 @@ function Toggle({
 }) {
   return (
     <div>
-      <label htmlFor={id} style={{ display: "flex", alignItems: "center", gap: "1.2rem", cursor: "pointer" }}>
+      <label
+        htmlFor={id}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "1.2rem",
+          cursor: "pointer",
+        }}
+      >
         <input
           type="checkbox"
           id={id}
@@ -143,11 +159,31 @@ function Toggle({
             }}
           />
         </div>
-        <span style={{ fontSize: "1.35rem", fontWeight: 500, color: "var(--ink)" }}>{label}</span>
+        <span
+          style={{ fontSize: "1.35rem", fontWeight: 500, color: "var(--ink)" }}
+        >
+          {label}
+        </span>
       </label>
-      {hint && <p className="settings-hint-indent" style={{ ...hintStyle, margin: "0.5rem 0 0 5rem" }}>{hint}</p>}
+      {hint && (
+        <p
+          className="settings-hint-indent"
+          style={{ ...hintStyle, margin: "0.5rem 0 0 5rem" }}
+        >
+          {hint}
+        </p>
+      )}
       {checked && children && (
-        <div className="settings-toggle-indent" style={{ marginTop: "1.6rem", marginLeft: "5rem", display: "flex", flexDirection: "column", gap: "1.4rem" }}>
+        <div
+          className="settings-toggle-indent"
+          style={{
+            marginTop: "1.6rem",
+            marginLeft: "5rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.4rem",
+          }}
+        >
           {children}
         </div>
       )}
@@ -169,14 +205,29 @@ function CheckRow({
 }) {
   const [on, setOn] = useState(checked);
   return (
-    <label htmlFor={id} style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: "pointer", fontSize: "1.3rem", color: "var(--ink-60)" }}>
+    <label
+      htmlFor={id}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "0.8rem",
+        cursor: "pointer",
+        fontSize: "1.3rem",
+        color: "var(--ink-60)",
+      }}
+    >
       <input
         type="checkbox"
         id={id}
         name={name}
         checked={on}
         onChange={(e) => setOn(e.target.checked)}
-        style={{ width: "1.4rem", height: "1.4rem", accentColor: "var(--sage)", flexShrink: 0 }}
+        style={{
+          width: "1.4rem",
+          height: "1.4rem",
+          accentColor: "var(--sage)",
+          flexShrink: 0,
+        }}
       />
       {label}
     </label>
@@ -193,7 +244,9 @@ function LocationRow({
   onDelete: () => void;
   t: (key: string, vars?: Record<string, string>) => string;
 }) {
-  const [enterOn, setEnterOn] = useState(loc.events?.includes("enter") ?? false);
+  const [enterOn, setEnterOn] = useState(
+    loc.events?.includes("enter") ?? false,
+  );
   const [exitOn, setExitOn] = useState(loc.events?.includes("exit") ?? false);
   const [invisibleOn, setInvisibleOn] = useState(loc.invisible ?? false);
   const [showMap, setShowMap] = useState(false);
@@ -212,14 +265,30 @@ function LocationRow({
         padding: "1.6rem",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-        <span style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ink)" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1.2rem",
+        }}
+      >
+        <span
+          style={{ fontSize: "1.3rem", fontWeight: 600, color: "var(--ink)" }}
+        >
           {loc.title || t("studySettings.locTitlePlaceholder")}
         </span>
         <button
           type="button"
           onClick={onDelete}
-          style={{ fontSize: "1.2rem", color: "var(--coral)", background: "none", border: "none", cursor: "pointer", padding: "0.2rem 0.6rem" }}
+          style={{
+            fontSize: "1.2rem",
+            color: "var(--coral)",
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            padding: "0.2rem 0.6rem",
+          }}
         >
           {t("studySettings.locRemoveButton")}
         </button>
@@ -227,10 +296,19 @@ function LocationRow({
 
       <input type="hidden" name={`loc-slug-${loc.slug}`} value={loc.slug} />
 
-      <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+      <div
+        className="settings-2col grid"
+        style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}
+      >
         <div>
           <label style={labelStyle}>{t("studySettings.locTitleLabel")}</label>
-          <input name={`loc-title-${loc.slug}`} type="text" defaultValue={loc.title} placeholder={t("studySettings.locTitlePlaceholder")} style={fieldStyle} />
+          <input
+            name={`loc-title-${loc.slug}`}
+            type="text"
+            defaultValue={loc.title}
+            placeholder={t("studySettings.locTitlePlaceholder")}
+            style={fieldStyle}
+          />
         </div>
         <div>
           <label style={labelStyle}>{t("studySettings.locRadiusLabel")}</label>
@@ -282,14 +360,33 @@ function LocationRow({
             fontFamily: "var(--font-body)",
           }}
         >
-          {showMap ? t("studySettings.locHideMap") : t("studySettings.locShowMap")}
+          {showMap
+            ? t("studySettings.locHideMap")
+            : t("studySettings.locShowMap")}
         </button>
         {showMap && (
           <div style={{ marginTop: "0.8rem" }}>
             <p style={{ ...hintStyle, marginBottom: "0.6rem" }}>
               {t("studySettings.locMapHint")}
             </p>
-            <Suspense fallback={<div style={{ height: "280px", background: "var(--ink-10)", borderRadius: "0.8rem", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem", color: "var(--ink-40)" }}>{t("studySettings.locLoadingMap")}</div>}>
+            <Suspense
+              fallback={
+                <div
+                  style={{
+                    height: "280px",
+                    background: "var(--ink-10)",
+                    borderRadius: "0.8rem",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.2rem",
+                    color: "var(--ink-40)",
+                  }}
+                >
+                  {t("studySettings.locLoadingMap")}
+                </div>
+              }
+            >
               <MapPicker
                 lat={lat}
                 lng={lng}
@@ -307,56 +404,147 @@ function LocationRow({
       <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
         <div>
           <label style={labelStyle}>{t("studySettings.locSurveyLabel")}</label>
-          <input name={`loc-link-${loc.slug}`} type="text" defaultValue={loc.link ?? ""} placeholder="https://…" style={{ ...fieldStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
+          <input
+            name={`loc-link-${loc.slug}`}
+            type="text"
+            defaultValue={loc.link ?? ""}
+            placeholder="https://…"
+            style={{
+              ...fieldStyle,
+              fontFamily: "var(--font-mono)",
+              fontSize: "1.2rem",
+            }}
+          />
         </div>
-        <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+        <div
+          className="settings-2col grid"
+          style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}
+        >
           <div>
-            <label style={labelStyle}>{t("studySettings.locNotifHeaderLabel")}</label>
-            <input name={`loc-header-${loc.slug}`} type="text" defaultValue={loc.header ?? ""} placeholder={t("studySettings.locArrivedPlaceholder")} style={fieldStyle} />
+            <label style={labelStyle}>
+              {t("studySettings.locNotifHeaderLabel")}
+            </label>
+            <input
+              name={`loc-header-${loc.slug}`}
+              type="text"
+              defaultValue={loc.header ?? ""}
+              placeholder={t("studySettings.locArrivedPlaceholder")}
+              style={fieldStyle}
+            />
           </div>
           <div>
-            <label style={labelStyle}>{t("studySettings.locNotifMessageLabel")}</label>
-            <input name={`loc-message-${loc.slug}`} type="text" defaultValue={loc.message ?? ""} placeholder={t("studySettings.locSurveyPlaceholder")} style={fieldStyle} />
+            <label style={labelStyle}>
+              {t("studySettings.locNotifMessageLabel")}
+            </label>
+            <input
+              name={`loc-message-${loc.slug}`}
+              type="text"
+              defaultValue={loc.message ?? ""}
+              placeholder={t("studySettings.locSurveyPlaceholder")}
+              style={fieldStyle}
+            />
           </div>
           <div>
-            <label style={labelStyle}>{t("studySettings.locExitZoneLabel")}</label>
-            <input name={`loc-exitzone-${loc.slug}`} type="number" defaultValue={loc.exitzone ?? ""} placeholder="0" style={fieldStyle} />
+            <label style={labelStyle}>
+              {t("studySettings.locExitZoneLabel")}
+            </label>
+            <input
+              name={`loc-exitzone-${loc.slug}`}
+              type="number"
+              defaultValue={loc.exitzone ?? ""}
+              placeholder="0"
+              style={fieldStyle}
+            />
           </div>
           <div>
-            <label style={labelStyle}>{t("studySettings.locMinTimeLabel")}</label>
-            <input name={`loc-mintimewindow-${loc.slug}`} type="number" defaultValue={loc.mintimewindow ?? ""} placeholder="0" style={fieldStyle} />
+            <label style={labelStyle}>
+              {t("studySettings.locMinTimeLabel")}
+            </label>
+            <input
+              name={`loc-mintimewindow-${loc.slug}`}
+              type="number"
+              defaultValue={loc.mintimewindow ?? ""}
+              placeholder="0"
+              style={fieldStyle}
+            />
           </div>
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "1.6rem", marginTop: "0.8rem", flexWrap: "wrap" }}>
-        <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "1.6rem",
+          marginTop: "0.8rem",
+          flexWrap: "wrap",
+        }}
+      >
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            fontSize: "1.2rem",
+            color: "var(--ink-60)",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="checkbox"
             name={`loc-event-enter-${loc.slug}`}
             checked={enterOn}
             onChange={(e) => setEnterOn(e.target.checked)}
-            style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
+            style={{
+              width: "1.3rem",
+              height: "1.3rem",
+              accentColor: "var(--sage)",
+            }}
           />
           {t("studySettings.locTriggerEnter")}
         </label>
-        <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            fontSize: "1.2rem",
+            color: "var(--ink-60)",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="checkbox"
             name={`loc-event-exit-${loc.slug}`}
             checked={exitOn}
             onChange={(e) => setExitOn(e.target.checked)}
-            style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
+            style={{
+              width: "1.3rem",
+              height: "1.3rem",
+              accentColor: "var(--sage)",
+            }}
           />
           {t("studySettings.locTriggerExit")}
         </label>
-        <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.6rem",
+            fontSize: "1.2rem",
+            color: "var(--ink-60)",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="checkbox"
             name={`loc-invisible-${loc.slug}`}
             checked={invisibleOn}
             onChange={(e) => setInvisibleOn(e.target.checked)}
-            style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
+            style={{
+              width: "1.3rem",
+              height: "1.3rem",
+              accentColor: "var(--sage)",
+            }}
           />
           {t("studySettings.locInvisible")}
         </label>
@@ -366,7 +554,17 @@ function LocationRow({
 }
 
 /* ── Copyable URL ────────────────────────────────────────────────────────── */
-function CopyableUrl({ label, url, copyLabel, copiedLabel }: { label: string; url: string; copyLabel: string; copiedLabel: string }) {
+function CopyableUrl({
+  label,
+  url,
+  copyLabel,
+  copiedLabel,
+}: {
+  label: string;
+  url: string;
+  copyLabel: string;
+  copiedLabel: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   function copy() {
@@ -378,17 +576,61 @@ function CopyableUrl({ label, url, copyLabel, copiedLabel }: { label: string; ur
 
   return (
     <div>
-      <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: ".1em", textTransform: "uppercase", marginBottom: "0.5rem", fontFamily: "var(--font-mono)" }}>
+      <div
+        style={{
+          fontSize: "1.1rem",
+          fontWeight: 600,
+          color: "var(--ink-40)",
+          letterSpacing: ".1em",
+          textTransform: "uppercase",
+          marginBottom: "0.5rem",
+          fontFamily: "var(--font-mono)",
+        }}
+      >
         {label}
       </div>
-      <div style={{ display: "flex", alignItems: "stretch", gap: "0", border: "1px solid var(--ink-20)", borderRadius: "0.8rem", overflow: "hidden" }}>
-        <div style={{ flex: 1, padding: "0.9rem 1.2rem", fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", background: "rgba(214,90,48,.04)", wordBreak: "break-all", lineHeight: 1.5 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "stretch",
+          gap: "0",
+          border: "1px solid var(--ink-20)",
+          borderRadius: "0.8rem",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            flex: 1,
+            padding: "0.9rem 1.2rem",
+            fontFamily: "var(--font-mono)",
+            fontSize: "1.15rem",
+            color: "var(--coral)",
+            background: "rgba(214,90,48,.04)",
+            wordBreak: "break-all",
+            lineHeight: 1.5,
+          }}
+        >
           {url}
         </div>
         <button
           type="button"
           onClick={copy}
-          style={{ flexShrink: 0, padding: "0 1.4rem", background: copied ? "rgba(61,115,107,.1)" : "var(--ink-10)", border: "none", borderLeft: "1px solid var(--ink-20)", cursor: "pointer", fontFamily: "var(--font-mono)", fontSize: "1.05rem", fontWeight: 600, color: copied ? "var(--sage)" : "var(--ink-40)", letterSpacing: ".06em", whiteSpace: "nowrap", transition: "all 150ms" }}
+          style={{
+            flexShrink: 0,
+            padding: "0 1.4rem",
+            background: copied ? "rgba(61,115,107,.1)" : "var(--ink-10)",
+            border: "none",
+            borderLeft: "1px solid var(--ink-20)",
+            cursor: "pointer",
+            fontFamily: "var(--font-mono)",
+            fontSize: "1.05rem",
+            fontWeight: 600,
+            color: copied ? "var(--sage)" : "var(--ink-40)",
+            letterSpacing: ".06em",
+            whiteSpace: "nowrap",
+            transition: "all 150ms",
+          }}
         >
           {copied ? copiedLabel : copyLabel}
         </button>
@@ -398,7 +640,14 @@ function CopyableUrl({ label, url, copyLabel, copiedLabel }: { label: string; ur
 }
 
 /* ── Main component ──────────────────────────────────────────────────────── */
-export default function SettingsClient({ project, memberEmails, action, notice, warning, baseUrl }: Props) {
+export default function SettingsClient({
+  project,
+  memberEmails,
+  action,
+  notice,
+  warning,
+  baseUrl,
+}: Props) {
   const { t } = useT();
   const s = project.settings ?? {};
   const formRef = useRef<HTMLFormElement>(null);
@@ -408,18 +657,32 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
     memberEmails.length ? memberEmails : [""],
   );
 
+  /* Legacy permanent link — predecessor of the multi-event structure.
+     Only surfaced when a study still has one saved; new studies never see it. */
+  const hadPermanentLink = Boolean((s.permanentLink ?? "").trim());
+  const [permanentLink, setPermanentLink] = useState(s.permanentLink ?? "");
+
   /* Feature toggles */
   const [showEvents, setShowEvents] = useState(s.enableEvents ?? false);
   const [showActions, setShowActions] = useState(s.enableActions ?? false);
   const [showWebhooks, setShowWebhooks] = useState(s.enableWebhooks ?? false);
-  const [showGeofencing, setShowGeofencing] = useState(s.enableGeofencing ?? false);
+  const [showGeofencing, setShowGeofencing] = useState(
+    s.enableGeofencing ?? false,
+  );
 
   const hasParticipantZoneData = Boolean(
-    s.geofencing?.link || s.geofencing?.radius || s.geofencing?.header ||
-    s.geofencing?.message || s.geofencing?.exitzone || s.geofencing?.mintimewindow ||
-    s.geofencing?.events?.length || s.geofencing?.invisible,
+    s.geofencing?.link ||
+    s.geofencing?.radius ||
+    s.geofencing?.header ||
+    s.geofencing?.message ||
+    s.geofencing?.exitzone ||
+    s.geofencing?.mintimewindow ||
+    s.geofencing?.events?.length ||
+    s.geofencing?.invisible,
   );
-  const [showParticipantZone, setShowParticipantZone] = useState(hasParticipantZoneData);
+  const [showParticipantZone, setShowParticipantZone] = useState(
+    hasParticipantZoneData,
+  );
 
   /* Geofencing locations */
   const [locations, setLocations] = useState<GeoLocation[]>(
@@ -441,7 +704,10 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
   function addLocation() {
     const name = newLocationName.trim();
     if (!name) return;
-    const slug = name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+    const slug = name
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "");
     if (locations.find((l) => l.slug === slug)) return;
     setLocations((prev) => [
       ...prev,
@@ -455,22 +721,75 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
     const form = e.currentTarget;
     const built = locations.map((loc) => ({
       slug: loc.slug,
-      title: (form.elements.namedItem(`loc-title-${loc.slug}`) as HTMLInputElement)?.value ?? loc.title,
-      latitude: parseFloat((form.elements.namedItem(`loc-latitude-${loc.slug}`) as HTMLInputElement)?.value ?? String(loc.latitude)),
-      longitude: parseFloat((form.elements.namedItem(`loc-longitude-${loc.slug}`) as HTMLInputElement)?.value ?? String(loc.longitude)),
-      radius: parseFloat((form.elements.namedItem(`loc-radius-${loc.slug}`) as HTMLInputElement)?.value ?? String(loc.radius)),
-      header: (form.elements.namedItem(`loc-header-${loc.slug}`) as HTMLInputElement)?.value ?? "",
-      message: (form.elements.namedItem(`loc-message-${loc.slug}`) as HTMLInputElement)?.value ?? "",
-      link: (form.elements.namedItem(`loc-link-${loc.slug}`) as HTMLInputElement)?.value ?? "",
-      exitzone: Number((form.elements.namedItem(`loc-exitzone-${loc.slug}`) as HTMLInputElement)?.value ?? 0),
-      mintimewindow: Number((form.elements.namedItem(`loc-mintimewindow-${loc.slug}`) as HTMLInputElement)?.value ?? 0),
+      title:
+        (form.elements.namedItem(`loc-title-${loc.slug}`) as HTMLInputElement)
+          ?.value ?? loc.title,
+      latitude: parseFloat(
+        (
+          form.elements.namedItem(
+            `loc-latitude-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.value ?? String(loc.latitude),
+      ),
+      longitude: parseFloat(
+        (
+          form.elements.namedItem(
+            `loc-longitude-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.value ?? String(loc.longitude),
+      ),
+      radius: parseFloat(
+        (form.elements.namedItem(`loc-radius-${loc.slug}`) as HTMLInputElement)
+          ?.value ?? String(loc.radius),
+      ),
+      header:
+        (form.elements.namedItem(`loc-header-${loc.slug}`) as HTMLInputElement)
+          ?.value ?? "",
+      message:
+        (form.elements.namedItem(`loc-message-${loc.slug}`) as HTMLInputElement)
+          ?.value ?? "",
+      link:
+        (form.elements.namedItem(`loc-link-${loc.slug}`) as HTMLInputElement)
+          ?.value ?? "",
+      exitzone: Number(
+        (
+          form.elements.namedItem(
+            `loc-exitzone-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.value ?? 0,
+      ),
+      mintimewindow: Number(
+        (
+          form.elements.namedItem(
+            `loc-mintimewindow-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.value ?? 0,
+      ),
       events: [
-        ...((form.elements.namedItem(`loc-event-enter-${loc.slug}`) as HTMLInputElement)?.checked ? ["enter"] : []),
-        ...((form.elements.namedItem(`loc-event-exit-${loc.slug}`) as HTMLInputElement)?.checked ? ["exit"] : []),
+        ...((
+          form.elements.namedItem(
+            `loc-event-enter-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.checked
+          ? ["enter"]
+          : []),
+        ...((
+          form.elements.namedItem(
+            `loc-event-exit-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.checked
+          ? ["exit"]
+          : []),
       ],
-      invisible: (form.elements.namedItem(`loc-invisible-${loc.slug}`) as HTMLInputElement)?.checked ?? false,
+      invisible:
+        (
+          form.elements.namedItem(
+            `loc-invisible-${loc.slug}`,
+          ) as HTMLInputElement
+        )?.checked ?? false,
     }));
-    (form.elements.namedItem("locationsJson") as HTMLInputElement).value = JSON.stringify(built);
+    (form.elements.namedItem("locationsJson") as HTMLInputElement).value =
+      JSON.stringify(built);
   }
 
   return (
@@ -480,18 +799,40 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
       onSubmit={handleSubmit}
       style={{ display: "flex", flexDirection: "column", gap: "2rem" }}
     >
-      <input type="hidden" name="locationsJson" value={JSON.stringify(locations)} />
+      <input
+        type="hidden"
+        name="locationsJson"
+        value={JSON.stringify(locations)}
+      />
 
       {/* Notice */}
       {notice && (
-        <div style={{ background: "rgba(61,115,107,.1)", border: "1px solid rgba(61,115,107,.25)", borderRadius: "1rem", padding: "1.1rem 1.6rem", fontSize: "1.35rem", color: "var(--sage)" }}>
+        <div
+          style={{
+            background: "rgba(61,115,107,.1)",
+            border: "1px solid rgba(61,115,107,.25)",
+            borderRadius: "1rem",
+            padding: "1.1rem 1.6rem",
+            fontSize: "1.35rem",
+            color: "var(--sage)",
+          }}
+        >
           {notice}
         </div>
       )}
 
       {/* Warning */}
       {warning && (
-        <div style={{ background: "rgba(214,90,48,.08)", border: "1px solid rgba(214,90,48,.25)", borderRadius: "1rem", padding: "1.1rem 1.6rem", fontSize: "1.35rem", color: "var(--coral)" }}>
+        <div
+          style={{
+            background: "rgba(214,90,48,.08)",
+            border: "1px solid rgba(214,90,48,.25)",
+            borderRadius: "1rem",
+            padding: "1.1rem 1.6rem",
+            fontSize: "1.35rem",
+            color: "var(--coral)",
+          }}
+        >
           {warning}
         </div>
       )}
@@ -501,7 +842,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         <p style={{ ...hintStyle, margin: 0 }}>
           {t("studySettings.collabHint")}
         </p>
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+        <div
+          style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}
+        >
           {members.map((email, i) => (
             <div key={i} style={{ display: "flex", gap: "0.8rem" }}>
               <input
@@ -514,8 +857,19 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
               {members.length > 1 && (
                 <button
                   type="button"
-                  onClick={() => setMembers((prev) => prev.filter((_, j) => j !== i))}
-                  style={{ padding: "0 1.4rem", background: "none", border: "1px solid var(--ink-20)", borderRadius: "0.8rem", color: "var(--ink-60)", cursor: "pointer", fontSize: "1.6rem", lineHeight: 1 }}
+                  onClick={() =>
+                    setMembers((prev) => prev.filter((_, j) => j !== i))
+                  }
+                  style={{
+                    padding: "0 1.4rem",
+                    background: "none",
+                    border: "1px solid var(--ink-20)",
+                    borderRadius: "0.8rem",
+                    color: "var(--ink-60)",
+                    cursor: "pointer",
+                    fontSize: "1.6rem",
+                    lineHeight: 1,
+                  }}
                   aria-label={t("studySettings.collabRemoveAriaLabel")}
                 >
                   ×
@@ -526,7 +880,17 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
           <button
             type="button"
             onClick={() => setMembers((prev) => [...prev, ""])}
-            style={{ alignSelf: "flex-start", padding: "0.6rem 1.4rem", background: "none", border: "1px solid var(--ink-20)", borderRadius: "9999px", color: "var(--ink-60)", cursor: "pointer", fontSize: "1.25rem", fontFamily: "var(--font-body)" }}
+            style={{
+              alignSelf: "flex-start",
+              padding: "0.6rem 1.4rem",
+              background: "none",
+              border: "1px solid var(--ink-20)",
+              borderRadius: "9999px",
+              color: "var(--ink-60)",
+              cursor: "pointer",
+              fontSize: "1.25rem",
+              fontFamily: "var(--font-body)",
+            }}
           >
             {t("studySettings.collabAdd")}
           </button>
@@ -537,9 +901,26 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
       <Section title={t("studySettings.secReminders")}>
         <p style={{ ...hintStyle, margin: 0 }}>
           {t("studySettings.remindersHintPre")}{" "}
-          <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%MESSAGE_ID%</code>{" "}
+          <code
+            style={{
+              fontFamily: "var(--font-mono)",
+              fontSize: "1.1rem",
+              background: "var(--ink-10)",
+              padding: "0.1rem 0.4rem",
+              borderRadius: "0.3rem",
+            }}
+          >
+            %MESSAGE_ID%
+          </code>{" "}
           {t("studySettings.remindersHintMid")}{" "}
-          <a href="/docs/reminders" target="_blank" rel="noreferrer" style={{ color: "var(--coral)" }}>{t("studySettings.remindersHintLink")}</a>{" "}
+          <a
+            href="/docs/reminders"
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "var(--coral)" }}
+          >
+            {t("studySettings.remindersHintLink")}
+          </a>{" "}
           {t("studySettings.remindersHintPost")}
         </p>
         <CopyableUrl
@@ -567,7 +948,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
           onChange={setShowEvents}
         >
           <div>
-            <label style={labelStyle}>{t("studySettings.eventsInstructionLabel")}</label>
+            <label style={labelStyle}>
+              {t("studySettings.eventsInstructionLabel")}
+            </label>
             <p style={hintStyle}>{t("studySettings.eventsInstructionHint")}</p>
             <textarea
               name="eventDescription"
@@ -578,18 +961,80 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
           </div>
 
           <div>
-            <label style={labelStyle}>{t("studySettings.eventsTypesLabel")}</label>
+            <label style={labelStyle}>
+              {t("studySettings.eventsTypesLabel")}
+            </label>
             <p style={hintStyle}>
               {t("studySettings.eventsTypesHintPre")}{" "}
-              <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%SAMPLY_ID%</code>,{" "}
-              <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%PARTICIPANT_CODE%</code>,{" "}
-              <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%GROUP_ID%</code>,{" "}
-              <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", background: "var(--ink-10)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>%TIMESTAMP%</code>.
+              <code
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1.1rem",
+                  background: "var(--ink-10)",
+                  padding: "0.1rem 0.4rem",
+                  borderRadius: "0.3rem",
+                }}
+              >
+                %SAMPLY_ID%
+              </code>
+              ,{" "}
+              <code
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1.1rem",
+                  background: "var(--ink-10)",
+                  padding: "0.1rem 0.4rem",
+                  borderRadius: "0.3rem",
+                }}
+              >
+                %PARTICIPANT_CODE%
+              </code>
+              ,{" "}
+              <code
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1.1rem",
+                  background: "var(--ink-10)",
+                  padding: "0.1rem 0.4rem",
+                  borderRadius: "0.3rem",
+                }}
+              >
+                %GROUP_ID%
+              </code>
+              ,{" "}
+              <code
+                style={{
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1.1rem",
+                  background: "var(--ink-10)",
+                  padding: "0.1rem 0.4rem",
+                  borderRadius: "0.3rem",
+                }}
+              >
+                %TIMESTAMP%
+              </code>
+              .
             </p>
-            <div style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden" }}>
+            <div
+              style={{
+                background: "var(--paper)",
+                border: "1px solid var(--ink-10)",
+                borderRadius: "0.8rem",
+                overflow: "hidden",
+              }}
+            >
               <div
                 className="grid"
-                style={{ gridTemplateColumns: "3.2rem 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
+                style={{
+                  gridTemplateColumns: "3.2rem 1fr",
+                  padding: "0.7rem 1.2rem",
+                  background: "var(--ink-10)",
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1rem",
+                  letterSpacing: ".12em",
+                  textTransform: "uppercase",
+                  color: "var(--ink-40)",
+                }}
               >
                 <span>{t("studySettings.eventsColNum")}</span>
                 <span>{t("studySettings.eventsColHeader")}</span>
@@ -597,10 +1042,32 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
               {[1, 2, 3, 4, 5].map((n) => (
                 <div
                   key={n}
-                  style={{ display: "grid", gridTemplateColumns: "3.2rem 1fr", padding: "0.8rem 1.2rem", gap: "0.6rem", borderTop: "1px solid var(--ink-10)", alignItems: "start" }}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "3.2rem 1fr",
+                    padding: "0.8rem 1.2rem",
+                    gap: "0.6rem",
+                    borderTop: "1px solid var(--ink-10)",
+                    alignItems: "start",
+                  }}
                 >
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)", paddingTop: "0.9rem" }}>{n}</span>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                  <span
+                    style={{
+                      fontFamily: "var(--font-mono)",
+                      fontSize: "1.1rem",
+                      color: "var(--ink-40)",
+                      paddingTop: "0.9rem",
+                    }}
+                  >
+                    {n}
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "0.5rem",
+                    }}
+                  >
                     <input
                       type="text"
                       name={`event-caption-${n}`}
@@ -613,7 +1080,11 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                       name={`event-url-${n}`}
                       defaultValue={getEventValue(n, "url")}
                       placeholder="https://…"
-                      style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }}
+                      style={{
+                        ...inputStyle,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "1.2rem",
+                      }}
                     />
                   </div>
                 </div>
@@ -621,6 +1092,70 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
             </div>
           </div>
         </Toggle>
+
+        {/* Legacy permanent link — only shown to studies that still have one
+            saved under the old structure. Editing to empty + saving removes it. */}
+        {hadPermanentLink && (
+          <div
+            style={{
+              marginTop: "0.4rem",
+              paddingTop: "1.6rem",
+              borderTop: "1px solid var(--ink-10)",
+            }}
+          >
+            <label style={labelStyle}>
+              {t("studySettings.legacyLinkLabel")}
+            </label>
+            <p style={hintStyle}>{t("studySettings.legacyLinkHint")}</p>
+            <div
+              style={{
+                display: "flex",
+                gap: "0.8rem",
+                alignItems: "flex-start",
+              }}
+            >
+              <input
+                type="text"
+                name="permanentLink"
+                value={permanentLink}
+                onChange={(e) => setPermanentLink(e.target.value)}
+                placeholder="https://…"
+                style={{
+                  ...inputStyle,
+                  flex: 1,
+                  fontFamily: "var(--font-mono)",
+                  fontSize: "1.2rem",
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => setPermanentLink("")}
+                style={{
+                  padding: "0 1.6rem",
+                  height: "4.4rem",
+                  background: "none",
+                  border: "1px solid var(--ink-20)",
+                  borderRadius: "0.8rem",
+                  color: "var(--coral)",
+                  cursor: "pointer",
+                  fontSize: "1.25rem",
+                  fontFamily: "var(--font-body)",
+                  whiteSpace: "nowrap",
+                  flexShrink: 0,
+                }}
+              >
+                {t("studySettings.legacyLinkRemove")}
+              </button>
+            </div>
+            {!permanentLink.trim() && (
+              <p
+                style={{ ...hintStyle, color: "var(--coral)", marginBottom: 0 }}
+              >
+                {t("studySettings.legacyLinkClearedHint")}
+              </p>
+            )}
+          </div>
+        )}
       </Section>
 
       {/* ── 4 · Action buttons ────────────────────────────────────────────── */}
@@ -635,42 +1170,77 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         >
           <div>
             <p style={{ ...hintStyle, margin: "0 0 1rem" }}>
-              {t("studySettings.actionsHintPre")} <strong>{t("studySettings.actionsHintIdentifier")}</strong> {t("studySettings.actionsHintMid")} <strong>{t("studySettings.actionsHintCaption")}</strong> {t("studySettings.actionsHintPost")}
+              {t("studySettings.actionsHintPre")}{" "}
+              <strong>{t("studySettings.actionsHintIdentifier")}</strong>{" "}
+              {t("studySettings.actionsHintMid")}{" "}
+              <strong>{t("studySettings.actionsHintCaption")}</strong>{" "}
+              {t("studySettings.actionsHintPost")}
             </p>
-            <div className="settings-actions-wrap" style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden" }}>
-            <div className="settings-actions-inner">
-              <div
-                className="grid"
-                style={{ gridTemplateColumns: "3.2rem 1fr 1fr", padding: "0.7rem 1.2rem", background: "var(--ink-10)", fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".12em", textTransform: "uppercase", color: "var(--ink-40)" }}
-              >
-                <span>{t("studySettings.actionsColNum")}</span>
-                <span>{t("studySettings.actionsColId")}</span>
-                <span>{t("studySettings.actionsColCaption")}</span>
-              </div>
-              {[1, 2, 3, 4].map((n) => (
+            <div
+              className="settings-actions-wrap"
+              style={{
+                background: "var(--paper)",
+                border: "1px solid var(--ink-10)",
+                borderRadius: "0.8rem",
+                overflow: "hidden",
+              }}
+            >
+              <div className="settings-actions-inner">
                 <div
-                  key={n}
                   className="grid"
-                  style={{ gridTemplateColumns: "3.2rem 1fr 1fr", padding: "0.8rem 1.2rem", gap: "0.8rem", borderTop: "1px solid var(--ink-10)", alignItems: "center" }}
+                  style={{
+                    gridTemplateColumns: "3.2rem 1fr 1fr",
+                    padding: "0.7rem 1.2rem",
+                    background: "var(--ink-10)",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: "1rem",
+                    letterSpacing: ".12em",
+                    textTransform: "uppercase",
+                    color: "var(--ink-40)",
+                  }}
                 >
-                  <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>{n}</span>
-                  <input
-                    type="text"
-                    name={`identifier-${n}`}
-                    defaultValue={getActionValue(n, "identifier")}
-                    placeholder={t("studySettings.actionsIdPlaceholder")}
-                    style={inputStyle}
-                  />
-                  <input
-                    type="text"
-                    name={`buttonTitle-${n}`}
-                    defaultValue={getActionValue(n, "buttonTitle")}
-                    placeholder={t("studySettings.actionsCaptionPlaceholder")}
-                    style={inputStyle}
-                  />
+                  <span>{t("studySettings.actionsColNum")}</span>
+                  <span>{t("studySettings.actionsColId")}</span>
+                  <span>{t("studySettings.actionsColCaption")}</span>
                 </div>
-              ))}
-            </div>
+                {[1, 2, 3, 4].map((n) => (
+                  <div
+                    key={n}
+                    className="grid"
+                    style={{
+                      gridTemplateColumns: "3.2rem 1fr 1fr",
+                      padding: "0.8rem 1.2rem",
+                      gap: "0.8rem",
+                      borderTop: "1px solid var(--ink-10)",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "1.1rem",
+                        color: "var(--ink-40)",
+                      }}
+                    >
+                      {n}
+                    </span>
+                    <input
+                      type="text"
+                      name={`identifier-${n}`}
+                      defaultValue={getActionValue(n, "identifier")}
+                      placeholder={t("studySettings.actionsIdPlaceholder")}
+                      style={inputStyle}
+                    />
+                    <input
+                      type="text"
+                      name={`buttonTitle-${n}`}
+                      defaultValue={getActionValue(n, "buttonTitle")}
+                      placeholder={t("studySettings.actionsCaptionPlaceholder")}
+                      style={inputStyle}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </Toggle>
@@ -687,7 +1257,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
           onChange={setShowWebhooks}
         >
           <div>
-            <label style={labelStyle}>{t("studySettings.webhookEndpointLabel")}</label>
+            <label style={labelStyle}>
+              {t("studySettings.webhookEndpointLabel")}
+            </label>
             <input
               type="url"
               name="webhookEndpoint"
@@ -697,8 +1269,16 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
             />
           </div>
           <div>
-            <label style={{ ...labelStyle, marginBottom: "0.8rem" }}>{t("studySettings.webhookEventsLabel")}</label>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            <label style={{ ...labelStyle, marginBottom: "0.8rem" }}>
+              {t("studySettings.webhookEventsLabel")}
+            </label>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.6rem",
+              }}
+            >
               <CheckRow
                 id="webhookEvents-study_joined"
                 name="webhookEvents-study_joined"
@@ -715,7 +1295,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 id="webhookEvents-participant_info_updated"
                 name="webhookEvents-participant_info_updated"
                 label={t("studySettings.webhookParticipantInfo")}
-                checked={s.webhookEvents?.includes("participant_info_updated") ?? false}
+                checked={
+                  s.webhookEvents?.includes("participant_info_updated") ?? false
+                }
               />
             </div>
           </div>
@@ -734,7 +1316,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
         >
           {/* Instruction */}
           <div>
-            <label style={labelStyle}>{t("studySettings.geofencingInstLabel")}</label>
+            <label style={labelStyle}>
+              {t("studySettings.geofencingInstLabel")}
+            </label>
             <p style={hintStyle}>{t("studySettings.geofencingInstHint")}</p>
             <textarea
               name="geofencingInstruction"
@@ -762,7 +1346,9 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 alignItems: "center",
                 justifyContent: "space-between",
                 padding: "1.2rem 1.6rem",
-                background: showParticipantZone ? "var(--ink-10)" : "transparent",
+                background: showParticipantZone
+                  ? "var(--ink-10)"
+                  : "transparent",
                 border: "none",
                 cursor: "pointer",
                 fontFamily: "var(--font-body)",
@@ -771,77 +1357,210 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
               }}
             >
               <div>
-                <div style={{ ...labelStyle, margin: 0 }}>{t("studySettings.participantZoneTitle")}</div>
+                <div style={{ ...labelStyle, margin: 0 }}>
+                  {t("studySettings.participantZoneTitle")}
+                </div>
                 {!showParticipantZone && (
-                  <div style={{ ...hintStyle, margin: "0.2rem 0 0", fontSize: "1.1rem" }}>
+                  <div
+                    style={{
+                      ...hintStyle,
+                      margin: "0.2rem 0 0",
+                      fontSize: "1.1rem",
+                    }}
+                  >
                     {t("studySettings.participantZoneHintCollapsed")}
                   </div>
                 )}
               </div>
-              <span style={{ fontSize: "1rem", color: "var(--ink-40)", flexShrink: 0, transition: "transform 150ms", display: "inline-block", transform: showParticipantZone ? "rotate(180deg)" : "rotate(0deg)" }}>
+              <span
+                style={{
+                  fontSize: "1rem",
+                  color: "var(--ink-40)",
+                  flexShrink: 0,
+                  transition: "transform 150ms",
+                  display: "inline-block",
+                  transform: showParticipantZone
+                    ? "rotate(180deg)"
+                    : "rotate(0deg)",
+                }}
+              >
                 ▼
               </span>
             </button>
 
             {/* Accordion body */}
             {showParticipantZone && (
-              <div style={{ padding: "1.6rem", borderTop: "1px solid var(--ink-10)", display: "flex", flexDirection: "column", gap: "1.2rem" }}>
+              <div
+                style={{
+                  padding: "1.6rem",
+                  borderTop: "1px solid var(--ink-10)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "1.2rem",
+                }}
+              >
                 <p style={{ ...hintStyle, margin: 0 }}>
                   {t("studySettings.participantZoneHintExpanded")}
                 </p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.8rem",
+                  }}
+                >
                   <div>
-                    <label style={labelStyle}>{t("studySettings.zoneLinkLabel")}</label>
-                    <input name="geofencingURL" type="text" defaultValue={s.geofencing?.link ?? ""} placeholder="https://maps.yourapp.com/select" style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "1.2rem" }} />
+                    <label style={labelStyle}>
+                      {t("studySettings.zoneLinkLabel")}
+                    </label>
+                    <input
+                      name="geofencingURL"
+                      type="text"
+                      defaultValue={s.geofencing?.link ?? ""}
+                      placeholder="https://maps.yourapp.com/select"
+                      style={{
+                        ...inputStyle,
+                        fontFamily: "var(--font-mono)",
+                        fontSize: "1.2rem",
+                      }}
+                    />
                   </div>
-                  <div className="settings-2col grid" style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
+                  <div
+                    className="settings-2col grid"
+                    style={{ gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}
+                  >
                     <div>
-                      <label style={labelStyle}>{t("studySettings.zoneRadiusLabel")}</label>
-                      <input name="userLocationRadius" type="number" defaultValue={s.geofencing?.radius ?? ""} placeholder="100" style={inputStyle} />
+                      <label style={labelStyle}>
+                        {t("studySettings.zoneRadiusLabel")}
+                      </label>
+                      <input
+                        name="userLocationRadius"
+                        type="number"
+                        defaultValue={s.geofencing?.radius ?? ""}
+                        placeholder="100"
+                        style={inputStyle}
+                      />
                     </div>
                     <div>
-                      <label style={labelStyle}>{t("studySettings.zoneExitLabel")}</label>
-                      <input name="userLocationExitzone" type="number" defaultValue={s.geofencing?.exitzone ?? ""} placeholder="0" style={inputStyle} />
+                      <label style={labelStyle}>
+                        {t("studySettings.zoneExitLabel")}
+                      </label>
+                      <input
+                        name="userLocationExitzone"
+                        type="number"
+                        defaultValue={s.geofencing?.exitzone ?? ""}
+                        placeholder="0"
+                        style={inputStyle}
+                      />
                     </div>
                     <div>
-                      <label style={labelStyle}>{t("studySettings.zoneHeaderLabel")}</label>
-                      <input name="userLocationHeader" type="text" defaultValue={s.geofencing?.header ?? ""} placeholder={t("studySettings.locArrivedPlaceholder")} style={inputStyle} />
+                      <label style={labelStyle}>
+                        {t("studySettings.zoneHeaderLabel")}
+                      </label>
+                      <input
+                        name="userLocationHeader"
+                        type="text"
+                        defaultValue={s.geofencing?.header ?? ""}
+                        placeholder={t("studySettings.locArrivedPlaceholder")}
+                        style={inputStyle}
+                      />
                     </div>
                     <div>
-                      <label style={labelStyle}>{t("studySettings.zoneMessageLabel")}</label>
-                      <input name="userLocationMessage" type="text" defaultValue={s.geofencing?.message ?? ""} placeholder={t("studySettings.locSurveyPlaceholder")} style={inputStyle} />
+                      <label style={labelStyle}>
+                        {t("studySettings.zoneMessageLabel")}
+                      </label>
+                      <input
+                        name="userLocationMessage"
+                        type="text"
+                        defaultValue={s.geofencing?.message ?? ""}
+                        placeholder={t("studySettings.locSurveyPlaceholder")}
+                        style={inputStyle}
+                      />
                     </div>
                     <div>
-                      <label style={labelStyle}>{t("studySettings.zoneMintimeLabel")}</label>
-                      <input name="userLocationMintimewindow" type="number" defaultValue={s.geofencing?.mintimewindow ?? ""} placeholder="0" style={inputStyle} />
+                      <label style={labelStyle}>
+                        {t("studySettings.zoneMintimeLabel")}
+                      </label>
+                      <input
+                        name="userLocationMintimewindow"
+                        type="number"
+                        defaultValue={s.geofencing?.mintimewindow ?? ""}
+                        placeholder="0"
+                        style={inputStyle}
+                      />
                     </div>
                   </div>
                 </div>
-                <div style={{ display: "flex", gap: "1.6rem", flexWrap: "wrap" }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
+                <div
+                  style={{ display: "flex", gap: "1.6rem", flexWrap: "wrap" }}
+                >
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.6rem",
+                      fontSize: "1.2rem",
+                      color: "var(--ink-60)",
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
                       type="checkbox"
                       name="event-enter"
-                      defaultChecked={s.geofencing?.events?.includes("enter") ?? false}
-                      style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
+                      defaultChecked={
+                        s.geofencing?.events?.includes("enter") ?? false
+                      }
+                      style={{
+                        width: "1.3rem",
+                        height: "1.3rem",
+                        accentColor: "var(--sage)",
+                      }}
                     />
                     {t("studySettings.triggerEnter")}
                   </label>
-                  <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.6rem",
+                      fontSize: "1.2rem",
+                      color: "var(--ink-60)",
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
                       type="checkbox"
                       name="event-exit"
-                      defaultChecked={s.geofencing?.events?.includes("exit") ?? false}
-                      style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
+                      defaultChecked={
+                        s.geofencing?.events?.includes("exit") ?? false
+                      }
+                      style={{
+                        width: "1.3rem",
+                        height: "1.3rem",
+                        accentColor: "var(--sage)",
+                      }}
                     />
                     {t("studySettings.triggerExit")}
                   </label>
-                  <label style={{ display: "flex", alignItems: "center", gap: "0.6rem", fontSize: "1.2rem", color: "var(--ink-60)", cursor: "pointer" }}>
+                  <label
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.6rem",
+                      fontSize: "1.2rem",
+                      color: "var(--ink-60)",
+                      cursor: "pointer",
+                    }}
+                  >
                     <input
                       type="checkbox"
                       name="invisible"
                       defaultChecked={s.geofencing?.invisible ?? false}
-                      style={{ width: "1.3rem", height: "1.3rem", accentColor: "var(--sage)" }}
+                      style={{
+                        width: "1.3rem",
+                        height: "1.3rem",
+                        accentColor: "var(--sage)",
+                      }}
                     />
                     {t("studySettings.hiddenZone")}
                   </label>
@@ -852,18 +1571,22 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
 
           {/* Researcher-defined locations */}
           <div>
-            <label style={{ ...labelStyle, marginBottom: "0.6rem" }}>{t("studySettings.researcherLocLabel")}</label>
-            <p style={hintStyle}>
-              {t("studySettings.researcherLocHint")}
-            </p>
+            <label style={{ ...labelStyle, marginBottom: "0.6rem" }}>
+              {t("studySettings.researcherLocLabel")}
+            </label>
+            <p style={hintStyle}>{t("studySettings.researcherLocHint")}</p>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div
+              style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
+            >
               {locations.map((loc) => (
                 <LocationRow
                   key={loc.slug}
                   loc={loc}
                   onDelete={() =>
-                    setLocations((prev) => prev.filter((l) => l.slug !== loc.slug))
+                    setLocations((prev) =>
+                      prev.filter((l) => l.slug !== loc.slug),
+                    )
                   }
                   t={t}
                 />
@@ -875,14 +1598,27 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
                 type="text"
                 value={newLocationName}
                 onChange={(e) => setNewLocationName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addLocation())}
+                onKeyDown={(e) =>
+                  e.key === "Enter" && (e.preventDefault(), addLocation())
+                }
                 placeholder={t("studySettings.locNewPlaceholder")}
                 style={{ ...inputStyle, flex: 1 }}
               />
               <button
                 type="button"
                 onClick={addLocation}
-                style={{ padding: "0.9rem 1.6rem", background: "var(--ink)", color: "var(--paper)", border: "none", borderRadius: "0.8rem", fontSize: "1.25rem", fontWeight: 500, cursor: "pointer", fontFamily: "var(--font-body)", whiteSpace: "nowrap" }}
+                style={{
+                  padding: "0.9rem 1.6rem",
+                  background: "var(--ink)",
+                  color: "var(--paper)",
+                  border: "none",
+                  borderRadius: "0.8rem",
+                  fontSize: "1.25rem",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  fontFamily: "var(--font-body)",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {t("studySettings.locAddButton")}
               </button>
@@ -895,7 +1631,16 @@ export default function SettingsClient({ project, memberEmails, action, notice, 
       <div style={{ paddingTop: "0.4rem" }}>
         <SubmitButton
           pendingLabel={t("studySettings.saving")}
-          style={{ padding: "1.2rem 2.8rem", background: "var(--coral)", color: "#fff", border: "none", borderRadius: "9999px", fontSize: "1.4rem", fontWeight: 500, fontFamily: "var(--font-body)" }}
+          style={{
+            padding: "1.2rem 2.8rem",
+            background: "var(--coral)",
+            color: "#fff",
+            border: "none",
+            borderRadius: "9999px",
+            fontSize: "1.4rem",
+            fontWeight: 500,
+            fontFamily: "var(--font-body)",
+          }}
         >
           {t("studySettings.saveButton")}
         </SubmitButton>

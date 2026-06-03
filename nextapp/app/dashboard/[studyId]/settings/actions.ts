@@ -130,8 +130,7 @@ export async function updateSettingsAction(studyId: string, formData: FormData) 
     parsedLocations = [];
   }
 
-  await Project.findByIdAndUpdate(studyId, {
-    $set: {
+  const setOps: Record<string, unknown> = {
       members: memberObjectIds,
 
       "settings.enableEvents": formData.get("enableEvents") === "on",
@@ -164,8 +163,17 @@ export async function updateSettingsAction(studyId: string, formData: FormData) 
       "settings.geofencing.events": geoUserEvents,
       "settings.geofencing.invisible": formData.get("invisible") === "on",
       "settings.geofencing.locations": parsedLocations,
-    },
-  });
+  };
+
+  // Legacy permanent link (predecessor of the multi-event structure). The field
+  // is only rendered for studies that still have one, so we only touch it when
+  // the form actually submitted it — leaving every other study untouched.
+  // Saving it empty removes the link.
+  if (formData.has("permanentLink")) {
+    setOps["settings.permanentLink"] = ((formData.get("permanentLink") as string) ?? "").trim();
+  }
+
+  await Project.findByIdAndUpdate(studyId, { $set: setOps });
 
   if (missingEmails.length > 0) {
     redirect(
