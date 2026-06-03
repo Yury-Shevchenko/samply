@@ -43,9 +43,16 @@ const config: NextAuthConfig = {
         if (!credentials?.email || !credentials?.password) return null;
 
         await connectDB();
+        // Match email case-insensitively. Emails are stored as entered (no
+        // normalization on signup), so some accounts have mixed-case addresses
+        // (e.g. "tVNS@sussex.ac.uk"). A plain lowercased lookup would never find
+        // them — locking them out of both login and post-reset sign-in. The
+        // collation (strength 2) makes the equality match ignore case.
         const user = await User.findOne({
-          email: (credentials.email as string).toLowerCase().trim(),
-        }).select("+local.password");
+          email: (credentials.email as string).trim(),
+        })
+          .collation({ locale: "en", strength: 2 })
+          .select("+local.password");
 
         if (!user || !user.local?.password) return null;
         if (!user.validPassword(credentials.password as string)) return null;
