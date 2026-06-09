@@ -51,6 +51,11 @@ const hookLimiter = rateLimit({
 });
 
 const app = express();
+// Behind a single nginx reverse proxy (nginx terminates TLS on 443 and forwards
+// to this server). Trust exactly one hop so req.ip reflects the real client IP
+// from X-Forwarded-For and express-rate-limit can identify clients correctly.
+// Use 1 (not `true`) so clients can't spoof X-Forwarded-For to bypass limits.
+app.set("trust proxy", 1);
 app.use(express.static("public"));
 
 // webhook for payment events with stripe
