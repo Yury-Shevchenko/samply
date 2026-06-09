@@ -42,23 +42,27 @@ async function applyOneCollection(
   collection: string,
   expireAfterSeconds: number
 ): Promise<void> {
-  try {
-    await db.command({
-      collMod: collection,
-      index: { keyPattern: { created: 1 }, expireAfterSeconds },
-    });
-  } catch (err: unknown) {
-    const isNotFound =
-      (err instanceof Error && err.message.includes("not found")) ||
-      // MongoDB error code 27 = IndexNotFound
-      (typeof err === "object" && err !== null && "code" in err && (err as { code: number }).code === 27);
+  // We deliberately avoid the `collMod` command here: it requires the `dbAdmin`
+  // role, whereas a typical application user only has `readWrite`. Both
+  // `createIndex` and `dropIndex` are granted by `readWrite`, so to change an
+  // existing TTL value we drop the index and recreate it.
+  const coll = db.collection(collection);
 
-    if (isNotFound) {
-      // Index doesn't exist yet — create it
-      const coll = db.collection(collection);
-      await coll.createIndex({ created: 1 }, { expireAfterSeconds, background: true });
-    } else {
-      throw err;
-    }
+  const indexes = await coll.indexes();
+  const existing = indexes.find(
+    (ix) =>
+      ix.key &&
+      Object.keys(ix.key).length === 1 &&
+      (ix.key as Record<string, unknown>).created === 1
+  );
+
+  if (existing) {
+    // Already the desired TTL — nothing to do.
+    if (existing.expireAfterSeconds === expireAfterSeconds) return;
+    // Different TTL (or a non-TTL index on `created`): drop and recreate, since
+    // MongoDB won't let you redefine an existing index with different options.
+    await coll.dropIndex(existing.name as string);
   }
+
+  await coll.createIndex({ created: 1 }, { expireAfterSeconds });
 }
