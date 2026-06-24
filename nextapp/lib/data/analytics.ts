@@ -316,8 +316,13 @@ export async function fetchSchedulePerformance(
   const oid = new mongoose.Types.ObjectId(projectId);
   const since = sinceDate(days);
 
+  // Only count actual notification sends. Every send path (notificationSender,
+  // legacy jobController, hookController) writes an "events.status: sent" marker;
+  // survey-data saves (saveIncrementalResults) and geofencing events do not, and
+  // would otherwise be miscounted as "(untracked schedule)" since they carry a
+  // project but no notificationConfigId.
   const rows: { _id: string | null; sent: number; responded: number }[] = await Result.aggregate([
-    { $match: { project: oid, created: { $gte: since } } },
+    { $match: { project: oid, created: { $gte: since }, "events.status": "sent" } },
     {
       $group: {
         _id: { $ifNull: ["$notificationConfigId", null] },

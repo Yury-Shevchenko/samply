@@ -113,7 +113,7 @@ export default async function StudyDetailPage({
                 className="font-[family-name:var(--font-hand)]"
                 style={{ fontSize: "1.8rem", color: "var(--coral)", marginBottom: "1.6rem" }}
               >
-                how to join
+                {t("studyDetail.howToJoin")}
               </div>
               <ol
                 style={{
@@ -126,9 +126,9 @@ export default async function StudyDetailPage({
                 }}
               >
                 {[
-                  "Download the Samply Research app (iOS or Android).",
-                  'Open the app and tap "Join a study".',
-                  "Scan the QR code on this page — or tap the link on your phone.",
+                  t("studyDetail.joinStep1"),
+                  t("studyDetail.joinStep2"),
+                  t("studyDetail.joinStep3"),
                 ].map((step, i) => (
                   <li key={i} className="flex gap-[1.4rem] items-start">
                     <span
@@ -231,7 +231,7 @@ export default async function StudyDetailPage({
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={qrDataUrl}
-                  alt={`QR code to join ${project.name}`}
+                  alt={t("studyDetail.qrCodeAlt", { name: project.name })}
                   width={180}
                   height={180}
                   style={{ display: "block" }}

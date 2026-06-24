@@ -1089,6 +1089,11 @@ const en = {
     findStudyHint:        "in Find a Study → Enter code",
     tapToOpen:            "On your phone?",
     tapToOpenLink:        "Tap to open directly",
+    howToJoin: "how to join",
+    joinStep1: "Download the Samply Research app (iOS or Android).",
+    joinStep2: "Open the app and tap “Join a study”.",
+    joinStep3: "Scan the QR code on this page — or tap the link on your phone.",
+    qrCodeAlt: "QR code to join {name}",
   },
 
   // ─── Study not-found page ────────────────────────────────────────────────────

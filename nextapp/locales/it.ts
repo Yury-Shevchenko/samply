@@ -785,6 +785,11 @@ const it: DeepLoose<Messages> = {
     findStudyHint:         'in Trova uno studio → Inserisci codice',
     tapToOpen:             'Sul telefono?',
     tapToOpenLink:         'Tocca per aprire direttamente',
+    howToJoin: "come partecipare",
+    joinStep1: "Scarica l’app Samply Research (iOS o Android).",
+    joinStep2: "Apri l’app e tocca “Partecipa a uno studio”.",
+    joinStep3: "Scansiona il codice QR su questa pagina — oppure tocca il link sul telefono.",
+    qrCodeAlt: "Codice QR per partecipare a {name}",
   },
 
   studyNotFound: {

@@ -145,6 +145,26 @@ const TOOLS_EN = [
     ],
     url: 'https://survey.institution.edu/123456?lang=en&samply_id=%SAMPLY_ID%&batch=%BATCH%',
   },
+  {
+    name: 'SoSci-Survey',
+    steps: [
+      'Append the placeholders to your survey URL as query parameters — for example id, code, msg.',
+      'SoSci does not save URL parameters to the dataset automatically — you must capture them with a question. Add a question of type "Device and Transmitted Variables" and open its "Variables (POST/GET)" tab.',
+      'Enter each URL parameter name (id, code, msg) into a "Variable name" field. SoSci stores each value in a dataset variable shown in the Name column (e.g. GD01_RV1). This question must be placed on the first page of the questionnaire.',
+      'The values are now saved to your dataset and export. Run one test call with a real Samply link and confirm the GD…_RV columns are filled before starting data collection.',
+    ],
+    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
+  {
+    name: 'Unipark (EFS)',
+    steps: [
+      'Append the placeholders to your participation link as query parameters — for example id, code, msg. With an anonymous link (no panel), add them after the survey URL.',
+      'In the questionnaire editor, create one internal variable per value to hold the incoming parameters.',
+      'Register the incoming URL parameters so EFS writes them into those internal variables — under Project properties → URL parameters, or via a "Save value" trigger on the first page. Without this step EFS keeps the values only for the session and does not export them.',
+      'The stored internal variables now appear in your data export. Test with a real Samply link and confirm the values are saved before starting data collection. Note: capturing custom URL parameters requires a Unipark license tier that allows it.',
+    ],
+    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
 ];
 
 const TOOLS_DE = [
@@ -175,6 +195,26 @@ const TOOLS_DE = [
     ],
     url: 'https://survey.institution.edu/123456?lang=en&samply_id=%SAMPLY_ID%&batch=%BATCH%',
   },
+  {
+    name: 'SoSci-Survey',
+    steps: [
+      'Hängen Sie die Platzhalter als Query-Parameter an Ihre Umfrage-URL an — zum Beispiel id, code, msg.',
+      'SoSci speichert URL-Parameter nicht automatisch im Datensatz — Sie müssen sie mit einer Frage erfassen. Fügen Sie eine Frage vom Typ „Gerät und übermittelte Variablen" hinzu und öffnen Sie deren Reiter „Variablen (POST/GET)".',
+      'Tragen Sie jeden URL-Parameternamen (id, code, msg) in ein Feld „Variablenname" ein. SoSci speichert jeden Wert in einer Datensatzvariable, die in der Spalte „Name im Datensatz" angezeigt wird (z. B. GD01_RV1). Diese Frage muss auf der ersten Seite des Fragebogens stehen.',
+      'Die Werte werden nun in Ihrem Datensatz und Export gespeichert. Führen Sie vor Beginn der Datenerhebung einen Testaufruf mit einem echten Samply-Link durch und prüfen Sie, dass die GD…_RV-Spalten gefüllt sind.',
+    ],
+    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
+  {
+    name: 'Unipark (EFS)',
+    steps: [
+      'Hängen Sie die Platzhalter als Query-Parameter an Ihren Teilnahme-Link an — zum Beispiel id, code, msg. Bei einem anonymen Link (ohne Panel) fügen Sie sie hinter der Umfrage-URL an.',
+      'Legen Sie im Fragebogen-Editor pro Wert eine interne Variable an, die den eingehenden Parameter aufnimmt.',
+      'Registrieren Sie die eingehenden URL-Parameter, damit EFS sie in diese internen Variablen schreibt — unter Projekteigenschaften → URL-Parameter oder über einen „Wert speichern"-Trigger auf der ersten Seite. Ohne diesen Schritt behält EFS die Werte nur für die Sitzung und exportiert sie nicht.',
+      'Die gespeicherten internen Variablen erscheinen nun in Ihrem Datenexport. Testen Sie mit einem echten Samply-Link und prüfen Sie, dass die Werte gespeichert werden, bevor Sie mit der Datenerhebung beginnen. Hinweis: Das Erfassen eigener URL-Parameter erfordert eine Unipark-Lizenz, die dies erlaubt.',
+    ],
+    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
 ];
 
 const TOOLS_NL = [
@@ -204,6 +244,26 @@ const TOOLS_NL = [
       'Geef plaatshouderwaarden door als URL-parameters — LimeSurvey slaat ze automatisch op als antwoordgegevens.',
     ],
     url: 'https://survey.institution.edu/123456?lang=nl&samply_id=%SAMPLY_ID%&batch=%BATCH%',
+  },
+  {
+    name: 'SoSci-Survey',
+    steps: [
+      'Voeg de plaatshouders als querystring-parameters toe aan uw enquete-URL — bijvoorbeeld id, code, msg.',
+      'SoSci slaat URL-parameters niet automatisch op in de dataset — u moet ze met een vraag vastleggen. Voeg een vraag van het type "Apparaat en doorgegeven variabelen" toe en open het tabblad "Variabelen (POST/GET)".',
+      'Voer elke URL-parameternaam (id, code, msg) in een veld "Variabelenaam" in. SoSci slaat elke waarde op in een datasetvariabele die in de kolom Naam wordt getoond (bijv. GD01_RV1). Deze vraag moet op de eerste pagina van de vragenlijst staan.',
+      'De waarden worden nu opgeslagen in uw dataset en export. Voer vóór de start van de dataverzameling één testoproep uit met een echte Samply-link en controleer of de GD…_RV-kolommen gevuld zijn.',
+    ],
+    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
+  {
+    name: 'Unipark (EFS)',
+    steps: [
+      'Voeg de plaatshouders als querystring-parameters toe aan uw deelnamelink — bijvoorbeeld id, code, msg. Bij een anonieme link (zonder panel) voegt u ze achter de enquete-URL toe.',
+      'Maak in de vragenlijsteditor één interne variabele per waarde aan om de binnenkomende parameters op te slaan.',
+      'Registreer de binnenkomende URL-parameters zodat EFS ze in die interne variabelen schrijft — onder Projecteigenschappen → URL-parameters, of via een "Waarde opslaan"-trigger op de eerste pagina. Zonder deze stap bewaart EFS de waarden alleen voor de sessie en worden ze niet geëxporteerd.',
+      'De opgeslagen interne variabelen verschijnen nu in uw data-export. Test met een echte Samply-link en controleer of de waarden worden opgeslagen voordat u met de dataverzameling begint. Let op: het vastleggen van eigen URL-parameters vereist een Unipark-licentie die dit toestaat.',
+    ],
+    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
   },
 ];
 
@@ -274,6 +334,26 @@ const TOOLS_RU = [
     ],
     url: 'https://survey.institution.edu/123456?lang=ru&samply_id=%SAMPLY_ID%&batch=%BATCH%',
   },
+  {
+    name: 'SoSci-Survey',
+    steps: [
+      'Добавьте заполнители как параметры строки запроса к URL опроса — например id, code, msg.',
+      'SoSci не сохраняет URL-параметры в набор данных автоматически — их нужно захватить вопросом. Добавьте вопрос типа «Устройство и переданные переменные» и откройте вкладку «Переменные (POST/GET)».',
+      'Введите имя каждого URL-параметра (id, code, msg) в поле «Имя переменной». SoSci сохраняет каждое значение в переменной набора данных, показанной в столбце «Имя» (например, GD01_RV1). Этот вопрос должен находиться на первой странице анкеты.',
+      'Значения теперь сохраняются в вашем наборе данных и при экспорте. Перед началом сбора данных выполните один тестовый вызов с реальной ссылкой Samply и убедитесь, что столбцы GD…_RV заполнены.',
+    ],
+    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
+  {
+    name: 'Unipark (EFS)',
+    steps: [
+      'Добавьте заполнители как параметры строки запроса к ссылке участия — например id, code, msg. При анонимной ссылке (без панели) добавьте их после URL опроса.',
+      'В редакторе анкеты создайте по одной внутренней переменной на каждое значение для хранения входящих параметров.',
+      'Зарегистрируйте входящие URL-параметры, чтобы EFS записывал их в эти внутренние переменные — в разделе «Свойства проекта» → «URL-параметры» или через триггер «Сохранить значение» на первой странице. Без этого шага EFS хранит значения только в течение сессии и не экспортирует их.',
+      'Сохранённые внутренние переменные теперь появятся при экспорте данных. Протестируйте с реальной ссылкой Samply и убедитесь, что значения сохраняются, прежде чем начинать сбор данных. Примечание: захват собственных URL-параметров требует лицензии Unipark, которая это позволяет.',
+    ],
+    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
 ];
 
 const TOKENS_ZH = [
@@ -342,6 +422,26 @@ const TOOLS_ZH = [
       '将占位符值作为 URL 参数传入——LimeSurvey 会自动将其保存为回答数据。',
     ],
     url: 'https://survey.institution.edu/123456?lang=zh&samply_id=%SAMPLY_ID%&batch=%BATCH%',
+  },
+  {
+    name: 'SoSci-Survey',
+    steps: [
+      '将占位符作为查询字符串参数附加到您的问卷 URL——例如 id、code、msg。',
+      'SoSci 不会自动将 URL 参数保存到数据集——您必须用一个问题来捕获它们。添加一个"设备与传入变量"类型的问题，并打开其"变量（POST/GET）"选项卡。',
+      '将每个 URL 参数名称（id、code、msg）填入"变量名"字段。SoSci 会将每个值存储到"名称"列中显示的数据集变量（例如 GD01_RV1）。此问题必须位于问卷的第一页。',
+      '这些值现在会保存到您的数据集和导出中。在开始数据收集前，使用真实的 Samply 链接进行一次测试调用，确认 GD…_RV 列已填充。',
+    ],
+    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
+  },
+  {
+    name: 'Unipark (EFS)',
+    steps: [
+      '将占位符作为查询字符串参数附加到您的参与链接——例如 id、code、msg。对于匿名链接（无 panel），将它们附加在问卷 URL 之后。',
+      '在问卷编辑器中为每个值创建一个内部变量，以保存传入的参数。',
+      '注册传入的 URL 参数，使 EFS 将它们写入这些内部变量——在"项目属性 → URL 参数"中，或通过第一页上的"保存值"触发器。若没有此步骤，EFS 仅在会话期间保留这些值，不会导出。',
+      '保存的内部变量现在会出现在您的数据导出中。在开始数据收集前，使用真实的 Samply 链接进行测试，确认值已保存。注意：捕获自定义 URL 参数需要支持此功能的 Unipark 许可证。',
+    ],
+    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
   },
 ];
 

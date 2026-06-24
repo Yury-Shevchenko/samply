@@ -768,6 +768,11 @@ const ja: DeepLoose<Messages> = {
     findStudyHint:        "「研究を見つける」→「コードを入力」で",
     tapToOpen:            "スマートフォンですか?",
     tapToOpenLink:        "タップして直接開く",
+    howToJoin: "参加方法",
+    joinStep1: "Samply Research アプリをダウンロード（iOS または Android）。",
+    joinStep2: "アプリを開いて「研究に参加」をタップ。",
+    joinStep3: "このページの QR コードをスキャン、またはスマートフォンでリンクをタップ。",
+    qrCodeAlt: "{name} に参加するための QR コード",
   },
 
   studyNotFound: {

@@ -785,6 +785,11 @@ const zh: DeepLoose<Messages> = {
     findStudyHint:         '在"查找研究 → 输入代码"中',
     tapToOpen:             '在手机上？',
     tapToOpenLink:         '点击直接打开',
+    howToJoin: "如何加入",
+    joinStep1: "下载 Samply Research 应用（iOS 或 Android）。",
+    joinStep2: "打开应用并点按“加入研究”。",
+    joinStep3: "扫描此页面上的二维码——或在手机上点按链接。",
+    qrCodeAlt: "加入 {name} 的二维码",
   },
 
   studyNotFound: {

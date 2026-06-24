@@ -174,12 +174,18 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
   const pnPage = Math.max(1, parseInt(pnPageStr ?? "1", 10) || 1);
 
   const [project, allNotifications, participants] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchScheduledNotifications(studyId),
     fetchParticipants(studyId),
   ]);
 
   if (!project) notFound();
+
+  // Owners and members can modify schedules; an admin viewing another
+  // researcher's study has view-only access, so write controls are hidden.
+  const isOwner = String(project.creator) === session.user.id;
+  const isMember = (project.members ?? []).map(String).includes(session.user.id);
+  const canEdit = isOwner || isMember;
 
   const notification = notificationId
     ? allNotifications.find((n) => n.id === notificationId)
@@ -301,7 +307,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     };
   });
 
-  const deleteScheduleAction = notification
+  const deleteScheduleAction = notification && canEdit
     ? deleteNotificationAction.bind(null, studyId, notificationId!, `/dashboard/${studyId}/schedule`)
     : null;
 
@@ -532,18 +538,22 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                       </td>
                       <td style={{ ...TD, color: "var(--ink-40)" }}>{job.data.groupid ?? "—"}</td>
                       <td style={{ padding: "1rem 2rem 1rem 1.6rem" }}>
-                        <div style={{ display: "flex", gap: "1.4rem", alignItems: "center" }}>
-                          <a href={`/scheduled/${notificationId}/edit/${job._id}?project=${studyId}`}
-                            style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
-                            className="hover:text-[var(--ink)] transition-colors">
-                            {t("scheduled.jobEdit")}
-                          </a>
-                          <a href={`/scheduled/delete/${notificationId}/${job._id}?project=${studyId}`}
-                            style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--coral)", textDecoration: "none", letterSpacing: ".04em" }}
-                            className="hover:opacity-70 transition-opacity">
-                            {t("scheduled.jobDelete")}
-                          </a>
-                        </div>
+                        {canEdit ? (
+                          <div style={{ display: "flex", gap: "1.4rem", alignItems: "center" }}>
+                            <a href={`/scheduled/${notificationId}/edit/${job._id}?project=${studyId}`}
+                              style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
+                              className="hover:text-[var(--ink)] transition-colors">
+                              {t("scheduled.jobEdit")}
+                            </a>
+                            <a href={`/scheduled/delete/${notificationId}/${job._id}?project=${studyId}`}
+                              style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--coral)", textDecoration: "none", letterSpacing: ".04em" }}
+                              className="hover:opacity-70 transition-opacity">
+                              {t("scheduled.jobDelete")}
+                            </a>
+                          </div>
+                        ) : (
+                          <span style={{ color: "var(--ink-20)" }}>—</span>
+                        )}
                       </td>
                     </tr>
                   ))}
