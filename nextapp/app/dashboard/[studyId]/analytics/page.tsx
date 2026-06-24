@@ -27,7 +27,7 @@ export default async function AnalyticsPage({ params, searchParams }: Props) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
-  const project = await fetchProjectById(studyId, session.user.id);
+  const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   if (!project) notFound();
 
   const [overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention, notifications] =

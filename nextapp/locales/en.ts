@@ -22,6 +22,12 @@ const en = {
   // @page    Every page (sticky top navigation bar)
   // @context Concise link labels; keep them short. "Sign out" should sound neutral,
   //          not punishing. "♥ Donate" — the heart symbol is intentional branding.
+  cookie: {
+    notice:    "Samply uses only essential cookies needed to sign you in and keep you logged in. We don’t use tracking, analytics, or advertising cookies.",
+    learnMore: "Learn more",
+    dismiss:   "Got it",
+  },
+
   nav: {
     dashboard:    "Dashboard",
     forum:        "Forum",
@@ -409,6 +415,10 @@ const en = {
     privacyExport:   "Export your data regularly from each study's History tab before these periods expire.",
     privacyPolicy:   "Privacy Policy",
     privacyTerms:    "Terms & Conditions",
+    privacyDpa:      "Data Processing Agreement",
+    newsletterToggle: "Receive Samply newsletters and product updates",
+    newsletterHint:   "Essential account emails (password resets, confirmations) are always sent.",
+    newsletterSave:   "Save email preferences",
   },
 
   // ─── Study tab navigation ────────────────────────────────────────────────────
@@ -1219,6 +1229,7 @@ const en = {
       policy:             "Privacy Policy",
       terms:              "Terms & Conditions",
       irb:                "IRB / Ethics Brief",
+      dpa:                "Data Processing Agreement",
     },
     /** Sidebar section group headings — also used as breadcrumb in the page header */
     sections: {
@@ -1253,6 +1264,7 @@ const en = {
       policy:             "Privacy Policy",
       terms:              "Terms & Conditions",
       irb:                "IRB & Ethics Brief",
+      dpa:                "Data Processing Agreement",
     },
     /** Handwritten-style eyebrow shown above the H1 on each page */
     pageEyebrows: {
@@ -1863,6 +1875,7 @@ const en = {
       studiesLabel:      "studies · {n}",
       viewHistory:       "View history →",
       manageAccount:     "Manage account →",
+      downloadData:      "Download my data →",
       statsReceived:     "Notifications received",
       statsTapped:       "Tapped",
       statsCompleted:    "Completed",

@@ -61,7 +61,7 @@ export default async function ResultDetailPage({ params }: Props) {
   if (!session || session.user.level <= 10) redirect("/login");
 
   const [project, result] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchResultById(resultId, studyId),
   ]);
 

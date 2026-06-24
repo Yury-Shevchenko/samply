@@ -22,6 +22,12 @@ import type { Messages } from "./en";
 
 const de: DeepLoose<Messages> = {
 
+  cookie: {
+    notice:    "Samply verwendet nur essenzielle Cookies, die zur Anmeldung und zum Eingeloggtbleiben nötig sind. Wir nutzen keine Tracking-, Analyse- oder Werbe-Cookies.",
+    learnMore: "Mehr erfahren",
+    dismiss:   "Verstanden",
+  },
+
   nav: {
     dashboard:    "Dashboard",
     forum:        "Forum",
@@ -288,6 +294,10 @@ const de: DeepLoose<Messages> = {
     privacyExport: "Exportieren Sie Ihre Daten regelmäßig im Verlaufstab jeder Studie, bevor diese Fristen ablaufen.",
     privacyPolicy: "Datenschutzerklärung",
     privacyTerms: "AGB",
+    privacyDpa: "Auftragsverarbeitungsvertrag",
+    newsletterToggle: "Samply-Newsletter und Produktneuigkeiten erhalten",
+    newsletterHint: "Wesentliche Konto-E-Mails (Passwort-Zurücksetzen, Bestätigungen) werden immer gesendet.",
+    newsletterSave: "E-Mail-Einstellungen speichern",
   },
 
   studyTab: {
@@ -1396,6 +1406,7 @@ const de: DeepLoose<Messages> = {
       studiesLabel:      "Studien · {n}",
       viewHistory:       "Verlauf anzeigen →",
       manageAccount:     "Konto verwalten →",
+      downloadData:      "Meine Daten herunterladen →",
       statsReceived:     "Erhaltene Benachrichtigungen",
       statsTapped:       "Angetippt",
       statsCompleted:    "Abgeschlossen",

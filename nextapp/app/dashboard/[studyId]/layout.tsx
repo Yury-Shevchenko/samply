@@ -17,10 +17,16 @@ export default async function StudyLayout({ children, params }: Props) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
-  const project = await fetchProjectById(studyId, session.user.id);
+  const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   if (!project) notFound();
 
   const { t } = await getT();
+
+  // Owners and members can edit; an admin viewing another researcher's study
+  // has view-only access, so hide the (write-only) "Edit study" action for them.
+  const isOwner = String(project.creator) === session.user.id;
+  const isMember = (project.members ?? []).map(String).includes(session.user.id);
+  const canEdit = isOwner || isMember;
 
   return (
     <div style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
@@ -72,28 +78,30 @@ export default async function StudyLayout({ children, params }: Props) {
             )}
           </div>
 
-          <a
-            href={`/projects/${studyId}/edit`}
-            style={{
-              flexShrink: 0,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.4rem",
-              padding: "0.7rem 1.4rem",
-              fontFamily: "var(--font-mono)",
-              fontSize: "1.1rem",
-              letterSpacing: ".04em",
-              color: "var(--ink-60)",
-              textDecoration: "none",
-              border: "1px solid var(--ink-20)",
-              borderRadius: "9999px",
-              background: "transparent",
-              marginTop: "0.6rem",
-            }}
-            className="hover:opacity-70 transition-opacity"
-          >
-            {t("studyLayout.editStudy")}
-          </a>
+          {canEdit && (
+            <a
+              href={`/projects/${studyId}/edit`}
+              style={{
+                flexShrink: 0,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                padding: "0.7rem 1.4rem",
+                fontFamily: "var(--font-mono)",
+                fontSize: "1.1rem",
+                letterSpacing: ".04em",
+                color: "var(--ink-60)",
+                textDecoration: "none",
+                border: "1px solid var(--ink-20)",
+                borderRadius: "9999px",
+                background: "transparent",
+                marginTop: "0.6rem",
+              }}
+              className="hover:opacity-70 transition-opacity"
+            >
+              {t("studyLayout.editStudy")}
+            </a>
+          )}
         </div>
 
         {/* Tab navigation */}

@@ -50,8 +50,14 @@ export default async function StudyApiPage({
   await connectDB();
 
   const oid = new mongoose.Types.ObjectId(session.user.id);
+  const isAdmin = session.user.level > 100;
+  // Admins get read access to any study; the token itself stays hidden below
+  // since it only renders for the owner.
+  const match = isAdmin
+    ? { _id: studyId }
+    : { _id: studyId, $or: [{ creator: oid }, { members: oid }] };
   const project = await Project.findOne(
-    { _id: studyId, $or: [{ creator: oid }, { members: oid }] },
+    match,
     { name: 1, creator: 1, notifyToken: 1, notifyExpires: 1 },
   ).lean() as { _id: unknown; name?: string; creator?: unknown; notifyToken?: string; notifyExpires?: Date | null } | null;
 

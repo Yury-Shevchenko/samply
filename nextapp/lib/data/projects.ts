@@ -104,7 +104,11 @@ export async function fetchUserProjects(userId: string): Promise<{
   return { projects, invitedProjects };
 }
 
-export async function fetchProjectById(id: string, userId: string): Promise<ProjectFull | null> {
+export async function fetchProjectById(
+  id: string,
+  userId: string,
+  isAdmin = false,
+): Promise<ProjectFull | null> {
   await connectDB();
   const project = await Project.findById(id).lean();
   if (!project) return null;
@@ -115,7 +119,10 @@ export async function fetchProjectById(id: string, userId: string): Promise<Proj
 
   const isOwner = creatorStr === userId;
   const isMember = membersArr.some((m) => m === userId);
-  if (!isOwner && !isMember) return null;
+  // Admins (level > 100) get read access to any study so they can view it
+  // in the dashboard the way a researcher would. Write actions remain gated
+  // separately on owner/member, so admin access stays view-only.
+  if (!isOwner && !isMember && !isAdmin) return null;
 
   const participantCount = ((p.mobileUsers as unknown[]) ?? []).length;
 

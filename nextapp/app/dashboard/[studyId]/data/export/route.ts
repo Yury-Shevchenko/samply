@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
+import { recordAccess } from "@/lib/data/audit";
 import connectDB from "@/lib/db";
 import Result from "@/lib/models/result";
 import Project from "@/lib/models/project";
@@ -39,8 +40,15 @@ export async function GET(
   }
 
   const { studyId } = await params;
-  const project = await fetchProjectById(studyId, session.user.id);
+  const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   if (!project) return new NextResponse("Not found", { status: 404 });
+
+  await recordAccess({
+    actorUserId: session.user.id,
+    actorEmail: session.user.email ?? undefined,
+    action: "export_results",
+    projectId: studyId,
+  });
 
   await connectDB();
 

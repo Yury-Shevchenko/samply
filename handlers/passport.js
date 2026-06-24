@@ -7,6 +7,7 @@ const language = require('../config/lang');
 
 const crypto = require('crypto');
 const mail = require('../handlers/mail');
+const consent = require('../handlers/consent');
 const { nanoid } = require('nanoid');
 
 const getRandomInt = (min, max) => {
@@ -131,12 +132,21 @@ passport.use('website-signup-researcher', new LocalStrategy({
             resetURL: `${req.headers['x-app-url'] || process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${newUser.confirmEmailToken}`,
             filename: 'email-confirmation-' + newUser.language
           }).catch(err => {
-            console.error('Failed to send confirmation email to researcher:', newUser.email, err.message);
+            console.error('Failed to send confirmation email to researcher:', newUser._id, err.message);
           });
 
           // save the user
           newUser.save(function(err) {
             if (err) throw err;
+            // Record auditable terms + privacy consent for the new researcher.
+            // The register page states agreement to the Terms & Privacy Policy
+            // as a condition of creating an account. Fire-and-forget.
+            consent.recordSignupConsent({
+              subjectType: 'researcher',
+              userId: newUser._id,
+              source: 'web',
+              locale: newUser.language,
+            });
             return done(null, newUser, req.flash('success', `${language[user_lang]['passport'].flash_confirm_email}`));
           });
         }

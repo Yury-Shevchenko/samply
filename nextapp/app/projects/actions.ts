@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import User from "@/lib/models/user";
+import { purgeProjectData } from "@/lib/data/erasure";
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 import type { Session } from "next-auth";
@@ -159,6 +160,10 @@ export async function deleteProjectAction(id: string, formData: FormData) {
     redirect(`/projects/${id}/delete?error=` + encodeURIComponent("Name did not match."));
   }
 
+  // Cascade-delete all data referencing this study (responses, queued
+  // notifications, jobs, consent records) before removing the project itself,
+  // so nothing is left orphaned (GDPR Art. 17).
+  await purgeProjectData(id);
   await project.deleteOne();
   redirect("/projects");
 }

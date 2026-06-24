@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { fetchParticipantBysamplyId, fetchReceipts } from "@/lib/data/participants";
+import { fetchParticipantBysamplyId, fetchReceipts, researcherCanAccessParticipant } from "@/lib/data/participants";
+import { recordAccess } from "@/lib/data/audit";
 import type { IReceipt } from "@/lib/models/receipt";
 import { getT } from "@/lib/i18n.server";
 
@@ -27,8 +28,17 @@ export default async function ReceiptsPage({
 
   const { id: samplyId } = await params;
 
+  if (!(await researcherCanAccessParticipant(session.user.id, samplyId))) notFound();
+
   const participant = await fetchParticipantBysamplyId(samplyId);
   if (!participant) notFound();
+
+  await recordAccess({
+    actorUserId: session.user.id,
+    actorEmail: session.user.email ?? undefined,
+    action: "view_receipts",
+    targetSamplyId: samplyId,
+  });
 
   const p = participant as unknown as {
     name?: string;

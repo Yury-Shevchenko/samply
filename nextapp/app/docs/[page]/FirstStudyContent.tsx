@@ -35,7 +35,7 @@ const WORKSPACE_SECTIONS = [
   },
   {
     title: "Participants",
-    body: "Everyone enrolled — their anonymous Samply ID, enrolment date, assigned group (if any), timezone, and response history.",
+    body: "Everyone enrolled — their pseudonymous Samply ID, enrolment date, assigned group (if any), timezone, and response history.",
   },
   {
     title: "Schedule",
@@ -98,7 +98,7 @@ const WORKSPACE_SECTIONS_DE = [
   },
   {
     title: "Teilnehmende",
-    body: "Alle Eingeschriebenen – ihre anonyme Samply-ID, das Einschreibungsdatum, die zugewiesene Gruppe (falls vorhanden), die Zeitzone und der Antwortverlauf.",
+    body: "Alle Eingeschriebenen – ihre pseudonyme Samply-ID, das Einschreibungsdatum, die zugewiesene Gruppe (falls vorhanden), die Zeitzone und der Antwortverlauf.",
   },
   {
     title: "Zeitplan",
@@ -161,7 +161,7 @@ const WORKSPACE_SECTIONS_NL = [
   },
   {
     title: "Deelnemers",
-    body: "Iedereen die is ingeschreven — hun anonieme Samply-ID, inschrijvingsdatum, toegewezen groep (indien van toepassing), tijdzone en antwoordgeschiedenis.",
+    body: "Iedereen die is ingeschreven — hun pseudonieme Samply-ID, inschrijvingsdatum, toegewezen groep (indien van toepassing), tijdzone en antwoordgeschiedenis.",
   },
   {
     title: "Schema",
@@ -224,7 +224,7 @@ const WORKSPACE_SECTIONS_RU = [
   },
   {
     title: 'Участники',
-    body: 'Все зарегистрированные участники — их анонимный Samply ID, дата регистрации, назначенная группа (при наличии), часовой пояс и история ответов.',
+    body: 'Все зарегистрированные участники — их псевдонимный Samply ID, дата регистрации, назначенная группа (при наличии), часовой пояс и история ответов.',
   },
   {
     title: 'Расписание',
@@ -287,7 +287,7 @@ const WORKSPACE_SECTIONS_ZH = [
   },
   {
     title: '参与者',
-    body: '所有已注册人员——其匿名 Samply ID、注册日期、所属组（如有）、时区和回答历史。',
+    body: '所有已注册人员——其假名 Samply ID、注册日期、所属组（如有）、时区和回答历史。',
   },
   {
     title: '日程',
@@ -908,7 +908,7 @@ const WORKSPACE_SECTIONS_KO = [
   },
   {
     title: '참가자',
-    body: '등록된 모든 참가자 — 익명 Samply ID, 등록 날짜, 배정된 그룹(있는 경우), 시간대 및 응답 기록.',
+    body: '등록된 모든 참가자 — 가명 Samply ID, 등록 날짜, 배정된 그룹(있는 경우), 시간대 및 응답 기록.',
   },
   {
     title: '일정',
@@ -971,7 +971,7 @@ const WORKSPACE_SECTIONS_IT = [
   },
   {
     title: 'Partecipanti',
-    body: 'Tutti gli iscritti — il loro ID Samply anonimo, la data di iscrizione, il gruppo assegnato (se presente), il fuso orario e la cronologia delle risposte.',
+    body: 'Tutti gli iscritti — il loro ID Samply pseudonimo, la data di iscrizione, il gruppo assegnato (se presente), il fuso orario e la cronologia delle risposte.',
   },
   {
     title: 'Pianificazione',
@@ -1246,7 +1246,7 @@ const WORKSPACE_SECTIONS_FR = [
   },
   {
     title: "Participants",
-    body: "Tous les inscrits — leur ID Samply anonyme, la date d'inscription, le groupe attribué (le cas échéant), le fuseau horaire et l'historique des réponses.",
+    body: "Tous les inscrits — leur ID Samply pseudonyme, la date d'inscription, le groupe attribué (le cas échéant), le fuseau horaire et l'historique des réponses.",
   },
   {
     title: "Planification",
@@ -1419,7 +1419,7 @@ const WORKSPACE_SECTIONS_ES = [
   },
   {
     title: "Participantes",
-    body: "Todos los inscritos — su ID de Samply anónimo, la fecha de inscripción, el grupo asignado (si corresponde), la zona horaria y el historial de respuestas.",
+    body: "Todos los inscritos — su ID de Samply seudónimo, la fecha de inscripción, el grupo asignado (si corresponde), la zona horaria y el historial de respuestas.",
   },
   {
     title: "Calendario",
@@ -1592,7 +1592,7 @@ const WORKSPACE_SECTIONS_PT = [
   },
   {
     title: "Participantes",
-    body: "Todos os inscritos — seu ID Samply anônimo, a data de inscrição, o grupo atribuído (se houver), o fuso horário e o histórico de respostas.",
+    body: "Todos os inscritos — seu ID Samply pseudônimo, a data de inscrição, o grupo atribuído (se houver), o fuso horário e o histórico de respostas.",
   },
   {
     title: "Calendário",
@@ -1765,7 +1765,7 @@ const WORKSPACE_SECTIONS_JA = [
   },
   {
     title: "参加者",
-    body: "登録されたすべての人 — 匿名のSamply ID、登録日、割り当てられたグループ（ある場合）、タイムゾーン、回答履歴。",
+    body: "登録されたすべての人 — 仮名のSamply ID、登録日、割り当てられたグループ（ある場合）、タイムゾーン、回答履歴。",
   },
   {
     title: "スケジュール",
@@ -1936,7 +1936,7 @@ const WORKSPACE_SECTIONS_TR = [
   },
   {
     title: "Katılımcılar",
-    body: "Kayıtlı herkes — anonim Samply kimlikleri, kayıt tarihleri, atanmış grupları (varsa), saat dilimleri ve yanıt geçmişleri.",
+    body: "Kayıtlı herkes — takma adlı Samply kimlikleri, kayıt tarihleri, atanmış grupları (varsa), saat dilimleri ve yanıt geçmişleri.",
   },
   {
     title: "Program",
@@ -2107,7 +2107,7 @@ const WORKSPACE_SECTIONS_PL = [
   },
   {
     title: "Uczestnicy",
-    body: "Wszyscy, którzy się zapisali — anonimowe identyfikatory Samply, daty rejestracji, przypisane grupy (jeśli istnieją), strefy czasowe i historia odpowiedzi.",
+    body: "Wszyscy, którzy się zapisali — pseudonimowe identyfikatory Samply, daty rejestracji, przypisane grupy (jeśli istnieją), strefy czasowe i historia odpowiedzi.",
   },
   {
     title: "Harmonogram",
@@ -2278,7 +2278,7 @@ const WORKSPACE_SECTIONS_AR = [
   },
   {
     title: "المشاركون",
-    body: "كل من سجّل — معرّفات Samply مجهولة الهوية، وتواريخ التسجيل، والمجموعات المخصصة (إن وُجدت)، والمناطق الزمنية، وسجل الإجابات.",
+    body: "كل من سجّل — معرّفات Samply مستعارة، وتواريخ التسجيل، والمجموعات المخصصة (إن وُجدت)، والمناطق الزمنية، وسجل الإجابات.",
   },
   {
     title: "الجدول",

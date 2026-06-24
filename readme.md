@@ -9,7 +9,7 @@ With Samply you can schedule notifications for experience sampling studies. Samp
 * Different types of notifications schedule (one-time, repeat, user-dependent, randomized).
 * Customization of messages and URL links: you can send links to any online survey of experiment (e.g., Google Forms, SurveyMonkey, Qualtrics, lab.js). You just have to make sure that your online study looks right on mobile devices.
 * Recording participants' responses to your notifications.
-* Preserving anonymity: participants do not need to provide any personal information such as emails or phone numbers to you to participate in your study. All notifications are sent through the application.
+* Pseudonymous participation: participants are identified to you only by an app-generated Samply ID — you never receive their name, email, or phone number. (Participants do create an account with an email in the app, so data is pseudonymous rather than fully anonymous.) All notifications are sent through the application.
 
 ## Researcher access in a web browser
 

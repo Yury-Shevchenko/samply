@@ -53,6 +53,7 @@ require("./models/Project");
 require("./models/Job");
 require("./models/Receipt");
 require("./models/PendingNotification");
+require("./models/ConsentRecord");
 
 // Background notification poller
 require("./services/notificationCron").start();

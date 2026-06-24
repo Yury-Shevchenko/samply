@@ -164,6 +164,22 @@ async function changeEmailAction(formData: FormData) {
   redirect("/account?notice=" + encodeURIComponent("Email updated. Check your new inbox to confirm it."));
 }
 
+async function updateEmailPrefsAction(formData: FormData) {
+  "use server";
+  const session = await auth();
+  if (!session) redirect("/login");
+
+  await connectDB();
+  // Checkbox present (="on") means the user wants newsletters; absent means opted out.
+  const subscribed = formData.get("newsletter") === "on";
+  await User.updateOne(
+    { _id: session.user.id },
+    { $set: { emailUnsubscribed: !subscribed } },
+  );
+
+  redirect("/account?notice=" + encodeURIComponent("Email preferences updated."));
+}
+
 const inputStyle: React.CSSProperties = {
   width: "100%",
   padding: "1rem 1.4rem",
@@ -575,7 +591,33 @@ export default async function AccountPage({
             <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
               <a href="/docs/policy" style={{ fontSize: "1.2rem", color: "var(--ink-60)", textDecoration: "underline" }}>{t("account.privacyPolicy")}</a>
               <a href="/docs/terms"  style={{ fontSize: "1.2rem", color: "var(--ink-60)", textDecoration: "underline" }}>{t("account.privacyTerms")}</a>
+              <a href="/docs/dpa"    style={{ fontSize: "1.2rem", color: "var(--ink-60)", textDecoration: "underline" }}>{t("account.privacyDpa")}</a>
             </div>
+
+            {/* Email preferences — newsletter opt-out (GDPR Art. 21) */}
+            <form action={updateEmailPrefsAction} style={{ marginTop: "1.6rem" }}>
+              <label style={{ display: "flex", alignItems: "flex-start", gap: "0.7rem", fontSize: "1.25rem", color: "var(--ink)", lineHeight: 1.5 }}>
+                <input type="checkbox" name="newsletter" defaultChecked={!user.emailUnsubscribed} style={{ marginTop: "0.25rem" }} />
+                <span>{t("account.newsletterToggle")}</span>
+              </label>
+              <p style={{ fontSize: "1.15rem", color: "var(--ink-40)", margin: "0.5rem 0 0.8rem", lineHeight: 1.5 }}>
+                {t("account.newsletterHint")}
+              </p>
+              <SubmitButton
+                pendingLabel="…"
+                style={{
+                  fontSize: "1.2rem",
+                  padding: "0.55rem 1.2rem",
+                  background: "none",
+                  border: "1px solid var(--ink-20)",
+                  borderRadius: "9999px",
+                  color: "var(--ink-60)",
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {t("account.newsletterSave")}
+              </SubmitButton>
+            </form>
           </div>
         )}
 

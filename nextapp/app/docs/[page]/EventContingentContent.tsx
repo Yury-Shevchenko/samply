@@ -74,7 +74,7 @@ function EventContingentContentEn() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>The participant&apos;s anonymous Samply ID.</td>
+            <td>The participant&apos;s pseudonymous Samply ID.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -208,7 +208,7 @@ function EventContingentContentDe() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>Die anonyme Samply-ID des Teilnehmers.</td>
+            <td>Die pseudonyme Samply-ID des Teilnehmers.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -343,7 +343,7 @@ function EventContingentContentNl() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>De anonieme Samply-ID van de deelnemer.</td>
+            <td>De pseudonieme Samply-ID van de deelnemer.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -478,7 +478,7 @@ function EventContingentContentRu() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>Анонимный идентификатор Samply участника.</td>
+            <td>Псевдонимный идентификатор Samply участника.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -607,7 +607,7 @@ function EventContingentContentZh() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>参与者的匿名 Samply ID。</td>
+            <td>参与者的假名 Samply ID。</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -748,7 +748,7 @@ function EventContingentContentKo() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>참여자의 익명 Samply ID.</td>
+            <td>참여자의 가명 Samply ID.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -881,7 +881,7 @@ function EventContingentContentIt() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>L&apos;ID Samply anonimo del partecipante.</td>
+            <td>L&apos;ID Samply pseudonimo del partecipante.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1022,7 +1022,7 @@ function EventContingentContentFr() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>L&apos;identifiant Samply anonyme du participant.</td>
+            <td>L&apos;identifiant Samply pseudonyme du participant.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1162,7 +1162,7 @@ function EventContingentContentEs() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>El identificador Samply anónimo del participante.</td>
+            <td>El identificador Samply seudónimo del participante.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1301,7 +1301,7 @@ function EventContingentContentPt() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>O ID anônimo do participante no Samply.</td>
+            <td>O ID pseudônimo do participante no Samply.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1422,7 +1422,7 @@ function EventContingentContentJa() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>参加者の匿名Samply ID。</td>
+            <td>参加者の仮名Samply ID。</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1522,7 +1522,7 @@ function EventContingentContentTr() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>Katılımcının anonim Samply kimliği.</td>
+            <td>Katılımcının takma adlı Samply kimliği.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1622,7 +1622,7 @@ function EventContingentContentPl() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>Anonimowy identyfikator Samply uczestnika.</td>
+            <td>Pseudonimowy identyfikator Samply uczestnika.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>
@@ -1722,7 +1722,7 @@ function EventContingentContentAr() {
         <tbody>
           <tr>
             <td><Code>%SAMPLY_ID%</Code></td>
-            <td>مُعرّف Samply المجهول للمشارك.</td>
+            <td>مُعرّف Samply المستعار للمشارك.</td>
           </tr>
           <tr>
             <td><Code>%PARTICIPANT_CODE%</Code></td>

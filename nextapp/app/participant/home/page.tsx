@@ -217,6 +217,13 @@ export default async function ParticipantHomePage() {
           >
             {t("participant.home.manageAccount")}
           </a>
+          <a
+            href="/participant/export"
+            style={{ fontSize: "1.35rem", color: "var(--ink)", textDecoration: "none", fontWeight: 500 }}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {t("participant.home.downloadData")}
+          </a>
         </div>
       </div>
     </main>

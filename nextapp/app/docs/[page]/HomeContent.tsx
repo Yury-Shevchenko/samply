@@ -407,7 +407,7 @@ function HomeContentRu() {
           <tr><td>Исследование</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Верхнеуровневый контейнер. Всё — участники, расписания, результаты — принадлежит одному исследованию.</td></tr>
           <tr><td>Расписание</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Правило, определяющее <em>кто</em> получает уведомление, <em>когда</em> и <em>что в нём написано</em>. Одно исследование может содержать несколько расписаний.</td></tr>
           <tr><td>Очередь</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Развёрнутый список отдельных отправок, сгенерированных из расписания — одна строка на участника на каждое время отправки.</td></tr>
-          <tr><td>Участник</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Человек, зарегистрированный в вашем исследовании через приложение Samply Research. Идентифицируется анонимным ID, а не контактными данными.</td></tr>
+          <tr><td>Участник</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Человек, зарегистрированный в вашем исследовании через приложение Samply Research. Идентифицируется псевдонимным ID, а не контактными данными.</td></tr>
           <tr><td>Завершение</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply отмечает уведомление как завершённое, когда обнаруживает ответ на опрос, связанный с данной отправкой.</td></tr>
         </tbody>
       </table>
@@ -495,7 +495,7 @@ function HomeContentZh() {
           <tr><td>研究</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>顶层容器。所有内容——参与者、计划、结果——均属于一个研究。</td></tr>
           <tr><td>计划</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>规定<em>谁</em>接收通知、<em>何时</em>接收以及<em>内容是什么</em>的规则。一个研究可以有多个计划。</td></tr>
           <tr><td>队列</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>由计划生成的各条发送任务的展开列表——每位参与者每个发送时间对应一行。</td></tr>
-          <tr><td>参与者</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>通过 Samply Research 应用加入您研究的人员。以匿名 ID 标识，不使用联系方式。</td></tr>
+          <tr><td>参与者</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>通过 Samply Research 应用加入您研究的人员。以假名 ID 标识，不使用联系方式。</td></tr>
           <tr><td>完成</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>当 Samply 检测到与该次发送关联的问卷回答时，将该通知标记为已完成。</td></tr>
         </tbody>
       </table>
@@ -583,7 +583,7 @@ function HomeContentEn() {
           <tr><td>Study</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>The top-level container. Everything — participants, schedules, results — belongs to one study.</td></tr>
           <tr><td>Schedule</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>A rule that says <em>who</em> gets a notification, <em>when</em>, and <em>what it says</em>. One study can have many schedules.</td></tr>
           <tr><td>Queue</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>The expanded list of individual sends generated from a schedule — one row per participant per send time.</td></tr>
-          <tr><td>Participant</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>A person enrolled in your study via the Samply Research app. Identified by an anonymous ID, never by contact details.</td></tr>
+          <tr><td>Participant</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>A person enrolled in your study via the Samply Research app. Identified by a pseudonymous ID, not by contact details.</td></tr>
           <tr><td>Completion</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply marks a notification as completed when it detects a survey response linked to that send.</td></tr>
         </tbody>
       </table>
@@ -672,7 +672,7 @@ function HomeContentDe() {
           <tr><td>Studie</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Der übergeordnete Container. Alles – Teilnehmende, Zeitpläne, Ergebnisse – gehört zu einer Studie.</td></tr>
           <tr><td>Zeitplan</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Eine Regel, die festlegt, <em>wer</em> eine Benachrichtigung erhält, <em>wann</em> und <em>was sie besagt</em>. Eine Studie kann viele Zeitpläne haben.</td></tr>
           <tr><td>Warteschlange</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Die erweiterte Liste der einzelnen Versendungen, die aus einem Zeitplan generiert werden – eine Zeile pro Teilnehmender pro Sendezeitpunkt.</td></tr>
-          <tr><td>Teilnehmende</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Eine Person, die über die Samply Research-App in Ihre Studie eingeschrieben ist. Identifiziert durch eine anonyme ID, nie durch Kontaktdaten.</td></tr>
+          <tr><td>Teilnehmende</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Eine Person, die über die Samply Research-App in Ihre Studie eingeschrieben ist. Identifiziert durch eine pseudonyme ID, nie durch Kontaktdaten.</td></tr>
           <tr><td>Abschluss</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply markiert eine Benachrichtigung als abgeschlossen, wenn es eine Umfrageantwort erkennt, die mit dieser Versendung verknüpft ist.</td></tr>
         </tbody>
       </table>
@@ -761,7 +761,7 @@ function HomeContentNl() {
           <tr><td>Studie</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>De overkoepelende container. Alles — deelnemers, schema's, resultaten — behoort tot één studie.</td></tr>
           <tr><td>Schema</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Een regel die aangeeft <em>wie</em> een melding ontvangt, <em>wanneer</em> en <em>wat erin staat</em>. Eén studie kan meerdere schema's hebben.</td></tr>
           <tr><td>Wachtrij</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>De uitgebreide lijst van afzonderlijke verzendingen gegenereerd vanuit een schema — één rij per deelnemer per verzendtijdstip.</td></tr>
-          <tr><td>Deelnemer</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Een persoon die via de Samply Research-app is ingeschreven in uw studie. Geïdentificeerd door een anoniem ID, nooit door contactgegevens.</td></tr>
+          <tr><td>Deelnemer</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Een persoon die via de Samply Research-app is ingeschreven in uw studie. Geïdentificeerd door een pseudoniem ID, nooit door contactgegevens.</td></tr>
           <tr><td>Voltooiing</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply markeert een melding als voltooid wanneer het een enquêtereactie detecteert die aan die verzending is gekoppeld.</td></tr>
         </tbody>
       </table>
@@ -984,7 +984,7 @@ function HomeContentKo() {
           <tr><td>연구</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>최상위 컨테이너입니다. 참가자, 일정, 결과 등 모든 항목이 하나의 연구에 속합니다.</td></tr>
           <tr><td>일정</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}><em>누가</em> 알림을 받을지, <em>언제</em> 받을지, <em>내용이 무엇인지</em>를 정의하는 규칙입니다. 하나의 연구에 여러 일정을 설정할 수 있습니다.</td></tr>
           <tr><td>대기열</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>일정에서 생성된 개별 발송 목록으로, 참가자별·발송 시간별로 한 행씩 구성됩니다.</td></tr>
-          <tr><td>참가자</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Research 앱을 통해 연구에 등록된 사람입니다. 연락처가 아닌 익명 ID로 식별됩니다.</td></tr>
+          <tr><td>참가자</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Research 앱을 통해 연구에 등록된 사람입니다. 연락처가 아닌 가명 ID로 식별됩니다.</td></tr>
           <tr><td>완료</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply가 해당 발송과 연결된 설문 응답을 감지하면 알림을 완료 상태로 표시합니다.</td></tr>
         </tbody>
       </table>
@@ -1072,7 +1072,7 @@ function HomeContentIt() {
           <tr><td>Studio</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Il contenitore di livello superiore. Tutto — partecipanti, pianificazioni, risultati — appartiene a un unico studio.</td></tr>
           <tr><td>Pianificazione</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Una regola che stabilisce <em>chi</em> riceve una notifica, <em>quando</em> e <em>cosa contiene</em>. Uno studio può avere molte pianificazioni.</td></tr>
           <tr><td>Coda</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>L'elenco espanso degli invii individuali generati da una pianificazione — una riga per partecipante per ogni orario di invio.</td></tr>
-          <tr><td>Partecipante</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Una persona iscritta al Suo studio tramite l'app Samply Research. Identificata da un ID anonimo, mai dai dati di contatto.</td></tr>
+          <tr><td>Partecipante</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Una persona iscritta al Suo studio tramite l'app Samply Research. Identificata da un ID pseudonimo, mai dai dati di contatto.</td></tr>
           <tr><td>Completamento</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply contrassegna una notifica come completata quando rileva una risposta al sondaggio collegata a quell'invio.</td></tr>
         </tbody>
       </table>
@@ -1228,7 +1228,7 @@ function HomeContentFr() {
           <tr><td>Étude</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Le conteneur de premier niveau. Tout — participants, planifications, résultats — appartient à une seule étude.</td></tr>
           <tr><td>Planification</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Une règle qui définit <em>qui</em> reçoit une notification, <em>quand</em> et <em>ce qu'elle contient</em>. Une étude peut avoir plusieurs planifications.</td></tr>
           <tr><td>File d'attente</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>La liste développée des envois individuels générés à partir d'une planification — une ligne par participant par heure d'envoi.</td></tr>
-          <tr><td>Participant</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Une personne inscrite à votre étude via l'application Samply Research. Identifiée par un ID anonyme, jamais par ses coordonnées.</td></tr>
+          <tr><td>Participant</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Une personne inscrite à votre étude via l'application Samply Research. Identifiée par un ID pseudonyme, jamais par ses coordonnées.</td></tr>
           <tr><td>Complétion</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply marque une notification comme complétée lorsqu'il détecte une réponse au sondage liée à cet envoi.</td></tr>
         </tbody>
       </table>
@@ -1384,7 +1384,7 @@ function HomeContentEs() {
           <tr><td>Estudio</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>El contenedor de primer nivel. Todo — participantes, calendarios, resultados — pertenece a un solo estudio.</td></tr>
           <tr><td>Calendario</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Una regla que define <em>quién</em> recibe una notificación, <em>cuándo</em> y <em>qué contiene</em>. Un estudio puede tener varios calendarios.</td></tr>
           <tr><td>Cola</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>La lista expandida de envíos individuales generados a partir de un calendario — una fila por participante por hora de envío.</td></tr>
-          <tr><td>Participante</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Una persona inscrita en su estudio a través de la aplicación Samply Research. Identificada por un ID anónimo, nunca por sus datos de contacto.</td></tr>
+          <tr><td>Participante</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Una persona inscrita en su estudio a través de la aplicación Samply Research. Identificada por un ID seudónimo, nunca por sus datos de contacto.</td></tr>
           <tr><td>Finalización</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply marca una notificación como finalizada cuando detecta una respuesta de encuesta vinculada a ese envío.</td></tr>
         </tbody>
       </table>
@@ -1540,7 +1540,7 @@ function HomeContentPt() {
           <tr><td>Estudo</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>O contêiner de primeiro nível. Tudo — participantes, calendários, resultados — pertence a um único estudo.</td></tr>
           <tr><td>Calendário</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Uma regra que define <em>quem</em> recebe uma notificação, <em>quando</em> e <em>o que ela contém</em>. Um estudo pode ter vários calendários.</td></tr>
           <tr><td>Fila</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>A lista expandida de envios individuais gerados a partir de um calendário — uma linha por participante por horário de envio.</td></tr>
-          <tr><td>Participante</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Uma pessoa inscrita no seu estudo por meio do aplicativo Samply Research. Identificada por um ID anônimo, nunca por dados de contato.</td></tr>
+          <tr><td>Participante</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Uma pessoa inscrita no seu estudo por meio do aplicativo Samply Research. Identificada por um ID pseudônimo, nunca por dados de contato.</td></tr>
           <tr><td>Conclusão</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>O Samply marca uma notificação como concluída quando detecta uma resposta de pesquisa vinculada a esse envio.</td></tr>
         </tbody>
       </table>
@@ -1696,7 +1696,7 @@ function HomeContentJa() {
           <tr><td>研究</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>最上位のコンテナ。すべて — 参加者、スケジュール、結果 — は1つの研究に属します。</td></tr>
           <tr><td>スケジュール</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}><em>誰が</em>通知を受け取り、<em>いつ</em>、<em>何が含まれるか</em>を定義するルール。1つの研究に複数のスケジュールを設定できます。</td></tr>
           <tr><td>キュー</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>スケジュールから生成された個別の送信の展開リスト — 1参加者×1送信時刻ごとに1行。</td></tr>
-          <tr><td>参加者</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Researchアプリを通じて研究に登録した人。連絡先情報ではなく匿名のIDで識別されます。</td></tr>
+          <tr><td>参加者</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Researchアプリを通じて研究に登録した人。連絡先情報ではなく仮名のIDで識別されます。</td></tr>
           <tr><td>完了</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samplyは、その送信に紐づく調査回答を検出すると、通知を完了としてマークします。</td></tr>
         </tbody>
       </table>
@@ -1851,7 +1851,7 @@ function HomeContentTr() {
           <tr><td>Çalışma</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>En üst düzey konteyner. Her şey — katılımcılar, programlar, sonuçlar — tek bir çalışmaya aittir.</td></tr>
           <tr><td>Program</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}><em>Kimin</em> bildirim alacağını, <em>ne zaman</em> ve <em>ne yazacağını</em> belirten bir kural. Bir çalışmanın birden fazla programı olabilir.</td></tr>
           <tr><td>Kuyruk</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Bir programdan üretilen tek tek gönderilerin genişletilmiş listesi — her katılımcı için her gönderim zamanına bir satır.</td></tr>
-          <tr><td>Katılımcı</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Research uygulaması aracılığıyla çalışmanıza kayıtlı kişi. İletişim bilgileri yerine anonim bir kimlikle tanımlanır.</td></tr>
+          <tr><td>Katılımcı</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply Research uygulaması aracılığıyla çalışmanıza kayıtlı kişi. İletişim bilgileri yerine takma adlı bir kimlikle tanımlanır.</td></tr>
           <tr><td>Tamamlanma</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply, o gönderime bağlı bir anket yanıtını algıladığında bildirimi tamamlanmış olarak işaretler.</td></tr>
         </tbody>
       </table>
@@ -2006,7 +2006,7 @@ function HomeContentPl() {
           <tr><td>Badanie</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Kontener najwyższego poziomu. Wszystko — uczestnicy, harmonogramy, wyniki — należy do pojedynczego badania.</td></tr>
           <tr><td>Harmonogram</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Reguła określająca, <em>kto</em> otrzymuje powiadomienie, <em>kiedy</em> i <em>z jaką treścią</em>. Badanie może mieć wiele harmonogramów.</td></tr>
           <tr><td>Kolejka</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Rozwinięta lista pojedynczych wysyłek wygenerowanych z harmonogramu — jeden wiersz dla każdego czasu wysyłki dla każdego uczestnika.</td></tr>
-          <tr><td>Uczestnik</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Osoba zapisana do Twojego badania za pośrednictwem aplikacji Samply Research. Identyfikowana anonimowym identyfikatorem zamiast danymi kontaktowymi.</td></tr>
+          <tr><td>Uczestnik</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Osoba zapisana do Twojego badania za pośrednictwem aplikacji Samply Research. Identyfikowana pseudonimowym identyfikatorem zamiast danymi kontaktowymi.</td></tr>
           <tr><td>Ukończenie</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>Samply oznacza powiadomienie jako ukończone, gdy wykryje odpowiedź ankiety powiązaną z tą wysyłką.</td></tr>
         </tbody>
       </table>
@@ -2161,7 +2161,7 @@ function HomeContentAr() {
           <tr><td>الدراسة</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>الحاوية الأعلى مستوى. كل شيء — المشاركون والجداول والنتائج — ينتمي إلى دراسة واحدة.</td></tr>
           <tr><td>الجدول</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>قاعدة تحدد <em>من</em> يستقبل الإشعار و<em>متى</em> و<em>ما يحتوي عليه</em>. يمكن أن تحتوي الدراسة الواحدة على عدة جداول.</td></tr>
           <tr><td>الطابور</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>القائمة الموسعة لعمليات الإرسال الفردية الناتجة عن جدول — صف واحد لكل مشارك في كل وقت إرسال.</td></tr>
-          <tr><td>المشارك</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>شخص مسجَّل في دراستك عبر تطبيق Samply Research. يُحدَّد بمعرّف مجهول الهوية وليس ببيانات اتصال.</td></tr>
+          <tr><td>المشارك</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>شخص مسجَّل في دراستك عبر تطبيق Samply Research. يُحدَّد بمعرّف مستعار وليس ببيانات اتصال.</td></tr>
           <tr><td>الإكمال</td><td style={{ fontFamily: "var(--font-body)", fontSize: "1.3rem" }}>يعتبر Samply الإشعار مكتملًا عندما يكتشف إجابة استطلاع مرتبطة بعملية الإرسال تلك.</td></tr>
         </tbody>
       </table>

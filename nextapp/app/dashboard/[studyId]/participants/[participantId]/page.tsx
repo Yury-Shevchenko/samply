@@ -9,6 +9,7 @@ import { DeleteForm } from "./DeleteForm";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import CodeEditor from "./CodeEditor";
 import { fetchPendingNotifications } from "@/lib/data/scheduled";
+import { recordAccess } from "@/lib/data/audit";
 import { getT } from "@/lib/i18n.server";
 
 interface Props {
@@ -91,7 +92,7 @@ export default async function ParticipantDetailPage({ params }: Props) {
   const { t } = await getT();
 
   const [project, allParticipants] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchParticipants(studyId),
   ]);
 
@@ -99,6 +100,15 @@ export default async function ParticipantDetailPage({ params }: Props) {
 
   const participant = allParticipants.find((p) => p.id === participantId);
   if (!participant) notFound();
+
+  // Audit who viewed this participant's data (GDPR Art. 32 accountability).
+  await recordAccess({
+    actorUserId: session.user.id,
+    actorEmail: session.user.email ?? undefined,
+    action: "view_participant",
+    projectId: studyId,
+    targetSamplyId: participantId,
+  });
 
   const [{ history: recentSent, count: sentCount }, receipts, userInfo, { items: upcomingRaw }] = await Promise.all([
     fetchHistory(studyId, 1, participantId, "created", "desc", 5),

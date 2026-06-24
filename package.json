@@ -18,7 +18,6 @@
     "bcrypt": "^6.0.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.17.1",
-    "cloudinary": "^1.13.2",
     "connect-flash": "0.1.1",
     "connect-mongo": "^1.3.2",
     "cookie-parser": "1.4.3",

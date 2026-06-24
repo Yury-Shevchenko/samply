@@ -30,7 +30,7 @@ function PolicyContentEn() {
         as &quot;online services&quot;).
       </p>
       <p>The terms used are not gender-specific.</p>
-      <p><strong>Last update:</strong> 3 December 2024</p>
+      <p><strong>Last update:</strong> 18 June 2026</p>
 
       {/* ── Controller ──────────────────────────────────────────────────────── */}
       <h2 id='m3'>Controller</h2>
@@ -89,6 +89,22 @@ function PolicyContentEn() {
         Notification history and response records are retained for <strong>12 months</strong>.
         After these periods records are deleted automatically by the platform. Researchers can
         export their study data at any time from the study dashboard before these periods expire.
+      </p>
+
+      <h3>Erasure of studies and accounts (cascade deletion)</h3>
+      <p>
+        When a researcher deletes a study, all data associated with it is permanently and
+        immediately deleted together with the study: participant responses, queued and scheduled
+        notifications, the notification job records, and the consent records for that study.
+      </p>
+      <p>
+        When a participant deletes their account, their account profile and all of their responses
+        across every study are permanently deleted, the device push token held for them is removed,
+        and all of their consents are recorded as withdrawn. When a participant leaves a single
+        study (or a researcher removes them from one), all future and scheduled notifications to
+        that participant are cancelled and their consent for that study is withdrawn; responses
+        already collected may be retained by the researcher as part of the research record in line
+        with the retention periods above. These deletions are immediate and cannot be undone.
       </p>
 
       {/* ── Legal bases ─────────────────────────────────────────────────────── */}
@@ -551,7 +567,7 @@ function PolicyContentNl() {
         sociale-mediaprofielen (hierna gezamenlijk aangeduid als &quot;onlinediensten&quot;).
       </p>
       <p>De gebruikte begrippen zijn niet geslachtsspecifiek.</p>
-      <p><strong>Laatste update:</strong> 3 december 2024</p>
+      <p><strong>Laatste update:</strong> 18 juni 2026</p>
 
       {/* ── Verwerkingsverantwoordelijke ────────────────────────────────────── */}
       <h2 id='m3'>Verwerkingsverantwoordelijke</h2>
@@ -610,6 +626,25 @@ function PolicyContentNl() {
         Meldingsgeschiedenissen en responsrecords worden <strong>12 maanden</strong> bewaard.
         Na afloop van deze perioden worden records automatisch verwijderd. Onderzoekers kunnen hun
         studiegegevens exporteren vanuit het studiedashboard.
+      </p>
+
+      <h3>Verwijdering van studies en accounts (cascadeverwijdering)</h3>
+      <p>
+        Wanneer een onderzoeker een studie verwijdert, worden alle bijbehorende gegevens samen met
+        de studie permanent en onmiddellijk verwijderd: de responses van deelnemers, in de wachtrij
+        staande en geplande meldingen, de records van de meldingstaak en de toestemmingsrecords voor
+        die studie.
+      </p>
+      <p>
+        Wanneer een deelnemer zijn account verwijdert, worden zijn accountprofiel en al zijn
+        responses in elke studie permanent verwijderd, wordt het voor hem bewaarde push-token van
+        het apparaat verwijderd en worden al zijn toestemmingen als ingetrokken geregistreerd.
+        Wanneer een deelnemer een afzonderlijke studie verlaat (of een onderzoeker hem daaruit
+        verwijdert), worden alle toekomstige en geplande meldingen aan die deelnemer geannuleerd en
+        wordt zijn toestemming voor die studie ingetrokken; reeds verzamelde responses mogen door de
+        onderzoeker worden bewaard als onderdeel van het onderzoeksdossier, in overeenstemming met
+        de bovenstaande bewaartermijnen. Deze verwijderingen zijn onmiddellijk en kunnen niet
+        ongedaan worden gemaakt.
       </p>
 
       {/* ── Rechtsgrondslag ─────────────────────────────────────────────────── */}
@@ -1095,7 +1130,7 @@ function PolicyContentDe() {
         bezeichnet als „Onlineangebote").
       </p>
       <p>Die verwendeten Begriffe sind nicht geschlechtsspezifisch.</p>
-      <p><strong>Letzte Aktualisierung:</strong> 3. Dezember 2024</p>
+      <p><strong>Letzte Aktualisierung:</strong> 18. Juni 2026</p>
 
       {/* ── Verantwortlicher ────────────────────────────────────────────────── */}
       <h2 id='m3'>Verantwortlicher</h2>
@@ -1154,6 +1189,24 @@ function PolicyContentDe() {
         Benachrichtigungsverläufe und Antwortdatensätze werden <strong>12 Monate</strong> aufbewahrt.
         Nach Ablauf dieser Fristen werden die Datensätze automatisch gelöscht. Forschende können
         ihre Studiendaten jederzeit im Studien-Dashboard exportieren.
+      </p>
+
+      <h3>Löschung von Studien und Konten (kaskadierende Löschung)</h3>
+      <p>
+        Wenn Forschende eine Studie löschen, werden alle damit verbundenen Daten dauerhaft und
+        unmittelbar zusammen mit der Studie gelöscht: Antworten der Teilnehmenden, geplante und in
+        der Warteschlange befindliche Benachrichtigungen, die zugehörigen Auftragsdatensätze sowie
+        die Einwilligungsnachweise für diese Studie.
+      </p>
+      <p>
+        Wenn Teilnehmende ihr Konto löschen, werden ihr Kontoprofil und alle ihre Antworten in
+        sämtlichen Studien dauerhaft gelöscht, das für sie gespeicherte Push-Token des Geräts wird
+        entfernt und alle ihre Einwilligungen werden als widerrufen erfasst. Wenn Teilnehmende eine
+        einzelne Studie verlassen (oder von Forschenden daraus entfernt werden), werden alle
+        künftigen und geplanten Benachrichtigungen an diese Person abgebrochen und ihre Einwilligung
+        für diese Studie wird widerrufen; bereits erhobene Antworten können von den Forschenden im
+        Rahmen der oben genannten Aufbewahrungsfristen als Teil des Forschungsdatensatzes aufbewahrt
+        werden. Diese Löschungen erfolgen sofort und können nicht rückgängig gemacht werden.
       </p>
 
       {/* ── Rechtsgrundlagen ────────────────────────────────────────────────── */}
@@ -1642,7 +1695,7 @@ function PolicyContentRu() {
         социальных сетей (далее совместно именуемых &quot;онлайн-услуги&quot;).
       </p>
       <p>Используемые термины не зависят от гендерной принадлежности.</p>
-      <p><strong>Последнее обновление:</strong> 3 декабря 2024 г.</p>
+      <p><strong>Последнее обновление:</strong> 18 июня 2026 г.</p>
 
       {/* ── Контролёр ───────────────────────────────────────────────────────── */}
       <h2 id='m3'>Контролёр</h2>
@@ -1701,6 +1754,24 @@ function PolicyContentRu() {
         и записи ответов хранятся <strong>12 месяцев</strong>. По истечении этих сроков записи
         автоматически удаляются. Исследователи могут экспортировать данные исследования в любое
         время из панели управления.
+      </p>
+
+      <h3>Удаление исследований и учётных записей (каскадное удаление)</h3>
+      <p>
+        Когда исследователь удаляет исследование, все связанные с ним данные удаляются вместе с ним
+        окончательно и немедленно: ответы участников, уведомления в очереди и запланированные
+        уведомления, записи о заданиях на отправку уведомлений, а также записи о согласиях для этого
+        исследования.
+      </p>
+      <p>
+        Когда участник удаляет свою учётную запись, профиль его учётной записи и все его ответы во
+        всех исследованиях удаляются окончательно, хранящийся для него push-токен устройства
+        удаляется, а все его согласия отмечаются как отозванные. Когда участник выходит из отдельного
+        исследования (или исследователь удаляет его из него), все будущие и запланированные
+        уведомления для этого участника отменяются, а его согласие на это исследование отзывается;
+        уже собранные ответы могут быть сохранены исследователем как часть исследовательской записи в
+        соответствии с указанными выше сроками хранения. Эти удаления выполняются немедленно и не
+        могут быть отменены.
       </p>
 
       {/* ── Правовые основания ──────────────────────────────────────────────── */}
@@ -2168,7 +2239,7 @@ function PolicyContentZh() {
         在以下隐私政策中，我们希望告知您：我们处理哪些类型的个人数据（以下简称"数据"）、出于何种目的以及在何种范围内进行处理。本隐私政策适用于我们开展的所有个人数据处理活动，包括在提供服务的背景下，特别是在我们的网站、移动应用程序及外部在线渠道（如我们的社交媒体主页）中的数据处理（以下统称"在线服务"）。
       </p>
       <p>本文所用术语不区分性别。</p>
-      <p><strong>最后更新：</strong>2024年12月3日</p>
+      <p><strong>最后更新：</strong>2026年6月18日</p>
 
       {/* ── 控制者 ──────────────────────────────────────────────────────── */}
       <h2 id='m3'>数据控制者</h2>
@@ -2224,6 +2295,14 @@ function PolicyContentZh() {
       <p>
         待处理通知队列记录保留 <strong>30 天</strong>。通知历史记录和响应记录保留 <strong>12 个月</strong>。
         超过这些期限后，记录将由平台自动删除。研究人员可以随时从研究仪表板导出研究数据。
+      </p>
+
+      <h3>研究与账户的删除（级联删除）</h3>
+      <p>
+        当研究人员删除某项研究时，与之关联的所有数据将随该研究一并被永久且立即删除：参与者的响应记录、队列中和已计划的通知、通知任务记录，以及该研究的同意记录。
+      </p>
+      <p>
+        当参与者删除其账户时，其账户资料及其在所有研究中的全部响应记录将被永久删除，为其保存的设备推送令牌将被移除，其所有同意均记录为已撤回。当参与者退出某一项研究（或研究人员将其从该研究中移除）时，发送给该参与者的所有未来和已计划的通知都将被取消，其对该研究的同意将被撤回；已收集的响应可由研究人员按照上述保留期限作为研究记录的一部分予以保留。这些删除操作会立即生效且无法撤销。
       </p>
 
       {/* ── 处理的法律依据 ──────────────────────────────────────────────── */}
@@ -2509,7 +2588,7 @@ function PolicyContentKo() {
         &quot;온라인 서비스&quot;라 한다)에서의 처리를 포함합니다.
       </p>
       <p>본 문서에서 사용되는 용어는 성별에 관계없이 적용됩니다.</p>
-      <p><strong>최종 업데이트:</strong> 2024년 12월 3일</p>
+      <p><strong>최종 업데이트:</strong> 2026년 6월 18일</p>
 
       {/* ── 개인정보 처리자 ────────────────────────────────────────────────── */}
       <h2 id='m3'>개인정보 처리자(Controller)</h2>
@@ -2566,6 +2645,21 @@ function PolicyContentKo() {
         대기 중인 알림 큐 기록은 <strong>30일</strong> 동안 보관됩니다. 알림 기록 및 응답 기록은{' '}
         <strong>12개월</strong> 동안 보관됩니다. 이 기간이 지나면 기록이 자동으로 삭제됩니다.
         연구자는 언제든지 대시보드에서 데이터를 내보낼 수 있습니다.
+      </p>
+
+      <h3>연구 및 계정의 삭제(연쇄 삭제)</h3>
+      <p>
+        연구자가 연구를 삭제하면 해당 연구와 관련된 모든 데이터, 즉 참여자의 응답 기록, 대기 중이거나
+        예약된 알림, 알림 작업 기록, 그리고 해당 연구의 동의 기록이 연구와 함께 영구적이고 즉시
+        삭제됩니다.
+      </p>
+      <p>
+        참여자가 자신의 계정을 삭제하면 계정 프로필과 모든 연구에서의 모든 응답 기록이 영구적으로
+        삭제되고, 해당 참여자를 위해 보관하던 기기 푸시 토큰이 제거되며, 모든 동의가 철회된 것으로
+        기록됩니다. 참여자가 단일 연구에서 탈퇴하거나(또는 연구자가 해당 연구에서 참여자를 제외하면)
+        그 참여자에게 보낼 향후의 모든 알림 및 예약된 알림이 취소되고 해당 연구에 대한 동의가
+        철회됩니다. 이미 수집된 응답은 위에 명시된 보존 기간에 따라 연구 기록의 일부로서 연구자가
+        보관할 수 있습니다. 이러한 삭제는 즉시 적용되며 되돌릴 수 없습니다.
       </p>
 
       {/* ── 처리의 법적 근거 ───────────────────────────────────────────────── */}
@@ -2987,7 +3081,7 @@ function PolicyContentIt() {
         media (di seguito collettivamente denominati &quot;servizi online&quot;).
       </p>
       <p>I termini utilizzati non hanno connotazione di genere.</p>
-      <p><strong>Ultimo aggiornamento:</strong> 3 dicembre 2024</p>
+      <p><strong>Ultimo aggiornamento:</strong> 18 giugno 2026</p>
 
       {/* ── Titolare del trattamento ────────────────────────────────────────── */}
       <h2 id='m3'>Titolare del trattamento</h2>
@@ -3046,6 +3140,25 @@ function PolicyContentIt() {
         La cronologia delle notifiche e i record delle risposte vengono conservati per{' '}
         <strong>12 mesi</strong>. Dopo questi periodi i record vengono eliminati automaticamente.
         I ricercatori possono esportare i dati in qualsiasi momento dal pannello di controllo.
+      </p>
+
+      <h3>Cancellazione di studi e account (cancellazione a cascata)</h3>
+      <p>
+        Quando un ricercatore elimina uno studio, tutti i dati ad esso associati vengono eliminati in
+        modo permanente e immediato insieme allo studio: le risposte dei partecipanti, le notifiche
+        in coda e programmate, i record delle attività di notifica e i record dei consensi relativi a
+        quello studio.
+      </p>
+      <p>
+        Quando un partecipante elimina il proprio account, il profilo del suo account e tutte le sue
+        risposte in ogni studio vengono eliminati in modo permanente, il token push del dispositivo
+        conservato per lui viene rimosso e tutti i suoi consensi vengono registrati come revocati.
+        Quando un partecipante abbandona un singolo studio (o un ricercatore lo rimuove da esso),
+        tutte le notifiche future e programmate per quel partecipante vengono annullate e il suo
+        consenso per quello studio viene revocato; le risposte già raccolte possono essere conservate
+        dal ricercatore come parte della documentazione di ricerca, in conformità con i periodi di
+        conservazione sopra indicati. Queste cancellazioni sono immediate e non possono essere
+        annullate.
       </p>
 
       {/* ── Basi giuridiche del trattamento ─────────────────────────────────── */}
@@ -3529,7 +3642,7 @@ function PolicyContentFr() {
         (ci-après collectivement désignés &quot;services en ligne&quot;).
       </p>
       <p>Les termes utilisés ne sont pas spécifiques au genre.</p>
-      <p><strong>Dernière mise à jour :</strong> 3 décembre 2024</p>
+      <p><strong>Dernière mise à jour :</strong> 18 juin 2026</p>
 
       {/* ── Responsable du traitement ───────────────────────────────────────── */}
       <h2 id='m3'>Responsable du traitement</h2>
@@ -3589,6 +3702,25 @@ function PolicyContentFr() {
         sont conservés pendant <strong>12 mois</strong>. Après ces périodes, les enregistrements sont
         supprimés automatiquement. Les chercheurs peuvent exporter leurs données à tout moment depuis
         le tableau de bord.
+      </p>
+
+      <h3>Suppression des études et des comptes (suppression en cascade)</h3>
+      <p>
+        Lorsqu’un chercheur supprime une étude, toutes les données qui y sont associées sont
+        supprimées de manière définitive et immédiate en même temps que l’étude : les réponses des
+        participants, les notifications en file d’attente et programmées, les enregistrements des
+        tâches de notification ainsi que les enregistrements de consentement relatifs à cette étude.
+      </p>
+      <p>
+        Lorsqu’un participant supprime son compte, le profil de son compte et l’ensemble de ses
+        réponses dans toutes les études sont définitivement supprimés, le jeton push de l’appareil
+        conservé pour lui est supprimé et tous ses consentements sont enregistrés comme retirés.
+        Lorsqu’un participant quitte une étude (ou qu’un chercheur l’en retire), toutes les
+        notifications futures et programmées destinées à ce participant sont annulées et son
+        consentement pour cette étude est retiré ; les réponses déjà recueillies peuvent être
+        conservées par le chercheur dans le cadre du dossier de recherche, conformément aux durées de
+        conservation indiquées ci-dessus. Ces suppressions sont immédiates et ne peuvent pas être
+        annulées.
       </p>
 
       {/* ── Bases légales ──────────────────────────────────────────────────── */}
@@ -4086,7 +4218,7 @@ function PolicyContentEs() {
         &quot;servicios en línea&quot;).
       </p>
       <p>Los términos utilizados no son específicos de género.</p>
-      <p><strong>Última actualización:</strong> 3 de diciembre de 2024</p>
+      <p><strong>Última actualización:</strong> 18 de junio de 2026</p>
 
       {/* ── Responsable del tratamiento ─────────────────────────────────────── */}
       <h2 id='m3'>Responsable del tratamiento</h2>
@@ -4145,6 +4277,24 @@ function PolicyContentEs() {
         El historial de notificaciones y los registros de respuestas se conservan durante{' '}
         <strong>12 meses</strong>. Después de estos períodos, los registros son eliminados automáticamente.
         Los investigadores pueden exportar sus datos en cualquier momento desde el panel de estudio.
+      </p>
+
+      <h3>Eliminación de estudios y cuentas (eliminación en cascada)</h3>
+      <p>
+        Cuando un investigador elimina un estudio, todos los datos asociados a él se eliminan de forma
+        permanente e inmediata junto con el estudio: las respuestas de los participantes, las
+        notificaciones en cola y programadas, los registros de las tareas de notificación y los
+        registros de consentimiento de ese estudio.
+      </p>
+      <p>
+        Cuando un participante elimina su cuenta, el perfil de su cuenta y todas sus respuestas en cada
+        estudio se eliminan de forma permanente, se elimina el token push del dispositivo conservado
+        para él y todos sus consentimientos se registran como retirados. Cuando un participante
+        abandona un único estudio (o un investigador lo retira de uno), se cancelan todas las
+        notificaciones futuras y programadas para ese participante y se retira su consentimiento para
+        ese estudio; las respuestas ya recopiladas pueden ser conservadas por el investigador como
+        parte del registro de investigación, de acuerdo con los períodos de retención indicados
+        anteriormente. Estas eliminaciones son inmediatas y no se pueden deshacer.
       </p>
 
       {/* ── Bases jurídicas ─────────────────────────────────────────────────── */}
@@ -4627,7 +4777,7 @@ function PolicyContentPt() {
         &quot;serviços on-line&quot;).
       </p>
       <p>Os termos utilizados não são específicos de gênero.</p>
-      <p><strong>Última atualização:</strong> 3 de dezembro de 2024</p>
+      <p><strong>Última atualização:</strong> 18 de junho de 2026</p>
 
       {/* ── Responsável pelo tratamento ─────────────────────────────────────── */}
       <h2 id='m3'>Responsável pelo tratamento</h2>
@@ -4686,6 +4836,24 @@ function PolicyContentPt() {
         O histórico de notificações e os registros de respostas são mantidos por{' '}
         <strong>12 meses</strong>. Após esses períodos, os registros são excluídos automaticamente.
         Os pesquisadores podem exportar os dados do estudo a qualquer momento.
+      </p>
+
+      <h3>Exclusão de estudos e contas (exclusão em cascata)</h3>
+      <p>
+        Quando um pesquisador exclui um estudo, todos os dados a ele associados são excluídos de forma
+        permanente e imediata juntamente com o estudo: as respostas dos participantes, as notificações
+        na fila e agendadas, os registros das tarefas de notificação e os registros de consentimento
+        desse estudo.
+      </p>
+      <p>
+        Quando um participante exclui sua conta, o perfil de sua conta e todas as suas respostas em
+        cada estudo são excluídos de forma permanente, o token push do dispositivo mantido para ele é
+        removido e todos os seus consentimentos são registrados como retirados. Quando um participante
+        sai de um único estudo (ou um pesquisador o remove de um), todas as notificações futuras e
+        agendadas para esse participante são canceladas e seu consentimento para esse estudo é
+        retirado; as respostas já coletadas podem ser mantidas pelo pesquisador como parte do registro
+        de pesquisa, de acordo com os períodos de retenção indicados acima. Essas exclusões são
+        imediatas e não podem ser desfeitas.
       </p>
 
       {/* ── Bases jurídicas ─────────────────────────────────────────────────── */}
@@ -5159,7 +5327,7 @@ function PolicyContentJa() {
         以下のプライバシーポリシーでは、どのような種類のお客様の個人データ（以下「データ」とも略します）を、どのような目的で、どの範囲で処理するかについてご案内します。本プライバシー声明は、当社が行うすべての個人データの処理に適用され、当社のサービス提供の文脈において、特に当社のウェブサイト、モバイルアプリケーション、およびソーシャルメディアプロファイルなどの外部オンラインプレゼンス（以下総称して「オンラインサービス」といいます）における処理に適用されます。
       </p>
       <p>使用される用語は性別を特定するものではありません。</p>
-      <p><strong>最終更新日:</strong> 2024年12月3日</p>
+      <p><strong>最終更新日:</strong> 2026年6月18日</p>
 
       {/* ── 管理者 ──────────────────────────────────────── */}
       <h2 id='m3'>管理者</h2>
@@ -5216,6 +5384,14 @@ function PolicyContentJa() {
         保留中の通知キューのレコードは <strong>30日間</strong> 保持されます。通知履歴および回答レコードは{' '}
         <strong>12ヶ月</strong> 保持されます。これらの期間が過ぎると、自動的に削除されます。
         研究者はいつでもダッシュボードからデータをエクスポートできます。
+      </p>
+
+      <h3>研究およびアカウントの削除（カスケード削除）</h3>
+      <p>
+        研究者が研究を削除すると、それに関連するすべてのデータ、すなわち参加者の回答、キューに入っている通知および予約済みの通知、通知ジョブの記録、ならびにその研究に関する同意の記録が、研究とともに恒久的かつ即座に削除されます。
+      </p>
+      <p>
+        参加者が自分のアカウントを削除すると、そのアカウントのプロフィールおよびすべての研究における回答のすべてが恒久的に削除され、その参加者のために保持されていたデバイスのプッシュトークンが削除され、すべての同意が撤回済みとして記録されます。参加者が単一の研究から離脱した場合（または研究者がその研究から参加者を除外した場合）、その参加者宛ての今後のすべての通知および予約済みの通知が取り消され、その研究に対する同意が撤回されます。すでに収集された回答は、上記の保持期間に従い、研究記録の一部として研究者が保持する場合があります。これらの削除は即座に行われ、取り消すことはできません。
       </p>
 
       {/* ── 法的根拠 ──────────────────────────────────────── */}
@@ -5502,7 +5678,7 @@ function PolicyContentTr() {
         Aşağıdaki gizlilik politikası ile, hangi türde kişisel verilerinizi (bundan sonra «veriler» olarak da kısaltılacaktır) hangi amaçlarla ve hangi kapsamda işlediğimiz hakkında sizi bilgilendirmek istiyoruz. Gizlilik beyanı, tarafımızca gerçekleştirilen tüm kişisel veri işleme faaliyetlerine uygulanır; bu, hizmetlerimizin sunulması bağlamında ve özellikle web sitelerimizde, mobil uygulamalarda ve sosyal medya profillerimiz gibi harici çevrimiçi mecralarda (bundan sonra topluca «çevrimiçi hizmetler» olarak anılacaktır) geçerlidir.
       </p>
       <p>Kullanılan terimler cinsiyete özgü değildir.</p>
-      <p><strong>Son güncelleme:</strong> 3 Aralık 2024</p>
+      <p><strong>Son güncelleme:</strong> 18 Haziran 2026</p>
 
       {/* ── Veri Sorumlusu ──────────────────────────────────────── */}
       <h2 id='m3'>Veri Sorumlusu</h2>
@@ -5559,6 +5735,14 @@ function PolicyContentTr() {
         Bekleyen bildirim kuyruğu kayıtları <strong>30 gün</strong> süreyle saklanır. Bildirim geçmişi ve yanıt kayıtları{' '}
         <strong>12 ay</strong> süreyle saklanır. Bu sürelerin sonunda kayıtlar platform tarafından otomatik olarak silinir.
         Araştırmacılar, bu süreler sona ermeden önce çalışma panosundan istedikleri zaman çalışma verilerini dışa aktarabilirler.
+      </p>
+
+      <h3>Çalışmaların ve hesapların silinmesi (kademeli silme)</h3>
+      <p>
+        Bir araştırmacı bir çalışmayı sildiğinde, onunla ilişkili tüm veriler çalışmayla birlikte kalıcı olarak ve derhal silinir: katılımcı yanıtları, kuyruktaki ve zamanlanmış bildirimler, bildirim işi kayıtları ve o çalışmaya ilişkin onay kayıtları.
+      </p>
+      <p>
+        Bir katılımcı hesabını sildiğinde, hesap profili ve tüm çalışmalardaki tüm yanıtları kalıcı olarak silinir, onun için tutulan cihaz push jetonu kaldırılır ve tüm onayları geri çekilmiş olarak kaydedilir. Bir katılımcı tek bir çalışmadan ayrıldığında (veya bir araştırmacı onu bir çalışmadan çıkardığında), o katılımcıya gönderilecek gelecekteki ve zamanlanmış tüm bildirimler iptal edilir ve o çalışmaya ilişkin onayı geri çekilir; halihazırda toplanmış yanıtlar, yukarıda belirtilen saklama sürelerine uygun olarak araştırmacı tarafından araştırma kaydının bir parçası olarak saklanabilir. Bu silme işlemleri derhal gerçekleşir ve geri alınamaz.
       </p>
 
       {/* ── Hukuki dayanaklar ──────────────────────────────────────── */}
@@ -5845,7 +6029,7 @@ function PolicyContentPl() {
         Za pomocą poniższej polityki prywatności chcielibyśmy poinformować Państwa, jakie rodzaje Państwa danych osobowych (dalej również w skrócie «dane») przetwarzamy, w jakich celach i w jakim zakresie. Oświadczenie o ochronie prywatności ma zastosowanie do wszelkiego przetwarzania danych osobowych przez nas, zarówno w ramach świadczenia naszych usług, jak i w szczególności na naszych stronach internetowych, w aplikacjach mobilnych oraz w zewnętrznych obecnościach online, takich jak nasze profile w mediach społecznościowych (dalej łącznie zwane «usługami online»).
       </p>
       <p>Używane terminy nie są specyficzne dla płci.</p>
-      <p><strong>Ostatnia aktualizacja:</strong> 3 grudnia 2024</p>
+      <p><strong>Ostatnia aktualizacja:</strong> 18 czerwca 2026</p>
 
       {/* ── Administrator danych ──────────────────────────────────────── */}
       <h2 id='m3'>Administrator danych</h2>
@@ -5902,6 +6086,14 @@ function PolicyContentPl() {
         Rekordy oczekującej kolejki powiadomień są przechowywane przez <strong>30 dni</strong>. Historia powiadomień i rekordy odpowiedzi są przechowywane przez{' '}
         <strong>12 miesięcy</strong>. Po upływie tych okresów rekordy są automatycznie usuwane przez platformę.
         Badacze mogą w dowolnym momencie wyeksportować swoje dane badawcze z panelu badania przed upływem tych okresów.
+      </p>
+
+      <h3>Usuwanie badań i kont (usuwanie kaskadowe)</h3>
+      <p>
+        Gdy badacz usuwa badanie, wszystkie powiązane z nim dane są trwale i natychmiast usuwane wraz z badaniem: odpowiedzi uczestników, powiadomienia w kolejce i zaplanowane, rekordy zadań powiadomień oraz rekordy zgód dotyczące tego badania.
+      </p>
+      <p>
+        Gdy uczestnik usuwa swoje konto, profil jego konta oraz wszystkie jego odpowiedzi we wszystkich badaniach są trwale usuwane, przechowywany dla niego token push urządzenia zostaje usunięty, a wszystkie jego zgody są rejestrowane jako wycofane. Gdy uczestnik opuszcza pojedyncze badanie (lub badacz go z niego usuwa), wszystkie przyszłe i zaplanowane powiadomienia dla tego uczestnika zostają anulowane, a jego zgoda na to badanie zostaje wycofana; już zebrane odpowiedzi mogą być przechowywane przez badacza jako część dokumentacji badawczej, zgodnie z podanymi powyżej okresami przechowywania. Te usunięcia są natychmiastowe i nie można ich cofnąć.
       </p>
 
       {/* ── Podstawy prawne ──────────────────────────────────────── */}
@@ -6188,7 +6380,7 @@ function PolicyContentAr() {
         من خلال سياسة الخصوصية التالية، نود إعلامكم بأنواع بياناتكم الشخصية (المشار إليها فيما يلي اختصاراً بـ «البيانات») التي نعالجها، ولأي أغراض وبأي نطاق. ينطبق بيان الخصوصية على جميع عمليات معالجة البيانات الشخصية التي نقوم بها، سواء في سياق تقديم خدماتنا، وعلى وجه الخصوص على مواقعنا الإلكترونية، وفي تطبيقات الهاتف المحمول، وضمن الحضور الإلكتروني الخارجي، مثل ملفاتنا الشخصية على وسائل التواصل الاجتماعي (المشار إليها مجتمعةً فيما يلي بـ «الخدمات الإلكترونية»).
       </p>
       <p>المصطلحات المستخدمة ليست محددة بنوع الجنس.</p>
-      <p><strong>آخر تحديث:</strong> 3 ديسمبر 2024</p>
+      <p><strong>آخر تحديث:</strong> 18 يونيو 2026</p>
 
       {/* ── المتحكم في البيانات ──────────────────────────────────────── */}
       <h2 id='m3'>المتحكم في البيانات</h2>
@@ -6245,6 +6437,14 @@ function PolicyContentAr() {
         يتم الاحتفاظ بسجلات قائمة انتظار الإشعارات المعلقة لمدة <strong>30 يوماً</strong>. يتم الاحتفاظ بتاريخ الإشعارات وسجلات الاستجابات لمدة{' '}
         <strong>12 شهراً</strong>. بعد انقضاء هذه الفترات، تُحذف السجلات تلقائياً بواسطة المنصة.
         يمكن للباحثين تصدير بيانات دراساتهم في أي وقت من لوحة تحكم الدراسة قبل انقضاء هذه الفترات.
+      </p>
+
+      <h3>حذف الدراسات والحسابات (الحذف المتتالي)</h3>
+      <p>
+        عندما يحذف الباحث دراسة، تُحذف جميع البيانات المرتبطة بها بشكل دائم وفوري مع الدراسة: استجابات المشاركين، والإشعارات الموجودة في قائمة الانتظار والمجدولة، وسجلات مهام الإشعارات، وسجلات الموافقة الخاصة بتلك الدراسة.
+      </p>
+      <p>
+        عندما يحذف المشارك حسابه، يُحذف ملف حسابه الشخصي وجميع استجاباته في كل دراسة بشكل دائم، ويُزال رمز الدفع (push token) الخاص بجهازه والمحتفظ به من أجله، وتُسجَّل جميع موافقاته على أنها مسحوبة. وعندما يغادر المشارك دراسة واحدة (أو يقوم الباحث بإزالته منها)، تُلغى جميع الإشعارات المستقبلية والمجدولة الموجهة إلى ذلك المشارك وتُسحب موافقته على تلك الدراسة؛ أما الاستجابات التي تم جمعها بالفعل فيجوز للباحث الاحتفاظ بها كجزء من السجل البحثي وفقاً لفترات الاحتفاظ المذكورة أعلاه. تُنفَّذ عمليات الحذف هذه فوراً ولا يمكن التراجع عنها.
       </p>
 
       {/* ── الأسس القانونية ──────────────────────────────────────── */}

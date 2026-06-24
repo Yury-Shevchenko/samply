@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import NewsletterLog from "@/lib/models/newsletterLog";
+import { unsubscribeUrl } from "@/lib/unsubscribe";
 
 async function requireAdmin() {
   const session = await auth();
@@ -41,7 +42,13 @@ export async function sendNewsletter(formData: FormData): Promise<SendResult> {
   await connectDB();
 
   const researchers = await User.find(
-    { level: { $gte: 11 }, emailIsConfirmed: true, email: { $exists: true, $ne: "" } },
+    {
+      level: { $gte: 11 },
+      emailIsConfirmed: true,
+      email: { $exists: true, $ne: "" },
+      // Respect opt-outs — never send marketing email to unsubscribed users (GDPR Art. 21).
+      emailUnsubscribed: { $ne: true },
+    },
     { email: 1, name: 1 }
   ).lean();
 
@@ -71,14 +78,18 @@ export async function sendNewsletter(formData: FormData): Promise<SendResult> {
   for (let i = 0; i < researchers.length; i += BATCH) {
     const batch = researchers.slice(i, i + BATCH);
 
-    const messages = batch.map((r) => ({
-      From: "Samply <yury.shevchenko@uni.kn>",
-      To: r.email as string,
-      Subject: subject,
-      TextBody: textBody,
-      HtmlBody: htmlBody,
-      MessageStream: "outbound",
-    }));
+    const messages = batch.map((r) => {
+      // Every marketing email must carry a working unsubscribe link (GDPR Art. 21).
+      const unsubUrl = unsubscribeUrl(String(r._id));
+      return {
+        From: "Samply <yury.shevchenko@uni.kn>",
+        To: r.email as string,
+        Subject: subject,
+        TextBody: `${textBody}\n\n—\nYou received this because you have a Samply researcher account. Unsubscribe: ${unsubUrl}`,
+        HtmlBody: `${htmlBody}\n<hr style="border:none;border-top:1px solid #ddd;margin:24px 0"/>\n<p style="font-family:sans-serif;font-size:12px;color:#888;">You received this because you have a Samply researcher account. <a href="${unsubUrl}" style="color:#888;">Unsubscribe</a>.</p>`,
+        MessageStream: "outbound",
+      };
+    });
 
     try {
       const res = await fetch("https://api.postmarkapp.com/email/batch", {
@@ -133,6 +144,7 @@ export async function getResearcherCount(): Promise<number> {
     level: { $gte: 11 },
     emailIsConfirmed: true,
     email: { $exists: true, $ne: "" },
+    emailUnsubscribed: { $ne: true },
   });
 }
 

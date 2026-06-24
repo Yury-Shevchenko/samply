@@ -9,7 +9,7 @@ export async function generateMetadata({ params }: { params: Promise<{ studyId: 
   const { studyId } = await params;
   const session = await auth();
   if (!session) return {};
-  const project = await fetchProjectById(studyId, session.user.id);
+  const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   return { title: `Submit for review — ${project?.name ?? "Study"} — Samply` };
 }
 
@@ -23,7 +23,7 @@ export default async function ApprovalPage({
   if (!session || session.user.level <= 10) redirect("/login");
 
   const { t } = await getT();
-  const project = await fetchProjectById(studyId, session.user.id);
+  const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   if (!project) notFound();
 
   const toggleAction = toggleApprovalRequestAction.bind(null, studyId);

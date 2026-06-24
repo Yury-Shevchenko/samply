@@ -42,16 +42,16 @@ exports.send = async (options) => {
       HtmlBody: html,
     });
   } catch (err) {
-    // Log specific Postmark errors
+    // Log specific Postmark errors without leaking recipient PII
     if (err.name === "InactiveRecipientsError") {
       console.error("Postmark InactiveRecipientsError:", {
-        email: options.participant.email,
+        userId: options.participant && options.participant._id,
         statusCode: err.statusCode,
         code: err.code,
-        recipients: err.recipients,
+        recipientCount: Array.isArray(err.recipients) ? err.recipients.length : undefined,
       });
     } else {
-      console.error("Postmark error sending email:", err);
+      console.error("Postmark error sending email:", err.message);
     }
     throw err; // Re-throw to be caught by caller
   }

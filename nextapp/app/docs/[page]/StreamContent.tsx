@@ -219,7 +219,7 @@ function StreamContentRu() {
       <table>
         <thead><tr><th>Токен</th><th>Заменяется на</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Анонимный Samply ID получателя.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Псевдонимный Samply ID получателя.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Код участника получателя (остаётся незаменённым, если не задан).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>ID группы получателя (остаётся незаменённым, если не задан).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Уникальный ID данной отправки — используйте его для подключения обратных вызовов завершения и отмены напоминаний.</td></tr>
@@ -423,7 +423,7 @@ function StreamContentZh() {
       <table>
         <thead><tr><th>令牌</th><th>替换为</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>接收者的匿名 Samply ID。</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>接收者的假名 Samply ID。</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>接收者的参与者代码（未设置时保持不替换）。</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>接收者的组 ID（未设置时保持不替换）。</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>该次发送的唯一 ID——用于接入完成回调并取消提醒。</td></tr>
@@ -625,7 +625,7 @@ function StreamContentEn() {
       <table>
         <thead><tr><th>Token</th><th>Replaced with</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>The recipient&apos;s anonymous Samply ID.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>The recipient&apos;s pseudonymous Samply ID.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>The recipient&apos;s participant code (left unreplaced if none).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>The recipient&apos;s group ID (left unreplaced if none).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>A unique ID for this send — use it to wire up completion callbacks and cancel reminders.</td></tr>
@@ -837,7 +837,7 @@ function StreamContentNl() {
       <table>
         <thead><tr><th>Token</th><th>Vervangen door</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>De anonieme Samply-ID van de ontvanger.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>De pseudonieme Samply-ID van de ontvanger.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>De deelnemerscode van de ontvanger (blijft onvervangen als er geen is).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>De groeps-ID van de ontvanger (blijft onvervangen als er geen is).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Een unieke ID voor deze verzending — gebruik hem om voltooiingscallbacks te koppelen en herinneringen te annuleren.</td></tr>
@@ -1051,7 +1051,7 @@ function StreamContentDe() {
       <table>
         <thead><tr><th>Token</th><th>Ersetzt durch</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Die anonyme Samply-ID des Empfängers.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Die pseudonyme Samply-ID des Empfängers.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Der Teilnehmercode des Empfängers (bleibt unersetzt, wenn keiner vorhanden).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>Die Gruppen-ID des Empfängers (bleibt unersetzt, wenn keine vorhanden).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Eine eindeutige ID für diesen Versand — verwenden Sie sie, um Abschluss-Callbacks zu verknüpfen und Erinnerungen zu stornieren.</td></tr>
@@ -1274,7 +1274,7 @@ function StreamContentKo() {
       <table>
         <thead><tr><th>토큰</th><th>대체 값</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>수신자의 익명 Samply ID.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>수신자의 가명 Samply ID.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>수신자의 참여자 코드(없으면 대체되지 않음).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>수신자의 그룹 ID(없으면 대체되지 않음).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>이 발송에 대한 고유 ID — 완료 콜백을 연결하고 리마인더를 취소하는 데 사용하십시오.</td></tr>
@@ -1492,7 +1492,7 @@ function StreamContentIt() {
       <table>
         <thead><tr><th>Token</th><th>Sostituito con</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Il Samply ID anonimo del destinatario.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Il Samply ID pseudonimo del destinatario.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Il codice partecipante del destinatario (lasciato non sostituito se non presente).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>L'ID gruppo del destinatario (lasciato non sostituito se non presente).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Un ID univoco per questo invio — utilizzarlo per collegare i callback di completamento e annullare i promemoria.</td></tr>
@@ -1706,7 +1706,7 @@ function StreamContentFr() {
       <table>
         <thead><tr><th>Token</th><th>Remplacé par</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Le Samply ID anonyme du destinataire.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Le Samply ID pseudonyme du destinataire.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Le code participant du destinataire (laissé non remplacé si absent).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>L'identifiant de groupe du destinataire (laissé non remplacé si absent).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Un identifiant unique pour cet envoi — utilisez-le pour connecter les callbacks de complétion et annuler les rappels.</td></tr>
@@ -1927,7 +1927,7 @@ function StreamContentEs() {
       <table>
         <thead><tr><th>Token</th><th>Sustituido por</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>El Samply ID anónimo del destinatario.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>El Samply ID seudónimo del destinatario.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>El código de participante del destinatario (sin sustituir si no existe).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>El ID de grupo del destinatario (sin sustituir si no existe).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Un ID único para este envío — úselo para conectar las devoluciones de llamada de finalización y cancelar los recordatorios.</td></tr>
@@ -2148,7 +2148,7 @@ function StreamContentPt() {
       <table>
         <thead><tr><th>Token</th><th>Substituído por</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>O Samply ID anônimo do destinatário.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>O Samply ID pseudônimo do destinatário.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>O código de participante do destinatário (sem substituição se não existir).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>O ID de grupo do destinatário (sem substituição se não existir).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Um ID único para este envio — use-o para conectar os callbacks de conclusão e cancelar os lembretes.</td></tr>
@@ -2366,7 +2366,7 @@ function StreamContentJa() {
       <table>
         <thead><tr><th>トークン</th><th>置換される値</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>受信者の匿名Samply ID。</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>受信者の仮名Samply ID。</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>受信者の参加者コード（設定されていない場合は置換されません）。</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>受信者のグループID（設定されていない場合は置換されません）。</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>この送信の一意のID — 完了コールバックの接続やリマインダーのキャンセルに使用してください。</td></tr>
@@ -2583,7 +2583,7 @@ function StreamContentTr() {
       <table>
         <thead><tr><th>Token</th><th>Değiştirilen değer</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Alıcının anonim Samply kimliği.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Alıcının takma adlı Samply kimliği.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Alıcının katılımcı kodu (ayarlanmamışsa değiştirilmez).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>Alıcının grup kimliği (ayarlanmamışsa değiştirilmez).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Bu gönderimin benzersiz kimliği — tamamlanma geri çağrılarını bağlamak ve hatırlatıcıları iptal etmek için kullanın.</td></tr>
@@ -2802,7 +2802,7 @@ function StreamContentPl() {
       <table>
         <thead><tr><th>Token</th><th>Wartość zastąpiona</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Anonimowy identyfikator Samply odbiorcy.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>Pseudonimowy identyfikator Samply odbiorcy.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>Kod uczestnika odbiorcy (nie podstawiany, jeśli nie ustawiony).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>Identyfikator grupy odbiorcy (nie podstawiany, jeśli nie ustawiony).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>Unikalny identyfikator tej wysyłki — użyj do łączenia wywołań zwrotnych ukończenia i anulowania przypomnień.</td></tr>
@@ -3019,7 +3019,7 @@ function StreamContentAr() {
       <table>
         <thead><tr><th>الرمز</th><th>القيمة المُستبدَلة</th></tr></thead>
         <tbody>
-          <tr><td><Code>%SAMPLY_ID%</Code></td><td>مُعرِّف Samply المجهول الخاص بالمستلِم.</td></tr>
+          <tr><td><Code>%SAMPLY_ID%</Code></td><td>مُعرِّف Samply المستعار الخاص بالمستلِم.</td></tr>
           <tr><td><Code>%PARTICIPANT_CODE%</Code></td><td>رمز المشارك الخاص بالمستلِم (لا يُستبدَل إن لم يكن مُعيَّناً).</td></tr>
           <tr><td><Code>%GROUP_CODE%</Code></td><td>مُعرِّف المجموعة الخاص بالمستلِم (لا يُستبدَل إن لم يكن مُعيَّناً).</td></tr>
           <tr><td><Code>%MESSAGE_ID%</Code></td><td>مُعرِّف فريد لهذا الإرسال — استخدمه لربط استدعاءات الإكمال وإلغاء التذكيرات.</td></tr>

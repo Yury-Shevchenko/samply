@@ -14,7 +14,7 @@ export default async function InvitationsPage({ params }: Props) {
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");
 
-  const project = await fetchProjectById(studyId, session.user.id);
+  const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   if (!project) notFound();
 
   const baseUrl = (process.env.NEXTAUTH_URL || "https://samply.uni-konstanz.de").replace(/\/$/, "");

@@ -50,10 +50,10 @@ exports.forgot = async (req, res) => {
         filename: "password-reset-" + res.locals.locale_language,
       });
     } catch (err) {
-      console.error("Failed to send password reset email to:", user.email, err.message);
+      console.error("Failed to send password reset email for user:", user._id, err.message);
     }
   } else if (process.env.NODE_ENV !== "production") {
-    console.log("[forgot] No account found for email:", req.body.email);
+    console.log("[forgot] No account found for the requested email");
   }
   req.flash("success", genericMessage);
   res.redirect("back");
@@ -92,7 +92,7 @@ exports.sendEmailConfirmationLink = async (req, res) => {
       filename: "email-confirmation-" + user.language,
     });
   } catch (err) {
-    console.error("Failed to send confirmation email to:", user.email, err.message);
+    console.error("Failed to send confirmation email for user:", user._id, err.message);
   }
   req.flash("success", `${res.locals.layout.flash_sent_confirm_email_ink}`);
   res.redirect("/account");

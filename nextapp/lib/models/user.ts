@@ -22,6 +22,7 @@ export interface IUser extends Document {
   participant_projects?: Array<{ _id: mongoose.Types.ObjectId; name: string; slug: string }>;
   stripeAccountId?: string;
   stripeInformation?: { charges_enabled?: boolean; details_submitted?: boolean; payouts_enabled?: boolean };
+  emailUnsubscribed?: boolean;
   validPassword(password: string): boolean;
 }
 
@@ -45,6 +46,7 @@ const userSchema = new Schema<IUser>(
     participant_projects: [{ _id: Schema.Types.ObjectId, name: String, slug: String }],
     stripeAccountId: String,
     stripeInformation: { charges_enabled: Boolean, details_submitted: Boolean, payouts_enabled: Boolean },
+    emailUnsubscribed: { type: Boolean, default: false },
   },
   { strict: false } // allow extra fields from the existing collection
 );

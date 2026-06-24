@@ -87,7 +87,7 @@ export default async function GroupsPage({ params, searchParams }: Props) {
   if (!session || session.user.level <= 10) redirect("/login");
 
   const [project, data] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchGroupsData(studyId),
   ]);
 

@@ -18,7 +18,7 @@ export default async function NewSchedulePage({ params, searchParams }: Props) {
   const { t } = await getT();
 
   const [project, participants] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchParticipants(studyId),
   ]);
 

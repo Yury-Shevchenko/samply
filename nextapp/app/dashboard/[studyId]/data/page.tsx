@@ -95,7 +95,7 @@ export default async function DataPage({ params, searchParams }: Props) {
   if (!session || session.user.level <= 10) redirect("/login");
 
   const [project, { history, count, pages }, compliance] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchHistory(studyId, page, participant || undefined, sort, order),
     fetchComplianceForProject(studyId),
   ]);

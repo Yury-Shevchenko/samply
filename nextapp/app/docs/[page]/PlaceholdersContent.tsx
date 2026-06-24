@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n";
 const TOKENS_EN = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'The participant anonymous Samply ID.',
+    replaced_with: 'The participant pseudonymous Samply ID.',
     fallback: 'Always substituted — every participant has one.',
     example: 'abc123XYZ',
   },
@@ -42,7 +42,7 @@ const TOKENS_EN = [
 const TOKENS_DE = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'Die anonyme Samply-ID des Teilnehmers.',
+    replaced_with: 'Die pseudonyme Samply-ID des Teilnehmers.',
     fallback: 'Wird immer ersetzt — jeder Teilnehmer hat eine.',
     example: 'abc123XYZ',
   },
@@ -81,7 +81,7 @@ const TOKENS_DE = [
 const TOKENS_NL = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'De anonieme Samply-ID van de deelnemer.',
+    replaced_with: 'De pseudonieme Samply-ID van de deelnemer.',
     fallback: 'Altijd vervangen — elke deelnemer heeft er een.',
     example: 'abc123XYZ',
   },
@@ -210,7 +210,7 @@ const TOOLS_NL = [
 const TOKENS_RU = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'Анонимный Samply ID участника.',
+    replaced_with: 'Псевдонимный Samply ID участника.',
     fallback: 'Всегда подставляется — у каждого участника он есть.',
     example: 'abc123XYZ',
   },
@@ -279,7 +279,7 @@ const TOOLS_RU = [
 const TOKENS_ZH = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: '参与者的匿名 Samply ID。',
+    replaced_with: '参与者的假名 Samply ID。',
     fallback: '始终替换——每位参与者都有一个。',
     example: 'abc123XYZ',
   },
@@ -1052,7 +1052,7 @@ export default function PlaceholdersContent({ locale }: { locale: Locale }) {
 const TOKENS_KO = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: '참여자의 익명 Samply ID입니다.',
+    replaced_with: '참여자의 가명 Samply ID입니다.',
     fallback: '항상 대체됩니다 — 모든 참여자가 보유합니다.',
     example: 'abc123XYZ',
   },
@@ -1121,7 +1121,7 @@ const TOOLS_KO = [
 const TOKENS_IT = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: "L'ID Samply anonimo del partecipante.",
+    replaced_with: "L'ID Samply pseudonimo del partecipante.",
     fallback: 'Sempre sostituito — ogni partecipante ne ha uno.',
     example: 'abc123XYZ',
   },
@@ -1461,7 +1461,7 @@ function PlaceholdersContentIt() {
 const TOKENS_ES = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'El Samply ID anónimo del participante.',
+    replaced_with: 'El Samply ID seudónimo del participante.',
     fallback: 'Siempre sustituido — cada participante tiene uno.',
     example: 'abc123XYZ',
   },
@@ -1530,7 +1530,7 @@ const TOOLS_ES = [
 const TOKENS_FR = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'Le Samply ID anonyme du participant.',
+    replaced_with: 'Le Samply ID pseudonyme du participant.',
     fallback: 'Toujours substitué — chaque participant en possède un.',
     example: 'abc123XYZ',
   },
@@ -1889,7 +1889,7 @@ function PlaceholdersContentEs() {
 const TOKENS_PT = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: 'O Samply ID anônimo do participante.',
+    replaced_with: 'O Samply ID pseudônimo do participante.',
     fallback: 'Sempre substituído — cada participante tem um.',
     example: 'abc123XYZ',
   },
@@ -2102,7 +2102,7 @@ function PlaceholdersContentPt() {
 const TOKENS_JA = [
   {
     token: '%SAMPLY_ID%',
-    replaced_with: '参加者の匿名Samply ID。',
+    replaced_with: '参加者の仮名Samply ID。',
     fallback: '常に置換されます — すべての参加者が持っています。',
     example: 'abc123XYZ',
   },
@@ -2303,7 +2303,7 @@ function PlaceholdersContentJa() {
 const TOKENS_TR = [
   {
     token: "%SAMPLY_ID%",
-    replaced_with: "Katılımcının anonim Samply ID değeri.",
+    replaced_with: "Katılımcının takma adlı Samply ID değeri.",
     fallback: "Her zaman değiştirilir — tüm katılımcılarda bulunur.",
     example: "abc123XYZ",
   },
@@ -2504,7 +2504,7 @@ function PlaceholdersContentTr() {
 const TOKENS_PL = [
   {
     token: "%SAMPLY_ID%",
-    replaced_with: "Anonimowe Samply ID uczestnika.",
+    replaced_with: "Pseudonimowe Samply ID uczestnika.",
     fallback: "Zawsze zastępowane — wszyscy uczestnicy je mają.",
     example: "abc123XYZ",
   },
@@ -2713,7 +2713,7 @@ function PlaceholdersContentPl() {
 const TOKENS_AR = [
   {
     token: "%SAMPLY_ID%",
-    replaced_with: "Samply ID المجهول للمشارك.",
+    replaced_with: "Samply ID المستعار للمشارك.",
     fallback: "يُستبدل دائماً — جميع المشاركين يمتلكونه.",
     example: "abc123XYZ",
   },

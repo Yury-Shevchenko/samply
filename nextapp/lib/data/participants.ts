@@ -95,6 +95,25 @@ export async function fetchParticipantBysamplyId(samplyId: string) {
   ).lean();
 }
 
+/**
+ * True if the researcher (userId) owns or is a member of at least one project
+ * that the given participant (samplyId) belongs to. Used to gate access to
+ * participant identity (name/email) in the payout/receipts flow so a researcher
+ * cannot look up an arbitrary samplyId they have no relationship with.
+ */
+export async function researcherCanAccessParticipant(
+  userId: string,
+  samplyId: string,
+): Promise<boolean> {
+  await connectDB();
+  const oid = new mongoose.Types.ObjectId(userId);
+  const exists = await Project.exists({
+    $or: [{ creator: oid }, { members: oid }],
+    "mobileUsers.id": samplyId,
+  });
+  return Boolean(exists);
+}
+
 export interface ParticipantUserInfo {
   timezone?: string;
   timeWindowFrom?: string;

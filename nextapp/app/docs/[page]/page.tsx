@@ -19,6 +19,7 @@ import LegalNoticeContent from "./LegalNoticeContent";
 import PolicyContent from "./PolicyContent";
 import TermsContent from "./TermsContent";
 import IrbContent from "./IrbContent";
+import DpaContent from "./DpaContent";
 import EventContingentContent from "./EventContingentContent";
 import GeofencingContent from "./GeofencingContent";
 import StreamContent from "./StreamContent";
@@ -37,7 +38,7 @@ const SIDEBAR_PAGES = [
   "analytics",
   "glossary", "api", "changelog", "about", "collaborate",
 ] as const;
-const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb"] as const;
+const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb", "dpa"] as const;
 type DocsPage = (typeof ALL_PAGES)[number];
 
 const NAV_LABELS: Record<DocsPage, string> = {
@@ -64,6 +65,7 @@ const NAV_LABELS: Record<DocsPage, string> = {
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
   irb:                 "IRB / Ethics Brief",
+  dpa:                 "Data Processing Agreement",
 };
 
 const PAGE_TITLES: Record<DocsPage, string> = {
@@ -90,6 +92,7 @@ const PAGE_TITLES: Record<DocsPage, string> = {
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
   irb:                 "IRB & Ethics Brief",
+  dpa:                 "Data Processing Agreement",
 };
 
 const PAGE_META: Record<string, { eyebrow: string; lede: string; section: string }> = {
@@ -174,7 +177,7 @@ function DocsSidebar({ current, navLabels, groupLabels, searchPlaceholder }: { c
         ))}
       </nav>
       <div style={{ marginTop: "2.8rem", paddingTop: "1.6rem", borderTop: "1px solid var(--ink-10)", display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-        {(["legalnotice", "policy", "terms", "irb"] as const).map((p) => (
+        {(["legalnotice", "policy", "terms", "irb", "dpa"] as const).map((p) => (
           <a key={p} href={`/docs/${p}`} style={{ display: "block", padding: "0.5rem 1rem", fontSize: "1.2rem", color: "var(--ink-40)", textDecoration: "none" }}>{navLabels[p]}</a>
         ))}
       </div>
@@ -249,6 +252,8 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
                 <TermsContent locale={locale} />
               ) : currentPage === "irb" ? (
                 <IrbContent locale={locale} />
+              ) : currentPage === "dpa" ? (
+                <DpaContent />
               ) : (
                 <p style={{ color: "var(--ink-60)" }}>Content coming soon.</p>
               )}

@@ -14,6 +14,7 @@ const nanoid = customAlphabet(
   10
 );
 const webhookController = require("./webhookController");
+const consent = require("../handlers/consent");
 const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByFinid, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
 const { scheduleForUser } = require("../services/scheduleForUser");
 
@@ -1791,6 +1792,19 @@ exports.joinStudy = async (req, res) => {
     }
     await project.save();
 
+    // Record auditable study consent at enrolment (the app gates "Join" on an
+    // "I agree to participate" checkbox). If the study uses geofencing, also
+    // record the participant's consent to location tracking. Fire-and-forget.
+    if (req.body.consent) {
+      consent.recordStudyConsent({
+        userId: participant ? participant._id : null,
+        samplyId: req.body.id,
+        projectId: project._id,
+        source: "app",
+        geolocation: !!(project.settings && project.settings.enableGeofencing),
+      });
+    }
+
     // Auto-schedule group-targeted non-yoked notifications for this new group member
     if (group && project.notifications && project.notifications.length > 0) {
       const userCreated = isNew ? new Date() : (project.mobileUsers.find((u) => u.id === req.body.id) || {}).created || new Date();
@@ -1993,7 +2007,9 @@ async function removeParticipantFromProject({
       const updatedUser = {
         ...user._doc,
         deactivated: true,
-        token: message,
+        // Delete the device push token (a device identifier) on removal rather
+        // than overwriting it with a status string (GDPR data minimisation).
+        token: null,
       };
       return updatedUser;
     } else {
@@ -2001,6 +2017,8 @@ async function removeParticipantFromProject({
     }
   });
   await project.save();
+  // Record withdrawal of this participant's study/geolocation consent for the project.
+  await consent.withdrawStudyConsent({ samplyId: participantId, projectId: project._id });
 }
 
 // participant deletes the account from the mobile phone
@@ -2020,6 +2038,12 @@ exports.deleteAccountFromMobileApp = async (req, res) => {
         })
       );
     }
+    // Erase the participant's collected responses across all studies
+    // (participant-initiated account deletion = full erasure, GDPR Art. 17).
+    await Result.deleteMany({ samplyid: user.samplyId });
+    // Mark all of the participant's consents (terms/privacy/study/geolocation)
+    // as withdrawn before the account is removed, keeping the audit trail.
+    await consent.withdrawAllConsent({ samplyId: user.samplyId });
     await user.remove();
     res.status(200).json({ message: "OK" });
   } else {

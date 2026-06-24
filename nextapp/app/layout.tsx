@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Inter, Caveat, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "./components/Nav";
+import CookieNotice from "./components/CookieNotice";
 import { TranslationProvider } from "./components/TranslationProvider";
 import { getLocale } from "@/lib/i18n.server";
 
@@ -74,6 +75,7 @@ export default async function RootLayout({
         <TranslationProvider locale={locale}>
           <Nav />
           {children}
+          <CookieNotice />
         </TranslationProvider>
       </body>
     </html>

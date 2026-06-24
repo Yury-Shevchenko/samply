@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
-import mongoose from "mongoose";
+import { purgeProjectData } from "@/lib/data/erasure";
 
 async function requireSuperAdmin() {
   const session = await auth();
@@ -19,17 +19,10 @@ export async function deleteStudyAction(projectId: string) {
   const project = await Project.findById(projectId);
   if (!project) redirect("/admin/studies");
 
-  const Result = mongoose.model("Result");
-  const resultsCount = await Result.countDocuments({ project: projectId });
-
-  if (resultsCount > 0) {
-    await Promise.all([
-      Result.deleteMany({ project: projectId }),
-      project.deleteOne(),
-    ]);
-  } else {
-    await project.deleteOne();
-  }
+  // Cascade-delete all study data (responses, queued notifications, jobs,
+  // consent records) before removing the project (GDPR Art. 17).
+  await purgeProjectData(projectId);
+  await project.deleteOne();
 
   redirect("/admin/studies");
 }

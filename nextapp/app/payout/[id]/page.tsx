@@ -1,6 +1,7 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { fetchParticipantBysamplyId } from "@/lib/data/participants";
+import { fetchParticipantBysamplyId, researcherCanAccessParticipant } from "@/lib/data/participants";
+import { recordAccess } from "@/lib/data/audit";
 import { getT } from "@/lib/i18n.server";
 
 export const metadata = { title: "Payout — Samply" };
@@ -16,8 +17,17 @@ export default async function PayoutPage({
 
   const { id: samplyId } = await params;
 
+  if (!(await researcherCanAccessParticipant(session.user.id, samplyId))) notFound();
+
   const participant = await fetchParticipantBysamplyId(samplyId);
   if (!participant) notFound();
+
+  await recordAccess({
+    actorUserId: session.user.id,
+    actorEmail: session.user.email ?? undefined,
+    action: "view_payout",
+    targetSamplyId: samplyId,
+  });
 
   const p = participant as unknown as {
     name?: string;

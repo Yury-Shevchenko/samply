@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
+import { purgeParticipantSchedules } from "@/lib/data/erasure";
 
 async function requireOwner(studyId: string) {
   const session = await auth();
@@ -61,6 +62,11 @@ export async function deleteParticipantAction(studyId: string, participantId: st
     { _id: studyId },
     { $pull: { mobileUsers: { id: participantId } } },
   );
+
+  // Stop future notifications/jobs for this participant in this study and
+  // withdraw their study consent. Already-collected responses are retained
+  // (unenrolment is not erasure of lawfully collected research data).
+  await purgeParticipantSchedules(participantId, studyId);
 
   redirect(`/dashboard/${studyId}/participants`);
 }

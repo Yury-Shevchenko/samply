@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
 import { fetchParticipants } from "@/lib/data/participants";
+import { recordAccess } from "@/lib/data/audit";
 
 function csvCell(v: unknown): string {
   const s = v == null ? "" : String(v);
@@ -26,11 +27,19 @@ export async function GET(
   }
 
   const [project, participants] = await Promise.all([
-    fetchProjectById(studyId, session.user.id),
+    fetchProjectById(studyId, session.user.id, session.user.level > 100),
     fetchParticipants(studyId),
   ]);
 
   if (!project) return new NextResponse("Not found", { status: 404 });
+
+  await recordAccess({
+    actorUserId: session.user.id,
+    actorEmail: session.user.email ?? undefined,
+    action: "export_participants",
+    projectId: studyId,
+    meta: { count: participants.length },
+  });
 
   const infoKeys = new Set<string>();
   for (const p of participants) {
@@ -40,13 +49,15 @@ export async function GET(
   }
   const infoKeysArr = [...infoKeys];
 
+  // Note: the device push token is intentionally excluded — it is a device
+  // identifier with no research value and should not be exported (GDPR data
+  // minimisation).
   const header = [
     "participant_id",
     "code",
     "group",
     "status",
     "enrolled",
-    "push_token",
     "stripe_account",
     ...infoKeysArr,
   ];
@@ -57,7 +68,6 @@ export async function GET(
     p.group?.name ?? "",
     p.deactivated ? "deactivated" : "active",
     p.created ? new Date(p.created).toISOString() : "",
-    p.token ?? "",
     p.stripe?.account ?? "",
     ...infoKeysArr.map((k) => String(p.information?.[k] ?? "")),
   ]);

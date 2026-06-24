@@ -6,6 +6,7 @@ const User = mongoose.model("User");
 const Project = mongoose.model("Project");
 const mail = require("../handlers/mail");
 const webhookController = require("./webhookController");
+const consent = require("../handlers/consent");
 const validator = require("validator"); // For email validation
 
 const { customAlphabet } = require("nanoid");
@@ -183,12 +184,12 @@ exports.createMobileAccount = async (req, res) => {
           resetURL: `${process.env.APP_URL || `https://${req.headers.host}`}/account/confirm/${newUser.confirmEmailToken}`,
           filename: "email-confirmation-" + newUser.language,
         }).catch(err => {
-          console.error("Failed to send confirmation email to:", userData.email, err.message);
+          console.error("Failed to send confirmation email for user:", newUser.samplyId, err.message);
         });
       } else {
         console.warn(
-          "Skipping email send due to invalid or missing email:",
-          userData.email || "undefined"
+          "Skipping confirmation email: invalid or missing email for new user",
+          newUser.samplyId
         );
       }
 
@@ -196,6 +197,18 @@ exports.createMobileAccount = async (req, res) => {
         if (err) {
           console.error("Error saving new user:", err);
           return res.status(500).json({ message: "Error saving user" });
+        }
+        // Record auditable terms + privacy consent for the new participant.
+        // The app gates signup on an "I agree" checkbox; the server stamps the
+        // current document versions. Fire-and-forget — never blocks signup.
+        if (userData.consent) {
+          consent.recordSignupConsent({
+            subjectType: "participant",
+            userId: newUser._id,
+            samplyId: userToken,
+            source: "app",
+            locale: newUser.language,
+          });
         }
         res.status(200).json({ message: "OK", userToken: userToken });
       });
