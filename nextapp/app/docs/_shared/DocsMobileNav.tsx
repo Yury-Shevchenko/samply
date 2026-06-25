@@ -6,14 +6,14 @@ import { useT } from "@/app/components/TranslationProvider";
 const NAV_GROUPS: { sectionKey: string; pages: string[] }[] = [
   { sectionKey: "getStarted",            pages: ["home", "first-study", "invite"] },
   { sectionKey: "notificationSchedules", pages: ["types", "form", "personal", "queue"] },
-  { sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders"] },
+  { sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders", "integrations"] },
   { sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream"] },
   { sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about"] },
 ];
 
 const PAGE_KEYS = [
   "home", "first-study", "invite", "types", "form", "personal", "queue",
-  "placeholders", "groups", "reminders", "event-contingent", "geofencing",
+  "placeholders", "groups", "reminders", "integrations", "event-contingent", "geofencing",
   "stream", "glossary", "api", "changelog", "about",
 ];
 

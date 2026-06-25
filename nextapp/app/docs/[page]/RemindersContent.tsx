@@ -16,6 +16,32 @@ function UrlBox({ url }: { url: string }) {
   );
 }
 
+function CompletionPointer({ lang }: { lang: string }) {
+  const T: Record<string, { h: string; p: React.ReactNode }> = {
+    en: { h: "Registering a completion event", p: <>Samply cancels pending reminders as soon as it receives a completion event for a send. Your survey tool signals completion by redirecting the participant to Samply&apos;s completion endpoint with the message id at the end of the survey. The exact setup for each tool — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap and more — is in the <a href="/docs/integrations">Survey integrations</a> guides. Make sure <code>%MESSAGE_ID%</code> is included in your notification link (see <a href="/docs/placeholders">URL placeholders</a>).</> },
+    de: { h: "Ein Abschlussereignis registrieren", p: <>Samply bricht ausstehende Erinnerungen ab, sobald ein Abschlussereignis für einen Versand eingeht. Ihr Umfragetool signalisiert den Abschluss, indem es den Teilnehmer am Umfrageende mit der Nachrichten-ID zum Samply-Abschluss-Endpunkt weiterleitet. Die genaue Einrichtung je Tool — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap und mehr — finden Sie in den <a href="/docs/integrations">Umfrage-Integrationen</a>. Achten Sie darauf, dass <code>%MESSAGE_ID%</code> in Ihrem Benachrichtigungslink enthalten ist (siehe <a href="/docs/placeholders">URL-Platzhalter</a>).</> },
+    nl: { h: "Een voltooiingsgebeurtenis registreren", p: <>Samply annuleert openstaande herinneringen zodra het een voltooiingsgebeurtenis voor een verzending ontvangt. Uw enquetetool signaleert voltooiing door de deelnemer aan het einde van de enquete met de bericht-id naar het Samply-voltooiingseindpunt te leiden. De exacte instelling per tool — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap en meer — staat in de <a href="/docs/integrations">Enquete-integraties</a>. Zorg dat <code>%MESSAGE_ID%</code> in uw notificatielink staat (zie <a href="/docs/placeholders">URL-plaatshouders</a>).</> },
+    ru: { h: "Регистрация события завершения", p: <>Samply отменяет ожидающие напоминания, как только получает событие завершения для отправки. Ваш инструмент опроса сигнализирует о завершении, перенаправляя участника в конце опроса на конечную точку завершения Samply с идентификатором сообщения. Точная настройка для каждого инструмента — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap и других — описана в разделе <a href="/docs/integrations">Интеграции опросов</a>. Убедитесь, что <code>%MESSAGE_ID%</code> включён в ссылку уведомления (см. <a href="/docs/placeholders">URL-заполнители</a>).</> },
+    zh: { h: "注册完成事件", p: <>一旦收到某次发送的完成事件，Samply 就会取消待处理的提醒。您的问卷工具通过在问卷结束时将参与者重定向到带有消息 ID 的 Samply 完成端点来发出完成信号。每个工具（Qualtrics、SoSci、LimeSurvey、Unipark、REDCap 等）的具体设置请参见<a href="/docs/integrations">问卷集成</a>指南。请确保通知链接中包含 <code>%MESSAGE_ID%</code>（参见<a href="/docs/placeholders">URL 占位符</a>）。</> },
+    ko: { h: "완료 이벤트 등록", p: <>Samply는 발송에 대한 완료 이벤트를 수신하는 즉시 대기 중인 알림을 취소합니다. 설문 도구는 설문 종료 시 참가자를 메시지 ID와 함께 Samply 완료 엔드포인트로 리디렉션하여 완료를 알립니다. 각 도구(Qualtrics, SoSci, LimeSurvey, Unipark, REDCap 등)의 정확한 설정은 <a href="/docs/integrations">설문 통합</a> 가이드에 있습니다. 알림 링크에 <code>%MESSAGE_ID%</code>가 포함되어 있는지 확인하세요(<a href="/docs/placeholders">URL 자리표시자</a> 참조).</> },
+    it: { h: "Registrare un evento di completamento", p: <>Samply annulla i promemoria in sospeso non appena riceve un evento di completamento per un invio. Il tuo strumento di sondaggio segnala il completamento reindirizzando il partecipante all&apos;endpoint di completamento di Samply con l&apos;ID del messaggio alla fine del sondaggio. La configurazione esatta per ogni strumento — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap e altri — è nelle guide <a href="/docs/integrations">Integrazioni dei sondaggi</a>. Assicurati che <code>%MESSAGE_ID%</code> sia incluso nel link di notifica (vedi <a href="/docs/placeholders">Segnaposto URL</a>).</> },
+    fr: { h: "Enregistrer un événement d'achèvement", p: <>Samply annule les rappels en attente dès qu&apos;il reçoit un événement d&apos;achèvement pour un envoi. Votre outil d&apos;enquête signale l&apos;achèvement en redirigeant le participant vers le point de terminaison d&apos;achèvement de Samply avec l&apos;ID du message à la fin de l&apos;enquête. La configuration exacte pour chaque outil — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap et plus — se trouve dans les guides <a href="/docs/integrations">Intégrations d&apos;enquête</a>. Assurez-vous que <code>%MESSAGE_ID%</code> figure dans votre lien de notification (voir <a href="/docs/placeholders">Espaces réservés d&apos;URL</a>).</> },
+    es: { h: "Registrar un evento de finalización", p: <>Samply cancela los recordatorios pendientes en cuanto recibe un evento de finalización de un envío. Tu herramienta de encuesta señala la finalización redirigiendo al participante al punto final de finalización de Samply con el id del mensaje al terminar la encuesta. La configuración exacta de cada herramienta — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap y más — está en las guías de <a href="/docs/integrations">Integraciones de encuestas</a>. Asegúrate de incluir <code>%MESSAGE_ID%</code> en tu enlace de notificación (consulta <a href="/docs/placeholders">Marcadores de URL</a>).</> },
+    pt: { h: "Registrar um evento de conclusão", p: <>O Samply cancela os lembretes pendentes assim que recebe um evento de conclusão de um envio. Sua ferramenta de pesquisa sinaliza a conclusão redirecionando o participante para o endpoint de conclusão do Samply com o id da mensagem no fim da pesquisa. A configuração exata de cada ferramenta — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap e mais — está nos guias de <a href="/docs/integrations">Integrações de pesquisa</a>. Garanta que <code>%MESSAGE_ID%</code> esteja no seu link de notificação (veja <a href="/docs/placeholders">Espaços reservados de URL</a>).</> },
+    ja: { h: "完了イベントの登録", p: <>Samply は送信の完了イベントを受信するとすぐに、保留中のリマインダーをキャンセルします。アンケートツールは、アンケート終了時に参加者をメッセージ ID 付きで Samply の完了エンドポイントにリダイレクトすることで完了を通知します。各ツール（Qualtrics、SoSci、LimeSurvey、Unipark、REDCap など）の具体的な設定は<a href="/docs/integrations">アンケート連携</a>ガイドにあります。通知リンクに <code>%MESSAGE_ID%</code> が含まれていることを確認してください（<a href="/docs/placeholders">URL プレースホルダー</a>を参照）。</> },
+    tr: { h: "Tamamlanma olayını kaydetme", p: <>Samply, bir gönderim için tamamlanma olayı aldığı anda bekleyen hatırlatıcıları iptal eder. Anket aracınız, anket sonunda katılımcıyı mesaj kimliğiyle birlikte Samply tamamlanma uç noktasına yönlendirerek tamamlanmayı bildirir. Her araç için tam kurulum — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap ve daha fazlası — <a href="/docs/integrations">Anket entegrasyonları</a> kılavuzlarındadır. Bildirim bağlantınızda <code>%MESSAGE_ID%</code> bulunduğundan emin olun (bkz. <a href="/docs/placeholders">URL yer tutucuları</a>).</> },
+    pl: { h: "Rejestrowanie zdarzenia ukończenia", p: <>Samply anuluje oczekujące przypomnienia, gdy tylko otrzyma zdarzenie ukończenia dla wysyłki. Twoje narzędzie ankietowe sygnalizuje ukończenie, przekierowując uczestnika na koniec ankiety do punktu końcowego ukończenia Samply z identyfikatorem wiadomości. Dokładna konfiguracja dla każdego narzędzia — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap i więcej — znajduje się w przewodnikach <a href="/docs/integrations">Integracje ankiet</a>. Upewnij się, że <code>%MESSAGE_ID%</code> znajduje się w linku powiadomienia (zobacz <a href="/docs/placeholders">Symbole zastępcze URL</a>).</> },
+    ar: { h: "تسجيل حدث الإكمال", p: <>يلغي Samply التذكيرات المعلقة بمجرد تلقيه حدث إكمال لعملية إرسال. تشير أداة الاستبيان إلى الإكمال بإعادة توجيه المشارك إلى نقطة نهاية الإكمال في Samply مع معرّف الرسالة في نهاية الاستبيان. الإعداد الدقيق لكل أداة — Qualtrics وSoSci وLimeSurvey وUnipark وREDCap وغيرها — موجود في أدلة <a href="/docs/integrations">تكاملات الاستبيان</a>. تأكد من تضمين <code>%MESSAGE_ID%</code> في رابط الإشعار (انظر <a href="/docs/placeholders">عناصر URL النائبة</a>).</> },
+  };
+  const c = T[lang] ?? T.en;
+  return (
+    <>
+      <h2>{c.h}</h2>
+      <p style={{ fontSize: '1.4rem', lineHeight: 1.65, color: 'var(--ink-60)' }}>{c.p}</p>
+    </>
+  );
+}
+
 function RemindersContentEn({ baseUrl }: { baseUrl: string }) {
   return (
     <>
@@ -82,104 +108,8 @@ function RemindersContentEn({ baseUrl }: { baseUrl: string }) {
         completion event arrives, regardless of which have already fired.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Registering a completion event</h2>
-      <p>
-        Samply cannot know on its own when a participant finishes a survey. Your survey
-        tool must signal completion by calling the Samply completion endpoint. There are
-        two ways to do this.
-      </p>
-      <p>
-        The exact URLs for your study — with the correct slug already filled in — are
-        shown in the <strong>Settings</strong> tab of your study dashboard, under{' '}
-        <em>Reminders — completion URL</em>. You can copy them directly from there.
-      </p>
-
-      <h3>Option 1 — redirect (Qualtrics, LimeSurvey, most survey tools)</h3>
-      <p>
-        At the end of your survey, redirect the participant to the Samply completion URL.
-        Samply marks the send as completed and cancels pending reminders, then shows the
-        participant a confirmation page.
-      </p>
-      <p>
-        The redirect URL follows this pattern — replace <em>your-study-slug</em> with
-        your study URL slug and use the <Code>%MESSAGE_ID%</Code> placeholder so each
-        participant&apos;s completion is recorded against their specific send:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        In Qualtrics, set this as the survey end-of-survey redirect URL. In LimeSurvey,
-        set it as the &quot;End URL&quot; on the survey settings panel. The survey tool
-        substitutes <Code>%MESSAGE_ID%</Code> with the actual message ID it received via
-        the URL parameter you passed in the notification link (see{' '}
-        <a href='/docs/placeholders'>URL placeholders</a>).
-      </p>
-
-      <h3>Option 2 — POST request (REDCap, custom integrations)</h3>
-      <p>
-        Send an HTTP POST to the same endpoint. This is suited for survey tools that
-        support end-of-survey webhooks, or for custom code running server-side.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        A <code>200</code> response confirms the completion was recorded and reminders
-        were cancelled. A <code>400</code> response means Samply could not find a matching
-        result record for that message ID — check that <Code>%MESSAGE_ID%</Code> was
-        correctly substituted and passed through.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Why MESSAGE_ID is required</h2>
-      <p>
-        Samply uses <Code>%MESSAGE_ID%</Code> to link a completion event to the exact
-        notification send that triggered the survey. Without it, Samply cannot identify
-        which pending reminders to cancel. The flow is:
-      </p>
-      <ol>
-        <li>
-          You put <Code>%MESSAGE_ID%</Code> in the notification Web Link as a query
-          parameter — for example, <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply substitutes the token with a unique 15-character ID at send time.
-          The participant opens the survey URL with that ID already in it.
-        </li>
-        <li>
-          Your survey tool reads the <code>messageid</code> parameter and passes it to
-          the end-of-survey redirect or webhook.
-        </li>
-        <li>
-          Samply receives the completion call with the message ID, cancels reminders, and
-          marks the result record as completed.
-        </li>
-      </ol>
-      <p>
-        If you use reminders, always include <Code>%MESSAGE_ID%</Code> in your notification
-        URL and verify that your survey tool forwards it to the completion endpoint.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtrics setup walkthrough</h2>
-      <ol>
-        <li>
-          In the notification Web Link, add <code>?messageid=%MESSAGE_ID%</code> (plus any
-          other placeholders you need).
-        </li>
-        <li>
-          In your Qualtrics survey flow, add an <strong>Embedded Data</strong> element
-          before the first block and create a field named <code>messageid</code>. Qualtrics
-          captures query string parameters automatically.
-        </li>
-        <li>
-          In <strong>Survey Options → Survey Termination</strong>, set
-          the redirect URL to:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics substitutes <code>{'{e://Field/messageid}'}</code> with the captured
-        value, so participants are redirected to the correct completion URL.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="en" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Things to watch out for</h3>
@@ -279,105 +209,8 @@ function RemindersContentDe({ baseUrl }: { baseUrl: string }) {
         wurden.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Ein Abschlussereignis registrieren</h2>
-      <p>
-        Samply kann nicht von selbst wissen, wann ein Teilnehmer eine Umfrage abschließt. Ihr Umfragetool
-        muss den Abschluss durch Aufruf des Samply-Abschluss-Endpunkts signalisieren. Dafür gibt es
-        zwei Möglichkeiten.
-      </p>
-      <p>
-        Die genauen URLs für Ihre Studie — mit dem bereits eingetragenen korrekten Slug — werden im Tab{' '}
-        <strong>Einstellungen</strong> Ihres Studien-Dashboards unter{' '}
-        <em>Erinnerungen — Abschluss-URL</em> angezeigt. Sie können sie direkt von dort kopieren.
-      </p>
-
-      <h3>Option 1 — Weiterleitung (Qualtrics, LimeSurvey, die meisten Umfragetools)</h3>
-      <p>
-        Leiten Sie den Teilnehmer am Ende Ihrer Umfrage zur Samply-Abschluss-URL weiter.
-        Samply markiert den Versand als abgeschlossen und bricht ausstehende Erinnerungen ab, dann zeigt
-        es dem Teilnehmer eine Bestätigungsseite.
-      </p>
-      <p>
-        Die Weiterleitungs-URL folgt diesem Muster — ersetzen Sie <em>your-study-slug</em> durch
-        Ihren Studien-URL-Slug und verwenden Sie den Platzhalter <Code>%MESSAGE_ID%</Code>, damit der
-        Abschluss jedes Teilnehmers seinem spezifischen Versand zugeordnet wird:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Setzen Sie dies in Qualtrics als Weiterleitungs-URL am Umfrageende. In LimeSurvey
-        setzen Sie es als „End-URL" im Umfrageeinstellungen-Panel. Das Umfragetool
-        ersetzt <Code>%MESSAGE_ID%</Code> durch die tatsächliche Nachrichten-ID, die es über den
-        URL-Parameter empfangen hat, den Sie im Benachrichtigungslink übergeben haben (siehe{' '}
-        <a href='/docs/placeholders'>URL-Platzhalter</a>).
-      </p>
-
-      <h3>Option 2 — POST-Anfrage (REDCap, benutzerdefinierte Integrationen)</h3>
-      <p>
-        Senden Sie einen HTTP-POST an denselben Endpunkt. Dies eignet sich für Umfragetools, die
-        End-of-Survey-Webhooks unterstützen, oder für serverseitig laufenden benutzerdefinierten Code.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Eine <code>200</code>-Antwort bestätigt, dass der Abschluss aufgezeichnet und Erinnerungen
-        abgebrochen wurden. Eine <code>400</code>-Antwort bedeutet, dass Samply keinen passenden
-        Ergebnisdatensatz für diese Nachrichten-ID finden konnte — überprüfen Sie, ob{' '}
-        <Code>%MESSAGE_ID%</Code> korrekt ersetzt und weitergegeben wurde.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Warum MESSAGE_ID erforderlich ist</h2>
-      <p>
-        Samply verwendet <Code>%MESSAGE_ID%</Code>, um ein Abschlussereignis mit dem genauen
-        Benachrichtigungsversand zu verknüpfen, der die Umfrage ausgelöst hat. Ohne sie kann Samply nicht
-        identifizieren, welche ausstehenden Erinnerungen abgebrochen werden sollen. Der Ablauf ist:
-      </p>
-      <ol>
-        <li>
-          Sie fügen <Code>%MESSAGE_ID%</Code> in den Benachrichtigungs-Weblink als Query-Parameter ein —
-          zum Beispiel <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply ersetzt den Token zum Sendezeitpunkt durch eine eindeutige 15-stellige ID.
-          Der Teilnehmer öffnet die Umfrage-URL mit dieser bereits enthaltenen ID.
-        </li>
-        <li>
-          Ihr Umfragetool liest den Parameter <code>messageid</code> und übergibt ihn an die
-          End-of-Survey-Weiterleitung oder den Webhook.
-        </li>
-        <li>
-          Samply erhält den Abschluss-Aufruf mit der Nachrichten-ID, bricht Erinnerungen ab und
-          markiert den Ergebnisdatensatz als abgeschlossen.
-        </li>
-      </ol>
-      <p>
-        Wenn Sie Erinnerungen verwenden, fügen Sie immer <Code>%MESSAGE_ID%</Code> in Ihre
-        Benachrichtigungs-URL ein und stellen Sie sicher, dass Ihr Umfragetool sie an den
-        Abschluss-Endpunkt weiterleitet.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtrics-Einrichtung Schritt für Schritt</h2>
-      <ol>
-        <li>
-          Fügen Sie im Benachrichtigungs-Weblink <code>?messageid=%MESSAGE_ID%</code> hinzu (plus alle
-          anderen benötigten Platzhalter).
-        </li>
-        <li>
-          Fügen Sie in Ihrem Qualtrics-Umfrage-Flow ein Element <strong>Eingebettete Daten</strong>{' '}
-          vor dem ersten Block ein und erstellen Sie ein Feld namens <code>messageid</code>. Qualtrics
-          erfasst Query-String-Parameter automatisch.
-        </li>
-        <li>
-          Setzen Sie unter <strong>Umfrageoptionen → Umfrageabschluss</strong> die
-          Weiterleitungs-URL auf:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics ersetzt <code>{'{e://Field/messageid}'}</code> durch den erfassten
-        Wert, sodass Teilnehmer zur korrekten Abschluss-URL weitergeleitet werden.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="de" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Worauf Sie achten sollten</h3>
@@ -476,105 +309,8 @@ function RemindersContentNl({ baseUrl }: { baseUrl: string }) {
         geannuleerd zodra een voltooiingsgebeurtenis binnenkomt, ongeacht welke al zijn verstuurd.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Een voltooiingsgebeurtenis registreren</h2>
-      <p>
-        Samply kan niet op eigen initiatief weten wanneer een deelnemer een enquete afrondt. Uw
-        enquetetool moet voltooiing signaleren door het Samply-voltooiingseindpunt aan te roepen.
-        Er zijn twee manieren om dit te doen.
-      </p>
-      <p>
-        De exacte URL's voor uw studie — met de juiste slug al ingevuld — worden getoond op het
-        tabblad <strong>Instellingen</strong> van uw studiedashboard, onder{' '}
-        <em>Herinneringen — voltooiings-URL</em>. U kunt ze daar rechtstreeks kopiëren.
-      </p>
-
-      <h3>Optie 1 — doorsturen (Qualtrics, LimeSurvey, de meeste enquetetools)</h3>
-      <p>
-        Stuur de deelnemer aan het einde van uw enquete door naar de Samply-voltooiings-URL.
-        Samply markeert de verzending als voltooid en annuleert openstaande herinneringen, waarna het
-        de deelnemer een bevestigingspagina toont.
-      </p>
-      <p>
-        De doorstuur-URL volgt dit patroon — vervang <em>your-study-slug</em> door uw studie-URL-slug
-        en gebruik de plaatshouder <Code>%MESSAGE_ID%</Code> zodat de voltooiing van elke deelnemer
-        wordt geregistreerd bij zijn specifieke verzending:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Stel dit in Qualtrics in als de doorstuur-URL aan het einde van de enquete. In LimeSurvey
-        stelt u het in als de &quot;Eind-URL&quot; in het instellingenpaneel van de enquete. De
-        enquetetool vervangt <Code>%MESSAGE_ID%</Code> door de daadwerkelijke bericht-ID die het heeft
-        ontvangen via de URL-parameter die u heeft doorgegeven in de notificatielink (zie{' '}
-        <a href='/docs/placeholders'>URL-plaatshouders</a>).
-      </p>
-
-      <h3>Optie 2 — POST-verzoek (REDCap, aangepaste integraties)</h3>
-      <p>
-        Stuur een HTTP POST naar hetzelfde eindpunt. Dit is geschikt voor enquetetools die
-        end-of-survey-webhooks ondersteunen, of voor aangepaste code die aan de serverzijde wordt
-        uitgevoerd.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Een <code>200</code>-antwoord bevestigt dat de voltooiing is geregistreerd en herinneringen
-        zijn geannuleerd. Een <code>400</code>-antwoord betekent dat Samply geen overeenkomend
-        resultaatrecord kon vinden voor die bericht-ID — controleer of <Code>%MESSAGE_ID%</Code>{' '}
-        correct is vervangen en doorgegeven.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Waarom MESSAGE_ID vereist is</h2>
-      <p>
-        Samply gebruikt <Code>%MESSAGE_ID%</Code> om een voltooiingsgebeurtenis te koppelen aan de
-        exacte notificatieverzending die de enquete heeft geactiveerd. Zonder deze kan Samply niet
-        identificeren welke openstaande herinneringen moeten worden geannuleerd. De stroom is:
-      </p>
-      <ol>
-        <li>
-          U plaatst <Code>%MESSAGE_ID%</Code> in de notificatie-weblink als queryparameter —
-          bijvoorbeeld <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply vervangt de token op het moment van verzending door een unieke 15-tekens ID.
-          De deelnemer opent de enquete-URL met die ID er al in.
-        </li>
-        <li>
-          Uw enquetetool leest de parameter <code>messageid</code> en geeft deze door aan de
-          end-of-survey-doorstuur of webhook.
-        </li>
-        <li>
-          Samply ontvangt de voltooiingsaanroep met de bericht-ID, annuleert herinneringen en
-          markeert het resultaatrecord als voltooid.
-        </li>
-      </ol>
-      <p>
-        Als u herinneringen gebruikt, neem dan altijd <Code>%MESSAGE_ID%</Code> op in uw
-        notificatie-URL en controleer of uw enquetetool deze doorstuurt naar het voltooiingseindpunt.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtrics stap voor stap instellen</h2>
-      <ol>
-        <li>
-          Voeg in de notificatie-weblink <code>?messageid=%MESSAGE_ID%</code> toe (plus eventuele
-          andere plaatshouders die u nodig heeft).
-        </li>
-        <li>
-          Voeg in uw Qualtrics-enqueteflow een element <strong>Ingesloten data</strong>{' '}
-          toe vóór het eerste blok en maak een veld aan met de naam <code>messageid</code>.
-          Qualtrics legt querystring-parameters automatisch vast.
-        </li>
-        <li>
-          Stel onder <strong>Enqueteopties &rarr; Enqueteafsluiting</strong> de
-          doorstuur-URL in op:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics vervangt <code>{'{e://Field/messageid}'}</code> door de vastgelegde
-        waarde, zodat deelnemers worden doorgestuurd naar de juiste voltooiings-URL.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="nl" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Aandachtspunten</h3>
@@ -673,106 +409,8 @@ function RemindersContentRu({ baseUrl }: { baseUrl: string }) {
         событие завершения, независимо от того, какие из них уже были отправлены.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Регистрация события завершения</h2>
-      <p>
-        Samply не может самостоятельно определить, когда участник завершил опрос. Ваш
-        инструмент для проведения опросов должен сигнализировать о завершении, вызвав
-        конечную точку завершения Samply. Это можно сделать двумя способами.
-      </p>
-      <p>
-        Точные URL-адреса для вашего исследования — с уже подставленным правильным slug —
-        отображаются на вкладке <strong>Настройки</strong> панели управления исследованием
-        в разделе <em>Напоминания — URL завершения</em>. Вы можете скопировать их прямо оттуда.
-      </p>
-
-      <h3>Вариант 1 — перенаправление (Qualtrics, LimeSurvey и большинство инструментов для опросов)</h3>
-      <p>
-        В конце опроса перенаправьте участника на URL завершения Samply. Samply пометит
-        отправку как завершённую, отменит ожидающие напоминания и покажет участнику
-        страницу подтверждения.
-      </p>
-      <p>
-        URL перенаправления следует этому шаблону — замените <em>your-study-slug</em> на
-        slug URL вашего исследования и используйте заполнитель <Code>%MESSAGE_ID%</Code>,
-        чтобы завершение каждого участника фиксировалось для его конкретной отправки:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        В Qualtrics укажите это как URL перенаправления по завершении опроса. В LimeSurvey
-        укажите его как &quot;End URL&quot; на панели настроек опроса. Инструмент для опросов
-        заменит <Code>%MESSAGE_ID%</Code> фактическим идентификатором сообщения, полученным
-        через URL-параметр в ссылке уведомления (см.{' '}
-        <a href='/docs/placeholders'>URL-заполнители</a>).
-      </p>
-
-      <h3>Вариант 2 — POST-запрос (REDCap, пользовательские интеграции)</h3>
-      <p>
-        Отправьте HTTP POST на ту же конечную точку. Это подходит для инструментов,
-        поддерживающих вебхуки по завершении опроса, или для пользовательского кода
-        на стороне сервера.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Ответ <code>200</code> подтверждает, что завершение зафиксировано и напоминания
-        отменены. Ответ <code>400</code> означает, что Samply не нашло соответствующей
-        записи результата для данного идентификатора сообщения — убедитесь, что{' '}
-        <Code>%MESSAGE_ID%</Code> был правильно подставлен и передан.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Почему MESSAGE_ID обязателен</h2>
-      <p>
-        Samply использует <Code>%MESSAGE_ID%</Code>, чтобы связать событие завершения с
-        конкретной отправкой уведомления, инициировавшей опрос. Без него Samply не сможет
-        определить, какие ожидающие напоминания нужно отменить. Процесс выглядит так:
-      </p>
-      <ol>
-        <li>
-          Вы добавляете <Code>%MESSAGE_ID%</Code> в веб-ссылку уведомления в качестве
-          параметра запроса — например, <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply при отправке заменяет токен уникальным 15-символьным идентификатором.
-          Участник открывает URL опроса с уже подставленным идентификатором.
-        </li>
-        <li>
-          Ваш инструмент для опросов считывает параметр <code>messageid</code> и передаёт
-          его в перенаправление по завершении или вебхук.
-        </li>
-        <li>
-          Samply получает вызов завершения с идентификатором сообщения, отменяет напоминания
-          и помечает запись результата как завершённую.
-        </li>
-      </ol>
-      <p>
-        Если вы используете напоминания, всегда включайте <Code>%MESSAGE_ID%</Code> в URL
-        уведомления и убедитесь, что ваш инструмент для опросов передаёт его на конечную
-        точку завершения.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Пошаговая настройка в Qualtrics</h2>
-      <ol>
-        <li>
-          В веб-ссылке уведомления добавьте <code>?messageid=%MESSAGE_ID%</code> (плюс любые
-          другие нужные заполнители).
-        </li>
-        <li>
-          В потоке опроса Qualtrics добавьте элемент <strong>Встроенные данные</strong>{' '}
-          перед первым блоком и создайте поле с именем <code>messageid</code>. Qualtrics
-          автоматически захватывает параметры строки запроса.
-        </li>
-        <li>
-          В разделе <strong>Параметры опроса → Завершение опроса</strong> укажите
-          URL перенаправления:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics заменит <code>{'{e://Field/messageid}'}</code> захваченным значением,
-        и участники будут перенаправлены на правильный URL завершения.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="ru" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>На что обратить внимание</h3>
@@ -859,91 +497,8 @@ function RemindersContentZh({ baseUrl }: { baseUrl: string }) {
         无论哪些提醒已经触发，一旦收到完成事件，所有提醒都会被取消。
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>注册完成事件</h2>
-      <p>
-        Samply 无法自行知道参与者何时完成问卷。您的问卷工具必须通过调用
-        Samply 完成端点来发出完成信号。有两种方式可以做到这一点。
-      </p>
-      <p>
-        您研究的确切 URL——已填入正确的 slug——显示在研究仪表板的<strong>设置</strong>选项卡中，
-        位于<em>提醒——完成 URL</em>下方。您可以直接从那里复制它们。
-      </p>
-
-      <h3>选项 1 — 重定向（Qualtrics、LimeSurvey、大多数问卷工具）</h3>
-      <p>
-        在问卷结束时，将参与者重定向到 Samply 完成 URL。
-        Samply 将该发送标记为已完成并取消待处理的提醒，然后向参与者显示确认页面。
-      </p>
-      <p>
-        重定向 URL 遵循以下模式——将 <em>your-study-slug</em> 替换为您的研究 URL slug，
-        并使用 <Code>%MESSAGE_ID%</Code> 占位符，以便每个参与者的完成情况都记录到其特定的发送：
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        在 Qualtrics 中，将其设置为问卷结束重定向 URL。在 LimeSurvey 中，
-        将其设置为问卷设置面板上的"End URL"。问卷工具会将 <Code>%MESSAGE_ID%</Code>{' '}
-        替换为通过您在通知链接中传递的 URL 参数收到的实际消息 ID（参见{' '}
-        <a href='/docs/placeholders'>URL 占位符</a>）。
-      </p>
-
-      <h3>选项 2 — POST 请求（REDCap、自定义集成）</h3>
-      <p>
-        向同一端点发送 HTTP POST。这适用于支持问卷结束 webhook 的问卷工具，或在服务器端运行的自定义代码。
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        <code>200</code> 响应确认完成已记录且提醒已取消。
-        <code>400</code> 响应表示 Samply 找不到该消息 ID 的匹配结果记录——
-        请检查 <Code>%MESSAGE_ID%</Code> 是否被正确替换和传递。
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>为什么需要 MESSAGE_ID</h2>
-      <p>
-        Samply 使用 <Code>%MESSAGE_ID%</Code> 将完成事件链接到触发问卷的特定通知发送。
-        没有它，Samply 无法识别要取消哪些待处理的提醒。流程如下：
-      </p>
-      <ol>
-        <li>
-          您将 <Code>%MESSAGE_ID%</Code> 作为查询参数放入通知 Web 链接中——
-          例如 <code>?messageid=%MESSAGE_ID%</code>。
-        </li>
-        <li>
-          Samply 在发送时将令牌替换为唯一的 15 字符 ID。
-          参与者打开已包含该 ID 的问卷 URL。
-        </li>
-        <li>
-          您的问卷工具读取 <code>messageid</code> 参数并将其传递给问卷结束重定向或 webhook。
-        </li>
-        <li>
-          Samply 收到带有消息 ID 的完成调用，取消提醒，并将结果记录标记为已完成。
-        </li>
-      </ol>
-      <p>
-        如果您使用提醒，请务必在通知 URL 中包含 <Code>%MESSAGE_ID%</Code>，
-        并验证您的问卷工具将其转发到完成端点。
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtrics 设置演练</h2>
-      <ol>
-        <li>
-          在通知 Web 链接中，添加 <code>?messageid=%MESSAGE_ID%</code>（加上您需要的任何其他占位符）。
-        </li>
-        <li>
-          在您的 Qualtrics 问卷流程中，在第一个模块之前添加一个<strong>嵌入数据</strong>元素，
-          并创建一个名为 <code>messageid</code> 的字段。Qualtrics 会自动捕获查询字符串参数。
-        </li>
-        <li>
-          在<strong>问卷选项 → 问卷终止</strong>中，将重定向 URL 设置为：
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics 会将 <code>{'{e://Field/messageid}'}</code> 替换为捕获的值，
-        因此参与者会被重定向到正确的完成 URL。
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="zh" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>注意事项</h3>
@@ -1047,98 +602,8 @@ function RemindersContentKo({ baseUrl }: { baseUrl: string }) {
         모든 알림이 취소됩니다.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>완료 이벤트 등록하기</h2>
-      <p>
-        Samply는 참여자가 설문을 언제 완료하는지 자체적으로 알 수 없습니다. 설문 도구가
-        Samply 완료 엔드포인트를 호출하여 완료 신호를 보내야 합니다. 이를 위한 두 가지 방법이 있습니다.
-      </p>
-      <p>
-        연구에 대한 정확한 URL — 올바른 슬러그가 이미 입력된 — 은 연구 대시보드의{' '}
-        <strong>설정</strong> 탭에서{' '}
-        <em>알림 — 완료 URL</em> 아래에 표시됩니다. 거기서 직접 복사할 수 있습니다.
-      </p>
-
-      <h3>옵션 1 — 리디렉션 (Qualtrics, LimeSurvey, 대부분의 설문 도구)</h3>
-      <p>
-        설문 마지막에 참여자를 Samply 완료 URL로 리디렉션하십시오.
-        Samply는 발송을 완료됨으로 표시하고 대기 중인 알림을 취소한 후 참여자에게 확인 페이지를 보여줍니다.
-      </p>
-      <p>
-        리디렉션 URL은 다음 패턴을 따릅니다 — <em>your-study-slug</em>를 연구 URL 슬러그로 바꾸고
-        <Code>%MESSAGE_ID%</Code> 플레이스홀더를 사용하여 각 참여자의 완료가 특정 발송에 기록되도록 하십시오:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics에서는 이를 설문 종료 리디렉션 URL로 설정하십시오. LimeSurvey에서는
-        설문 설정 패널의 &quot;End URL&quot;로 설정하십시오. 설문 도구는 알림 링크에서
-        전달한 URL 파라미터를 통해 수신한 실제 메시지 ID로 <Code>%MESSAGE_ID%</Code>를 대체합니다
-        (<a href='/docs/placeholders'>URL 플레이스홀더</a> 참조).
-      </p>
-
-      <h3>옵션 2 — POST 요청 (REDCap, 사용자 지정 통합)</h3>
-      <p>
-        동일한 엔드포인트로 HTTP POST를 전송하십시오. 이는 설문 종료 웹훅을 지원하는
-        설문 도구나 서버 측에서 실행되는 사용자 지정 코드에 적합합니다.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        <code>200</code> 응답은 완료가 기록되고 알림이 취소되었음을 확인합니다.
-        <code>400</code> 응답은 Samply가 해당 메시지 ID에 대한 일치하는 결과 레코드를 찾을 수 없다는 것을 의미합니다 —
-        <Code>%MESSAGE_ID%</Code>가 올바르게 대체되고 전달되었는지 확인하십시오.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>MESSAGE_ID가 필요한 이유</h2>
-      <p>
-        Samply는 <Code>%MESSAGE_ID%</Code>를 사용하여 완료 이벤트를 설문을 유발한
-        정확한 알림 발송과 연결합니다. 이것이 없으면 Samply는 어떤 대기 중인 알림을
-        취소해야 하는지 식별할 수 없습니다. 처리 흐름은 다음과 같습니다:
-      </p>
-      <ol>
-        <li>
-          알림 웹 링크에 쿼리 파라미터로 <Code>%MESSAGE_ID%</Code>를 입력합니다 —
-          예: <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply는 발송 시 토큰을 고유한 15자 ID로 대체합니다.
-          참여자는 해당 ID가 이미 포함된 설문 URL을 엽니다.
-        </li>
-        <li>
-          설문 도구는 <code>messageid</code> 파라미터를 읽고 이를 설문 종료 리디렉션
-          또는 웹훅에 전달합니다.
-        </li>
-        <li>
-          Samply는 메시지 ID가 포함된 완료 호출을 수신하고 알림을 취소하며
-          결과 레코드를 완료됨으로 표시합니다.
-        </li>
-      </ol>
-      <p>
-        알림을 사용하는 경우 알림 URL에 항상 <Code>%MESSAGE_ID%</Code>를 포함하고
-        설문 도구가 이를 완료 엔드포인트로 전달하는지 확인하십시오.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtrics 설정 안내</h2>
-      <ol>
-        <li>
-          알림 웹 링크에 <code>?messageid=%MESSAGE_ID%</code>를 추가하십시오(필요한
-          다른 플레이스홀더도 함께).
-        </li>
-        <li>
-          Qualtrics 설문 흐름에서 첫 번째 블록 앞에 <strong>포함된 데이터</strong> 요소를
-          추가하고 <code>messageid</code>라는 필드를 생성하십시오. Qualtrics는 쿼리 문자열
-          파라미터를 자동으로 캡처합니다.
-        </li>
-        <li>
-          <strong>설문 옵션 → 설문 종료</strong>에서 리디렉션 URL을 다음으로 설정하십시오:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics는 <code>{'{e://Field/messageid}'}</code>를 캡처된 값으로 대체하여
-        참여자가 올바른 완료 URL로 리디렉션됩니다.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="ko" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>주의 사항</h3>
@@ -1232,104 +697,8 @@ function RemindersContentIt({ baseUrl }: { baseUrl: string }) {
         non appena arriva un evento di completamento, indipendentemente da quali siano già stati attivati.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Registrazione di un evento di completamento</h2>
-      <p>
-        Samply non è in grado di sapere autonomamente quando un partecipante termina un sondaggio.
-        Lo strumento di sondaggio deve segnalare il completamento chiamando l&apos;endpoint di completamento
-        di Samply. Esistono due modi per farlo.
-      </p>
-      <p>
-        Gli URL esatti per lo studio — con lo slug corretto già inserito — sono mostrati nella
-        scheda <strong>Impostazioni</strong> del dashboard dello studio, sotto{' '}
-        <em>Promemoria — URL di completamento</em>. È possibile copiarli direttamente da lì.
-      </p>
-
-      <h3>Opzione 1 — reindirizzamento (Qualtrics, LimeSurvey, la maggior parte degli strumenti di sondaggio)</h3>
-      <p>
-        Alla fine del sondaggio, reindirizzare il partecipante all&apos;URL di completamento di Samply.
-        Samply contrassegna l&apos;invio come completato e annulla i promemoria in sospeso, quindi mostra
-        al partecipante una pagina di conferma.
-      </p>
-      <p>
-        L&apos;URL di reindirizzamento segue questo schema — sostituire <em>your-study-slug</em> con
-        lo slug URL dello studio e utilizzare il segnaposto <Code>%MESSAGE_ID%</Code> affinché il
-        completamento di ciascun partecipante venga registrato rispetto al suo invio specifico:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        In Qualtrics, impostarlo come URL di reindirizzamento al termine del sondaggio. In LimeSurvey,
-        impostarlo come &quot;End URL&quot; nel pannello delle impostazioni del sondaggio. Lo strumento
-        di sondaggio sostituisce <Code>%MESSAGE_ID%</Code> con l&apos;ID messaggio effettivo ricevuto tramite
-        il parametro URL passato nel collegamento alla notifica (vedere{' '}
-        <a href='/docs/placeholders'>Segnaposto URL</a>).
-      </p>
-
-      <h3>Opzione 2 — richiesta POST (REDCap, integrazioni personalizzate)</h3>
-      <p>
-        Inviare un HTTP POST allo stesso endpoint. Questo è adatto per gli strumenti di sondaggio che
-        supportano webhook di fine sondaggio, o per codice personalizzato eseguito lato server.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Una risposta <code>200</code> conferma che il completamento è stato registrato e i promemoria
-        sono stati annullati. Una risposta <code>400</code> significa che Samply non ha trovato un
-        record di risultati corrispondente per quell&apos;ID messaggio — verificare che <Code>%MESSAGE_ID%</Code>{' '}
-        sia stato correttamente sostituito e trasmesso.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Perché MESSAGE_ID è obbligatorio</h2>
-      <p>
-        Samply usa <Code>%MESSAGE_ID%</Code> per collegare un evento di completamento all&apos;esatto
-        invio della notifica che ha generato il sondaggio. Senza di esso, Samply non può identificare
-        quali promemoria in sospeso annullare. Il flusso è:
-      </p>
-      <ol>
-        <li>
-          Si inserisce <Code>%MESSAGE_ID%</Code> nel collegamento web della notifica come parametro
-          di query — ad esempio <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply sostituisce il token con un ID univoco di 15 caratteri al momento dell&apos;invio.
-          Il partecipante apre l&apos;URL del sondaggio con quell&apos;ID già inserito.
-        </li>
-        <li>
-          Lo strumento di sondaggio legge il parametro <code>messageid</code> e lo trasmette al
-          reindirizzamento di fine sondaggio o al webhook.
-        </li>
-        <li>
-          Samply riceve la chiamata di completamento con l&apos;ID messaggio, annulla i promemoria e
-          contrassegna il record dei risultati come completato.
-        </li>
-      </ol>
-      <p>
-        Se si utilizzano i promemoria, includere sempre <Code>%MESSAGE_ID%</Code> nell&apos;URL della
-        notifica e verificare che lo strumento di sondaggio lo inoltri all&apos;endpoint di completamento.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Procedura dettagliata di configurazione in Qualtrics</h2>
-      <ol>
-        <li>
-          Nel collegamento web della notifica, aggiungere <code>?messageid=%MESSAGE_ID%</code> (più
-          qualsiasi altro segnaposto necessario).
-        </li>
-        <li>
-          Nel flusso del sondaggio Qualtrics, aggiungere un elemento <strong>Dati incorporati</strong>{' '}
-          prima del primo blocco e creare un campo denominato <code>messageid</code>. Qualtrics
-          acquisisce automaticamente i parametri della stringa di query.
-        </li>
-        <li>
-          In <strong>Opzioni sondaggio → Terminazione sondaggio</strong>, impostare
-          l&apos;URL di reindirizzamento su:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics sostituisce <code>{'{e://Field/messageid}'}</code> con il valore acquisito,
-        in modo che i partecipanti vengano reindirizzati al corretto URL di completamento.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="it" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Aspetti a cui prestare attenzione</h3>
@@ -1428,108 +797,8 @@ function RemindersContentFr({ baseUrl }: { baseUrl: string }) {
         déjà été déclenchés.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Enregistrer un événement de complétion</h2>
-      <p>
-        Samply ne peut pas savoir par lui-même quand un participant termine une enquête. Votre
-        outil d'enquête doit signaler la complétion en appelant le point de terminaison de
-        complétion de Samply. Il existe deux façons de procéder.
-      </p>
-      <p>
-        Les URL exactes pour votre étude — avec le bon slug déjà renseigné — sont affichées dans
-        l'onglet <strong>Paramètres</strong> de votre tableau de bord d'étude, sous{' '}
-        <em>Rappels — URL de complétion</em>. Vous pouvez les copier directement depuis cet endroit.
-      </p>
-
-      <h3>Option 1 — redirection (Qualtrics, LimeSurvey, la plupart des outils d'enquête)</h3>
-      <p>
-        À la fin de votre enquête, redirigez le participant vers l'URL de complétion de Samply.
-        Samply marque l'envoi comme complété et annule les rappels en attente, puis affiche une
-        page de confirmation au participant.
-      </p>
-      <p>
-        L'URL de redirection suit ce modèle — remplacez <em>your-study-slug</em> par le slug URL
-        de votre étude et utilisez le paramètre <Code>%MESSAGE_ID%</Code> afin que la complétion
-        de chaque participant soit enregistrée pour son envoi spécifique :
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Dans Qualtrics, définissez ceci comme URL de redirection de fin d'enquête. Dans
-        LimeSurvey, définissez-le comme &quot;URL de fin&quot; dans le panneau des paramètres
-        de l'enquête. L'outil d'enquête remplace <Code>%MESSAGE_ID%</Code> par l'identifiant de
-        message réel reçu via le paramètre URL que vous avez transmis dans le lien de notification
-        (voir <a href='/docs/placeholders'>Paramètres URL</a>).
-      </p>
-
-      <h3>Option 2 — requête POST (REDCap, intégrations personnalisées)</h3>
-      <p>
-        Envoyez un HTTP POST au même point de terminaison. Cela convient aux outils d'enquête
-        qui prennent en charge les webhooks de fin d'enquête, ou au code personnalisé exécuté
-        côté serveur.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Une réponse <code>200</code> confirme que la complétion a été enregistrée et que les
-        rappels ont été annulés. Une réponse <code>400</code> signifie que Samply n'a pas pu
-        trouver d'enregistrement de résultat correspondant pour cet identifiant de message —
-        vérifiez que <Code>%MESSAGE_ID%</Code> a été correctement substitué et transmis.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Pourquoi MESSAGE_ID est obligatoire</h2>
-      <p>
-        Samply utilise <Code>%MESSAGE_ID%</Code> pour relier un événement de complétion à
-        l'envoi de notification exact qui a déclenché l'enquête. Sans lui, Samply ne peut pas
-        identifier quels rappels en attente annuler. Le déroulement est le suivant :
-      </p>
-      <ol>
-        <li>
-          Vous placez <Code>%MESSAGE_ID%</Code> dans le lien web de la notification en tant que
-          paramètre de requête — par exemple <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply substitue le jeton par un identifiant unique de 15 caractères au moment de
-          l'envoi. Le participant ouvre l'URL de l'enquête avec cet identifiant déjà inclus.
-        </li>
-        <li>
-          Votre outil d'enquête lit le paramètre <code>messageid</code> et le transmet à la
-          redirection de fin d'enquête ou au webhook.
-        </li>
-        <li>
-          Samply reçoit l'appel de complétion avec l'identifiant de message, annule les rappels
-          et marque l'enregistrement de résultat comme complété.
-        </li>
-      </ol>
-      <p>
-        Si vous utilisez des rappels, incluez toujours <Code>%MESSAGE_ID%</Code> dans l'URL de
-        votre notification et vérifiez que votre outil d'enquête le transmet au point de
-        terminaison de complétion.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Guide de configuration Qualtrics étape par étape</h2>
-      <ol>
-        <li>
-          Dans le lien web de la notification, ajoutez{' '}
-          <code>?messageid=%MESSAGE_ID%</code> (ainsi que tout autre paramètre dont vous avez
-          besoin).
-        </li>
-        <li>
-          Dans votre flux d'enquête Qualtrics, ajoutez un élément{' '}
-          <strong>Données incorporées</strong> avant le premier bloc et créez un champ nommé{' '}
-          <code>messageid</code>. Qualtrics capture automatiquement les paramètres de chaîne
-          de requête.
-        </li>
-        <li>
-          Dans <strong>Options de l'enquête → Fin de l'enquête</strong>, définissez l'URL de
-          redirection sur :
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics remplace <code>{'{e://Field/messageid}'}</code> par la valeur capturée,
-        de sorte que les participants sont redirigés vers l'URL de complétion correcte.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="fr" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Points d'attention</h3>
@@ -1629,107 +898,8 @@ function RemindersContentEs({ baseUrl }: { baseUrl: string }) {
         en cuanto llega un evento de finalización, independientemente de cuáles ya se hayan activado.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Registrar un evento de finalización</h2>
-      <p>
-        Samply no puede saber por sí mismo cuándo un participante termina una encuesta. Su
-        herramienta de encuesta debe señalar la finalización llamando al endpoint de finalización
-        de Samply. Hay dos formas de hacerlo.
-      </p>
-      <p>
-        Las URL exactas para su estudio — con el slug correcto ya introducido — se muestran en la
-        pestaña <strong>Configuración</strong> del panel de su estudio, bajo{' '}
-        <em>Recordatorios — URL de finalización</em>. Puede copiarlas directamente desde allí.
-      </p>
-
-      <h3>Opción 1 — redirección (Qualtrics, LimeSurvey, la mayoría de herramientas de encuesta)</h3>
-      <p>
-        Al final de su encuesta, redirija al participante a la URL de finalización de Samply.
-        Samply marca el envío como completado y cancela los recordatorios pendientes, y luego
-        muestra al participante una página de confirmación.
-      </p>
-      <p>
-        La URL de redirección sigue este patrón — reemplace <em>your-study-slug</em> con el slug
-        URL de su estudio y use el marcador <Code>%MESSAGE_ID%</Code> para que la finalización
-        de cada participante quede registrada frente a su envío específico:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        En Qualtrics, configúrelo como la URL de redirección al final de la encuesta. En
-        LimeSurvey, configúrelo como la «URL final» en el panel de configuración de la encuesta.
-        La herramienta de encuesta sustituye <Code>%MESSAGE_ID%</Code> por el ID de mensaje real
-        recibido a través del parámetro URL que pasó en el enlace de notificación (véase{' '}
-        <a href='/docs/placeholders'>Marcadores de URL</a>).
-      </p>
-
-      <h3>Opción 2 — solicitud POST (REDCap, integraciones personalizadas)</h3>
-      <p>
-        Envíe un HTTP POST al mismo endpoint. Esto es adecuado para herramientas de encuesta
-        que admiten webhooks de fin de encuesta, o para código personalizado que se ejecuta
-        en el servidor.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Una respuesta <code>200</code> confirma que la finalización fue registrada y los
-        recordatorios fueron cancelados. Una respuesta <code>400</code> significa que Samply no
-        pudo encontrar un registro de resultado coincidente para ese ID de mensaje — verifique
-        que <Code>%MESSAGE_ID%</Code> fue correctamente sustituido y transmitido.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Por qué MESSAGE_ID es obligatorio</h2>
-      <p>
-        Samply usa <Code>%MESSAGE_ID%</Code> para vincular un evento de finalización con el
-        envío de notificación exacto que activó la encuesta. Sin él, Samply no puede identificar
-        qué recordatorios pendientes cancelar. El flujo es:
-      </p>
-      <ol>
-        <li>
-          Usted coloca <Code>%MESSAGE_ID%</Code> en el enlace web de la notificación como
-          parámetro de consulta — por ejemplo, <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply sustituye el token por un ID único de 15 caracteres en el momento del envío.
-          El participante abre la URL de la encuesta con ese ID ya incluido.
-        </li>
-        <li>
-          Su herramienta de encuesta lee el parámetro <code>messageid</code> y lo pasa a la
-          redirección de fin de encuesta o al webhook.
-        </li>
-        <li>
-          Samply recibe la llamada de finalización con el ID de mensaje, cancela los recordatorios
-          y marca el registro de resultado como completado.
-        </li>
-      </ol>
-      <p>
-        Si usa recordatorios, incluya siempre <Code>%MESSAGE_ID%</Code> en la URL de su
-        notificación y verifique que su herramienta de encuesta lo transmite al endpoint de
-        finalización.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Guía de configuración de Qualtrics paso a paso</h2>
-      <ol>
-        <li>
-          En el enlace web de la notificación, añada{' '}
-          <code>?messageid=%MESSAGE_ID%</code> (más cualquier otro marcador que necesite).
-        </li>
-        <li>
-          En el flujo de su encuesta de Qualtrics, añada un elemento de{' '}
-          <strong>Datos incrustados</strong> antes del primer bloque y cree un campo llamado{' '}
-          <code>messageid</code>. Qualtrics captura automáticamente los parámetros de cadena
-          de consulta.
-        </li>
-        <li>
-          En <strong>Opciones de encuesta → Finalización de la encuesta</strong>, configure
-          la URL de redirección en:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics sustituye <code>{'{e://Field/messageid}'}</code> por el valor capturado,
-        de modo que los participantes son redirigidos a la URL de finalización correcta.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="es" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Aspectos a tener en cuenta</h3>
@@ -1829,107 +999,8 @@ function RemindersContentPt({ baseUrl }: { baseUrl: string }) {
         assim que chega um evento de conclusão, independentemente de quais já foram disparados.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Registrar um evento de conclusão</h2>
-      <p>
-        O Samply não pode saber por si só quando um participante termina uma pesquisa. Sua
-        ferramenta de pesquisa deve sinalizar a conclusão chamando o endpoint de conclusão
-        do Samply. Há duas maneiras de fazer isso.
-      </p>
-      <p>
-        As URLs exatas para o seu estudo — com o slug correto já preenchido — são exibidas na
-        aba <strong>Configurações</strong> do painel do seu estudo, em{' '}
-        <em>Lembretes — URL de conclusão</em>. Você pode copiá-las diretamente de lá.
-      </p>
-
-      <h3>Opção 1 — redirecionamento (Qualtrics, LimeSurvey, a maioria das ferramentas de pesquisa)</h3>
-      <p>
-        Ao final da sua pesquisa, redirecione o participante para a URL de conclusão do Samply.
-        O Samply marca o envio como concluído e cancela os lembretes pendentes, e depois
-        exibe ao participante uma página de confirmação.
-      </p>
-      <p>
-        A URL de redirecionamento segue este padrão — substitua <em>your-study-slug</em> pelo slug
-        URL do seu estudo e use o marcador <Code>%MESSAGE_ID%</Code> para que a conclusão
-        de cada participante seja registrada em seu envio específico:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        No Qualtrics, configure isso como a URL de redirecionamento ao final da pesquisa. No
-        LimeSurvey, configure como a «URL final» no painel de configurações da pesquisa.
-        A ferramenta de pesquisa substitui <Code>%MESSAGE_ID%</Code> pelo ID de mensagem real
-        recebido por meio do parâmetro URL que você passou no link de notificação (veja{' '}
-        <a href='/docs/placeholders'>Marcadores de URL</a>).
-      </p>
-
-      <h3>Opção 2 — solicitação POST (REDCap, integrações personalizadas)</h3>
-      <p>
-        Envie um HTTP POST para o mesmo endpoint. Isso é adequado para ferramentas de pesquisa
-        que suportam webhooks de fim de pesquisa, ou para código personalizado executado
-        no servidor.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Uma resposta <code>200</code> confirma que a conclusão foi registrada e os
-        lembretes foram cancelados. Uma resposta <code>400</code> significa que o Samply não
-        conseguiu encontrar um registro de resultado correspondente para esse ID de mensagem — verifique
-        se <Code>%MESSAGE_ID%</Code> foi corretamente substituído e transmitido.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Por que MESSAGE_ID é obrigatório</h2>
-      <p>
-        O Samply usa <Code>%MESSAGE_ID%</Code> para vincular um evento de conclusão ao
-        envio de notificação exato que disparou a pesquisa. Sem ele, o Samply não consegue identificar
-        quais lembretes pendentes cancelar. O fluxo é:
-      </p>
-      <ol>
-        <li>
-          Você coloca <Code>%MESSAGE_ID%</Code> no link web da notificação como
-          parâmetro de consulta — por exemplo, <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          O Samply substitui o token por um ID único de 15 caracteres no momento do envio.
-          O participante abre a URL da pesquisa com esse ID já incluído.
-        </li>
-        <li>
-          Sua ferramenta de pesquisa lê o parâmetro <code>messageid</code> e o passa para o
-          redirecionamento de fim de pesquisa ou webhook.
-        </li>
-        <li>
-          O Samply recebe a chamada de conclusão com o ID de mensagem, cancela os lembretes
-          e marca o registro de resultado como concluído.
-        </li>
-      </ol>
-      <p>
-        Se usar lembretes, sempre inclua <Code>%MESSAGE_ID%</Code> na URL da sua
-        notificação e verifique se sua ferramenta de pesquisa o transmite ao endpoint de
-        conclusão.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Guia de configuração do Qualtrics passo a passo</h2>
-      <ol>
-        <li>
-          No link web da notificação, adicione{' '}
-          <code>?messageid=%MESSAGE_ID%</code> (mais quaisquer outros marcadores que precisar).
-        </li>
-        <li>
-          No fluxo da sua pesquisa do Qualtrics, adicione um elemento de{' '}
-          <strong>Dados incorporados</strong> antes do primeiro bloco e crie um campo chamado{' '}
-          <code>messageid</code>. O Qualtrics captura automaticamente os parâmetros de string
-          de consulta.
-        </li>
-        <li>
-          Em <strong>Opções de pesquisa → Conclusão da pesquisa</strong>, configure
-          a URL de redirecionamento para:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        O Qualtrics substitui <code>{'{e://Field/messageid}'}</code> pelo valor capturado,
-        de modo que os participantes são redirecionados para a URL de conclusão correta.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="pt" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Aspectos a observar</h3>
@@ -2021,99 +1092,8 @@ function RemindersContentJa({ baseUrl }: { baseUrl: string }) {
         すべてのリマインダーがキャンセルされます。
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>完了イベントの登録</h2>
-      <p>
-        Samplyは参加者がいつ調査を終えるかを単独で知ることはできません。調査ツールはSamplyの完了
-        エンドポイントを呼び出して完了をシグナルする必要があります。これを行う方法は2つあります。
-      </p>
-      <p>
-        研究のための正確なURL — 正しいスラッグがすでに入力されたもの — は、研究ダッシュボードの
-        <strong>設定</strong>タブの<em>リマインダー — 完了URL</em>の下に表示されます。
-        そこから直接コピーできます。
-      </p>
-
-      <h3>オプション1 — リダイレクト（Qualtrics、LimeSurvey、ほとんどの調査ツール）</h3>
-      <p>
-        調査の最後に、参加者をSamplyの完了URLにリダイレクトします。Samplyは送信を完了済みとして
-        マークし、保留中のリマインダーをキャンセルし、参加者に確認ページを表示します。
-      </p>
-      <p>
-        リダイレクトURLは次のパターンに従います — <em>your-study-slug</em>を研究のURLスラッグに
-        置き換え、<Code>%MESSAGE_ID%</Code>プレースホルダーを使用して、各参加者の完了がその特定の
-        送信に対して記録されるようにします：
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtricsでは、これを調査終了時のリダイレクトURLとして設定します。LimeSurveyでは、
-        調査設定パネルの「終了URL」として設定します。調査ツールは<Code>%MESSAGE_ID%</Code>を、
-        通知リンクで渡したURLパラメーターを介して受け取った実際のメッセージIDで置換します
-        （<a href='/docs/placeholders'>URLプレースホルダー</a>を参照）。
-      </p>
-
-      <h3>オプション2 — POSTリクエスト（REDCap、カスタム統合）</h3>
-      <p>
-        同じエンドポイントにHTTP POSTを送信します。これは調査終了ウェブフックをサポートする
-        調査ツール、またはサーバー側で実行されるカスタムコードに適しています。
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        <code>200</code>レスポンスは完了が記録され、リマインダーがキャンセルされたことを確認します。
-        <code>400</code>レスポンスは、Samplyがそのメッセージ ID の一致する結果レコードを見つけられなかった
-        ことを意味します — <Code>%MESSAGE_ID%</Code>が正しく置換されて渡されたか確認してください。
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>なぜMESSAGE_IDが必要か</h2>
-      <p>
-        Samplyは<Code>%MESSAGE_ID%</Code>を使用して、完了イベントを調査をトリガーした正確な
-        通知送信にリンクします。これがないと、Samplyはどの保留中のリマインダーをキャンセルすべきか
-        識別できません。フローは次のとおりです：
-      </p>
-      <ol>
-        <li>
-          通知Webリンクに<Code>%MESSAGE_ID%</Code>をクエリ パラメーターとして入れます — 例えば、
-          <code>?messageid=%MESSAGE_ID%</code>。
-        </li>
-        <li>
-          Samplyは送信時にこのトークンを15文字のユニークIDに置換します。参加者はそのIDが
-          すでに含まれた調査URLを開きます。
-        </li>
-        <li>
-          調査ツールは<code>messageid</code>パラメーターを読み取り、調査終了時のリダイレクトまたは
-          ウェブフックに渡します。
-        </li>
-        <li>
-          Samplyはメッセージ ID とともに完了呼び出しを受信し、リマインダーをキャンセルし、結果
-          レコードを完了済みとしてマークします。
-        </li>
-      </ol>
-      <p>
-        リマインダーを使用する場合は、常に通知URLに<Code>%MESSAGE_ID%</Code>を含め、調査ツールが
-        それを完了エンドポイントに転送することを確認してください。
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtricsの設定手順</h2>
-      <ol>
-        <li>
-          通知Webリンクに、<code>?messageid=%MESSAGE_ID%</code>（および必要なその他のプレースホルダー）
-          を追加します。
-        </li>
-        <li>
-          Qualtricsの調査フローで、最初のブロックの前に<strong>埋め込みデータ</strong>要素を追加し、
-          <code>messageid</code>という名前のフィールドを作成します。Qualtricsはクエリ文字列パラメーターを
-          自動的にキャプチャします。
-        </li>
-        <li>
-          <strong>調査オプション → 調査終了</strong>で、リダイレクトURLを次のように設定します：
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtricsは<code>{'{e://Field/messageid}'}</code>をキャプチャした値で置換するため、
-        参加者は正しい完了URLにリダイレクトされます。
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="ja" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>注意すべき点</h3>
@@ -2209,104 +1189,8 @@ function RemindersContentPl({ baseUrl }: { baseUrl: string }) {
         które już zostały wyzwolone.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Rejestrowanie zdarzeń ukończenia</h2>
-      <p>
-        Samply nie może samodzielnie wiedzieć, kiedy uczestnik kończy ankietę. Narzędzie do
-        ankiety musi wywołać punkt końcowy ukończenia Samply, aby zasygnalizować ukończenie.
-        Istnieją dwa sposoby, aby to zrobić.
-      </p>
-      <p>
-        Dokładny URL dla Twojego badania — z już wypełnionym poprawnym slugiem — jest
-        wyświetlany w panelu badania w zakładce <strong>Ustawienia</strong> pod{' '}
-        <em>Przypomnienia — URL ukończenia</em>. Możesz go skopiować bezpośrednio stamtąd.
-      </p>
-
-      <h3>Opcja 1 — Przekierowanie (Qualtrics, LimeSurvey, większość narzędzi ankietowych)</h3>
-      <p>
-        Na końcu ankiety przekieruj uczestnika na URL ukończenia Samply. Samply oznaczy
-        wysyłkę jako ukończoną, anuluje oczekujące przypomnienia i pokaże uczestnikowi
-        stronę potwierdzenia.
-      </p>
-      <p>
-        URL przekierowania ma następujący wzór — zastąp <em>your-study-slug</em> slugiem URL
-        swojego badania i użyj placeholdera <Code>%MESSAGE_ID%</Code>, aby ukończenie każdego
-        uczestnika było rejestrowane dla tej konkretnej wysyłki:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        W Qualtrics ustaw to jako URL przekierowania końca ankiety. W LimeSurvey ustaw to jako
-        «URL końcowy» w panelu ustawień ankiety. Narzędzie do ankiety zastąpi{' '}
-        <Code>%MESSAGE_ID%</Code> rzeczywistym identyfikatorem wiadomości, który otrzymało
-        przez parametr URL, który przekazałeś w linku powiadomienia (zobacz{' '}
-        <a href='/docs/placeholders'>Placeholdery URL</a>).
-      </p>
-
-      <h3>Opcja 2 — Żądanie POST (REDCap, integracje niestandardowe)</h3>
-      <p>
-        Wyślij HTTP POST do tego samego punktu końcowego. Jest to odpowiednie dla narzędzi
-        ankietowych, które obsługują webhooki końca ankiety, lub niestandardowego kodu
-        działającego po stronie serwera.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Odpowiedź <code>200</code> potwierdza, że ukończenie zostało zarejestrowane, a
-        przypomnienia anulowane. Odpowiedź <code>400</code> oznacza, że Samply nie mógł
-        znaleźć pasującego rekordu wyniku dla tego identyfikatora wiadomości — sprawdź, czy{' '}
-        <Code>%MESSAGE_ID%</Code> został poprawnie zastąpiony i przekazany.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>Dlaczego MESSAGE_ID jest wymagany</h2>
-      <p>
-        Samply używa <Code>%MESSAGE_ID%</Code>, aby powiązać zdarzenie ukończenia z dokładną
-        wysyłką powiadomienia, która wyzwoliła ankietę. Bez niego Samply nie może
-        zidentyfikować, które oczekujące przypomnienia anulować. Przepływ wygląda następująco:
-      </p>
-      <ol>
-        <li>
-          Umieść <Code>%MESSAGE_ID%</Code> w linku internetowym powiadomienia jako parametr
-          zapytania — na przykład <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply zastępuje ten Token unikalnym 15-znakowym ID w momencie wysłania. Uczestnik
-          otwiera URL ankiety z już wbudowanym tym ID.
-        </li>
-        <li>
-          Narzędzie do ankiety odczytuje parametr <code>messageid</code> i przekazuje go w
-          przekierowaniu końca ankiety lub webhooku.
-        </li>
-        <li>
-          Samply otrzymuje wywołanie ukończenia wraz z identyfikatorem wiadomości, anuluje
-          przypomnienia i oznacza rekord wyniku jako ukończony.
-        </li>
-      </ol>
-      <p>
-        Zawsze dołączaj <Code>%MESSAGE_ID%</Code> w URL powiadomienia, gdy używasz
-        przypomnień, i upewnij się, że narzędzie do ankiety przekazuje go do punktu końcowego ukończenia.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Kroki konfiguracji Qualtrics</h2>
-      <ol>
-        <li>
-          Dodaj <code>?messageid=%MESSAGE_ID%</code> (oraz wszelkie inne placeholdery, których
-          potrzebujesz) do linku internetowego powiadomienia.
-        </li>
-        <li>
-          W przepływie ankiety Qualtrics dodaj element <strong>Embedded Data</strong> przed
-          pierwszym blokiem i utwórz pole o nazwie <code>messageid</code>. Qualtrics
-          automatycznie przechwyci parametry ciągu zapytania.
-        </li>
-        <li>
-          W <strong>Opcjach ankiety → Koniec ankiety</strong>, ustaw URL przekierowania na:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics zastąpi <code>{'{e://Field/messageid}'}</code> przechwyconą wartością,
-        więc uczestnik zostanie przekierowany na poprawny URL ukończenia.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="pl" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>O czym należy pamiętać</h3>
@@ -2399,100 +1283,8 @@ function RemindersContentAr({ baseUrl }: { baseUrl: string }) {
         4 ساعات. عند وصول حدث إكمال، تُلغى جميع التذكيرات، بصرف النظر عن أيّها قد أُطلق.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>تسجيل أحداث الإكمال</h2>
-      <p>
-        لا يمكن لـ Samply أن يعرف وحده متى ينتهي مشارك من استطلاع. يجب على أداة الاستطلاع
-        استدعاء نقطة نهاية الإكمال في Samply للإشارة إلى الإكمال. هناك طريقتان للقيام بذلك.
-      </p>
-      <p>
-        يُعرض الـ URL الدقيق لدراستك — مع تعبئة slug الصحيح تلقائياً — في لوحة الدراسة
-        ضمن علامة التبويب <strong>إعدادات</strong> تحت <em>التذكيرات — URL الإكمال</em>.
-        يمكنك نسخه مباشرةً من هناك.
-      </p>
-
-      <h3>الخيار 1 — إعادة التوجيه (Qualtrics وLimeSurvey ومعظم أدوات الاستطلاع)</h3>
-      <p>
-        في نهاية الاستطلاع، أعد توجيه المشارك إلى URL الإكمال في Samply. سيُعلِّم Samply
-        الإرسال على أنه مكتمل، ويلغي التذكيرات المعلقة، ويعرض للمشارك صفحة تأكيد.
-      </p>
-      <p>
-        URL إعادة التوجيه على النمط التالي — استبدل <em>your-study-slug</em> بـ slug
-        دراستك في الـ URL، واستخدم العنصر النائب <Code>%MESSAGE_ID%</Code> ليُسجَّل
-        إكمال كل مشارك لذلك الإرسال المحدد:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        في Qualtrics، اضبط هذا كـ URL إعادة توجيه نهاية الاستطلاع. في LimeSurvey، اضبط
-        هذا كـ «URL النهاية» في لوحة إعدادات الاستطلاع. ستستبدل أداة الاستطلاع{' '}
-        <Code>%MESSAGE_ID%</Code> بمعرّف الرسالة الفعلي الذي تلقَّتْه من خلال معامل الـ
-        URL الذي مرَّرته في رابط الإشعار (انظر{' '}
-        <a href='/docs/placeholders'>العناصر النائبة في URL</a>).
-      </p>
-
-      <h3>الخيار 2 — طلب POST (REDCap والتكاملات المخصصة)</h3>
-      <p>
-        أرسل HTTP POST إلى نقطة النهاية ذاتها. هذا مناسب لأدوات الاستطلاع التي تدعم
-        webhooks نهاية الاستطلاع، أو للأكواد المخصصة التي تعمل من جانب الخادم.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        تؤكد استجابة <code>200</code> أنه تم تسجيل الإكمال، وأن التذكيرات قد أُلغيت.
-        تعني استجابة <code>400</code> أن Samply لم يتمكن من العثور على سجل نتيجة مطابق
-        لمعرّف الرسالة هذا — تحقق من أن <Code>%MESSAGE_ID%</Code> قد استُبدل ومُرِّر بشكل صحيح.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>لماذا يُعدّ MESSAGE_ID مطلوباً</h2>
-      <p>
-        يستخدم Samply <Code>%MESSAGE_ID%</Code> لربط حدث الإكمال بإرسال الإشعار الدقيق
-        الذي أطلق الاستطلاع. بدونه، لا يستطيع Samply تحديد التذكيرات المعلقة التي يجب
-        إلغاؤها. التدفق على النحو التالي:
-      </p>
-      <ol>
-        <li>
-          ضع <Code>%MESSAGE_ID%</Code> في رابط ويب الإشعار كمعامل استعلام — على سبيل
-          المثال <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          يستبدل Samply هذا الـ Token بمعرّف فريد من 15 حرفاً وقت الإرسال. يفتح
-          المشارك URL الاستطلاع مع تضمين هذا المعرّف بالفعل.
-        </li>
-        <li>
-          تقرأ أداة الاستطلاع المعامل <code>messageid</code> وتمرّره في إعادة توجيه
-          نهاية الاستطلاع أو في webhook.
-        </li>
-        <li>
-          يتلقى Samply استدعاء الإكمال مع معرّف الرسالة، ويلغي التذكيرات، ويُعلِّم سجل
-          النتيجة على أنه مكتمل.
-        </li>
-      </ol>
-      <p>
-        أدرج دائماً <Code>%MESSAGE_ID%</Code> في URL الإشعار عند استخدام التذكيرات،
-        وتأكد من أن أداة الاستطلاع تُمرّرها إلى نقطة نهاية الإكمال.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>خطوات إعداد Qualtrics</h2>
-      <ol>
-        <li>
-          أضف <code>?messageid=%MESSAGE_ID%</code> (وأي عناصر نائبة أخرى تحتاجها) إلى
-          رابط ويب الإشعار.
-        </li>
-        <li>
-          في تدفق استطلاع Qualtrics، أضف عنصر <strong>Embedded Data</strong> قبل الكتلة
-          الأولى وأنشئ حقلاً باسم <code>messageid</code>. سيلتقط Qualtrics معاملات سلسلة
-          الاستعلام تلقائياً.
-        </li>
-        <li>
-          في <strong>خيارات الاستطلاع ← نهاية الاستطلاع</strong>، اضبط URL إعادة التوجيه على:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        سيستبدل Qualtrics <code>{'{e://Field/messageid}'}</code> بالقيمة الملتقطة، لذا
-        ستعاد توجيه المشارك إلى URL الإكمال الصحيح.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="ar" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>أمور يجب أن تأخذها في الحسبان</h3>
@@ -2584,105 +1376,8 @@ function RemindersContentTr({ baseUrl }: { baseUrl: string }) {
         geldiğinde, halihazırda hangilerinin tetiklendiğine bakılmaksızın tüm hatırlatmalar iptal edilir.
       </p>
 
-      {/* ── Completion events ─────────────────────────────────────────────── */}
-      <h2>Tamamlama olayını kaydetme</h2>
-      <p>
-        Samply, bir katılımcının anketi ne zaman bitirdiğini kendi başına bilemez. Anket
-        aracınızın Samply tamamlama uç noktasını çağırarak tamamlamayı sinyallemesi gerekir.
-        Bunu yapmanın iki yolu vardır.
-      </p>
-      <p>
-        Çalışmanız için tam URL'ler — doğru slug zaten doldurulmuş olarak — çalışma panonuzun{' '}
-        <strong>Ayarlar</strong> sekmesinde, <em>Hatırlatmalar — tamamlama URL'si</em> altında
-        gösterilir. Doğrudan oradan kopyalayabilirsiniz.
-      </p>
-
-      <h3>Seçenek 1 — yönlendirme (Qualtrics, LimeSurvey, çoğu anket aracı)</h3>
-      <p>
-        Anketinizin sonunda katılımcıyı Samply tamamlama URL'sine yönlendirin. Samply gönderimi
-        tamamlanmış olarak işaretler, bekleyen hatırlatmaları iptal eder ve katılımcıya bir
-        onay sayfası gösterir.
-      </p>
-      <p>
-        Yönlendirme URL'si şu kalıbı izler — <em>your-study-slug</em>'i çalışmanızın URL
-        slug'ıyla değiştirin ve her katılımcının tamamlaması belirli gönderimine karşı
-        kaydedilsin diye <Code>%MESSAGE_ID%</Code> yer tutucusunu kullanın:
-      </p>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/%MESSAGE_ID%`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics'te bunu anket sonu yönlendirme URL'si olarak ayarlayın. LimeSurvey'de anket
-        ayarları panelinde "End URL" olarak ayarlayın. Anket aracı,{' '}
-        <Code>%MESSAGE_ID%</Code>'yi bildirim bağlantısında ilettiğiniz URL parametresi
-        aracılığıyla aldığı gerçek mesaj kimliğiyle değiştirir ({' '}
-        <a href='/docs/placeholders'>URL yer tutucuları</a>'na bakın).
-      </p>
-
-      <h3>Seçenek 2 — POST isteği (REDCap, özel entegrasyonlar)</h3>
-      <p>
-        Aynı uç noktaya bir HTTP POST gönderin. Bu, anket sonu webhook'larını destekleyen
-        anket araçları veya sunucu tarafında çalışan özel kod için uygundur.
-      </p>
-      <UrlBox url={`POST ${baseUrl}/studies/your-study-slug/done/:messageid`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Bir <code>200</code> yanıtı, tamamlamanın kaydedildiğini ve hatırlatmaların iptal
-        edildiğini onaylar. <code>400</code> yanıtı, Samply'nin o mesaj kimliği için eşleşen
-        bir sonuç kaydı bulamadığı anlamına gelir — <Code>%MESSAGE_ID%</Code>'nin doğru şekilde
-        değiştirilip iletildiğinden emin olun.
-      </p>
-
-      {/* ── MESSAGE_ID is required ─────────────────────────────────────────── */}
-      <h2>MESSAGE_ID neden gerekli</h2>
-      <p>
-        Samply, bir tamamlama olayını anketi tetikleyen tam bildirim gönderimine bağlamak için{' '}
-        <Code>%MESSAGE_ID%</Code>'yi kullanır. Onsuz, Samply hangi bekleyen hatırlatmaların
-        iptal edileceğini belirleyemez. Akış şöyledir:
-      </p>
-      <ol>
-        <li>
-          Bildirim Web Bağlantısına <Code>%MESSAGE_ID%</Code>'yi bir sorgu parametresi olarak
-          koyun — örneğin, <code>?messageid=%MESSAGE_ID%</code>.
-        </li>
-        <li>
-          Samply, gönderme anında bu jetonu benzersiz 15 karakterli bir kimlikle değiştirir.
-          Katılımcı anket URL'sini bu kimlik zaten içinde olarak açar.
-        </li>
-        <li>
-          Anket aracınız <code>messageid</code> parametresini okur ve anket sonu yönlendirmesine
-          veya webhook'una iletir.
-        </li>
-        <li>
-          Samply, mesaj kimliğiyle tamamlama çağrısını alır, hatırlatmaları iptal eder ve sonuç
-          kaydını tamamlanmış olarak işaretler.
-        </li>
-      </ol>
-      <p>
-        Hatırlatmalar kullanıyorsanız, bildirim URL'nizde her zaman{' '}
-        <Code>%MESSAGE_ID%</Code> yer alsın ve anket aracınızın bunu tamamlama uç noktasına
-        ilettiğini doğrulayın.
-      </p>
-
-      {/* ── Qualtrics setup ───────────────────────────────────────────────── */}
-      <h2>Qualtrics kurulum adımları</h2>
-      <ol>
-        <li>
-          Bildirim Web Bağlantısına <code>?messageid=%MESSAGE_ID%</code>'yi (ve ihtiyaç
-          duyduğunuz diğer yer tutucuları) ekleyin.
-        </li>
-        <li>
-          Qualtrics anket akışınızda, ilk bloktan önce bir <strong>Embedded Data</strong> ögesi
-          ekleyin ve <code>messageid</code> adlı bir alan oluşturun. Qualtrics sorgu dizisi
-          parametrelerini otomatik olarak yakalar.
-        </li>
-        <li>
-          <strong>Survey Options → Survey Termination</strong> bölümünde yönlendirme URL'sini
-          şu şekilde ayarlayın:
-        </li>
-      </ol>
-      <UrlBox url={`${baseUrl}/studies/your-study-slug/done/\${e://Field/messageid}`} />
-      <p style={{ marginTop: '1.4rem' }}>
-        Qualtrics <code>{'{e://Field/messageid}'}</code>'yi yakalanan değerle değiştirir, böylece
-        katılımcılar doğru tamamlama URL'sine yönlendirilir.
-      </p>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <CompletionPointer lang="tr" />
 
       {/* ── Caveats ───────────────────────────────────────────────────────── */}
       <h3>Dikkat edilecekler</h3>

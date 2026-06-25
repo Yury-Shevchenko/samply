@@ -117,155 +117,8 @@ const TOKENS_NL = [
   },
 ];
 
-const TOOLS_EN = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'In your survey flow, add an Embedded Data element before the first question block.',
-      'Create fields named id, code, wave, messageid (or whatever names match your URL params).',
-      'Qualtrics captures query string parameters automatically when the survey loads from a URL that includes them.',
-      'Reference the values in question text or logic with ${e://Field/id} syntax.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Use a survey queue or public survey link with the record parameter.',
-      'Pass %PARTICIPANT_CODE% as the record value so each submission maps to the correct REDCap record.',
-      'Pass %MESSAGE_ID% as a hidden field if you need to wire up completion callbacks to cancel reminders.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Enable "URL fields" in the survey settings.',
-      'Pass placeholder values as URL parameters — LimeSurvey stores them as response data automatically.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=en&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-  {
-    name: 'SoSci-Survey',
-    steps: [
-      'Append the placeholders to your survey URL as query parameters — for example id, code, msg.',
-      'SoSci does not save URL parameters to the dataset automatically — you must capture them with a question. Add a question of type "Device and Transmitted Variables" and open its "Variables (POST/GET)" tab.',
-      'Enter each URL parameter name (id, code, msg) into a "Variable name" field. SoSci stores each value in a dataset variable shown in the Name column (e.g. GD01_RV1). This question must be placed on the first page of the questionnaire.',
-      'The values are now saved to your dataset and export. Run one test call with a real Samply link and confirm the GD…_RV columns are filled before starting data collection.',
-    ],
-    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-  {
-    name: 'Unipark (EFS)',
-    steps: [
-      'Append the placeholders to your participation link as query parameters — for example id, code, msg. With an anonymous link (no panel), add them after the survey URL.',
-      'In the questionnaire editor, create one internal variable per value to hold the incoming parameters.',
-      'Register the incoming URL parameters so EFS writes them into those internal variables — under Project properties → URL parameters, or via a "Save value" trigger on the first page. Without this step EFS keeps the values only for the session and does not export them.',
-      'The stored internal variables now appear in your data export. Test with a real Samply link and confirm the values are saved before starting data collection. Note: capturing custom URL parameters requires a Unipark license tier that allows it.',
-    ],
-    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-];
 
-const TOOLS_DE = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'Fügen Sie in Ihrem Umfrage-Flow ein Element „Eingebettete Daten" vor dem ersten Frageblock ein.',
-      'Erstellen Sie Felder mit den Namen id, code, wave, messageid (oder welche Namen auch immer zu Ihren URL-Parametern passen).',
-      'Qualtrics erfasst Query-String-Parameter automatisch, wenn die Umfrage von einer URL geladen wird, die sie enthält.',
-      'Referenzieren Sie die Werte in Fragetext oder Logik mit der Syntax ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Verwenden Sie eine Umfragewarteschlange oder einen öffentlichen Umfragelink mit dem record-Parameter.',
-      'Übergeben Sie %PARTICIPANT_CODE% als den record-Wert, damit jede Einreichung dem richtigen REDCap-Datensatz zugeordnet wird.',
-      'Übergeben Sie %MESSAGE_ID% als verstecktes Feld, wenn Sie Abschluss-Callbacks zum Abbrechen von Erinnerungen einrichten möchten.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Aktivieren Sie „URL-Felder" in den Umfrageeinstellungen.',
-      'Übergeben Sie Platzhalter-Werte als URL-Parameter — LimeSurvey speichert sie automatisch als Antwortdaten.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=en&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-  {
-    name: 'SoSci-Survey',
-    steps: [
-      'Hängen Sie die Platzhalter als Query-Parameter an Ihre Umfrage-URL an — zum Beispiel id, code, msg.',
-      'SoSci speichert URL-Parameter nicht automatisch im Datensatz — Sie müssen sie mit einer Frage erfassen. Fügen Sie eine Frage vom Typ „Gerät und übermittelte Variablen" hinzu und öffnen Sie deren Reiter „Variablen (POST/GET)".',
-      'Tragen Sie jeden URL-Parameternamen (id, code, msg) in ein Feld „Variablenname" ein. SoSci speichert jeden Wert in einer Datensatzvariable, die in der Spalte „Name im Datensatz" angezeigt wird (z. B. GD01_RV1). Diese Frage muss auf der ersten Seite des Fragebogens stehen.',
-      'Die Werte werden nun in Ihrem Datensatz und Export gespeichert. Führen Sie vor Beginn der Datenerhebung einen Testaufruf mit einem echten Samply-Link durch und prüfen Sie, dass die GD…_RV-Spalten gefüllt sind.',
-    ],
-    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-  {
-    name: 'Unipark (EFS)',
-    steps: [
-      'Hängen Sie die Platzhalter als Query-Parameter an Ihren Teilnahme-Link an — zum Beispiel id, code, msg. Bei einem anonymen Link (ohne Panel) fügen Sie sie hinter der Umfrage-URL an.',
-      'Legen Sie im Fragebogen-Editor pro Wert eine interne Variable an, die den eingehenden Parameter aufnimmt.',
-      'Registrieren Sie die eingehenden URL-Parameter, damit EFS sie in diese internen Variablen schreibt — unter Projekteigenschaften → URL-Parameter oder über einen „Wert speichern"-Trigger auf der ersten Seite. Ohne diesen Schritt behält EFS die Werte nur für die Sitzung und exportiert sie nicht.',
-      'Die gespeicherten internen Variablen erscheinen nun in Ihrem Datenexport. Testen Sie mit einem echten Samply-Link und prüfen Sie, dass die Werte gespeichert werden, bevor Sie mit der Datenerhebung beginnen. Hinweis: Das Erfassen eigener URL-Parameter erfordert eine Unipark-Lizenz, die dies erlaubt.',
-    ],
-    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-];
 
-const TOOLS_NL = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'Voeg in uw enqueteflow een element Ingesloten data toe vóór het eerste vragenblok.',
-      'Maak velden aan met de namen id, code, wave, messageid (of welke namen dan ook overeenkomen met uw URL-parameters).',
-      'Qualtrics legt querystring-parameters automatisch vast wanneer de enquete wordt geladen vanuit een URL die ze bevat.',
-      'Verwijs naar de waarden in vraagtekst of logica met de syntaxis ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Gebruik een enquetewachtrij of een openbare enquetelink met de record-parameter.',
-      'Geef %PARTICIPANT_CODE% door als de record-waarde zodat elke inzending aan het juiste REDCap-record wordt gekoppeld.',
-      'Geef %MESSAGE_ID% door als een verborgen veld als u voltooiingscallbacks wilt instellen om herinneringen te annuleren.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Schakel URL-velden in via de enquete-instellingen.',
-      'Geef plaatshouderwaarden door als URL-parameters — LimeSurvey slaat ze automatisch op als antwoordgegevens.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=nl&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-  {
-    name: 'SoSci-Survey',
-    steps: [
-      'Voeg de plaatshouders als querystring-parameters toe aan uw enquete-URL — bijvoorbeeld id, code, msg.',
-      'SoSci slaat URL-parameters niet automatisch op in de dataset — u moet ze met een vraag vastleggen. Voeg een vraag van het type "Apparaat en doorgegeven variabelen" toe en open het tabblad "Variabelen (POST/GET)".',
-      'Voer elke URL-parameternaam (id, code, msg) in een veld "Variabelenaam" in. SoSci slaat elke waarde op in een datasetvariabele die in de kolom Naam wordt getoond (bijv. GD01_RV1). Deze vraag moet op de eerste pagina van de vragenlijst staan.',
-      'De waarden worden nu opgeslagen in uw dataset en export. Voer vóór de start van de dataverzameling één testoproep uit met een echte Samply-link en controleer of de GD…_RV-kolommen gevuld zijn.',
-    ],
-    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-  {
-    name: 'Unipark (EFS)',
-    steps: [
-      'Voeg de plaatshouders als querystring-parameters toe aan uw deelnamelink — bijvoorbeeld id, code, msg. Bij een anonieme link (zonder panel) voegt u ze achter de enquete-URL toe.',
-      'Maak in de vragenlijsteditor één interne variabele per waarde aan om de binnenkomende parameters op te slaan.',
-      'Registreer de binnenkomende URL-parameters zodat EFS ze in die interne variabelen schrijft — onder Projecteigenschappen → URL-parameters, of via een "Waarde opslaan"-trigger op de eerste pagina. Zonder deze stap bewaart EFS de waarden alleen voor de sessie en worden ze niet geëxporteerd.',
-      'De opgeslagen interne variabelen verschijnen nu in uw data-export. Test met een echte Samply-link en controleer of de waarden worden opgeslagen voordat u met de dataverzameling begint. Let op: het vastleggen van eigen URL-parameters vereist een Unipark-licentie die dit toestaat.',
-    ],
-    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-];
 
 const TOKENS_RU = [
   {
@@ -306,55 +159,6 @@ const TOKENS_RU = [
   },
 ];
 
-const TOOLS_RU = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'В потоке опроса добавьте элемент "Встроенные данные" перед первым блоком вопросов.',
-      'Создайте поля с именами id, code, wave, messageid (или любыми именами, соответствующими параметрам вашего URL).',
-      'Qualtrics автоматически захватывает параметры строки запроса, когда опрос загружается по URL, содержащему их.',
-      'Ссылайтесь на значения в тексте вопросов или логике с помощью синтаксиса ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Используйте очередь опросов или публичную ссылку на опрос с параметром record.',
-      'Передайте %PARTICIPANT_CODE% как значение record, чтобы каждая отправка сопоставлялась с нужной записью REDCap.',
-      'Передайте %MESSAGE_ID% как скрытое поле, если необходимо настроить обратные вызовы завершения для отмены напоминаний.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Включите параметр "URL-поля" в настройках опроса.',
-      'Передайте значения заполнителей как URL-параметры — LimeSurvey автоматически сохраняет их как данные ответов.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=ru&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-  {
-    name: 'SoSci-Survey',
-    steps: [
-      'Добавьте заполнители как параметры строки запроса к URL опроса — например id, code, msg.',
-      'SoSci не сохраняет URL-параметры в набор данных автоматически — их нужно захватить вопросом. Добавьте вопрос типа «Устройство и переданные переменные» и откройте вкладку «Переменные (POST/GET)».',
-      'Введите имя каждого URL-параметра (id, code, msg) в поле «Имя переменной». SoSci сохраняет каждое значение в переменной набора данных, показанной в столбце «Имя» (например, GD01_RV1). Этот вопрос должен находиться на первой странице анкеты.',
-      'Значения теперь сохраняются в вашем наборе данных и при экспорте. Перед началом сбора данных выполните один тестовый вызов с реальной ссылкой Samply и убедитесь, что столбцы GD…_RV заполнены.',
-    ],
-    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-  {
-    name: 'Unipark (EFS)',
-    steps: [
-      'Добавьте заполнители как параметры строки запроса к ссылке участия — например id, code, msg. При анонимной ссылке (без панели) добавьте их после URL опроса.',
-      'В редакторе анкеты создайте по одной внутренней переменной на каждое значение для хранения входящих параметров.',
-      'Зарегистрируйте входящие URL-параметры, чтобы EFS записывал их в эти внутренние переменные — в разделе «Свойства проекта» → «URL-параметры» или через триггер «Сохранить значение» на первой странице. Без этого шага EFS хранит значения только в течение сессии и не экспортирует их.',
-      'Сохранённые внутренние переменные теперь появятся при экспорте данных. Протестируйте с реальной ссылкой Samply и убедитесь, что значения сохраняются, прежде чем начинать сбор данных. Примечание: захват собственных URL-параметров требует лицензии Unipark, которая это позволяет.',
-    ],
-    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-];
 
 const TOKENS_ZH = [
   {
@@ -395,55 +199,6 @@ const TOKENS_ZH = [
   },
 ];
 
-const TOOLS_ZH = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      '在问卷流程中，在第一个问题模块之前添加"嵌入数据"元素。',
-      '创建名为 id、code、wave、messageid 的字段（或与您的 URL 参数匹配的任意名称）。',
-      '当问卷从包含查询字符串参数的 URL 加载时，Qualtrics 会自动捕获这些参数。',
-      '在问题文本或逻辑中使用 ${e://Field/id} 语法引用这些值。',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      '使用带有 record 参数的问卷队列或公开问卷链接。',
-      '将 %PARTICIPANT_CODE% 作为 record 值传入，使每次提交映射到正确的 REDCap 记录。',
-      '若需要连接完成回调以取消提醒，请将 %MESSAGE_ID% 作为隐藏字段传入。',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      '在问卷设置中启用"URL 字段"。',
-      '将占位符值作为 URL 参数传入——LimeSurvey 会自动将其保存为回答数据。',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=zh&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-  {
-    name: 'SoSci-Survey',
-    steps: [
-      '将占位符作为查询字符串参数附加到您的问卷 URL——例如 id、code、msg。',
-      'SoSci 不会自动将 URL 参数保存到数据集——您必须用一个问题来捕获它们。添加一个"设备与传入变量"类型的问题，并打开其"变量（POST/GET）"选项卡。',
-      '将每个 URL 参数名称（id、code、msg）填入"变量名"字段。SoSci 会将每个值存储到"名称"列中显示的数据集变量（例如 GD01_RV1）。此问题必须位于问卷的第一页。',
-      '这些值现在会保存到您的数据集和导出中。在开始数据收集前，使用真实的 Samply 链接进行一次测试调用，确认 GD…_RV 列已填充。',
-    ],
-    url: 'https://survey.example.com/?q=start&id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-  {
-    name: 'Unipark (EFS)',
-    steps: [
-      '将占位符作为查询字符串参数附加到您的参与链接——例如 id、code、msg。对于匿名链接（无 panel），将它们附加在问卷 URL 之后。',
-      '在问卷编辑器中为每个值创建一个内部变量，以保存传入的参数。',
-      '注册传入的 URL 参数，使 EFS 将它们写入这些内部变量——在"项目属性 → URL 参数"中，或通过第一页上的"保存值"触发器。若没有此步骤，EFS 仅在会话期间保留这些值，不会导出。',
-      '保存的内部变量现在会出现在您的数据导出中。在开始数据收集前，使用真实的 Samply 链接进行测试，确认值已保存。注意：捕获自定义 URL 参数需要支持此功能的 Unipark 许可证。',
-    ],
-    url: 'https://www.unipark.de/uc/your_project/?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%',
-  },
-];
 
 function Code({ children }: { children: string }) {
   return (
@@ -458,6 +213,32 @@ function UrlBox({ url }: { url: string }) {
     <div style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', color: 'var(--coral)', background: 'var(--coral-soft)', padding: '0.8rem 1.2rem', borderRadius: '0.5rem', wordBreak: 'break-all', margin: '0.8rem 0 0' }}>
       {url}
     </div>
+  );
+}
+
+function ToolGuidesPointer({ lang }: { lang: string }) {
+  const T: Record<string, { h: string; p: React.ReactNode }> = {
+    en: { h: "Survey tool setup", p: <>Step-by-step guides for capturing these placeholders and registering completion — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap, SurveyMonkey, Alchemer and QuestionPro — now live in the <a href="/docs/integrations">Survey integrations</a> section.</> },
+    de: { h: "Einrichtung im Umfragetool", p: <>Schritt-für-Schritt-Anleitungen zum Erfassen dieser Platzhalter und zum Registrieren des Abschlusses — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap und mehr — finden Sie jetzt im Abschnitt <a href="/docs/integrations">Umfrage-Integrationen</a>.</> },
+    nl: { h: "Instellen per enquetetool", p: <>Stapsgewijze handleidingen voor het vastleggen van deze plaatshouders en het registreren van voltooiing — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap en meer — staan nu in de sectie <a href="/docs/integrations">Enquete-integraties</a>.</> },
+    ru: { h: "Настройка в инструменте опроса", p: <>Пошаговые руководства по захвату этих заполнителей и регистрации завершения — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap и другие — теперь находятся в разделе <a href="/docs/integrations">Интеграции опросов</a>.</> },
+    zh: { h: "问卷工具设置", p: <>关于捕获这些占位符并注册完成的分步指南——Qualtrics、SoSci、LimeSurvey、Unipark、REDCap 等——现已移至<a href="/docs/integrations">问卷集成</a>部分。</> },
+    ko: { h: "설문 도구 설정", p: <>이러한 자리표시자를 캡처하고 완료를 등록하는 단계별 가이드(Qualtrics, SoSci, LimeSurvey, Unipark, REDCap 등)는 이제 <a href="/docs/integrations">설문 통합</a> 섹션에 있습니다.</> },
+    it: { h: "Configurazione dello strumento", p: <>Le guide passo-passo per acquisire questi segnaposto e registrare il completamento — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap e altri — si trovano ora nella sezione <a href="/docs/integrations">Integrazioni dei sondaggi</a>.</> },
+    fr: { h: "Configuration de l'outil d'enquête", p: <>Les guides étape par étape pour capturer ces espaces réservés et enregistrer l'achèvement — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap et plus — se trouvent désormais dans la section <a href="/docs/integrations">Intégrations d'enquête</a>.</> },
+    es: { h: "Configuración de la herramienta", p: <>Las guías paso a paso para capturar estos marcadores y registrar la finalización — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap y más — ahora están en la sección <a href="/docs/integrations">Integraciones de encuestas</a>.</> },
+    pt: { h: "Configuração da ferramenta", p: <>Os guias passo a passo para capturar estes espaços reservados e registrar a conclusão — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap e mais — agora estão na seção <a href="/docs/integrations">Integrações de pesquisa</a>.</> },
+    ja: { h: "アンケートツールの設定", p: <>これらのプレースホルダーを取得し完了を登録するための手順ガイド（Qualtrics、SoSci、LimeSurvey、Unipark、REDCap など）は、<a href="/docs/integrations">アンケート連携</a>セクションに移動しました。</> },
+    tr: { h: "Anket aracı kurulumu", p: <>Bu yer tutucuları yakalamak ve tamamlanmayı kaydetmek için adım adım kılavuzlar — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap ve daha fazlası — artık <a href="/docs/integrations">Anket entegrasyonları</a> bölümünde.</> },
+    pl: { h: "Konfiguracja narzędzia ankietowego", p: <>Przewodniki krok po kroku dotyczące przechwytywania tych symboli zastępczych i rejestrowania ukończenia — Qualtrics, SoSci, LimeSurvey, Unipark, REDCap i więcej — znajdują się teraz w sekcji <a href="/docs/integrations">Integracje ankiet</a>.</> },
+    ar: { h: "إعداد أداة الاستبيان", p: <>الأدلة التفصيلية لالتقاط هذه العناصر النائبة وتسجيل الإكمال — Qualtrics وSoSci وLimeSurvey وUnipark وREDCap وغيرها — أصبحت الآن في قسم <a href="/docs/integrations">تكاملات الاستبيان</a>.</> },
+  };
+  const c = T[lang] ?? T.en;
+  return (
+    <>
+      <h2 style={{ marginTop: '3.6rem' }}>{c.h}</h2>
+      <p style={{ fontSize: '1.4rem', lineHeight: 1.65, color: 'var(--ink-60)' }}>{c.p}</p>
+    </>
   );
 }
 
@@ -522,25 +303,8 @@ function PlaceholdersContentEn() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Tool-specific setup</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_EN.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="en" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID and completion tracking</h2>
@@ -661,25 +425,8 @@ function PlaceholdersContentDe() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Umfragetool-spezifische Einrichtung</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_DE.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="de" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID und Abschluss-Tracking</h2>
@@ -801,25 +548,8 @@ function PlaceholdersContentNl() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Instellen per enquetetool</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_NL.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="nl" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID en voltooiingsregistratie</h2>
@@ -940,25 +670,8 @@ function PlaceholdersContentRu() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Настройка для конкретных инструментов</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_RU.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="ru" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID и отслеживание завершения</h2>
@@ -1070,25 +783,8 @@ function PlaceholdersContentZh() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>特定工具的设置</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_ZH.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="zh" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID 与完成追踪</h2>
@@ -1188,35 +884,6 @@ const TOKENS_KO = [
   },
 ];
 
-const TOOLS_KO = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      '설문 흐름에서 첫 번째 질문 블록 앞에 포함된 데이터 요소를 추가하십시오.',
-      'id, code, wave, messageid (또는 URL 파라미터에 맞는 이름)로 필드를 생성하십시오.',
-      'Qualtrics는 해당 파라미터가 포함된 URL에서 설문이 로드될 때 쿼리 문자열 파라미터를 자동으로 캡처합니다.',
-      '질문 텍스트 또는 로직에서 ${e://Field/id} 구문으로 값을 참조하십시오.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'record 파라미터가 포함된 설문 대기열 또는 공개 설문 링크를 사용하십시오.',
-      '%PARTICIPANT_CODE%를 record 값으로 전달하여 각 제출이 올바른 REDCap 레코드에 매핑되도록 하십시오.',
-      '완료 콜백을 통해 알림을 취소해야 하는 경우 %MESSAGE_ID%를 숨겨진 필드로 전달하십시오.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      '설문 설정에서 "URL 필드"를 활성화하십시오.',
-      '플레이스홀더 값을 URL 파라미터로 전달하십시오 — LimeSurvey가 자동으로 응답 데이터로 저장합니다.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=ko&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-];
 
 const TOKENS_IT = [
   {
@@ -1257,35 +924,6 @@ const TOKENS_IT = [
   },
 ];
 
-const TOOLS_IT = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'Nel flusso del sondaggio, aggiungere un elemento Dati incorporati prima del primo blocco di domande.',
-      'Creare campi denominati id, code, wave, messageid (o qualsiasi nome corrisponda ai parametri URL).',
-      'Qualtrics acquisisce automaticamente i parametri della stringa di query quando il sondaggio viene caricato da un URL che li include.',
-      'Fare riferimento ai valori nel testo delle domande o nella logica con la sintassi ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Utilizzare una coda di sondaggi o un link a sondaggio pubblico con il parametro record.',
-      'Passare %PARTICIPANT_CODE% come valore record in modo che ogni invio venga mappato al record REDCap corretto.',
-      'Passare %MESSAGE_ID% come campo nascosto se si desidera collegare i callback di completamento per annullare i promemoria.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Abilitare "Campi URL" nelle impostazioni del sondaggio.',
-      'Passare i valori segnaposto come parametri URL — LimeSurvey li salva automaticamente come dati di risposta.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=it&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-];
 
 function PlaceholdersContentKo() {
   return (
@@ -1343,25 +981,8 @@ function PlaceholdersContentKo() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>도구별 설정</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_KO.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="ko" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID 및 완료 추적</h2>
@@ -1477,25 +1098,8 @@ function PlaceholdersContentIt() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Configurazione specifica per strumento</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_IT.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="it" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID e tracciamento dei completamenti</h2>
@@ -1597,35 +1201,6 @@ const TOKENS_ES = [
   },
 ];
 
-const TOOLS_ES = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'En el flujo de su encuesta, añada un elemento de Datos incrustados antes del primer bloque de preguntas.',
-      'Cree campos llamados id, code, wave, messageid (o los nombres que correspondan a sus parámetros de URL).',
-      'Qualtrics captura automáticamente los parámetros de la cadena de consulta cuando la encuesta se carga desde una URL que los contiene.',
-      'Haga referencia a los valores en el texto de las preguntas o en la lógica con la sintaxis ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Use una cola de encuestas o un enlace de encuesta público con el parámetro record.',
-      'Pase %PARTICIPANT_CODE% como valor record para que cada envío quede asociado al registro REDCap correcto.',
-      'Pase %MESSAGE_ID% como campo oculto si necesita conectar callbacks de finalización para cancelar recordatorios.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Active los «Campos URL» en la configuración de la encuesta.',
-      'Pase los valores de los marcadores como parámetros de URL — LimeSurvey los registra automáticamente como datos de respuesta.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=es&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-];
 
 const TOKENS_FR = [
   {
@@ -1666,35 +1241,6 @@ const TOKENS_FR = [
   },
 ];
 
-const TOOLS_FR = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'Dans le flux de votre questionnaire, ajoutez un élément Données intégrées avant le premier bloc de questions.',
-      'Créez des champs nommés id, code, wave, messageid (ou les noms correspondant à vos paramètres d\'URL).',
-      'Qualtrics capture automatiquement les paramètres de la chaîne de requête lorsque le questionnaire est chargé depuis une URL qui les contient.',
-      'Référencez les valeurs dans le texte des questions ou la logique avec la syntaxe ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Utilisez une file d\'attente de questionnaires ou un lien de questionnaire public avec le paramètre record.',
-      'Transmettez %PARTICIPANT_CODE% comme valeur record afin que chaque soumission soit associée au bon enregistrement REDCap.',
-      'Transmettez %MESSAGE_ID% comme champ caché si vous devez connecter des callbacks de complétion pour annuler les rappels.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Activez les « Champs URL » dans les paramètres du questionnaire.',
-      'Transmettez les valeurs des espaces réservés comme paramètres d\'URL — LimeSurvey les enregistre automatiquement comme données de réponse.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=fr&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-];
 
 function PlaceholdersContentFr() {
   return (
@@ -1759,25 +1305,8 @@ function PlaceholdersContentFr() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Configuration par outil</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_FR.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="fr" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID et suivi des complétions</h2>
@@ -1904,25 +1433,8 @@ function PlaceholdersContentEs() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Configuración por herramienta</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_ES.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="es" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID y seguimiento de finalizaciones</h2>
@@ -2025,35 +1537,6 @@ const TOKENS_PT = [
   },
 ];
 
-const TOOLS_PT = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      'No fluxo da sua pesquisa, adicione um elemento de Dados incorporados antes do primeiro bloco de perguntas.',
-      'Crie campos chamados id, code, wave, messageid (ou os nomes correspondentes aos seus parâmetros de URL).',
-      'O Qualtrics captura automaticamente os parâmetros da string de consulta quando a pesquisa é carregada a partir de uma URL que os contém.',
-      'Referencie os valores no texto das perguntas ou na lógica com a sintaxe ${e://Field/id}.',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'Use uma fila de pesquisas ou um link de pesquisa público com o parâmetro record.',
-      'Passe %PARTICIPANT_CODE% como valor record para que cada envio fique associado ao registro REDCap correto.',
-      'Passe %MESSAGE_ID% como campo oculto se precisar conectar callbacks de conclusão para cancelar lembretes.',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      'Ative os «Campos URL» nas configurações da pesquisa.',
-      'Passe os valores dos marcadores como parâmetros de URL — o LimeSurvey os registra automaticamente como dados de resposta.',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=pt&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-];
 
 function PlaceholdersContentPt() {
   return (
@@ -2117,25 +1600,8 @@ function PlaceholdersContentPt() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>Configuração por ferramenta</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_PT.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="pt" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_ID e rastreamento de conclusões</h2>
@@ -2238,35 +1704,6 @@ const TOKENS_JA = [
   },
 ];
 
-const TOOLS_JA = [
-  {
-    name: 'Qualtrics',
-    steps: [
-      '調査フローで、最初の質問ブロックの前に「埋め込みデータ」要素を追加します。',
-      'id、code、wave、messageid（またはURLパラメーターに対応する任意の名前）という名前のフィールドを作成します。',
-      'Qualtricsは、それらを含むURLから調査がロードされたときに、クエリ文字列パラメーターを自動的にキャプチャします。',
-      '${e://Field/id}構文を使用して、質問のテキストやロジックでこれらの値を参照します。',
-    ],
-    url: 'https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'REDCap',
-    steps: [
-      'recordパラメーター付きの調査キューまたは公開調査リンクを使用します。',
-      '各提出が正しいREDCapレコードにマップされるように、%PARTICIPANT_CODE%をrecord値として渡します。',
-      'リマインダーをキャンセルする完了コールバックを設定する必要がある場合は、%MESSAGE_ID%を隠しフィールドとして渡します。',
-    ],
-    url: 'https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%',
-  },
-  {
-    name: 'LimeSurvey',
-    steps: [
-      '調査設定で「URLフィールド」を有効にします。',
-      'プレースホルダー値をURLパラメーターとして渡します — LimeSurveyはそれらを自動的に応答データとして保存します。',
-    ],
-    url: 'https://survey.institution.edu/123456?lang=ja&samply_id=%SAMPLY_ID%&batch=%BATCH%',
-  },
-];
 
 function PlaceholdersContentJa() {
   return (
@@ -2325,25 +1762,8 @@ function PlaceholdersContentJa() {
       </p>
       <UrlBox url='https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5' />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: '3.6rem' }}>ツール別設定</h2>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem', margin: '2rem 0 3.6rem' }}>
-        {TOOLS_JA.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: 'var(--surface)', border: '1px solid var(--ink-10)', borderRadius: '1rem', padding: '1.8rem 2.2rem' }}
-          >
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.55rem', fontWeight: 700, color: 'var(--ink)', marginBottom: '1rem' }}>{tool.name}</div>
-            <ol style={{ margin: '0 0 0.4rem', paddingLeft: '1.8rem' }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: '1.3rem', color: 'var(--ink-60)', lineHeight: 1.6, marginBottom: '0.4rem' }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="ja" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: '3.6rem' }}>MESSAGE_IDと完了の追跡</h2>
@@ -2439,35 +1859,6 @@ const TOKENS_TR = [
   },
 ];
 
-const TOOLS_TR = [
-  {
-    name: "Qualtrics",
-    steps: [
-      "Anket akışında, ilk soru bloğundan önce bir «Gömülü Veri» öğesi ekleyin.",
-      "id, code, wave, messageid adlı alanlar oluşturun (veya URL parametrelerinize karşılık gelen herhangi bir ad).",
-      "Qualtrics, anket bu parametreleri içeren bir URL'den yüklendiğinde sorgu dizesi parametrelerini otomatik olarak yakalar.",
-      "Bu değerlere soru metinlerinde veya mantıkta ${e://Field/id} sözdizimi ile başvurun.",
-    ],
-    url: "https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%",
-  },
-  {
-    name: "REDCap",
-    steps: [
-      "record parametreli bir anket kuyruğu veya genel anket bağlantısı kullanın.",
-      "Her gönderimin doğru REDCap kaydına eşlenmesi için %PARTICIPANT_CODE% değerini record değeri olarak geçirin.",
-      "Hatırlatmaları iptal eden bir tamamlanma geri çağrısı yapılandırmanız gerekiyorsa %MESSAGE_ID% değerini gizli bir alan olarak geçirin.",
-    ],
-    url: "https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
-  },
-  {
-    name: "LimeSurvey",
-    steps: [
-      "Anket ayarlarında «URL alanları» seçeneğini etkinleştirin.",
-      "Yer tutucu değerlerini URL parametreleri olarak geçirin — LimeSurvey bunları otomatik olarak yanıt verisi olarak saklar.",
-    ],
-    url: "https://survey.institution.edu/123456?lang=tr&samply_id=%SAMPLY_ID%&batch=%BATCH%",
-  },
-];
 
 function PlaceholdersContentTr() {
   return (
@@ -2526,25 +1917,8 @@ function PlaceholdersContentTr() {
       </p>
       <UrlBox url="https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5" />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: "3.6rem" }}>Araca özgü ayarlar</h2>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 3.6rem" }}>
-        {TOOLS_TR.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
-          >
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{tool.name}</div>
-            <ol style={{ margin: "0 0 0.4rem", paddingLeft: "1.8rem" }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.4rem" }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="tr" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: "3.6rem" }}>MESSAGE_ID ve tamamlanmaları izleme</h2>
@@ -2640,35 +2014,6 @@ const TOKENS_PL = [
   },
 ];
 
-const TOOLS_PL = [
-  {
-    name: "Qualtrics",
-    steps: [
-      "W przepływie ankiety dodaj element «Embedded Data» przed pierwszym blokiem pytań.",
-      "Utwórz pola o nazwach id, code, wave, messageid (lub dowolnych nazwach odpowiadających Twoim parametrom URL).",
-      "Qualtrics automatycznie przechwyci parametry ciągu zapytania, gdy ankieta zostanie załadowana z URL zawierającym te parametry.",
-      "Odwołuj się do tych wartości w tekstach pytań lub logice za pomocą składni ${e://Field/id}.",
-    ],
-    url: "https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%",
-  },
-  {
-    name: "REDCap",
-    steps: [
-      "Użyj kolejki ankiet lub publicznego linku do ankiety z parametrem record.",
-      "Przekaż %PARTICIPANT_CODE% jako wartość record, aby każda wysyłka była mapowana do prawidłowego rekordu REDCap.",
-      "Przekaż %MESSAGE_ID% jako ukryte pole, jeśli musisz skonfigurować wywołanie zwrotne ukończenia, które anuluje przypomnienia.",
-    ],
-    url: "https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
-  },
-  {
-    name: "LimeSurvey",
-    steps: [
-      "Włącz «Pola URL» w ustawieniach ankiety.",
-      "Przekaż wartości placeholderów jako parametry URL — LimeSurvey automatycznie przechowuje je jako dane odpowiedzi.",
-    ],
-    url: "https://survey.institution.edu/123456?lang=pl&samply_id=%SAMPLY_ID%&batch=%BATCH%",
-  },
-];
 
 function PlaceholdersContentPl() {
   return (
@@ -2731,25 +2076,8 @@ function PlaceholdersContentPl() {
       </p>
       <UrlBox url="https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5" />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: "3.6rem" }}>Konfiguracja dla konkretnych narzędzi</h2>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 3.6rem" }}>
-        {TOOLS_PL.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
-          >
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{tool.name}</div>
-            <ol style={{ margin: "0 0 0.4rem", paddingLeft: "1.8rem" }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.4rem" }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="pl" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: "3.6rem" }}>MESSAGE_ID i śledzenie ukończeń</h2>
@@ -2849,35 +2177,6 @@ const TOKENS_AR = [
   },
 ];
 
-const TOOLS_AR = [
-  {
-    name: "Qualtrics",
-    steps: [
-      "في تدفق الاستطلاع، أضف عنصر «Embedded Data» قبل كتلة الأسئلة الأولى.",
-      "أنشئ حقولاً باسم id وcode وwave وmessageid (أو بأي أسماء تطابق معاملات الـ URL لديك).",
-      "سيلتقط Qualtrics معاملات سلسلة الاستعلام تلقائياً عند تحميل الاستطلاع من URL يحتوي على هذه المعاملات.",
-      "أحل إلى هذه القيم في نصوص الأسئلة أو المنطق باستخدام بناء الجملة ${e://Field/id}.",
-    ],
-    url: "https://survey.com/S_abc?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&wave=%BATCH%&messageid=%MESSAGE_ID%",
-  },
-  {
-    name: "REDCap",
-    steps: [
-      "استخدم طابور الاستطلاعات أو الرابط العام للاستطلاع مع معامل record.",
-      "مرِّر %PARTICIPANT_CODE% كقيمة لـ record بحيث تُربط كل عملية إرسال بسجل REDCap الصحيح.",
-      "مرِّر %MESSAGE_ID% كحقل مخفي إذا احتجت إلى إعداد رد إكمال يُلغي التذكيرات.",
-    ],
-    url: "https://redcap.institution.edu/surveys/?s=XYZ&record=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
-  },
-  {
-    name: "LimeSurvey",
-    steps: [
-      "فعِّل «حقول URL» في إعدادات الاستطلاع.",
-      "مرِّر قيم العناصر النائبة كمعاملات URL — يخزّنها LimeSurvey تلقائياً كبيانات للرد.",
-    ],
-    url: "https://survey.institution.edu/123456?lang=ar&samply_id=%SAMPLY_ID%&batch=%BATCH%",
-  },
-];
 
 function PlaceholdersContentAr() {
   return (
@@ -2937,25 +2236,8 @@ function PlaceholdersContentAr() {
       </p>
       <UrlBox url="https://survey.example.com/?id=abc123&code=P042&wave=3&messageid=aB3dE6fG9hJ2kL5" />
 
-      {/* ── Tool-specific guides ──────────────────────────────────────────── */}
-      <h2 style={{ marginTop: "3.6rem" }}>إعداد الأدوات المحددة</h2>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem", margin: "2rem 0 3.6rem" }}>
-        {TOOLS_AR.map((tool) => (
-          <div
-            key={tool.name}
-            style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "1rem", padding: "1.8rem 2.2rem" }}
-          >
-            <div style={{ fontFamily: "var(--font-display)", fontSize: "1.55rem", fontWeight: 700, color: "var(--ink)", marginBottom: "1rem" }}>{tool.name}</div>
-            <ol style={{ margin: "0 0 0.4rem", paddingLeft: "1.8rem" }}>
-              {tool.steps.map((s, i) => (
-                <li key={i} style={{ fontSize: "1.3rem", color: "var(--ink-60)", lineHeight: 1.6, marginBottom: "0.4rem" }}>{s}</li>
-              ))}
-            </ol>
-            <UrlBox url={tool.url} />
-          </div>
-        ))}
-      </div>
+      {/* survey-tool setup moved to /docs/integrations */}
+      <ToolGuidesPointer lang="ar" />
 
       {/* ── MESSAGE_ID and completions ────────────────────────────────────── */}
       <h2 style={{ marginTop: "3.6rem" }}>MESSAGE_ID وتتبع الإكمالات</h2>
