@@ -71,10 +71,19 @@ function resolveUserStop(int_end: StoppingStrategy | undefined, userCreated: Dat
   return undefined;
 }
 
-function patchStartDay(expr: string, start: string): string {
+// Anchor an "every N days" cron ("*/N" in the day-of-month field) to the
+// recipient's window start. cron-converter only honours a step when it is given
+// a RANGE: "7-31/7" yields [7,14,21,28], whereas the bare "7/7" collapses to just
+// [7]. So expand "*/N" into "<startDay>-31/N", using the day-of-month in the
+// schedule's timezone (a tz-naive Date.getDate() can be off by one near midnight).
+function patchStartDay(expr: string, start: string, timezone?: string): string {
   if (!expr.includes("*/")) return expr;
   const p = expr.split(" ");
-  if (p[3]?.includes("*/")) p[3] = p[3].replace("*", String(new Date(start).getDate()));
+  if (p[3]?.startsWith("*/")) {
+    const step = p[3].slice(2);
+    const startDay = momentTz.tz(start, timezone || "UTC").date();
+    p[3] = `${startDay}-31/${step}`;
+  }
   return p.join(" ");
 }
 
@@ -165,7 +174,7 @@ export async function POST(req: NextRequest) {
           const gEnd = resolveUserStop(int_end, latestUser.created!, timezone) || int_endResolved;
           if (!gStart || !gEnd) continue;
           for (const iv of interval) {
-            const dates = expandCronBetween(patchStartDay(iv, gStart), gStart, gEnd, timezone);
+            const dates = expandCronBetween(patchStartDay(iv, gStart, timezone), gStart, gEnd, timezone);
             const r = await scheduleBatch(dates.map((d) => ({
               ...baseDoc, scheduledFor: new Date(d), recipientGroupIds: [group], recipientUserIds: [],
             })));
@@ -177,7 +186,7 @@ export async function POST(req: NextRequest) {
             const uEnd = resolveUserStop(int_end, member.created!, timezone) || int_endResolved;
             if (!uStart || !uEnd) continue;
             for (const iv of interval) {
-              const dates = expandCronBetween(patchStartDay(iv, uStart), uStart, uEnd, timezone);
+              const dates = expandCronBetween(patchStartDay(iv, uStart, timezone), uStart, uEnd, timezone);
               const r = await scheduleBatch(dates.map((d) => ({
                 ...baseDoc, scheduledFor: new Date(d), recipientUserIds: [member.id], recipientGroupIds: [],
               })));
@@ -194,7 +203,7 @@ export async function POST(req: NextRequest) {
         const uEnd = resolveUserStop(int_end, user.created!, timezone) || int_endResolved;
         if (!uStart || !uEnd) continue;
         for (const iv of interval) {
-          const dates = expandCronBetween(patchStartDay(iv, uStart), uStart, uEnd, timezone);
+          const dates = expandCronBetween(patchStartDay(iv, uStart, timezone), uStart, uEnd, timezone);
           const r = await scheduleBatch(dates.map((d) => ({
             ...baseDoc, scheduledFor: new Date(d), recipientUserIds: [user.id], recipientGroupIds: [],
           })));

@@ -1686,6 +1686,24 @@ async function sendMobileNotification({
 
 // TODO finish reminders here
 
+// Anchor an "every N days" cron ("*/N" in the day-of-month field) to a recipient's
+// window start. cron-converter only honours a step inside a RANGE ("7-31/7" ->
+// [7,14,21,28]); the bare "7/7" collapses to just [7]. So expand "*/N" into
+// "<startDay>-31/N", using the day-of-month in the schedule's timezone (a tz-naive
+// Date.getDate() can be off by one near midnight). Mirrors patchStartDay in the
+// Next.js create routes and services/scheduleForUser.js so future participants
+// (scheduled here at join time) get the same cadence as current ones.
+function patchStartDayCron(cronExpr, start, timezone) {
+  if (!cronExpr || !cronExpr.includes("*/")) return cronExpr;
+  const p = cronExpr.split(" ");
+  if (p[3] && p[3].startsWith("*/")) {
+    const step = p[3].slice(2);
+    const startDay = moment.tz(start, timezone || "UTC").date();
+    p[3] = `${startDay}-31/${step}`;
+  }
+  return p.join(" ");
+}
+
 // participants join a study on mobile phone, a user id is created if there was no one before
 exports.joinStudy = async (req, res) => {
   try {
@@ -1886,22 +1904,9 @@ exports.joinStudy = async (req, res) => {
             }
 
             if (sub.randomize) {
-              let windowFrom = sub.windowInterval && sub.windowInterval.from;
-              let windowTo = sub.windowInterval && sub.windowInterval.to;
               const distance = (sub.windowInterval && sub.windowInterval.distance) || 0;
-
-              if (windowFrom && windowFrom.includes("*/")) {
-                const p = windowFrom.split(" ");
-                if (p[3] && p[3].includes("*/"))
-                  p[3] = p[3].replace("*", new Date(user_int_start).getDate());
-                windowFrom = p.join(" ");
-              }
-              if (windowTo && windowTo.includes("*/")) {
-                const p = windowTo.split(" ");
-                if (p[3] && p[3].includes("*/"))
-                  p[3] = p[3].replace("*", new Date(user_int_start).getDate());
-                windowTo = p.join(" ");
-              }
+              const windowFrom = patchStartDayCron(sub.windowInterval && sub.windowInterval.from, user_int_start, timezone);
+              const windowTo = patchStartDayCron(sub.windowInterval && sub.windowInterval.to, user_int_start, timezone);
 
               const docs = computeRandomWindowDocs({
                 ...baseDoc,
@@ -1915,13 +1920,7 @@ exports.joinStudy = async (req, res) => {
               });
               await scheduleBatch(docs);
             } else {
-              let updatedInterval = sub.interval;
-              if (updatedInterval && updatedInterval.includes("*/")) {
-                const p = updatedInterval.split(" ");
-                if (p[3] && p[3].includes("*/"))
-                  p[3] = p[3].replace("*", new Date(user_int_start).getDate());
-                updatedInterval = p.join(" ");
-              }
+              const updatedInterval = patchStartDayCron(sub.interval, user_int_start, timezone);
               const dates = expandCronBetween(updatedInterval, user_int_start, user_int_end, timezone);
               await scheduleBatch(dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) })));
             }

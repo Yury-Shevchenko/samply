@@ -94,10 +94,21 @@ function computeRandomWindowDocs({ windowFrom, windowTo, int_start, int_end, num
   return docs;
 }
 
-function patchStartDay(cronExpr, start) {
+// Anchor an "every N days" cron ("*/N" in the day-of-month field) to this user's
+// window start. cron-converter only honours a step when given a RANGE: "7-31/7"
+// yields [7,14,21,28], whereas the bare "7/7" collapses to just [7]. So expand
+// "*/N" into "<startDay>-31/N", using the day-of-month in the schedule's timezone
+// (a tz-naive Date.getDate() can be off by one near midnight). Must mirror the
+// patchStartDay in the create routes so future participants (scheduled here at
+// enrollment) get the same cadence as current ones.
+function patchStartDay(cronExpr, start, timezone) {
   if (!cronExpr.includes("*/")) return cronExpr;
   const p = cronExpr.split(" ");
-  if (p[3] && p[3].includes("*/")) p[3] = p[3].replace("*", String(new Date(start).getDate()));
+  if (p[3] && p[3].startsWith("*/")) {
+    const step = p[3].slice(2);
+    const startDay = momentTz.tz(start, timezone || "UTC").date();
+    p[3] = `${startDay}-31/${step}`;
+  }
   return p.join(" ");
 }
 
@@ -179,8 +190,8 @@ async function scheduleForUser(projectOid, user, groupId, configs) {
       const { from, to, number, distance } = cfg.windowInterval;
       const docs = computeRandomWindowDocs({
         ...baseDoc,
-        windowFrom: patchStartDay(from, start),
-        windowTo: to,
+        windowFrom: patchStartDay(from, start, timezone),
+        windowTo: patchStartDay(to, start, timezone),
         int_start: start,
         int_end: stop,
         number,
@@ -201,7 +212,7 @@ async function scheduleForUser(projectOid, user, groupId, configs) {
       const start = resolveStart(cfg, user.created, timezone);
       const stop = resolveStop(cfg, user.created, timezone);
       if (!start || !stop) continue;
-      const dates = expandCronBetween(patchStartDay(cfg.interval, start), start, stop, timezone);
+      const dates = expandCronBetween(patchStartDay(cfg.interval, start, timezone), start, stop, timezone);
       const r = await scheduleBatch(
         dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) }))
       );

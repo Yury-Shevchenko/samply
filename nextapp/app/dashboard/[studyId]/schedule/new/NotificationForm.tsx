@@ -409,8 +409,12 @@ export default function NotificationForm({ projectId, participants, groups, pres
     return new Date(base.getTime() + ms);
   }
 
-  function buildDayMonthCron(dayStart: number): string {
-    if (dateType === "every") return everyNDays === 1 ? "*" : `${dayStart}/${everyNDays}`;
+  function buildDayMonthCron(): string {
+    // "Every N days" is emitted as the open-ended step "*/N". The server anchors
+    // it to each recipient's actual window start (registration + offset) via
+    // patchStartDay — baking a fixed day-of-month here would wrongly anchor the
+    // cadence to the schedule's creation date instead.
+    if (dateType === "every") return everyNDays === 1 ? "*" : `*/${everyNDays}`;
     if (dateType === "spec-week") return "*";
     if (dateType === "spec-month") return selectedMonthDays.join(",") || "*";
     return "*";
@@ -421,11 +425,11 @@ export default function NotificationForm({ projectId, participants, groups, pres
   function buildMonthCron(): string {
     return monthType === "every" ? "*" : (selectedMonths.join(",") || "*");
   }
-  function buildCronSchedules(dayStart: number): string[] {
-    return timepoints.map((tp) => `${getRandomSec()} ${tp.minute} ${tp.hour} ${buildDayMonthCron(dayStart)} ${buildMonthCron()} ${buildDayWeekCron()}`);
+  function buildCronSchedules(): string[] {
+    return timepoints.map((tp) => `${getRandomSec()} ${tp.minute} ${tp.hour} ${buildDayMonthCron()} ${buildMonthCron()} ${buildDayWeekCron()}`);
   }
-  function buildCronIntervals(dayStart: number): Array<{ from: string; to: string; number: number; distance: number }> {
-    const d = buildDayMonthCron(dayStart), w = buildDayWeekCron(), m = buildMonthCron();
+  function buildCronIntervals(): Array<{ from: string; to: string; number: number; distance: number }> {
+    const d = buildDayMonthCron(), w = buildDayWeekCron(), m = buildMonthCron();
     return timeWindows.map((w2) => ({
       from: `${getRandomSec()} ${w2.minuteStart} ${w2.hourStart} ${d} ${m} ${w}`,
       to: `${getRandomSec()} ${w2.minuteEnd} ${w2.hourEnd} ${d} ${m} ${w}`,
@@ -514,9 +518,8 @@ export default function NotificationForm({ projectId, participants, groups, pres
       } else if (timeType === "repeat") {
         if (dateType === "specific") { alert(t("notificationForm.alertRepeatDates")); setSubmitting(false); return; }
         const s = buildStartingStrategy(), e = buildStoppingStrategy();
-        const dayStart = new Date(s.startMoment || Date.now()).getDate();
         const isRegBased = s.startEvent === "registration" || e.stopEvent === "registration";
-        const crons = [`${getRandomSec()} */${repeatEvery} * ${buildDayMonthCron(dayStart)} ${buildMonthCron()} ${buildDayWeekCron()}`];
+        const crons = [`${getRandomSec()} */${repeatEvery} * ${buildDayMonthCron()} ${buildMonthCron()} ${buildDayWeekCron()}`];
         endpoint = isRegBased ? "/createindividualnotification" : "/createintervalnotification";
         payload = { ...commonFields, interval: crons, int_start: s, int_end: e, randomize: false, participantId: participantsList };
 
@@ -533,14 +536,13 @@ export default function NotificationForm({ projectId, participants, groups, pres
 
       } else {
         const s = buildStartingStrategy(), e = buildStoppingStrategy();
-        const dayStart = new Date(s.startMoment || Date.now()).getDate();
         const isRegBased = s.startEvent === "registration" || e.stopEvent === "registration";
         if (timeType === "specific") {
-          const crons = buildCronSchedules(dayStart);
+          const crons = buildCronSchedules();
           endpoint = isRegBased ? "/createindividualnotification" : "/createintervalnotification";
           payload = { ...commonFields, interval: crons, int_start: s, int_end: e, randomize: false, participantId: participantsList };
         } else {
-          const cronWindows = buildCronIntervals(dayStart);
+          const cronWindows = buildCronIntervals();
           endpoint = "/createintervalnotification";
           payload = { ...commonFields, randomize: true, intervalWindows: cronWindows, int_start: s, int_end: e, participantId: participantsList };
         }
