@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
   // Schedule retroactively for existing participants (option B: from their original join date)
   const docs: PendingNotificationDoc[] = [];
   if (participants !== null && participants !== undefined) {
-    const activeUsers = p.mobileUsers.filter((u) => !u.deactivated);
+    const activeUsers = (p.mobileUsers ?? []).filter((u) => !u.deactivated);
     const targetUsers = participants.length > 0
       ? activeUsers.filter((u) => participants.includes(u.id))
       : activeUsers;

@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     if (participants !== undefined && participants !== null) {
       userIds = participants.length > 0
         ? participants
-        : p.mobileUsers.filter((u) => !u.deactivated).map((u) => u.id);
+        : (p.mobileUsers ?? []).filter((u) => !u.deactivated).map((u) => u.id);
     }
 
     // Resolve group list
@@ -126,18 +126,21 @@ export async function POST(req: NextRequest) {
     if (groups !== undefined && groups !== null) {
       groupIds = groups.length > 0
         ? groups
-        : [...new Set(p.mobileUsers.map((u) => u.group?.id).filter(Boolean) as string[])];
+        : [...new Set((p.mobileUsers ?? []).map((u) => u.group?.id).filter(Boolean) as string[])];
     }
 
     const docs: PendingNotificationDoc[] = [];
 
-    if (groupIds) {
+    // An empty resolved list means "all current X" matched nobody — schedule
+    // nothing rather than queuing a recipient-less notification. (`[]` is truthy,
+    // so the length guard is required.)
+    if (groupIds && groupIds.length > 0) {
       for (const d of scheduledDates) {
         docs.push({ ...baseDoc, scheduledFor: d, recipientGroupIds: groupIds, recipientUserIds: [] });
       }
     }
 
-    if (userIds) {
+    if (userIds && userIds.length > 0) {
       if (!useParticipantTimezone) {
         for (const d of scheduledDates) {
           docs.push({ ...baseDoc, scheduledFor: d, recipientUserIds: userIds, recipientGroupIds: [] });

@@ -75,13 +75,13 @@ export async function POST(req: NextRequest) {
   if (participantId !== undefined && participantId !== null) {
     users = participantId.length > 0
       ? participantId
-      : p.mobileUsers.filter((u) => !u.deactivated).map((u) => u.id);
+      : (p.mobileUsers ?? []).filter((u) => !u.deactivated).map((u) => u.id);
   }
 
   let groupIds: string[] | undefined;
   if (groups !== undefined && groups !== null) {
     groupIds = groups.length > 0 ? groups
-      : [...new Set(p.mobileUsers.map((u) => u.group?.id).filter(Boolean) as string[])];
+      : [...new Set((p.mobileUsers ?? []).map((u) => u.group?.id).filter(Boolean) as string[])];
   }
 
   const newConfigs = intervals.map((interval) => ({
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
     for (const interval of intervals) {
       if (groupIds) {
         for (const group of groupIds) {
-          const groupMembers = p.mobileUsers.filter((u) => u.group?.id === group && !u.deactivated);
+          const groupMembers = (p.mobileUsers ?? []).filter((u) => u.group?.id === group && !u.deactivated);
           if (!groupMembers.length) continue;
           if (yokedDesign) {
             const docs = computeRandomWindowDocs({

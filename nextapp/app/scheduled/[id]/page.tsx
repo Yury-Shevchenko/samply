@@ -20,6 +20,7 @@ import {
 import { DeleteScheduleButton } from "../DeleteScheduleButton";
 import { PendingTable } from "../PendingTable";
 import { getT } from "@/lib/i18n.server";
+import cronstrue from "cronstrue";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -66,6 +67,23 @@ function describeEvent(
     return delay ? `${delay} after ${event}` : null;
   }
   return null;
+}
+
+// Repeat schedules store their cadence as a cron string in `interval` (a 6-field
+// "sec min hour dom month dow" expression, or an array of them). Older configs also
+// carry a precomputed `readable.interval`; newer ones may not, leaving the time/day/
+// month invisible on this page. Derive a human phrase from the cron when needed,
+// dropping the leading seconds field (a random delivery jitter, not meaningful here).
+function cronToText(cron?: string | string[]): string | null {
+  const expr = Array.isArray(cron) ? cron[0] : cron;
+  if (!expr || typeof expr !== "string" || !expr.trim()) return null;
+  const parts = expr.trim().split(/\s+/);
+  const normalized = parts.length === 6 ? parts.slice(1).join(" ") : expr;
+  try {
+    return cronstrue.toString(normalized, { verbose: false, throwExceptionOnParseError: true });
+  } catch {
+    return expr;
+  }
 }
 
 function scheduleType(n: NotificationConfig): string {
@@ -427,9 +445,12 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               <MetaRow label={t("scheduled.labelTimeWindow")}>{fmt(notification.window_from)} – {fmt(notification.window_to)}</MetaRow>
             )}
             {/* Repeat */}
-            {notification.readable?.interval && (
-              <MetaRow label={t("scheduled.labelRepeatInterval")}>{notification.readable.interval}</MetaRow>
-            )}
+            {(() => {
+              const repeatInterval = notification.readable?.interval ?? cronToText(notification.interval);
+              return repeatInterval
+                ? <MetaRow label={t("scheduled.labelRepeatInterval")}>{repeatInterval}</MetaRow>
+                : null;
+            })()}
             {startDesc && <MetaRow label={t("scheduled.labelStart")}>{startDesc}</MetaRow>}
             {stopDesc  && <MetaRow label={t("scheduled.labelStop")}>{stopDesc}</MetaRow>}
             {notification.readable?.from && notification.readable?.to && (
@@ -444,9 +465,14 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
             {notification.number != null && (
               <MetaRow label={t("scheduled.labelCount")}>{t("scheduled.notifications", { n: String(notification.number) })}</MetaRow>
             )}
-            {notification.distance != null && (
-              <MetaRow label={t("scheduled.labelMinDistance")}>{t("scheduled.minutes", { n: String(Math.round(notification.distance / 60000)) })}</MetaRow>
-            )}
+            {(() => {
+              // Fixed-random schedules carry the min gap at top level; window-based
+              // random schedules nest it under windowInterval.distance (both in ms).
+              const distMs = notification.distance ?? notification.windowInterval?.distance;
+              return distMs != null
+                ? <MetaRow label={t("scheduled.labelMinDistance")}>{t("scheduled.minutes", { n: String(Math.round(distMs / 60000)) })}</MetaRow>
+                : null;
+            })()}
             {/* Audience */}
             {notification.reminders && notification.reminders.length > 0 && (
               <MetaRow label={notification.reminders.length > 1 ? t("scheduled.labelReminders") : t("scheduled.labelReminder")}>

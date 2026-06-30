@@ -1991,6 +1991,16 @@ async function removeParticipantFromProject({
       mobileUsers: 1,
     }
   );
+  // The project may have already been deleted while the participant still lists
+  // it in participant_projects. Dereferencing a null project here used to throw,
+  // and because this runs in an unhandled async path the request would hang
+  // forever (e.g. account deletion spinning indefinitely). The project's jobs
+  // were cancelled when it was deleted, so there is nothing left to clean up on
+  // the project side — just withdraw consent (by the projectId argument) and return.
+  if (!project) {
+    await consent.withdrawStudyConsent({ samplyId: participantId, projectId });
+    return;
+  }
   agenda.cancel(
     {
       "data.projectid": project._id,

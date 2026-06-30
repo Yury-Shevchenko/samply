@@ -20,6 +20,7 @@ export interface NotificationConfig {
   distance?: number;
   int_start?: Date;
   int_end?: Date;
+  interval?: string | string[];
   start_event?: string;
   start_next?: number | string;
   start_after?: { days?: number; hours?: number; minutes?: number } | string;

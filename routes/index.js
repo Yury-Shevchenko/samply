@@ -52,7 +52,7 @@ router.get("/api/study/:id/:token", projectController.getPublicStudy);
 
 // participant API (mobile)
 router.post("/api/join/:id", jobController.joinStudy);
-router.post("/api/leave/:id", jobController.leaveStudy);
+router.post("/api/leave/:id", catchErrors(jobController.leaveStudy));
 router.post("/api/createaccount", userController.createMobileAccount);
 router.post("/api/login", userController.loginMobileAccount);
 router.post("/api/mystudies", userController.requireParticipantToken, userController.getMyStudies);
@@ -63,7 +63,7 @@ router.post("/api/reset", userController.resetPassword);
 router.post("/api/updatetoken", userController.requireParticipantToken, jobController.updateTokenInStudy);
 router.post("/api/checkpayableaccount", userController.requireParticipantToken, userController.checkPayableAccount);
 router.post("/api/updatelocation", userController.requireParticipantToken, resultController.updatelocation);
-router.post("/api/deleteparticipantaccount", jobController.deleteAccountFromMobileApp);
+router.post("/api/deleteparticipantaccount", catchErrors(jobController.deleteAccountFromMobileApp));
 
 // hook API
 router.post("/api/creategroup", hookController.creategroup);

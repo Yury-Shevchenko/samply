@@ -141,15 +141,15 @@ export async function POST(req: NextRequest) {
   let users: Array<{ id: string; created?: Date }> | undefined;
   if (participantId !== undefined && participantId !== null) {
     users = participantId.length > 0
-      ? p.mobileUsers.filter((u) => participantId.includes(u.id))
-      : p.mobileUsers.filter((u) => !u.deactivated);
+      ? (p.mobileUsers ?? []).filter((u) => participantId.includes(u.id))
+      : (p.mobileUsers ?? []).filter((u) => !u.deactivated);
   }
 
   let groupIds: string[] | undefined;
   if (groups !== undefined && groups !== null) {
     groupIds = groups.length > 0
       ? groups
-      : [...new Set(p.mobileUsers.map((u) => u.group?.id).filter(Boolean) as string[])];
+      : [...new Set((p.mobileUsers ?? []).map((u) => u.group?.id).filter(Boolean) as string[])];
   }
 
   const newConfigs: unknown[] = [];
@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
 
         if (groupIds) {
           for (const group of groupIds) {
-            const groupMembers = p.mobileUsers.filter((u) => u.group?.id === group && !u.deactivated);
+            const groupMembers = (p.mobileUsers ?? []).filter((u) => u.group?.id === group && !u.deactivated);
             if (!groupMembers.length) continue;
             if (yokedDesign) {
               const latestUser = groupMembers
@@ -241,7 +241,7 @@ export async function POST(req: NextRequest) {
 
       if (groupIds) {
         for (const group of groupIds) {
-          const groupMembers = p.mobileUsers.filter((u) => u.group?.id === group && !u.deactivated);
+          const groupMembers = (p.mobileUsers ?? []).filter((u) => u.group?.id === group && !u.deactivated);
           if (!groupMembers.length) continue;
           if (yokedDesign) {
             const latestUser = groupMembers
