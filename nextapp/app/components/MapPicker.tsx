@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import "leaflet/dist/leaflet.css";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 interface Props {
   lat: number;
@@ -21,11 +25,6 @@ export default function MapPicker({ lat, lng, radius, onChange }: Props) {
 
     let cancelled = false;
 
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-    document.head.appendChild(link);
-
     import("leaflet").then((L) => {
       if (cancelled || !containerRef.current) return;
 
@@ -35,9 +34,9 @@ export default function MapPicker({ lat, lng, radius, onChange }: Props) {
       type IconWithPrivate = typeof L.Icon.Default.prototype & { _getIconUrl?: unknown };
       delete (L.Icon.Default.prototype as IconWithPrivate)._getIconUrl;
       L.Icon.Default.mergeOptions({
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+        iconUrl: markerIcon.src,
+        iconRetinaUrl: markerIcon2x.src,
+        shadowUrl: markerShadow.src,
       });
 
       const hasCoords = Boolean(lat && lng);
@@ -97,7 +96,6 @@ export default function MapPicker({ lat, lng, radius, onChange }: Props) {
       mapRef.current = null;
       markerRef.current = null;
       circleRef.current = null;
-      if (document.head.contains(link)) document.head.removeChild(link);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
