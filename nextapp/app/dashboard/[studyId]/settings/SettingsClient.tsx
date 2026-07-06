@@ -7,6 +7,39 @@ import { useT } from "@/app/components/TranslationProvider";
 
 const MapPicker = lazy(() => import("@/app/components/MapPicker"));
 
+/* ── Geofence location slug helpers ──────────────────────────────────────── */
+/** Turn a display name into a URL-safe slug (may be empty for non-latin names). */
+function slugify(name: string | undefined | null): string {
+  return (name ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+}
+
+/** Return a non-empty slug based on `base` that does not collide with `existing`. */
+function uniqueSlug(base: string, existing: { slug: string }[]): string {
+  const root = base || "location";
+  let slug = root;
+  let n = 2;
+  while (existing.some((l) => l.slug === slug)) slug = `${root}-${n++}`;
+  return slug;
+}
+
+/**
+ * Guarantee every location has a unique, non-empty slug. Stored data can carry
+ * empty or duplicate slugs (e.g. non-latin names slugify to ""), which breaks
+ * React keys and the per-location form field names that are keyed by slug.
+ */
+function ensureUniqueSlugs(locs: GeoLocation[]): GeoLocation[] {
+  const out: GeoLocation[] = [];
+  for (const loc of locs) {
+    const base = loc.slug?.trim() || slugify(loc.title);
+    const slug = uniqueSlug(base, out);
+    out.push(slug === loc.slug ? loc : { ...loc, slug });
+  }
+  return out;
+}
+
 interface Props {
   project: ProjectFull;
   memberEmails: string[];
@@ -685,8 +718,8 @@ export default function SettingsClient({
   );
 
   /* Geofencing locations */
-  const [locations, setLocations] = useState<GeoLocation[]>(
-    s.geofencing?.locations ?? [],
+  const [locations, setLocations] = useState<GeoLocation[]>(() =>
+    ensureUniqueSlugs(s.geofencing?.locations ?? []),
   );
   const [newLocationName, setNewLocationName] = useState("");
 
@@ -704,11 +737,7 @@ export default function SettingsClient({
   function addLocation() {
     const name = newLocationName.trim();
     if (!name) return;
-    const slug = name
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
-    if (locations.find((l) => l.slug === slug)) return;
+    const slug = uniqueSlug(slugify(name), locations);
     setLocations((prev) => [
       ...prev,
       { slug, title: name, latitude: 0, longitude: 0, radius: 100 },

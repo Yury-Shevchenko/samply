@@ -6,6 +6,14 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
+/**
+ * Static image imports resolve to a URL string in some builds and to a
+ * `{ src }` object in others, so normalize to the URL either way.
+ */
+function assetUrl(asset: string | { src: string }): string {
+  return typeof asset === "string" ? asset : asset.src;
+}
+
 interface Props {
   lat: number;
   lng: number;
@@ -34,9 +42,9 @@ export default function MapPicker({ lat, lng, radius, onChange }: Props) {
       type IconWithPrivate = typeof L.Icon.Default.prototype & { _getIconUrl?: unknown };
       delete (L.Icon.Default.prototype as IconWithPrivate)._getIconUrl;
       L.Icon.Default.mergeOptions({
-        iconUrl: markerIcon.src,
-        iconRetinaUrl: markerIcon2x.src,
-        shadowUrl: markerShadow.src,
+        iconUrl: assetUrl(markerIcon),
+        iconRetinaUrl: assetUrl(markerIcon2x),
+        shadowUrl: assetUrl(markerShadow),
       });
 
       const hasCoords = Boolean(lat && lng);
