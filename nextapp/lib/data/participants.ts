@@ -17,6 +17,9 @@ export interface MobileUser {
 }
 
 export async function fetchParticipants(projectId: string): Promise<MobileUser[]> {
+  // A malformed projectId (non-ObjectId) would make findById throw a CastError;
+  // return an empty list instead of crashing the render.
+  if (!mongoose.Types.ObjectId.isValid(projectId)) return [];
   await connectDB();
   const project = await Project.findById(projectId, { mobileUsers: 1 }).lean();
   if (!project) return [];

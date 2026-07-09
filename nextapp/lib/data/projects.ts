@@ -109,6 +109,10 @@ export async function fetchProjectById(
   userId: string,
   isAdmin = false,
 ): Promise<ProjectFull | null> {
+  // Guard against non-ObjectId segments (bots, devtools source-map requests
+  // like "installHook.js.map") — findById would otherwise throw a CastError
+  // and crash the page render instead of rendering a clean 404.
+  if (!mongoose.Types.ObjectId.isValid(id)) return null;
   await connectDB();
   const project = await Project.findById(id).lean();
   if (!project) return null;

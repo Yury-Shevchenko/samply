@@ -1918,17 +1918,23 @@ exports.joinStudy = async (req, res) => {
                 distance,
                 timezone,
               });
-              await scheduleBatch(docs);
+              await scheduleBatch(docs).catch((err) =>
+                console.error(`joinStudy repeat(random) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
+              );
             } else {
               const updatedInterval = patchStartDayCron(sub.interval, user_int_start, timezone);
               const dates = expandCronBetween(updatedInterval, user_int_start, user_int_end, timezone);
-              await scheduleBatch(dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) })));
+              await scheduleBatch(dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) }))).catch((err) =>
+                console.error(`joinStudy repeat(cron) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
+              );
             }
           } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
             if (sub.target === "fixed-times") {
               const dateForParticipant = moment.tz(sub.date, sub.timezone).tz(timezone, true).toISOString();
               if (new Date(dateForParticipant) > new Date()) {
-                await scheduleBatch([{ ...baseDoc, scheduledFor: new Date(dateForParticipant) }]);
+                await scheduleBatch([{ ...baseDoc, scheduledFor: new Date(dateForParticipant) }]).catch((err) =>
+                  console.error(`joinStudy one-time(fixed) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
+                );
               }
             } else if (sub.target === "user-specific") {
               if (sub.window_from > sub.window_to) return;
@@ -1938,7 +1944,9 @@ exports.joinStudy = async (req, res) => {
                 sub.number,
                 sub.distance || 0
               );
-              await scheduleBatch(nums.map((ts) => ({ ...baseDoc, scheduledFor: new Date(ts) })));
+              await scheduleBatch(nums.map((ts) => ({ ...baseDoc, scheduledFor: new Date(ts) }))).catch((err) =>
+                console.error(`joinStudy one-time(user-specific) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
+              );
             }
           }
         })

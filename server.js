@@ -139,7 +139,13 @@ async function main() {
     }
     try {
       const schedule = require("node-schedule");
-      await schedule.gracefulShutdown();
+      // The installed node-schedule version does not export gracefulShutdown();
+      // cancel every scheduled job directly instead (supported API).
+      if (typeof schedule.gracefulShutdown === "function") {
+        await schedule.gracefulShutdown();
+      } else {
+        Object.values(schedule.scheduledJobs || {}).forEach((job) => job.cancel());
+      }
       console.log("samply: node-schedule jobs cancelled");
     } catch (err) {
       console.error("samply: node-schedule shutdown failed", err);
