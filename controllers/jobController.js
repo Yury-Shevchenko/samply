@@ -1975,7 +1975,10 @@ exports.joinStudy = async (req, res) => {
     res.status(200).json({ message: "OK" });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ message: error });
+    // An Error object serializes to {} over JSON, which the app can't display
+    // (Alert.alert on a non-string shows nothing). Send a real string so the
+    // participant sees a message instead of the "Join" button doing nothing.
+    res.status(400).json({ message: error.message || "Failed to join the study." });
   }
 };
 

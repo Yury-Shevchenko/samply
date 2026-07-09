@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import Script from "next/script";
+import { AuthError } from "next-auth";
 import { auth, signIn } from "@/lib/auth";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { getT } from "@/lib/i18n.server";
@@ -82,11 +83,36 @@ async function registerAction(formData: FormData) {
     redirect: "manual",
   });
 
+  const failRedirect =
+    "/register?error=" + encodeURIComponent("Registration failed. Check your details and try again.");
+
+  // Express registers via passport with successRedirect "/newproject" and
+  // failureRedirect "/researcher/register" — BOTH are 302s, so the status code
+  // alone can't tell success from failure. A failed registration (duplicate
+  // email, validation) would otherwise be treated as success, and the signIn
+  // below would throw an uncaught CredentialsSignin that crashes the page.
+  // Distinguish them by the redirect target instead.
   if (res.status === 302 || res.status === 301) {
-    await signIn("credentials", { email, password, redirectTo: "/dashboard" });
-    return;
+    const location = res.headers.get("location") ?? "";
+    const registered = location.includes("/newproject");
+    if (registered) {
+      try {
+        await signIn("credentials", { email, password, redirectTo: "/dashboard" });
+        return;
+      } catch (err) {
+        // signIn throws NEXT_REDIRECT on success (must propagate). Only swallow
+        // a genuine auth failure: the account exists, so send them to sign in.
+        if (err instanceof AuthError) {
+          redirect(
+            "/login?notice=" +
+              encodeURIComponent("Account created. Please sign in.")
+          );
+        }
+        throw err;
+      }
+    }
   }
-  redirect("/register?error=" + encodeURIComponent("Registration failed. Check your details and try again."));
+  redirect(failRedirect);
 }
 
 export default async function RegisterPage({
