@@ -533,6 +533,7 @@ const pl: DeepLoose<Messages> = {
     addFirst:       "+ Dodaj pierwszy harmonogram",
     viewQueueCard:  "zobacz kolejkę →",
     delete:         "usuń",
+    edit:           "edytuj",
     configs:        "{n} konfiguracja",
     configsPlural:  "{n} konfiguracji",
     typeOneTime:    "jednorazowy",
@@ -957,6 +958,14 @@ const pl: DeepLoose<Messages> = {
     back:    "← Powrót do harmonogramów",
   },
 
+  editSchedulePage: {
+    eyebrow:       "edytuj harmonogram",
+    back:          "← Powrót do kolejki",
+    untitled:      "Harmonogram bez tytułu",
+    scopeNote:     "Zapisanie aktualizuje ten harmonogram w miejscu. Już wysłane powiadomienia pozostają niezmienione — tylko przyszłe, jeszcze niewysłane powiadomienia są generowane ponownie na podstawie poniższych ustawień.",
+    legacyWarning: "Ten harmonogram został utworzony przed wprowadzeniem obsługi edycji, więc jego pola dotyczące czasu i odbiorców nie mogły zostać wstępnie wypełnione — pokazują wartości domyślne. Sprawdź je ponownie przed zapisaniem.",
+  },
+
   smaat: {
     platformComparison: "porównanie platform",
     whenToUse:          "kiedy używać każdej",
@@ -1062,6 +1071,7 @@ const pl: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← Harmonogram",
     deleteSchedule:          "Usuń harmonogram",
+    editSchedule:            "Edytuj harmonogram",
     queueLabel:              "zaplanowana kolejka",
     allSchedules:            "wszystkie harmonogramy",
     notifSchedule:           "harmonogram powiadomień",
@@ -1291,6 +1301,7 @@ const pl: DeepLoose<Messages> = {
     sendAfter:           "Wyślij po",
     addReminder:         "Dodaj przypomnienie",
     submit:              "Zaplanuj powiadomienia →",
+    submitEdit:          "Zapisz zmiany",
     submitting:          "Planowanie…",
     mon: "Pon", tue: "Wt", wed: "Śr", thu: "Czw", fri: "Pt", sat: "Sob", sun: "Nd",
     jan: "Sty", feb: "Lut", mar: "Mar", apr: "Kwi", may: "Maj", jun: "Cze",

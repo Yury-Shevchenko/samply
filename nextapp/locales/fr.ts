@@ -533,6 +533,7 @@ const fr: DeepLoose<Messages> = {
     addFirst:       "+ Ajouter le premier calendrier",
     viewQueueCard:  "voir la file →",
     delete:         "supprimer",
+    edit:           "modifier",
     configs:        "{n} config",
     configsPlural:  "{n} configs",
     typeOneTime:    "unique",
@@ -957,6 +958,14 @@ const fr: DeepLoose<Messages> = {
     back:    "← Retour aux calendriers",
   },
 
+  editSchedulePage: {
+    eyebrow:       "modifier le calendrier",
+    back:          "← Retour à la file",
+    untitled:      "Calendrier sans titre",
+    scopeNote:     "L'enregistrement met à jour ce calendrier sur place. Les notifications déjà envoyées restent inchangées — seules les notifications futures et non envoyées sont régénérées à partir des paramètres ci-dessous.",
+    legacyWarning: "Ce calendrier a été créé avant la prise en charge de la modification, ses champs de programmation et de destinataires n'ont donc pas pu être pré-remplis — ils affichent les valeurs par défaut. Veuillez les revérifier avant d'enregistrer.",
+  },
+
   smaat: {
     platformComparison: "comparaison de plateformes",
     whenToUse:          "quand utiliser chacune",
@@ -1062,6 +1071,7 @@ const fr: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← Calendrier",
     deleteSchedule:          "Supprimer le calendrier",
+    editSchedule:            "Modifier le calendrier",
     queueLabel:              "file planifiée",
     allSchedules:            "tous les calendriers",
     notifSchedule:           "calendrier de notifications",
@@ -1295,6 +1305,7 @@ const fr: DeepLoose<Messages> = {
     afterJoiningNote:       "Mettez tous les champs à 0 pour envoyer immédiatement lorsqu'un participant s'inscrit.",
     afterJoiningFutureNote: "\"Participants futurs\" a été activé automatiquement — c'est ce qui déclenche la notification lors de l'inscription de chaque nouveau participant.",
     submit:              "Planifier les notifications →",
+    submitEdit:          "Enregistrer les modifications",
     submitting:          "Planification…",
     mon: "Lun", tue: "Mar", wed: "Mer", thu: "Jeu", fri: "Ven", sat: "Sam", sun: "Dim",
     jan: "Jan", feb: "Fév", mar: "Mar", apr: "Avr", may: "Mai", jun: "Juin",

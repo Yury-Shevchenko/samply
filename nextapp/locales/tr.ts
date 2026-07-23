@@ -533,6 +533,7 @@ const tr: DeepLoose<Messages> = {
     addFirst:       "+ İlk programı ekle",
     viewQueueCard:  "kuyruğu görüntüle →",
     delete:         "sil",
+    edit:           "düzenle",
     configs:        "{n} yapılandırma",
     configsPlural:  "{n} yapılandırma",
     typeOneTime:    "tek seferlik",
@@ -957,6 +958,14 @@ const tr: DeepLoose<Messages> = {
     back:    "← Programlara geri dön",
   },
 
+  editSchedulePage: {
+    eyebrow:       "programı düzenle",
+    back:          "← Kuyruğa geri dön",
+    untitled:      "Başlıksız program",
+    scopeNote:     "Kaydetmek bu programı yerinde günceller. Zaten gönderilmiş bildirimler değişmeden kalır — yalnızca gelecekteki, henüz gönderilmemiş bildirimler aşağıdaki ayarlardan yeniden oluşturulur.",
+    legacyWarning: "Bu program düzenleme desteği eklenmeden önce oluşturuldu, bu nedenle zamanlama ve alıcı alanları önceden doldurulamadı — varsayılan değerleri gösteriyorlar. Lütfen kaydetmeden önce bunları yeniden kontrol edin.",
+  },
+
   smaat: {
     platformComparison: "platform karşılaştırması",
     whenToUse:          "her birini ne zaman kullanmalı",
@@ -1062,6 +1071,7 @@ const tr: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← Program",
     deleteSchedule:          "Programı sil",
+    editSchedule:            "Programı düzenle",
     queueLabel:              "zamanlanmış kuyruk",
     allSchedules:            "tüm programlar",
     notifSchedule:           "bildirim programı",
@@ -1291,6 +1301,7 @@ const tr: DeepLoose<Messages> = {
     sendAfter:           "Şundan sonra gönder",
     addReminder:         "Hatırlatıcı ekle",
     submit:              "Bildirimleri programla →",
+    submitEdit:          "Değişiklikleri kaydet",
     submitting:          "Programlanıyor…",
     mon: "Pzt", tue: "Sal", wed: "Çar", thu: "Per", fri: "Cum", sat: "Cmt", sun: "Paz",
     jan: "Oca", feb: "Şub", mar: "Mar", apr: "Nis", may: "May", jun: "Haz",

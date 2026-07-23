@@ -550,6 +550,7 @@ const it: DeepLoose<Messages> = {
     addFirst:       '+ Aggiungi la prima pianificazione',
     viewQueueCard:  'visualizza coda →',
     delete:         'elimina',
+    edit:           'modifica',
     configs:        '{n} config',
     configsPlural:  '{n} config',
     typeOneTime:    'una tantum',
@@ -974,6 +975,14 @@ const it: DeepLoose<Messages> = {
     back:    '← Torna alle pianificazioni',
   },
 
+  editSchedulePage: {
+    eyebrow:       'modifica pianificazione',
+    back:          '← Torna alla coda',
+    untitled:      'Pianificazione senza titolo',
+    scopeNote:     'Il salvataggio aggiorna questa pianificazione sul posto. Le notifiche già inviate rimangono invariate — solo le notifiche future non ancora inviate vengono rigenerate dalle impostazioni sottostanti.',
+    legacyWarning: 'Questa pianificazione è stata creata prima del supporto alla modifica, quindi i suoi campi di orario e destinatari non hanno potuto essere precompilati — mostrano i valori predefiniti. Ricontrollali prima di salvare.',
+  },
+
   smaat: {
     platformComparison: 'Confronto piattaforme',
     whenToUse:          'Quando usare ciascuna',
@@ -1079,6 +1088,7 @@ const it: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              '← Pianificazioni',
     deleteSchedule:          'Elimina pianificazione',
+    editSchedule:            'Modifica pianificazione',
     queueLabel:              'Coda di invio',
     allSchedules:            'Tutte le pianificazioni',
     notifSchedule:           'Pianificazione notifiche',
@@ -1318,6 +1328,7 @@ const it: DeepLoose<Messages> = {
     afterJoiningNote:       'Imposta tutti i campi a 0 per inviare immediatamente quando un partecipante si iscrive.',
     afterJoiningFutureNote: '"Partecipanti futuri" è stato abilitato automaticamente — questo fa scattare la notifica quando ogni nuovo partecipante si iscrive.',
     submit:              'Pianifica notifiche →',
+    submitEdit:          'Salva modifiche',
     submitting:          'Pianificazione…',
 
     mon: 'Lun', tue: 'Mar', wed: 'Mer', thu: 'Gio', fri: 'Ven', sat: 'Sab', sun: 'Dom',

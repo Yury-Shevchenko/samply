@@ -361,7 +361,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                 }}
                 className="hover:text-[var(--ink)] transition-colors"
               >
-                edit schedule
+                {t("scheduled.editSchedule")}
               </a>
               <DeleteScheduleButton
                 action={deleteScheduleAction}

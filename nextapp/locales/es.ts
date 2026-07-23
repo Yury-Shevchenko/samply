@@ -533,6 +533,7 @@ const es: DeepLoose<Messages> = {
     addFirst:       "+ Añadir primer calendario",
     viewQueueCard:  "ver cola →",
     delete:         "eliminar",
+    edit:           "editar",
     configs:        "{n} config",
     configsPlural:  "{n} configs",
     typeOneTime:    "única vez",
@@ -957,6 +958,14 @@ const es: DeepLoose<Messages> = {
     back:    "← Volver a calendarios",
   },
 
+  editSchedulePage: {
+    eyebrow:       "editar calendario",
+    back:          "← Volver a la cola",
+    untitled:      "Calendario sin título",
+    scopeNote:     "Al guardar se actualiza este calendario en su lugar. Las notificaciones ya enviadas permanecen sin cambios — solo las notificaciones futuras y no enviadas se regeneran a partir de la configuración siguiente.",
+    legacyWarning: "Este calendario se creó antes de que existiera la función de edición, por lo que sus campos de horario y destinatarios no se pudieron rellenar previamente — muestran valores predeterminados. Vuelve a comprobarlos antes de guardar.",
+  },
+
   smaat: {
     platformComparison: "comparación de plataformas",
     whenToUse:          "cuándo usar cada una",
@@ -1062,6 +1071,7 @@ const es: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← Calendario",
     deleteSchedule:          "Eliminar calendario",
+    editSchedule:            "Editar calendario",
     queueLabel:              "cola programada",
     allSchedules:            "todos los calendarios",
     notifSchedule:           "calendario de notificaciones",
@@ -1291,6 +1301,7 @@ const es: DeepLoose<Messages> = {
     sendAfter:           "Enviar después de",
     addReminder:         "Añadir recordatorio",
     submit:              "Programar notificaciones →",
+    submitEdit:          "Guardar cambios",
     submitting:          "Programando…",
     mon: "Lun", tue: "Mar", wed: "Mié", thu: "Jue", fri: "Vie", sat: "Sáb", sun: "Dom",
     jan: "Ene", feb: "Feb", mar: "Mar", apr: "Abr", may: "May", jun: "Jun",

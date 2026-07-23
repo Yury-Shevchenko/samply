@@ -533,6 +533,7 @@ const ar: DeepLoose<Messages> = {
     addFirst:       "+ إضافة الجدول الأول",
     viewQueueCard:  "عرض الطابور →",
     delete:         "حذف",
+    edit:           "تعديل",
     configs:        "{n} تكوين",
     configsPlural:  "{n} تكوينات",
     typeOneTime:    "مرة واحدة",
@@ -957,6 +958,14 @@ const ar: DeepLoose<Messages> = {
     back:    "← العودة إلى الجداول",
   },
 
+  editSchedulePage: {
+    eyebrow:       "تعديل الجدول",
+    back:          "← العودة إلى الطابور",
+    untitled:      "جدول بلا عنوان",
+    scopeNote:     "يؤدي الحفظ إلى تحديث هذا الجدول في مكانه. تبقى الإشعارات المُرسَلة بالفعل دون تغيير — ويُعاد إنشاء الإشعارات المستقبلية غير المُرسَلة فقط استنادًا إلى الإعدادات أدناه.",
+    legacyWarning: "أُنشئ هذا الجدول قبل دعم التعديل، لذلك تعذّر تعبئة حقول التوقيت والمستلمين مسبقًا — وهي تعرض القيم الافتراضية. يُرجى إعادة التحقق منها قبل الحفظ.",
+  },
+
   smaat: {
     platformComparison: "مقارنة المنصات",
     whenToUse:          "متى تستخدم كل واحدة",
@@ -1062,6 +1071,7 @@ const ar: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← الجدول",
     deleteSchedule:          "حذف الجدول",
+    editSchedule:            "تعديل الجدول",
     queueLabel:              "الطابور المجدول",
     allSchedules:            "جميع الجداول",
     notifSchedule:           "جدول الإشعارات",
@@ -1291,6 +1301,7 @@ const ar: DeepLoose<Messages> = {
     sendAfter:           "أرسل بعد",
     addReminder:         "إضافة تذكير",
     submit:              "جدولة الإشعارات →",
+    submitEdit:          "حفظ التغييرات",
     submitting:          "جارٍ الجدولة…",
     mon: "إث", tue: "ثل", wed: "أر", thu: "خم", fri: "جم", sat: "سب", sun: "أح",
     jan: "ينا", feb: "فبر", mar: "مار", apr: "أبر", may: "ماي", jun: "يون",
