@@ -350,16 +350,30 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
             {t("scheduled.breadcrumb")}
           </a>
           {deleteScheduleAction && (
-            <DeleteScheduleButton
-              action={deleteScheduleAction}
-              label={t("scheduled.deleteSchedule")}
-              style={{
-                fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".04em",
-                padding: "0.5rem 1.2rem", borderRadius: "9999px",
-                border: "1px solid rgba(214,90,48,.35)", background: "rgba(214,90,48,.06)",
-                color: "var(--coral)", cursor: "pointer",
-              }}
-            />
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+              <a
+                href={`/dashboard/${studyId}/schedule/${notificationId!}/edit`}
+                style={{
+                  fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".04em",
+                  padding: "0.5rem 1.2rem", borderRadius: "9999px",
+                  border: "1px solid var(--ink-20)", background: "var(--paper)",
+                  color: "var(--ink-60)", textDecoration: "none",
+                }}
+                className="hover:text-[var(--ink)] transition-colors"
+              >
+                edit schedule
+              </a>
+              <DeleteScheduleButton
+                action={deleteScheduleAction}
+                label={t("scheduled.deleteSchedule")}
+                style={{
+                  fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".04em",
+                  padding: "0.5rem 1.2rem", borderRadius: "9999px",
+                  border: "1px solid rgba(214,90,48,.35)", background: "rgba(214,90,48,.06)",
+                  color: "var(--coral)", cursor: "pointer",
+                }}
+              />
+            </div>
           )}
         </div>
 

@@ -6,6 +6,7 @@ import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import AgendaJob from "@/lib/models/agendaJob";
 import PendingNotification from "@/lib/models/pendingNotification";
+import { sanitizeSurveyUrl } from "@/lib/urlValidation";
 import mongoose from "mongoose";
 import type { Session } from "next-auth";
 
@@ -165,4 +166,81 @@ export async function bulkDeletePendingNotificationsAction(
     });
   }
   redirect(safeReturnUrl(returnPath, `/scheduled/${studyId}`));
+}
+
+interface ReminderInput { title: string; message: string; time: number }
+
+// Edit the CONTENT of an existing schedule (title / message / URL / link expiry /
+// reminders) in place — leaving its cadence, recipients and history untouched.
+// The config's content is copied onto each occurrence at create time, so we must
+// update both the config (in Project.notifications) and the still-future,
+// unsent, non-reminder occurrences. Sent/processing/past occurrences and
+// already-materialised reminder occurrences are deliberately left as-is.
+// Reminders live only on the config and are materialised at send time, so no
+// occurrence backfill is needed for them.
+export async function updateScheduleContentAction(
+  studyId: string,
+  notificationId: string,
+  formData: FormData,
+) {
+  await requireProjectAccess(studyId);
+  const oid = new mongoose.Types.ObjectId(studyId);
+
+  const title = ((formData.get("title") as string) ?? "").trim();
+  const message = ((formData.get("message") as string) ?? "").trim();
+  const url = sanitizeSurveyUrl(formData.get("url") as string);
+
+  const expireRaw = (formData.get("expireIn") as string) ?? "";
+  const expireNum = expireRaw ? Number(expireRaw) : NaN;
+  const expireIn = Number.isFinite(expireNum) && expireNum > 0 ? expireNum : null;
+
+  let reminders: ReminderInput[] = [];
+  try {
+    const parsed = JSON.parse((formData.get("reminders") as string) || "[]");
+    if (Array.isArray(parsed)) {
+      reminders = parsed
+        .filter((r) => r && typeof r === "object")
+        .map((r) => ({
+          title: String(r.title ?? ""),
+          message: String(r.message ?? ""),
+          time: Number.isFinite(Number(r.time)) ? Number(r.time) : 0,
+        }));
+    }
+  } catch {
+    reminders = [];
+  }
+
+  // Title and message are required — bail back to the queue on invalid input.
+  if (!title || !message) redirect(returnUrl(studyId, notificationId));
+
+  await Promise.all([
+    // Update the config element(s) sharing this id (multi-cron submissions share one id).
+    Project.updateOne(
+      { _id: oid, "notifications.id": notificationId },
+      {
+        $set: {
+          "notifications.$[c].title": title,
+          "notifications.$[c].message": message,
+          "notifications.$[c].url": url,
+          "notifications.$[c].expireIn": expireIn,
+          "notifications.$[c].reminders": reminders,
+        },
+      },
+      { arrayFilters: [{ "c.id": notificationId }] },
+    ),
+    // Update only future, unsent, non-reminder occurrences (race-safe: the send
+    // worker claims status:"pending" and flips to "processing" atomically).
+    PendingNotification.updateMany(
+      {
+        projectId: oid,
+        notificationConfigId: notificationId,
+        status: "pending",
+        scheduledFor: { $gt: new Date() },
+        isReminder: { $ne: true },
+      },
+      { $set: { title, message, url, expireIn } },
+    ),
+  ]);
+
+  redirect(returnUrl(studyId, notificationId));
 }
