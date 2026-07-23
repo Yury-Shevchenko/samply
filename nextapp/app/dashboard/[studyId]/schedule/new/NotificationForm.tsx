@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useT } from "@/app/components/TranslationProvider";
 import { SPEC_VERSION, type ScheduleSpec } from "@/lib/scheduleSpec";
+import { compileSpec, isInvalidRepeatDates } from "@/lib/compileSpec";
 
 interface Participant { id: string; username?: string }
 interface Group { id: string; name?: string }
@@ -24,8 +25,6 @@ const MONTH_VALUES   = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", 
 
 const now = new Date();
 const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
-
-function getRandomSec() { return Math.floor(Math.random() * 60); }
 
 // ── Shared style tokens ────────────────────────────────────────────────────────
 
@@ -391,86 +390,6 @@ export default function NotificationForm({ projectId, participants, groups, pres
     setSelectedMonthDays((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]);
   }
 
-  function buildTzIso(year: number, month: number, day: number, hour: number, minute: number): string {
-    const fmt = new Intl.DateTimeFormat("en-US", { timeZone: timezone, timeZoneName: "shortOffset" });
-    const candidate = new Date(Date.UTC(year, month, day, hour, minute));
-    const parts = fmt.formatToParts(candidate);
-    const offsetPart = parts.find((p) => p.type === "timeZoneName")?.value ?? "UTC+0";
-    const match = offsetPart.match(/([+-])(\d+)(?::(\d+))?/);
-    let offsetMs = 0;
-    if (match) {
-      const sign = match[1] === "+" ? 1 : -1;
-      offsetMs = sign * (parseInt(match[2]) * 60 + (parseInt(match[3] ?? "0"))) * 60000;
-    }
-    return new Date(candidate.getTime() - offsetMs).toISOString();
-  }
-
-  function addDuration(base: Date, d: { days?: number; hours?: number; minutes?: number }): Date {
-    const ms = ((d.days ?? 0) * 86400 + (d.hours ?? 0) * 3600 + (d.minutes ?? 0) * 60) * 1000;
-    return new Date(base.getTime() + ms);
-  }
-
-  function buildDayMonthCron(): string {
-    // "Every N days" is emitted as the open-ended step "*/N". The server anchors
-    // it to each recipient's actual window start (registration + offset) via
-    // patchStartDay — baking a fixed day-of-month here would wrongly anchor the
-    // cadence to the schedule's creation date instead.
-    if (dateType === "every") return everyNDays === 1 ? "*" : `*/${everyNDays}`;
-    if (dateType === "spec-week") return "*";
-    if (dateType === "spec-month") return selectedMonthDays.join(",") || "*";
-    return "*";
-  }
-  function buildDayWeekCron(): string {
-    return dateType === "spec-week" ? (selectedWeekDays.join(",") || "*") : "*";
-  }
-  function buildMonthCron(): string {
-    return monthType === "every" ? "*" : (selectedMonths.join(",") || "*");
-  }
-  function buildCronSchedules(): string[] {
-    return timepoints.map((tp) => `${getRandomSec()} ${tp.minute} ${tp.hour} ${buildDayMonthCron()} ${buildMonthCron()} ${buildDayWeekCron()}`);
-  }
-  function buildCronIntervals(): Array<{ from: string; to: string; number: number; distance: number }> {
-    const d = buildDayMonthCron(), w = buildDayWeekCron(), m = buildMonthCron();
-    return timeWindows.map((w2) => ({
-      from: `${getRandomSec()} ${w2.minuteStart} ${w2.hourStart} ${d} ${m} ${w}`,
-      to: `${getRandomSec()} ${w2.minuteEnd} ${w2.hourEnd} ${d} ${m} ${w}`,
-      number: w2.number,
-      distance: w2.distance,
-    }));
-  }
-
-  function buildStartingStrategy() {
-    if (startType === "specific") {
-      return { start: "specific", startMoment: buildTzIso(startYear, startMonth - 1, startDay, startHour, startMinute), startAfter: "", startEvent: "", startNextDay: "" };
-    }
-    if (startType === "event") {
-      const startMoment = startEvent === "now" ? addDuration(new Date(), { days: startAfterDays, hours: startAfterHours, minutes: startAfterMinutes }).toISOString() : "";
-      return { start: "event", startMoment, startAfter: { days: startAfterDays, hours: startAfterHours, minutes: startAfterMinutes }, startEvent, startNextDay: "" };
-    }
-    const startMoment = startNextEvent === "now"
-      ? (startNextDay == 1
-          ? addDuration(new Date(), { minutes: 1 }).toISOString()
-          : new Date(new Date().setHours(0, 0, 0, 0) + (startNextDay - 1) * 86400000 + Math.floor(Math.random() * 10) * 60000).toISOString())
-      : "";
-    return { start: "next", startMoment, startAfter: "", startEvent: startNextEvent, startNextDay };
-  }
-
-  function buildStoppingStrategy() {
-    if (stopType === "specific") {
-      return { stop: "specific", stopMoment: buildTzIso(stopYear, stopMonth - 1, stopDay, stopHour, stopMinute), stopAfter: "", stopEvent: "", stopNextDay: "" };
-    }
-    if (stopType === "event") {
-      const stopMoment = stopEvent === "now" ? addDuration(new Date(), { days: stopAfterDays, hours: stopAfterHours, minutes: stopAfterMinutes }).toISOString() : "";
-      return { stop: "event", stopMoment, stopAfter: { days: stopAfterDays, hours: stopAfterHours, minutes: stopAfterMinutes }, stopEvent, stopNextDay: "" };
-    }
-    const stopMoment = stopNextEvent === "now"
-      ? (stopNextDay == 1
-          ? addDuration(new Date(), { minutes: 1 }).toISOString()
-          : new Date(new Date().setHours(0, 0, 0, 0) + (stopNextDay - 1) * 86400000 + Math.floor(Math.random() * 10) * 60000).toISOString())
-      : "";
-    return { stop: "next", stopMoment, stopAfter: "", stopEvent: stopNextEvent, stopNextDay };
-  }
-
   async function handleSubmit() {
     if (!title.trim()) { alert(t("notificationForm.alertTitle")); return; }
     if (!message.trim()) { alert(t("notificationForm.alertMessage")); return; }
@@ -517,55 +436,17 @@ export default function NotificationForm({ projectId, participants, groups, pres
       stopAfterDays, stopAfterHours, stopAfterMinutes, stopEvent, stopNextDay, stopNextEvent,
     };
 
-    const commonFields = { projectId, title, message, url: url.trim(), timezone, useParticipantTimezone, expireIn, reminders: reminderList, scheduleInFuture: includeFuture, participants: participantsList, groups: groupsList, yokedDesign: includeGroups ? yokedDesign : false, spec };
+    // "repeat" cadence with "specific" one-off dates is not a valid combination.
+    if (isInvalidRepeatDates(spec)) { alert(t("notificationForm.alertRepeatDates")); return; }
 
     setSubmitting(true);
     setStatus(null);
 
     try {
-      let endpoint = "";
-      let payload: Record<string, unknown> = {};
-
-      if (timeType === "enrollment") {
-        endpoint = "/createenrollmentnotification";
-        payload = { ...commonFields, delay: { days: enrollmentDays, hours: enrollmentHours, minutes: enrollmentMinutes } };
-
-      } else if (timeType === "specific" && dateType === "specific") {
-        endpoint = "/createschedulenotification";
-        payload = { ...commonFields, timepoints, dates: specificDates };
-
-      } else if (timeType === "repeat") {
-        if (dateType === "specific") { alert(t("notificationForm.alertRepeatDates")); setSubmitting(false); return; }
-        const s = buildStartingStrategy(), e = buildStoppingStrategy();
-        const isRegBased = s.startEvent === "registration" || e.stopEvent === "registration";
-        const crons = [`${getRandomSec()} */${repeatEvery} * ${buildDayMonthCron()} ${buildMonthCron()} ${buildDayWeekCron()}`];
-        endpoint = isRegBased ? "/createindividualnotification" : "/createintervalnotification";
-        payload = { ...commonFields, interval: crons, int_start: s, int_end: e, randomize: false, participantId: participantsList };
-
-      } else if (timeType === "interval" && dateType === "specific") {
-        const fixedIntervals = timeWindows.map((w) =>
-          specificDates.map((d) => ({
-            from: buildTzIso(d.year, d.month - 1, d.day, w.hourStart, w.minuteStart),
-            to: buildTzIso(d.year, d.month - 1, d.day, w.hourEnd, w.minuteEnd),
-            number: w.number, distance: w.distance,
-          }))
-        ).flat();
-        endpoint = "/createfixedindividualnotification";
-        payload = { ...commonFields, intervals: fixedIntervals, participantId: participantsList };
-
-      } else {
-        const s = buildStartingStrategy(), e = buildStoppingStrategy();
-        const isRegBased = s.startEvent === "registration" || e.stopEvent === "registration";
-        if (timeType === "specific") {
-          const crons = buildCronSchedules();
-          endpoint = isRegBased ? "/createindividualnotification" : "/createintervalnotification";
-          payload = { ...commonFields, interval: crons, int_start: s, int_end: e, randomize: false, participantId: participantsList };
-        } else {
-          const cronWindows = buildCronIntervals();
-          endpoint = "/createintervalnotification";
-          payload = { ...commonFields, randomize: true, intervalWindows: cronWindows, int_start: s, int_end: e, participantId: participantsList };
-        }
-      }
+      // Compile the spec into the endpoint + timing/recipient payload; merge in
+      // the content fields (which are not part of the spec) and the raw spec.
+      const { endpoint, fields } = compileSpec(spec);
+      const payload = { projectId, title, message, url: url.trim(), expireIn, reminders: reminderList, spec, ...fields };
 
       const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = await res.json() as { warning?: string; redirect?: string; error?: string };
