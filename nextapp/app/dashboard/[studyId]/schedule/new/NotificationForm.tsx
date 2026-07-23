@@ -12,11 +12,22 @@ interface TimeWindow { hourStart: number; minuteStart: number; hourEnd: number; 
 interface SpecificDate { day: number; month: number; year: number }
 interface Reminder { title: string; message: string; days: number; hours: number; minutes: number }
 
+export interface EditInitial {
+  configId: string;
+  spec?: ScheduleSpec | null;
+  title: string;
+  message: string;
+  url?: string;
+  expireIn?: number | null;
+  reminders?: Array<{ title: string; message: string; time: number }>;
+}
+
 interface Props {
   projectId: string;
   participants: Participant[];
   groups: Group[];
   preselectedParticipantId?: string;
+  initial?: EditInitial;
 }
 
 const TIMEZONES = Intl.supportedValuesOf("timeZone");
@@ -25,6 +36,11 @@ const MONTH_VALUES   = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", 
 
 const now = new Date();
 const twoWeeksFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+function msToDHM(ms: number): { days: number; hours: number; minutes: number } {
+  const totalMin = Math.max(0, Math.round(ms / 60000));
+  return { days: Math.floor(totalMin / 1440), hours: Math.floor((totalMin % 1440) / 60), minutes: totalMin % 60 };
+}
 
 // ── Shared style tokens ────────────────────────────────────────────────────────
 
@@ -276,7 +292,8 @@ function DatetimeStrategyPicker({
 
 // ── Main form ──────────────────────────────────────────────────────────────────
 
-export default function NotificationForm({ projectId, participants, groups, preselectedParticipantId }: Props) {
+export default function NotificationForm({ projectId, participants, groups, preselectedParticipantId, initial }: Props) {
+  const S = initial?.spec ?? undefined;
   const { t } = useT();
 
   const WEEKDAYS = [
@@ -294,78 +311,80 @@ export default function NotificationForm({ projectId, participants, groups, pres
     { value: "NOV", label: t("notificationForm.nov") }, { value: "DEC", label: t("notificationForm.dec") },
   ];
 
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [url, setUrl] = useState("https://");
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [message, setMessage] = useState(initial?.message ?? "");
+  const [url, setUrl] = useState(initial?.url ?? "https://");
   const [urlHelpOpen, setUrlHelpOpen] = useState(false);
 
-  const [timezone, setTimezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone);
-  const [useParticipantTimezone, setUseParticipantTimezone] = useState(false);
+  const [timezone, setTimezone] = useState(() => S?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [useParticipantTimezone, setUseParticipantTimezone] = useState(S?.useParticipantTimezone ?? false);
 
-  const [includeCurrent, setIncludeCurrent] = useState(!!preselectedParticipantId);
-  const [includeFuture, setIncludeFuture] = useState(false);
-  const [includeGroups, setIncludeGroups] = useState(false);
-  const [allCurrentParticipants, setAllCurrentParticipants] = useState(!preselectedParticipantId);
-  const [selectedParticipants, setSelectedParticipants] = useState<string[]>(preselectedParticipantId ? [preselectedParticipantId] : []);
-  const [allCurrentGroups, setAllCurrentGroups] = useState(true);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const [yokedDesign, setYokedDesign] = useState(false);
+  const [includeCurrent, setIncludeCurrent] = useState(S?.includeCurrent ?? !!preselectedParticipantId);
+  const [includeFuture, setIncludeFuture] = useState(S?.includeFuture ?? false);
+  const [includeGroups, setIncludeGroups] = useState(S?.includeGroups ?? false);
+  const [allCurrentParticipants, setAllCurrentParticipants] = useState(S?.allCurrentParticipants ?? !preselectedParticipantId);
+  const [selectedParticipants, setSelectedParticipants] = useState<string[]>(S?.selectedParticipants ?? (preselectedParticipantId ? [preselectedParticipantId] : []));
+  const [allCurrentGroups, setAllCurrentGroups] = useState(S?.allCurrentGroups ?? true);
+  const [selectedGroups, setSelectedGroups] = useState<string[]>(S?.selectedGroups ?? []);
+  const [yokedDesign, setYokedDesign] = useState(S?.yokedDesign ?? false);
 
-  const [timeType, setTimeType] = useState<"specific" | "interval" | "repeat" | "enrollment">("specific");
-  const [enrollmentDays, setEnrollmentDays] = useState(0);
-  const [enrollmentHours, setEnrollmentHours] = useState(0);
-  const [enrollmentMinutes, setEnrollmentMinutes] = useState(0);
+  const [timeType, setTimeType] = useState<"specific" | "interval" | "repeat" | "enrollment">(S?.timeType ?? "specific");
+  const [enrollmentDays, setEnrollmentDays] = useState(S?.enrollmentDays ?? 0);
+  const [enrollmentHours, setEnrollmentHours] = useState(S?.enrollmentHours ?? 0);
+  const [enrollmentMinutes, setEnrollmentMinutes] = useState(S?.enrollmentMinutes ?? 0);
 
   // Auto-enable future participants when enrollment type is selected
   useEffect(() => {
     if (timeType === "enrollment") setIncludeFuture(true);
   }, [timeType]);
-  const [timepoints, setTimepoints] = useState<Timepoint[]>([{ hour: 12, minute: 0 }]);
-  const [timeWindows, setTimeWindows] = useState<TimeWindow[]>([{ hourStart: 9, minuteStart: 0, hourEnd: 21, minuteEnd: 0, distance: 2700000, number: 5 }]);
-  const [repeatEvery, setRepeatEvery] = useState(30);
+  const [timepoints, setTimepoints] = useState<Timepoint[]>(S?.timepoints ?? [{ hour: 12, minute: 0 }]);
+  const [timeWindows, setTimeWindows] = useState<TimeWindow[]>(S?.timeWindows ?? [{ hourStart: 9, minuteStart: 0, hourEnd: 21, minuteEnd: 0, distance: 2700000, number: 5 }]);
+  const [repeatEvery, setRepeatEvery] = useState(S?.repeatEvery ?? 30);
 
-  const [dateType, setDateType] = useState<"specific" | "every" | "spec-week" | "spec-month">("specific");
-  const [specificDates, setSpecificDates] = useState<SpecificDate[]>([{ day: now.getDate(), month: now.getMonth() + 1, year: now.getFullYear() }]);
-  const [everyNDays, setEveryNDays] = useState(1);
-  const [selectedWeekDays, setSelectedWeekDays] = useState<string[]>([]);
-  const [selectedMonthDays, setSelectedMonthDays] = useState<number[]>([]);
+  const [dateType, setDateType] = useState<"specific" | "every" | "spec-week" | "spec-month">(S?.dateType ?? "specific");
+  const [specificDates, setSpecificDates] = useState<SpecificDate[]>(S?.specificDates ?? [{ day: now.getDate(), month: now.getMonth() + 1, year: now.getFullYear() }]);
+  const [everyNDays, setEveryNDays] = useState(S?.everyNDays ?? 1);
+  const [selectedWeekDays, setSelectedWeekDays] = useState<string[]>(S?.selectedWeekDays ?? []);
+  const [selectedMonthDays, setSelectedMonthDays] = useState<number[]>(S?.selectedMonthDays ?? []);
 
-  const [monthType, setMonthType] = useState<"every" | "specific">("every");
-  const [selectedMonths, setSelectedMonths] = useState<string[]>([]);
+  const [monthType, setMonthType] = useState<"every" | "specific">(S?.monthType ?? "every");
+  const [selectedMonths, setSelectedMonths] = useState<string[]>(S?.selectedMonths ?? []);
 
-  const [startType, setStartType] = useState<"specific" | "event" | "next">("specific");
-  const [startHour, setStartHour] = useState(now.getHours());
-  const [startMinute, setStartMinute] = useState(now.getMinutes());
-  const [startDay, setStartDay] = useState(now.getDate());
-  const [startMonth, setStartMonth] = useState(now.getMonth() + 1);
-  const [startYear, setStartYear] = useState(now.getFullYear());
-  const [startAfterDays, setStartAfterDays] = useState(0);
-  const [startAfterHours, setStartAfterHours] = useState(0);
-  const [startAfterMinutes, setStartAfterMinutes] = useState(0);
-  const [startEvent, setStartEvent] = useState<"registration" | "now">("registration");
-  const [startNextDay, setStartNextDay] = useState(1);
-  const [startNextEvent, setStartNextEvent] = useState<"registration" | "now">("registration");
+  const [startType, setStartType] = useState<"specific" | "event" | "next">(S?.startType ?? "specific");
+  const [startHour, setStartHour] = useState(S?.startHour ?? now.getHours());
+  const [startMinute, setStartMinute] = useState(S?.startMinute ?? now.getMinutes());
+  const [startDay, setStartDay] = useState(S?.startDay ?? now.getDate());
+  const [startMonth, setStartMonth] = useState(S?.startMonth ?? now.getMonth() + 1);
+  const [startYear, setStartYear] = useState(S?.startYear ?? now.getFullYear());
+  const [startAfterDays, setStartAfterDays] = useState(S?.startAfterDays ?? 0);
+  const [startAfterHours, setStartAfterHours] = useState(S?.startAfterHours ?? 0);
+  const [startAfterMinutes, setStartAfterMinutes] = useState(S?.startAfterMinutes ?? 0);
+  const [startEvent, setStartEvent] = useState<"registration" | "now">(S?.startEvent ?? "registration");
+  const [startNextDay, setStartNextDay] = useState(S?.startNextDay ?? 1);
+  const [startNextEvent, setStartNextEvent] = useState<"registration" | "now">(S?.startNextEvent ?? "registration");
 
-  const [stopType, setStopType] = useState<"specific" | "event" | "next">("specific");
-  const [stopHour, setStopHour] = useState(now.getHours());
-  const [stopMinute, setStopMinute] = useState(now.getMinutes());
-  const [stopDay, setStopDay] = useState(twoWeeksFromNow.getDate());
-  const [stopMonth, setStopMonth] = useState(twoWeeksFromNow.getMonth() + 1);
-  const [stopYear, setStopYear] = useState(twoWeeksFromNow.getFullYear());
-  const [stopAfterDays, setStopAfterDays] = useState(0);
-  const [stopAfterHours, setStopAfterHours] = useState(0);
-  const [stopAfterMinutes, setStopAfterMinutes] = useState(0);
-  const [stopEvent, setStopEvent] = useState<"registration" | "now">("registration");
-  const [stopNextDay, setStopNextDay] = useState(1);
-  const [stopNextEvent, setStopNextEvent] = useState<"registration" | "now">("registration");
+  const [stopType, setStopType] = useState<"specific" | "event" | "next">(S?.stopType ?? "specific");
+  const [stopHour, setStopHour] = useState(S?.stopHour ?? now.getHours());
+  const [stopMinute, setStopMinute] = useState(S?.stopMinute ?? now.getMinutes());
+  const [stopDay, setStopDay] = useState(S?.stopDay ?? twoWeeksFromNow.getDate());
+  const [stopMonth, setStopMonth] = useState(S?.stopMonth ?? twoWeeksFromNow.getMonth() + 1);
+  const [stopYear, setStopYear] = useState(S?.stopYear ?? twoWeeksFromNow.getFullYear());
+  const [stopAfterDays, setStopAfterDays] = useState(S?.stopAfterDays ?? 0);
+  const [stopAfterHours, setStopAfterHours] = useState(S?.stopAfterHours ?? 0);
+  const [stopAfterMinutes, setStopAfterMinutes] = useState(S?.stopAfterMinutes ?? 0);
+  const [stopEvent, setStopEvent] = useState<"registration" | "now">(S?.stopEvent ?? "registration");
+  const [stopNextDay, setStopNextDay] = useState(S?.stopNextDay ?? 1);
+  const [stopNextEvent, setStopNextEvent] = useState<"registration" | "now">(S?.stopNextEvent ?? "registration");
 
-  const [expireType, setExpireType] = useState<"no" | "yes">("no");
-  const [expireDays, setExpireDays] = useState(0);
-  const [expireHours, setExpireHours] = useState(0);
-  const [expireMinutes, setExpireMinutes] = useState(0);
+  const initExpire = initial?.expireIn && initial.expireIn > 0 ? msToDHM(initial.expireIn) : null;
+  const [expireType, setExpireType] = useState<"no" | "yes">(initExpire ? "yes" : "no");
+  const [expireDays, setExpireDays] = useState(initExpire?.days ?? 0);
+  const [expireHours, setExpireHours] = useState(initExpire?.hours ?? 0);
+  const [expireMinutes, setExpireMinutes] = useState(initExpire?.minutes ?? 0);
 
-  const [reminderType, setReminderType] = useState<"no" | "yes">("no");
-  const [reminders, setReminders] = useState<Reminder[]>([{ title: "", message: "", days: 0, hours: 0, minutes: 0 }]);
+  const initReminders: Reminder[] = (initial?.reminders ?? []).map((r) => ({ title: r.title, message: r.message, ...msToDHM(r.time ?? 0) }));
+  const [reminderType, setReminderType] = useState<"no" | "yes">(initReminders.length ? "yes" : "no");
+  const [reminders, setReminders] = useState<Reminder[]>(initReminders.length ? initReminders : [{ title: "", message: "", days: 0, hours: 0, minutes: 0 }]);
 
   const [status, setStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -446,13 +465,18 @@ export default function NotificationForm({ projectId, participants, groups, pres
       // Compile the spec into the endpoint + timing/recipient payload; merge in
       // the content fields (which are not part of the spec) and the raw spec.
       const { endpoint, fields } = compileSpec(spec);
-      const payload = { projectId, title, message, url: url.trim(), expireIn, reminders: reminderList, spec, ...fields };
+      // editConfigId (edit mode) tells the create route to reuse the existing
+      // config id: it replaces the config in place and regenerates only future,
+      // unsent occurrences instead of creating a brand-new schedule.
+      const payload = { projectId, title, message, url: url.trim(), expireIn, reminders: reminderList, spec, editConfigId: initial?.configId, ...fields };
 
       const res = await fetch(endpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const data = await res.json() as { warning?: string; redirect?: string; error?: string };
       if (!res.ok) { setStatus(`Error: ${data.error ?? t("notificationForm.alertError")}`); return; }
       if (data.warning) alert(data.warning);
-      window.location.href = `/dashboard/${projectId}/schedule`;
+      window.location.href = initial?.configId
+        ? `/scheduled/${projectId}?notificationId=${initial.configId}`
+        : `/dashboard/${projectId}/schedule`;
     } catch (err) {
       setStatus(`Error: ${String(err)}`);
     } finally {
@@ -935,7 +959,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
           alignSelf: "flex-start",
         }}
         className={submitting ? "" : "hover:opacity-90 transition-opacity"}>
-        {submitting ? t("notificationForm.submitting") : t("notificationForm.submit")}
+        {submitting ? t("notificationForm.submitting") : (initial ? "Save changes" : t("notificationForm.submit"))}
       </button>
     </div>
   );

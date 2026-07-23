@@ -80,7 +80,18 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  const id = nanoid(8);
+  const editConfigId = (body as unknown as { editConfigId?: string }).editConfigId;
+  const id = editConfigId || nanoid(8);
+  if (editConfigId) {
+    // Edit mode: replace the config in place and clear its future, unsent
+    // occurrences so the generation below re-creates them. Sent/processing/past
+    // occurrences are preserved.
+    const PN = (await import("@/lib/models/pendingNotification")).default;
+    await Promise.all([
+      Project.updateOne({ _id: oid }, { $pull: { notifications: { id: editConfigId } } }),
+      PN.deleteMany({ projectId: oid, notificationConfigId: editConfigId, status: "pending", scheduledFor: { $gt: new Date() } }),
+    ]);
+  }
   const counter = { inserted: 0, skipped: 0 };
 
   const baseDoc = {
