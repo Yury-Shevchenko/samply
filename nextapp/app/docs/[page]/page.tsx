@@ -91,7 +91,7 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
               ) : currentPage === "irb" ? (
                 <IrbContent locale={locale} />
               ) : currentPage === "dpa" ? (
-                <DpaContent />
+                <DpaContent locale={locale} />
               ) : (
                 <p style={{ color: "var(--ink-60)" }}>Content coming soon.</p>
               )}
