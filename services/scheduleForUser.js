@@ -1,30 +1,7 @@
 const momentTz = require("moment-timezone");
 const Cron = require("cron-converter");
 const { scheduleBatch } = require("./notificationScheduler");
-
-function toFivePart(cronExpr) {
-  const parts = cronExpr.trim().split(/\s+/);
-  return parts.length >= 6 ? parts.slice(1).join(" ") : cronExpr;
-}
-
-function expandCronBetween(cronExpr, from, to, timezone) {
-  const fivePart = toFivePart(cronExpr);
-  const inst = new Cron({ timezone: timezone || "UTC" });
-  try {
-    inst.fromString(fivePart);
-  } catch (e) {
-    return [];
-  }
-  const endMs = new Date(to).getTime();
-  const schedule = inst.schedule(new Date(new Date(from).getTime() - 1));
-  const dates = [];
-  let next = schedule.next();
-  while (next && next.valueOf() <= endMs) {
-    dates.push(new Date(next.valueOf()).toISOString());
-    next = schedule.next();
-  }
-  return dates;
-}
+const { expandScheduleBetween, expandCronBetween, toFivePart } = require("./scheduleExpand");
 
 function getNumberBetween(min, max) {
   return Math.round(Math.random() * (max - min) + min);
@@ -212,7 +189,7 @@ async function scheduleForUser(projectOid, user, groupId, configs) {
       const start = resolveStart(cfg, user.created, timezone);
       const stop = resolveStop(cfg, user.created, timezone);
       if (!start || !stop) continue;
-      const dates = expandCronBetween(patchStartDay(cfg.interval, start, timezone), start, stop, timezone);
+      const dates = expandScheduleBetween(cfg.interval, start, stop, timezone);
       const r = await scheduleBatch(
         dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) }))
       );

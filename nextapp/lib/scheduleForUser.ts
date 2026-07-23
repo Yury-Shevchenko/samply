@@ -1,7 +1,7 @@
 import momentTz from "moment-timezone";
 import type mongoose from "mongoose";
 import {
-  scheduleBatch, expandCronBetween, computeRandomWindowDocs,
+  scheduleBatch, expandScheduleBetween, computeRandomWindowDocs,
 } from "./scheduling";
 
 export interface StoredConfig {
@@ -143,7 +143,7 @@ export async function scheduleForUser(
       const start = resolveStart(cfg, user.created, timezone);
       const stop = resolveStop(cfg, user.created, timezone);
       if (!start || !stop) continue;
-      const dates = expandCronBetween(patchStartDay(cfg.interval, start, timezone), start, stop, timezone);
+      const dates = expandScheduleBetween(cfg.interval, start, stop, timezone);
       const r = await scheduleBatch(
         dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) }))
       );
