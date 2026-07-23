@@ -14,7 +14,7 @@
   "browserslist": "last 2 versions",
   "dependencies": {
     "agenda": "^5.0.0",
-    "axios": "0.18.1",
+    "axios": "0.33.0",
     "bcrypt": "^6.0.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "1.17.1",
