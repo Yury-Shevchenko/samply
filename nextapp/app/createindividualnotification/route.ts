@@ -142,7 +142,7 @@ export async function POST(req: NextRequest) {
     start_after: int_start?.startAfter, stop_after: int_end?.stopAfter,
     start_next: int_start?.startNextDay, stop_next: int_end?.stopNextDay,
     start_event: int_start?.startEvent, stop_event: int_end?.stopEvent,
-    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, created: new Date(),
+    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, spec: (body as unknown as { spec?: unknown }).spec ?? null, created: new Date(),
     interval: iv,
   }));
 

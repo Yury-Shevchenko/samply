@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useT } from "@/app/components/TranslationProvider";
+import { SPEC_VERSION, type ScheduleSpec } from "@/lib/scheduleSpec";
 
 interface Participant { id: string; username?: string }
 interface Group { id: string; name?: string }
@@ -498,7 +499,25 @@ export default function NotificationForm({ projectId, participants, groups, pres
       ? reminders.map((r) => ({ title: r.title, message: r.message, time: ((r.days * 24 * 60 + r.hours * 60 + r.minutes) * 60000) }))
       : [];
 
-    const commonFields = { projectId, title, message, url: url.trim(), timezone, useParticipantTimezone, expireIn, reminders: reminderList, scheduleInFuture: includeFuture, participants: participantsList, groups: groupsList, yokedDesign: includeGroups ? yokedDesign : false };
+    // Capture the researcher's original form inputs so the schedule can be
+    // re-hydrated for editing (and re-compiled) later. Only the hard-to-reverse
+    // cadence/recipient/timezone state is stored — content/expiry/reminders
+    // round-trip from plain config fields.
+    const spec: ScheduleSpec = {
+      specVersion: SPEC_VERSION,
+      timezone, useParticipantTimezone,
+      includeCurrent, includeFuture, includeGroups,
+      allCurrentParticipants, selectedParticipants, allCurrentGroups, selectedGroups, yokedDesign,
+      timeType, timepoints, timeWindows, repeatEvery, enrollmentDays, enrollmentHours, enrollmentMinutes,
+      dateType, specificDates, everyNDays, selectedWeekDays, selectedMonthDays,
+      monthType, selectedMonths,
+      startType, startHour, startMinute, startDay, startMonth, startYear,
+      startAfterDays, startAfterHours, startAfterMinutes, startEvent, startNextDay, startNextEvent,
+      stopType, stopHour, stopMinute, stopDay, stopMonth, stopYear,
+      stopAfterDays, stopAfterHours, stopAfterMinutes, stopEvent, stopNextDay, stopNextEvent,
+    };
+
+    const commonFields = { projectId, title, message, url: url.trim(), timezone, useParticipantTimezone, expireIn, reminders: reminderList, scheduleInFuture: includeFuture, participants: participantsList, groups: groupsList, yokedDesign: includeGroups ? yokedDesign : false, spec };
 
     setSubmitting(true);
     setStatus(null);

@@ -191,6 +191,7 @@ export async function POST(req: NextRequest) {
     expireIn,
     useParticipantTimezone,
     reminders,
+    spec: (body as unknown as { spec?: unknown }).spec ?? null,
     created: new Date(),
   };
 
