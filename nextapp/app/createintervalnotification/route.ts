@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import { nanoid } from "nanoid";
 import momentTz from "moment-timezone";
 import {
-  scheduleBatch, expandCronBetween, computeRandomWindowDocs,
+  scheduleBatch, expandScheduleBetween, computeRandomWindowDocs,
   BatchLimitError, type PendingNotificationDoc
 } from "@/lib/scheduling";
 import cronstrue from "cronstrue";
@@ -259,7 +259,7 @@ export async function POST(req: NextRequest) {
             const gEnd = resolveStop(int_end, latestUser.created, timezone) || int_endResolved;
             if (!gStart || !gEnd) continue;
             for (const iv of interval) {
-              const dates = expandCronBetween(patchStartDay(iv, gStart, timezone), gStart, gEnd, timezone);
+              const dates = expandScheduleBetween(iv, gStart, gEnd, timezone);
               const r = await scheduleBatch(dates.map((d) => ({
                 ...baseDoc, scheduledFor: new Date(d), recipientGroupIds: [group], recipientUserIds: [],
               })));
@@ -271,7 +271,7 @@ export async function POST(req: NextRequest) {
               const uEnd = resolveStop(int_end, member.created, timezone) || int_endResolved;
               if (!uStart || !uEnd) continue;
               for (const iv of interval) {
-                const dates = expandCronBetween(patchStartDay(iv, uStart, timezone), uStart, uEnd, timezone);
+                const dates = expandScheduleBetween(iv, uStart, uEnd, timezone);
                 const r = await scheduleBatch(dates.map((d) => ({
                   ...baseDoc, scheduledFor: new Date(d), recipientUserIds: [member.id], recipientGroupIds: [],
                 })));
@@ -289,7 +289,7 @@ export async function POST(req: NextRequest) {
           const uEnd = resolveStop(int_end, user.created, timezone) || int_endResolved;
           if (!uStart || !uEnd) continue;
           for (const iv of interval) {
-            const dates = expandCronBetween(patchStartDay(iv, uStart, timezone), uStart, uEnd, timezone);
+            const dates = expandScheduleBetween(iv, uStart, uEnd, timezone);
             const r = await scheduleBatch(dates.map((d) => ({
               ...baseDoc, scheduledFor: new Date(d), recipientUserIds: [user.id], recipientGroupIds: [],
             })));
