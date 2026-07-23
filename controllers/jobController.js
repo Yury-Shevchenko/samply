@@ -315,8 +315,11 @@ agenda.on("ready", function () {
 
   // define the admin job to update notifications in the beginning of each month
   agenda.define("admin_job", (job, done) => {
-    rescheduleRepeatJobs(done);
-    done();
+    // Sweep dead one-time jobs first, then re-establish repeat schedules (existing behavior).
+    purgeCompletedAgendaJobs().finally(() => {
+      rescheduleRepeatJobs();
+      done();
+    });
   });
 
   agenda.start();
@@ -2242,6 +2245,25 @@ const rescheduleRepeatJobs = async () => {
       const numRemoved = await agenda.cancel({ _id: job._id });
     }
   });
+};
+
+// Purge completed one-time Agenda jobs. Agenda never removes a non-repeating job
+// after it runs — it lingers forever with nextRunAt=null — so without this monthly
+// sweep the `Job` collection grows without bound (tens of thousands of dead records
+// have accumulated since the migration to the PendingNotification pipeline). Only
+// matches jobs with no repeat schedule, no pending future run, and not currently
+// locked/executing, so live one-time, pending, and recurring jobs are never touched.
+const purgeCompletedAgendaJobs = async () => {
+  try {
+    const removed = await agenda.cancel({
+      repeatInterval: null, // matches null or missing → non-repeating only
+      nextRunAt: null, // already ran (or never scheduled), nothing pending
+      lockedAt: null, // not mid-execution
+    });
+    console.log(`admin_job: purged ${removed} completed one-time Agenda jobs`);
+  } catch (err) {
+    console.error("admin_job: purgeCompletedAgendaJobs failed", err);
+  }
 };
 
 exports.manageNotifications = async (req, res) => {
