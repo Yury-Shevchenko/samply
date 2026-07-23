@@ -1,0 +1,37 @@
+# Dependabot configuration.
+#
+# Purpose of this file is narrow: keep the current "security updates only"
+# behavior (those are enabled in repo Settings and need no config), while
+# adding an ignore rule so Dependabot stops proposing uuid major bumps.
+#
+# WHY uuid is pinned to the 9.x line:
+#   uuid >= 10 trends toward ESM-only builds (14.x has no CommonJS entry).
+#   This app is CommonJS and production runs Node 20.11.1, which cannot
+#   require() an ES module (ERR_REQUIRE_ESM) — uuid 14 took prod down once.
+#   Revisit once production is on Node >= 20.19 (supports require(esm)).
+#
+# open-pull-requests-limit: 0 disables *version-update* PRs (so this file
+# does not start a flood of routine bumps). Dependabot *security* updates
+# are NOT subject to that limit and keep running; they honor the ignore
+# conditions below.
+
+version: 2
+updates:
+  # Express app (repo root)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
+    ignore:
+      # Stay on uuid 9.x (last CommonJS line). Blocks 10.x and above for
+      # both version and security updates.
+      - dependency-name: "uuid"
+        versions: [">=10.0.0"]
+
+  # Next.js app
+  - package-ecosystem: "npm"
+    directory: "/nextapp"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 0
