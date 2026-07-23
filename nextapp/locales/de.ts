@@ -535,6 +535,7 @@ const de: DeepLoose<Messages> = {
     addFirst:       "+ Ersten Zeitplan hinzufügen",
     viewQueueCard:  "Warteschlange →",
     delete:         "löschen",
+    edit:           "bearbeiten",
     configs:        "{n} Konfiguration",
     configsPlural:  "{n} Konfigurationen",
     typeOneTime:    "einmalig",
@@ -959,6 +960,14 @@ const de: DeepLoose<Messages> = {
     back:    "← Zurück zu den Zeitplänen",
   },
 
+  editSchedulePage: {
+    eyebrow:       "Zeitplan bearbeiten",
+    back:          "← Zurück zur Warteschlange",
+    untitled:      "Unbenannter Zeitplan",
+    scopeNote:     "Beim Speichern wird dieser Zeitplan direkt aktualisiert. Bereits gesendete Benachrichtigungen bleiben unverändert – nur zukünftige, noch nicht gesendete Benachrichtigungen werden aus den folgenden Einstellungen neu erstellt.",
+    legacyWarning: "Dieser Zeitplan wurde vor der Bearbeitungsunterstützung erstellt, daher konnten die Zeit- und Empfängerfelder nicht vorausgefüllt werden – sie zeigen Standardwerte. Bitte überprüfen Sie sie vor dem Speichern erneut.",
+  },
+
   smaat: {
     platformComparison: "Plattformvergleich",
     whenToUse:          "wann welche wählen",
@@ -1064,6 +1073,7 @@ const de: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← Zeitplan",
     deleteSchedule:          "Zeitplan löschen",
+    editSchedule:            "Zeitplan bearbeiten",
     queueLabel:              "Warteschlange",
     allSchedules:            "alle Zeitpläne",
     notifSchedule:           "Benachrichtigungszeitplan",
@@ -1292,6 +1302,7 @@ const de: DeepLoose<Messages> = {
     afterJoiningNote:       "Alle Felder auf 0 setzen, um die Benachrichtigung sofort beim Beitritt zu senden.",
     afterJoiningFutureNote: "\"Zukünftige Teilnehmer\" wurde automatisch aktiviert – das bewirkt, dass die Benachrichtigung beim Beitritt jedes neuen Teilnehmers ausgelöst wird.",
     submit:              "Benachrichtigungen planen →",
+    submitEdit:          "Änderungen speichern",
     submitting:          "Wird geplant…",
     mon: "Mo", tue: "Di", wed: "Mi", thu: "Do", fri: "Fr", sat: "Sa", sun: "So",
     jan: "Jan", feb: "Feb", mar: "Mär", apr: "Apr", may: "Mai", jun: "Jun",

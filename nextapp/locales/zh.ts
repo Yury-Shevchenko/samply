@@ -550,6 +550,7 @@ const zh: DeepLoose<Messages> = {
     addFirst:       '+ 添加第一个计划',
     viewQueueCard:  '查看队列 →',
     delete:         '删除',
+    edit:           '编辑',
     configs:        '{n} 个配置',
     configsPlural:  '{n} 个配置',
     typeOneTime:    '一次性',
@@ -974,6 +975,14 @@ const zh: DeepLoose<Messages> = {
     back:    '← 返回计划列表',
   },
 
+  editSchedulePage: {
+    eyebrow:       '编辑计划',
+    back:          '← 返回队列',
+    untitled:      '无标题日程表',
+    scopeNote:     '保存将就地更新此日程表。已发送的通知保持不变——只有未来尚未发送的通知会根据下方设置重新生成。',
+    legacyWarning: '此日程表创建于支持编辑功能之前，因此其时间和收件人字段无法预填——它们显示为默认值。请在保存前重新检查这些字段。',
+  },
+
   smaat: {
     platformComparison: '平台对比',
     whenToUse:          '各自适用场景',
@@ -1079,6 +1088,7 @@ const zh: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              '← 日程表',
     deleteSchedule:          '删除日程表',
+    editSchedule:            '编辑日程表',
     queueLabel:              '发送队列',
     allSchedules:            '所有日程表',
     notifSchedule:           '通知日程表',
@@ -1318,6 +1328,7 @@ const zh: DeepLoose<Messages> = {
     afterJoiningNote:       '将所有字段设为0，以在参与者加入时立即发送。',
     afterJoiningFutureNote: '已自动启用「未来参与者」——这使通知在每位新参与者加入时触发。',
     submit:              '安排通知 →',
+    submitEdit:          '保存更改',
     submitting:          '安排中…',
 
     mon: '周一', tue: '周二', wed: '周三', thu: '周四', fri: '周五', sat: '周六', sun: '周日',
