@@ -7,10 +7,10 @@
 module.exports = {
   apps: [
     {
-      // Distinct from the old PM2 entry "samply" so rollback is just
-      // `pm2 stop samply-combined && pm2 start samply`. After Stage 3c
-      // stability, you can rename to "samply" (or just leave as-is).
-      name: "samply-combined",
+      // Canonical PM2 process name. Must match the live process (and the
+      // `pm2 restart samply` in deploy.sh) so subsequent deploys and the
+      // boot-time resurrect target the same entry.
+      name: "samply",
       cwd: __dirname,
       script: "server.js",
       instances: 1,
