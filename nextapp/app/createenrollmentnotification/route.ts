@@ -60,7 +60,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ warning: `Project limit reached (${existingPending.toLocaleString()}/${MAX_PROJECT_PENDING.toLocaleString()}).`, redirect: `/dashboard/${projectId}/schedule` });
   }
 
-  const id = nanoid(8);
+  const editConfigId = (body as unknown as { editConfigId?: string }).editConfigId;
+  const id = editConfigId || nanoid(8);
+  if (editConfigId) {
+    const PN = (await import("@/lib/models/pendingNotification")).default;
+    await Promise.all([
+      Project.updateOne({ _id: oid }, { $pull: { notifications: { id: editConfigId } } }),
+      PN.deleteMany({ projectId: oid, notificationConfigId: editConfigId, status: "pending", scheduledFor: { $gt: new Date() } }),
+    ]);
+  }
   const delayDays = delay?.days ?? 0;
   const delayHours = delay?.hours ?? 0;
   const delayMinutes = delay?.minutes ?? 0;
