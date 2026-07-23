@@ -148,11 +148,18 @@ function NotifCard({ n, studyId, index, deleteAction, t }: { n: NotificationConf
       {/* Footer */}
       <div style={{ height: "0.1rem", backgroundImage: "radial-gradient(circle, var(--ink-40) 1px, transparent 1.2px)", backgroundSize: "0.8rem 0.1rem", backgroundRepeat: "repeat-x", opacity: 0.3 }} />
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1.4rem" }}>
         <a href={`/scheduled/${studyId}?notificationId=${n.id}`}
           style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
           className="hover:opacity-70 transition-opacity">
           {t("schedule.viewQueueCard")}
         </a>
+        <a href={`/dashboard/${studyId}/schedule/${n.id}/edit`}
+          style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
+          className="hover:opacity-70 transition-opacity">
+          edit
+        </a>
+        </div>
         <DeleteScheduleButton
           action={deleteAction}
           label={t("schedule.delete")}

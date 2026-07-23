@@ -136,6 +136,19 @@ function NotifRow({
         >
           view queue →
         </a>
+        <a
+          href={`/dashboard/${projectId}/schedule/${n.id}/edit`}
+          style={{
+            fontFamily: "var(--font-mono)",
+            fontSize: "1rem",
+            letterSpacing: ".04em",
+            color: "var(--ink-60)",
+            textDecoration: "none",
+          }}
+          className="hover:text-[var(--ink)] transition-colors"
+        >
+          edit
+        </a>
         <DeleteScheduleButton
           action={deleteOne}
           label="delete"
