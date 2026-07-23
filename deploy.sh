@@ -32,9 +32,9 @@ if [ "$1" = "--first" ]; then
   echo "If pm2 isn't set to start on boot yet, run:  pm2 startup"
 else
   echo "==> Restarting pm2 process..."
-  pm2 restart samply-combined --update-env
+  pm2 restart samply --update-env
 fi
 
 echo ""
-echo "Done. Combined server runs on port 3000 (pm2 name: samply-combined)."
-echo "Status: pm2 status      Logs: pm2 logs samply-combined"
+echo "Done. Combined server runs on port 3000 (pm2 name: samply)."
+echo "Status: pm2 status      Logs: pm2 logs samply"
