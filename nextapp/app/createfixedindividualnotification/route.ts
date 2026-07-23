@@ -90,7 +90,8 @@ export async function POST(req: NextRequest) {
     allCurrentParticipants: participantId !== null && participantId !== undefined && participantId.length === 0,
     allCurrentGroups: groups !== null && groups !== undefined && groups.length === 0,
     name: "One-time", windowInterval: interval,
-    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, created: new Date(),
+    scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign,
+    spec: (body as unknown as { spec?: unknown }).spec ?? null, created: new Date(),
   }));
 
   try {

@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import AgendaJob, { type IAgendaJob } from "@/lib/models/agendaJob";
 import PendingNotification, { type IPendingNotification } from "@/lib/models/pendingNotification";
+import type { ScheduleSpec } from "@/lib/scheduleSpec";
 import mongoose from "mongoose";
 
 export interface NotificationConfig {
@@ -40,6 +41,9 @@ export interface NotificationConfig {
   delay?: { days?: number; hours?: number; minutes?: number };
   expireIn?: number;
   reminders?: Array<{ title: string; message: string; time: number }>;
+  // Original form inputs, captured at create time so the schedule can be
+  // re-hydrated for editing / re-compiled later (see lib/scheduleSpec.ts).
+  spec?: ScheduleSpec | null;
 }
 
 export async function fetchScheduledNotifications(projectId: string): Promise<NotificationConfig[]> {

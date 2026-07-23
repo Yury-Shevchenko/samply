@@ -82,6 +82,7 @@ export async function POST(req: NextRequest) {
     timezone,
     useParticipantTimezone: !!useParticipantTimezone,
     reminders: reminders ?? [],
+    spec: (body as unknown as { spec?: unknown }).spec ?? null,
     created: new Date(),
   };
 

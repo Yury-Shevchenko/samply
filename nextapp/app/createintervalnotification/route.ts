@@ -178,7 +178,7 @@ export async function POST(req: NextRequest) {
           start_next: int_start?.startNextDay, stop_next: int_end?.stopNextDay,
           start_event: int_start?.startEvent, stop_event: int_end?.stopEvent,
           scheduleInFuture, readable: { from: window.from && safeHuman(window.from), to: window.to && safeHuman(window.to) },
-          timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, created: new Date(),
+          timezone, expireIn, useParticipantTimezone, reminders, yokedDesign: !!yokedDesign, spec: (body as unknown as { spec?: unknown }).spec ?? null, created: new Date(),
         });
 
         if (groupIds) {
@@ -244,7 +244,7 @@ export async function POST(req: NextRequest) {
           start_next: int_start?.startNextDay, stop_next: int_end?.stopNextDay,
           start_event: int_start?.startEvent, stop_event: int_end?.stopEvent,
           scheduleInFuture, timezone, expireIn, useParticipantTimezone, reminders,
-          interval: iv, readable: { interval: safeHuman(iv) }, yokedDesign: !!yokedDesign, created: new Date(),
+          interval: iv, readable: { interval: safeHuman(iv) }, yokedDesign: !!yokedDesign, spec: (body as unknown as { spec?: unknown }).spec ?? null, created: new Date(),
         });
       }
 
