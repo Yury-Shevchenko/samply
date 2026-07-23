@@ -25,7 +25,7 @@
     "cron-converter": "^1.0.0",
     "cronstrue": "^1.94.0",
     "dat.gui": "^0.7.1",
-    "dompurify": "3.4.11",
+    "dompurify": "3.4.12",
     "dotenv": "4.0.0",
     "es6-promisify": "5.0.0",
     "escape-string-regexp": "^4.0.0",
