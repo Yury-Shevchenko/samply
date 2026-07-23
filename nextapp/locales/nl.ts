@@ -546,6 +546,7 @@ const nl: DeepLoose<Messages> = {
     addFirst:       "+ Eerste schema toevoegen",
     viewQueueCard:  "wachtrij bekijken →",
     delete:         "verwijderen",
+    edit:           "bewerken",
     configs:        "{n} configuratie",
     configsPlural:  "{n} configuraties",
     typeOneTime:    "eenmalig",
@@ -970,6 +971,14 @@ const nl: DeepLoose<Messages> = {
     back:    "← Terug naar schema's",
   },
 
+  editSchedulePage: {
+    eyebrow:       "schema bewerken",
+    back:          "← Terug naar wachtrij",
+    untitled:      "Naamloos schema",
+    scopeNote:     "Opslaan werkt dit schema ter plekke bij. Reeds verzonden meldingen blijven ongewijzigd — alleen toekomstige, nog niet verzonden meldingen worden opnieuw gegenereerd op basis van de onderstaande instellingen.",
+    legacyWarning: "Dit schema is aangemaakt voordat bewerken werd ondersteund, dus de tijd- en ontvangersvelden konden niet vooraf worden ingevuld — ze tonen standaardwaarden. Controleer ze opnieuw voordat u opslaat.",
+  },
+
   smaat: {
     platformComparison: "platformvergelijking",
     whenToUse:          "wanneer welke kiezen",
@@ -1075,6 +1084,7 @@ const nl: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← Schema",
     deleteSchedule:          "Schema verwijderen",
+    editSchedule:            "Schema bewerken",
     queueLabel:              "geplande wachtrij",
     allSchedules:            "alle schema's",
     notifSchedule:           "meldingsschema",
@@ -1303,6 +1313,7 @@ const nl: DeepLoose<Messages> = {
     afterJoiningNote:       "Zet alle velden op 0 om direct te verzenden wanneer een deelnemer deelneemt.",
     afterJoiningFutureNote: "\"Toekomstige deelnemers\" is automatisch ingeschakeld — dit zorgt dat de melding wordt verzonden wanneer elke nieuwe deelnemer deelneemt.",
     submit:              "Meldingen plannen →",
+    submitEdit:          "Wijzigingen opslaan",
     submitting:          "Plannen…",
     mon: "Ma", tue: "Di", wed: "Wo", thu: "Do", fri: "Vr", sat: "Za", sun: "Zo",
     jan: "Jan", feb: "Feb", mar: "Mrt", apr: "Apr", may: "Mei", jun: "Jun",

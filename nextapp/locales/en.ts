@@ -792,6 +792,7 @@ const en = {
     addFirst:       "+ Add first schedule",
     viewQueueCard:  "view queue →",
     delete:         "delete",
+    edit:           "edit",
     /** {n} = config count, singular */
     configs:        "{n} config",
     /** {n} = config count, plural */
@@ -1330,6 +1331,17 @@ const en = {
     back:    "← Back to schedules",
   },
 
+  // ─── Edit schedule page ──────────────────────────────────────────────────────
+  // @page    /dashboard/[studyId]/schedule/[notificationId]/edit
+  // @context Re-uses the create form to edit an existing schedule.
+  editSchedulePage: {
+    eyebrow:       "edit schedule",
+    back:          "← Back to queue",
+    untitled:      "Untitled schedule",
+    scopeNote:     "Saving updates this schedule in place. Notifications already sent stay unchanged — only future, unsent notifications are re-generated from the settings below.",
+    legacyWarning: "This schedule was created before edit support, so its timing and recipient fields could not be pre-filled — they show defaults. Please re-check them before saving.",
+  },
+
   // ─── Samply vs SMAAT comparison page ─────────────────────────────────────────
   // @page    /smaat
   smaat: {
@@ -1457,6 +1469,7 @@ const en = {
   scheduled: {
     breadcrumb:              "← Schedule",
     deleteSchedule:          "Delete schedule",
+    editSchedule:            "Edit schedule",
     queueLabel:              "scheduled queue",
     allSchedules:            "all schedules",
     notifSchedule:           "notification schedule",
@@ -1749,6 +1762,7 @@ const en = {
 
     // Submit button
     submit:              "Schedule notifications →",
+    submitEdit:          "Save changes",
     submitting:          "Scheduling…",
 
     // Weekday abbreviations (display labels only; cron values stay English)

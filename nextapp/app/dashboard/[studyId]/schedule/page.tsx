@@ -157,7 +157,7 @@ function NotifCard({ n, studyId, index, deleteAction, t }: { n: NotificationConf
         <a href={`/dashboard/${studyId}/schedule/${n.id}/edit`}
           style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
           className="hover:opacity-70 transition-opacity">
-          edit
+          {t("schedule.edit")}
         </a>
         </div>
         <DeleteScheduleButton

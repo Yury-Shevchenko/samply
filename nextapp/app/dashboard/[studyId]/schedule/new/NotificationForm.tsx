@@ -959,7 +959,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
           alignSelf: "flex-start",
         }}
         className={submitting ? "" : "hover:opacity-90 transition-opacity"}>
-        {submitting ? t("notificationForm.submitting") : (initial ? "Save changes" : t("notificationForm.submit"))}
+        {submitting ? t("notificationForm.submitting") : (initial ? t("notificationForm.submitEdit") : t("notificationForm.submit"))}
       </button>
     </div>
   );

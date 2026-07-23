@@ -550,6 +550,7 @@ const ko: DeepLoose<Messages> = {
     addFirst:       '+ 첫 번째 예약 추가',
     viewQueueCard:  '대기열 보기 →',
     delete:         '삭제',
+    edit:           '편집',
     configs:        '{n}개 구성',
     configsPlural:  '{n}개 구성',
     typeOneTime:    '일회성',
@@ -974,6 +975,14 @@ const ko: DeepLoose<Messages> = {
     back:    '← 예약 목록으로',
   },
 
+  editSchedulePage: {
+    eyebrow:       '예약 편집',
+    back:          '← 대기열로',
+    untitled:      '제목 없는 예약',
+    scopeNote:     '저장하면 이 예약이 그 자리에서 업데이트됩니다. 이미 발송된 알림은 변경되지 않으며 — 아직 발송되지 않은 향후 알림만 아래 설정에 따라 다시 생성됩니다.',
+    legacyWarning: '이 예약은 편집 기능이 지원되기 전에 생성되어 타이밍 및 수신자 필드를 미리 채울 수 없었습니다 — 기본값이 표시됩니다. 저장하기 전에 다시 확인해 주세요.',
+  },
+
   smaat: {
     platformComparison: '플랫폼 비교',
     whenToUse:          '각각의 사용 시점',
@@ -1079,6 +1088,7 @@ const ko: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              '← 예약',
     deleteSchedule:          '예약 삭제',
+    editSchedule:            '예약 편집',
     queueLabel:              '발송 대기열',
     allSchedules:            '모든 예약',
     notifSchedule:           '알림 예약',
@@ -1318,6 +1328,7 @@ const ko: DeepLoose<Messages> = {
     afterJoiningNote:       '모든 필드를 0으로 설정하면 참가자가 참여할 때 즉시 전송됩니다.',
     afterJoiningFutureNote: '"미래 참가자"가 자동으로 활성화되었습니다 — 이것이 새 참가자가 참여할 때 알림이 전송되는 이유입니다.',
     submit:              '알림 예약 →',
+    submitEdit:          '변경사항 저장',
     submitting:          '예약 중…',
 
     mon: '월', tue: '화', wed: '수', thu: '목', fri: '금', sat: '토', sun: '일',

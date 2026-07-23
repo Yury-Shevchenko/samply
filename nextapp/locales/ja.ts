@@ -533,6 +533,7 @@ const ja: DeepLoose<Messages> = {
     addFirst:       "+ 最初のスケジュールを追加",
     viewQueueCard:  "キューを表示 →",
     delete:         "削除",
+    edit:           "編集",
     configs:        "{n} 設定",
     configsPlural:  "{n} 設定",
     typeOneTime:    "1回限り",
@@ -957,6 +958,14 @@ const ja: DeepLoose<Messages> = {
     back:    "← スケジュールに戻る",
   },
 
+  editSchedulePage: {
+    eyebrow:       "スケジュールを編集",
+    back:          "← キューに戻る",
+    untitled:      "無題のスケジュール",
+    scopeNote:     "保存すると、このスケジュールがその場で更新されます。すでに送信された通知は変更されません。今後の未送信の通知のみ、以下の設定から再生成されます。",
+    legacyWarning: "このスケジュールは編集機能に対応する前に作成されたため、タイミングと受信者のフィールドを事前入力できませんでした。これらにはデフォルト値が表示されています。保存する前に再度ご確認ください。",
+  },
+
   smaat: {
     platformComparison: "プラットフォーム比較",
     whenToUse:          "それぞれをいつ使うか",
@@ -1062,6 +1071,7 @@ const ja: DeepLoose<Messages> = {
   scheduled: {
     breadcrumb:              "← スケジュール",
     deleteSchedule:          "スケジュールを削除",
+    editSchedule:            "スケジュールを編集",
     queueLabel:              "スケジュール済みキュー",
     allSchedules:            "すべてのスケジュール",
     notifSchedule:           "通知スケジュール",
@@ -1291,6 +1301,7 @@ const ja: DeepLoose<Messages> = {
     sendAfter:           "後に送信",
     addReminder:         "リマインダーを追加",
     submit:              "通知をスケジュール →",
+    submitEdit:          "変更を保存",
     submitting:          "スケジュール中…",
     mon: "月", tue: "火", wed: "水", thu: "木", fri: "金", sat: "土", sun: "日",
     jan: "1月", feb: "2月", mar: "3月", apr: "4月", may: "5月", jun: "6月",
