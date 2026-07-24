@@ -45,6 +45,13 @@ router.post(
 // result save (study completion flow)
 router.post("/save", catchErrors(resultController.saveIncrementalResults));
 
+// Survey-tool completion webhook (no auth — the message id is the shared
+// secret). The matching GET renders the Next.js confirmation page.
+router.post(
+  "/studies/:study/done/:messageid",
+  catchErrors(jobController.registerCompletionWithPost)
+);
+
 // public study API (mobile)
 router.get("/api/studies", projectController.getPublicStudiesAPI);
 router.get("/api/study/:id", projectController.getPublicStudy);

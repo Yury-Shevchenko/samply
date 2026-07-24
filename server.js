@@ -86,6 +86,11 @@ function isExpressPath(url, method, headers) {
   // charge.succeeded → Receipt). Distinct from Next.js /api/stripe/webhook,
   // which handles donations. Must stay on Express.
   if (p === "/payment/webhook") return true;
+  // Survey-tool completion webhook: POST /studies/:slug/done/:messageid. The
+  // matching GET renders the Next.js confirmation page, so only the POST is
+  // handed to Express. External webhooks never carry a next-action header, and
+  // the Next.js done page has no Server Action, so no collision to guard.
+  if (method === "POST" && /^\/studies\/[^/]+\/done\/[^/]+\/?$/.test(p)) return true;
   // Auth/account backends the Next.js app POSTs to server-side (register,
   // password reset, email confirmation). The matching GET pages (reset/confirm
   // forms) live in Next.js, so only POSTs are routed to Express here.

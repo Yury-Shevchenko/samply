@@ -136,9 +136,9 @@ export default async function ApprovalPage({
           {t("approval.submitBody1", { appName: "Samply Research" }).split("Samply Research")[1]}
         </p>
         <p style={PROSE}>
-          {t("approval.submitBody2", { not: "" }).split("{not}")[0]}
+          {t("approval.submitBody2").split("{not}")[0]}
           <strong>{t("approval.submitBodyNot")}</strong>
-          {t("approval.submitBody2", { not: "" }).split("{not}")[1]}
+          {t("approval.submitBody2").split("{not}")[1]}
         </p>
 
         <div

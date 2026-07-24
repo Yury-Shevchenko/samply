@@ -15,7 +15,7 @@ const nanoid = customAlphabet(
 );
 const webhookController = require("./webhookController");
 const consent = require("../handlers/consent");
-const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByFinid, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
+const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
 const { scheduleForUser } = require("../services/scheduleForUser");
 
 const MAX_PROJECT_PENDING = 50_000;
@@ -2337,70 +2337,70 @@ exports.updateTokenInStudy = async (req, res) => {
   }
 };
 
-// record completion of a survey/task and cancel scheduled reminders
+// Record completion of a survey/task and cancel its pending reminders.
+// Mirrors the Next.js completion page (studies/[slug]/done/[messageId]) so the
+// GET redirect and the POST webhook behave identically.
 async function registerCompletion({ study, messageid }) {
   const project = await Project.findOne(
     { slug: study },
-    {
-      _id: 1,
-      name: 1,
-      description: 1,
-      created: 1,
-      image: 1,
-      completionMessage: 1,
-    }
+    { _id: 1, name: 1, completionMessage: 1, image: 1 }
   );
+  if (!project) return { project: null, result: null, alreadyCompleted: false };
+
   const result = await Result.findOne(
-    { messageId: messageid, project: project?._id },
-    { finid: 1 }
+    { messageId: messageid, project: project._id },
+    { finid: 1, events: 1 }
+  );
+  if (!result) return { project, result: null, alreadyCompleted: false };
+
+  const alreadyCompleted = (result.events || []).some(
+    (e) => e.status === "completed"
   );
 
-  let numJobsRemoved = 0;
-
-  if (project && result) {
-    const { finid } = result;
-
-    // cancel the job (legacy Agenda jobs + new PendingNotification reminders)
-    numJobsRemoved = await agenda.cancel(
-      {
-        "data.projectid": project._id,
-        "data.scheduleid": finid,
-      },
-      (err, numRemoved) => {
-        console.log({ err });
-      }
-    );
-    await cancelByFinid(project._id, finid);
-
-    // log the completion of the survey
-    // update the record with completion event (using messageId which is data.id)
-    await Result.findOneAndUpdate(
-      { messageId: messageid },
-      {
-        ["$addToSet"]: {
-          events: { status: "completed", created: Date.now() },
+  if (!alreadyCompleted) {
+    await Promise.all([
+      // Cancel only the pending/processing reminder rows for this send — the
+      // same filter the Next.js page uses (isReminder: true), so non-reminder
+      // sends and already-dispatched rows are left untouched.
+      PendingNotification.updateMany(
+        {
+          projectId: project._id,
+          finid: result.finid,
+          isReminder: true,
+          status: { $in: ["pending", "processing"] },
         },
-      },
-      { upsert: true, new: true }
-    );
+        { $set: { status: "cancelled" } }
+      ),
+      Result.findOneAndUpdate(
+        { messageId: messageid },
+        { $addToSet: { events: { status: "completed", created: Date.now() } } }
+      ),
+    ]);
   }
-  return { project, result, numJobsRemoved };
+
+  return { project, result, alreadyCompleted };
 }
 
+// GET completion is served by the Next.js page (studies/[slug]/done/[messageId]).
+// This Express handler is retained as a fallback only and is not mounted.
 exports.registerCompletionWithGet = async (req, res) => {
-  const { project, result, numJobsRemoved } = await registerCompletion({
+  const { project, result } = await registerCompletion({
     study: req.params.study,
     messageid: req.params.messageid,
   });
-  res.render("confirmation", { project, result, numJobsRemoved });
+  res.render("confirmation", { project, result });
 };
 
+// Silent completion webhook for survey tools (no auth — the message id is the
+// shared secret). Returns 400 when no matching result record exists for the
+// given study + message id, 200 once completion is recorded. Idempotent: a
+// repeat POST for an already-completed send also returns 200.
 exports.registerCompletionWithPost = async (req, res) => {
-  const numJobsRemoved = await registerCompletion({
+  const { project, result } = await registerCompletion({
     study: req.params.study,
     messageid: req.params.messageid,
   });
-  if (numJobsRemoved < 1) {
+  if (!project || !result) {
     res.status(400).send();
   } else {
     res.status(200).send();
