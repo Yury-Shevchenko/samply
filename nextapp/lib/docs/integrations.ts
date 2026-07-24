@@ -5,7 +5,7 @@
  * Samply-specific tasks a researcher must wire up:
  *   (A) capture the Samply URL placeholders into the tool's dataset, and
  *   (B) register completion by redirecting to Samply's
- *       /studies/<slug>/done/<MESSAGE_ID> endpoint at the end of the survey.
+ *       /studies/<study-code>/done/<MESSAGE_ID> endpoint at the end of the survey.
  *
  * Content here was researched and adversarially verified against each
  * platform's official documentation (see `sources`). The data-driven
@@ -42,6 +42,13 @@ export interface Integration {
   /** Optional prominent warning about a completion-flow limitation. */
   completionWarning?: string;
 
+  /**
+   * Optional tool-specific note on registering completion as a server-side POST
+   * (webhook) instead of the browser redirect. The generic POST mechanics are
+   * rendered for every tool; this adds what THIS tool can/can't do natively.
+   */
+  postWebhookNote?: string;
+
   reservedParamWarning?: string;
   caveats: string[];
   sources: string[];
@@ -57,7 +64,7 @@ export const INTEGRATIONS: Integration[] = [
     planNote: "The end-of-survey redirect is not available on free Qualtrics accounts — it needs a licensed/institutional account.",
     confidence: "high",
     exampleStartUrl: "https://<your-org>.qualtrics.com/jfe/form/SV_xxxx?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%",
-    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-slug>/done/${e://Field/msg}",
+    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-code>/done/${e://Field/msg}",
     urlParamMechanism: "Embedded Data in the Survey Flow, left unassigned so Qualtrics fills each field from the matching query-string key.",
     urlParamSteps: [
       "Open the Survey Flow (Survey tab → Survey Flow), click \"Add a New Element Here\" and choose Embedded Data.",
@@ -69,9 +76,10 @@ export const INTEGRATIONS: Integration[] = [
     completionSteps: [
       "In the Survey Flow (or Survey Options) open an End of Survey element, click \"Customize…\" and check \"Override Survey Options\".",
       "Select \"Redirect to a URL\".",
-      "Enter the Samply completion URL with the captured message id piped in: https://samply.uni-konstanz.de/studies/<study-slug>/done/${e://Field/msg} (use whatever field name holds %MESSAGE_ID%).",
+      "Enter the Samply completion URL with the captured message id piped in: https://samply.uni-konstanz.de/studies/<study-code>/done/${e://Field/msg} (use whatever field name holds %MESSAGE_ID%).",
       "Optionally use ${e://Field/msg?format=urlencode} to be safe, then save and publish. Test with a real Samply link end-to-end.",
     ],
+    postWebhookNote: "Qualtrics can also fire this POST itself instead of redirecting: build a Workflow (Workflows tab → started by a completed survey response) with a Web Service task that POSTs the completion URL, piping the msg embedded-data field into the path.",
     reservedParamWarning: "Avoid Q_-prefixed names (Q_Language, Q_TotalDuration, …) and other built-ins (RID/rid, SID, EndDate, IPAddress). Field names are case-sensitive and must match the URL keys exactly.",
     caveats: [
       "The message id sits in the URL path; Samply's %MESSAGE_ID% is a plain 15-char ID, so it is URL-safe, but ${e://Field/msg?format=urlencode} is the cautious choice.",
@@ -90,7 +98,7 @@ export const INTEGRATIONS: Integration[] = [
     supportsExternalRedirect: true,
     confidence: "high",
     exampleStartUrl: "https://www.soscisurvey.de/<project>/?r=%MESSAGE_ID%&u_sid=%SAMPLY_ID%&u_code=%PARTICIPANT_CODE%",
-    exampleCompletionUrl: "redirect('https://samply.uni-konstanz.de/studies/<study-slug>/done/%reference%', false);",
+    exampleCompletionUrl: "redirect('https://samply.uni-konstanz.de/studies/<study-code>/done/%reference%', false);",
     urlParamMechanism: "The reserved r parameter is auto-stored in the built-in REF variable; other custom u_ parameters are captured with a \"Device and Transmitted Variables\" question on the first page.",
     urlParamSteps: [
       "Send the message id as the reserved parameter r (e.g. ?r=%MESSAGE_ID%). SoSci automatically stores r in the built-in REF column — no setup needed.",
@@ -101,13 +109,14 @@ export const INTEGRATIONS: Integration[] = [
     completionMechanism: "A \"PHP code\" element placed alone on the final page calling redirect(url, false), which marks the interview FINISHED and redirects.",
     completionSteps: [
       "Add a final questionnaire page containing ONLY a \"PHP code\" element (commands after redirect() are ignored).",
-      "Build the redirect with SoSci's %reference% placeholder, which resolves to the stored REF value: redirect('https://samply.uni-konstanz.de/studies/<study-slug>/done/%reference%', false);",
+      "Build the redirect with SoSci's %reference% placeholder, which resolves to the stored REF value: redirect('https://samply.uni-konstanz.de/studies/<study-code>/done/%reference%', false);",
       "Keep the second argument false so SoSci marks the dataset complete before sending the participant to Samply.",
-      "Test a full interview from a real Samply link and confirm it lands on /studies/<slug>/done/<message-id>.",
+      "Test a full interview from a real Samply link and confirm it lands on /studies/<study-code>/done/<message-id>.",
     ],
+    postWebhookNote: "SoSci has no dedicated webhook, but because the final page runs PHP you can POST server-side instead of (or before) redirecting — e.g. a cURL call to the same URL built with %reference%. Most studies simply use the redirect above.",
     reservedParamWarning: "r is reserved (auto-stored in REF) — that is exactly what we use for the message id, and %reference% reads it back. Custom parameter names must start with u (e.g. u_sid). readGET() only reads on the first page.",
     caveats: [
-      "If you instead capture the id into your own variable, inject it with PHP instead of %reference%, e.g. redirect('https://samply.uni-konstanz.de/studies/<study-slug>/done/'.value('IV01'), false);",
+      "If you instead capture the id into your own variable, inject it with PHP instead of %reference%, e.g. redirect('https://samply.uni-konstanz.de/studies/<study-code>/done/'.value('IV01'), false);",
       "No SoSci plan/tier restriction applies — redirect() and URL-parameter capture are standard features.",
     ],
     sources: [
@@ -125,7 +134,7 @@ export const INTEGRATIONS: Integration[] = [
     supportsExternalRedirect: true,
     confidence: "high",
     exampleStartUrl: "https://<your-limesurvey>/index.php/<surveyID>?msg=%MESSAGE_ID%&pid=%SAMPLY_ID%&code=%PARTICIPANT_CODE%",
-    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-slug>/done/{PASSTHRU:msg}",
+    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-code>/done/{PASSTHRU:msg}",
     urlParamMechanism: "\"Panel integration\" (Survey menu → Panel integration → Add URL parameter), each parameter mapped to a Target question so it is saved into the response and export.",
     urlParamSteps: [
       "For each Samply parameter, first add a free-text question to hold it — type \"Sort text\" (Short free text) or \"Multiple texts\" — with a clear code such as samply_msg; optionally hide it.",
@@ -136,10 +145,11 @@ export const INTEGRATIONS: Integration[] = [
     completionMechanism: "The End URL (Survey text elements) with the {PASSTHRU:msg} placeholder, plus \"automatically load the end URL\" enabled in Presentation so it redirects on completion.",
     completionSteps: [
       "Make sure %MESSAGE_ID% is defined as a Panel integration parameter (e.g. named msg) so {PASSTHRU:msg} is available.",
-      "Survey settings → Text elements → set End URL to: https://samply.uni-konstanz.de/studies/<study-slug>/done/{PASSTHRU:msg}",
+      "Survey settings → Text elements → set End URL to: https://samply.uni-konstanz.de/studies/<study-code>/done/{PASSTHRU:msg}",
       "Survey settings → Presentation → enable automatically loading the End URL on completion, so the participant is redirected (not just shown a link).",
       "Activate and test: {PASSTHRU:msg} resolves to the value LimeSurvey received in the start link.",
     ],
+    postWebhookNote: "LimeSurvey's End URL is a browser redirect only; there is no built-in server-side POST. A silent POST would require a plugin on the afterSurveyComplete event, so the redirect above is the supported route.",
     reservedParamWarning: "Do not reuse LimeSurvey-reserved start-URL keys: sid, lang, token, newtest. Use names like msg, pid, code. {PASSTHRU:name} only works if name was first defined under Panel integration.",
     caveats: [
       "The exact wording of the Presentation toggle that auto-loads the End URL varies across LimeSurvey 3.x/5.x/6.x — confirm it in your installed version.",
@@ -157,7 +167,7 @@ export const INTEGRATIONS: Integration[] = [
     supportsExternalRedirect: true,
     confidence: "medium",
     exampleStartUrl: "https://<survey-host>/uc/<project>/?a=%SAMPLY_ID%&b=%PARTICIPANT_CODE%&c=%MESSAGE_ID%",
-    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-slug>/done/#p_0003#",
+    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-code>/done/#p_0003#",
     urlParamMechanism: "EFS reads incoming keys a, b, c… positionally into the system variables p_0001, p_0002, p_0003. You declare how many under Project Properties → Survey Options → User-defined Variables.",
     urlParamSteps: [
       "In the project, open Project Properties (Projekteigenschaften) → Survey Options (Umfrageeinstellungen) → the \"User-defined Variables\" (Benutzerdefinierte Variablen) tab.",
@@ -168,10 +178,11 @@ export const INTEGRATIONS: Integration[] = [
     completionMechanism: "Final Page → Properties → \"Destination URL of external survey\", embedding the wildcard #p_0003# for the message id.",
     completionSteps: [
       "In the Questionnaire Editor open the Final Page → Properties.",
-      "Set the destination URL to: https://samply.uni-konstanz.de/studies/<study-slug>/done/#p_0003# (use whichever p_000n holds %MESSAGE_ID%).",
+      "Set the destination URL to: https://samply.uni-konstanz.de/studies/<study-code>/done/#p_0003# (use whichever p_000n holds %MESSAGE_ID%).",
       "UNCHECK \"Automatically add ospe.php3 to URL\" and \"Add return ticket\" (both ticked by default) so EFS sends the participant to the unmodified Samply URL.",
       "Save and run a test completion; confirm #p_0003# resolves to the real 15-char message id.",
     ],
+    postWebhookNote: "Unipark/EFS has no simple action to POST to an arbitrary external URL at completion, so the Final-Page redirect above is the reliable route; a server-side POST would need custom trigger scripting.",
     reservedParamWarning: "Incoming keys must be the reserved single letters a, b, c… (NOT p_0001). Mapping is positional: a→p_0001, b→p_0002, c→p_0003 — a wrong order silently stores values in the wrong column. EFS also reserves lfdn, code, c, tester, language.",
     caveats: [
       "EFS UI labels vary by version/locale and the official docs are partly login-gated, so confidence on exact English wording is medium — verify against your instance with a live test before fielding.",
@@ -191,7 +202,7 @@ export const INTEGRATIONS: Integration[] = [
     supportsExternalRedirect: true,
     confidence: "high",
     exampleStartUrl: "https://<your-redcap>/surveys/?s=TOKEN&messageid=%MESSAGE_ID%&samply_id=%SAMPLY_ID%&participant_code=%PARTICIPANT_CODE%",
-    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-slug>/done/[messageid]",
+    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-code>/done/[messageid]",
     urlParamMechanism: "URL pre-fill into hidden Text Box fields whose Variable Names match the query-string keys (@HIDDEN). The value is stored because the field is on the submitted instrument.",
     urlParamSteps: [
       "In Online Designer, on the FIRST survey instrument, add Text Box fields with Variable Names exactly matching the incoming keys (e.g. messageid, samply_id, participant_code — case-sensitive, no dashes/colons).",
@@ -203,9 +214,10 @@ export const INTEGRATIONS: Integration[] = [
     completionSteps: [
       "Make sure messageid was captured into a stored Text Box field (see above).",
       "On the LAST instrument, open Survey Settings → Survey Termination Options and select \"Redirect to a URL\".",
-      "Enter: https://samply.uni-konstanz.de/studies/<study-slug>/done/[messageid] — REDCap replaces [messageid] with the stored value at submission.",
+      "Enter: https://samply.uni-konstanz.de/studies/<study-code>/done/[messageid] — REDCap replaces [messageid] with the stored value at submission.",
       "Save and test end-to-end.",
     ],
+    postWebhookNote: "REDCap's Data Entry Trigger does POST on save, but only to one fixed URL with REDCap's own payload — it cannot place the message id in the path, so it does not fit this endpoint. Use the redirect above, or an external API job that reads the stored messageid and POSTs the completion URL.",
     reservedParamWarning: "Avoid REDCap's own params (s, __response_hash__). Variable names are case-sensitive, no dashes/colons. CRITICAL: the value is only saved when the instrument holding the field is submitted — keep the hidden fields on the first instrument.",
     caveats: [
       "\"Redirect to a URL\" cannot be combined with \"Survey Completion Text\".",
@@ -225,9 +237,9 @@ export const INTEGRATIONS: Integration[] = [
     supportsExternalRedirect: true,
     planNote: "Custom Variables and the redirect end page are paid features.",
     confidence: "high",
-    completionWarning: "SurveyMonkey appends captured variables to the redirect as a query string (…?messageid=<value>); it cannot build Samply's path-style /studies/<slug>/done/<id>. Samply's completion endpoint currently reads the id from the path only, so SurveyMonkey needs either Samply to also accept ?messageid= or a small redirector that rewrites ?messageid=X into /done/X. Verify before fielding.",
+    completionWarning: "SurveyMonkey appends captured variables to the redirect as a query string (…?messageid=<value>); it cannot build Samply's path-style /studies/<study-code>/done/<id>. Samply's completion endpoint currently reads the id from the path only, so SurveyMonkey needs either Samply to also accept ?messageid= or a small redirector that rewrites ?messageid=X into /done/X. Verify before fielding.",
     exampleStartUrl: "https://www.surveymonkey.com/r/<code>?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&messageid=%MESSAGE_ID%",
-    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-slug>/done   →   …/done?messageid=<value> (appended automatically)",
+    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-code>/done   →   …/done?messageid=<value> (appended automatically)",
     urlParamMechanism: "Custom Variables (Design Survey → Logic → Custom Variables) on a Web Link collector; stored as columns at the end of each export row.",
     urlParamSteps: [
       "Design Survey → Logic → Custom Variables → \"New custom variable\". Name each one (no spaces, case-sensitive) to match your start-link keys, e.g. id, code, messageid.",
@@ -242,6 +254,7 @@ export const INTEGRATIONS: Integration[] = [
       "Enter a STATIC base URL (do NOT embed a [messageid] token — SurveyMonkey has no path substitution). It appends ?messageid=<value> automatically.",
       "Because of the query-vs-path limitation above, confirm Samply can read messageid from the query string (or route through a rewriter) before going live.",
     ],
+    postWebhookNote: "SurveyMonkey has no per-response action that POSTs to a path-style URL (the same query-vs-path limitation flagged above applies), so a server-side POST would run through the SurveyMonkey API or a webhook relay rather than the End Page.",
     reservedParamWarning: "Custom Variable names: no spaces, case-sensitive, max 100, keep the URL under 2000 chars. The redirect appends ALL incoming custom variables, so the endpoint must tolerate extra query keys.",
     caveats: [
       "Custom Variables work only with the Web Link collector.",
@@ -260,7 +273,7 @@ export const INTEGRATIONS: Integration[] = [
     supportsExternalRedirect: true,
     confidence: "high",
     exampleStartUrl: "https://<survey>.alchemer.com/s3/<id>/survey?id=%SAMPLY_ID%&code=%PARTICIPANT_CODE%&msg=%MESSAGE_ID%",
-    exampleCompletionUrl: "samply.uni-konstanz.de/studies/<study-slug>/done/[url(\"msg\")]  (choose https:// in the protocol dropdown)",
+    exampleCompletionUrl: "samply.uni-konstanz.de/studies/<study-code>/done/[url(\"msg\")]  (choose https:// in the protocol dropdown)",
     urlParamMechanism: "A Hidden Value Action on the first page populated with the URL-variable merge code [url(\"msg\")] (lowercase) names and stores the parameter for export.",
     urlParamSteps: [
       "On the FIRST page, Add New → Action → Hidden Value; give it a title like \"Samply Message ID\".",
@@ -272,9 +285,10 @@ export const INTEGRATIONS: Integration[] = [
     completionSteps: [
       "Capture the message id first (Hidden Value with [url(\"msg\")]).",
       "On the LAST page, Add New → Action → URL Redirect.",
-      "In the protocol dropdown choose https://, and in the URL field put host+path WITHOUT the protocol: samply.uni-konstanz.de/studies/<study-slug>/done/[url(\"msg\")].",
+      "In the protocol dropdown choose https://, and in the URL field put host+path WITHOUT the protocol: samply.uni-konstanz.de/studies/<study-code>/done/[url(\"msg\")].",
       "Do NOT use \"Fields To Pass\" (that appends ?name=value query strings rather than building the /done/<id> path). Save and test.",
     ],
+    postWebhookNote: "Alchemer can POST server-side with a Webhook action on the final page (Add New → Action → Webhook) targeting the same URL built with [url(\"msg\")] — an alternative to the browser URL Redirect above. Verify the request in a test response.",
     reservedParamWarning: "Do not name a variable source (breaks quotas/logic) or sguid (reserved). The merge-code name inside [url(\"…\")] must be lowercase, though the incoming key is matched case-insensitively.",
     caveats: [
       "Alchemer's redirect docs mostly show appending query strings via \"Fields To Pass\"; the path-style approach relies on the URL field being merge-code compatible — verify the rendered redirect in a test response.",
@@ -295,7 +309,7 @@ export const INTEGRATIONS: Integration[] = [
     planNote: "Custom variables and Automatic Redirect both require a paid QuestionPro plan — the round-trip does not work on the free version.",
     confidence: "high",
     exampleStartUrl: "https://www.questionpro.com/t/<collectorID>?custom1=%MESSAGE_ID%&custom2=%SAMPLY_ID%",
-    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-slug>/done/${custom1}",
+    exampleCompletionUrl: "https://samply.uni-konstanz.de/studies/<study-code>/done/${custom1}",
     urlParamMechanism: "custom1–custom255 (or ext_ref) are captured automatically from the URL — no in-survey field needed — and appear in the export.",
     urlParamSteps: [
       "Build the start link so the collector receives %MESSAGE_ID% in a custom variable, e.g. ?custom1=%MESSAGE_ID%&custom2=%SAMPLY_ID%.",
@@ -307,9 +321,10 @@ export const INTEGRATIONS: Integration[] = [
     completionSteps: [
       "Ensure the message id arrived as a custom variable (e.g. custom1).",
       "Survey → Edit → Finish Options → Advanced Options → Automatic Redirect.",
-      "In \"Website Address\" enter: https://samply.uni-konstanz.de/studies/<study-slug>/done/${custom1}.",
+      "In \"Website Address\" enter: https://samply.uni-konstanz.de/studies/<study-code>/done/${custom1}.",
       "Save; QuestionPro substitutes ${custom1} with the real message id at the end and redirects. Test end-to-end.",
     ],
+    postWebhookNote: "QuestionPro's Automatic Redirect is browser-side; a silent POST would use QuestionPro's webhook/API features (availability varies by plan) rather than Finish Options, so the redirect above is the standard route.",
     reservedParamWarning: "Reserved names: customN, ext_ref, email. Values may not contain comma or hash. Prefer ${custom1} over ${ext_ref} in the redirect — only ${custom1}–${custom255} are documented piping tags.",
     caveats: [
       "ext_ref capture works too, but using ${ext_ref} inside the redirect is undocumented — stick to ${custom1} for the round-trip.",

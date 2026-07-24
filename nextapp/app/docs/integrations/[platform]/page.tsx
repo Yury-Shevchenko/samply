@@ -44,6 +44,12 @@ function Steps({ steps }: { steps: string[] }) {
   );
 }
 
+function Code({ children }: { children: React.ReactNode }) {
+  return (
+    <code style={{ fontFamily: "var(--font-mono)", fontSize: "0.9em", background: "var(--ink-10)", color: "var(--coral)", padding: "0.1rem 0.4rem", borderRadius: "0.3rem" }}>{children}</code>
+  );
+}
+
 /* ── Page ─────────────────────────────────────────────────────────────────── */
 
 export default async function IntegrationPlatformPage({ params }: { params: Promise<{ platform: string }> }) {
@@ -98,6 +104,24 @@ export default async function IntegrationPlatformPage({ params }: { params: Prom
               <p>{entry.completionMechanism}</p>
               <Steps steps={entry.completionSteps} />
               <UrlBox label="Example completion redirect" url={entry.exampleCompletionUrl} />
+
+              {/* POST alternative — same endpoint, issued server-to-server instead of redirecting */}
+              <h3 style={{ marginTop: "2.8rem" }}>Or register completion silently with a POST</h3>
+              <p>
+                The redirect above hands the participant&apos;s browser to Samply. If you would rather
+                record completion server-to-server — without navigating the participant away — send an
+                HTTP <strong>POST</strong> to the very same completion URL, built with the same message-id
+                substitution shown above. No request body and no authentication are needed: the message id
+                in the path is the shared secret. Samply replies <Code>200</Code> on success, or{" "}
+                <Code>400</Code> if the message id matches no response. Either way it records the completion
+                and cancels that send&apos;s pending reminders, exactly like the redirect.
+              </p>
+              {entry.postWebhookNote && <p>{entry.postWebhookNote}</p>}
+              <UrlBox label="POST endpoint" url="POST https://samply.uni-konstanz.de/studies/<study-code>/done/<message-id>" />
+              <p style={{ fontSize: "1.25rem", color: "var(--ink-40)", marginTop: "1rem" }}>
+                Full request and response details are in the{" "}
+                <a href="/docs/api" style={{ color: "var(--coral)" }}>API reference</a>.
+              </p>
 
               {/* Reserved params */}
               {entry.reservedParamWarning && (

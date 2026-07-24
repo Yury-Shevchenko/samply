@@ -236,13 +236,13 @@ function ApiContentZh() {
       </p>
 
       <EndpointGroup title='完成——无需身份验证'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='注册完成并显示确认页面（用作问卷结束重定向）。' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='静默注册完成（用作来自问卷工具的 webhook）。' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='注册完成并显示确认页面（用作问卷结束重定向）。' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='静默注册完成（用作来自问卷工具的 webhook）。' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>仪表板地址栏中显示的研究 URL slug。</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>研究代码，显示在研究的邀请页面上——并已预填到设置页面的完成 URL 中。</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           来自 <Code>%MESSAGE_ID%</Code> 占位符的消息 ID，通过您的问卷 URL 传递到问卷结束重定向或 webhook。
@@ -499,13 +499,13 @@ function ApiContentEn() {
       </p>
 
       <EndpointGroup title='Completion — no auth required'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Register completion and show a confirmation page (use as end-of-survey redirect).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Register completion silently (use as a webhook from your survey tool).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Register completion and show a confirmation page (use as end-of-survey redirect).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Register completion silently (use as a webhook from your survey tool).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>The study URL slug shown in the dashboard address bar.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>The study code, shown on your study's Invitations page — and pre-filled into the completion URLs on the Settings page.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           The message ID from the <Code>%MESSAGE_ID%</Code> placeholder, passed through
@@ -770,13 +770,13 @@ function ApiContentRu() {
       </p>
 
       <EndpointGroup title='Завершение — аутентификация не требуется'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Зарегистрировать завершение и показать страницу подтверждения (используйте как перенаправление по окончании опроса).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Зарегистрировать завершение без вывода страницы (используйте как вебхук из вашего инструмента для опросов).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Зарегистрировать завершение и показать страницу подтверждения (используйте как перенаправление по окончании опроса).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Зарегистрировать завершение без вывода страницы (используйте как вебхук из вашего инструмента для опросов).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>URL-slug исследования, отображаемый в адресной строке панели управления.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>Код исследования, показанный на странице «Приглашения» вашего исследования — и уже подставленный в URL завершения на странице «Настройки».</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           Идентификатор сообщения из заполнителя <Code>%MESSAGE_ID%</Code>, переданный
@@ -1051,13 +1051,13 @@ function ApiContentNl() {
       </p>
 
       <EndpointGroup title='Voltooiing — geen authenticatie vereist'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Voltooiing registreren en een bevestigingspagina tonen (gebruik als eindomleidingsadres van de enquête).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Voltooiing stilzwijgend registreren (gebruik als webhook van uw enquêtetool).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Voltooiing registreren en een bevestigingspagina tonen (gebruik als eindomleidingsadres van de enquête).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Voltooiing stilzwijgend registreren (gebruik als webhook van uw enquêtetool).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>De URL-slug van de studie zoals weergegeven in de adresbalk van het dashboard.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>De studiecode, te vinden op de pagina Uitnodigingen van uw studie — en al ingevuld in de voltooiings-URL's op de pagina Instellingen.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           De bericht-ID uit de <Code>%MESSAGE_ID%</Code>-plaatshouder, doorgegeven via
@@ -1329,13 +1329,13 @@ function ApiContentDe() {
       </p>
 
       <EndpointGroup title='Abschluss — keine Authentifizierung erforderlich'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Abschluss registrieren und eine Bestätigungsseite anzeigen (als End-of-Survey-Weiterleitung verwenden).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Abschluss stillschweigend registrieren (als webhook vom Umfrage-Tool verwenden).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Abschluss registrieren und eine Bestätigungsseite anzeigen (als End-of-Survey-Weiterleitung verwenden).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Abschluss stillschweigend registrieren (als webhook vom Umfrage-Tool verwenden).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>Der in der Dashboard-Adressleiste angezeigte Studien-URL-Slug.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>Der Studiencode, angezeigt auf der Einladungsseite Ihrer Studie — und in den Abschluss-URLs auf der Einstellungsseite bereits eingesetzt.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           Die Message-ID aus dem <Code>%MESSAGE_ID%</Code>-Platzhalter, die über Ihre
@@ -1596,13 +1596,13 @@ function ApiContentKo() {
       </p>
 
       <EndpointGroup title='완료 — 인증 불필요'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='완료를 등록하고 확인 페이지를 표시합니다 (설문 종료 리디렉션으로 사용).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='완료를 자동으로 등록합니다 (설문 도구의 webhook으로 사용).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='완료를 등록하고 확인 페이지를 표시합니다 (설문 종료 리디렉션으로 사용).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='완료를 자동으로 등록합니다 (설문 도구의 webhook으로 사용).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>대시보드 주소 표시줄에 표시된 연구 URL 슬러그.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>연구 코드로, 연구의 초대 페이지에 표시되며 설정 페이지의 완료 URL에 미리 입력되어 있습니다.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           설문 URL을 통해 설문 종료 리디렉션 또는 webhook으로 전달되는{' '}
@@ -1865,13 +1865,13 @@ function ApiContentIt() {
       </p>
 
       <EndpointGroup title='Completamento — nessuna autenticazione richiesta'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Registra il completamento e mostra una pagina di conferma (da usare come reindirizzamento di fine sondaggio).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Registra il completamento in modo silenzioso (da usare come webhook dallo strumento di indagine).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Registra il completamento e mostra una pagina di conferma (da usare come reindirizzamento di fine sondaggio).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Registra il completamento in modo silenzioso (da usare come webhook dallo strumento di indagine).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>Lo slug URL dello studio mostrato nella barra degli indirizzi del pannello di controllo.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>Il codice dello studio, mostrato nella pagina Inviti del tuo studio — e già inserito negli URL di completamento nella pagina Impostazioni.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           L&apos;ID messaggio dal segnaposto <Code>%MESSAGE_ID%</Code>, passato tramite l&apos;URL del
@@ -2137,13 +2137,13 @@ function ApiContentFr() {
       </p>
 
       <EndpointGroup title='Complétion — aucune authentification requise'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Enregistrer la complétion et afficher une page de confirmation (à utiliser comme redirection de fin de sondage).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Enregistrer la complétion silencieusement (à utiliser comme webhook depuis votre outil de sondage).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Enregistrer la complétion et afficher une page de confirmation (à utiliser comme redirection de fin de sondage).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Enregistrer la complétion silencieusement (à utiliser comme webhook depuis votre outil de sondage).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>Le slug URL de l'étude affiché dans la barre d'adresse du tableau de bord.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>Le code de l'étude, affiché sur la page Invitations de votre étude — et déjà renseigné dans les URL d'achèvement sur la page Paramètres.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           L'identifiant de message provenant de la variable de substitution <Code>%MESSAGE_ID%</Code>,
@@ -2409,13 +2409,13 @@ function ApiContentEs() {
       </p>
 
       <EndpointGroup title='Finalización — sin autenticación requerida'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Registrar la finalización y mostrar una página de confirmación (úselo como redirección al final de la encuesta).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Registrar la finalización silenciosamente (úselo como webhook desde su herramienta de encuesta).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Registrar la finalización y mostrar una página de confirmación (úselo como redirección al final de la encuesta).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Registrar la finalización silenciosamente (úselo como webhook desde su herramienta de encuesta).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>El slug de URL del estudio que aparece en la barra de direcciones del panel.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>El código del estudio, que se muestra en la página Invitaciones de tu estudio — y ya incluido en las URL de finalización en la página Configuración.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           El identificador de mensaje proveniente del marcador de posición <Code>%MESSAGE_ID%</Code>,
@@ -2680,13 +2680,13 @@ function ApiContentPt() {
       </p>
 
       <EndpointGroup title='Conclusão — sem autenticação necessária'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='Registrar a conclusão e exibir uma página de confirmação (use como redirecionamento ao final da pesquisa).' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='Registrar a conclusão silenciosamente (use como webhook da sua ferramenta de pesquisa).' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Registrar a conclusão e exibir uma página de confirmação (use como redirecionamento ao final da pesquisa).' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='Registrar a conclusão silenciosamente (use como webhook da sua ferramenta de pesquisa).' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>O slug de URL do estudo exibido na barra de endereços do painel.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>O código do estudo, exibido na página Convites do seu estudo — e já preenchido nas URLs de conclusão na página Configurações.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           O identificador de mensagem proveniente do marcador de posição <Code>%MESSAGE_ID%</Code>,
@@ -2951,13 +2951,13 @@ function ApiContentJa() {
       </p>
 
       <EndpointGroup title='完了 — 認証不要'>
-        <Method verb='GET'  path='/studies/:study/done/:messageid' desc='完了を記録し、確認ページを表示します（調査の最後のリダイレクトとして使用）。' />
-        <Method verb='POST' path='/studies/:study/done/:messageid' desc='完了をサイレントに記録します（調査ツールからのWebhookとして使用）。' />
+        <Method verb='GET'  path='/studies/:code/done/:messageid' desc='完了を記録し、確認ページを表示します（調査の最後のリダイレクトとして使用）。' />
+        <Method verb='POST' path='/studies/:code/done/:messageid' desc='完了をサイレントに記録します（調査ツールからのWebhookとして使用）。' />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>ダッシュボードのアドレスバーに表示される研究のURLスラッグ。</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>研究コード。研究の「招待」ページに表示され、「設定」ページの完了 URL にあらかじめ入力されています。</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           <Code>%MESSAGE_ID%</Code> プレースホルダーから取得したメッセージ識別子で、
@@ -3221,13 +3221,13 @@ function ApiContentTr() {
       </p>
 
       <EndpointGroup title="Tamamlanma — kimlik doğrulama gerekmez">
-        <Method verb="GET"  path="/studies/:study/done/:messageid" desc="Tamamlanmayı kaydeder ve bir onay sayfası gösterir (anketin son yönlendirmesi olarak kullanılır)." />
-        <Method verb="POST" path="/studies/:study/done/:messageid" desc="Tamamlanmayı sessizce kaydeder (anket aracından bir webhook olarak kullanılır)." />
+        <Method verb="GET"  path="/studies/:code/done/:messageid" desc="Tamamlanmayı kaydeder ve bir onay sayfası gösterir (anketin son yönlendirmesi olarak kullanılır)." />
+        <Method verb="POST" path="/studies/:code/done/:messageid" desc="Tamamlanmayı sessizce kaydeder (anket aracından bir webhook olarak kullanılır)." />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>Panelin adres çubuğunda görünen çalışmanın URL kısaltması.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>Çalışma kodu; çalışmanızın Davetler sayfasında görünür ve Ayarlar sayfasındaki tamamlanma URL'lerine önceden doldurulmuştur.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           <Code>%MESSAGE_ID%</Code> yer tutucusundan alınan ve anket URL'si tarafından
@@ -3498,13 +3498,13 @@ function ApiContentPl() {
       </p>
 
       <EndpointGroup title="Ukończenie — uwierzytelnianie nie jest wymagane">
-        <Method verb="GET"  path="/studies/:study/done/:messageid" desc="Rejestruje ukończenie i wyświetla stronę potwierdzenia (używane jako końcowe przekierowanie ankiety)." />
-        <Method verb="POST" path="/studies/:study/done/:messageid" desc="Rejestruje ukończenie po cichu (używane jako webhook z narzędzia ankietowego)." />
+        <Method verb="GET"  path="/studies/:code/done/:messageid" desc="Rejestruje ukończenie i wyświetla stronę potwierdzenia (używane jako końcowe przekierowanie ankiety)." />
+        <Method verb="POST" path="/studies/:code/done/:messageid" desc="Rejestruje ukończenie po cichu (używane jako webhook z narzędzia ankietowego)." />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>Skrót URL badania, który pojawia się w pasku adresu Panelu.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>Kod badania, wyświetlany na stronie Zaproszenia Twojego badania — i już wstawiony do adresów URL ukończenia na stronie Ustawienia.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           Identyfikator wiadomości pochodzący z symbolu zastępczego <Code>%MESSAGE_ID%</Code>
@@ -3771,13 +3771,13 @@ function ApiContentAr() {
       </p>
 
       <EndpointGroup title="الإكمال — لا تلزم المصادقة">
-        <Method verb="GET"  path="/studies/:study/done/:messageid" desc="يسجّل الإكمال ويعرض صفحة تأكيد (يُستخدم كإعادة توجيه في نهاية الاستطلاع)." />
-        <Method verb="POST" path="/studies/:study/done/:messageid" desc="يسجّل الإكمال بصمت (يُستخدم كـ webhook من أداة الاستطلاع)." />
+        <Method verb="GET"  path="/studies/:code/done/:messageid" desc="يسجّل الإكمال ويعرض صفحة تأكيد (يُستخدم كإعادة توجيه في نهاية الاستطلاع)." />
+        <Method verb="POST" path="/studies/:code/done/:messageid" desc="يسجّل الإكمال بصمت (يُستخدم كـ webhook من أداة الاستطلاع)." />
       </EndpointGroup>
 
       <dl>
-        <dt><Code>:study</Code></dt>
-        <dd>اختصار رابط URL الخاص بالدراسة كما يظهر في شريط عنوان لوحة التحكم.</dd>
+        <dt><Code>:code</Code></dt>
+        <dd>رمز الدراسة، الظاهر في صفحة الدعوات الخاصة بدراستك — ومُدرَج مسبقًا في روابط الإكمال في صفحة الإعدادات.</dd>
         <dt><Code>:messageid</Code></dt>
         <dd>
           معرّف الرسالة الناتج عن العنصر النائب <Code>%MESSAGE_ID%</Code>
