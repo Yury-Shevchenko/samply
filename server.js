@@ -51,7 +51,6 @@ require("./models/User");
 require("./models/Result");
 require("./models/Project");
 require("./models/Job");
-require("./models/Receipt");
 require("./models/PendingNotification");
 require("./models/ConsentRecord");
 
@@ -82,10 +81,6 @@ function isExpressPath(url, method, headers) {
   if (p.startsWith("/api/")) return true;
   if (p.startsWith("/webapi/")) return true;
   if (p === "/save") return true;
-  // Legacy Stripe webhook for participant payouts (Connect account.updated,
-  // charge.succeeded → Receipt). Distinct from Next.js /api/stripe/webhook,
-  // which handles donations. Must stay on Express.
-  if (p === "/payment/webhook") return true;
   // Survey-tool completion webhook: POST /studies/:slug/done/:messageid. The
   // matching GET renders the Next.js confirmation page, so only the POST is
   // handed to Express. External webhooks never carry a next-action header, and

@@ -21,7 +21,6 @@ require("./handlers/passport");
 const language = require("./config/lang");
 const authController = require("./controllers/authController");
 const userController = require("./controllers/userController");
-const paymentController = require("./controllers/paymentController");
 const jobController = require("./controllers/jobController");
 const crypto = require("crypto");
 
@@ -57,13 +56,6 @@ const app = express();
 // Use 1 (not `true`) so clients can't spoof X-Forwarded-For to bypass limits.
 app.set("trust proxy", 1);
 app.use(express.static("public"));
-
-// webhook for payment events with stripe
-app.post(
-  "/payment/webhook",
-  bodyParser.raw({ type: "*/*" }),
-  paymentController.webhook
-);
 
 app.use(cookieParser());
 app.use(bodyParser.json({ limit: "2mb" }));

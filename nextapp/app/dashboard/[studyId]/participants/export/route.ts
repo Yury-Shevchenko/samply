@@ -58,7 +58,6 @@ export async function GET(
     "group",
     "status",
     "enrolled",
-    "stripe_account",
     ...infoKeysArr,
   ];
 
@@ -68,7 +67,6 @@ export async function GET(
     p.group?.name ?? "",
     p.deactivated ? "deactivated" : "active",
     p.created ? new Date(p.created).toISOString() : "",
-    p.stripe?.account ?? "",
     ...infoKeysArr.map((k) => String(p.information?.[k] ?? "")),
   ]);
 

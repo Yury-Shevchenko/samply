@@ -3,7 +3,6 @@ import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
 import Result from "@/lib/models/result";
 import ConsentRecord from "@/lib/models/consentRecord";
-import Receipt from "@/lib/models/receipt";
 
 /**
  * Assemble a complete machine-readable copy of one data subject's personal data
@@ -11,7 +10,7 @@ import Receipt from "@/lib/models/receipt";
  *
  * Returns the account profile (minus credentials and device secrets), all
  * survey/notification responses keyed by the user's Samply ID, the consent
- * audit trail, and any payment receipts. Returns null if the user is not found.
+ * and the consent audit trail. Returns null if the user is not found.
  */
 export async function exportParticipantData(userId: string) {
   await connectDB();
@@ -31,12 +30,11 @@ export async function exportParticipantData(userId: string) {
   if (!user) return null;
   const samplyId = user.samplyId;
 
-  const [responses, consent, receipts] = await Promise.all([
+  const [responses, consent] = await Promise.all([
     samplyId ? Result.find({ samplyid: samplyId }).lean() : Promise.resolve([]),
     ConsentRecord.find({
       $or: [{ samplyId: samplyId ?? null }, { userId: oid }],
     }).lean(),
-    Receipt.find({ $or: [{ payer: oid }, { payee: oid }] }).lean(),
   ]);
 
   return {
@@ -46,6 +44,5 @@ export async function exportParticipantData(userId: string) {
     account: user,
     responses,
     consent,
-    receipts,
   };
 }

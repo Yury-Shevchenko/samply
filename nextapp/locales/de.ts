@@ -494,7 +494,6 @@ const de: DeepLoose<Messages> = {
     labelPushToken: "Push-Token",
     detailNoToken: "Kein Token",
     detailNoTokenHint: "Diese teilnehmende Person hat keine Benachrichtigungsberechtigung erteilt, sodass ihr Expo-Push-Token nie registriert wurde. Bitten Sie sie, Benachrichtigungen in den Geräteeinstellungen zu erlauben und dann der Studie erneut beizutreten, indem sie den QR-Code scannt oder den Einladungslink erneut öffnet.",
-    labelStripeAccount: "Stripe-Konto",
     labelTimezone: "Zeitzone",
     labelTimeWindow: "Zeitfenster",
     scheduleNotification: "+ Benachrichtigung planen",
@@ -513,12 +512,6 @@ const de: DeepLoose<Messages> = {
     thNotification: "Benachrichtigung",
     thSent: "Gesendet",
     thStatus: "Status",
-    payoutsHeading: "auszahlungen · {n}",
-    thDate: "Datum",
-    thAmount: "Betrag",
-    thCurrency: "Währung",
-    thReceipt: "Beleg",
-    openReceipt: "öffnen →",
     dangerZoneHeading: "gefahrenzone",
     removeParticipant: "Teilnehmenden entfernen",
     removeParticipantHint: "Entfernt diese teilnehmende Person aus der Studie. Ihre Benachrichtigungshistorie bleibt erhalten.",
@@ -624,7 +617,6 @@ const de: DeepLoose<Messages> = {
     secureCodeHint: "Leer lassen für gemeinsamen Link · Ausfüllen, um einer Person zuzuweisen",
     secureCodePlaceholder: "z. B. P001",
     secureAllowTz: "Zeitzonenänderungen erlauben",
-    secureAllowPayment: "Zahlungs-Konto erlauben",
     secureGenerate: "Sicheren Link generieren",
     secureCopyLink: "Link kopieren",
     secureCopied: "Kopiert ✓",
@@ -993,7 +985,6 @@ const de: DeepLoose<Messages> = {
     colGroup:       "Gruppe",
     colPrefs:       "Zeitpräferenzen",
     colTimezone:    "Zeitzone",
-    colPayout:      "Auszahlung",
   },
 
   legacyProjects: {
@@ -1005,31 +996,6 @@ const de: DeepLoose<Messages> = {
     newStudy:       "+ Neue Studie",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "Auszahlungen",
-    tabReceipts:     "Quittungen",
-    participantInfo: "Teilnehmer-Info",
-    idLabel:         "Samply-ID",
-    nameLabel:       "Name",
-    emailLabel:      "E-Mail",
-    paymentsLabel:   "Zahlungen",
-    enabled:         "Aktiviert",
-    disabled:        "Deaktiviert",
-    sendPayment:     "Zahlung senden",
-    currencyLabel:   "Währung",
-    amountLabel:     "Betrag",
-    sendButton:      "Zahlung senden",
-    notSetUp:        "Dieser Teilnehmende hat noch kein Zahlungskonto eingerichtet.",
-    noReceipts:      "Noch keine Quittungen.",
-    colDate:         "Datum",
-    colReceiptId:    "Quittungs-ID",
-    colStatus:       "Status",
-    colCurrency:     "Währung",
-    colAmount:       "Betrag",
-    colFee:          "Gebühr",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "Benachrichtigungen gesendet",
@@ -1454,22 +1420,6 @@ const de: DeepLoose<Messages> = {
       deleteIntro:   "Löschen Sie Ihr Konto und alle Ihre Antwortdaten endgültig. Diese Aktion kann nicht rückgängig gemacht werden.",
     },
 
-    // ─── Auszahlungskonto (Stripe Connect für Teilnehmende) ────────────────────
-    payable: {
-      title:              "Auszahlungskonto",
-      intro:              "Richten Sie ein Auszahlungskonto ein, wenn Sie für die Teilnahme an Studien von Forschenden bezahlt werden möchten. Ihr Konto wird von Stripe gehostet.",
-      createButton:       "Auszahlungskonto einrichten →",
-      editButton:         "Auszahlungskonto aktualisieren →",
-      confirmEmailFirst:  "Bitte bestätigen Sie zuerst Ihre E-Mail-Adresse, bevor Sie ein Auszahlungskonto einrichten.",
-      statusCharges:      "Zahlungen können angenommen werden",
-      statusDetails:      "Onboarding-Daten",
-      statusPayouts:      "Auszahlungen auf Ihr Bankkonto",
-      enabled:            "Aktiviert",
-      disabled:           "Noch nicht aktiviert",
-      submitted:          "Übermittelt",
-      notSubmitted:       "Nicht übermittelt",
-      errorCreate:        "Stripe-Onboarding konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
-    },
   },
 
   legacyInvitations: {

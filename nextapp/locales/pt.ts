@@ -492,7 +492,6 @@ const pt: DeepLoose<Messages> = {
     labelPushToken: "Token de push",
     detailNoToken: "Sem token",
     detailNoTokenHint: "Este participante não concedeu permissão para notificações, então o token push do Expo nunca foi registrado. Peça que ele permita notificações nas configurações do dispositivo e depois entre novamente no estudo escaneando o QR code ou abrindo o link de convite novamente.",
-    labelStripeAccount: "Conta Stripe",
     labelTimezone: "Fuso horário",
     labelTimeWindow: "Janela de tempo",
     scheduleNotification: "+ Agendar notificação",
@@ -511,12 +510,6 @@ const pt: DeepLoose<Messages> = {
     thNotification: "Notificação",
     thSent: "Enviado",
     thStatus: "Status",
-    payoutsHeading: "pagamentos · {n}",
-    thDate: "Data",
-    thAmount: "Valor",
-    thCurrency: "Moeda",
-    thReceipt: "Recibo",
-    openReceipt: "abrir →",
     dangerZoneHeading: "zona de perigo",
     removeParticipant: "Remover participante",
     removeParticipantHint: "Remove este participante do estudo. O histórico de notificações é preservado.",
@@ -622,7 +615,6 @@ const pt: DeepLoose<Messages> = {
     secureCodeHint: "Deixe vazio para link compartilhado · Preencha para atribuir a uma pessoa",
     secureCodePlaceholder: "ex. P001",
     secureAllowTz: "Permitir atualizações de fuso horário",
-    secureAllowPayment: "Permitir conta de pagamento",
     secureGenerate: "Gerar link seguro",
     secureCopyLink: "Copiar link",
     secureCopied: "Copiado ✓",
@@ -991,7 +983,6 @@ const pt: DeepLoose<Messages> = {
     colGroup:       "Grupo",
     colPrefs:       "Preferências de horário",
     colTimezone:    "Fuso horário",
-    colPayout:      "Pagamento",
   },
 
   legacyProjects: {
@@ -1003,31 +994,6 @@ const pt: DeepLoose<Messages> = {
     newStudy:       "+ Novo estudo",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "Pagamentos",
-    tabReceipts:     "Recibos",
-    participantInfo: "Informações do participante",
-    idLabel:         "ID Samply",
-    nameLabel:       "Nome",
-    emailLabel:      "E-mail",
-    paymentsLabel:   "Pagamentos",
-    enabled:         "Ativado",
-    disabled:        "Desativado",
-    sendPayment:     "Enviar pagamento",
-    currencyLabel:   "Moeda",
-    amountLabel:     "Valor",
-    sendButton:      "Enviar pagamento",
-    notSetUp:        "Este participante ainda não configurou uma conta de pagamento.",
-    noReceipts:      "Ainda não há recibos.",
-    colDate:         "Data",
-    colReceiptId:    "ID do recibo",
-    colStatus:       "Status",
-    colCurrency:     "Moeda",
-    colAmount:       "Valor",
-    colFee:          "Taxa",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "Notificações enviadas",
@@ -1451,22 +1417,6 @@ const pt: DeepLoose<Messages> = {
       deleteIntro:   "Exclua permanentemente sua conta e todos os dados das suas respostas. Esta ação não pode ser desfeita.",
     },
 
-    // ─── Conta de pagamento (Stripe Connect para participantes) ────────────────
-    payable: {
-      title:              "Conta de pagamento",
-      intro:              "Conecte uma conta de pagamento se quiser receber dos pesquisadores por participar dos estudos. Sua conta é hospedada pelo Stripe.",
-      createButton:       "Criar conta de pagamento →",
-      editButton:         "Atualizar conta de pagamento →",
-      confirmEmailFirst:  "Confirme seu e-mail antes de configurar uma conta de pagamento.",
-      statusCharges:      "Pode receber cobranças",
-      statusDetails:      "Dados de cadastro",
-      statusPayouts:      "Transferências para o seu banco",
-      enabled:            "Ativada",
-      disabled:           "Ainda não ativada",
-      submitted:          "Enviados",
-      notSubmitted:       "Não enviados",
-      errorCreate:        "Não foi possível iniciar o cadastro no Stripe. Tente novamente.",
-    },
   },
 
   legacyInvitations: {

@@ -90,8 +90,7 @@ function DpaContentEn() {
           <strong>Personal data:</strong> pseudonymous participant identifier (Samply ID), account
           email and (optionally) name, device push token, language and timezone, notification
           delivery and interaction events, survey/response metadata, optional participant code and
-          group, location/geofencing events where the Study enables them, and payment data where
-          compensation is configured.
+          group, and location/geofencing events where the Study enables them.
         </li>
         <li>
           <strong>Special-category data:</strong> not collected by the platform itself. The
@@ -124,7 +123,7 @@ function DpaContentEn() {
       <h2>6. Technical and organisational measures (Art. 32)</h2>
       <ul>
         <li>Encryption of data in transit (TLS); access restricted to authenticated, role-checked accounts.</li>
-        <li>Participant research data is keyed by a pseudonymous Samply ID; contact details are not shown to researchers except where a participant opts into payments.</li>
+        <li>Participant research data is keyed by a pseudonymous Samply ID; contact details are not shown to researchers.</li>
         <li>Passwords are stored hashed (bcrypt); session and API tokens are time-limited.</li>
         <li>Access to participant data and exports is recorded in an internal audit log.</li>
         <li>Configurable retention with automatic deletion after the periods stated in the Privacy Policy.</li>
@@ -139,7 +138,6 @@ function DpaContentEn() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — database hosting.</li>
         <li><strong>Postmark</strong> — transactional and notification email.</li>
-        <li><strong>Stripe</strong> — participant compensation / payouts (only when enabled).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — push-notification delivery.</li>
         <li><strong>Cloudflare Turnstile</strong> — bot protection at sign-up.</li>
         <li><strong>University of Konstanz</strong> — web/app hosting.</li>
@@ -245,7 +243,7 @@ function DpaContentDe() {
           Konto-E-Mail-Adresse und (optional) Name, Geräte-Push-Token, Sprache und Zeitzone,
           Zustellungs- und Interaktionsereignisse von Benachrichtigungen, Umfrage-/Antwortmetadaten,
           optionaler Teilnehmercode und Gruppe, Standort-/Geofencing-Ereignisse, sofern die Studie
-          diese aktiviert, sowie Zahlungsdaten, sofern eine Vergütung konfiguriert ist.
+          diese aktiviert.
         </li>
         <li>
           <strong>Besondere Kategorien personenbezogener Daten:</strong> werden von der Plattform
@@ -281,7 +279,7 @@ function DpaContentDe() {
       <h2>6. Technische und organisatorische Maßnahmen (Art. 32)</h2>
       <ul>
         <li>Verschlüsselung der Daten bei der Übertragung (TLS); Zugriff beschränkt auf authentifizierte, rollengeprüfte Konten.</li>
-        <li>Forschungsdaten der Teilnehmenden werden über eine pseudonyme Samply ID verschlüsselt; Kontaktdaten werden Forschenden nicht angezeigt, außer wenn eine teilnehmende Person sich für Zahlungen entscheidet.</li>
+        <li>Forschungsdaten der Teilnehmenden werden über eine pseudonyme Samply ID verschlüsselt; Kontaktdaten werden Forschenden nicht angezeigt.</li>
         <li>Passwörter werden als Hash gespeichert (bcrypt); Sitzungs- und API-Token sind zeitlich begrenzt.</li>
         <li>Der Zugriff auf Teilnehmerdaten und Exporte wird in einem internen Prüfprotokoll erfasst.</li>
         <li>Konfigurierbare Aufbewahrung mit automatischer Löschung nach den in der Datenschutzerklärung angegebenen Fristen.</li>
@@ -297,7 +295,6 @@ function DpaContentDe() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — Datenbank-Hosting.</li>
         <li><strong>Postmark</strong> — Transaktions- und Benachrichtigungs-E-Mails.</li>
-        <li><strong>Stripe</strong> — Vergütung/Auszahlungen an Teilnehmende (nur wenn aktiviert).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — Zustellung von Push-Benachrichtigungen.</li>
         <li><strong>Cloudflare Turnstile</strong> — Bot-Schutz bei der Registrierung.</li>
         <li><strong>Universität Konstanz</strong> — Web-/App-Hosting.</li>
@@ -408,8 +405,7 @@ function DpaContentNl() {
           account-e-mail en (optioneel) naam, push-token van het apparaat, taal en tijdzone,
           gebeurtenissen met betrekking tot aflevering en interactie van meldingen, metadata van
           enquêtes/antwoorden, optionele deelnemerscode en -groep, locatie-/geofencing-gebeurtenissen
-          waar het Onderzoek deze inschakelt, en betalingsgegevens waar een vergoeding is
-          geconfigureerd.
+          waar het Onderzoek deze inschakelt.
         </li>
         <li>
           <strong>Bijzondere categorieën van persoonsgegevens:</strong> worden niet door het platform
@@ -445,7 +441,7 @@ function DpaContentNl() {
       <h2>6. Technische en organisatorische maatregelen (art. 32)</h2>
       <ul>
         <li>Versleuteling van gegevens tijdens de overdracht (TLS); toegang beperkt tot geauthenticeerde accounts met rolcontrole.</li>
-        <li>Onderzoeksgegevens van deelnemers worden geïndexeerd op basis van een pseudonieme Samply ID; contactgegevens worden niet aan onderzoekers getoond, behalve wanneer een deelnemer kiest voor betalingen.</li>
+        <li>Onderzoeksgegevens van deelnemers worden geïndexeerd op basis van een pseudonieme Samply ID; contactgegevens worden niet aan onderzoekers getoond.</li>
         <li>Wachtwoorden worden gehasht opgeslagen (bcrypt); sessie- en API-tokens zijn in de tijd beperkt.</li>
         <li>Toegang tot deelnemersgegevens en exports wordt vastgelegd in een intern auditlogboek.</li>
         <li>Configureerbare bewaring met automatische verwijdering na de in het Privacybeleid vermelde termijnen.</li>
@@ -461,7 +457,6 @@ function DpaContentNl() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — databasehosting.</li>
         <li><strong>Postmark</strong> — transactionele en meldings-e-mail.</li>
-        <li><strong>Stripe</strong> — vergoeding/uitbetalingen aan deelnemers (alleen indien ingeschakeld).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — aflevering van pushmeldingen.</li>
         <li><strong>Cloudflare Turnstile</strong> — botbescherming bij aanmelding.</li>
         <li><strong>Universiteit Konstanz</strong> — web-/app-hosting.</li>
@@ -572,7 +567,7 @@ function DpaContentRu() {
           адрес электронной почты учётной записи и (опционально) имя, push-токен устройства, язык и
           часовой пояс, события доставки и взаимодействия с уведомлениями, метаданные
           опросов/ответов, опциональный код и группа участника, события местоположения/геозонирования,
-          если Исследование их включает, и платёжные данные, если настроена компенсация.
+          если Исследование их включает.
         </li>
         <li>
           <strong>Особые категории персональных данных:</strong> не собираются самой платформой.
@@ -605,7 +600,7 @@ function DpaContentRu() {
       <h2>6. Технические и организационные меры (ст. 32)</h2>
       <ul>
         <li>Шифрование данных при передаче (TLS); доступ ограничен аутентифицированными учётными записями с проверкой ролей.</li>
-        <li>Исследовательские данные участников привязаны к псевдонимному Samply ID; контактные данные не показываются исследователям, кроме случаев, когда участник соглашается на выплаты.</li>
+        <li>Исследовательские данные участников привязаны к псевдонимному Samply ID; контактные данные не показываются исследователям.</li>
         <li>Пароли хранятся в хешированном виде (bcrypt); сессионные и API-токены имеют ограниченный срок действия.</li>
         <li>Доступ к данным участников и экспортам фиксируется во внутреннем журнале аудита.</li>
         <li>Настраиваемое хранение с автоматическим удалением по истечении сроков, указанных в Политике конфиденциальности.</li>
@@ -621,7 +616,6 @@ function DpaContentRu() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — хостинг базы данных.</li>
         <li><strong>Postmark</strong> — транзакционная электронная почта и почта уведомлений.</li>
-        <li><strong>Stripe</strong> — компенсация участникам / выплаты (только когда включено).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — доставка push-уведомлений.</li>
         <li><strong>Cloudflare Turnstile</strong> — защита от ботов при регистрации.</li>
         <li><strong>Констанцский университет</strong> — хостинг веб-сайта/приложения.</li>
@@ -720,8 +714,7 @@ function DpaContentZh() {
         <li>
           <strong>个人数据：</strong> 假名化的参与者标识符（Samply ID）、账户电子邮箱及
           （可选的）姓名、设备推送令牌、语言与时区、通知发送和交互事件、调查/回应元数据、
-          可选的参与者代码与分组、研究项目启用时的位置/地理围栏事件，以及配置了报酬时的
-          支付数据。
+          可选的参与者代码与分组，以及研究项目启用时的位置/地理围栏事件。
         </li>
         <li>
           <strong>特殊类别个人数据：</strong> 平台本身不收集此类数据。控制者负责通过所链接的
@@ -751,7 +744,7 @@ function DpaContentZh() {
       <h2>6. 技术和组织措施（第 32 条）</h2>
       <ul>
         <li>传输中数据的加密（TLS）；访问权限限于经身份验证并经角色核查的账户。</li>
-        <li>参与者研究数据以假名化的 Samply ID 作为键值；除参与者选择加入支付的情形外，联系方式不向研究人员显示。</li>
+        <li>参与者研究数据以假名化的 Samply ID 作为键值；联系方式不向研究人员显示。</li>
         <li>密码以哈希形式存储（bcrypt）；会话和 API 令牌有时限。</li>
         <li>对参与者数据的访问及导出记录在内部审计日志中。</li>
         <li>可配置的保留期限，并在隐私政策所述期限届满后自动删除。</li>
@@ -766,7 +759,6 @@ function DpaContentZh() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — 数据库托管。</li>
         <li><strong>Postmark</strong> — 事务性及通知电子邮件。</li>
-        <li><strong>Stripe</strong> — 参与者报酬/付款（仅在启用时）。</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — 推送通知的发送。</li>
         <li><strong>Cloudflare Turnstile</strong> — 注册时的机器人防护。</li>
         <li><strong>康斯坦茨大学</strong> — 网站/应用托管。</li>
@@ -863,8 +855,7 @@ function DpaContentKo() {
         <li>
           <strong>개인정보:</strong> 가명화된 참여자 식별자(Samply ID), 계정 이메일 및 (선택적으로)
           이름, 기기 푸시 토큰, 언어 및 시간대, 알림 전달 및 상호작용 이벤트, 설문/응답 메타데이터,
-          선택적 참여자 코드 및 그룹, 본 연구가 활성화한 경우의 위치/지오펜싱 이벤트, 그리고 보상이
-          구성된 경우의 결제 데이터.
+          선택적 참여자 코드 및 그룹, 본 연구가 활성화한 경우의 위치/지오펜싱 이벤트.
         </li>
         <li>
           <strong>특별 범주의 개인정보:</strong> 플랫폼 자체에서는 수집하지 않습니다. 연결된 외부
@@ -895,7 +886,7 @@ function DpaContentKo() {
       <h2>6. 기술적 및 조직적 조치(제32조)</h2>
       <ul>
         <li>전송 중 데이터의 암호화(TLS); 접근은 인증되고 역할이 확인된 계정으로 제한됩니다.</li>
-        <li>참여자 연구 데이터는 가명화된 Samply ID로 키가 지정되며, 참여자가 결제를 선택한 경우를 제외하고는 연락처 정보가 연구자에게 표시되지 않습니다.</li>
+        <li>참여자 연구 데이터는 가명화된 Samply ID로 키가 지정되며, 연락처 정보는 연구자에게 표시되지 않습니다.</li>
         <li>비밀번호는 해시 처리되어 저장됩니다(bcrypt); 세션 및 API 토큰은 시간 제한이 있습니다.</li>
         <li>참여자 데이터 및 내보내기에 대한 접근은 내부 감사 로그에 기록됩니다.</li>
         <li>개인정보 처리방침에 명시된 기간 이후 자동 삭제되는 구성 가능한 보관.</li>
@@ -910,7 +901,6 @@ function DpaContentKo() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — 데이터베이스 호스팅.</li>
         <li><strong>Postmark</strong> — 트랜잭션 및 알림 이메일.</li>
-        <li><strong>Stripe</strong> — 참여자 보상 / 지급 (활성화된 경우에 한함).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — 푸시 알림 전달.</li>
         <li><strong>Cloudflare Turnstile</strong> — 가입 시 봇 방지.</li>
         <li><strong>콘스탄츠 대학교</strong> — 웹/앱 호스팅.</li>
@@ -1015,8 +1005,8 @@ function DpaContentIt() {
           <strong>Dati personali:</strong> identificativo pseudonimo del partecipante (Samply ID), email
           dell&rsquo;account e (facoltativamente) nome, token push del dispositivo, lingua e fuso orario,
           eventi di consegna e interazione delle notifiche, metadati di sondaggi/risposte, codice e
-          gruppo facoltativi del partecipante, eventi di localizzazione/geofencing ove lo Studio li
-          abiliti, e dati di pagamento ove sia configurato un compenso.
+          gruppo facoltativi del partecipante ed eventi di localizzazione/geofencing ove lo Studio li
+          abiliti.
         </li>
         <li>
           <strong>Categorie particolari di dati personali:</strong> non raccolte dalla piattaforma
@@ -1050,7 +1040,7 @@ function DpaContentIt() {
       <h2>6. Misure tecniche e organizzative (art. 32)</h2>
       <ul>
         <li>Cifratura dei dati in transito (TLS); accesso limitato ad account autenticati e verificati per ruolo.</li>
-        <li>I dati di ricerca dei partecipanti sono indicizzati tramite un Samply ID pseudonimo; i dati di contatto non sono mostrati ai ricercatori, salvo il caso in cui un partecipante scelga di aderire ai pagamenti.</li>
+        <li>I dati di ricerca dei partecipanti sono indicizzati tramite un Samply ID pseudonimo; i dati di contatto non sono mostrati ai ricercatori.</li>
         <li>Le password sono conservate in forma sottoposta ad hashing (bcrypt); i token di sessione e API hanno durata limitata nel tempo.</li>
         <li>L&rsquo;accesso ai dati dei partecipanti e alle esportazioni è registrato in un registro di audit interno.</li>
         <li>Conservazione configurabile con cancellazione automatica dopo i periodi indicati nell&rsquo;Informativa sulla privacy.</li>
@@ -1066,7 +1056,6 @@ function DpaContentIt() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — hosting del database.</li>
         <li><strong>Postmark</strong> — email transazionali e di notifica.</li>
-        <li><strong>Stripe</strong> — compenso / pagamenti ai partecipanti (solo se abilitato).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — invio delle notifiche push.</li>
         <li><strong>Cloudflare Turnstile</strong> — protezione dai bot in fase di registrazione.</li>
         <li><strong>Università di Costanza</strong> — hosting web/app.</li>
@@ -1177,8 +1166,7 @@ function DpaContentFr() {
           (Samply ID), adresse e-mail du compte et (facultativement) nom, jeton push de
           l&rsquo;appareil, langue et fuseau horaire, événements de diffusion et d&rsquo;interaction
           des notifications, métadonnées d&rsquo;enquête/de réponse, code et groupe facultatifs du
-          participant, événements de localisation/géorepérage lorsque l&rsquo;Étude les active, et
-          données de paiement lorsqu&rsquo;une compensation est configurée.
+          participant et événements de localisation/géorepérage lorsque l&rsquo;Étude les active.
         </li>
         <li>
           <strong>Catégories particulières de données à caractère personnel :</strong> non
@@ -1213,7 +1201,7 @@ function DpaContentFr() {
       <h2>6. Mesures techniques et organisationnelles (art. 32)</h2>
       <ul>
         <li>Chiffrement des données en transit (TLS) ; accès restreint aux comptes authentifiés et contrôlés par rôle.</li>
-        <li>Les données de recherche des participants sont indexées par un Samply ID pseudonyme ; les coordonnées ne sont pas montrées aux chercheurs, sauf lorsqu&rsquo;un participant opte pour les paiements.</li>
+        <li>Les données de recherche des participants sont indexées par un Samply ID pseudonyme ; les coordonnées ne sont pas montrées aux chercheurs.</li>
         <li>Les mots de passe sont stockés sous forme hachée (bcrypt) ; les jetons de session et d&rsquo;API ont une durée limitée.</li>
         <li>L&rsquo;accès aux données des participants et aux exports est consigné dans un journal d&rsquo;audit interne.</li>
         <li>Conservation configurable avec suppression automatique à l&rsquo;issue des périodes indiquées dans la Politique de confidentialité.</li>
@@ -1229,7 +1217,6 @@ function DpaContentFr() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — hébergement de la base de données.</li>
         <li><strong>Postmark</strong> — e-mails transactionnels et de notification.</li>
-        <li><strong>Stripe</strong> — compensation / versements aux participants (uniquement lorsque activé).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — diffusion des notifications push.</li>
         <li><strong>Cloudflare Turnstile</strong> — protection anti-robots à l&rsquo;inscription.</li>
         <li><strong>Université de Constance</strong> — hébergement web/app.</li>
@@ -1342,8 +1329,7 @@ function DpaContentEs() {
           ID), correo electrónico de la cuenta y (opcionalmente) nombre, token de notificación push
           del dispositivo, idioma y zona horaria, eventos de entrega e interacción de las
           notificaciones, metadatos de encuestas/respuestas, código y grupo opcionales del
-          participante, eventos de ubicación/geovallado cuando el Estudio los habilita, y datos de
-          pago cuando se configura una compensación.
+          participante y eventos de ubicación/geovallado cuando el Estudio los habilita.
         </li>
         <li>
           <strong>Categorías especiales de datos personales:</strong> la propia plataforma no las
@@ -1377,7 +1363,7 @@ function DpaContentEs() {
       <h2>6. Medidas técnicas y organizativas (art. 32)</h2>
       <ul>
         <li>Cifrado de los datos en tránsito (TLS); acceso restringido a cuentas autenticadas y verificadas por rol.</li>
-        <li>Los datos de investigación de los participantes se indexan mediante un Samply ID seudonimizado; los datos de contacto no se muestran a los investigadores, salvo cuando un participante opta por recibir pagos.</li>
+        <li>Los datos de investigación de los participantes se indexan mediante un Samply ID seudonimizado; los datos de contacto no se muestran a los investigadores.</li>
         <li>Las contraseñas se almacenan cifradas mediante hash (bcrypt); los tokens de sesión y de API tienen una duración limitada en el tiempo.</li>
         <li>El acceso a los datos de los participantes y a las exportaciones se registra en un registro de auditoría interno.</li>
         <li>Conservación configurable con supresión automática tras los plazos indicados en la Política de Privacidad.</li>
@@ -1393,7 +1379,6 @@ function DpaContentEs() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — alojamiento de la base de datos.</li>
         <li><strong>Postmark</strong> — correo electrónico transaccional y de notificaciones.</li>
-        <li><strong>Stripe</strong> — compensación / pagos a los participantes (solo cuando está habilitado).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — entrega de notificaciones push.</li>
         <li><strong>Cloudflare Turnstile</strong> — protección frente a bots en el registro.</li>
         <li><strong>Universidad de Constanza</strong> — alojamiento web/de la aplicación.</li>
@@ -1504,9 +1489,8 @@ function DpaContentPt() {
           <strong>Dados pessoais:</strong> identificador pseudonimizado do participante (Samply ID),
           email da conta e (opcionalmente) nome, token de notificação push do dispositivo, idioma e
           fuso horário, eventos de entrega e interação de notificações, metadados de
-          inquérito/resposta, código e grupo opcionais do participante, eventos de
-          localização/geofencing quando o Estudo os ativa, e dados de pagamento quando é configurada
-          uma compensação.
+          inquérito/resposta, código e grupo opcionais do participante e eventos de
+          localização/geofencing quando o Estudo os ativa.
         </li>
         <li>
           <strong>Categorias especiais de dados pessoais:</strong> não são recolhidas pela própria
@@ -1540,7 +1524,7 @@ function DpaContentPt() {
       <h2>6. Medidas técnicas e organizativas (art. 32.º)</h2>
       <ul>
         <li>Cifragem dos dados em trânsito (TLS); acesso restrito a contas autenticadas e com verificação de função.</li>
-        <li>Os dados de investigação dos participantes são indexados por um Samply ID pseudonimizado; os dados de contacto não são mostrados aos investigadores, exceto quando um participante opta por receber pagamentos.</li>
+        <li>Os dados de investigação dos participantes são indexados por um Samply ID pseudonimizado; os dados de contacto não são mostrados aos investigadores.</li>
         <li>As palavras-passe são armazenadas em forma de hash (bcrypt); os tokens de sessão e de API têm duração limitada.</li>
         <li>O acesso aos dados dos participantes e às exportações é registado num registo de auditoria interno.</li>
         <li>Conservação configurável com eliminação automática após os períodos indicados na Política de Privacidade.</li>
@@ -1556,7 +1540,6 @@ function DpaContentPt() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — alojamento da base de dados.</li>
         <li><strong>Postmark</strong> — email transacional e de notificação.</li>
-        <li><strong>Stripe</strong> — compensação / pagamentos aos participantes (apenas quando ativado).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — entrega de notificações push.</li>
         <li><strong>Cloudflare Turnstile</strong> — proteção contra bots no registo.</li>
         <li><strong>Universidade de Constança</strong> — alojamento web/da aplicação.</li>
@@ -1654,8 +1637,7 @@ function DpaContentJa() {
         <li>
           <strong>個人データ：</strong> 仮名化された参加者識別子（Samply ID）、アカウントの
           email および（任意で）氏名、デバイスのプッシュトークン、言語およびタイムゾーン、通知の
-          配信および操作イベント、調査／回答のメタデータ、任意の参加者コードおよびグループ、本研究が有効にしている場合の位置情報／ジオフェンシングイベント、
-          ならびに報酬が設定されている場合の支払いデータ。
+          配信および操作イベント、調査／回答のメタデータ、任意の参加者コードおよびグループ、本研究が有効にしている場合の位置情報／ジオフェンシングイベント。
         </li>
         <li>
           <strong>特別な種類の個人データ：</strong> プラットフォーム自体では収集しません。リンクされた外部調査を介して収集される特別な種類の個人データについては、
@@ -1685,7 +1667,7 @@ function DpaContentJa() {
       <h2>6. 技術的および組織的措置（第32条）</h2>
       <ul>
         <li>転送中のデータの暗号化（TLS）。アクセスは、認証され、役割が確認されたアカウントに制限されます。</li>
-        <li>参加者の研究データは、仮名化された Samply ID によってキー付けされます。連絡先の詳細は、参加者が支払いを選択する場合を除き、研究者に表示されません。</li>
+        <li>参加者の研究データは、仮名化された Samply ID によってキー付けされます。連絡先の詳細が研究者に表示されることはありません。</li>
         <li>パスワードはハッシュ化して保存されます（bcrypt）。セッションおよび API トークンには有効期限があります。</li>
         <li>参加者データおよびエクスポートへのアクセスは、内部監査ログに記録されます。</li>
         <li>プライバシーポリシーに記載された期間の経過後に自動削除される、設定可能な保存。</li>
@@ -1700,7 +1682,6 @@ function DpaContentJa() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — データベースのホスティング。</li>
         <li><strong>Postmark</strong> — トランザクションおよび通知の email。</li>
-        <li><strong>Stripe</strong> — 参加者への報酬／支払い（有効な場合のみ）。</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — プッシュ通知の配信。</li>
         <li><strong>Cloudflare Turnstile</strong> — サインアップ時のボット対策。</li>
         <li><strong>コンスタンツ大学</strong> — ウェブ／アプリのホスティング。</li>
@@ -1797,8 +1778,7 @@ function DpaContentAr() {
           <strong>البيانات الشخصية:</strong> المُعرِّف المستعار للمشارك (Samply ID)، والبريد
           الإلكتروني للحساب و(اختيارياً) الاسم، ورمز الدفع الخاص بالجهاز، واللغة والمنطقة الزمنية،
           وأحداث تسليم الإشعارات والتفاعل معها، وبيانات وصفية عن الاستبيان/الردود، ورمز المشارك
-          الاختياري والمجموعة، وأحداث الموقع/السياج الجغرافي حيثما تُفعِّلها الدراسة، وبيانات
-          الدفع حيثما جرى تكوين التعويض.
+          الاختياري والمجموعة، وأحداث الموقع/السياج الجغرافي حيثما تُفعِّلها الدراسة.
         </li>
         <li>
           <strong>الفئات الخاصة من البيانات الشخصية:</strong> لا تجمعها المنصة ذاتها.
@@ -1831,7 +1811,7 @@ function DpaContentAr() {
       <h2>6. التدابير التقنية والتنظيمية (المادة 32)</h2>
       <ul>
         <li>تشفير البيانات أثناء النقل (TLS)؛ ويقتصر الوصول على الحسابات المُصادَق عليها والمتحقَّق من أدوارها.</li>
-        <li>تُفهرَس بيانات أبحاث المشاركين بواسطة مُعرِّف مستعار Samply ID؛ ولا تُعرَض بيانات الاتصال على الباحثين إلا حيث يختار المشارك المشاركة في المدفوعات.</li>
+        <li>تُفهرَس بيانات أبحاث المشاركين بواسطة مُعرِّف مستعار Samply ID؛ ولا تُعرَض بيانات الاتصال على الباحثين.</li>
         <li>تُخزَّن كلمات المرور مجزّأة (bcrypt)؛ وتكون رموز الجلسات وواجهة برمجة التطبيقات محدودة زمنياً.</li>
         <li>يُسجَّل الوصول إلى بيانات المشاركين وعمليات التصدير في سجل تدقيق داخلي.</li>
         <li>احتفاظ قابل للتكوين مع حذف تلقائي بعد الفترات المنصوص عليها في سياسة الخصوصية.</li>
@@ -1846,7 +1826,6 @@ function DpaContentAr() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — استضافة قواعد البيانات.</li>
         <li><strong>Postmark</strong> — البريد الإلكتروني للمعاملات والإشعارات.</li>
-        <li><strong>Stripe</strong> — تعويض المشاركين / المدفوعات (فقط عند التفعيل).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — تسليم الإشعارات الفورية.</li>
         <li><strong>Cloudflare Turnstile</strong> — الحماية من الروبوتات عند التسجيل.</li>
         <li><strong>جامعة كونستانس</strong> — استضافة الموقع/التطبيق.</li>
@@ -1947,8 +1926,7 @@ function DpaContentPl() {
           <strong>Dane osobowe:</strong> pseudonimowy identyfikator uczestnika (Samply ID), adres e-mail
           konta oraz (opcjonalnie) imię i nazwisko, token push urządzenia, język i strefa czasowa, zdarzenia
           dostarczania i interakcji z powiadomieniami, metadane ankiet/odpowiedzi, opcjonalny kod uczestnika i
-          grupa, zdarzenia lokalizacji/geofencingu tam, gdzie Badanie je włącza, oraz dane płatności tam, gdzie
-          skonfigurowano wynagrodzenie.
+          grupa oraz zdarzenia lokalizacji/geofencingu tam, gdzie Badanie je włącza.
         </li>
         <li>
           <strong>Szczególne kategorie danych osobowych:</strong> nie są zbierane przez samą
@@ -1981,7 +1959,7 @@ function DpaContentPl() {
       <h2>6. Środki techniczne i organizacyjne (art. 32)</h2>
       <ul>
         <li>Szyfrowanie danych w tranzycie (TLS); dostęp ograniczony do uwierzytelnionych kont ze sprawdzaniem ról.</li>
-        <li>Dane badawcze uczestników są kluczowane pseudonimowym Samply ID; dane kontaktowe nie są udostępniane badaczom, z wyjątkiem sytuacji, gdy uczestnik zdecyduje się na płatności.</li>
+        <li>Dane badawcze uczestników są kluczowane pseudonimowym Samply ID; dane kontaktowe nie są udostępniane badaczom.</li>
         <li>Hasła są przechowywane w postaci zahaszowanej (bcrypt); tokeny sesji i API mają ograniczony czas ważności.</li>
         <li>Dostęp do danych uczestników i eksportów jest rejestrowany w wewnętrznym dzienniku audytu.</li>
         <li>Konfigurowalne przechowywanie z automatycznym usuwaniem po okresach określonych w Polityce prywatności.</li>
@@ -1996,7 +1974,6 @@ function DpaContentPl() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — hosting bazy danych.</li>
         <li><strong>Postmark</strong> — transakcyjna i powiadomieniowa poczta e-mail.</li>
-        <li><strong>Stripe</strong> — wynagrodzenia / wypłaty dla uczestników (tylko gdy włączone).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — dostarczanie powiadomień push.</li>
         <li><strong>Cloudflare Turnstile</strong> — ochrona przed botami przy rejestracji.</li>
         <li><strong>Uniwersytet w Konstancji</strong> — hosting strony/aplikacji.</li>
@@ -2099,8 +2076,7 @@ function DpaContentTr() {
           <strong>Kişisel veriler:</strong> takma adlı katılımcı tanımlayıcısı (Samply ID), hesap
           e-postası ve (isteğe bağlı olarak) ad, cihaz push jetonu, dil ve saat dilimi, bildirim
           iletim ve etkileşim olayları, anket/yanıt üstverileri, isteğe bağlı katılımcı kodu ve
-          grubu, Çalışmanın etkinleştirdiği durumlarda konum/coğrafi çit olayları ve tazminat
-          yapılandırıldığında ödeme verileri.
+          grubu ve Çalışmanın etkinleştirdiği durumlarda konum/coğrafi çit olayları.
         </li>
         <li>
           <strong>Özel nitelikli kişisel veriler:</strong> platformun kendisi tarafından toplanmaz.
@@ -2133,7 +2109,7 @@ function DpaContentTr() {
       <h2>6. Teknik ve idari tedbirler (madde 32)</h2>
       <ul>
         <li>Aktarım halindeki verilerin şifrelenmesi (TLS); erişim, kimliği doğrulanmış ve rolü kontrol edilen hesaplarla sınırlıdır.</li>
-        <li>Katılımcı araştırma verileri takma adlı bir Samply ID ile anahtarlanır; bir katılımcı ödemelere dahil olmayı tercih etmediği sürece iletişim bilgileri araştırmacılara gösterilmez.</li>
+        <li>Katılımcı araştırma verileri takma adlı bir Samply ID ile anahtarlanır; iletişim bilgileri araştırmacılara gösterilmez.</li>
         <li>Parolalar karma değeriyle (bcrypt) saklanır; oturum ve API jetonları zaman sınırlıdır.</li>
         <li>Katılımcı verilerine ve dışa aktarımlara erişim, dahili bir denetim kaydında kaydedilir.</li>
         <li>Gizlilik Politikası&rsquo;nda belirtilen sürelerden sonra otomatik silme ile yapılandırılabilir saklama.</li>
@@ -2149,7 +2125,6 @@ function DpaContentTr() {
       <ul>
         <li><strong>MongoDB Atlas</strong> — veritabanı barındırma.</li>
         <li><strong>Postmark</strong> — işlemsel ve bildirim e-postaları.</li>
-        <li><strong>Stripe</strong> — katılımcı tazminatı / ödemeler (yalnızca etkinleştirildiğinde).</li>
         <li><strong>Expo / Apple Push / Google FCM</strong> — push bildirim iletimi.</li>
         <li><strong>Cloudflare Turnstile</strong> — kayıt sırasında bot koruması.</li>
         <li><strong>Konstanz Üniversitesi</strong> — web/uygulama barındırma.</li>

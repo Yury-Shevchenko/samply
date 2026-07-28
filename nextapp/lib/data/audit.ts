@@ -46,8 +46,6 @@ export const AUDIT_ACTIONS: AuditAction[] = [
   "view_participant",
   "export_results",
   "export_participants",
-  "view_payout",
-  "view_receipts",
 ];
 
 const AUDIT_PAGE_SIZE = 100;

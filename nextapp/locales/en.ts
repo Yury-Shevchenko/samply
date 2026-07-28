@@ -673,7 +673,6 @@ const en = {
     labelPushToken:        "Push token",
     detailNoToken:         "No token",
     detailNoTokenHint:     "This participant has not granted notification permission, so their Expo push token was never registered. Ask them to allow notifications in their device settings and then re-join the study by scanning the QR code or opening the invitation link again.",
-    labelStripeAccount:    "Stripe account",
     labelTimezone:         "Timezone",
     labelTimeWindow:       "Time window",
     scheduleNotification:  "+ Schedule notification",
@@ -693,13 +692,6 @@ const en = {
     thNotification:        "Notification",
     thSent:                "Sent",
     thStatus:              "Status",
-    /** {n} = number of payouts */
-    payoutsHeading:        "payouts · {n}",
-    thDate:                "Date",
-    thAmount:              "Amount",
-    thCurrency:            "Currency",
-    thReceipt:             "Receipt",
-    openReceipt:           "open →",
     dangerZoneHeading:     "danger zone",
     removeParticipant:     "Remove participant",
     removeParticipantHint: "Removes this participant from the study. Their notification history is preserved.",
@@ -905,7 +897,6 @@ const en = {
     secureCodeHint:         "Leave empty for shared link · Fill to assign one person",
     secureCodePlaceholder:  "e.g. P001",
     secureAllowTz:          "Allow timezone updates",
-    secureAllowPayment:     "Allow payment account",
     secureGenerate:         "Generate secure link",
     secureCopyLink:         "Copy link",
     secureCopied:           "Copied ✓",
@@ -1371,7 +1362,6 @@ const en = {
     colGroup:       "Group",
     colPrefs:       "Time preferences",
     colTimezone:    "Timezone",
-    colPayout:      "Payout",
   },
 
   // ─── Legacy projects page ─────────────────────────────────────────────────────
@@ -1385,33 +1375,6 @@ const en = {
     newStudy:       "+ New study",
   },
 
-
-  // ─── Legacy payouts / receipts pages ─────────────────────────────────────────
-  // @page    /payout/[id], /receipts/[id]
-  legacyPayouts: {
-    tabPayouts:      "Payouts",
-    tabReceipts:     "Receipts",
-    participantInfo: "Participant info",
-    idLabel:         "Samply ID",
-    nameLabel:       "Name",
-    emailLabel:      "Email",
-    paymentsLabel:   "Payments",
-    enabled:         "Enabled",
-    disabled:        "Disabled",
-    sendPayment:     "Send payment",
-    currencyLabel:   "Currency",
-    amountLabel:     "Amount",
-    sendButton:      "Send payment",
-    notSetUp:        "This participant has not set up a payment account yet.",
-    noReceipts:      "No receipts yet.",
-    colDate:         "Date",
-    colReceiptId:    "Receipt ID",
-    colStatus:       "Status",
-    colCurrency:     "Currency",
-    colAmount:       "Amount",
-    colFee:          "Fee",
-    colUrl:          "URL",
-  },
 
   // ─── Analytics dashboard ─────────────────────────────────────────────────────
   // @page    /dashboard/[studyId]/analytics
@@ -1931,26 +1894,6 @@ const en = {
       deleteIntro:   "Permanently delete your account and all your response data. This action cannot be undone.",
     },
 
-    // ─── Payable account (Stripe Connect for participants) ─────────────────────
-    // @page /account (for participants only)
-    // @context Lets participants connect a Stripe Express account so researchers
-    //          can pay them for participating in studies. This is OPTIONAL — a
-    //          participant only needs it if a study compensates them via Samply.
-    payable: {
-      title:              "Payable account",
-      intro:              "Connect a payable account if you’d like to receive payment from researchers for participating in studies. Your account is hosted by Stripe.",
-      createButton:       "Create payable account →",
-      editButton:         "Update payable account →",
-      confirmEmailFirst:  "Please confirm your email address before setting up a payable account.",
-      statusCharges:      "Can accept charges",
-      statusDetails:      "Onboarding details",
-      statusPayouts:      "Payouts to your bank",
-      enabled:            "Enabled",
-      disabled:           "Not yet enabled",
-      submitted:          "Submitted",
-      notSubmitted:       "Not submitted",
-      errorCreate:        "Could not start Stripe onboarding. Please try again.",
-    },
   },
 
   legacyInvitations: {

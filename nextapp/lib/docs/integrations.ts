@@ -43,11 +43,15 @@ export interface Integration {
   completionWarning?: string;
 
   /**
-   * Optional tool-specific note on registering completion as a server-side POST
-   * (webhook) instead of the browser redirect. The generic POST mechanics are
-   * rendered for every tool; this adds what THIS tool can/can't do natively.
+   * Server-side POST (webhook) alternative to the browser redirect. The generic
+   * POST mechanics are rendered for every tool; these fields add what THIS tool
+   * can/can't do and how. `postFeasibility`: "native" = the tool can POST itself,
+   * "partial" = possible but gated/unverified, "external" = needs a relay/script.
    */
-  postWebhookNote?: string;
+  postFeasibility?: "native" | "partial" | "external";
+  postMechanism?: string;
+  postSteps?: string[];
+  postSources?: string[];
 
   reservedParamWarning?: string;
   caveats: string[];
@@ -79,7 +83,19 @@ export const INTEGRATIONS: Integration[] = [
       "Enter the Samply completion URL with the captured message id piped in: https://samply.uni-konstanz.de/studies/<study-code>/done/${e://Field/msg} (use whatever field name holds %MESSAGE_ID%).",
       "Optionally use ${e://Field/msg?format=urlencode} to be safe, then save and publish. Test with a real Samply link end-to-end.",
     ],
-    postWebhookNote: "Qualtrics can also fire this POST itself instead of redirecting: build a Workflow (Workflows tab → started by a completed survey response) with a Web Service task that POSTs the completion URL, piping the msg embedded-data field into the path.",
+    postFeasibility: "native",
+    postMechanism: "Qualtrics can POST it from a Workflow — a \"Survey response\" event running a \"Web Service\" task set to POST — so nothing redirects the participant. Needs a licensed account with the Workflows module (not free tiers).",
+    postSteps: [
+      "Open the survey's Workflows tab → Create a workflow → \"Started when an event is received\", and choose the \"Survey response\" event, firing on newly-created completed responses only.",
+      "Add a task and pick \"Web Service\". Set the method to POST and Authentication to \"Not authenticated\".",
+      "In the URL field, type the completion URL and use the piped-text {a} button to drop the msg embedded-data field into the path: https://samply.uni-konstanz.de/studies/<study-code>/done/${e://Field/msg}",
+      "Choose any body format but leave the body empty, and add no headers. Save the task and publish the workflow.",
+      "Send a test response and confirm Samply recorded it from the task's run history — verify the msg resolved inside the path (Qualtrics documents piping mainly for query strings, so test it). If your brand restricts outbound domains, allowlist samply.uni-konstanz.de.",
+    ],
+    postSources: [
+      "https://www.qualtrics.com/support/survey-platform/actions-module/web-service-task/",
+      "https://www.qualtrics.com/support/survey-platform/actions-module/survey-response-events/",
+    ],
     reservedParamWarning: "Avoid Q_-prefixed names (Q_Language, Q_TotalDuration, …) and other built-ins (RID/rid, SID, EndDate, IPAddress). Field names are case-sensitive and must match the URL keys exactly.",
     caveats: [
       "The message id sits in the URL path; Samply's %MESSAGE_ID% is a plain 15-char ID, so it is URL-safe, but ${e://Field/msg?format=urlencode} is the cautious choice.",
@@ -113,7 +129,20 @@ export const INTEGRATIONS: Integration[] = [
       "Keep the second argument false so SoSci marks the dataset complete before sending the participant to Samply.",
       "Test a full interview from a real Samply link and confirm it lands on /studies/<study-code>/done/<message-id>.",
     ],
-    postWebhookNote: "SoSci has no dedicated webhook, but because the final page runs PHP you can POST server-side instead of (or before) redirecting — e.g. a cURL call to the same URL built with %reference%. Most studies simply use the redirect above.",
+    postFeasibility: "native",
+    postMechanism: "SoSci can POST it directly with the built-in sendPOST() function in a \"PHP code\" element — no redirect. Watch SoSci's outbound-request rate limits, which bite at ESM scale.",
+    postSteps: [
+      "Add a contentless page just before SoSci's final/goodbye page and place a \"PHP code\" element on it; an empty page auto-forwards after the PHP runs, so the real last page still sets FINISHED.",
+      "Read the message id from the built-in REF variable with reference() — the value SoSci stored from ?r=%MESSAGE_ID% in the start link.",
+      "Build the URL with the id in the path and POST with an empty body: $url = 'https://samply.uni-konstanz.de/studies/<study-code>/done/'.reference(); sendPOST($url, array());",
+      "Do NOT call redirect() — sendPOST() returns inline and the participant continues to the last page. Optionally guard with if (strlen(reference()) == 15).",
+      "Mind SoSci's outbound limits (~1000 requests/24h per project, 20 per interview, 2 per page; 5s timeout, no retry). A high-volume ESM study can hit the daily cap, where the redirect has none.",
+    ],
+    postSources: [
+      "https://www.soscisurvey.de/help/doku.php/en:create:functions:sendjson",
+      "https://www.soscisurvey.de/help/doku.php/en:create:functions:reference",
+      "https://www.soscisurvey.de/help/doku.php/en:create:lastpage",
+    ],
     reservedParamWarning: "r is reserved (auto-stored in REF) — that is exactly what we use for the message id, and %reference% reads it back. Custom parameter names must start with u (e.g. u_sid). readGET() only reads on the first page.",
     caveats: [
       "If you instead capture the id into your own variable, inject it with PHP instead of %reference%, e.g. redirect('https://samply.uni-konstanz.de/studies/<study-code>/done/'.value('IV01'), false);",
@@ -149,7 +178,20 @@ export const INTEGRATIONS: Integration[] = [
       "Survey settings → Presentation → enable automatically loading the End URL on completion, so the participant is redirected (not just shown a link).",
       "Activate and test: {PASSTHRU:msg} resolves to the value LimeSurvey received in the start link.",
     ],
-    postWebhookNote: "LimeSurvey's End URL is a browser redirect only; there is no built-in server-side POST. A silent POST would require a plugin on the afterSurveyComplete event, so the redirect above is the supported route.",
+    postFeasibility: "partial",
+    postMechanism: "Core LimeSurvey only redirects; a silent POST needs a self-hosted install plus a plugin on the afterSurveyComplete event. Existing webhook plugins POST a JSON body to a fixed URL, so they must be adapted to put the id in the path.",
+    postSteps: [
+      "This needs a self-hosted LimeSurvey where you can install plugins (LimeSurvey Cloud generally cannot).",
+      "Start from a community webhook plugin that subscribes to afterSurveyComplete and POSTs via cURL (e.g. IrishWolf/LimeSurveyWebhook or nicon8/httphook) — these are unofficial, so vet the code.",
+      "In the afterSurveyComplete handler, load the completed response by responseId and read the stored msg value (the question column that captured {PASSTHRU:msg}).",
+      "Change the plugin's URL from a fixed URL + JSON body to append msg to the path — rtrim($sUrl,'/').'/'.$msg — and POST with an empty body to https://samply.uni-konstanz.de/studies/<study-code>/done/<message-id>.",
+      "Install into upload/plugins/, activate under Configuration → Plugins, set the base URL, and test against your LimeSurvey version (3.x/5.x/6.x differ).",
+    ],
+    postSources: [
+      "https://www.limesurvey.org/manual/AfterSurveyComplete",
+      "https://www.limesurvey.org/manual/Plugin_events",
+      "https://www.limesurvey.org/manual/Plugins_-_advanced",
+    ],
     reservedParamWarning: "Do not reuse LimeSurvey-reserved start-URL keys: sid, lang, token, newtest. Use names like msg, pid, code. {PASSTHRU:name} only works if name was first defined under Panel integration.",
     caveats: [
       "The exact wording of the Presentation toggle that auto-loads the End URL varies across LimeSurvey 3.x/5.x/6.x — confirm it in your installed version.",
@@ -182,7 +224,18 @@ export const INTEGRATIONS: Integration[] = [
       "UNCHECK \"Automatically add ospe.php3 to URL\" and \"Add return ticket\" (both ticked by default) so EFS sends the participant to the unmodified Samply URL.",
       "Save and run a test completion; confirm #p_0003# resolves to the real 15-char message id.",
     ],
-    postWebhookNote: "Unipark/EFS has no simple action to POST to an arbitrary external URL at completion, so the Final-Page redirect above is the reliable route; a server-side POST would need custom trigger scripting.",
+    postFeasibility: "external",
+    postMechanism: "EFS/Unipark has no trigger that makes an outbound HTTP call (its Service Layer is inbound-only), so it cannot POST to Samply itself. Use the Final-Page redirect above, or an external relay driven by the EFS export/API.",
+    postSteps: [
+      "There is no native EFS trigger that POSTs to an external URL, so a silent POST is not possible from EFS alone.",
+      "Simplest: keep the Final-Page redirect above — it reaches the same /done/<message-id> URL, just via the participant's browser.",
+      "To avoid redirecting, run an external relay: periodically export completed cases (EFS export or the Service Layer/API), read p_0003 (the message id) for each newly-finished case, and POST https://samply.uni-konstanz.de/studies/<study-code>/done/<message-id> from your relay.",
+      "De-duplicate on your side so each message id is POSTed only once.",
+    ],
+    postSources: [
+      "https://qbdocs.atlassian.net/wiki/spaces/DOC/pages/1447919750/Triggers",
+      "https://qbdocs.atlassian.net/wiki/spaces/DOC/pages/1273102351/How-to:+Service+Layer",
+    ],
     reservedParamWarning: "Incoming keys must be the reserved single letters a, b, c… (NOT p_0001). Mapping is positional: a→p_0001, b→p_0002, c→p_0003 — a wrong order silently stores values in the wrong column. EFS also reserves lfdn, code, c, tester, language.",
     caveats: [
       "EFS UI labels vary by version/locale and the official docs are partly login-gated, so confidence on exact English wording is medium — verify against your instance with a live test before fielding.",
@@ -217,7 +270,19 @@ export const INTEGRATIONS: Integration[] = [
       "Enter: https://samply.uni-konstanz.de/studies/<study-code>/done/[messageid] — REDCap replaces [messageid] with the stored value at submission.",
       "Save and test end-to-end.",
     ],
-    postWebhookNote: "REDCap's Data Entry Trigger does POST on save, but only to one fixed URL with REDCap's own payload — it cannot place the message id in the path, so it does not fit this endpoint. Use the redirect above, or an external API job that reads the stored messageid and POSTs the completion URL.",
+    postFeasibility: "external",
+    postMechanism: "REDCap can't POST to a path-based URL natively — the Data Entry Trigger posts a fixed payload (record id in the body) to one static URL, and Alerts send only email/SMS. A silent POST needs a small external relay or an API job.",
+    postSteps: [
+      "REDCap has no path-based webhook, so use one of the relay options below (or just the redirect above).",
+      "Relay via the Data Entry Trigger: set Project Setup → Additional Customizations → Data Entry Trigger to your endpoint. On completion REDCap POSTs the record id (not field values) to it.",
+      "Your relay reads the record id, calls the REDCap API (content=record, fields=messageid) with a stored token to fetch messageid, then POSTs https://samply.uni-konstanz.de/studies/<study-code>/done/<messageid> with no body.",
+      "Alternative: a scheduled API poller that exports newly-completed records, reads messageid, and POSTs Samply — tracking sent ids to avoid duplicates.",
+      "The Data Entry Trigger field and API tokens usually need admin rights; confirm access before relying on this.",
+    ],
+    postSources: [
+      "https://atlas.utdallas.edu/TDClient/30/Portal/KB/Article/1091/REDCap-Project-Setup-Additional-Customizations",
+      "https://redcapucdenver.zendesk.com/hc/en-us/articles/31119566714004-Alerts-Notifications",
+    ],
     reservedParamWarning: "Avoid REDCap's own params (s, __response_hash__). Variable names are case-sensitive, no dashes/colons. CRITICAL: the value is only saved when the instrument holding the field is submitted — keep the hidden fields on the first instrument.",
     caveats: [
       "\"Redirect to a URL\" cannot be combined with \"Survey Completion Text\".",
@@ -254,7 +319,19 @@ export const INTEGRATIONS: Integration[] = [
       "Enter a STATIC base URL (do NOT embed a [messageid] token — SurveyMonkey has no path substitution). It appends ?messageid=<value> automatically.",
       "Because of the query-vs-path limitation above, confirm Samply can read messageid from the query string (or route through a rewriter) before going live.",
     ],
-    postWebhookNote: "SurveyMonkey has no per-response action that POSTs to a path-style URL (the same query-vs-path limitation flagged above applies), so a server-side POST would run through the SurveyMonkey API or a webhook relay rather than the End Page.",
+    postFeasibility: "external",
+    postMechanism: "SurveyMonkey's webhooks POST its own event JSON (ids only) to a fixed subscriber URL — they can't put messageid in Samply's path — so a silent POST needs a relay. The query-vs-path limitation flagged above applies.",
+    postSteps: [
+      "SurveyMonkey can't POST directly to Samply's path-based URL, so use a relay (or keep the redirect above with a small rewriter).",
+      "Create a developer app (paid/Enterprise) and subscribe a webhook: POST /v3/webhooks with event_type response_completed, pointing subscription_url at your relay.",
+      "On each callback, the relay reads the response id, then calls GET /v3/surveys/{id}/responses/{id}/details and reads custom_variables.messageid.",
+      "The relay then POSTs https://samply.uni-konstanz.de/studies/<study-code>/done/<messageid> with no body.",
+      "No-code option: a Zapier/Make flow with a completed-response trigger → a Webhooks POST built as .../done/{{messageid}} (paid tiers on both sides).",
+    ],
+    postSources: [
+      "https://developer.surveymonkey.com/api/v3/#webhooks",
+      "https://help.surveymonkey.com/en/surveymonkey/send/custom-variables/",
+    ],
     reservedParamWarning: "Custom Variable names: no spaces, case-sensitive, max 100, keep the URL under 2000 chars. The redirect appends ALL incoming custom variables, so the endpoint must tolerate extra query keys.",
     caveats: [
       "Custom Variables work only with the Web Link collector.",
@@ -288,7 +365,19 @@ export const INTEGRATIONS: Integration[] = [
       "In the protocol dropdown choose https://, and in the URL field put host+path WITHOUT the protocol: samply.uni-konstanz.de/studies/<study-code>/done/[url(\"msg\")].",
       "Do NOT use \"Fields To Pass\" (that appends ?name=value query strings rather than building the /done/<id> path). Save and test.",
     ],
-    postWebhookNote: "Alchemer can POST server-side with a Webhook action on the final page (Add New → Action → Webhook) targeting the same URL built with [url(\"msg\")] — an alternative to the browser URL Redirect above. Verify the request in a test response.",
+    postFeasibility: "partial",
+    postMechanism: "Alchemer's Webhook action can POST server-side and accepts merge codes in the URL — but it is enterprise-tier only, and placing a merge code in the URL path (rather than the query string) is undocumented, so it must be tested.",
+    postSteps: [
+      "Requires an enterprise Alchemer plan — the Webhook action is enterprise-only; otherwise use the URL Redirect above.",
+      "On the final / Thank-You page, click Action → Webhook.",
+      "Set Method to POST (Samply ignores the body) and set it to run \"when the page is displayed\" so it fires on completion.",
+      "In the URL field, insert the [url(\"msg\")] merge code into the path via \"Select a Merge Code\": https://samply.uni-konstanz.de/studies/<study-code>/done/[url(\"msg\")]",
+      "Enable Asynchronous Connect, save, and run a live test — critically confirm the merge code resolved inside the path (Alchemer only documents merge codes in the query string; if it fails there is no path fallback).",
+    ],
+    postSources: [
+      "https://help.alchemer.com/help/survey-webhook",
+      "https://help.alchemer.com/help/url-variables",
+    ],
     reservedParamWarning: "Do not name a variable source (breaks quotas/logic) or sguid (reserved). The merge-code name inside [url(\"…\")] must be lowercase, though the incoming key is matched case-insensitively.",
     caveats: [
       "Alchemer's redirect docs mostly show appending query strings via \"Fields To Pass\"; the path-style approach relies on the URL field being merge-code compatible — verify the rendered redirect in a test response.",
@@ -324,7 +413,19 @@ export const INTEGRATIONS: Integration[] = [
       "In \"Website Address\" enter: https://samply.uni-konstanz.de/studies/<study-code>/done/${custom1}.",
       "Save; QuestionPro substitutes ${custom1} with the real message id at the end and redirects. Test end-to-end.",
     ],
-    postWebhookNote: "QuestionPro's Automatic Redirect is browser-side; a silent POST would use QuestionPro's webhook/API features (availability varies by plan) rather than Finish Options, so the redirect above is the standard route.",
+    postFeasibility: "partial",
+    postMechanism: "QuestionPro's Webhooks (Survey → Integrations → Webhooks) can POST after completion, but ${custom1} substitution is documented only for the JSON body, not the URL path — so the path form must be tested and a relay may be needed. Paid tier only.",
+    postSteps: [
+      "Requires a paid tier with Webhooks (Team or Research edition).",
+      "Survey → Integrations → Webhooks → Add New Webhook; set Request Method = POST and the trigger to \"after the survey is completed\".",
+      "Set the Request URL to https://samply.uni-konstanz.de/studies/<study-code>/done/${custom1} and fire a test to a capture endpoint (e.g. webhook.site) to see whether QuestionPro substitutes ${custom1} inside the URL.",
+      "If it substitutes in the URL, you're done (Samply ignores the body). If it sends the literal ${custom1}, fall back to a relay: POST {\"mid\":\"${custom1}\"} to your relay (body substitution IS supported), and have the relay POST .../done/<mid> to Samply.",
+      "Use the webhook Logs (payload, response, manual retry) to confirm Samply returned success.",
+    ],
+    postSources: [
+      "https://www.questionpro.com/help/webhook.html",
+      "https://www.questionpro.com/api/create-webhook.html",
+    ],
     reservedParamWarning: "Reserved names: customN, ext_ref, email. Values may not contain comma or hash. Prefer ${custom1} over ${ext_ref} in the redirect — only ${custom1}–${custom255} are documented piping tags.",
     caveats: [
       "ext_ref capture works too, but using ${ext_ref} inside the redirect is undocumented — stick to ${custom1} for the round-trip.",

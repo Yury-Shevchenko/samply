@@ -490,7 +490,6 @@ const ru: DeepLoose<Messages> = {
     labelPushToken: "Push-токен",
     detailNoToken: "Нет токена",
     detailNoTokenHint: "Этот участник не дал разрешение на уведомления, поэтому его Expo push-токен не был зарегистрирован. Попросите его разрешить уведомления в настройках устройства и снова присоединиться к исследованию, отсканировав QR-код или открыв ссылку-приглашение заново.",
-    labelStripeAccount: "Аккаунт Stripe",
     labelTimezone: "Часовой пояс",
     labelTimeWindow: "Временное окно",
     scheduleNotification: "+ Запланировать уведомление",
@@ -509,12 +508,6 @@ const ru: DeepLoose<Messages> = {
     thNotification: "Уведомление",
     thSent: "Отправлено",
     thStatus: "Статус",
-    payoutsHeading: "выплаты · {n}",
-    thDate: "Дата",
-    thAmount: "Сумма",
-    thCurrency: "Валюта",
-    thReceipt: "Чек",
-    openReceipt: "открыть →",
     dangerZoneHeading: "опасная зона",
     removeParticipant: "Удалить участника",
     removeParticipantHint: "Удаляет участника из исследования. История его уведомлений сохраняется.",
@@ -620,7 +613,6 @@ const ru: DeepLoose<Messages> = {
     secureCodeHint: "Оставьте пустым для общей ссылки · Заполните, чтобы привязать к одному человеку",
     secureCodePlaceholder: "напр. P001",
     secureAllowTz: "Разрешить изменение часового пояса",
-    secureAllowPayment: "Разрешить платёжный аккаунт",
     secureGenerate: "Сгенерировать защищённую ссылку",
     secureCopyLink: "Копировать ссылку",
     secureCopied: "Скопировано ✓",
@@ -989,7 +981,6 @@ const ru: DeepLoose<Messages> = {
     colGroup:       "Группа",
     colPrefs:       "Временны́е предпочтения",
     colTimezone:    "Часовой пояс",
-    colPayout:      "Выплата",
   },
 
   legacyProjects: {
@@ -1001,31 +992,6 @@ const ru: DeepLoose<Messages> = {
     newStudy:       "+ Новое исследование",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "Выплаты",
-    tabReceipts:     "Квитанции",
-    participantInfo: "Данные участника",
-    idLabel:         "Samply ID",
-    nameLabel:       "Имя",
-    emailLabel:      "Email",
-    paymentsLabel:   "Платежи",
-    enabled:         "Включено",
-    disabled:        "Отключено",
-    sendPayment:     "Отправить платёж",
-    currencyLabel:   "Валюта",
-    amountLabel:     "Сумма",
-    sendButton:      "Отправить платёж",
-    notSetUp:        "Этот участник ещё не настроил платёжный аккаунт.",
-    noReceipts:      "Квитанций пока нет.",
-    colDate:         "Дата",
-    colReceiptId:    "ID квитанции",
-    colStatus:       "Статус",
-    colCurrency:     "Валюта",
-    colAmount:       "Сумма",
-    colFee:          "Комиссия",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "Отправлено уведомлений",
@@ -1449,22 +1415,6 @@ const ru: DeepLoose<Messages> = {
       deleteIntro:   "Безвозвратно удалить ваш аккаунт и все данные ваших ответов. Это действие нельзя отменить.",
     },
 
-    // ─── Счёт для выплат (Stripe Connect для участников) ───────────────────────
-    payable: {
-      title:              "Счёт для выплат",
-      intro:              "Подключите счёт для выплат, если хотите получать оплату от исследователей за участие в исследованиях. Ваш счёт обслуживается Stripe.",
-      createButton:       "Создать счёт для выплат →",
-      editButton:         "Обновить счёт для выплат →",
-      confirmEmailFirst:  "Пожалуйста, подтвердите свой email, прежде чем настраивать счёт для выплат.",
-      statusCharges:      "Может принимать платежи",
-      statusDetails:      "Данные для подключения",
-      statusPayouts:      "Выплаты на ваш банковский счёт",
-      enabled:            "Включено",
-      disabled:           "Ещё не включено",
-      submitted:          "Отправлено",
-      notSubmitted:       "Не отправлено",
-      errorCreate:        "Не удалось запустить подключение Stripe. Попробуйте ещё раз.",
-    },
   },
 
   legacyInvitations: {

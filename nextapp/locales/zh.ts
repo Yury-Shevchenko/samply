@@ -509,7 +509,6 @@ const zh: DeepLoose<Messages> = {
     labelPushToken: "推送令牌",
     detailNoToken: "无令牌",
     detailNoTokenHint: "该参与者未授予通知权限,因此其 Expo 推送令牌从未注册。请让其在设备设置中允许通知,然后通过扫描 QR 码或再次打开邀请链接重新加入研究。",
-    labelStripeAccount: "Stripe 账户",
     labelTimezone: "时区",
     labelTimeWindow: "时间窗口",
     scheduleNotification: "+ 安排通知",
@@ -528,12 +527,6 @@ const zh: DeepLoose<Messages> = {
     thNotification: "通知",
     thSent: "已发送",
     thStatus: "状态",
-    payoutsHeading: "支付 · {n}",
-    thDate: "日期",
-    thAmount: "金额",
-    thCurrency: "货币",
-    thReceipt: "收据",
-    openReceipt: "打开 →",
     dangerZoneHeading: "危险区域",
     removeParticipant: "移除参与者",
     removeParticipantHint: "将该参与者从研究中移除。其通知历史会被保留。",
@@ -639,7 +632,6 @@ const zh: DeepLoose<Messages> = {
     secureCodeHint: "留空表示共享链接 · 填写以分配给某个人",
     secureCodePlaceholder: "例如 P001",
     secureAllowTz: "允许更新时区",
-    secureAllowPayment: "允许付款账户",
     secureGenerate: "生成安全链接",
     secureCopyLink: "复制链接",
     secureCopied: "已复制 ✓",
@@ -1008,7 +1000,6 @@ const zh: DeepLoose<Messages> = {
     colGroup:       '分组',
     colPrefs:       '时间偏好',
     colTimezone:    '时区',
-    colPayout:      '支付',
   },
 
   legacyProjects: {
@@ -1020,31 +1011,6 @@ const zh: DeepLoose<Messages> = {
     newStudy:       '+ 新建研究',
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      '支付',
-    tabReceipts:     '收据',
-    participantInfo: '参与者信息',
-    idLabel:         'Samply ID',
-    nameLabel:       '姓名',
-    emailLabel:      '邮箱',
-    paymentsLabel:   '支付',
-    enabled:         '已启用',
-    disabled:        '已禁用',
-    sendPayment:     '发送支付',
-    currencyLabel:   '货币',
-    amountLabel:     '金额',
-    sendButton:      '发送支付',
-    notSetUp:        '该参与者尚未设置支付账户。',
-    noReceipts:      '暂无收据。',
-    colDate:         '日期',
-    colReceiptId:    '收据 ID',
-    colStatus:       '状态',
-    colCurrency:     '货币',
-    colAmount:       '金额',
-    colFee:          '手续费',
-    colUrl:          'URL',
-  },
 
   analytics: {
     metricSent:           '已发送通知',
@@ -1482,22 +1448,6 @@ const zh: DeepLoose<Messages> = {
       deleteIntro:   '永久删除您的账户和所有响应数据。此操作无法撤销。',
     },
 
-    // ─── 收款账户（参与者的 Stripe Connect） ───────────────────────────────────
-    payable: {
-      title:              '收款账户',
-      intro:              '如果您希望从研究者那里获得参与研究的报酬，请关联收款账户。您的账户由 Stripe 托管。',
-      createButton:       '创建收款账户 →',
-      editButton:         '更新收款账户 →',
-      confirmEmailFirst:  '请先确认您的邮箱地址，然后再设置收款账户。',
-      statusCharges:      '可接受款项',
-      statusDetails:      '入驻信息',
-      statusPayouts:      '向您的银行付款',
-      enabled:            '已启用',
-      disabled:           '尚未启用',
-      submitted:          '已提交',
-      notSubmitted:       '未提交',
-      errorCreate:        '无法启动 Stripe 入驻。请重试。',
-    },
   },
 
   legacyInvitations: {

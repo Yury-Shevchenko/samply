@@ -505,7 +505,6 @@ const nl: DeepLoose<Messages> = {
     labelPushToken: "Pushtoken",
     detailNoToken: "Geen token",
     detailNoTokenHint: "Deze deelnemer heeft geen toestemming voor meldingen gegeven, dus de Expo-pushtoken is nooit geregistreerd. Vraag de deelnemer om meldingen toe te staan in de apparaatinstellingen en zich opnieuw aan te melden voor de studie door de QR-code te scannen of de uitnodigingslink opnieuw te openen.",
-    labelStripeAccount: "Stripe-account",
     labelTimezone: "Tijdzone",
     labelTimeWindow: "Tijdsvenster",
     scheduleNotification: "+ Melding plannen",
@@ -524,12 +523,6 @@ const nl: DeepLoose<Messages> = {
     thNotification: "Melding",
     thSent: "Verzonden",
     thStatus: "Status",
-    payoutsHeading: "uitbetalingen · {n}",
-    thDate: "Datum",
-    thAmount: "Bedrag",
-    thCurrency: "Valuta",
-    thReceipt: "Bon",
-    openReceipt: "openen →",
     dangerZoneHeading: "gevarenzone",
     removeParticipant: "Deelnemer verwijderen",
     removeParticipantHint: "Verwijdert deze deelnemer uit de studie. De meldingsgeschiedenis blijft bewaard.",
@@ -635,7 +628,6 @@ const nl: DeepLoose<Messages> = {
     secureCodeHint: "Leeg laten voor gedeelde link · Vul in om aan één persoon toe te wijzen",
     secureCodePlaceholder: "bijv. P001",
     secureAllowTz: "Tijdzone-updates toestaan",
-    secureAllowPayment: "Betaalaccount toestaan",
     secureGenerate: "Veilige link genereren",
     secureCopyLink: "Link kopiëren",
     secureCopied: "Gekopieerd ✓",
@@ -1004,7 +996,6 @@ const nl: DeepLoose<Messages> = {
     colGroup:       "Groep",
     colPrefs:       "Tijdvoorkeuren",
     colTimezone:    "Tijdzone",
-    colPayout:      "Uitbetaling",
   },
 
   legacyProjects: {
@@ -1016,31 +1007,6 @@ const nl: DeepLoose<Messages> = {
     newStudy:       "+ Nieuwe studie",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "Uitbetalingen",
-    tabReceipts:     "Ontvangstbewijzen",
-    participantInfo: "Deelnemersinformatie",
-    idLabel:         "Samply-ID",
-    nameLabel:       "Naam",
-    emailLabel:      "E-mail",
-    paymentsLabel:   "Betalingen",
-    enabled:         "Ingeschakeld",
-    disabled:        "Uitgeschakeld",
-    sendPayment:     "Betaling verzenden",
-    currencyLabel:   "Valuta",
-    amountLabel:     "Bedrag",
-    sendButton:      "Betaling verzenden",
-    notSetUp:        "Deze deelnemer heeft nog geen betalingsaccount ingesteld.",
-    noReceipts:      "Nog geen ontvangstbewijzen.",
-    colDate:         "Datum",
-    colReceiptId:    "Ontvangstbewijs-ID",
-    colStatus:       "Status",
-    colCurrency:     "Valuta",
-    colAmount:       "Bedrag",
-    colFee:          "Vergoeding",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "Verzonden meldingen",
@@ -1464,22 +1430,6 @@ const nl: DeepLoose<Messages> = {
       deleteIntro:   "Verwijder uw account en al uw antwoordgegevens permanent. Deze actie kan niet ongedaan worden gemaakt.",
     },
 
-    // ─── Uitbetalingsaccount (Stripe Connect voor deelnemers) ──────────────────
-    payable: {
-      title:              "Uitbetalingsaccount",
-      intro:              "Koppel een uitbetalingsaccount als u betaling van onderzoekers wilt ontvangen voor deelname aan studies. Uw account wordt gehost door Stripe.",
-      createButton:       "Uitbetalingsaccount aanmaken →",
-      editButton:         "Uitbetalingsaccount bijwerken →",
-      confirmEmailFirst:  "Bevestig uw e-mailadres voordat u een uitbetalingsaccount instelt.",
-      statusCharges:      "Kan betalingen accepteren",
-      statusDetails:      "Onboardinggegevens",
-      statusPayouts:      "Uitbetalingen naar uw bank",
-      enabled:            "Ingeschakeld",
-      disabled:           "Nog niet ingeschakeld",
-      submitted:          "Ingediend",
-      notSubmitted:       "Niet ingediend",
-      errorCreate:        "Stripe-onboarding kon niet worden gestart. Probeer het opnieuw.",
-    },
   },
 
   legacyInvitations: {

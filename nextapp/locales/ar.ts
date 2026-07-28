@@ -492,7 +492,6 @@ const ar: DeepLoose<Messages> = {
     labelPushToken: "رمز Push",
     detailNoToken: "لا يوجد رمز",
     detailNoTokenHint: "لم يمنح هذا المشارك إذن الإشعارات، لذا لم يتم تسجيل رمز Expo Push الخاص به. اطلب منه السماح بالإشعارات في إعدادات الجهاز ثم الانضمام مجددًا إلى الدراسة عن طريق مسح رمز QR أو فتح رابط الدعوة مرة أخرى.",
-    labelStripeAccount: "حساب Stripe",
     labelTimezone: "المنطقة الزمنية",
     labelTimeWindow: "النافذة الزمنية",
     scheduleNotification: "+ جدولة إشعار",
@@ -511,12 +510,6 @@ const ar: DeepLoose<Messages> = {
     thNotification: "الإشعار",
     thSent: "أُرسل",
     thStatus: "الحالة",
-    payoutsHeading: "المدفوعات · {n}",
-    thDate: "التاريخ",
-    thAmount: "المبلغ",
-    thCurrency: "العملة",
-    thReceipt: "الإيصال",
-    openReceipt: "فتح ←",
     dangerZoneHeading: "منطقة الخطر",
     removeParticipant: "إزالة المشارك",
     removeParticipantHint: "يزيل هذا المشارك من الدراسة. يتم الاحتفاظ بسجل الإشعارات.",
@@ -622,7 +615,6 @@ const ar: DeepLoose<Messages> = {
     secureCodeHint: "اتركه فارغًا للرابط المشترك · املأه لتعيينه لشخص واحد",
     secureCodePlaceholder: "مثل P001",
     secureAllowTz: "السماح بتحديثات المنطقة الزمنية",
-    secureAllowPayment: "السماح بحساب الدفع",
     secureGenerate: "إنشاء رابط آمن",
     secureCopyLink: "نسخ الرابط",
     secureCopied: "تم النسخ ✓",
@@ -991,7 +983,6 @@ const ar: DeepLoose<Messages> = {
     colGroup:       "المجموعة",
     colPrefs:       "تفضيلات الوقت",
     colTimezone:    "المنطقة الزمنية",
-    colPayout:      "الدفع",
   },
 
   legacyProjects: {
@@ -1003,31 +994,6 @@ const ar: DeepLoose<Messages> = {
     newStudy:       "+ دراسة جديدة",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "المدفوعات",
-    tabReceipts:     "الإيصالات",
-    participantInfo: "معلومات المشارك",
-    idLabel:         "معرّف Samply",
-    nameLabel:       "الاسم",
-    emailLabel:      "البريد الإلكتروني",
-    paymentsLabel:   "المدفوعات",
-    enabled:         "مفعَّل",
-    disabled:        "معطَّل",
-    sendPayment:     "إرسال الدفع",
-    currencyLabel:   "العملة",
-    amountLabel:     "المبلغ",
-    sendButton:      "إرسال الدفع",
-    notSetUp:        "لم يقم هذا المشارك بإعداد حساب دفع بعد.",
-    noReceipts:      "لا توجد إيصالات بعد.",
-    colDate:         "التاريخ",
-    colReceiptId:    "معرّف الإيصال",
-    colStatus:       "الحالة",
-    colCurrency:     "العملة",
-    colAmount:       "المبلغ",
-    colFee:          "الرسوم",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "الإشعارات المرسلة",
@@ -1451,22 +1417,6 @@ const ar: DeepLoose<Messages> = {
       deleteIntro:   "احذف حسابك وجميع بيانات إجاباتك نهائيًا. لا يمكن التراجع عن هذا الإجراء.",
     },
 
-    // ─── حساب الاستلام (Stripe Connect للمشاركين) ───────────────────────────────
-    payable: {
-      title:              "حساب الاستلام",
-      intro:              "اربط حساب استلام إذا كنت ترغب في تلقّي مدفوعات من الباحثين مقابل المشاركة في الدراسات. حسابك مستضاف لدى Stripe.",
-      createButton:       "إنشاء حساب استلام →",
-      editButton:         "تحديث حساب الاستلام →",
-      confirmEmailFirst:  "يرجى تأكيد عنوان بريدك الإلكتروني قبل إعداد حساب استلام.",
-      statusCharges:      "يمكن استلام المدفوعات",
-      statusDetails:      "بيانات التسجيل",
-      statusPayouts:      "تحويلات إلى حسابك المصرفي",
-      enabled:            "مفعَّل",
-      disabled:           "لم يُفعَّل بعد",
-      submitted:          "تم الإرسال",
-      notSubmitted:       "لم يُرسل",
-      errorCreate:        "تعذَّر بدء تسجيل Stripe. يرجى المحاولة مرة أخرى.",
-    },
   },
 
   legacyInvitations: {

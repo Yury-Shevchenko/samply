@@ -509,7 +509,6 @@ const ko: DeepLoose<Messages> = {
     labelPushToken: "푸시 토큰",
     detailNoToken: "토큰 없음",
     detailNoTokenHint: "이 참가자는 알림 권한을 부여하지 않아 Expo 푸시 토큰이 등록되지 않았습니다. 기기 설정에서 알림을 허용한 다음 QR 코드를 스캔하거나 초대 링크를 다시 열어 연구에 재참여하도록 요청하십시오.",
-    labelStripeAccount: "Stripe 계정",
     labelTimezone: "시간대",
     labelTimeWindow: "시간 창",
     scheduleNotification: "+ 알림 예약",
@@ -528,12 +527,6 @@ const ko: DeepLoose<Messages> = {
     thNotification: "알림",
     thSent: "전송됨",
     thStatus: "상태",
-    payoutsHeading: "지급 · {n}",
-    thDate: "날짜",
-    thAmount: "금액",
-    thCurrency: "통화",
-    thReceipt: "영수증",
-    openReceipt: "열기 →",
     dangerZoneHeading: "위험 영역",
     removeParticipant: "참가자 제거",
     removeParticipantHint: "이 참가자를 연구에서 제거합니다. 알림 기록은 보존됩니다.",
@@ -639,7 +632,6 @@ const ko: DeepLoose<Messages> = {
     secureCodeHint: "공유 링크의 경우 비워두기 · 한 사람에게 할당하려면 입력",
     secureCodePlaceholder: "예: P001",
     secureAllowTz: "시간대 업데이트 허용",
-    secureAllowPayment: "결제 계정 허용",
     secureGenerate: "보안 링크 생성",
     secureCopyLink: "링크 복사",
     secureCopied: "복사됨 ✓",
@@ -1008,7 +1000,6 @@ const ko: DeepLoose<Messages> = {
     colGroup:       '그룹',
     colPrefs:       '시간 선호도',
     colTimezone:    '시간대',
-    colPayout:      '지급',
   },
 
   legacyProjects: {
@@ -1020,31 +1011,6 @@ const ko: DeepLoose<Messages> = {
     newStudy:       '+ 새 연구',
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      '지급',
-    tabReceipts:     '영수증',
-    participantInfo: '참가자 정보',
-    idLabel:         'Samply ID',
-    nameLabel:       '이름',
-    emailLabel:      '이메일',
-    paymentsLabel:   '결제',
-    enabled:         '활성화됨',
-    disabled:        '비활성화됨',
-    sendPayment:     '결제 전송',
-    currencyLabel:   '통화',
-    amountLabel:     '금액',
-    sendButton:      '결제 전송',
-    notSetUp:        '이 참가자는 아직 결제 계정을 설정하지 않았습니다.',
-    noReceipts:      '영수증이 없습니다.',
-    colDate:         '날짜',
-    colReceiptId:    '영수증 ID',
-    colStatus:       '상태',
-    colCurrency:     '통화',
-    colAmount:       '금액',
-    colFee:          '수수료',
-    colUrl:          'URL',
-  },
 
   analytics: {
     metricSent:           '발송된 알림',
@@ -1482,22 +1448,6 @@ const ko: DeepLoose<Messages> = {
       deleteIntro:   '계정과 모든 응답 데이터를 영구적으로 삭제합니다. 이 작업은 되돌릴 수 없습니다.',
     },
 
-    // ─── 정산 계정 (참가자용 Stripe Connect) ───────────────────────────────────
-    payable: {
-      title:              '정산 계정',
-      intro:              '연구 참여에 대한 보수를 연구자로부터 받고 싶다면 정산 계정을 연결하세요. 계정은 Stripe에서 호스팅됩니다.',
-      createButton:       '정산 계정 만들기 →',
-      editButton:         '정산 계정 업데이트 →',
-      confirmEmailFirst:  '정산 계정을 설정하기 전에 이메일 주소를 먼저 확인해 주세요.',
-      statusCharges:      '결제 수신 가능',
-      statusDetails:      '온보딩 정보',
-      statusPayouts:      '귀하의 은행 계좌로 송금',
-      enabled:            '활성화됨',
-      disabled:           '아직 활성화되지 않음',
-      submitted:          '제출됨',
-      notSubmitted:       '제출되지 않음',
-      errorCreate:        'Stripe 온보딩을 시작할 수 없습니다. 다시 시도해 주세요.',
-    },
   },
 
   legacyInvitations: {

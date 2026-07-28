@@ -108,16 +108,41 @@ export default async function IntegrationPlatformPage({ params }: { params: Prom
               {/* POST alternative — same endpoint, issued server-to-server instead of redirecting */}
               <h3 style={{ marginTop: "2.8rem" }}>Or register completion silently with a POST</h3>
               <p>
-                The redirect above hands the participant&apos;s browser to Samply. If you would rather
-                record completion server-to-server — without navigating the participant away — send an
-                HTTP <strong>POST</strong> to the very same completion URL, built with the same message-id
-                substitution shown above. No request body and no authentication are needed: the message id
-                in the path is the shared secret. Samply replies <Code>200</Code> on success, or{" "}
-                <Code>400</Code> if the message id matches no response. Either way it records the completion
-                and cancels that send&apos;s pending reminders, exactly like the redirect.
+                The redirect above navigates the participant&apos;s browser to Samply. The same completion
+                can instead be registered server-to-server with an HTTP <strong>POST</strong> to{" "}
+                <Code>{"/studies/<study-code>/done/<message-id>"}</Code> — no request body and no
+                authentication (the message id in the path is the shared secret). Samply replies{" "}
+                <Code>200</Code> on success or <Code>400</Code> if the id matches no response, and it records
+                the completion and cancels that send&apos;s pending reminders exactly like the redirect —
+                just without redirecting. Whether {entry.name} can issue that POST itself varies:
               </p>
-              {entry.postWebhookNote && <p>{entry.postWebhookNote}</p>}
+              {entry.postMechanism && (
+                <Callout
+                  tone={entry.postFeasibility === "native" ? "info" : "warn"}
+                  title={
+                    entry.postFeasibility === "native"
+                      ? "Supported natively"
+                      : entry.postFeasibility === "partial"
+                        ? "Possible — verify against your account"
+                        : "Requires an external relay"
+                  }
+                >
+                  {entry.postMechanism}
+                </Callout>
+              )}
+              {entry.postSteps && entry.postSteps.length > 0 && <Steps steps={entry.postSteps} />}
               <UrlBox label="POST endpoint" url="POST https://samply.uni-konstanz.de/studies/<study-code>/done/<message-id>" />
+              {entry.postSources && entry.postSources.length > 0 && (
+                <p style={{ fontSize: "1.2rem", color: "var(--ink-40)", marginTop: "1rem" }}>
+                  POST sources:{" "}
+                  {entry.postSources.map((s, i) => (
+                    <span key={s}>
+                      {i > 0 ? " · " : ""}
+                      <a href={s} target="_blank" rel="noreferrer" style={{ color: "var(--ink-60)", wordBreak: "break-all" }}>{s}</a>
+                    </span>
+                  ))}
+                </p>
+              )}
               <p style={{ fontSize: "1.25rem", color: "var(--ink-40)", marginTop: "1rem" }}>
                 Full request and response details are in the{" "}
                 <a href="/docs/api" style={{ color: "var(--coral)" }}>API reference</a>.

@@ -39,9 +39,6 @@ function ParticipantRow({ person, i }: { person: MobileUser; i: number }) {
       <td>{person.group?.name ?? ""}</td>
       <td>{info}</td>
       <td>{timezone ?? ""}</td>
-      <td>
-        <a href={`/payout/${person.id}`}>Open</a>
-      </td>
     </tr>
   );
 }
@@ -96,7 +93,6 @@ export default async function ParticipantsPage({
                     <td>{t("legacyParticipants.colGroup")}</td>
                     <td>{t("legacyParticipants.colPrefs")}</td>
                     <td>{t("legacyParticipants.colTimezone")}</td>
-                    <td>{t("legacyParticipants.colPayout")}</td>
                   </tr>
                 </thead>
                 <tbody>

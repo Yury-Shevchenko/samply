@@ -1,9 +1,8 @@
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { fetchProjectById } from "@/lib/data/projects";
-import { fetchParticipants, fetchHistory, fetchReceipts, fetchParticipantUserInfo } from "@/lib/data/participants";
+import { fetchParticipants, fetchHistory, fetchParticipantUserInfo } from "@/lib/data/participants";
 import type { IResult } from "@/lib/models/result";
-import type { IReceipt } from "@/lib/models/receipt";
 import { toggleParticipantAction, deleteParticipantAction, updateParticipantCodeAction } from "./actions";
 import { DeleteForm } from "./DeleteForm";
 import SubmitButton from "@/app/components/ui/SubmitButton";
@@ -110,9 +109,8 @@ export default async function ParticipantDetailPage({ params }: Props) {
     targetSamplyId: participantId,
   });
 
-  const [{ history: recentSent, count: sentCount }, receipts, userInfo, { items: upcomingRaw }] = await Promise.all([
+  const [{ history: recentSent, count: sentCount }, userInfo, { items: upcomingRaw }] = await Promise.all([
     fetchHistory(studyId, 1, participantId, "created", "desc", 5),
-    fetchReceipts(participantId, session.user.id),
     fetchParticipantUserInfo(participantId),
     fetchPendingNotifications(studyId, undefined, ["pending"], participantId, 1, "scheduledFor", "asc"),
   ]);
@@ -190,11 +188,6 @@ export default async function ParticipantDetailPage({ params }: Props) {
               <span style={{ display: "block", fontSize: "1.15rem", color: "var(--ink-60)", marginTop: "0.3rem", lineHeight: 1.5 }}>
                 {t("participants.detailNoTokenHint")}
               </span>
-            </MetaRow>
-          )}
-          {participant.stripe?.account && (
-            <MetaRow label={t("participants.labelStripeAccount")}>
-              <span style={{ color: "var(--ink-40)", fontSize: "1.1rem" }}>{participant.stripe.account}</span>
             </MetaRow>
           )}
           {userInfo.timezone && (
@@ -339,57 +332,6 @@ export default async function ParticipantDetailPage({ params }: Props) {
           </div>
         )}
       </section>
-
-      {/* Receipts */}
-      {receipts.length > 0 && (
-        <section>
-          <SectionLabel>{t("participants.payoutsHeading", { n: receipts.length })}</SectionLabel>
-          <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                  <th style={TH}>{t("participants.thDate")}</th>
-                  <th style={TH}>{t("participants.thAmount")}</th>
-                  <th style={TH}>{t("participants.thCurrency")}</th>
-                  <th style={TH}>{t("participants.thStatus")}</th>
-                  <th style={TH}>{t("participants.thReceipt")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(receipts as IReceipt[]).map((rec, i) => (
-                  <tr key={String(rec._id)}
-                    style={{ borderBottom: i < receipts.length - 1 ? "1px solid var(--ink-10)" : "none" }}
-                    className="hover:bg-[var(--paper)] transition-colors">
-                    <td style={{ padding: "1rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
-                      {new Date(rec.created).toLocaleDateString()}
-                    </td>
-                    <td style={{ padding: "1rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.2rem", color: "var(--ink)", fontWeight: 600 }}>
-                      {rec.paymentInfo?.amount != null ? (rec.paymentInfo.amount / 100).toFixed(2) : "—"}
-                    </td>
-                    <td style={{ padding: "1rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textTransform: "uppercase" }}>
-                      {rec.paymentInfo?.currency ?? "—"}
-                    </td>
-                    <td style={{ padding: "1rem 1.6rem" }}>
-                      <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.8rem", borderRadius: "9999px", background: rec.status === "paid" ? "rgba(61,115,107,.1)" : "var(--ink-10)", color: rec.status === "paid" ? "var(--sage)" : "var(--ink-60)" }}>
-                        {rec.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: "1rem 1.6rem" }}>
-                      {rec.paymentInfo?.url ? (
-                        <a href={rec.paymentInfo.url} target="_blank" rel="noreferrer"
-                          style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", letterSpacing: ".04em" }}
-                          className="hover:opacity-70 transition-opacity">
-                          {t("participants.openReceipt")}
-                        </a>
-                      ) : "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      )}
 
       {/* Danger zone */}
       <section>

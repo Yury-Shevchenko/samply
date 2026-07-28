@@ -8,8 +8,6 @@ const ACTION_LABELS: Record<string, string> = {
   view_participant: "Viewed participant",
   export_results: "Exported responses",
   export_participants: "Exported participants",
-  view_payout: "Viewed payout",
-  view_receipts: "Viewed receipts",
 };
 
 const TH: React.CSSProperties = {

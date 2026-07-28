@@ -492,7 +492,6 @@ const tr: DeepLoose<Messages> = {
     labelPushToken: "Push belirteci",
     detailNoToken: "Belirteç yok",
     detailNoTokenHint: "Bu katılımcı bildirim izni vermediği için Expo push belirteci kaydedilmemiş. Cihaz ayarlarında bildirimlere izin vermesini ve QR kodu tarayarak veya davet bağlantısını tekrar açarak çalışmaya yeniden katılmasını isteyin.",
-    labelStripeAccount: "Stripe hesabı",
     labelTimezone: "Saat dilimi",
     labelTimeWindow: "Zaman aralığı",
     scheduleNotification: "+ Bildirim planla",
@@ -511,12 +510,6 @@ const tr: DeepLoose<Messages> = {
     thNotification: "Bildirim",
     thSent: "Gönderildi",
     thStatus: "Durum",
-    payoutsHeading: "ödemeler · {n}",
-    thDate: "Tarih",
-    thAmount: "Tutar",
-    thCurrency: "Para birimi",
-    thReceipt: "Makbuz",
-    openReceipt: "aç →",
     dangerZoneHeading: "tehlikeli bölge",
     removeParticipant: "Katılımcıyı kaldır",
     removeParticipantHint: "Bu katılımcıyı çalışmadan kaldırır. Bildirim geçmişi korunur.",
@@ -622,7 +615,6 @@ const tr: DeepLoose<Messages> = {
     secureCodeHint: "Paylaşılan bağlantı için boş bırak · Bir kişiye atamak için doldur",
     secureCodePlaceholder: "ör. P001",
     secureAllowTz: "Saat dilimi güncellemelerine izin ver",
-    secureAllowPayment: "Ödeme hesabına izin ver",
     secureGenerate: "Güvenli bağlantı oluştur",
     secureCopyLink: "Bağlantıyı kopyala",
     secureCopied: "Kopyalandı ✓",
@@ -991,7 +983,6 @@ const tr: DeepLoose<Messages> = {
     colGroup:       "Grup",
     colPrefs:       "Zaman tercihleri",
     colTimezone:    "Saat dilimi",
-    colPayout:      "Ödeme",
   },
 
   legacyProjects: {
@@ -1003,31 +994,6 @@ const tr: DeepLoose<Messages> = {
     newStudy:       "+ Yeni çalışma",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "Ödemeler",
-    tabReceipts:     "Makbuzlar",
-    participantInfo: "Katılımcı bilgileri",
-    idLabel:         "Samply Kimliği",
-    nameLabel:       "Ad",
-    emailLabel:      "E-posta",
-    paymentsLabel:   "Ödemeler",
-    enabled:         "Etkin",
-    disabled:        "Devre dışı",
-    sendPayment:     "Ödeme gönder",
-    currencyLabel:   "Para birimi",
-    amountLabel:     "Tutar",
-    sendButton:      "Ödeme gönder",
-    notSetUp:        "Bu katılımcı henüz bir ödeme hesabı kurmadı.",
-    noReceipts:      "Henüz makbuz yok.",
-    colDate:         "Tarih",
-    colReceiptId:    "Makbuz kimliği",
-    colStatus:       "Durum",
-    colCurrency:     "Para birimi",
-    colAmount:       "Tutar",
-    colFee:          "Ücret",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "Gönderilen bildirimler",
@@ -1451,22 +1417,6 @@ const tr: DeepLoose<Messages> = {
       deleteIntro:   "Hesabınızı ve tüm yanıt verilerinizi kalıcı olarak silin. Bu işlem geri alınamaz.",
     },
 
-    // ─── Ödeme alma hesabı (Katılımcılar için Stripe Connect) ──────────────────
-    payable: {
-      title:              "Ödeme alma hesabı",
-      intro:              "Çalışmalara katılım karşılığında araştırmacılardan ödeme almak isterseniz bir ödeme alma hesabı bağlayın. Hesabınız Stripe tarafından sağlanır.",
-      createButton:       "Ödeme alma hesabı oluştur →",
-      editButton:         "Ödeme alma hesabını güncelle →",
-      confirmEmailFirst:  "Ödeme alma hesabı kurmadan önce lütfen e-posta adresinizi doğrulayın.",
-      statusCharges:      "Tahsilat kabul edebilir",
-      statusDetails:      "Kayıt bilgileri",
-      statusPayouts:      "Banka hesabınıza ödemeler",
-      enabled:            "Etkin",
-      disabled:           "Henüz etkin değil",
-      submitted:          "Gönderildi",
-      notSubmitted:       "Gönderilmedi",
-      errorCreate:        "Stripe kaydı başlatılamadı. Lütfen tekrar deneyin.",
-    },
   },
 
   legacyInvitations: {

@@ -62,7 +62,6 @@ export default function SecureLinkGenerator({ projectId }: { projectId: string }
   const [server, setServer] = useState("samply.uni-konstanz.de");
   const [mode, setMode] = useState("multi");
   const [allowtz, setAllowtz] = useState(false);
-  const [allowpayment, setAllowpayment] = useState(false);
   const [validfor, setValidfor] = useState(168);
   const [code, setCode] = useState("");
   const [generatedLink, setGeneratedLink] = useState("");
@@ -71,7 +70,7 @@ export default function SecureLinkGenerator({ projectId }: { projectId: string }
 
   function generateLink() {
     const params: Record<string, string | boolean | number> = {
-      protocol, server, study: projectId, mode, allowtz, allowpayment,
+      protocol, server, study: projectId, mode, allowtz,
       timestamp: Date.now(), validfor: validfor * 3600,
     };
     if (code) params.code = code;
@@ -148,7 +147,6 @@ export default function SecureLinkGenerator({ projectId }: { projectId: string }
       <div style={{ display: "flex", gap: "2rem" }}>
         {[
           { label: t("invitations.secureAllowTz"), checked: allowtz, onChange: setAllowtz },
-          { label: t("invitations.secureAllowPayment"), checked: allowpayment, onChange: setAllowpayment },
         ].map(({ label, checked, onChange }) => (
           <label key={label} style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: "pointer" }}>
             <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)}

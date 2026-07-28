@@ -2,7 +2,6 @@ import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import User from "@/lib/models/user";
 import Result, { type IResult } from "@/lib/models/result";
-import Receipt, { type IReceipt } from "@/lib/models/receipt";
 import mongoose from "mongoose";
 
 export interface MobileUser {
@@ -12,7 +11,6 @@ export interface MobileUser {
   username?: string;
   group?: { id?: string; name?: string };
   information?: Record<string, unknown>;
-  stripe?: { account?: string; information?: unknown };
   deactivated?: boolean;
 }
 
@@ -90,33 +88,6 @@ export async function fetchHistory(
   };
 }
 
-export async function fetchParticipantBysamplyId(samplyId: string) {
-  await connectDB();
-  return User.findOne(
-    { samplyId },
-    { name: 1, email: 1, stripeAccountId: 1, stripeInformation: 1 },
-  ).lean();
-}
-
-/**
- * True if the researcher (userId) owns or is a member of at least one project
- * that the given participant (samplyId) belongs to. Used to gate access to
- * participant identity (name/email) in the payout/receipts flow so a researcher
- * cannot look up an arbitrary samplyId they have no relationship with.
- */
-export async function researcherCanAccessParticipant(
-  userId: string,
-  samplyId: string,
-): Promise<boolean> {
-  await connectDB();
-  const oid = new mongoose.Types.ObjectId(userId);
-  const exists = await Project.exists({
-    $or: [{ creator: oid }, { members: oid }],
-    "mobileUsers.id": samplyId,
-  });
-  return Boolean(exists);
-}
-
 export interface ParticipantUserInfo {
   timezone?: string;
   timeWindowFrom?: string;
@@ -149,23 +120,4 @@ export async function fetchParticipantUserInfo(samplyId: string): Promise<Partic
   if (!result.timeWindowTo && typeof info.to === "string") result.timeWindowTo = info.to;
 
   return result;
-}
-
-export async function fetchReceipts(
-  samplyId: string,
-  payerId: string,
-): Promise<IReceipt[]> {
-  await connectDB();
-  const payee = await User.findOne({ samplyId }, { _id: 1 }).lean();
-  if (!payee) return [];
-  const receipts = await Receipt.find(
-    {
-      payee: (payee as unknown as { _id: mongoose.Types.ObjectId })._id,
-      payer: new mongoose.Types.ObjectId(payerId),
-    },
-    { created: 1, receiptId: 1, status: 1, paymentInfo: 1 },
-  )
-    .sort({ created: -1 })
-    .lean();
-  return receipts as unknown as IReceipt[];
 }

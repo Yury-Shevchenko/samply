@@ -211,7 +211,7 @@ async function getParticipantsOfProject({ id }) {
     project.mobileUsers.map(async (user) => {
       const participant = await User.findOne(
         { samplyId: user.id },
-        { information: 1, stripeAccountId: 1, stripeInformation: 1 }
+        { information: 1 }
       );
 
       if (
@@ -244,13 +244,6 @@ async function getParticipantsOfProject({ id }) {
         user.information = {
           ...user.information,
           timezone: participant.information.timezone,
-        };
-      }
-
-      if (participant && participant.stripeAccountId) {
-        user.stripe = {
-          account: participant.stripeAccountId,
-          information: participant.stripeInformation,
         };
       }
 

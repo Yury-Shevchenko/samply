@@ -492,7 +492,6 @@ const ja: DeepLoose<Messages> = {
     labelPushToken: "プッシュトークン",
     detailNoToken: "トークンなし",
     detailNoTokenHint: "この参加者は通知の許可を与えなかったため、Expo プッシュトークンが登録されませんでした。デバイス設定で通知を許可してもらい、QR コードをスキャンするか招待リンクを再度開いて研究に再参加してもらってください。",
-    labelStripeAccount: "Stripe アカウント",
     labelTimezone: "タイムゾーン",
     labelTimeWindow: "時間枠",
     scheduleNotification: "+ 通知を予定",
@@ -511,12 +510,6 @@ const ja: DeepLoose<Messages> = {
     thNotification: "通知",
     thSent: "送信",
     thStatus: "ステータス",
-    payoutsHeading: "支払い · {n}",
-    thDate: "日付",
-    thAmount: "金額",
-    thCurrency: "通貨",
-    thReceipt: "領収書",
-    openReceipt: "開く →",
     dangerZoneHeading: "危険ゾーン",
     removeParticipant: "参加者を削除",
     removeParticipantHint: "この参加者を研究から削除します。通知履歴は保持されます。",
@@ -622,7 +615,6 @@ const ja: DeepLoose<Messages> = {
     secureCodeHint: "共有リンクの場合は空のまま · 1 人に割り当てるには入力",
     secureCodePlaceholder: "例: P001",
     secureAllowTz: "タイムゾーンの更新を許可",
-    secureAllowPayment: "支払いアカウントを許可",
     secureGenerate: "安全なリンクを生成",
     secureCopyLink: "リンクをコピー",
     secureCopied: "コピーしました ✓",
@@ -991,7 +983,6 @@ const ja: DeepLoose<Messages> = {
     colGroup:       "グループ",
     colPrefs:       "時間設定",
     colTimezone:    "タイムゾーン",
-    colPayout:      "支払い",
   },
 
   legacyProjects: {
@@ -1003,31 +994,6 @@ const ja: DeepLoose<Messages> = {
     newStudy:       "+ 新規研究",
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      "支払い",
-    tabReceipts:     "領収書",
-    participantInfo: "参加者情報",
-    idLabel:         "サンプリーID",
-    nameLabel:       "名前",
-    emailLabel:      "メール",
-    paymentsLabel:   "支払い",
-    enabled:         "有効",
-    disabled:        "無効",
-    sendPayment:     "支払いを送信",
-    currencyLabel:   "通貨",
-    amountLabel:     "金額",
-    sendButton:      "支払いを送信",
-    notSetUp:        "この参加者はまだ支払いアカウントを設定していません。",
-    noReceipts:      "まだ領収書がありません。",
-    colDate:         "日付",
-    colReceiptId:    "領収書ID",
-    colStatus:       "ステータス",
-    colCurrency:     "通貨",
-    colAmount:       "金額",
-    colFee:          "手数料",
-    colUrl:          "URL",
-  },
 
   analytics: {
     metricSent:           "送信済み通知",
@@ -1451,22 +1417,6 @@ const ja: DeepLoose<Messages> = {
       deleteIntro:   "アカウントと、すべての回答データを完全に削除します。この操作は取り消せません。",
     },
 
-    // ─── 受取口座 (参加者向け Stripe Connect) ──────────────────────────────────
-    payable: {
-      title:              "受取口座",
-      intro:              "研究への参加報酬を研究者から受け取りたい場合は、受取口座を連携してください。アカウントは Stripe によってホストされます。",
-      createButton:       "受取口座を作成 →",
-      editButton:         "受取口座を更新 →",
-      confirmEmailFirst:  "受取口座を設定する前に、メールアドレスを確認してください。",
-      statusCharges:      "支払いを受け取り可能",
-      statusDetails:      "オンボーディング情報",
-      statusPayouts:      "銀行口座への送金",
-      enabled:            "有効",
-      disabled:           "未有効",
-      submitted:          "送信済み",
-      notSubmitted:       "未送信",
-      errorCreate:        "Stripe のオンボーディングを開始できませんでした。もう一度お試しください。",
-    },
   },
 
   legacyInvitations: {

@@ -124,8 +124,6 @@ const config: NextAuthConfig = {
         "/groups",
         "/invitations",
         "/messages",
-        "/receipts",
-        "/payout",
         "/help",
       ];
       const isResearcherRoute = researcherPrefixes.some((p) => pathname.startsWith(p));

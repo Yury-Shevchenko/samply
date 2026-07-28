@@ -335,12 +335,12 @@ exports.resetPassword = async (req, res) => {
   res.status(200).json({ message: "OK" });
 };
 
-exports.checkPayableAccount = async (req, res) => {
+// Participant self-lookup used by the mobile Settings screen (timezone card).
+exports.getParticipantInfo = async (req, res) => {
   const userData = req.body;
   const user = await User.findOne(
     { email: userData.email, samplyId: userData.id },
     {
-      stripeInformation: 1,
       information: 1,
     }
   );

@@ -360,8 +360,7 @@ function InviteContentEn() {
       <p>
         Creating a participant account requires an email address. Samply stores it and uses it for
         authentication and account recovery; it is not shown to you in the dashboard or data exports.
-        The one exception is payments — if a participant sets up payouts to receive compensation, you
-        see the email tied to their payout account. There are three reasons an account is required:
+        There are three reasons an account is required:
       </p>
       <ul>
         <li><strong>One account per person.</strong> Requiring an account prevents a single person from enrolling multiple times from the same device.</li>

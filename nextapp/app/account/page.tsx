@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import User from "@/lib/models/user";
-import stripe from "@/lib/stripe";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { DB_LANG_TO_LOCALE } from "@/lib/i18n";
 import { getT } from "@/lib/i18n.server";
@@ -38,65 +37,6 @@ async function updateAccountAction(formData: FormData) {
   });
 
   redirect("/account?notice=" + encodeURIComponent("Profile updated."));
-}
-
-function stripeErrorMessage(err: unknown, fallback: string): string {
-  // Surface Stripe's own message when available — much more actionable than a
-  // generic "try again". Truncate to keep the URL sane.
-  const msg = err instanceof Error ? err.message : fallback;
-  return msg.slice(0, 240);
-}
-
-async function createPayableAccountAction() {
-  "use server";
-  const session = await auth();
-  if (!session) redirect("/login");
-
-  await connectDB();
-  const user = await User.findById(session.user.id);
-  if (!user) redirect("/login");
-  if (user.level >= 11) redirect("/dashboard");
-  if (!user.emailIsConfirmed) {
-    redirect("/account?error=" + encodeURIComponent("Please confirm your email first."));
-  }
-
-  const appBaseUrl = (process.env.NEXTAUTH_URL ?? "http://localhost:3000").replace(/\/$/, "");
-
-  let accountId = user.stripeAccountId;
-  if (!accountId) {
-    try {
-      const account = await stripe.accounts.create({
-        type: "express",
-        email: user.email,
-      });
-      accountId = account.id;
-      user.stripeAccountId = accountId;
-      await user.save();
-    } catch (err) {
-      console.error("[payable-account] stripe.accounts.create failed:", err);
-      redirect("/account?error=" + encodeURIComponent(
-        stripeErrorMessage(err, "Could not create Stripe account."),
-      ));
-    }
-  }
-
-  let url: string;
-  try {
-    const accountLink = await stripe.accountLinks.create({
-      account: accountId,
-      refresh_url: `${appBaseUrl}/account`,
-      return_url: `${appBaseUrl}/account`,
-      type: "account_onboarding",
-    });
-    url = accountLink.url;
-  } catch (err) {
-    console.error("[payable-account] stripe.accountLinks.create failed:", err);
-    redirect("/account?error=" + encodeURIComponent(
-      stripeErrorMessage(err, "Could not create Stripe onboarding link."),
-    ));
-  }
-
-  redirect(url);
 }
 
 async function resendConfirmationAction(formData: FormData) {
@@ -505,67 +445,6 @@ export default async function AccountPage({
               ) : (
                 <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: 0 }}>
                   {t("account.notParticipating")}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Payable account (Stripe Connect) — participants only */}
-          {!isResearcher && (
-            <div style={{ padding: "1.8rem 3.2rem", borderTop: "1px solid var(--ink-10)" }}>
-              <div style={{ fontSize: "1.1rem", fontWeight: 600, color: "var(--ink-40)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: "1rem" }}>
-                {t("participant.payable.title")}
-              </div>
-              <p style={{ fontSize: "1.3rem", color: "var(--ink-60)", margin: "0 0 1.4rem", lineHeight: 1.55 }}>
-                {t("participant.payable.intro")}
-              </p>
-
-              {user.stripeAccountId && (
-                <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "0.6rem 1.4rem", marginBottom: "1.4rem", fontSize: "1.3rem" }}>
-                  <span style={{ color: "var(--ink-60)" }}>{t("participant.payable.statusCharges")}</span>
-                  <span style={{ color: user.stripeInformation?.charges_enabled ? "var(--sage)" : "var(--ink-60)" }}>
-                    {user.stripeInformation?.charges_enabled
-                      ? "✓ " + t("participant.payable.enabled")
-                      : t("participant.payable.disabled")}
-                  </span>
-                  <span style={{ color: "var(--ink-60)" }}>{t("participant.payable.statusDetails")}</span>
-                  <span style={{ color: user.stripeInformation?.details_submitted ? "var(--sage)" : "var(--ink-60)" }}>
-                    {user.stripeInformation?.details_submitted
-                      ? "✓ " + t("participant.payable.submitted")
-                      : t("participant.payable.notSubmitted")}
-                  </span>
-                  <span style={{ color: "var(--ink-60)" }}>{t("participant.payable.statusPayouts")}</span>
-                  <span style={{ color: user.stripeInformation?.payouts_enabled ? "var(--sage)" : "var(--ink-60)" }}>
-                    {user.stripeInformation?.payouts_enabled
-                      ? "✓ " + t("participant.payable.enabled")
-                      : t("participant.payable.disabled")}
-                  </span>
-                </div>
-              )}
-
-              {user.emailIsConfirmed ? (
-                <form action={createPayableAccountAction}>
-                  <SubmitButton
-                    pendingLabel="…"
-                    style={{
-                      fontSize: "1.3rem",
-                      padding: "0.9rem 1.8rem",
-                      background: "var(--ink)",
-                      color: "var(--paper)",
-                      border: "none",
-                      borderRadius: "9999px",
-                      fontFamily: "var(--font-body)",
-                      fontWeight: 500,
-                    }}
-                  >
-                    {user.stripeAccountId
-                      ? t("participant.payable.editButton")
-                      : t("participant.payable.createButton")}
-                  </SubmitButton>
-                </form>
-              ) : (
-                <p style={{ fontSize: "1.25rem", color: "var(--coral)", margin: 0 }}>
-                  {t("participant.payable.confirmEmailFirst")}
                 </p>
               )}
             </div>

@@ -383,8 +383,8 @@ function PolicyContentEn() {
       {/* ── Commercial services ─────────────────────────────────────────────── */}
       <h2 id='m317'>Commercial services</h2>
       <p>
-        The following information on commercial services only applies to researchers who wish
-        to pay participants via the integration of the Samply platform with Stripe.
+        The following information on commercial services only applies to people who make a
+        voluntary donation to Samply, which is processed via Stripe.
       </p>
       <p>
         We process data of our contractual and business partners, e.g. customers and
@@ -409,9 +409,9 @@ function PolicyContentEn() {
       </p>
       <dl>
         <dt>Processed data types</dt>
-        <dd>Researcher data (e.g. name, institute, email, language); Participant data (e.g. email, timezone, time preferences, participant code).</dd>
+        <dd>Donor data (e.g. name, email, donation amount, payment details processed by Stripe).</dd>
         <dt>Data subjects</dt>
-        <dd>Researchers; participants.</dd>
+        <dd>Donors.</dd>
         <dt>Purposes of processing</dt>
         <dd>Contractual services and support; Contact requests and communication; Office and organisational procedures; Managing and responding to inquiries; Security measures.</dd>
         <dt>Legal basis</dt>
@@ -937,8 +937,7 @@ function PolicyContentNl() {
       <h2 id='m317'>Commerciële diensten</h2>
       <p>
         De volgende informatie over commerciële diensten is uitsluitend van toepassing op
-        onderzoekers die deelnemers willen betalen via de integratie van het Samply-platform
-        met Stripe.
+        personen die een vrijwillige donatie aan Samply doen, die via Stripe wordt verwerkt.
       </p>
       <p>
         Wij verwerken gegevens van onze contractuele en zakelijke partners, bijv. klanten en
@@ -964,9 +963,9 @@ function PolicyContentNl() {
       </p>
       <dl>
         <dt>Verwerkte gegevenscategorieën</dt>
-        <dd>Onderzoekergegevens (bijv. naam, instituut, e-mail, taal); Deelnemersgegevens (bijv. e-mail, tijdzone, tijdvoorkeuren, deelnemerscode).</dd>
+        <dd>Donateurgegevens (bijv. naam, e-mail, donatiebedrag, betaalgegevens verwerkt door Stripe).</dd>
         <dt>Betrokkenen</dt>
-        <dd>Onderzoekers; deelnemers.</dd>
+        <dd>Donateurs.</dd>
         <dt>Verwerkingsdoeleinden</dt>
         <dd>Contractuele diensten en ondersteuning; Contactverzoeken en communicatie; Kantoor- en organisatorische procedures; Beheren en beantwoorden van verzoeken; Beveiligingsmaatregelen.</dd>
         <dt>Rechtsgrondslag</dt>
@@ -1503,8 +1502,8 @@ function PolicyContentDe() {
       <h2 id='m317'>Kommerzielle Dienste</h2>
       <p>
         Die folgenden Informationen zu kommerziellen Diensten gelten ausschließlich für
-        Forschende, die Teilnehmende über die Integration der Samply-Plattform mit Stripe
-        vergüten möchten.
+        Personen, die eine freiwillige Spende an Samply leisten, die über Stripe abgewickelt
+        wird.
       </p>
       <p>
         Wir verarbeiten Daten unserer Vertrags- und Geschäftspartner, z. B. Kunden und
@@ -1530,9 +1529,9 @@ function PolicyContentDe() {
       </p>
       <dl>
         <dt>Verarbeitete Datenkategorien</dt>
-        <dd>Forscherdaten (z. B. Name, Institut, E-Mail, Sprache); Teilnehmerdaten (z. B. E-Mail, Zeitzone, Zeitpräferenzen, Teilnehmercode).</dd>
+        <dd>Spenderdaten (z. B. Name, E-Mail, Spendenbetrag, von Stripe verarbeitete Zahlungsdaten).</dd>
         <dt>Betroffene Personen</dt>
-        <dd>Forschende; Teilnehmende.</dd>
+        <dd>Spenderinnen und Spender.</dd>
         <dt>Verarbeitungszwecke</dt>
         <dd>Vertragliche Leistungen und Support; Kontaktanfragen und Kommunikation; Büro- und Organisationsverfahren; Verwaltung und Beantwortung von Anfragen; Sicherheitsmaßnahmen.</dd>
         <dt>Rechtsgrundlage</dt>
@@ -2056,9 +2055,8 @@ function PolicyContentRu() {
       {/* ── Коммерческие услуги ─────────────────────────────────────────────── */}
       <h2 id='m317'>Коммерческие услуги</h2>
       <p>
-        Следующая информация о коммерческих услугах применяется только к исследователям,
-        которые хотят выплачивать вознаграждение участникам через интеграцию платформы
-        Samply со Stripe.
+        Следующая информация о коммерческих услугах применяется только к лицам, которые
+        делают добровольное пожертвование Samply, обрабатываемое через Stripe.
       </p>
       <p>
         Мы обрабатываем данные наших договорных и деловых партнёров, например клиентов и
@@ -2083,9 +2081,9 @@ function PolicyContentRu() {
       </p>
       <dl>
         <dt>Типы обрабатываемых данных</dt>
-        <dd>Данные исследователя (например, имя, институт, электронная почта, язык); Данные участника (например, электронная почта, часовой пояс, временные предпочтения, код участника).</dd>
+        <dd>Данные жертвователя (например, имя, электронная почта, сумма пожертвования, платёжные данные, обрабатываемые Stripe).</dd>
         <dt>Субъекты данных</dt>
-        <dd>Исследователи; участники.</dd>
+        <dd>Жертвователи.</dd>
         <dt>Цели обработки</dt>
         <dd>Договорные услуги и поддержка; Контактные запросы и коммуникация; Офисные и организационные процедуры; Управление запросами и ответы на них; Меры безопасности.</dd>
         <dt>Правовое основание</dt>
@@ -2454,7 +2452,7 @@ function PolicyContentZh() {
       {/* ── 商业服务 ────────────────────────────────────────────────────── */}
       <h2 id='m317'>商业服务</h2>
       <p>
-        以下有关商业服务的信息仅适用于希望通过 Samply 平台与 Stripe 集成向参与者付款的研究者。
+        以下有关商业服务的信息仅适用于向 Samply 自愿捐款的人士，此类捐款通过 Stripe 处理。
       </p>
       <p>
         我们在合同及类似法律关系的背景下处理合同合作伙伴和商业伙伴（例如客户和潜在客户，统称为"合同伙伴"）的数据，以及与合同伙伴相关的行为和通信，或在缔约前阶段（例如回复询价）中处理其数据。
@@ -2467,9 +2465,9 @@ function PolicyContentZh() {
       </p>
       <dl>
         <dt>处理的数据类型</dt>
-        <dd>研究者数据（例如姓名、机构、电子邮件、语言）；参与者数据（例如电子邮件、时区、时间偏好、参与者编码）。</dd>
+        <dd>捐赠者数据（例如姓名、电子邮件、捐赠金额、由 Stripe 处理的支付信息）。</dd>
         <dt>数据主体</dt>
-        <dd>研究者；参与者。</dd>
+        <dd>捐赠者。</dd>
         <dt>处理目的</dt>
         <dd>合同服务与支持；联系请求与通信；办公及组织管理程序；管理并回复查询；安全措施。</dd>
         <dt>法律依据</dt>
@@ -2908,8 +2906,8 @@ function PolicyContentKo() {
       {/* ── 상업적 서비스 ─────────────────────────────────────────────────── */}
       <h2 id='m317'>상업적 서비스</h2>
       <p>
-        아래 상업적 서비스에 관한 정보는 Samply 플랫폼과 Stripe 연동을 통해 참여자에게
-        보상을 지급하고자 하는 연구자에게만 적용됩니다.
+        아래 상업적 서비스에 관한 정보는 Stripe를 통해 처리되는 Samply에 대한 자발적
+        후원을 하시는 분에게만 적용됩니다.
       </p>
       <p>
         당사는 계약적·비교적 법률 관계의 맥락에서, 그리고 계약 파트너와의 관련 행위 및
@@ -2930,9 +2928,9 @@ function PolicyContentKo() {
       </p>
       <dl>
         <dt>처리 데이터 유형</dt>
-        <dd>연구자 데이터 (예: 성명, 기관, 이메일, 언어); 참여자 데이터 (예: 이메일, 시간대, 시간 선호도, 참여자 코드).</dd>
+        <dd>후원자 데이터 (예: 성명, 이메일, 후원 금액, Stripe가 처리하는 결제 정보).</dd>
         <dt>정보주체</dt>
-        <dd>연구자; 참여자.</dd>
+        <dd>후원자.</dd>
         <dt>처리 목적</dt>
         <dd>계약적 서비스 및 지원; 연락 요청 및 의사소통; 사무 및 조직 절차; 문의사항 관리 및 응대; 보안 조치.</dd>
         <dt>법적 근거</dt>
@@ -3452,9 +3450,8 @@ function PolicyContentIt() {
       {/* ── Servizi commerciali ──────────────────────────────────────────────── */}
       <h2 id='m317'>Servizi commerciali</h2>
       <p>
-        Le seguenti informazioni sui servizi commerciali si applicano esclusivamente ai
-        ricercatori che desiderano remunerare i partecipanti tramite l&apos;integrazione
-        della piattaforma Samply con Stripe.
+        Le seguenti informazioni sui servizi commerciali si applicano esclusivamente a chi
+        effettua una donazione volontaria a Samply, elaborata tramite Stripe.
       </p>
       <p>
         Trattiamo i dati dei nostri partner contrattuali e commerciali, ad es. clienti e
@@ -3479,9 +3476,9 @@ function PolicyContentIt() {
       </p>
       <dl>
         <dt>Tipologie di dati trattati</dt>
-        <dd>Dati del ricercatore (ad es. nome, istituto, e-mail, lingua); Dati del partecipante (ad es. e-mail, fuso orario, preferenze orarie, codice partecipante).</dd>
+        <dd>Dati del donatore (ad es. nome, e-mail, importo della donazione, dati di pagamento trattati da Stripe).</dd>
         <dt>Interessati</dt>
-        <dd>Ricercatori; partecipanti.</dd>
+        <dd>Donatori.</dd>
         <dt>Finalità del trattamento</dt>
         <dd>Servizi contrattuali e assistenza; Richieste di contatto e comunicazione; Procedure amministrative e organizzative; Gestione e risposta alle richieste; Misure di sicurezza.</dd>
         <dt>Base giuridica</dt>
@@ -4024,8 +4021,7 @@ function PolicyContentFr() {
       <h2 id='m317'>Services commerciaux</h2>
       <p>
         Les informations suivantes sur les services commerciaux s&apos;appliquent uniquement
-        aux chercheurs souhaitant rémunérer des participants via l&apos;intégration de la
-        plateforme Samply avec Stripe.
+        aux personnes effectuant un don volontaire à Samply, traité via Stripe.
       </p>
       <p>
         Nous traitons les données de nos partenaires contractuels et commerciaux, par ex.
@@ -4051,9 +4047,9 @@ function PolicyContentFr() {
       </p>
       <dl>
         <dt>Types de données traitées</dt>
-        <dd>Données des chercheurs (par ex. nom, établissement, e-mail, langue) ; données des participants (par ex. e-mail, fuseau horaire, préférences horaires, code participant).</dd>
+        <dd>Données des donateurs (par ex. nom, e-mail, montant du don, données de paiement traitées par Stripe).</dd>
         <dt>Personnes concernées</dt>
-        <dd>Chercheurs ; participants.</dd>
+        <dd>Donateurs.</dd>
         <dt>Finalités du traitement</dt>
         <dd>Services contractuels et assistance ; demandes de contact et communication ; procédures de bureau et organisationnelles ; gestion et réponse aux demandes ; mesures de sécurité.</dd>
         <dt>Base juridique</dt>
@@ -4585,9 +4581,8 @@ function PolicyContentEs() {
       {/* ── Servicios comerciales ────────────────────────────────────────────── */}
       <h2 id='m317'>Servicios comerciales</h2>
       <p>
-        La siguiente información sobre servicios comerciales se aplica únicamente a los
-        investigadores que deseen remunerar a los participantes mediante la integración de
-        la plataforma Samply con Stripe.
+        La siguiente información sobre servicios comerciales se aplica únicamente a las
+        personas que realizan una donación voluntaria a Samply, procesada a través de Stripe.
       </p>
       <p>
         Tratamos los datos de nuestros socios contractuales y comerciales, p. ej. clientes
@@ -4612,9 +4607,9 @@ function PolicyContentEs() {
       </p>
       <dl>
         <dt>Tipos de datos tratados</dt>
-        <dd>Datos de investigadores (p. ej. nombre, institución, correo electrónico, idioma); datos de participantes (p. ej. correo electrónico, zona horaria, preferencias horarias, código de participante).</dd>
+        <dd>Datos de donantes (p. ej. nombre, correo electrónico, importe de la donación, datos de pago tratados por Stripe).</dd>
         <dt>Personas afectadas</dt>
-        <dd>Investigadores; participantes.</dd>
+        <dd>Donantes.</dd>
         <dt>Finalidades del tratamiento</dt>
         <dd>Servicios contractuales y asistencia; solicitudes de contacto y comunicación; procedimientos de oficina y organizativos; gestión y respuesta a consultas; medidas de seguridad.</dd>
         <dt>Base jurídica</dt>
@@ -5144,9 +5139,8 @@ function PolicyContentPt() {
       {/* ── Serviços comerciais ──────────────────────────────────────────────── */}
       <h2 id='m317'>Serviços comerciais</h2>
       <p>
-        As informações a seguir sobre serviços comerciais aplicam-se exclusivamente aos
-        pesquisadores que desejam remunerar os participantes por meio da integração da
-        plataforma Samply com o Stripe.
+        As informações a seguir sobre serviços comerciais aplicam-se exclusivamente às
+        pessoas que fazem um donativo voluntário à Samply, processado através do Stripe.
       </p>
       <p>
         Tratamos os dados de nossos parceiros contratuais e comerciais, p. ex. clientes
@@ -5171,9 +5165,9 @@ function PolicyContentPt() {
       </p>
       <dl>
         <dt>Tipos de dados tratados</dt>
-        <dd>Dados de pesquisadores (p. ex. nome, instituição, e-mail, idioma); dados de participantes (p. ex. e-mail, fuso horário, preferências de horário, código de participante).</dd>
+        <dd>Dados de doadores (p. ex. nome, e-mail, valor do donativo, dados de pagamento tratados pelo Stripe).</dd>
         <dt>Pessoas afetadas</dt>
-        <dd>Pesquisadores; participantes.</dd>
+        <dd>Doadores.</dd>
         <dt>Finalidades do tratamento</dt>
         <dd>Serviços contratuais e suporte; solicitações de contato e comunicação; procedimentos administrativos e organizacionais; gerenciamento e resposta a consultas; medidas de segurança.</dd>
         <dt>Base jurídica</dt>
@@ -5548,7 +5542,7 @@ function PolicyContentJa() {
       {/* ── 商業サービス ──────────────────────────────────────── */}
       <h2 id='m317'>商業サービス</h2>
       <p>
-        商業サービスに関する以下の情報は、SamplyプラットフォームとStripeの統合を通じて参加者に報酬を支払うことを希望する研究者にのみ適用されます。
+        商業サービスに関する以下の情報は、Stripeを通じて処理されるSamplyへの任意の寄付を行う方にのみ適用されます。
       </p>
       <p>
         当社は、契約関係および類似の関係の文脈、ならびに関連する活動および契約パートナーとの通信または契約締結前の段階において、例えば問い合わせに応じるために、契約パートナーおよびビジネスパートナー、例えば顧客および利害関係者（総称して「契約パートナー」）のデータを処理します。
@@ -5561,9 +5555,9 @@ function PolicyContentJa() {
       </p>
       <dl>
         <dt>処理されるデータの種類</dt>
-        <dd>研究者データ（例：氏名、所属機関、メール、言語）、参加者データ（例：メール、タイムゾーン、時間設定、参加者コード）。</dd>
+        <dd>寄付者データ（例：氏名、メール、寄付金額、Stripeが処理する支払情報）。</dd>
         <dt>関係する人</dt>
-        <dd>研究者、参加者。</dd>
+        <dd>寄付者。</dd>
         <dt>処理の目的</dt>
         <dd>契約サービスおよびサポート、連絡先からの問い合わせおよびコミュニケーション、事務および組織運営の手続き、問い合わせの管理および対応、セキュリティ対策。</dd>
         <dt>法的根拠</dt>
@@ -5899,7 +5893,7 @@ function PolicyContentTr() {
       {/* ── Ticari Hizmetler ──────────────────────────────────────── */}
       <h2 id='m317'>Ticari hizmetler</h2>
       <p>
-        Ticari hizmetlere ilişkin aşağıdaki bilgiler, yalnızca Samply platformu ile Stripe entegrasyonu aracılığıyla katılımcılara ödeme yapmak isteyen araştırmacılar için geçerlidir.
+        Ticari hizmetlere ilişkin aşağıdaki bilgiler, yalnızca Stripe aracılığıyla işlenen gönüllü bir bağışı Samply&apos;ye yapan kişiler için geçerlidir.
       </p>
       <p>
         Sözleşmesel ilişkiler ve benzer ilişkiler bağlamında, ayrıca ilgili faaliyetler ve sözleşme tarafları ile iletişim veya sözleşme öncesi aşamada, örneğin soruları yanıtlamak için, sözleşme taraflarının ve iş ortaklarının, örneğin müşterilerin ve ilgili tarafların (topluca «sözleşme tarafları») verilerini işliyoruz.
@@ -5912,9 +5906,9 @@ function PolicyContentTr() {
       </p>
       <dl>
         <dt>İşlenen veri türleri</dt>
-        <dd>Araştırmacı verileri (ör. ad, kurum, e-posta, dil), katılımcı verileri (ör. e-posta, saat dilimi, zaman tercihleri, katılımcı kodu).</dd>
+        <dd>Bağışçı verileri (ör. ad, e-posta, bağış tutarı, Stripe tarafından işlenen ödeme bilgileri).</dd>
         <dt>İlgili kişiler</dt>
-        <dd>Araştırmacılar, katılımcılar.</dd>
+        <dd>Bağışçılar.</dd>
         <dt>İşleme amaçları</dt>
         <dd>Sözleşmesel hizmetler ve destek, iletişim talepleri ve iletişim, ofis ve organizasyonel prosedürler, soruların yönetilmesi ve yanıtlanması, güvenlik önlemleri.</dd>
         <dt>Hukuki dayanak</dt>
@@ -6250,7 +6244,7 @@ function PolicyContentPl() {
       {/* ── Usługi komercyjne ──────────────────────────────────────── */}
       <h2 id='m317'>Usługi komercyjne</h2>
       <p>
-        Poniższe informacje dotyczące usług komercyjnych mają zastosowanie wyłącznie do badaczy, którzy chcą dokonywać płatności na rzecz uczestników poprzez integrację platformy Samply z Stripe.
+        Poniższe informacje dotyczące usług komercyjnych mają zastosowanie wyłącznie do osób, które przekazują dobrowolną darowiznę na rzecz Samply, obsługiwaną za pośrednictwem Stripe.
       </p>
       <p>
         W kontekście stosunków umownych i podobnych relacji, a także powiązanych działań i komunikacji ze stronami umowy lub na etapie przedumownym, na przykład w celu odpowiedzi na pytania, przetwarzamy dane stron umowy i partnerów biznesowych, na przykład klientów i zainteresowanych stron (łącznie zwanych «stronami umowy»).
@@ -6263,9 +6257,9 @@ function PolicyContentPl() {
       </p>
       <dl>
         <dt>Rodzaje przetwarzanych danych</dt>
-        <dd>Dane badacza (np. imię i nazwisko, instytut, e-mail, język), dane uczestnika (np. e-mail, strefa czasowa, preferencje czasowe, kod uczestnika).</dd>
+        <dd>Dane darczyńcy (np. imię i nazwisko, e-mail, kwota darowizny, dane płatności przetwarzane przez Stripe).</dd>
         <dt>Osoby, których dane dotyczą</dt>
-        <dd>Badacze, uczestnicy.</dd>
+        <dd>Darczyńcy.</dd>
         <dt>Cele przetwarzania</dt>
         <dd>Usługi kontraktowe i wsparcie, zapytania kontaktowe i komunikacja, procedury biurowe i organizacyjne, zarządzanie zapytaniami i odpowiadanie na nie, środki bezpieczeństwa.</dd>
         <dt>Podstawa prawna</dt>
@@ -6601,7 +6595,7 @@ function PolicyContentAr() {
       {/* ── الخدمات التجارية ──────────────────────────────────────── */}
       <h2 id='m317'>الخدمات التجارية</h2>
       <p>
-        تنطبق المعلومات التالية المتعلقة بالخدمات التجارية حصراً على الباحثين الذين يرغبون في إجراء مدفوعات للمشاركين من خلال دمج منصة Samply مع Stripe.
+        تنطبق المعلومات التالية المتعلقة بالخدمات التجارية حصراً على الأشخاص الذين يقدّمون تبرعاً طوعياً إلى Samply، والذي تتم معالجته عبر Stripe.
       </p>
       <p>
         في سياق العلاقات التعاقدية والعلاقات المماثلة، فضلاً عن الأنشطة ذات الصلة والتواصل مع أطراف العقد أو في المرحلة السابقة للتعاقد، على سبيل المثال للرد على الأسئلة، نقوم بمعالجة بيانات أطراف العقد والشركاء التجاريين، مثل العملاء والأطراف المهتمة (يُشار إليهم مجتمعين بـ «أطراف العقد»).
@@ -6614,9 +6608,9 @@ function PolicyContentAr() {
       </p>
       <dl>
         <dt>أنواع البيانات المعالجة</dt>
-        <dd>بيانات الباحث (مثل الاسم، المعهد، البريد الإلكتروني، اللغة)، بيانات المشارك (مثل البريد الإلكتروني، المنطقة الزمنية، تفضيلات الوقت، رمز المشارك).</dd>
+        <dd>بيانات المتبرع (مثل الاسم، البريد الإلكتروني، مبلغ التبرع، بيانات الدفع التي تعالجها Stripe).</dd>
         <dt>أصحاب البيانات</dt>
-        <dd>الباحثون، المشاركون.</dd>
+        <dd>المتبرعون.</dd>
         <dt>أغراض المعالجة</dt>
         <dd>الخدمات التعاقدية والدعم، طلبات الاتصال والتواصل، الإجراءات المكتبية والتنظيمية، إدارة الاستفسارات والرد عليها، تدابير الأمان.</dd>
         <dt>الأساس القانوني</dt>

@@ -509,7 +509,6 @@ const it: DeepLoose<Messages> = {
     labelPushToken: "Token push",
     detailNoToken: "Nessun token",
     detailNoTokenHint: "Questo partecipante non ha concesso l'autorizzazione per le notifiche, quindi il suo token push Expo non è mai stato registrato. Chiedigli di consentire le notifiche nelle impostazioni del dispositivo e di rientrare nello studio scansionando il codice QR o riaprendo il link di invito.",
-    labelStripeAccount: "Account Stripe",
     labelTimezone: "Fuso orario",
     labelTimeWindow: "Finestra temporale",
     scheduleNotification: "+ Pianifica notifica",
@@ -528,12 +527,6 @@ const it: DeepLoose<Messages> = {
     thNotification: "Notifica",
     thSent: "Inviato",
     thStatus: "Stato",
-    payoutsHeading: "pagamenti · {n}",
-    thDate: "Data",
-    thAmount: "Importo",
-    thCurrency: "Valuta",
-    thReceipt: "Ricevuta",
-    openReceipt: "apri →",
     dangerZoneHeading: "zona di pericolo",
     removeParticipant: "Rimuovi partecipante",
     removeParticipantHint: "Rimuove questo partecipante dallo studio. La cronologia delle notifiche viene conservata.",
@@ -639,7 +632,6 @@ const it: DeepLoose<Messages> = {
     secureCodeHint: "Lascia vuoto per un link condiviso · Compila per assegnarlo a una persona",
     secureCodePlaceholder: "es. P001",
     secureAllowTz: "Consenti aggiornamenti del fuso orario",
-    secureAllowPayment: "Consenti account di pagamento",
     secureGenerate: "Genera link sicuro",
     secureCopyLink: "Copia link",
     secureCopied: "Copiato ✓",
@@ -1008,7 +1000,6 @@ const it: DeepLoose<Messages> = {
     colGroup:       'Gruppo',
     colPrefs:       'Preferenze orario',
     colTimezone:    'Fuso orario',
-    colPayout:      'Pagamento',
   },
 
   legacyProjects: {
@@ -1020,31 +1011,6 @@ const it: DeepLoose<Messages> = {
     newStudy:       '+ Nuovo studio',
   },
 
-
-  legacyPayouts: {
-    tabPayouts:      'Pagamenti',
-    tabReceipts:     'Ricevute',
-    participantInfo: 'Informazioni partecipante',
-    idLabel:         'ID Samply',
-    nameLabel:       'Nome',
-    emailLabel:      'Email',
-    paymentsLabel:   'Pagamenti',
-    enabled:         'Abilitato',
-    disabled:        'Disabilitato',
-    sendPayment:     'Invia pagamento',
-    currencyLabel:   'Valuta',
-    amountLabel:     'Importo',
-    sendButton:      'Invia pagamento',
-    notSetUp:        'Questo partecipante non ha ancora configurato un account di pagamento.',
-    noReceipts:      'Nessuna ricevuta.',
-    colDate:         'Data',
-    colReceiptId:    'ID ricevuta',
-    colStatus:       'Stato',
-    colCurrency:     'Valuta',
-    colAmount:       'Importo',
-    colFee:          'Commissione',
-    colUrl:          'URL',
-  },
 
   analytics: {
     metricSent:           'Notifiche inviate',
@@ -1482,22 +1448,6 @@ const it: DeepLoose<Messages> = {
       deleteIntro:   'Elimina definitivamente il tuo account e tutti i dati delle tue risposte. Questa azione non può essere annullata.',
     },
 
-    // ─── Account per i pagamenti (Stripe Connect per i partecipanti) ───────────
-    payable: {
-      title:              'Account per i pagamenti',
-      intro:              'Collega un account per i pagamenti se vuoi ricevere un compenso dai ricercatori per la partecipazione agli studi. Il tuo account è gestito da Stripe.',
-      createButton:       'Crea account per i pagamenti →',
-      editButton:         'Aggiorna account per i pagamenti →',
-      confirmEmailFirst:  'Conferma il tuo indirizzo email prima di configurare un account per i pagamenti.',
-      statusCharges:      'Può ricevere pagamenti',
-      statusDetails:      'Dati di onboarding',
-      statusPayouts:      'Bonifici sul tuo conto',
-      enabled:            'Attivo',
-      disabled:           'Non ancora attivo',
-      submitted:          'Inviati',
-      notSubmitted:       'Non inviati',
-      errorCreate:        'Impossibile avviare l\'onboarding di Stripe. Riprova.',
-    },
   },
 
   legacyInvitations: {

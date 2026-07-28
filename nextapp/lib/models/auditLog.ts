@@ -3,9 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export type AuditAction =
   | "view_participant"
   | "export_results"
-  | "export_participants"
-  | "view_payout"
-  | "view_receipts";
+  | "export_participants";
 
 export interface IAuditLog extends Document {
   actorUserId: mongoose.Types.ObjectId;

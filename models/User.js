@@ -59,8 +59,6 @@ const userSchema = new Schema(
     ],
     useragent: String,
     information: JSON,
-    stripeAccountId: String,
-    stripeInformation: JSON,
   },
   { toJSON: { virtuals: true } }
 );
