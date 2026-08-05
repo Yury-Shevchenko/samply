@@ -136,10 +136,19 @@ const TICK_STYLE = { fontFamily: "var(--font-mono)", fontSize: 11, fill: C.ink40
 
 // ── Section 1: Metric cards ───────────────────────────────────────────────────
 
+/**
+ * Describes the active window. Every count on this page is scoped to it, so it
+ * must be stated wherever a raw number appears — a windowed count presented as
+ * a running total is what made compliance figures look like they were shrinking.
+ */
+function windowLabel(t: (k: string, v?: Record<string, string>) => string, days: number): string {
+  return days === 0 ? t("analytics.subEntireStudy") : t("analytics.subLastDays", { days: String(days) });
+}
+
 function MetricsRow({ overview, days }: { overview: AnalyticsOverview; days: number }) {
   const { t } = useT();
   const stats = [
-    { label: t("analytics.metricSent"), value: overview.totalSent, sub: t("analytics.subLastDays", { days: String(days) }) },
+    { label: t("analytics.metricSent"), value: overview.totalSent, sub: windowLabel(t, days) },
     { label: t("analytics.metricRate"), value: overview.totalSent > 0 ? `${overview.compliancePct}%` : "—", sub: t("analytics.subOpenedOf", { responded: String(overview.totalResponded), sent: String(overview.totalSent) }) },
     { label: t("analytics.metricTime"), value: fmtMs(overview.avgResponseTimeMs), sub: t("analytics.subSentOpened") },
     { label: t("analytics.metricActive"), value: overview.activeParticipants, sub: t("analytics.subUniqueRespondents") },
@@ -312,13 +321,13 @@ function HourlyPatternChart({ data }: { data: HourlyPoint[] }) {
 
 // ── Section 6: Schedule performance table ─────────────────────────────────────
 
-function ScheduleTable({ data, notifications }: { data: SchedulePerformanceRow[]; notifications: NotificationConfig[] }) {
+function ScheduleTable({ data, notifications, days }: { data: SchedulePerformanceRow[]; notifications: NotificationConfig[]; days: number }) {
   const { t } = useT();
   const nameMap = new Map(notifications.map((n) => [n.id, n.name || n.title]));
 
   return (
     <Card>
-      <CardTitle>{t("analytics.chartSchedules")}</CardTitle>
+      <CardTitle>{t("analytics.chartSchedules")} · {windowLabel(t, days)}</CardTitle>
       {data.length === 0 ? (
         <EmptyState />
       ) : (
@@ -328,7 +337,7 @@ function ScheduleTable({ data, notifications }: { data: SchedulePerformanceRow[]
               <tr style={{ color: "var(--ink-40)", borderBottom: "1px solid var(--ink-10)" }}>
                 <th style={{ textAlign: "left", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colSchedule")}</th>
                 <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colSent")}</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colOpened")}</th>
+                <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }} title={t("analytics.respondedHint")}>{t("analytics.colResponded")}</th>
                 <th style={{ padding: "0.5rem 0.8rem", fontWeight: 500, minWidth: "10rem" }}>{t("analytics.colCompliance")}</th>
               </tr>
             </thead>
@@ -357,11 +366,11 @@ function ScheduleTable({ data, notifications }: { data: SchedulePerformanceRow[]
 
 // ── Section 7: Participant compliance table ───────────────────────────────────
 
-function ParticipantTable({ data }: { data: ParticipantComplianceRow[] }) {
+function ParticipantTable({ data, days }: { data: ParticipantComplianceRow[]; days: number }) {
   const { t } = useT();
   return (
     <Card>
-      <CardTitle>{t("analytics.chartParticipants")}</CardTitle>
+      <CardTitle>{t("analytics.chartParticipants")} · {windowLabel(t, days)}</CardTitle>
       {data.length === 0 ? (
         <EmptyState />
       ) : (
@@ -371,7 +380,7 @@ function ParticipantTable({ data }: { data: ParticipantComplianceRow[] }) {
               <tr style={{ color: "var(--ink-40)", borderBottom: "1px solid var(--ink-10)" }}>
                 <th style={{ textAlign: "left", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colParticipant")}</th>
                 <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colSent")}</th>
-                <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colOpened")}</th>
+                <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }} title={t("analytics.respondedHint")}>{t("analytics.colResponded")}</th>
                 <th style={{ padding: "0.5rem 0.8rem", fontWeight: 500, minWidth: "10rem" }}>{t("analytics.colCompliance")}</th>
                 <th style={{ textAlign: "right", padding: "0.5rem 0.8rem", fontWeight: 500 }}>{t("analytics.colLastActive")}</th>
               </tr>
@@ -503,7 +512,10 @@ function EmptyState() {
 
 // ── Main dashboard ────────────────────────────────────────────────────────────
 
-const DAY_OPTIONS = [7, 14, 30] as const;
+// 0 = entire study. It leads because a rolling window makes per-participant
+// counts appear to shrink as older sends age out of it, which reads as data
+// loss; most studies are shorter than the shortest fixed window anyway.
+const DAY_OPTIONS = [0, 7, 14, 30] as const;
 
 export default function AnalyticsDashboard({ studyId, days: initialDays, initialData, notifications }: Props) {
   const { t } = useT();
@@ -564,7 +576,7 @@ export default function AnalyticsDashboard({ studyId, days: initialDays, initial
                 transition: "all .12s",
               }}
             >
-              {t("analytics.dayButton", { n: String(d) })}
+              {d === 0 ? t("analytics.allTimeButton") : t("analytics.dayButton", { n: String(d) })}
             </button>
           ))}
         </div>
@@ -601,10 +613,10 @@ export default function AnalyticsDashboard({ studyId, days: initialDays, initial
       <HourlyPatternChart data={data.hourly} />
 
       {/* Section 6: Schedule performance */}
-      <ScheduleTable data={data.schedules} notifications={notifications} />
+      <ScheduleTable data={data.schedules} notifications={notifications} days={days} />
 
       {/* Section 7: Participant compliance */}
-      <ParticipantTable data={data.participants} />
+      <ParticipantTable data={data.participants} days={days} />
     </div>
   );
 }

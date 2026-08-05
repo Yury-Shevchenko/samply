@@ -7,6 +7,91 @@ function sinceDate(days: number) {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 }
 
+/**
+ * `days = 0` means "entire study" — no lower bound on `created`.
+ *
+ * Every panel used to filter on a rolling window anchored to Date.now() while
+ * presenting the result as a running total. Because the window slides, a
+ * participant's `sent`/`responded` counts *decrease* once messages age out of
+ * it — researchers reported watching a row go from sent=6/opened=5 to
+ * sent=4/opened=4 overnight and reasonably concluded Samply was losing data.
+ * Nothing was ever lost; the counts were windowed. Studies typically run 5-8
+ * days, so the old 7-day default guaranteed every study crossed the boundary
+ * mid-run. "Entire study" is now the default.
+ */
+function createdFilter(days: number): Record<string, unknown> {
+  return days > 0 ? { created: { $gte: sinceDate(days) } } : {};
+}
+
+/**
+ * Parses the `days` query parameter into a window size.
+ *
+ * Returns 0 for "entire study", which is also the default when the parameter is
+ * absent or unparseable. Fixed windows are clamped to 1-90 days.
+ */
+export function parseWindowDays(raw: string | null | undefined): number {
+  if (raw === undefined || raw === null || raw === "" || raw === "all" || raw === "0") return 0;
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  return Math.min(90, Math.max(1, Math.floor(n)));
+}
+
+/**
+ * A notification counts as "responded to" if any of these events exists.
+ *
+ *  - `tapped`         — the participant tapped the push notification.
+ *  - `opened-in-app`  — the participant opened the survey from the History
+ *                       screen. This is the documented path for anyone who
+ *                       missed or dismissed the push, and it is a genuine
+ *                       response.
+ *  - `completed`      — the survey tool called back via the end-URL redirect or
+ *                       the completion webhook. Proof of response even when the
+ *                       push was never tapped.
+ *
+ * Counting only `tapped` reported 0% compliance for participants who
+ * demonstrably finished the survey, because the tap event is the one signal
+ * that depends on the mobile app winning a race against its own backgrounding.
+ */
+export const RESPONDED_STATUSES = ["tapped", "opened-in-app", "completed"];
+
+/** Statuses that mean the participant opened the link, for the delivery funnel. */
+const OPENED_STATUSES = ["tapped", "opened-in-app"];
+
+/** Aggregation expression: 1 when the document has any responded status, else 0. */
+const HAS_RESPONDED = {
+  $cond: [
+    {
+      $gt: [
+        { $size: { $setIntersection: [{ $ifNull: ["$events.status", []] }, RESPONDED_STATUSES] } },
+        0,
+      ],
+    },
+    1,
+    0,
+  ],
+};
+
+/**
+ * Aggregation expression: timestamp of the *earliest* responded event, or null.
+ *
+ * Uses $min rather than the first array element — `events` is appended to
+ * without a guaranteed sort, so position does not imply chronology.
+ */
+const FIRST_RESPONSE_AT = {
+  $min: {
+    $map: {
+      input: {
+        $filter: {
+          input: { $ifNull: ["$events", []] },
+          cond: { $in: ["$$this.status", RESPONDED_STATUSES] },
+        },
+      },
+      as: "e",
+      in: "$$e.created",
+    },
+  },
+};
+
 export interface AnalyticsOverview {
   totalSent: number;
   totalResponded: number;
@@ -17,36 +102,20 @@ export interface AnalyticsOverview {
 
 export async function fetchAnalyticsOverview(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<AnalyticsOverview> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
+  const window = createdFilter(days);
 
   const [totalSent, totalResponded, activeParticipants, avgAgg] = await Promise.all([
-    Result.countDocuments({ project: oid, created: { $gte: since } }),
-    Result.countDocuments({ project: oid, created: { $gte: since }, "events.status": "tapped" }),
-    Result.distinct("samplyid", { project: oid, created: { $gte: since } }).then((a) => a.length),
+    Result.countDocuments({ project: oid, ...window }),
+    Result.countDocuments({ project: oid, ...window, "events.status": { $in: RESPONDED_STATUSES } }),
+    Result.distinct("samplyid", { project: oid, ...window }).then((a) => a.length),
     Result.aggregate([
-      { $match: { project: oid, created: { $gte: since }, "events.status": "tapped" } },
-      {
-        $project: {
-          tappedAt: {
-            $arrayElemAt: [
-              {
-                $map: {
-                  input: { $filter: { input: "$events", cond: { $eq: ["$$this.status", "tapped"] } } },
-                  as: "e",
-                  in: "$$e.created",
-                },
-              },
-              0,
-            ],
-          },
-          sentAt: "$created",
-        },
-      },
-      { $project: { deltaMs: { $subtract: ["$tappedAt", "$sentAt"] } } },
+      { $match: { project: oid, ...window, "events.status": { $in: RESPONDED_STATUSES } } },
+      { $project: { respondedAt: FIRST_RESPONSE_AT, sentAt: "$created" } },
+      { $project: { deltaMs: { $subtract: ["$respondedAt", "$sentAt"] } } },
       { $match: { deltaMs: { $gte: 0 } } },
       { $group: { _id: null, avg: { $avg: "$deltaMs" } } },
     ]),
@@ -65,30 +134,60 @@ export interface TimeSeriesPoint {
   pct: number;
 }
 
+/**
+ * Widest x-axis we will zero-fill for the "entire study" view. A long-running
+ * study would otherwise render thousands of mostly-empty points; past this we
+ * show the most recent year.
+ */
+const MAX_TIMESERIES_DAYS = 365;
+
+/**
+ * Number of days the x-axis should span. For a fixed window that is the window
+ * itself; for "entire study" it runs from the first notification ever sent to
+ * today, so the chart covers the study rather than a rolling slice of it.
+ */
+async function axisSpanDays(oid: mongoose.Types.ObjectId, days: number): Promise<number> {
+  if (days > 0) return days;
+
+  const first = await Result.findOne({ project: oid }, { created: 1 })
+    .sort({ created: 1 })
+    .lean() as { created?: Date } | null;
+  if (!first?.created) return 1;
+
+  const startOfDay = (d: Date) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  const span =
+    Math.floor((startOfDay(new Date()) - startOfDay(new Date(first.created))) / 86400000) + 1;
+
+  return Math.min(MAX_TIMESERIES_DAYS, Math.max(1, span));
+}
+
 export async function fetchResponseTimeSeries(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<TimeSeriesPoint[]> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
 
-  const rows: { _id: string; sent: number; responded: number }[] = await Result.aggregate([
-    { $match: { project: oid, created: { $gte: since } } },
-    {
-      $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
-        sent: { $sum: 1 },
-        responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
-      },
-    },
-    { $sort: { _id: 1 } },
-  ]);
+  const [rows, spanDays]: [{ _id: string; sent: number; responded: number }[], number] =
+    await Promise.all([
+      Result.aggregate([
+        { $match: { project: oid, ...createdFilter(days) } },
+        {
+          $group: {
+            _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
+            sent: { $sum: 1 },
+            responded: { $sum: HAS_RESPONDED },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
+      axisSpanDays(oid, days),
+    ]);
 
   // Fill in zero-value days for a continuous X-axis
   const map = new Map(rows.map((r) => [r._id, r]));
   const result: TimeSeriesPoint[] = [];
-  for (let i = days - 1; i >= 0; i--) {
+  for (let i = spanDays - 1; i >= 0; i--) {
     const d = new Date(Date.now() - i * 24 * 60 * 60 * 1000);
     const key = d.toISOString().slice(0, 10);
     const row = map.get(key);
@@ -107,11 +206,10 @@ export interface FunnelStage {
 
 export async function fetchDeliveryFunnel(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<FunnelStage[]> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
 
   // We do not include a "Received" stage. The mobile OS does not surface push
   // delivery to us; the only "received" signal Samply has is `received-in-app`,
@@ -121,12 +219,25 @@ export async function fetchDeliveryFunnel(
   // → Completed; loss between Sent and Opened mixes delivery failure and
   // engagement failure, and the dashboard explains that explicitly.
   const [agg] = await Result.aggregate([
-    { $match: { project: oid, created: { $gte: since } } },
+    { $match: { project: oid, ...createdFilter(days) } },
     {
       $project: {
         hasSent: { $literal: 1 },
-        hasTapped: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] },
-        hasCompleted: { $cond: [{ $in: ["completed", "$events.status"] }, 1, 0] },
+        // "Opened" covers both ways a participant can open the link: tapping the
+        // push, or opening it from the History screen after missing the push.
+        hasTapped: {
+          $cond: [
+            {
+              $gt: [
+                { $size: { $setIntersection: [{ $ifNull: ["$events.status", []] }, OPENED_STATUSES] } },
+                0,
+              ],
+            },
+            1,
+            0,
+          ],
+        },
+        hasCompleted: { $cond: [{ $in: ["completed", { $ifNull: ["$events.status", []] }] }, 1, 0] },
       },
     },
     {
@@ -161,11 +272,10 @@ export interface ResponseTimeBucket {
 
 export async function fetchResponseTimeDistribution(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<ResponseTimeBucket[]> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
 
   const LABELS: Record<number, string> = {
     0: "<5 min",
@@ -177,25 +287,9 @@ export async function fetchResponseTimeDistribution(
   };
 
   const rows: { _id: number | string; count: number }[] = await Result.aggregate([
-    { $match: { project: oid, created: { $gte: since }, "events.status": "tapped" } },
-    {
-      $project: {
-        tappedAt: {
-          $arrayElemAt: [
-            {
-              $map: {
-                input: { $filter: { input: "$events", cond: { $eq: ["$$this.status", "tapped"] } } },
-                as: "e",
-                in: "$$e.created",
-              },
-            },
-            0,
-          ],
-        },
-        sentAt: "$created",
-      },
-    },
-    { $project: { deltaMs: { $subtract: ["$tappedAt", "$sentAt"] } } },
+    { $match: { project: oid, ...createdFilter(days), "events.status": { $in: RESPONDED_STATUSES } } },
+    { $project: { respondedAt: FIRST_RESPONSE_AT, sentAt: "$created" } },
+    { $project: { deltaMs: { $subtract: ["$respondedAt", "$sentAt"] } } },
     { $match: { deltaMs: { $gte: 0 } } },
     {
       $bucket: {
@@ -222,14 +316,13 @@ export interface HourlyPoint {
 
 export async function fetchHourlyPattern(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<HourlyPoint[]> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
 
   const rows: { _id: number; totalSent: number; avgPct: number }[] = await Result.aggregate([
-    { $match: { project: oid, created: { $gte: since } } },
+    { $match: { project: oid, ...createdFilter(days) } },
     {
       $group: {
         _id: {
@@ -237,7 +330,7 @@ export async function fetchHourlyPattern(
           day: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
         },
         sent: { $sum: 1 },
-        responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
+        responded: { $sum: HAS_RESPONDED },
       },
     },
     {
@@ -272,20 +365,19 @@ export interface ParticipantComplianceRow {
 
 export async function fetchParticipantCompliance(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<ParticipantComplianceRow[]> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
 
   const rows: { _id: string; sent: number; responded: number; lastActive: Date }[] =
     await Result.aggregate([
-      { $match: { project: oid, created: { $gte: since } } },
+      { $match: { project: oid, ...createdFilter(days) } },
       {
         $group: {
           _id: "$samplyid",
           sent: { $sum: 1 },
-          responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
+          responded: { $sum: HAS_RESPONDED },
           lastActive: { $max: "$created" },
         },
       },
@@ -310,11 +402,10 @@ export interface SchedulePerformanceRow {
 
 export async function fetchSchedulePerformance(
   projectId: string,
-  days = 7,
+  days = 0,
 ): Promise<SchedulePerformanceRow[]> {
   await connectDB();
   const oid = new mongoose.Types.ObjectId(projectId);
-  const since = sinceDate(days);
 
   // Only count actual notification sends. Every send path (notificationSender,
   // legacy jobController, hookController) writes an "events.status: sent" marker;
@@ -322,12 +413,12 @@ export async function fetchSchedulePerformance(
   // would otherwise be miscounted as "(untracked schedule)" since they carry a
   // project but no notificationConfigId.
   const rows: { _id: string | null; sent: number; responded: number }[] = await Result.aggregate([
-    { $match: { project: oid, created: { $gte: since }, "events.status": "sent" } },
+    { $match: { project: oid, ...createdFilter(days), "events.status": "sent" } },
     {
       $group: {
         _id: { $ifNull: ["$notificationConfigId", null] },
         sent: { $sum: 1 },
-        responded: { $sum: { $cond: [{ $in: ["tapped", "$events.status"] }, 1, 0] } },
+        responded: { $sum: HAS_RESPONDED },
       },
     },
     { $sort: { sent: -1 } },
@@ -350,7 +441,7 @@ export interface RetentionPoint {
 /**
  * Builds a dropout/retention curve in relative study days.
  * For each relative day D (day 1 = participant's join date):
- *  - active:   participants who tapped ≥1 notification on that day
+ *  - active:   participants who responded to ≥1 notification on that day
  *  - eligible: participants who have been in the study long enough to reach day D
  *
  * Does not accept a `days` filter — this is a whole-study view.
@@ -373,9 +464,9 @@ export async function fetchRetentionCurve(projectId: string): Promise<RetentionP
 
   if (joinMap.size === 0) return [];
 
-  // Aggregate: for each participant, which calendar dates did they tap a notification?
+  // Aggregate: for each participant, on which calendar dates did they respond?
   const tappedDays: { _id: { samplyid: string; date: string } }[] = await Result.aggregate([
-    { $match: { project: oid, "events.status": "tapped" } },
+    { $match: { project: oid, "events.status": { $in: RESPONDED_STATUSES } } },
     {
       $group: {
         _id: {

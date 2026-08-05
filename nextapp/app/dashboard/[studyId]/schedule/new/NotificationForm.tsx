@@ -546,7 +546,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
                     { ph: "%SAMPLY_ID%", desc: t("notificationForm.urlHelpPhSamplyId") },
                     { ph: "%PARTICIPANT_CODE%", desc: t("notificationForm.urlHelpPhCode") },
                     { ph: "%MESSAGE_ID%", desc: t("notificationForm.urlHelpPhMessageId") },
-                    { ph: "%GROUP_CODE%", desc: t("notificationForm.urlHelpPhGroup") },
+                    { ph: "%GROUP_ID%", desc: t("notificationForm.urlHelpPhGroup") },
                   ].map(({ ph, desc }) => (
                     <div key={ph} style={{ display: "flex", gap: "1rem", alignItems: "baseline" }}>
                       <code style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--coral)", background: "rgba(214,90,48,.06)", padding: "0.15rem 0.5rem", borderRadius: "0.3rem", flexShrink: 0 }}>{ph}</code>

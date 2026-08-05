@@ -11,6 +11,7 @@ import {
   fetchParticipantCompliance,
   fetchSchedulePerformance,
   fetchRetentionCurve,
+  parseWindowDays,
 } from "@/lib/data/analytics";
 import AnalyticsDashboard from "./AnalyticsDashboard";
 
@@ -22,7 +23,9 @@ interface Props {
 export default async function AnalyticsPage({ params, searchParams }: Props) {
   const { studyId } = await params;
   const { days: daysParam } = await searchParams;
-  const days = Math.min(90, Math.max(1, Number(daysParam ?? 7)));
+  // Defaults to 0 = entire study. A rolling window made per-participant counts
+  // appear to shrink as older sends aged out of it; see parseWindowDays.
+  const days = parseWindowDays(daysParam);
 
   const session = await auth();
   if (!session || session.user.level <= 10) redirect("/login");

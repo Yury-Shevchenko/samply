@@ -10,6 +10,7 @@ import {
   fetchParticipantCompliance,
   fetchSchedulePerformance,
   fetchRetentionCurve,
+  parseWindowDays,
 } from "@/lib/data/analytics";
 
 export async function GET(
@@ -27,7 +28,8 @@ export async function GET(
     return Response.json({ error: "Not found" }, { status: 404 });
   }
 
-  const days = Math.min(90, Math.max(1, Number(req.nextUrl.searchParams.get("days") ?? 7)));
+  // 0 = entire study, and the default. See parseWindowDays.
+  const days = parseWindowDays(req.nextUrl.searchParams.get("days"));
 
   const [overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention] =
     await Promise.all([

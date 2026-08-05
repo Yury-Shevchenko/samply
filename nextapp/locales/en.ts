@@ -1385,6 +1385,8 @@ const en = {
     metricActive:         "Active participants",
     /** {days} = number of days selected */
     subLastDays:          "last {days} days",
+    /** Shown in place of subLastDays when the window is the whole study. */
+    subEntireStudy:       "entire study",
     /** {responded} = opens, {sent} = total sent */
     subOpenedOf:          "{responded} of {sent} opened",
     subSentOpened:        "sent → opened",
@@ -1405,6 +1407,9 @@ const en = {
     scheduleUntracked:    "(untracked schedule)",
     colSent:              "Sent",
     colOpened:            "Opened",
+    colResponded:         "Responded",
+    /** Tooltip on the Responded column header. */
+    respondedHint:        "Counts a notification as answered if the participant tapped it, opened it from their history, or the survey reported completion.",
     colCompliance:        "Compliance",
     colParticipant:       "Participant",
     colLastActive:        "Last active",
@@ -1423,6 +1428,8 @@ const en = {
     dayLabel:             "Day {n}",
     /** {n} = number for day-range button (e.g. "7d") */
     dayButton:            "{n}d",
+    /** Window button selecting the whole study rather than a rolling window. */
+    allTimeButton:        "All",
   },
 
   // ─── Scheduled notifications queue page ──────────────────────────────────────
@@ -1638,9 +1645,9 @@ const en = {
     urlHelpToggle:       "Recording participant data in the survey URL",
     urlHelpDesc:         "Samply replaces placeholders in the URL before sending it to each participant, so you can capture identifiers directly in your survey tool's query string.",
     urlHelpPhSamplyId:   "Participant's unique Samply identifier (always present).",
-    urlHelpPhCode:       "Code the participant entered when joining the study. Falls back to the Samply ID if no code was provided.",
-    urlHelpPhMessageId:  "Unique ID of this specific notification delivery.",
-    urlHelpPhGroup:      "The participant's group name, if they belong to one.",
+    urlHelpPhCode:       "Code the participant entered when joining the study. Only use it if your study asks for a code — participants who joined without one are skipped.",
+    urlHelpPhMessageId:  "Unique ID of this specific notification delivery. Required if you want Samply to record completions and stop reminders.",
+    urlHelpPhGroup:      "The participant's group name. Only use it if your study defines groups — participants without a group are skipped.",
     urlHelpExample:      "Example",
     urlHelpSeeQueryPre:  "Your survey tool can then extract these values from the address bar. See",
     urlHelpQueryStrings: "query strings",

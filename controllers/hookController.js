@@ -11,6 +11,14 @@ const crypto = require("crypto");
 const { Expo } = require("expo-server-sdk");
 let expo = new Expo();
 
+// `expireIn` is milliseconds from send time. Returns null when absent or
+// unparseable so a malformed value means "no expiry" rather than an expireAt of
+// NaN, which would compare false everywhere and silently never expire.
+const expireAtFor = (expireIn, sentAt) => {
+  const ms = Number(expireIn);
+  return Number.isFinite(ms) && ms > 0 ? sentAt + ms : null;
+};
+
 const confirmOwner = (project, user) => {
   if (!project.creator.equals(user._id) || user.level <= 10) {
     throw Error("You must own a project in order to edit it!");
@@ -202,7 +210,11 @@ exports.notify = async (req, res) => {
         message: content.message,
         url: customizedUrl,
         messageId,
-        expireAt: expireIn ? Date.now() + parseInt(expireIn * 1000 * 60) : null,
+        // expireIn is milliseconds from send time, as the API reference states
+        // and as notificationSender.js treats it. This previously multiplied by
+        // 60_000 on the assumption it was minutes, turning a 1-hour expiry into
+        // ~6,800 years — link expiry never actually applied on this path.
+        expireAt: expireAtFor(expireIn, timestampSent),
       },
       id: pushToken.id,
       priority: "high",

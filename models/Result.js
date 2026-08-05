@@ -19,6 +19,11 @@ const resultSchema = new mongoose.Schema({
     expireAt: Number, // timestamp
   },
   ticket: JSON,
+  // Which schedule produced this send. The schema is strict, so until this was
+  // declared Mongoose silently dropped the value notificationSender.js passes —
+  // every result landed with no config id, and the analytics "Schedule
+  // performance" panel could only ever show "(untracked schedule)".
+  notificationConfigId: String,
   events: [
     {
       status: String,
