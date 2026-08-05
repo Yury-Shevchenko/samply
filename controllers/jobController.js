@@ -17,6 +17,7 @@ const webhookController = require("./webhookController");
 const consent = require("../handlers/consent");
 const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
 const { scheduleForUser } = require("../services/scheduleForUser");
+const { substitutePlaceholders } = require("../lib/placeholders");
 
 const MAX_PROJECT_PENDING = 50_000;
 
@@ -1575,30 +1576,14 @@ async function sendMobileNotification({
 
       // construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
       const messageId = makeRandomCodeForMessageID();
-      let updatedUrl = url;
-      if (url.includes("%")) {
-        if (url.includes("%MESSAGE_ID%")) {
-          updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
-        }
-        if (url.includes("%SAMPLY_ID%")) {
-          updatedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
-        }
-        if (url.includes("%PARTICIPANT_CODE%") && pushToken.username) {
-          updatedUrl = updatedUrl.replace(
-            "%PARTICIPANT_CODE%",
-            pushToken.username
-          );
-        }
-        if (url.includes("%GROUP_ID%") && pushToken.group) {
-          updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
-        }
-        if (url.includes("%TIMESTAMP_SENT%")) {
-          updatedUrl = updatedUrl.replace("%TIMESTAMP_SENT%", timestampSent);
-        }
-        if (url.includes("%BATCH%")) {
-          updatedUrl = updatedUrl.replace("%BATCH%", batch);
-        }
-      }
+      const updatedUrl = substitutePlaceholders(url, {
+        MESSAGE_ID: messageId,
+        SAMPLY_ID: pushToken.id,
+        PARTICIPANT_CODE: pushToken.username,
+        GROUP_ID: pushToken.group,
+        TIMESTAMP_SENT: timestampSent,
+        BATCH: batch,
+      });
 
       // schedule reminder notification
       let finid = finishid;

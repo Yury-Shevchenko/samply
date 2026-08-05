@@ -1654,6 +1654,24 @@ const en = {
     urlHelpSeeQueryMid:  "and the",
     urlHelpFullRef:      "full placeholder reference",
 
+    // ── Survey URL builder ──────────────────────────────────────────────────
+    builderToggle:          "Build this link for me →",
+    builderIntro:           "Paste your survey link and pick your platform. Samply adds the right parameters, with the right names for that tool, in the right places.",
+    builderPlatform:        "Survey platform",
+    builderBaseUrl:         "Your survey link",
+    builderInclude:         "Send to the survey",
+    builderIncSamplyId:     "Participant ID — needed to tell responses apart in your export",
+    builderIncCode:         "Participant code — only if your study asks participants for one",
+    builderIncMessageId:    "Message ID — needed to record completions and stop reminders",
+    builderResult:          "Your notification link",
+    builderApply:           "Use this link",
+    builderCancel:          "Cancel",
+    builderCompletionTitle: "End-of-survey redirect",
+    builderCompletionHint:  "Set this as the redirect at the end of your survey, replacing <MESSAGE_ID> with the tool's own code for the value it received.",
+    builderNoRedirect:      "This tool cannot redirect to an external URL at the end of a survey, so completions cannot be recorded automatically.",
+    /** {name} = survey platform name */
+    builderDocsLink:        "Setup guide for {name}",
+
     // Timezone
     adjustTimezone:      "Adjust delivery time for each participant's timezone",
     refTimezone:         "Reference timezone",

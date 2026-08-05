@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "for f in lib/*.test.ts; do node --experimental-strip-types \"$f\" || exit 1; done"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.3.0",

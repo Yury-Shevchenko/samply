@@ -4,6 +4,7 @@ const PendingNotification = mongoose.model("PendingNotification");
 const { Expo } = require("expo-server-sdk");
 const { customAlphabet } = require("nanoid");
 const uniqid = require("uniqid");
+const { substitutePlaceholders } = require("../lib/placeholders");
 
 const expo = new Expo();
 const nanoid = customAlphabet(
@@ -51,21 +52,14 @@ async function sendMobileNotification({
       const batch = countRecords + 1;
 
       const messageId = makeRandomCodeForMessageID();
-      let updatedUrl = url;
-      if (url && url.includes("%")) {
-        if (url.includes("%MESSAGE_ID%"))
-          updatedUrl = updatedUrl.replace("%MESSAGE_ID%", messageId);
-        if (url.includes("%SAMPLY_ID%"))
-          updatedUrl = updatedUrl.replace("%SAMPLY_ID%", pushToken.id);
-        if (url.includes("%PARTICIPANT_CODE%") && pushToken.username)
-          updatedUrl = updatedUrl.replace("%PARTICIPANT_CODE%", pushToken.username);
-        if (url.includes("%GROUP_ID%") && pushToken.group)
-          updatedUrl = updatedUrl.replace("%GROUP_ID%", pushToken.group);
-        if (url.includes("%TIMESTAMP_SENT%"))
-          updatedUrl = updatedUrl.replace("%TIMESTAMP_SENT%", timestampSent);
-        if (url.includes("%BATCH%"))
-          updatedUrl = updatedUrl.replace("%BATCH%", batch);
-      }
+      const updatedUrl = substitutePlaceholders(url, {
+        MESSAGE_ID: messageId,
+        SAMPLY_ID: pushToken.id,
+        PARTICIPANT_CODE: pushToken.username,
+        GROUP_ID: pushToken.group,
+        TIMESTAMP_SENT: timestampSent,
+        BATCH: batch,
+      });
 
       let finid = finishid;
       if (reminders && reminders.length) {

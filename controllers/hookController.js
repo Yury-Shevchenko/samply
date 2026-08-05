@@ -9,6 +9,7 @@ const nanoid = customAlphabet(
 const crypto = require("crypto");
 
 const { Expo } = require("expo-server-sdk");
+const { substitutePlaceholders } = require("../lib/placeholders");
 let expo = new Expo();
 
 // `expireIn` is milliseconds from send time. Returns null when absent or
@@ -192,13 +193,14 @@ exports.notify = async (req, res) => {
     const batch = countRecords + 1;
 
     const messageId = makeRandomCodeForMessageID();
-    const customizedUrl = content.url
-      .replace("%SAMPLY_ID%", pushToken.id)
-      .replace("%PARTICIPANT_CODE%", pushToken.username)
-      .replace("%GROUP_CODE%", groupID)
-      .replace("%MESSAGE_ID%", messageId)
-      .replace("%TIMESTAMP_SENT%", timestampSent)
-      .replace("%BATCH%", batch);
+    const customizedUrl = substitutePlaceholders(content.url, {
+      SAMPLY_ID: pushToken.id,
+      PARTICIPANT_CODE: pushToken.username,
+      GROUP_ID: groupID,
+      MESSAGE_ID: messageId,
+      TIMESTAMP_SENT: timestampSent,
+      BATCH: batch,
+    });
     // Construct a message (see https://docs.expo.io/versions/latest/guides/push-notifications)
     messages.push({
       to: pushToken.token,

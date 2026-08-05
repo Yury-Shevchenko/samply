@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useT } from "@/app/components/TranslationProvider";
 import { SPEC_VERSION, type ScheduleSpec } from "@/lib/scheduleSpec";
 import { compileSpec, isInvalidRepeatDates } from "@/lib/compileSpec";
+import { checkSurveyUrl } from "@/lib/placeholders";
+import SurveyUrlBuilder from "./SurveyUrlBuilder";
 
 interface Participant { id: string; username?: string }
 interface Group { id: string; name?: string }
@@ -28,6 +30,8 @@ interface Props {
   groups: Group[];
   preselectedParticipantId?: string;
   initial?: EditInitial;
+  /** Study code, used to show the end-of-survey completion URL in the builder. */
+  studySlug?: string;
 }
 
 const TIMEZONES = Intl.supportedValuesOf("timeZone");
@@ -292,7 +296,7 @@ function DatetimeStrategyPicker({
 
 // ── Main form ──────────────────────────────────────────────────────────────────
 
-export default function NotificationForm({ projectId, participants, groups, preselectedParticipantId, initial }: Props) {
+export default function NotificationForm({ projectId, participants, groups, preselectedParticipantId, initial, studySlug }: Props) {
   const S = initial?.spec ?? undefined;
   const { t } = useT();
 
@@ -315,6 +319,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
   const [message, setMessage] = useState(initial?.message ?? "");
   const [url, setUrl] = useState(initial?.url ?? "https://");
   const [urlHelpOpen, setUrlHelpOpen] = useState(false);
+  const [builderOpen, setBuilderOpen] = useState(false);
 
   const [timezone, setTimezone] = useState(() => S?.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone);
   const [useParticipantTimezone, setUseParticipantTimezone] = useState(S?.useParticipantTimezone ?? false);
@@ -389,6 +394,19 @@ export default function NotificationForm({ projectId, participants, groups, pres
   const [status, setStatus] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
+  // Checked as the researcher types. A duplicated placeholder or a stray "?" is
+  // invisible until the study is over and the export turns out to have no usable
+  // participant identifier, so the feedback has to arrive here — at send time it
+  // is already too late to fix the run.
+  const urlIssues = useMemo(
+    () => checkSurveyUrl(url === "https://" ? "" : url, {
+      participantCount: participants.length,
+      hasReminders: reminderType === "yes",
+    }),
+    [url, participants.length, reminderType],
+  );
+  const urlErrors = urlIssues.filter((i) => i.level === "error");
+
   // ── Helpers ──────────────────────────────────────────────────────────────────
 
   function toggleParticipant(id: string) {
@@ -458,6 +476,10 @@ export default function NotificationForm({ projectId, participants, groups, pres
     // "repeat" cadence with "specific" one-off dates is not a valid combination.
     if (isInvalidRepeatDates(spec)) { alert(t("notificationForm.alertRepeatDates")); return; }
 
+    // The server rejects these too; stopping here keeps the researcher on the
+    // field that needs fixing instead of bouncing them off a generic error.
+    if (urlErrors.length) { setStatus(`Error: ${urlErrors[0].message}`); return; }
+
     setSubmitting(true);
     setStatus(null);
 
@@ -504,7 +526,47 @@ export default function NotificationForm({ projectId, participants, groups, pres
           </div>
           <div>
             <label style={LABEL}>{t("notificationForm.labelWebLink")}</label>
-            <input style={FIELD} type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://your-survey.com/?id=%SAMPLY_ID%" />
+            <input
+              style={urlErrors.length ? { ...FIELD, borderColor: "var(--coral)" } : FIELD}
+              type="text" value={url} onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://your-survey.com/?id=%SAMPLY_ID%"
+            />
+            <button
+              type="button"
+              onClick={() => setBuilderOpen((o) => !o)}
+              style={{
+                marginTop: "0.6rem", display: "inline-flex", alignItems: "center", gap: "0.4rem",
+                background: "none", border: "none", padding: 0, cursor: "pointer",
+                fontFamily: "var(--font-mono)", fontSize: "1.05rem", letterSpacing: ".06em",
+                color: "var(--coral)",
+              }}
+            >
+              {t("notificationForm.builderToggle")}
+            </button>
+            {builderOpen && (
+              <SurveyUrlBuilder
+                studySlug={studySlug}
+                onApply={(built) => setUrl(built)}
+                onClose={() => setBuilderOpen(false)}
+              />
+            )}
+            {urlIssues.length > 0 && (
+              <ul style={{ margin: "0.5rem 0 0", padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+                {urlIssues.map((issue, i) => (
+                  <li
+                    key={`${issue.code}-${issue.token ?? i}`}
+                    style={{
+                      fontSize: "1.1rem", lineHeight: 1.45,
+                      color: issue.level === "error" ? "var(--coral)" : "var(--ink-60)",
+                      display: "flex", gap: "0.5rem", alignItems: "baseline",
+                    }}
+                  >
+                    <span aria-hidden style={{ flexShrink: 0 }}>{issue.level === "error" ? "✕" : "!"}</span>
+                    <span>{issue.message}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
             {/* URL placeholder accordion */}
             <button
               type="button"

@@ -66,6 +66,7 @@ export default async function NewSchedulePage({ params, searchParams }: Props) {
         participants={participantItems}
         groups={groupItems}
         preselectedParticipantId={participantId}
+        studySlug={project.slug}
       />
     </div>
   );

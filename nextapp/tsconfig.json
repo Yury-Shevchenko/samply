@@ -6,6 +6,11 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    // lib/*.test.ts files run under `node --experimental-strip-types`, which
+    // resolves neither the "@/" alias nor extensionless specifiers, so they and
+    // the modules they cover import with explicit .ts extensions. Legal here
+    // because this project never emits from tsc.
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",

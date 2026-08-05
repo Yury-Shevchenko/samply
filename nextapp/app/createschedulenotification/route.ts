@@ -7,6 +7,7 @@ import { nanoid } from "nanoid";
 import momentTz from "moment-timezone";
 import { scheduleBatch, makeTzDate, BatchLimitError, type PendingNotificationDoc } from "@/lib/scheduling";
 import { sanitizeSurveyUrl } from "@/lib/urlValidation";
+import { surveyUrlErrors } from "@/lib/placeholders";
 
 const MAX_PROJECT_PENDING = 50_000;
 
@@ -69,6 +70,28 @@ export async function POST(req: NextRequest) {
   const isMember = p.members?.some((m) => m.toString() === session.user.id) ?? false;
   if (!isOwner && !isMember) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  // A malformed survey URL is unrecoverable after the fact: the study runs for a
+  // week, and the damage only surfaces when the researcher opens their export
+  // and finds no participant identifier. Refuse the save while it can still be
+  // fixed. Only unambiguous mistakes block; advisory warnings are surfaced in
+  // the form and do not reach here.
+  if (rawUrl && rawUrl.trim() && !url) {
+    return NextResponse.json(
+      { error: "The survey link must be a valid http:// or https:// URL." },
+      { status: 400 },
+    );
+  }
+  const urlErrors = surveyUrlErrors(url, {
+    participantCount: p.mobileUsers?.filter((u) => !u.deactivated).length ?? 0,
+    hasReminders: !!reminders?.length,
+  });
+  if (urlErrors.length) {
+    return NextResponse.json(
+      { error: urlErrors.map((e) => e.message).join(" "), urlIssues: urlErrors },
+      { status: 400 },
+    );
   }
 
   const existingPending = await (await import("@/lib/models/pendingNotification")).default

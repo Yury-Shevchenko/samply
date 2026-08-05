@@ -74,6 +74,7 @@ export default async function EditSchedulePage({ params }: Props) {
         projectId={studyId}
         participants={participantItems}
         groups={groupItems}
+        studySlug={project.slug}
         initial={{
           configId: notificationId,
           spec: config.spec ?? null,
