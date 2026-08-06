@@ -107,8 +107,17 @@ function section(title) {
   console.log(`\n${C.bold}${title}${C.off}`);
 }
 
-const n = (x) => Number(x || 0).toLocaleString();
-const pct = (a, b) => (b > 0 ? `${Math.round((a / b) * 100)}%` : "n/a");
+// Forced to en-US: the production server's locale is German, where the default
+// grouping separator is "." — so 346861 rendered as "346.861", which reads as a
+// decimal and made large counts look like small ones.
+const n = (x) => Number(x || 0).toLocaleString("en-US");
+const pct = (a, b) => {
+  if (!(b > 0)) return "n/a";
+  const p = (a / b) * 100;
+  // Keep small-but-nonzero shares legible rather than rounding them to "0%".
+  if (p > 0 && p < 1) return "<1%";
+  return `${Math.round(p)}%`;
+};
 
 // Statuses the analytics now count as a response (Tier 1).
 const RESPONDED = ["tapped", "opened-in-app", "completed"];
@@ -265,8 +274,13 @@ const RESPONDED = ["tapped", "opened-in-app", "completed"];
   const deactivated = deactivatedAgg[0] ? deactivatedAgg[0].total : 0;
   const totalParticipants = totalParticipantsAgg[0] ? totalParticipantsAgg[0].total : 0;
 
-  report("info", `${n(deadTokenEvents.length)} participants have a DeviceNotRegistered receipt`,
-    `${n(deactivated)} of ${n(totalParticipants)} enrolments are currently deactivated (${pct(deactivated, totalParticipants)}).`);
+  // Only the DeviceNotRegistered count reflects the poller. Total deactivations
+  // are dominated by participants who left studies, which long predates this
+  // deploy — reporting the two side by side without saying so reads as though
+  // the poller had just disabled a quarter of everyone.
+  report("info", `Poller has retired ${n(deadTokenEvents.length)} participant token(s)`,
+    `Separately, ${n(deactivated)} of ${n(totalParticipants)} enrolments (${pct(deactivated, totalParticipants)}) are deactivated for any reason — ` +
+    "mostly people who left a study, accumulated over years. That figure is not the poller's doing.");
 
   if (deadTokenEvents.length > 0 && totalParticipants > 0) {
     const share = deadTokenEvents.length / totalParticipants;
@@ -275,8 +289,9 @@ const RESPONDED = ["tapped", "opened-in-app", "completed"];
         "That is high enough to suspect the poller is misreading receipts rather than finding genuinely dead devices.",
         "Inspect a few: db.results.find({'events.data.error':'DeviceNotRegistered'}).limit(3) and check those participants still have the app installed.");
     } else {
-      report("pass", `DeviceNotRegistered rate looks plausible (${pct(deadTokenEvents.length, totalParticipants)} of enrolments)`,
-        "Expected from reinstalls, new phones, and revoked notification permission.");
+      report("pass", `DeviceNotRegistered rate looks plausible (${n(deadTokenEvents.length)} participants, ${pct(deadTokenEvents.length, totalParticipants)} of enrolments)`,
+        "Expected from reinstalls, new phones, and revoked notification permission. " +
+        "The first runs clear a backlog of tokens that died years ago, so this rate should fall.");
     }
   } else {
     report("pass", "No tokens have been deactivated by the poller");
@@ -295,13 +310,34 @@ const RESPONDED = ["tapped", "opened-in-app", "completed"];
     report("pass", `No unsubstituted placeholders in ${n(recentSends)} recent sends`,
       "Every placeholder was either filled or its parameter dropped — the failure that cost four studies their person-level analyses.");
   } else {
-    const sample = await Results.find(
-      { ...sinceFilter, "data.url": { $regex: "%[A-Z_]+%" } },
-      { projection: { "data.url": 1 } }
-    ).limit(3).toArray();
-    report("fail", `${n(leaked)} recent sends still contain a literal placeholder`,
-      sample.map((s) => "  " + (s.data && s.data.url)).join("\n"),
-      "Check that the running process picked up lib/placeholders.js (pm2 restart samply).");
+    const PLACEHOLDER_RE = "%(SAMPLY_ID|PARTICIPANT_CODE|MESSAGE_ID|GROUP_ID|GROUP_CODE|TIMESTAMP|TIMESTAMP_SENT|BATCH)%";
+    const [sample, newestLeaked, firstNewCode] = await Promise.all([
+      Results.find({ ...sinceFilter, "data.url": { $regex: PLACEHOLDER_RE } },
+        { projection: { "data.url": 1, created: 1 } }).sort({ created: -1 }).limit(3).toArray(),
+      Results.find({ ...sinceFilter, "data.url": { $regex: PLACEHOLDER_RE } },
+        { projection: { created: 1 } }).sort({ created: -1 }).limit(1).toArray(),
+      // notificationConfigId only started persisting with this deploy, so the
+      // oldest row carrying it marks when the new code began serving traffic.
+      Results.find({ ...sinceFilter, notificationConfigId: { $exists: true } },
+        { projection: { created: 1 } }).sort({ created: 1 }).limit(1).toArray(),
+    ]);
+
+    const leakedAt = newestLeaked[0] && newestLeaked[0].created;
+    const newCodeFrom = firstNewCode[0] && firstNewCode[0].created;
+    const detail = sample.map((s) => "  " + (s.data && s.data.url)).join("\n");
+
+    // A leak that stopped before the new code started serving is old data
+    // caught by the window, not a live fault.
+    if (leakedAt && newCodeFrom && leakedAt < newCodeFrom) {
+      report("pass", `${n(leaked)} sends with literal placeholders, all from before the deploy`,
+        `${detail}\n      Newest leak ${leakedAt.toISOString()}, new code serving from ${newCodeFrom.toISOString()}.`,
+        "Pre-deploy traffic caught by the window. Re-run with --since set after your restart to see only new sends.");
+    } else {
+      report("fail", `${n(leaked)} recent sends still contain a literal placeholder`,
+        detail + (leakedAt ? `\n      Newest leak ${leakedAt.toISOString()}` : "") +
+        (newCodeFrom ? `, new code serving from ${newCodeFrom.toISOString()}` : ""),
+        "Leaks after the new code started serving. Check that the running process picked up lib/placeholders.js (pm2 restart samply).");
+    }
   }
 
   // ── 6. Completion tracking ─────────────────────────────────────────────────
