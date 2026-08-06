@@ -52,6 +52,9 @@ export function parseWindowDays(raw: string | null | undefined): number {
  * demonstrably finished the survey, because the tap event is the one signal
  * that depends on the mobile app winning a race against its own backgrounding.
  */
+// Mirrors Website/lib/eventStatuses.js, which the Express send paths and the
+// Result schema use. The two cannot be imported from one another across the
+// CommonJS/bundler boundary, so lib/eventStatuses.test.js asserts they agree.
 export const RESPONDED_STATUSES = ["tapped", "opened-in-app", "completed"];
 
 /** Statuses that mean the participant opened the link, for the delivery funnel. */

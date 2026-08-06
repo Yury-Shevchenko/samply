@@ -8,9 +8,26 @@ import Project from "@/lib/models/project";
 import mongoose from "mongoose";
 import type { IResult } from "@/lib/models/result";
 
+/**
+ * Values a spreadsheet would execute rather than display. Excel, LibreOffice
+ * and Sheets all treat a leading =, +, - or @ as the start of a formula, so a
+ * participant code like `=HYPERLINK(...)` becomes live content in the
+ * researcher's export. Both participant-authored codes and researcher-authored
+ * titles reach this file.
+ */
+function isFormulaLike(s: string): boolean {
+  if (!/^[=+\-@\t\r]/.test(s)) return false;
+  // Negative numbers are not formulas, and the export carries plenty of them —
+  // longitudes, offsets. Only escape when the value is not simply a number.
+  return !/^-?\d+(\.\d+)?$/.test(s);
+}
+
 function csvCell(val: unknown): string {
   if (val === null || val === undefined) return "";
-  const s = String(val);
+  let s = String(val);
+  // Prefix with an apostrophe, which spreadsheets strip on display and treat
+  // the remainder as text.
+  if (isFormulaLike(s)) s = "'" + s;
   if (s.includes(",") || s.includes('"') || s.includes("\n") || s.includes("\r")) {
     return '"' + s.replace(/"/g, '""') + '"';
   }
@@ -75,7 +92,11 @@ export async function GET(
   const rows: Record<string, unknown>[] = [];
 
   for (const r of results) {
-    if (!r.data) continue;
+    // Rows without a `data` sub-document used to be skipped outright, so the
+    // export silently disagreed with the analytics counts. They are real
+    // records — geofencing events, and now sends that failed before a payload
+    // was stored — and are emitted with empty content columns instead.
+    const data = r.data ?? {};
 
     const coords: Record<string, unknown> = {};
     for (const e of r.events ?? []) {
@@ -90,9 +111,9 @@ export async function GET(
 
     rows.push({
       samply_id: r.samplyid,
-      title: r.data.title ?? "",
-      message: r.data.message ?? "",
-      url: r.data.url ?? "",
+      title: data.title ?? "",
+      message: data.message ?? "",
+      url: data.url ?? "",
       sent: eventTimes(r, "sent"),
       tapped: eventTimes(r, "tapped"),
       opened_in_app: eventTimes(r, "opened-in-app"),

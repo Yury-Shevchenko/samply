@@ -31,6 +31,11 @@ const MIN_AGE_MS = 15 * 60 * 1000;
 const MAX_AGE_MS = 24 * 60 * 60 * 1000;
 // Ceiling per run so a backlog cannot monopolise the event loop.
 const MAX_PER_RUN = 1000;
+// Rows retired per run. Every send that predates this poller is unresolvable,
+// so on first deployment the backlog is the entire historical collection
+// (~347k rows). Retiring them in bounded batches keeps the write load
+// negligible — at this size and cadence it drains in roughly a day.
+const MAX_RETIRE_PER_RUN = 5000;
 
 let isRunning = false;
 
@@ -76,6 +81,45 @@ async function deactivateToken(projectId, samplyId) {
 }
 
 /**
+ * Retires sends whose receipts aged out of Expo's retention window.
+ *
+ * Expo discards receipts after about a day, so anything older can never be
+ * resolved; marking it stops `receiptCheckedAt` being a permanently-open
+ * question and keeps the "unresolved" count meaningful as a health signal.
+ *
+ * This used to be nested inside the "nothing to fetch" branch, which meant that
+ * on any server with steady traffic — where something is nearly always inside
+ * the 15 min–24 h window — it never ran at all. Now it runs every pass, bounded
+ * per run, and finds its own ids first so the update never touches an unbounded
+ * set.
+ */
+async function retireExpired(Result, now) {
+  const stale = await Result.find(
+    {
+      "ticket.id": { $exists: true },
+      receiptCheckedAt: { $exists: false },
+      created: { $lt: new Date(now - MAX_AGE_MS) },
+    },
+    { _id: 1 }
+  )
+    .limit(MAX_RETIRE_PER_RUN)
+    .lean();
+
+  if (stale.length === 0) return 0;
+
+  await Result.updateMany(
+    { _id: { $in: stale.map((s) => s._id) } },
+    {
+      $set: {
+        receiptCheckedAt: new Date(),
+        receipt: { status: "unavailable", message: "Receipt expired before it was fetched" },
+      },
+    }
+  );
+  return stale.length;
+}
+
+/**
  * Resolves one batch of outstanding receipts.
  * Returns the number of results examined, so the caller can tell when drained.
  */
@@ -95,24 +139,7 @@ async function pollOnce() {
     .limit(MAX_PER_RUN)
     .lean();
 
-  if (pending.length === 0) {
-    // Nothing to fetch. Separately, retire anything that aged out of Expo's
-    // retention window so it stops being rescanned every run.
-    await Result.updateMany(
-      {
-        "ticket.id": { $exists: true },
-        receiptCheckedAt: { $exists: false },
-        created: { $lt: new Date(now - MAX_AGE_MS) },
-      },
-      {
-        $set: {
-          receiptCheckedAt: new Date(),
-          receipt: { status: "unavailable", message: "Receipt expired before it was fetched" },
-        },
-      }
-    );
-    return 0;
-  }
+  if (pending.length === 0) return 0;
 
   const byTicketId = new Map();
   for (const r of pending) byTicketId.set(r.ticket.id, r);
@@ -165,6 +192,12 @@ async function pollAll() {
   isRunning = true;
   try {
     await pollOnce();
+    // Independent of fetching: runs every pass so a busy server still drains
+    // its expired backlog.
+    const retired = await retireExpired(mongoose.model("Result"), Date.now());
+    if (retired > 0) {
+      console.log(`receiptPoller: retired ${retired} send(s) whose receipts had expired`);
+    }
   } catch (err) {
     console.error("receiptPoller: unexpected error", err);
   } finally {
@@ -181,4 +214,12 @@ function start() {
   console.log("receiptPoller: started — polling Expo receipts every 5 minutes");
 }
 
-module.exports = { start, pollOnce, classifyReceipt, MIN_AGE_MS, MAX_AGE_MS };
+module.exports = {
+  start,
+  pollOnce,
+  retireExpired,
+  classifyReceipt,
+  MIN_AGE_MS,
+  MAX_AGE_MS,
+  MAX_RETIRE_PER_RUN,
+};

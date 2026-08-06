@@ -6,6 +6,7 @@ const flatMap = require("flatmap");
 const Result = mongoose.model("Result");
 const User = mongoose.model("User");
 const Project = mongoose.model("Project");
+const { isClientReportable } = require("../lib/eventStatuses");
 
 const confirmOwnerOrMember = (project, user) => {
   if (user.level <= 10) {
@@ -22,21 +23,42 @@ const confirmOwnerOrMember = (project, user) => {
   }
 };
 
-// update status
+// Records a participant-reported event against an existing send.
+//
+// Two things this deliberately does NOT do:
+//
+//  - It does not upsert. It used to, so a status for an unknown message id
+//    created a bare Result with no project and no `created` date. Those rows are
+//    invisible to every project-scoped view and to every date-windowed query;
+//    933 of them had accumulated in production.
+//  - It does not accept any status the caller invents. The endpoint is
+//    unauthenticated, so a client must not be able to forge a `completed` (which
+//    would cancel that participant's reminders) or a delivery outcome (which
+//    only Expo can attest to).
+//
+// A 404 for an unknown message id is safe to return: message ids are 15
+// characters from a 49-character alphabet, so this is not a practical oracle,
+// and the mobile queue needs to distinguish "retry later" from "give up".
 exports.updateStatus = async (req, res) => {
   const { messageId, status } = req.body;
-  const updatedResult = await Result.findOneAndUpdate(
-    { messageId: messageId },
-    {
-      ["$addToSet"]: {
-        events: { status: req.body.status, created: Date.now() },
-      },
-    },
-    { upsert: true, new: true }
-  );
-  if (updatedResult) {
-    res.status(200).json({ message: "OK" });
+
+  if (!messageId || typeof messageId !== "string") {
+    return res.status(400).json({ message: "messageId is required" });
   }
+  if (!isClientReportable(status)) {
+    return res.status(400).json({ message: "Unknown status" });
+  }
+
+  const updatedResult = await Result.findOneAndUpdate(
+    { messageId },
+    { $addToSet: { events: { status, created: Date.now() } } },
+    { new: true }
+  );
+
+  if (!updatedResult) {
+    return res.status(404).json({ message: "No such message" });
+  }
+  return res.status(200).json({ message: "OK" });
 };
 
 // update status

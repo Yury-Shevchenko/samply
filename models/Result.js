@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { EVENT_STATUSES } = require("../lib/eventStatuses");
 mongoose.Promise = global.Promise;
 
 const resultSchema = new mongoose.Schema({
@@ -34,13 +35,17 @@ const resultSchema = new mongoose.Schema({
   // every result landed with no config id, and the analytics "Schedule
   // performance" panel could only ever show "(untracked schedule)".
   notificationConfigId: String,
+  // The append-only event log every compliance figure is derived from. `status`
+  // is constrained to the documented vocabulary because an unconstrained string
+  // is exactly how `opened-in-app` came to be written by the app and ignored by
+  // the analytics for years. See lib/eventStatuses.js for the ladder.
   events: [
     {
-      status: String,
+      status: { type: String, enum: EVENT_STATUSES },
       created: Date,
       data: JSON,
     },
-  ], // sent, tapped
+  ],
   project_name: String,
   batch: Number,
   finid: String, // id that is connected to reminder jobs
