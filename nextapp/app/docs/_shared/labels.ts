@@ -1,4 +1,5 @@
 import { getT } from "@/lib/i18n.server";
+import { tOr } from "@/lib/i18n";
 import { ALL_PAGES, NAV_GROUPS, NAV_LABELS, type DocsPage } from "./nav";
 
 /**
@@ -10,11 +11,11 @@ export async function getDocsChrome() {
   const { t, locale } = await getT();
 
   const navLabels = Object.fromEntries(
-    ALL_PAGES.map((p) => [p, t(`docs.navLabels.${p}`) || NAV_LABELS[p]])
+    ALL_PAGES.map((p) => [p, tOr(t, `docs.navLabels.${p}`, NAV_LABELS[p])])
   ) as Record<DocsPage, string>;
 
   const groupLabels = Object.fromEntries(
-    NAV_GROUPS.map((g) => [g.sectionKey, t(`docs.sections.${g.sectionKey}`) || g.label])
+    NAV_GROUPS.map((g) => [g.sectionKey, tOr(t, `docs.sections.${g.sectionKey}`, g.label)])
   ) as Record<string, string>;
 
   const searchPlaceholder = t("docs.searchPlaceholder");

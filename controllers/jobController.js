@@ -2304,16 +2304,53 @@ exports.scheduleAdminJob = async (req, res) => {
   res.redirect(`back`);
 };
 
+// Re-registers a participant's push token across every study they are still in.
+// The app calls this on cold launch when the token has changed, and after login.
+//
+// Two things this must get right, both of which it previously got wrong:
+//
+//  1. A participant whose token the receipt poller retired (DeviceNotRegistered
+//     — typically a reinstall or a new phone) stays `deactivated`, and
+//     notificationSender skips deactivated users. Updating only the token left
+//     them permanently muted: the very failure the poller exists to detect
+//     became permanent the moment it was detected. A valid new token is proof
+//     the device is reachable again, so it clears the flag.
+//
+//  2. Leaving a study sets `token: null` and `deactivated: true` — the token is
+//     *deleted* rather than flagged, as data minimisation requires. Writing a
+//     fresh token over that put a device identifier back on a record that had
+//     deliberately been stripped of one. The array filter now excludes anyone
+//     without a live token string, so leavers are untouched by both operations.
 exports.updateTokenInStudy = async (req, res) => {
   try {
     const { id, token } = req.body;
     if (!id || !token) {
       return res.status(400).json({ message: "Missing id or token" });
     }
+    // Only a well-formed Expo token counts as proof of reachability; anything
+    // else must not be able to clear a deactivation.
+    if (!Expo.isExpoPushToken(token)) {
+      return res.status(400).json({ message: "Not a valid Expo push token" });
+    }
+
     await Project.updateMany(
       { "mobileUsers.id": id },
-      { $set: { "mobileUsers.$[user].token": token } },
-      { arrayFilters: [{ "user.id": id }] }
+      {
+        $set: {
+          "mobileUsers.$[user].token": token,
+          "mobileUsers.$[user].deactivated": false,
+        },
+      },
+      {
+        arrayFilters: [
+          {
+            "user.id": id,
+            // Still enrolled: has a real token. `null` means they left; the two
+            // string sentinels are legacy rows from before tokens were nulled.
+            "user.token": { $type: "string", $nin: ["User left the study", "miss"] },
+          },
+        ],
+      }
     );
     res.status(200).json({ message: "OK" });
   } catch (e) {

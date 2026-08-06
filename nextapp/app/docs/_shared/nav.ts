@@ -11,6 +11,7 @@ export const SIDEBAR_PAGES = [
   "integrations",
   "event-contingent", "geofencing", "stream",
   "analytics",
+  "troubleshooting",
   "glossary", "api", "changelog", "about", "collaborate",
 ] as const;
 export const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb", "dpa"] as const;
@@ -32,6 +33,7 @@ export const NAV_LABELS: Record<DocsPage, string> = {
   geofencing:          "Geofencing",
   stream:              "Stream API",
   analytics:           "Analytics",
+  troubleshooting:     "Troubleshooting",
   glossary:            "Glossary",
   api:                 "API",
   changelog:           "Changelog",
@@ -60,6 +62,7 @@ export const PAGE_TITLES: Record<DocsPage, string> = {
   geofencing:          "Geofencing",
   stream:              "Stream API",
   analytics:           "Analytics — monitoring a study while it runs",
+  troubleshooting:     "Troubleshooting — when something is not working",
   glossary:            "Glossary",
   api:                 "API",
   changelog:           "Changelog",
@@ -88,6 +91,7 @@ export const PAGE_META: Record<string, { eyebrow: string; lede: string; section:
   geofencing:          { section: "Advanced features",     eyebrow: "location as the trigger",                          lede: "Geofencing sends a notification automatically when a participant enters or leaves a defined geographic area — no clock, no cron." },
   stream:              { section: "Advanced features",     eyebrow: "your systems, in real time",                       lede: "The Stream API delivers participant events to your infrastructure as they happen, via outbound webhooks." },
   analytics:           { section: "Advanced features",     eyebrow: "the study, while it's still running",               lede: "Compliance, response times, dropout, and per-participant engagement — built around documented threats to ESM validity, not generic product-analytics templates." },
+  troubleshooting:     { section: "Reference",           eyebrow: "when something is not working",                     lede: "Every way a Samply study is known to go wrong, what each one looks like from the researcher's side, and the shortest path to a fix — for you and for your participants." },
   collaborate:         { section: "Reference",              eyebrow: "papers in return for support",                      lede: "Samply offers co-authorship to research teams in exchange for help running their study or building the features they need." },
   glossary:            { section: "Reference",             eyebrow: "the vocabulary",                                   lede: "Key terms used throughout Samply and this documentation." },
   api:          { section: "Reference",              eyebrow: "for the builders",                                  lede: "Samply exposes a REST API for programmatic study management and advanced integrations." },
@@ -100,7 +104,7 @@ export const NAV_GROUPS: { label: string; sectionKey: string; pages: (typeof SID
   { label: "Notification schedules", sectionKey: "notificationSchedules", pages: ["types", "form", "personal", "queue"] },
   { label: "Power features",         sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders", "integrations"] },
   { label: "Advanced features",      sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream", "analytics"] },
-  { label: "Reference",              sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about", "collaborate"] },
+  { label: "Reference",              sectionKey: "reference",             pages: ["troubleshooting", "glossary", "api", "changelog", "about", "collaborate"] },
 ];
 
 // Maps each docs page to its sidebar section key

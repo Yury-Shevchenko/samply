@@ -76,6 +76,7 @@ async function processOneNotification() {
       notificationConfigId: notification.notificationConfigId,
       reminders,
       finishid: notification.finid,
+      isTest: !!notification.isTest,
       openStudyScreenFallback:
         project.settings && project.settings.enableActions,
     });

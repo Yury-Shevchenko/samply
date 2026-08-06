@@ -20,7 +20,13 @@ function sinceDate(days: number) {
  * mid-run. "Entire study" is now the default.
  */
 function createdFilter(days: number): Record<string, unknown> {
-  return days > 0 ? { created: { $gte: sinceDate(days) } } : {};
+  // Also excludes pre-flight test sends. Every aggregation on this page spreads
+  // this into its $match, so it is the single point where a test notification is
+  // kept out of the numbers a researcher publishes. `$ne: true` rather than
+  // `$exists: false` so the vast majority of rows, which have no such field at
+  // all, still match.
+  const base = { isTest: { $ne: true } };
+  return days > 0 ? { ...base, created: { $gte: sinceDate(days) } } : base;
 }
 
 /**
@@ -152,7 +158,7 @@ const MAX_TIMESERIES_DAYS = 365;
 async function axisSpanDays(oid: mongoose.Types.ObjectId, days: number): Promise<number> {
   if (days > 0) return days;
 
-  const first = await Result.findOne({ project: oid }, { created: 1 })
+  const first = await Result.findOne({ project: oid, isTest: { $ne: true } }, { created: 1 })
     .sort({ created: 1 })
     .lean() as { created?: Date } | null;
   if (!first?.created) return 1;
@@ -424,9 +430,9 @@ export async function fetchStudyHealth(projectId: string): Promise<StudyHealth> 
   const oid = new mongoose.Types.ObjectId(projectId);
 
   const [sent, completions, deliveryFailures, project] = await Promise.all([
-    Result.countDocuments({ project: oid, "events.status": "sent" }),
-    Result.countDocuments({ project: oid, "events.status": "completed" }),
-    Result.countDocuments({ project: oid, "events.status": "delivery-failed" }),
+    Result.countDocuments({ project: oid, isTest: { $ne: true }, "events.status": "sent" }),
+    Result.countDocuments({ project: oid, isTest: { $ne: true }, "events.status": "completed" }),
+    Result.countDocuments({ project: oid, isTest: { $ne: true }, "events.status": "delivery-failed" }),
     Project.findById(oid, { notifications: 1, mobileUsers: 1 }).lean() as Promise<{
       notifications?: Array<{ url?: string; reminders?: unknown[] }>;
       mobileUsers?: Array<{ deactivated?: boolean }>;
@@ -518,7 +524,7 @@ export async function fetchRetentionCurve(projectId: string): Promise<RetentionP
 
   // Aggregate: for each participant, on which calendar dates did they respond?
   const tappedDays: { _id: { samplyid: string; date: string } }[] = await Result.aggregate([
-    { $match: { project: oid, "events.status": { $in: RESPONDED_STATUSES } } },
+    { $match: { project: oid, isTest: { $ne: true }, "events.status": { $in: RESPONDED_STATUSES } } },
     {
       $group: {
         _id: {

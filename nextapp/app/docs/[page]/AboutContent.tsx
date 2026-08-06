@@ -989,18 +989,6 @@ function AboutContentEn() {
       <p>
         Samply is free to use and open source. The source code for the web dashboard is available on <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>. Contributions, bug reports, and feature requests are welcome.
       </p>
-      <p>
-        If you use Samply in your research, please cite the original publication:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publication</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -1193,19 +1181,6 @@ function AboutContentNl() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>.
         Bijdragen, bugrapporten en functieverzoeken zijn welkom.
       </p>
-      <p>
-        Als u Samply in uw onderzoek gebruikt, verzoeken wij u de originele publicatie te
-        citeren:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publicatie</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710-1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -1395,19 +1370,6 @@ function AboutContentDe() {
         Samply ist kostenlos nutzbar und Open Source. Der Quellcode für das Web-Dashboard
         ist auf <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a> verfügbar. Beiträge, Fehlermeldungen und Funktionswünsche sind willkommen.
       </p>
-      <p>
-        Wenn Sie Samply in Ihrer Forschung verwenden, zitieren Sie bitte die
-        Originalpublikation:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publication</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -1589,18 +1551,6 @@ function AboutContentRu() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>.
         Вклад в разработку, отчёты об ошибках и запросы функций приветствуются.
       </p>
-      <p>
-        Если вы используете Samply в своих исследованиях, пожалуйста, цитируйте оригинальную публикацию:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Публикация</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -1774,18 +1724,6 @@ function AboutContentZh() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>
         上获取。欢迎贡献代码、提交错误报告和功能建议。
       </p>
-      <p>
-        如果您在研究中使用了 Samply，请引用原始发表文章：
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>发表文章</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -1973,18 +1911,6 @@ function AboutContentKo() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>
         에서 이용할 수 있습니다. 기여, 버그 보고, 기능 요청을 환영합니다.
       </p>
-      <p>
-        연구에서 Samply를 사용하셨다면 원본 논문을 인용해 주시기 바랍니다:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>논문</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -2176,18 +2102,6 @@ function AboutContentIt() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>.
         Contributi, segnalazioni di bug e richieste di funzionalità sono benvenuti.
       </p>
-      <p>
-        Se si utilizza Samply nella propria ricerca, si prega di citare la pubblicazione originale:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Pubblicazione</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -2492,18 +2406,6 @@ function AboutContentFr() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>.
         Les contributions, rapports de bogues et demandes de fonctionnalités sont les bienvenus.
       </p>
-      <p>
-        Si vous utilisez Samply dans votre recherche, veuillez citer la publication originale :
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publication</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -2808,18 +2710,6 @@ function AboutContentEs() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>.
         Las contribuciones, informes de errores y solicitudes de funcionalidades son bienvenidos.
       </p>
-      <p>
-        Si utilizas Samply en tu investigación, cita la publicación original:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publicación</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -3123,18 +3013,6 @@ function AboutContentPt() {
         <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>.
         Contribuições, relatórios de erros e solicitações de funcionalidades são bem-vindos.
       </p>
-      <p>
-        Se você usar o Samply em sua pesquisa, cite a publicação original:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publicação</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -3426,18 +3304,6 @@ function AboutContentJa() {
       <p>
         Samplyは無料で利用でき、オープンソースです。ウェブダッシュボードのソースコードは、<a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>で公開されています。貢献、バグレポート、機能リクエストを歓迎します。
       </p>
-      <p>
-        Samplyを研究で使用する場合は、元の出版物を引用してください：
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>出版物</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -3729,18 +3595,6 @@ function AboutContentTr() {
       <p>
         Samply ücretsiz kullanılabilir ve açık kaynaklıdır. Web panelinin kaynak kodu <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a> üzerinde mevcuttur. Katkılar, hata raporları ve özellik istekleri memnuniyetle karşılanır.
       </p>
-      <p>
-        Samply'ı araştırmanızda kullanıyorsanız, lütfen orijinal yayını alıntılayın:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Yayın</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -4032,18 +3886,6 @@ function AboutContentPl() {
       <p>
         Samply jest darmowe w użyciu i open source. Kod źródłowy panelu internetowego jest dostępny na <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>. Wkład, zgłoszenia błędów i prośby o funkcje są mile widziane.
       </p>
-      <p>
-        Jeśli używasz Samply w swoich badaniach, prosimy o cytowanie oryginalnej publikacji:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>Publikacja</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }
@@ -4335,18 +4177,6 @@ function AboutContentAr() {
       <p>
         Samply مجاني الاستخدام ومفتوح المصدر. الكود المصدري للوحة التحكم على الويب متاح على <a href="https://github.com/Yury-Shevchenko/samply" target="_blank" rel="noopener noreferrer">GitHub</a>. والمساهمات وتقارير الأخطاء وطلبات الميزات مرحَّب بها.
       </p>
-      <p>
-        إذا كنت تستخدم Samply في بحثك، فيُرجى الاستشهاد بالمنشور الأصلي:
-      </p>
-      <div style={{ background: "var(--coral-soft)", borderLeft: "3px solid var(--coral)", borderRadius: "0 0.8rem 0.8rem 0", padding: "1.4rem 1.6rem", margin: "0.4rem 0 0" }}>
-        <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.7rem" }}>منشور</div>
-        <p style={{ margin: "0 0 0.8rem", fontSize: "1.3rem", lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-          Shevchenko, Y., Kuhlmann, T., &amp; Reips, U.-D. (2021). Samply: A user-friendly smartphone app and web-based means of scheduling and sending mobile notifications for experience-sampling research. <em>Behavior Research Methods</em>, 53, 1710–1730.
-        </p>
-        <a href="https://doi.org/10.3758/s13428-020-01527-9" target="_blank" rel="noopener noreferrer" style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--coral)", wordBreak: "break-all" }}>
-          https://doi.org/10.3758/s13428-020-01527-9
-        </a>
-      </div>
     </>
   );
 }

@@ -122,6 +122,19 @@ function lookup(obj: DeepRecord, parts: string[]): string | undefined {
  *   t("login.title")              // "Willkommen zurück"
  *   t("dashboard.myStudiesLabel", { n: 3 })  // "Meine Studien · 3"
  */
+/**
+ * Resolves `key`, falling back to `fallback` when the string is missing.
+ *
+ * `t()` returns the key itself on a miss, which makes the natural-looking
+ * `t(key) || fallback` idiom dead code — the key is a non-empty string, so the
+ * fallback never runs and the raw key is rendered to the user. That is exactly
+ * what happened when a docs page was added without its title and lede strings.
+ */
+export function tOr(t: (key: string) => string, key: string, fallback: string): string {
+  const value = t(key);
+  return value === key ? fallback : value;
+}
+
 export function createT(locale: Locale) {
   const primary = MESSAGES[locale] ?? MESSAGES.en;
   const fallback = MESSAGES.en;

@@ -42,6 +42,8 @@ const pendingNotificationSchema = new mongoose.Schema({
     default: "",
   },
   expireIn: Number,
+  // Carried through to the Result so a test send stays out of analytics.
+  isTest: Boolean,
   timezone: String,
   useParticipantTimezone: {
     type: Boolean,

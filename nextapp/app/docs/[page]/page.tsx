@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { getT } from "@/lib/i18n.server";
+import { tOr } from "@/lib/i18n";
+import CitationBlock from "../_shared/CitationBlock";
 import HomeContent from "./HomeContent";
 import FirstStudyContent from "./FirstStudyContent";
 import InviteContent from "./InviteContent";
@@ -21,6 +23,7 @@ import IrbContent from "./IrbContent";
 import DpaContent from "./DpaContent";
 import EventContingentContent from "./EventContingentContent";
 import GeofencingContent from "./GeofencingContent";
+import TroubleshootingContent from "./TroubleshootingContent";
 import StreamContent from "./StreamContent";
 import AboutContent from "./AboutContent";
 import AnalyticsContent from "./AnalyticsContent";
@@ -38,7 +41,7 @@ import {
 export async function generateMetadata({ params }: { params: Promise<{ page: string }> }) {
   const { page } = await params;
   const { t } = await getT();
-  const label = t(`docs.navLabels.${page}`) || NAV_LABELS[page as DocsPage] || "Documentation";
+  const label = tOr(t, `docs.navLabels.${page}`, NAV_LABELS[page as DocsPage] ?? "Documentation");
   return { title: `${label} — Samply Docs` };
 }
 
@@ -50,13 +53,13 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
 
   const { t, locale } = await getT();
   const navLabels = Object.fromEntries(
-    ALL_PAGES.map((p) => [p, t(`docs.navLabels.${p}`) || NAV_LABELS[p]])
+    ALL_PAGES.map((p) => [p, tOr(t, `docs.navLabels.${p}`, NAV_LABELS[p])])
   ) as Record<DocsPage, string>;
   const searchPlaceholder = t("docs.searchPlaceholder");
 
   // Translated sidebar group labels
   const groupLabels = Object.fromEntries(
-    NAV_GROUPS.map((g) => [g.sectionKey, t(`docs.sections.${g.sectionKey}`) || g.label])
+    NAV_GROUPS.map((g) => [g.sectionKey, tOr(t, `docs.sections.${g.sectionKey}`, g.label)])
   ) as Record<string, string>;
 
   const hdrs = await headers();
@@ -67,12 +70,12 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
   const isLegal = !SIDEBAR_PAGES.includes(currentPage as (typeof SIDEBAR_PAGES)[number]);
 
   // Translated page header parts
-  const pageTitle = t(`docs.pageTitles.${currentPage}`) || PAGE_TITLES[currentPage];
+  const pageTitle = tOr(t, `docs.pageTitles.${currentPage}`, PAGE_TITLES[currentPage]);
   const rawMeta = PAGE_META[currentPage];
   const sectionKey = PAGE_SECTION_KEY[currentPage];
   const translatedSection = sectionKey ? (groupLabels[sectionKey] ?? rawMeta?.section ?? "") : (rawMeta?.section ?? "");
-  const translatedEyebrow = t(`docs.pageEyebrows.${currentPage}`) || rawMeta?.eyebrow || "";
-  const translatedLede = t(`docs.pageLedes.${currentPage}`) || rawMeta?.lede || "";
+  const translatedEyebrow = tOr(t, `docs.pageEyebrows.${currentPage}`, rawMeta?.eyebrow ?? "");
+  const translatedLede = tOr(t, `docs.pageLedes.${currentPage}`, rawMeta?.lede ?? "");
 
   return (
     <main style={{ background: "var(--paper)", minHeight: "100vh", color: "var(--ink)" }}>
@@ -138,10 +141,18 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
                   <StreamContent locale={locale} />
                 ) : currentPage === "analytics" ? (
                   <AnalyticsContent locale={locale} />
+                ) : currentPage === "troubleshooting" ? (
+                  <TroubleshootingContent locale={locale} />
                 ) : currentPage === "changelog" ? (
                   <ChangelogContent locale={locale} />
                 ) : currentPage === "about" ? (
-                  <AboutContent locale={locale} />
+                  <>
+                    <AboutContent locale={locale} />
+                    {/* Rendered once for every locale — a bibliographic
+                        reference must match the reference list verbatim, so it
+                        is not translated. */}
+                    <CitationBlock locale={locale} />
+                  </>
                 ) : currentPage === "collaborate" ? (
                   <CollaborateContent locale={locale} />
                 ) : (

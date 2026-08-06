@@ -83,6 +83,11 @@ function isExpressPath(url, method, headers) {
   if (p.startsWith("/api/")) return true;
   if (p.startsWith("/webapi/")) return true;
   if (p === "/save") return true;
+  // Universal Link / App Link association files. Matched exactly rather than by
+  // a /.well-known/ prefix so certbot's ACME challenge path keeps whatever
+  // handling it already has.
+  if (p === "/.well-known/apple-app-site-association") return true;
+  if (p === "/.well-known/assetlinks.json") return true;
   // Survey-tool completion webhook: POST /studies/:slug/done/:messageid. The
   // matching GET renders the Next.js confirmation page, so only the POST is
   // handed to Express. External webhooks never carry a next-action header, and

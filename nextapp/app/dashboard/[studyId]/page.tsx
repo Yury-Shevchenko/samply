@@ -11,6 +11,8 @@ import connectDB from "@/lib/db";
 import PendingNotification from "@/lib/models/pendingNotification";
 import mongoose from "mongoose";
 import { getT } from "@/lib/i18n.server";
+import { fetchStudyReadiness, fetchLatestTest } from "@/lib/data/readiness";
+import PreflightChecklist from "./PreflightChecklist";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -132,7 +134,11 @@ export default async function StudyOverviewPage({ params }: Props) {
 
   if (!project) notFound();
 
-  const notifCounts = await fetchNotifCounts(studyId, notifications.map((n) => n.id));
+  const [notifCounts, readiness, latestTest] = await Promise.all([
+    fetchNotifCounts(studyId, notifications.map((n) => n.id)),
+    fetchStudyReadiness(studyId),
+    fetchLatestTest(studyId),
+  ]);
   const activeParticipants = participants.filter((p) => !p.deactivated);
   const isLow = compliance.sent > 0 && compliance.pct < 60;
 
@@ -152,6 +158,16 @@ export default async function StudyOverviewPage({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-[3.2rem]">
+
+      {/* Everything below reports what a study HAS done. This reports whether it
+          is set up to do it at all — the question nothing previously answered
+          until the data came back wrong. */}
+      <PreflightChecklist
+        studyId={studyId}
+        readiness={readiness}
+        initialTest={latestTest}
+        participants={activeParticipants.map((p) => ({ id: p.id, username: p.username }))}
+      />
 
       {/* Stats row */}
       <div className="stats-grid">

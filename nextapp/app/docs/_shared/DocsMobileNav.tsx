@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { tOr } from "@/lib/i18n";
 import { useT } from "@/app/components/TranslationProvider";
 
 const NAV_GROUPS: { sectionKey: string; pages: string[] }[] = [
@@ -22,10 +23,10 @@ export default function DocsMobileNav({ current }: { current: string }) {
   const { t } = useT();
 
   const navLabel = (page: string) =>
-    t(`docs.navLabels.${page}`) || page;
+    tOr(t, `docs.navLabels.${page}`, page);
 
   const sectionLabel = (key: string) =>
-    t(`docs.sections.${key}`) || key;
+    tOr(t, `docs.sections.${key}`, key);
 
   return (
     <div className="docs-mobile-nav">

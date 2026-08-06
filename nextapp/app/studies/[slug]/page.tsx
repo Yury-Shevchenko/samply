@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import QRCode from "qrcode";
 import { fetchStudyBySlug } from "@/lib/data/studies";
 import { getT } from "@/lib/i18n.server";
@@ -14,7 +15,14 @@ export default async function StudyDetailPage({
 
   if (!project) notFound();
 
-  const qrUrl = `samply://--/study?id=${project._id}`;
+  // Encode the public https link, not the `samply://` scheme. A custom-scheme
+  // QR is a dead end for anyone who does not already have the app: the camera
+  // finds no handler and nothing happens. The https link degrades properly —
+  // with the app installed the Universal/App Link opens it directly on the
+  // study; without it, the phone lands on this page, which explains how to join.
+  const host = (await headers()).get("host");
+  const proto = host?.startsWith("localhost") ? "http" : "https";
+  const qrUrl = `${proto}://${host}/studies/${slug}`;
   const qrDataUrl = await QRCode.toDataURL(qrUrl, { width: 220, margin: 2, color: { dark: "#23201a", light: "#faf1de" } });
 
   return (

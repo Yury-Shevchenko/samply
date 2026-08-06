@@ -1218,6 +1218,7 @@ const en = {
       geofencing:         "Geofencing",
       stream:             "Stream API",
       analytics:          "Analytics",
+      troubleshooting:   "Troubleshooting",
       glossary:           "Glossary",
       api:                "API",
       changelog:          "Changelog",
@@ -1255,6 +1256,7 @@ const en = {
       geofencing:         "Geofencing",
       stream:             "Stream API",
       analytics:          "Analytics — monitoring a study while it runs",
+      troubleshooting:    "Troubleshooting — when something is not working",
       glossary:           "Glossary",
       api:                "API",
       changelog:          "Changelog",
@@ -1283,6 +1285,7 @@ const en = {
       geofencing:         "location as the trigger",
       stream:             "your systems, in real time",
       analytics:          "the study, while it's still running",
+      troubleshooting:    "when something is not working",
       glossary:           "the vocabulary",
       api:                "for the builders",
       changelog:          "what changed",
@@ -1306,6 +1309,7 @@ const en = {
       geofencing:         "Geofencing sends a notification automatically when a participant enters or leaves a defined geographic area — no clock, no cron.",
       stream:             "The Stream API delivers participant events to your infrastructure as they happen, via outbound webhooks.",
       analytics:          "Compliance, response times, dropout, and per-participant engagement — built around documented threats to ESM validity, not generic product-analytics templates.",
+      troubleshooting:    "Every way a Samply study is known to go wrong, what each one looks like from the researcher's side, and the shortest path to a fix — for you and for your participants.",
       collaborate:        "Samply offers co-authorship to research teams in exchange for help running their study or building the features they need.",
       glossary:           "Key terms used throughout Samply and this documentation.",
       api:                "Samply exposes a REST API for programmatic study management and advanced integrations.",
@@ -1378,6 +1382,75 @@ const en = {
 
   // ─── Analytics dashboard ─────────────────────────────────────────────────────
   // @page    /dashboard/[studyId]/analytics
+  // ─── Pre-flight checklist ────────────────────────────────────────────────────
+  // @page    /dashboard/[studyId]
+  // @context Shown before a study goes live. Each line names a documented way a
+  //          study has been lost, phrased so a first-time researcher can act.
+  preflight: {
+    // Not "before you go live": a study has to be active before anyone can be
+    // invited, so that phrasing told researchers to finish the checklist at a
+    // point they could not have reached yet.
+    title:            "Setup check",
+    fix:              "fix →",
+    /** {n} = number of blocking problems */
+    summaryBlocked:   "{n} problem(s) will break this study",
+    /** {blocked} = blocking problems, {warn} = advisories */
+    summaryBoth:      "{blocked} problem(s) will break this study · {warn} more to check",
+    /** {n} = number of advisory problems */
+    summaryWarn:      "{n} thing(s) worth checking",
+    summaryReady:     "ready to run",
+
+    check_participants_ok:        "Participants have joined.",
+    check_participants_blocked:   "No one has joined yet — nothing will be sent.",
+    check_participants_warn:      "No one has joined yet.",
+    check_participants_pending:   "Waiting for participants.",
+
+    check_schedule_ok:            "A notification schedule exists.",
+    check_schedule_blocked:       "No schedule yet — no notifications will ever be sent.",
+    check_schedule_warn:          "No schedule yet.",
+    check_schedule_pending:       "Waiting for a schedule.",
+
+    check_survey_url_ok:          "Your survey link is well-formed.",
+    check_survey_url_blocked:     "Your survey link has an error that will reach the survey malformed.",
+    check_survey_url_warn:        "No survey link yet — without one, responses cannot be linked to participants and completions cannot be recorded.",
+    check_survey_url_pending:     "No survey link set yet.",
+
+    check_participant_id_ok:      "Responses can be linked to participants.",
+    check_participant_id_blocked: "Your link carries no participant ID — your export will not show who answered what.",
+    check_participant_id_warn:    "Your link carries no participant ID. With one participant that may be fine.",
+    check_participant_id_pending: "Add a survey link to check this.",
+
+    check_completion_ok:          "Completions will be recorded.",
+    check_completion_blocked:     "Reminders are set but %MESSAGE_ID% is missing — reminders will go to everyone, including people who already answered.",
+    check_completion_warn:        "No %MESSAGE_ID% in your link, so response rates cannot be measured from completions.",
+    check_completion_pending:     "Add a survey link to check this.",
+
+    check_test_notification_ok:      "A test notification was sent and answered.",
+    check_test_notification_warn:    "No test notification sent yet — this is the only check that proves the whole chain.",
+    check_test_notification_blocked: "The test notification failed.",
+    check_test_notification_pending: "Test notification sent, waiting for a response.",
+
+    check_consent_ok:             "Study information and consent are set.",
+    check_consent_warn:           "No study description or consent text yet.",
+    check_consent_blocked:        "Consent information is required.",
+    check_consent_pending:        "Waiting.",
+
+    testTitle:            "Test notification",
+    testIntro:            "Sends one real notification through the ordinary pipeline, then shows the survey link exactly as the phone received it. It is excluded from your analytics and your export.",
+    testSend:             "Send test",
+    testSending:          "queueing…",
+    testWaiting:          "waiting — sending takes up to a minute",
+    testNoParticipants:   "Someone has to join the study before a test can be sent.",
+    testStageSent:        "Notification sent.",
+    testStageUrlOk:       "The survey link carries the participant ID.",
+    testStageUrlNoId:     "The survey link carries no participant ID.",
+    testStageUrlBad:      "The link still contains an unfilled placeholder — the survey will receive it literally.",
+    testStageOpened:      "Opened by the participant.",
+    testStageNotOpened:   "Not opened yet.",
+    testStageCompleted:   "Completion reported back — completion tracking works.",
+    testStageNoCompletion:"No completion reported yet. If the survey was finished, check the redirect at its end.",
+  },
+
   analytics: {
     metricSent:           "Notifications sent",
     metricRate:           "Response rate",

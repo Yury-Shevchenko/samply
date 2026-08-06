@@ -860,6 +860,7 @@ const de: DeepLoose<Messages> = {
       geofencing:         "Geofencing",
       stream:             "Stream API",
       analytics:          "Analytik",
+      troubleshooting:   "Fehlerbehebung",
       glossary:           "Glossar",
       api:                "API",
       changelog:          "Änderungsprotokoll",
@@ -892,6 +893,7 @@ const de: DeepLoose<Messages> = {
       geofencing:         "Geofencing",
       stream:             "Stream API",
       analytics:          "Analytik — eine Studie während des Laufs überwachen",
+      troubleshooting:    "Fehlerbehebung — wenn etwas nicht funktioniert",
       glossary:           "Glossar",
       api:                "API",
       changelog:          "Änderungsprotokoll",
@@ -917,6 +919,7 @@ const de: DeepLoose<Messages> = {
       geofencing:         "der Standort als Auslöser",
       stream:             "Ihre Systeme, in Echtzeit",
       analytics:          "die Studie, während sie noch läuft",
+      troubleshooting:    "wenn etwas nicht funktioniert",
       glossary:           "das Vokabular",
       api:                "für die Entwickler",
       changelog:          "was sich geändert hat",
@@ -938,6 +941,7 @@ const de: DeepLoose<Messages> = {
       geofencing:         "Geofencing sendet automatisch eine Benachrichtigung, wenn ein Teilnehmender ein definiertes geografisches Gebiet betritt oder verlässt — ohne Uhr, ohne Cron.",
       stream:             "Die Stream API liefert Teilnehmenden-Ereignisse über ausgehende Webhooks in Echtzeit an Ihre Infrastruktur.",
       analytics:          "Compliance, Antwortzeiten, Abbruch und Engagement pro Teilnehmenden — orientiert an dokumentierten Bedrohungen für die ESM-Validität, nicht an generischen Produkt-Analytics-Vorlagen.",
+      troubleshooting:    "Alle bekannten Arten, wie eine Samply-Studie schiefgehen kann, wie sich das aus Sicht der Forschenden zeigt und der kürzeste Weg zur Lösung — für Sie und für Ihre Teilnehmenden.",
       collaborate:        "Samply bietet Forschungsteams Co-Autorenschaft im Tausch gegen Hilfe bei der Studiendurchführung oder bei der Entwicklung benötigter Funktionen.",
       glossary:           "Schlüsselbegriffe, die in Samply und dieser Dokumentation verwendet werden.",
       api:                "Samply bietet eine REST API für programmatisches Studienmanagement und erweiterte Integrationen.",
@@ -996,6 +1000,66 @@ const de: DeepLoose<Messages> = {
     newStudy:       "+ Neue Studie",
   },
 
+
+  // ─── Pre-Flight-Checkliste ───────────────────────────────────────────────────
+  preflight: {
+    title:            "Einrichtungscheck",
+    fix:              "beheben →",
+    summaryBlocked:   "{n} Problem(e) werden diese Studie beeinträchtigen",
+    summaryBoth:      "{blocked} Problem(e) werden diese Studie beeinträchtigen · {warn} weitere zu prüfen",
+    summaryWarn:      "{n} Punkt(e) zur Überprüfung",
+    summaryReady:     "startbereit",
+
+    check_participants_ok:        "Teilnehmende sind beigetreten.",
+    check_participants_blocked:   "Noch niemand beigetreten — es wird nichts versendet.",
+    check_participants_warn:      "Noch niemand beigetreten.",
+    check_participants_pending:   "Warten auf Teilnehmende.",
+
+    check_schedule_ok:            "Ein Benachrichtigungszeitplan existiert.",
+    check_schedule_blocked:       "Noch kein Zeitplan — es werden nie Benachrichtigungen versendet.",
+    check_schedule_warn:          "Noch kein Zeitplan.",
+    check_schedule_pending:       "Warten auf einen Zeitplan.",
+
+    check_survey_url_ok:          "Ihr Umfrage-Link ist korrekt aufgebaut.",
+    check_survey_url_blocked:     "Ihr Umfrage-Link enthält einen Fehler und erreicht die Umfrage fehlerhaft.",
+    check_survey_url_warn:        "Noch kein Umfrage-Link — ohne ihn können Antworten keinen Personen zugeordnet und Abschlüsse nicht erfasst werden.",
+    check_survey_url_pending:     "Noch kein Umfrage-Link gesetzt.",
+
+    check_participant_id_ok:      "Antworten können Personen zugeordnet werden.",
+    check_participant_id_blocked: "Ihr Link enthält keine Teilnehmenden-ID — Ihr Export zeigt nicht, wer was beantwortet hat.",
+    check_participant_id_warn:    "Ihr Link enthält keine Teilnehmenden-ID. Bei einer einzelnen Person kann das in Ordnung sein.",
+    check_participant_id_pending: "Fügen Sie einen Umfrage-Link hinzu.",
+
+    check_completion_ok:          "Abschlüsse werden erfasst.",
+    check_completion_blocked:     "Erinnerungen sind konfiguriert, aber %MESSAGE_ID% fehlt — Erinnerungen gehen an alle, auch an bereits fertige Personen.",
+    check_completion_warn:        "Kein %MESSAGE_ID% im Link; Rücklaufquoten können nicht aus Abschlüssen berechnet werden.",
+    check_completion_pending:     "Fügen Sie einen Umfrage-Link hinzu.",
+
+    check_test_notification_ok:      "Eine Testbenachrichtigung wurde gesendet und beantwortet.",
+    check_test_notification_warn:    "Noch keine Testbenachrichtigung — nur sie prüft die gesamte Kette.",
+    check_test_notification_blocked: "Die Testbenachrichtigung ist fehlgeschlagen.",
+    check_test_notification_pending: "Testbenachrichtigung gesendet, warten auf Antwort.",
+
+    check_consent_ok:             "Studieninformation und Einwilligung sind hinterlegt.",
+    check_consent_warn:           "Noch keine Studienbeschreibung oder Einwilligungserklärung.",
+    check_consent_blocked:        "Einwilligungsinformationen sind erforderlich.",
+    check_consent_pending:        "Warten.",
+
+    testTitle:            "Testbenachrichtigung",
+    testIntro:            "Sendet eine echte Benachrichtigung über den normalen Versandweg und zeigt anschließend den Umfrage-Link genau so, wie das Telefon ihn erhalten hat. Sie wird aus Analytics und Export ausgeschlossen.",
+    testSend:             "Test senden",
+    testSending:          "wird eingereiht…",
+    testWaiting:          "warten — der Versand dauert bis zu einer Minute",
+    testNoParticipants:   "Jemand muss der Studie beitreten, bevor ein Test gesendet werden kann.",
+    testStageSent:        "Benachrichtigung gesendet.",
+    testStageUrlOk:       "Der Umfrage-Link enthält die Teilnehmenden-ID.",
+    testStageUrlNoId:     "Der Umfrage-Link enthält keine Teilnehmenden-ID.",
+    testStageUrlBad:      "Der Link enthält noch einen nicht ersetzten Platzhalter — die Umfrage erhält ihn wörtlich.",
+    testStageOpened:      "Von der teilnehmenden Person geöffnet.",
+    testStageNotOpened:   "Noch nicht geöffnet.",
+    testStageCompleted:   "Abschluss zurückgemeldet — die Abschlusserfassung funktioniert.",
+    testStageNoCompletion:"Noch kein Abschluss gemeldet. Falls die Umfrage beendet wurde, prüfen Sie die Weiterleitung an ihrem Ende.",
+  },
 
   analytics: {
     metricSent:           "Benachrichtigungen gesendet",

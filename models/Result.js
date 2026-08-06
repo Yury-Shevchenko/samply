@@ -35,6 +35,11 @@ const resultSchema = new mongoose.Schema({
   // every result landed with no config id, and the analytics "Schedule
   // performance" panel could only ever show "(untracked schedule)".
   notificationConfigId: String,
+  // Marks a researcher's pre-flight test send. Real code path, real push, real
+  // placeholder substitution — but excluded from every analytics figure and from
+  // the data export, so testing the setup cannot distort the numbers the
+  // researcher later publishes.
+  isTest: Boolean,
   // The append-only event log every compliance figure is derived from. `status`
   // is constrained to the documented vocabulary because an unconstrained string
   // is exactly how `opened-in-app` came to be written by the app and ignored by

@@ -29,6 +29,7 @@ async function sendMobileNotification({
   reminders,
   finishid,
   openStudyScreenFallback,
+  isTest = false,
 }) {
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
@@ -123,6 +124,7 @@ async function sendMobileNotification({
       ticket,
       messageId: msg.data.messageId,
       notificationConfigId,
+      isTest: isTest || undefined,
       events: [{ status: "sent", created: timestampSent }, ...extraEvents],
       batch: msg.batch,
       finid: msg.finid,

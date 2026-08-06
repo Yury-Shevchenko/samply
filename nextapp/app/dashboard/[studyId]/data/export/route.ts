@@ -77,8 +77,10 @@ export async function GET(
     if (u.id && u.username) participantMap.set(u.id, u.username);
   }
 
+  // Pre-flight test sends are excluded: they are the researcher checking their
+  // own setup, not data about a participant.
   const results = await Result.find(
-    { project: new mongoose.Types.ObjectId(studyId) },
+    { project: new mongoose.Types.ObjectId(studyId), isTest: { $ne: true } },
   ).lean() as unknown as IResult[];
 
   const FIXED_KEYS = [

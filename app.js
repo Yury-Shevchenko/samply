@@ -11,6 +11,7 @@ const flash = require("connect-flash");
 const expressValidator = require("express-validator");
 const rateLimit = require("express-rate-limit");
 const routes = require("./routes/index");
+const wellKnownRoutes = require("./routes/wellKnown");
 const apiRoutesAuthRouter = require("./routes/api/auth");
 const apiRoutesParticipants = require("./routes/api/participants");
 const apiRoutesNotifications = require("./routes/api/notifications");
@@ -156,6 +157,11 @@ app.use((req, res, next) => {
   next();
 });
 // Apply rate limiting before routes
+// Universal Link / App Link association files. Mounted ahead of the rate
+// limiters: Apple and Google fetch these from their own infrastructure, and a
+// throttled response would silently break link verification.
+app.use("/", wellKnownRoutes);
+
 app.use("/auth/", authLimiter);
 app.use("/account/forgot", authLimiter);
 app.use("/account/reset", authLimiter);
