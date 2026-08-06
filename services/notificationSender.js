@@ -112,29 +112,61 @@ async function sendMobileNotification({
   const validMessages = messages.filter((m) => !m.error);
   const chunks = expo.chunkPushNotifications(validMessages);
 
+  // Builds the Result row for one message. `extraEvents` carries whatever the
+  // send outcome adds beyond "sent".
+  const saveResult = (msg, ticket, extraEvents) =>
+    new Result({
+      project: project_id,
+      project_name,
+      samplyid: msg.id,
+      data: msg.data,
+      ticket,
+      messageId: msg.data.messageId,
+      notificationConfigId,
+      events: [{ status: "sent", created: timestampSent }, ...extraEvents],
+      batch: msg.batch,
+      finid: msg.finid,
+    }).save();
+
   await Promise.all(
     chunks.map(async (chunk) => {
       try {
         const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
         await Promise.all(
-          ticketChunk.map(async (ticket, i) => {
-            const result = new Result({
-              project: project_id,
-              project_name,
-              samplyid: chunk[i].id,
-              data: chunk[i].data,
+          ticketChunk.map((ticket, i) =>
+            saveResult(
+              chunk[i],
               ticket,
-              messageId: chunk[i].data.messageId,
-              notificationConfigId,
-              events: [{ status: "sent", created: timestampSent }],
-              batch: chunk[i].batch,
-              finid: chunk[i].finid,
-            });
-            await result.save();
-          })
+              // A per-message ticket error (an invalid token, say) is a delivery
+              // failure Expo reports up front. Record it as one rather than
+              // storing the ticket and hoping someone reads it later — the
+              // receipt poller will never see these, since there is no ticket id.
+              ticket && ticket.status === "error"
+                ? [{
+                    status: "delivery-failed",
+                    created: Date.now(),
+                    data: { error: ticket.details?.error || "unknown", message: ticket.message },
+                  }]
+                : []
+            )
+          )
         );
       } catch (error) {
+        // The whole chunk failed — network trouble, or Expo returning 5xx.
+        // Previously this logged and returned, so the messages vanished: no
+        // Result row meant analytics never counted them as sent, while their
+        // reminder rows had already been written and would still fire. Record
+        // them as attempted-and-failed so the numbers stay honest.
         console.error("notificationSender: Expo error", error);
+        await Promise.all(
+          chunk.map((msg) =>
+            saveResult(msg, { status: "error", message: error.message }, [
+              { status: "send-failed", created: Date.now(), data: { message: error.message } },
+            ]).catch((e) =>
+              console.error("notificationSender: could not record failed send", e.message)
+            )
+          )
+        );
       }
     })
   );

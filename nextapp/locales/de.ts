@@ -1038,6 +1038,17 @@ const de: DeepLoose<Messages> = {
     dayLabel:             "Tag {n}",
     dayButton:            "{n}T",
     allTimeButton:        "Alle",
+
+    // ── Hinweisbanner: Probleme, die sich während der Laufzeit noch beheben lassen ──
+    healthTitle:          "Erfordert Aufmerksamkeit",
+    healthNoMessageId:    "Kein Zeitplan übermittelt %MESSAGE_ID%; Samply kann daher nicht erkennen, welche Benachrichtigungen abgeschlossen wurden. Ergänzen Sie den Platzhalter in Ihrem Umfrage-Link und richten Sie die Weiterleitung am Ende der Umfrage ein.",
+    healthNoMessageIdWithReminders: "Erinnerungen sind konfiguriert, aber kein Zeitplan übermittelt %MESSAGE_ID% — Samply kann nicht erkennen, wer bereits geantwortet hat, sodass alle Erinnerungen erhalten. Ergänzen Sie %MESSAGE_ID% und richten Sie die Weiterleitung am Ende der Umfrage ein.",
+    /** {sent} = Anzahl gesendeter Benachrichtigungen */
+    healthNoCompletions:  "{sent} Benachrichtigungen gesendet, aber es wurden keine Abschlüsse zurückgemeldet. Prüfen Sie die Weiterleitung am Ende Ihrer Umfrage.",
+    /** {n} = Anzahl der Teilnehmenden */
+    healthDeadTokens:     "{n} Teilnehmende können keine Benachrichtigungen mehr empfangen — ihr Gerät nimmt keine mehr an, meist nach einer Neuinstallation der App oder einem Gerätewechsel. Bitten Sie sie, Samply zu öffnen und erneut beizutreten.",
+    /** {n} = Anzahl der Benachrichtigungen */
+    healthDeliveryFailures: "{n} Benachrichtigung(en) wurden vom Push-Dienst abgelehnt und haben die Teilnehmenden nie erreicht.",
   },
 
   scheduled: {
@@ -1282,7 +1293,8 @@ const de: DeepLoose<Messages> = {
     expiresAfter:        "Läuft ab nach",
     noReminders:         "Keine Erinnerungen",
     addReminders:        "Erinnerungen hinzufügen",
-    reminderHint:        "Wird gesendet, wenn die teilnehmende Person die Umfrage nach der angegebenen Verzögerung noch nicht abgeschlossen hat.",
+    reminderHint:        "Wird nach der angegebenen Verzögerung gesendet, sofern die teilnehmende Person die Umfrage nicht bereits abgeschlossen hat. Samply erkennt dies nur, wenn Ihr Umfrage-Link %MESSAGE_ID% enthält und Ihre Umfrage am Ende zu Samply zurückleitet.",
+    reminderNeedsMessageId: "Ihr Umfrage-Link enthält kein %MESSAGE_ID%; Samply kann daher nicht erkennen, wer bereits geantwortet hat — diese Erinnerungen gehen an alle Teilnehmenden, auch an bereits fertige.",
     sendAfter:           "Senden nach",
     addReminder:         "Erinnerung hinzufügen",
     afterJoining:           "Nach dem Beitritt",

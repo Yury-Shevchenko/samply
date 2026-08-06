@@ -26,6 +26,7 @@ import type {
   ParticipantComplianceRow,
   SchedulePerformanceRow,
   RetentionPoint,
+  StudyHealth,
 } from "@/lib/data/analytics";
 import type { NotificationConfig } from "@/lib/data/scheduled";
 
@@ -38,6 +39,7 @@ interface AnalyticsData {
   participants: ParticipantComplianceRow[];
   schedules: SchedulePerformanceRow[];
   retention: RetentionPoint[];
+  health: StudyHealth;
 }
 
 interface Props {
@@ -143,6 +145,58 @@ const TICK_STYLE = { fontFamily: "var(--font-mono)", fontSize: 11, fill: C.ink40
  */
 function windowLabel(t: (k: string, v?: Record<string, string>) => string, days: number): string {
   return days === 0 ? t("analytics.subEntireStudy") : t("analytics.subLastDays", { days: String(days) });
+}
+
+/**
+ * Warns about broken plumbing while the study can still be fixed.
+ *
+ * Deliberately silent when there is nothing to say — a banner that is always
+ * present stops being read. Each condition below cost at least one study in the
+ * Summer 2026 cohort, and every one of them was discoverable on day one.
+ */
+function HealthBanner({ health }: { health: StudyHealth }) {
+  const { t } = useT();
+  if (!health || health.sent === 0) return null;
+
+  const notices: string[] = [];
+
+  if (!health.completionConfigured) {
+    notices.push(
+      health.hasReminders
+        ? t("analytics.healthNoMessageIdWithReminders")
+        : t("analytics.healthNoMessageId"),
+    );
+  } else if (health.completions === 0) {
+    notices.push(t("analytics.healthNoCompletions", { sent: String(health.sent) }));
+  }
+
+  if (health.deadTokens > 0) {
+    notices.push(t("analytics.healthDeadTokens", { n: String(health.deadTokens) }));
+  }
+  if (health.deliveryFailures > 0) {
+    notices.push(t("analytics.healthDeliveryFailures", { n: String(health.deliveryFailures) }));
+  }
+
+  if (notices.length === 0) return null;
+
+  return (
+    <div style={{
+      background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.25)",
+      borderRadius: "0.8rem", padding: "1.1rem 1.4rem",
+    }}>
+      <div style={{
+        fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".14em",
+        textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.6rem",
+      }}>
+        {t("analytics.healthTitle")}
+      </div>
+      <ul style={{ margin: 0, paddingLeft: "1.2rem", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+        {notices.map((n, i) => (
+          <li key={i} style={{ fontSize: "1.2rem", lineHeight: 1.5, color: "var(--ink-60)" }}>{n}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 function MetricsRow({ overview, days }: { overview: AnalyticsOverview; days: number }) {
@@ -595,6 +649,8 @@ export default function AnalyticsDashboard({ studyId, days: initialDays, initial
       </div>
 
       {/* Section 1: Metrics */}
+      <HealthBanner health={data.health} />
+
       <MetricsRow overview={data.overview} days={days} />
 
       {/* Section 2: Response rate over time */}

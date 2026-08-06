@@ -18,7 +18,17 @@ const resultSchema = new mongoose.Schema({
     url: String,
     expireAt: Number, // timestamp
   },
+  // The Expo *ticket*, returned synchronously when a push is accepted for
+  // delivery. `ticket.id` is the handle used to fetch the receipt later.
   ticket: JSON,
+  // The Expo *receipt*, fetched minutes later by services/receiptPoller.js.
+  // This is where real delivery failures surface — DeviceNotRegistered above
+  // all, which means the token is dead and the participant will never receive
+  // another notification until they re-register.
+  receipt: JSON,
+  // Set once a receipt has been resolved (or given up on), so the poller does
+  // not rescan the same rows forever.
+  receiptCheckedAt: Date,
   // Which schedule produced this send. The schema is strict, so until this was
   // declared Mongoose silently dropped the value notificationSender.js passes —
   // every result landed with no config id, and the analytics "Schedule
@@ -43,5 +53,9 @@ resultSchema.index({ project: 1, samplyid: 1 });
 resultSchema.index({ project: 1, created: -1 });
 resultSchema.index({ created: -1 });
 resultSchema.index({ messageId: 1 });
+// The receipt poller scans a narrow `created` window (roughly 15 min to 24 h
+// old) and filters the rest in memory, so the existing { created: -1 } index
+// above serves it — a range scan works in either direction. No extra index:
+// the working set is transient and tiny relative to the collection.
 
 module.exports = mongoose.model("Result", resultSchema);

@@ -965,6 +965,16 @@ export default function NotificationForm({ projectId, participants, groups, pres
             <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.6 }}>
               {t("notificationForm.reminderHint")}
             </p>
+            {/* Suppression already works — reminders are cancelled the moment a
+                completion is registered — but it is invisible, and it silently
+                does nothing when the survey link cannot report completions.
+                Researchers reported reminders going to people who had already
+                answered and concluded the feature did not exist. */}
+            {!url.includes("%MESSAGE_ID%") && (
+              <p style={{ fontSize: "1.15rem", color: "var(--coral)", margin: 0, lineHeight: 1.55 }}>
+                {t("notificationForm.reminderNeedsMessageId")}
+              </p>
+            )}
             {reminders.map((r, i) => (
               <div key={i} style={{ background: "var(--paper)", border: "1px solid var(--ink-10)", borderRadius: "0.6rem", padding: "1.2rem 1.4rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
                 <div style={{ display: "flex", gap: "1rem" }}>

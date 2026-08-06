@@ -11,6 +11,7 @@ import {
   fetchParticipantCompliance,
   fetchSchedulePerformance,
   fetchRetentionCurve,
+  fetchStudyHealth,
   parseWindowDays,
 } from "@/lib/data/analytics";
 import AnalyticsDashboard from "./AnalyticsDashboard";
@@ -33,7 +34,7 @@ export default async function AnalyticsPage({ params, searchParams }: Props) {
   const project = await fetchProjectById(studyId, session.user.id, session.user.level > 100);
   if (!project) notFound();
 
-  const [overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention, notifications] =
+  const [overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention, health, notifications] =
     await Promise.all([
       fetchAnalyticsOverview(studyId, days),
       fetchResponseTimeSeries(studyId, days),
@@ -43,6 +44,7 @@ export default async function AnalyticsPage({ params, searchParams }: Props) {
       fetchParticipantCompliance(studyId, days),
       fetchSchedulePerformance(studyId, days),
       fetchRetentionCurve(studyId),
+      fetchStudyHealth(studyId),
       fetchScheduledNotifications(studyId),
     ]);
 
@@ -50,7 +52,7 @@ export default async function AnalyticsPage({ params, searchParams }: Props) {
     <AnalyticsDashboard
       studyId={studyId}
       days={days}
-      initialData={{ overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention }}
+      initialData={{ overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention, health }}
       notifications={notifications}
     />
   );

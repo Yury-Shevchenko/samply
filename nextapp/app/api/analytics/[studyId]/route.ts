@@ -10,6 +10,7 @@ import {
   fetchParticipantCompliance,
   fetchSchedulePerformance,
   fetchRetentionCurve,
+  fetchStudyHealth,
   parseWindowDays,
 } from "@/lib/data/analytics";
 
@@ -31,7 +32,7 @@ export async function GET(
   // 0 = entire study, and the default. See parseWindowDays.
   const days = parseWindowDays(req.nextUrl.searchParams.get("days"));
 
-  const [overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention] =
+  const [overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention, health] =
     await Promise.all([
       fetchAnalyticsOverview(studyId, days),
       fetchResponseTimeSeries(studyId, days),
@@ -41,7 +42,8 @@ export async function GET(
       fetchParticipantCompliance(studyId, days),
       fetchSchedulePerformance(studyId, days),
       fetchRetentionCurve(studyId),
+      fetchStudyHealth(studyId),
     ]);
 
-  return Response.json({ overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention });
+  return Response.json({ overview, timeSeries, funnel, responseTimes, hourly, participants, schedules, retention, health });
 }

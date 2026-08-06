@@ -9,7 +9,7 @@
     "start": "NODE_ENV=production node server.js",
     "dev": "PORT=3000 nodemon --watch app.js --watch routes --watch controllers --watch models --watch services --watch handlers --watch config --ignore nextapp -e js,json server.js",
     "build": "cd nextapp && npm run build",
-    "test": "node lib/placeholders.test.js && npm --prefix nextapp test"
+    "test": "for f in lib/*.test.js; do node \"$f\" || exit 1; done && npm --prefix nextapp test"
   },
   "browserslist": "last 2 versions",
   "dependencies": {

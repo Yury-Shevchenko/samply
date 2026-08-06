@@ -56,6 +56,8 @@ require("./models/ConsentRecord");
 
 // Background notification poller
 require("./services/notificationCron").start();
+// Resolves Expo delivery receipts and retires dead push tokens.
+require("./services/receiptPoller").start();
 
 // ── Express app ──────────────────────────────────────────────────────────────
 const expressApp = require("./app");

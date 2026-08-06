@@ -1430,6 +1430,17 @@ const en = {
     dayButton:            "{n}d",
     /** Window button selecting the whole study rather than a rolling window. */
     allTimeButton:        "All",
+
+    // ── Health banner: problems worth fixing while the study is still running ──
+    healthTitle:          "Needs attention",
+    healthNoMessageId:    "No schedule sends %MESSAGE_ID%, so Samply cannot tell which notifications were completed. Add it to your survey link and set the end-of-survey redirect to record completions.",
+    healthNoMessageIdWithReminders: "Reminders are configured, but no schedule sends %MESSAGE_ID% — Samply cannot tell who has already responded, so reminders go to everyone. Add %MESSAGE_ID% to your survey link and set the end-of-survey redirect.",
+    /** {sent} = number of notifications sent */
+    healthNoCompletions:  "{sent} notifications sent, but no completions have been reported back. Check the redirect at the end of your survey.",
+    /** {n} = number of participants */
+    healthDeadTokens:     "{n} participant(s) can no longer receive notifications — their device stopped accepting them, usually after reinstalling the app or switching phones. Ask them to open Samply and rejoin.",
+    /** {n} = number of notifications */
+    healthDeliveryFailures: "{n} notification(s) were rejected by the push service and never reached the participant.",
   },
 
   // ─── Scheduled notifications queue page ──────────────────────────────────────
@@ -1738,7 +1749,8 @@ const en = {
     // Reminders
     noReminders:         "No reminders",
     addReminders:        "Add reminders",
-    reminderHint:        "Sent if the participant has not completed the survey after the specified delay.",
+    reminderHint:        "Sent after the specified delay, unless the participant has already completed the survey. Samply can only tell they have if your survey link carries %MESSAGE_ID% and your survey redirects back to Samply at the end.",
+    reminderNeedsMessageId: "Your survey link has no %MESSAGE_ID%, so Samply cannot tell who has already responded — these reminders will go to every participant, including those who have finished.",
     sendAfter:           "Send after",
     addReminder:         "Add reminder",
 

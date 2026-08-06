@@ -393,6 +393,55 @@ export async function fetchParticipantCompliance(
   }));
 }
 
+export interface StudyHealth {
+  sent: number;
+  /** Sends whose completion the survey tool reported back to Samply. */
+  completions: number;
+  /** Whether any schedule's URL carries %MESSAGE_ID%, without which completion cannot be reported. */
+  completionConfigured: boolean;
+  /** Whether any schedule configures reminders (which rely on completions to stop). */
+  hasReminders: boolean;
+  /** Participants whose push token Expo has reported as permanently dead. */
+  deadTokens: number;
+  /** Sends the push service rejected outright. */
+  deliveryFailures: number;
+}
+
+/**
+ * The signals a researcher needs *during* a run rather than after it.
+ *
+ * Every failure in the Summer 2026 cohort had this shape: something was
+ * misconfigured on day one, nothing surfaced it, and the study ended before
+ * anyone noticed. A completion chain that never fires, or a participant whose
+ * device stopped accepting notifications, is recoverable on day two and
+ * unrecoverable on day eight.
+ */
+export async function fetchStudyHealth(projectId: string): Promise<StudyHealth> {
+  await connectDB();
+  const oid = new mongoose.Types.ObjectId(projectId);
+
+  const [sent, completions, deliveryFailures, project] = await Promise.all([
+    Result.countDocuments({ project: oid, "events.status": "sent" }),
+    Result.countDocuments({ project: oid, "events.status": "completed" }),
+    Result.countDocuments({ project: oid, "events.status": "delivery-failed" }),
+    Project.findById(oid, { notifications: 1, mobileUsers: 1 }).lean() as Promise<{
+      notifications?: Array<{ url?: string; reminders?: unknown[] }>;
+      mobileUsers?: Array<{ deactivated?: boolean }>;
+    } | null>,
+  ]);
+
+  const notifications = project?.notifications ?? [];
+
+  return {
+    sent,
+    completions,
+    completionConfigured: notifications.some((n) => (n.url ?? "").includes("%MESSAGE_ID%")),
+    hasReminders: notifications.some((n) => (n.reminders?.length ?? 0) > 0),
+    deadTokens: (project?.mobileUsers ?? []).filter((u) => u.deactivated).length,
+    deliveryFailures,
+  };
+}
+
 export interface SchedulePerformanceRow {
   notificationConfigId: string | null;
   sent: number;
