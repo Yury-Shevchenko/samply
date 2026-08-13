@@ -59,6 +59,87 @@ async function resolveMemberIds(
   return { ids, missing };
 }
 
+/* ── Researcher-defined geofence locations ─────────────────────────────────── */
+
+/** Shape the settings form submits and the mobile app reads back. */
+interface StoredGeoLocation {
+  slug: string;
+  title: string;
+  latitude: number;
+  longitude: number;
+  radius: number;
+  link: string;
+  header: string;
+  message: string;
+  exitzone: number;
+  mintimewindow: number;
+  events: string[];
+  invisible: boolean;
+}
+
+function geoString(value: unknown, maxLength: number): string {
+  return typeof value === "string" ? value.trim().slice(0, maxLength) : "";
+}
+
+function geoNumber(value: unknown, fallback: number, min: number, max: number): number {
+  const num = typeof value === "number" ? value : parseFloat(String(value ?? ""));
+  if (!Number.isFinite(num)) return fallback;
+  return Math.min(Math.max(num, min), max);
+}
+
+/**
+ * Rebuild each location field-by-field from the JSON the client submits: unknown
+ * keys are dropped, values are coerced to the types the mobile app expects, and
+ * the survey link passes the same URL check as the participant-zone link.
+ * Slugs are the identity used by the form's per-location field names, so they
+ * are always non-empty and unique.
+ */
+function parseGeoLocations(locationsJson: string): StoredGeoLocation[] {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(locationsJson);
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(raw)) return [];
+
+  const usedSlugs = new Set<string>();
+  return raw
+    .filter((item) => item !== null && typeof item === "object" && !Array.isArray(item))
+    .slice(0, 200)
+    .map((item, index) => {
+      const loc = item as Record<string, unknown>;
+      const title = geoString(loc.title, 200) || geoString(loc.name, 200);
+
+      const baseSlug =
+        geoString(loc.slug, 100) ||
+        title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") ||
+        `location-${index + 1}`;
+      let slug = baseSlug;
+      for (let n = 2; usedSlugs.has(slug); n++) slug = `${baseSlug}-${n}`;
+      usedSlugs.add(slug);
+
+      const events = Array.isArray(loc.events)
+        ? ["enter", "exit"].filter((e) => (loc.events as unknown[]).includes(e))
+        : [];
+
+      return {
+        slug,
+        title,
+        latitude: geoNumber(loc.latitude, 0, -90, 90),
+        longitude: geoNumber(loc.longitude, 0, -180, 180),
+        radius: geoNumber(loc.radius, 100, 1, 1_000_000),
+        link: sanitizeSurveyUrl(geoString(loc.link, 2000)),
+        header: geoString(loc.header, 200),
+        message: geoString(loc.message, 500),
+        exitzone: geoNumber(loc.exitzone, 0, 0, 1_000_000),
+        mintimewindow: geoNumber(loc.mintimewindow, 0, 0, 1_000_000),
+        events,
+        invisible: loc.invisible === true || loc.invisible === 1,
+      };
+    });
+}
+
 export async function updateSettingsAction(studyId: string, formData: FormData) {
   const session = await requireResearcher();
   await connectDB();
@@ -106,29 +187,9 @@ export async function updateSettingsAction(studyId: string, formData: FormData) 
   if (formData.get("event-exit") === "on") geoUserEvents.push("exit");
 
   /* ── Researcher-defined geofencing locations ─────────────────────────────── */
-  const locationsJson = (formData.get("locationsJson") as string) ?? "[]";
-  let parsedLocations: unknown[] = [];
-  try {
-    const raw = JSON.parse(locationsJson);
-    if (Array.isArray(raw)) {
-      // Sanitize each location: only allow plain objects with known primitive-value keys
-      const ALLOWED_GEO_KEYS = new Set(["lat", "lng", "latitude", "longitude", "radius", "name", "identifier"]);
-      parsedLocations = raw
-        .filter((item) => item !== null && typeof item === "object" && !Array.isArray(item))
-        .map((item) => {
-          const safe: Record<string, unknown> = {};
-          for (const [k, v] of Object.entries(item as Record<string, unknown>)) {
-            if (ALLOWED_GEO_KEYS.has(k) && (typeof v === "string" || typeof v === "number")) {
-              safe[k] = v;
-            }
-          }
-          return safe;
-        })
-        .slice(0, 200);
-    }
-  } catch {
-    parsedLocations = [];
-  }
+  const parsedLocations = parseGeoLocations(
+    (formData.get("locationsJson") as string) ?? "[]",
+  );
 
   const setOps: Record<string, unknown> = {
       members: memberObjectIds,

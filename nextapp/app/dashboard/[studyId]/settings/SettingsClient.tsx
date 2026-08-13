@@ -740,7 +740,8 @@ export default function SettingsClient({
     const slug = uniqueSlug(slugify(name), locations);
     setLocations((prev) => [
       ...prev,
-      { slug, title: name, latitude: 0, longitude: 0, radius: 100 },
+      // Default to notifying on entry — a location with no event never fires.
+      { slug, title: name, latitude: 0, longitude: 0, radius: 100, events: ["enter"] },
     ]);
     setNewLocationName("");
   }
