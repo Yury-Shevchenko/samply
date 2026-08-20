@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useT } from "@/app/components/TranslationProvider";
 import { SPEC_VERSION, type ScheduleSpec } from "@/lib/scheduleSpec";
 import { compileSpec, isInvalidRepeatDates } from "@/lib/compileSpec";
@@ -178,11 +178,11 @@ function RemoveLink({ onClick }: { onClick: () => void }) {
   );
 }
 
-function Check({ label, checked, onChange, indent = false }: { label: string; checked: boolean; onChange: (v: boolean) => void; indent?: boolean }) {
+function Check({ label, checked, onChange, indent = false, disabled = false }: { label: string; checked: boolean; onChange: (v: boolean) => void; indent?: boolean; disabled?: boolean }) {
   return (
-    <label style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: "pointer", paddingLeft: indent ? "2rem" : 0 }}>
-      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)}
-        style={{ width: "1.4rem", height: "1.4rem", cursor: "pointer", accentColor: "var(--coral)", flexShrink: 0 }} />
+    <label style={{ display: "flex", alignItems: "center", gap: "0.8rem", cursor: disabled ? "default" : "pointer", paddingLeft: indent ? "2rem" : 0, opacity: disabled ? 0.65 : 1 }}>
+      <input type="checkbox" checked={checked} disabled={disabled} onChange={(e) => onChange(e.target.checked)}
+        style={{ width: "1.4rem", height: "1.4rem", cursor: disabled ? "default" : "pointer", accentColor: "var(--coral)", flexShrink: 0 }} />
       <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.15rem", color: "var(--ink-60)", letterSpacing: ".02em" }}>{label}</span>
     </label>
   );
@@ -325,7 +325,7 @@ export default function NotificationForm({ projectId, participants, groups, pres
   const [useParticipantTimezone, setUseParticipantTimezone] = useState(S?.useParticipantTimezone ?? false);
 
   const [includeCurrent, setIncludeCurrent] = useState(S?.includeCurrent ?? !!preselectedParticipantId);
-  const [includeFuture, setIncludeFuture] = useState(S?.includeFuture ?? false);
+  const [includeFutureChoice, setIncludeFuture] = useState(S?.includeFuture ?? false);
   const [includeGroups, setIncludeGroups] = useState(S?.includeGroups ?? false);
   const [allCurrentParticipants, setAllCurrentParticipants] = useState(S?.allCurrentParticipants ?? !preselectedParticipantId);
   const [selectedParticipants, setSelectedParticipants] = useState<string[]>(S?.selectedParticipants ?? (preselectedParticipantId ? [preselectedParticipantId] : []));
@@ -338,10 +338,12 @@ export default function NotificationForm({ projectId, participants, groups, pres
   const [enrollmentHours, setEnrollmentHours] = useState(S?.enrollmentHours ?? 0);
   const [enrollmentMinutes, setEnrollmentMinutes] = useState(S?.enrollmentMinutes ?? 0);
 
-  // Auto-enable future participants when enrollment type is selected
-  useEffect(() => {
-    if (timeType === "enrollment") setIncludeFuture(true);
-  }, [timeType]);
+  // "Delay after joining" only has meaning for participants who join later, so
+  // the flag is forced on (and the checkbox locked) for that schedule type.
+  // Derived rather than pushed into state by an effect: the old effect left the
+  // box un-tickable-but-clickable, and a config saved with it off still fired at
+  // join time, which read as a bug. Everything downstream reads this value.
+  const includeFuture = timeType === "enrollment" ? true : includeFutureChoice;
   const [timepoints, setTimepoints] = useState<Timepoint[]>(S?.timepoints ?? [{ hour: 12, minute: 0 }]);
   const [timeWindows, setTimeWindows] = useState<TimeWindow[]>(S?.timeWindows ?? [{ hourStart: 9, minuteStart: 0, hourEnd: 21, minuteEnd: 0, distance: 2700000, number: 5 }]);
   const [repeatEvery, setRepeatEvery] = useState(S?.repeatEvery ?? 30);
@@ -648,7 +650,12 @@ export default function NotificationForm({ projectId, participants, groups, pres
       {/* Recipients */}
       <StepCard num="step 2" title={t("notificationForm.cardRecipients")}>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <Check label={t("notificationForm.futureParticipants")} checked={includeFuture} onChange={setIncludeFuture} />
+          <Check label={t("notificationForm.futureParticipants")} checked={includeFuture} onChange={setIncludeFuture} disabled={timeType === "enrollment"} />
+          {timeType === "enrollment" && (
+            <p style={{ margin: "-0.5rem 0 0", paddingLeft: "2.2rem", fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-40)", lineHeight: 1.6 }}>
+              {t("notificationForm.afterJoiningFutureNote")}
+            </p>
+          )}
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.8rem" }}>
             <Check label={t("notificationForm.currentParticipants")} checked={includeCurrent} onChange={setIncludeCurrent} />

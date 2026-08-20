@@ -15,8 +15,9 @@ const nanoid = customAlphabet(
 );
 const webhookController = require("./webhookController");
 const consent = require("../handlers/consent");
-const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, BatchLimitError } = require("../services/notificationScheduler");
+const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, hasEnrollmentNotification, BatchLimitError } = require("../services/notificationScheduler");
 const { scheduleForUser } = require("../services/scheduleForUser");
+const { plainConfigs } = require("../services/notificationConfigs");
 const { substitutePlaceholders } = require("../lib/placeholders");
 
 const MAX_PROJECT_PENDING = 50_000;
@@ -1811,18 +1812,25 @@ exports.joinStudy = async (req, res) => {
       });
     }
 
+    // Read the configs as plain objects: the strict legacy Project schema drops
+    // any path it does not declare while hydrating, which would silently blank
+    // fields the Next.js create routes wrote (see services/notificationConfigs.js).
+    const notificationConfigs = plainConfigs(project.notifications);
+    const userCreated = isNew
+      ? new Date()
+      : (project.mobileUsers.find((u) => u.id === req.body.id) || {}).created || new Date();
+
     // Auto-schedule group-targeted non-yoked notifications for this new group member
-    if (group && project.notifications && project.notifications.length > 0) {
-      const userCreated = isNew ? new Date() : (project.mobileUsers.find((u) => u.id === req.body.id) || {}).created || new Date();
-      await scheduleForUser(project._id, { id: req.body.id, created: userCreated }, group.id, project.notifications).catch((err) => {
+    if (group && notificationConfigs.length > 0) {
+      await scheduleForUser(project._id, { id: req.body.id, created: userCreated }, group.id, notificationConfigs).catch((err) => {
         console.error("scheduleForUser error during joinStudy:", err);
       });
     }
 
     // if there are scheduled notifications, create them for the new user
-    if (project && project.notifications && project.notifications.length > 0) {
+    if (notificationConfigs.length > 0) {
       await Promise.all(
-        project.notifications.map(async (sub) => {
+        notificationConfigs.map(async (sub) => {
           const timezone =
             sub.useParticipantTimezone && participantTimezone
               ? participantTimezone
@@ -1842,15 +1850,21 @@ exports.joinStudy = async (req, res) => {
           };
 
           if (sub.schedule === "enrollment") {
-            // Group-targeted configs are handled by scheduleForUser above; skip here to avoid duplicates
+            // Unticking "future participants" means current participants only —
+            // the config was already scheduled for them when it was created.
+            if (sub.scheduleInFuture === false) return;
+            // Group-targeted configs belong to scheduleForUser above, which runs
+            // only when this joiner actually has a group. A joiner with no group
+            // is in none of the targeted groups, so they get nothing either way.
             const isGroupTargeted = (sub.groups && sub.groups.length > 0) || sub.allCurrentGroups;
-            if (isGroupTargeted && group) return;
-            // For non-group-targeted configs, check group requirement
-            if (sub.allCurrentGroups && !group) return;
+            if (isGroupTargeted) return;
+            // A re-join must not queue a second copy of a notification this
+            // participant has already been sent or is already waiting for.
+            if (await hasEnrollmentNotification(project._id, sub.id, req.body.id)) return;
             const delayMs = (((sub.delay && sub.delay.days) || 0) * 86400 + ((sub.delay && sub.delay.hours) || 0) * 3600 + ((sub.delay && sub.delay.minutes) || 0) * 60) * 1000;
             // Add 30s buffer so scheduleBatch's strict > now filter doesn't skip zero-delay docs
             const MIN_BUFFER_MS = 30 * 1000;
-            const scheduledFor = new Date(Date.now() + delayMs + MIN_BUFFER_MS);
+            const scheduledFor = new Date(Math.max(userCreated.getTime(), Date.now()) + delayMs + MIN_BUFFER_MS);
             await scheduleBatch([{
               ...baseDoc,
               scheduledFor,

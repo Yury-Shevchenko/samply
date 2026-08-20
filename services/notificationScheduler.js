@@ -32,6 +32,25 @@ async function scheduleBatch(docs) {
   return { inserted: future.length, skipped };
 }
 
+// True if this participant already has an enrollment ("delay after joining")
+// notification for this config — queued, in flight, or already delivered.
+// joinStudy runs on every join, including a re-join of a study the participant
+// was already enrolled in, so without this check each re-join would queue
+// another copy. Reminder docs share the config id, so they are excluded.
+async function hasEnrollmentNotification(projectId, notificationConfigId, userId) {
+  const existing = await PendingNotification.findOne(
+    {
+      projectId,
+      notificationConfigId,
+      recipientUserIds: userId,
+      isReminder: { $ne: true },
+      status: { $in: ["pending", "processing", "sent"] },
+    },
+    { _id: 1 }
+  );
+  return !!existing;
+}
+
 // Cancel all pending notifications for a specific notification config.
 // Called when a researcher deletes or recreates a notification.
 async function cancelByNotificationId(projectId, notificationConfigId) {
@@ -91,6 +110,7 @@ async function deleteByStatus(status, projectId) {
 
 module.exports = {
   scheduleBatch,
+  hasEnrollmentNotification,
   cancelByNotificationId,
   cancelByParticipantId,
   cancelByFinid,

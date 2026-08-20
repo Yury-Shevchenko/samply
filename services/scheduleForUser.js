@@ -1,6 +1,7 @@
 const momentTz = require("moment-timezone");
 const Cron = require("cron-converter");
-const { scheduleBatch } = require("./notificationScheduler");
+const { scheduleBatch, hasEnrollmentNotification } = require("./notificationScheduler");
+const { plainConfigs } = require("./notificationConfigs");
 const { expandScheduleBetween, expandCronBetween, toFivePart } = require("./scheduleExpand");
 
 function getNumberBetween(min, max) {
@@ -135,10 +136,19 @@ async function scheduleForUser(projectOid, user, groupId, configs) {
   const counter = { inserted: 0, skipped: 0 };
   if (!configs || !configs.length) return counter;
 
-  const relevant = configs.filter((cfg) => {
+  // Normalise to plain objects first: a config read straight off a hydrated
+  // Project document silently loses every path the strict legacy schema does
+  // not declare (see services/notificationConfigs.js).
+  const relevant = plainConfigs(configs).filter((cfg) => {
     if (cfg.yokedDesign) return false;
-    // enrollment configs are always scheduled here regardless of scheduleInFuture
-    if (cfg.schedule !== "enrollment" && cfg.scheduleInFuture) return false;
+    if (cfg.schedule === "enrollment") {
+      // Enrollment configs are handled here rather than by the repeat branch of
+      // joinStudy, but only when the researcher kept "future participants" on —
+      // unticking it means "current participants only".
+      if (cfg.scheduleInFuture === false) return false;
+    } else if (cfg.scheduleInFuture) {
+      return false;
+    }
     if (cfg.allCurrentGroups) return true;
     return Array.isArray(cfg.groups) && cfg.groups.includes(groupId);
   });
@@ -178,6 +188,8 @@ async function scheduleForUser(projectOid, user, groupId, configs) {
       counter.inserted += r.inserted;
       counter.skipped += r.skipped;
     } else if (cfg.schedule === "enrollment") {
+      // eslint-disable-next-line no-await-in-loop
+      if (await hasEnrollmentNotification(projectOid, cfg.id, user.id)) continue;
       const delayMs = (((cfg.delay && cfg.delay.days) || 0) * 86400 + ((cfg.delay && cfg.delay.hours) || 0) * 3600 + ((cfg.delay && cfg.delay.minutes) || 0) * 60) * 1000;
       const MIN_BUFFER_MS = 30 * 1000;
       const base = Math.max(user.created.getTime(), Date.now());

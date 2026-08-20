@@ -4,6 +4,7 @@ const PendingNotification = mongoose.model("PendingNotification");
 const Project = mongoose.model("Project");
 const { sendMobileNotification } = require("./notificationSender");
 const { cancelByProjectId } = require("./notificationScheduler");
+const { plainConfigs } = require("./notificationConfigs");
 
 let isRunning = false;
 
@@ -57,7 +58,7 @@ async function processOneNotification() {
     // Look up reminder config from the notification definition (only for non-reminders)
     let reminders;
     if (!notification.isReminder) {
-      const notifConfig = (project.notifications || []).find(
+      const notifConfig = plainConfigs(project.notifications).find(
         (n) => n.id === notification.notificationConfigId
       );
       reminders = notifConfig && notifConfig.reminders;

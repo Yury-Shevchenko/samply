@@ -101,6 +101,15 @@ const projectSchema = new mongoose.Schema({
       expireIn: Number, // number of milliseconds
       useParticipantTimezone: Boolean,
       reminders: JSON,
+      // Written by the Next.js create routes (whose Project model is
+      // strict:false). Mongoose drops undeclared paths when it HYDRATES a
+      // document, so anything missing here is invisible to the Express side
+      // even though it is stored in MongoDB. That is what made "delay after
+      // joining" fire instantly: joinStudy read cfg.delay as undefined and the
+      // delay collapsed to 0. Keep this list in sync with the create routes.
+      delay: JSON,
+      participants: JSON,
+      spec: JSON,
     },
   ],
   projectGroups: [{ id: String, name: String }],

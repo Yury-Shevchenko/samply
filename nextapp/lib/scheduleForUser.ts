@@ -1,7 +1,7 @@
 import momentTz from "moment-timezone";
 import type mongoose from "mongoose";
 import {
-  scheduleBatch, expandScheduleBetween, computeRandomWindowDocs,
+  scheduleBatch, expandScheduleBetween, computeRandomWindowDocs, hasEnrollmentNotification,
 } from "./scheduling";
 
 export interface StoredConfig {
@@ -89,8 +89,14 @@ export async function scheduleForUser(
 
   const relevant = configs.filter((cfg) => {
     if (cfg.yokedDesign) return false;
-    // enrollment configs are always scheduled here regardless of scheduleInFuture
-    if (cfg.schedule !== "enrollment" && cfg.scheduleInFuture) return false;
+    if (cfg.schedule === "enrollment") {
+      // Enrollment configs are handled here rather than by the repeat branch of
+      // joinStudy, but only when the researcher kept "future participants" on —
+      // unticking it means "current participants only".
+      if (cfg.scheduleInFuture === false) return false;
+    } else if (cfg.scheduleInFuture) {
+      return false;
+    }
     if (cfg.allCurrentGroups) return true;
     return Array.isArray(cfg.groups) && cfg.groups.includes(groupId);
   });
@@ -131,6 +137,7 @@ export async function scheduleForUser(
       counter.inserted += r.inserted;
       counter.skipped += r.skipped;
     } else if (cfg.schedule === "enrollment") {
+      if (await hasEnrollmentNotification(projectOid, cfg.id, user.id)) continue;
       const delayMs = ((cfg.delay?.days ?? 0) * 86400 + (cfg.delay?.hours ?? 0) * 3600 + (cfg.delay?.minutes ?? 0) * 60) * 1000;
       const MIN_BUFFER_MS = 30 * 1000;
       const base = Math.max(user.created.getTime(), Date.now());

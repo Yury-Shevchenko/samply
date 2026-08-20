@@ -42,6 +42,29 @@ export async function scheduleBatch(docs: PendingNotificationDoc[]): Promise<{ i
   return { inserted: future.length, skipped };
 }
 
+// True if this participant already has an enrollment ("delay after joining")
+// notification for this config — queued, in flight, or already delivered.
+// Guards against a second copy when a participant is re-added to a group they
+// were in before. Reminder docs share the config id, so they are excluded.
+export async function hasEnrollmentNotification(
+  projectId: unknown,
+  notificationConfigId: string,
+  userId: string
+): Promise<boolean> {
+  const PendingNotification = (await import("@/lib/models/pendingNotification")).default;
+  const existing = await PendingNotification.findOne(
+    {
+      projectId,
+      notificationConfigId,
+      recipientUserIds: userId,
+      isReminder: { $ne: true },
+      status: { $in: ["pending", "processing", "sent"] },
+    },
+    { _id: 1 }
+  ).lean();
+  return !!existing;
+}
+
 // Convert a 6-part cron (with seconds) to 5-part by stripping the first field.
 function toFivePart(expr: string): string {
   const parts = expr.trim().split(/\s+/);
