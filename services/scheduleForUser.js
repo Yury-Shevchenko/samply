@@ -130,25 +130,29 @@ function resolveStop(cfg, userCreated, timezone) {
  * @param {{ id: string, created: Date }} user
  * @param {string} groupId
  * @param {Array} configs  — project.notifications array
+ * @param {{ atJoin?: boolean }} [options]  — atJoin: the participant enrolled
+ *        themselves just now (joinStudy). Left false when a researcher adds an
+ *        existing participant to the group from the dashboard, which is an
+ *        explicit act and so is not governed by the "future participants" box.
  * @returns {Promise<{ inserted: number, skipped: number }>}
  */
-async function scheduleForUser(projectOid, user, groupId, configs) {
+async function scheduleForUser(projectOid, user, groupId, configs, options = {}) {
   const counter = { inserted: 0, skipped: 0 };
   if (!configs || !configs.length) return counter;
+  const atJoin = !!options.atJoin;
 
   // Normalise to plain objects first: a config read straight off a hydrated
   // Project document silently loses every path the strict legacy schema does
   // not declare (see services/notificationConfigs.js).
   const relevant = plainConfigs(configs).filter((cfg) => {
     if (cfg.yokedDesign) return false;
-    if (cfg.schedule === "enrollment") {
-      // Enrollment configs are handled here rather than by the repeat branch of
-      // joinStudy, but only when the researcher kept "future participants" on —
-      // unticking it means "current participants only".
-      if (cfg.scheduleInFuture === false) return false;
-    } else if (cfg.scheduleInFuture) {
-      return false;
-    }
+    // "Future participants" explicitly off means current participants only, so
+    // joining alone never earns a notification.
+    if (atJoin && cfg.scheduleInFuture === false) return false;
+    // Repeat/one-time configs with future participants ON are expanded by the
+    // joinStudy branches, which resolve the participant's own timezone —
+    // scheduling them here as well would double-book them.
+    if (cfg.schedule !== "enrollment" && cfg.scheduleInFuture) return false;
     if (cfg.allCurrentGroups) return true;
     return Array.isArray(cfg.groups) && cfg.groups.includes(groupId);
   });

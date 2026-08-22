@@ -79,24 +79,29 @@ function patchStartDay(cronExpr: string, start: string, timezone?: string): stri
   return p.join(" ");
 }
 
+// options.atJoin: the participant enrolled themselves just now (the Express
+// joinStudy path). It stays false here — the dashboard caller adds an existing
+// participant to a group, an explicit act that the "future participants"
+// checkbox does not govern. Must mirror services/scheduleForUser.js.
 export async function scheduleForUser(
   projectOid: mongoose.Types.ObjectId,
   user: { id: string; created: Date },
   groupId: string,
-  configs: StoredConfig[]
+  configs: StoredConfig[],
+  options: { atJoin?: boolean } = {}
 ): Promise<{ inserted: number; skipped: number }> {
   const counter = { inserted: 0, skipped: 0 };
+  const atJoin = !!options.atJoin;
 
   const relevant = configs.filter((cfg) => {
     if (cfg.yokedDesign) return false;
-    if (cfg.schedule === "enrollment") {
-      // Enrollment configs are handled here rather than by the repeat branch of
-      // joinStudy, but only when the researcher kept "future participants" on —
-      // unticking it means "current participants only".
-      if (cfg.scheduleInFuture === false) return false;
-    } else if (cfg.scheduleInFuture) {
-      return false;
-    }
+    // "Future participants" explicitly off means current participants only, so
+    // joining alone never earns a notification.
+    if (atJoin && cfg.scheduleInFuture === false) return false;
+    // Repeat/one-time configs with future participants ON are expanded by the
+    // joinStudy branches, which resolve the participant's own timezone —
+    // scheduling them here as well would double-book them.
+    if (cfg.schedule !== "enrollment" && cfg.scheduleInFuture) return false;
     if (cfg.allCurrentGroups) return true;
     return Array.isArray(cfg.groups) && cfg.groups.includes(groupId);
   });

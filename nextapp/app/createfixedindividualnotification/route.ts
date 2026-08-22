@@ -4,7 +4,7 @@ import connectDB from "@/lib/db";
 import Project from "@/lib/models/project";
 import mongoose from "mongoose";
 import { nanoid } from "nanoid";
-import { scheduleBatch, computeRandomWindowDocs, BatchLimitError, type PendingNotificationDoc } from "@/lib/scheduling";
+import { scheduleBatch, computeAbsoluteWindowDocs, BatchLimitError, type PendingNotificationDoc } from "@/lib/scheduling";
 import { sanitizeSurveyUrl } from "@/lib/urlValidation";
 
 const MAX_PROJECT_PENDING = 50_000;
@@ -109,9 +109,8 @@ export async function POST(req: NextRequest) {
           const groupMembers = (p.mobileUsers ?? []).filter((u) => u.group?.id === group && !u.deactivated);
           if (!groupMembers.length) continue;
           if (yokedDesign) {
-            const docs = computeRandomWindowDocs({
-              ...baseDoc, windowFrom: interval.from, windowTo: interval.to,
-              int_start: interval.from, int_end: interval.to,
+            const docs = computeAbsoluteWindowDocs({
+              ...baseDoc, from: interval.from, to: interval.to,
               number: interval.number, distance: interval.distance || 0,
               recipientGroupIds: [group], recipientUserIds: [],
             });
@@ -119,9 +118,8 @@ export async function POST(req: NextRequest) {
             counter.inserted += r.inserted; counter.skipped += r.skipped;
           } else {
             for (const member of groupMembers) {
-              const docs = computeRandomWindowDocs({
-                ...baseDoc, windowFrom: interval.from, windowTo: interval.to,
-                int_start: interval.from, int_end: interval.to,
+              const docs = computeAbsoluteWindowDocs({
+                ...baseDoc, from: interval.from, to: interval.to,
                 number: interval.number, distance: interval.distance || 0,
                 recipientUserIds: [member.id], recipientGroupIds: [],
               });
@@ -134,9 +132,8 @@ export async function POST(req: NextRequest) {
 
       if (users) {
         for (const userId of users) {
-          const docs = computeRandomWindowDocs({
-            ...baseDoc, windowFrom: interval.from, windowTo: interval.to,
-            int_start: interval.from, int_end: interval.to,
+          const docs = computeAbsoluteWindowDocs({
+            ...baseDoc, from: interval.from, to: interval.to,
             number: interval.number, distance: interval.distance || 0,
             recipientUserIds: [userId], recipientGroupIds: [],
           });

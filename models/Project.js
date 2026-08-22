@@ -110,6 +110,7 @@ const projectSchema = new mongoose.Schema({
       delay: JSON,
       participants: JSON,
       spec: JSON,
+      dates: JSON,
     },
   ],
   projectGroups: [{ id: String, name: String }],

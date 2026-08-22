@@ -15,9 +15,9 @@ const nanoid = customAlphabet(
 );
 const webhookController = require("./webhookController");
 const consent = require("../handlers/consent");
-const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, hasEnrollmentNotification, BatchLimitError } = require("../services/notificationScheduler");
+const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, hasEnrollmentNotification, hasGroupNotifications, BatchLimitError } = require("../services/notificationScheduler");
 const { scheduleForUser } = require("../services/scheduleForUser");
-const { plainConfigs } = require("../services/notificationConfigs");
+const { plainConfigs, appliesToJoiner, isGroupLevelConfig } = require("../services/notificationConfigs");
 const { substitutePlaceholders } = require("../lib/placeholders");
 
 const MAX_PROJECT_PENDING = 50_000;
@@ -1693,6 +1693,27 @@ function patchStartDayCron(cronExpr, start, timezone) {
   return p.join(" ");
 }
 
+// Who should the docs created for a joining participant be addressed to — and
+// should any be created at all?
+//
+// A personal set for ordinary configs. Group-level configs (yoked designs, and
+// one-time fixed dates aimed at groups) are stored as one shared set addressed
+// to the group, which notificationCron resolves to whoever is in the group when
+// it fires: this joiner inherits it, so a personal copy would double every send
+// and re-anchor a schedule that is documented never to re-anchor. If the group
+// was empty when the schedule was created there is nothing to inherit — no docs
+// were written for it at all — so this first joiner establishes the shared
+// schedule instead, addressed to the group so that everyone who joins after
+// them inherits it in turn.
+async function joinRecipients(cfg, group, projectId, userId) {
+  if (!isGroupLevelConfig(cfg)) {
+    return { recipientUserIds: [userId], recipientGroupIds: [] };
+  }
+  if (!group) return null;
+  if (await hasGroupNotifications(projectId, cfg.id, group.id)) return null;
+  return { recipientUserIds: [], recipientGroupIds: [group.id] };
+}
+
 // participants join a study on mobile phone, a user id is created if there was no one before
 exports.joinStudy = async (req, res) => {
   try {
@@ -1822,7 +1843,7 @@ exports.joinStudy = async (req, res) => {
 
     // Auto-schedule group-targeted non-yoked notifications for this new group member
     if (group && notificationConfigs.length > 0) {
-      await scheduleForUser(project._id, { id: req.body.id, created: userCreated }, group.id, notificationConfigs).catch((err) => {
+      await scheduleForUser(project._id, { id: req.body.id, created: userCreated }, group.id, notificationConfigs, { atJoin: true }).catch((err) => {
         console.error("scheduleForUser error during joinStudy:", err);
       });
     }
@@ -1873,6 +1894,11 @@ exports.joinStudy = async (req, res) => {
             }]).catch((err) => console.error("enrollment schedule error:", err));
 
           } else if (sub.scheduleInFuture && sub.schedule === "repeat") {
+            // Group targeting narrows future participants too: someone who joins
+            // into one group must not receive the schedules built for the others.
+            if (!appliesToJoiner(sub, group)) return;
+            const recipients = await joinRecipients(sub, group, project._id, req.body.id);
+            if (!recipients) return;
             let user_int_start = sub.int_start;
             let user_int_end = sub.int_end;
 
@@ -1912,6 +1938,7 @@ exports.joinStudy = async (req, res) => {
 
               const docs = computeRandomWindowDocs({
                 ...baseDoc,
+                ...recipients,
                 windowFrom,
                 windowTo,
                 int_start: user_int_start,
@@ -1926,27 +1953,52 @@ exports.joinStudy = async (req, res) => {
             } else {
               const updatedInterval = patchStartDayCron(sub.interval, user_int_start, timezone);
               const dates = expandCronBetween(updatedInterval, user_int_start, user_int_end, timezone);
-              await scheduleBatch(dates.map((d) => ({ ...baseDoc, scheduledFor: new Date(d) }))).catch((err) =>
+              await scheduleBatch(dates.map((d) => ({ ...baseDoc, ...recipients, scheduledFor: new Date(d) }))).catch((err) =>
                 console.error(`joinStudy repeat(cron) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
               );
             }
           } else if (sub.scheduleInFuture && sub.schedule === "one-time") {
+            if (!appliesToJoiner(sub, group)) return;
+            const recipients = await joinRecipients(sub, group, project._id, req.body.id);
+            if (!recipients) return;
+            const groupLevel = recipients.recipientGroupIds.length > 0;
+
             if (sub.target === "fixed-times") {
-              const dateForParticipant = moment.tz(sub.date, sub.timezone).tz(timezone, true).toISOString();
-              if (new Date(dateForParticipant) > new Date()) {
-                await scheduleBatch([{ ...baseDoc, scheduledFor: new Date(dateForParticipant) }]).catch((err) =>
-                  console.error(`joinStudy one-time(fixed) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
-                );
+              // `dates` holds every date of the schedule; `date` is the first one
+              // only, kept for configs written before `dates` was stored.
+              const configured = Array.isArray(sub.dates) && sub.dates.length ? sub.dates : [sub.date];
+              const docs = [];
+              for (const d of configured) {
+                if (!d) continue;
+                // A shared group schedule keeps the study-wide moment it was
+                // created with; a personal copy is moved to the same wall-clock
+                // time in this participant's own timezone.
+                const scheduledFor = groupLevel
+                  ? new Date(d)
+                  : new Date(moment.tz(d, sub.timezone).tz(timezone, true).toISOString());
+                docs.push({ ...baseDoc, ...recipients, scheduledFor });
               }
-            } else if (sub.target === "user-specific") {
-              if (sub.window_from > sub.window_to) return;
-              const nums = getDatesInInterval(
-                Date.parse(sub.window_from),
-                Date.parse(sub.window_to),
-                sub.number,
-                sub.distance || 0
+              await scheduleBatch(docs).catch((err) =>
+                console.error(`joinStudy one-time(fixed) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
               );
-              await scheduleBatch(nums.map((ts) => ({ ...baseDoc, scheduledFor: new Date(ts) }))).catch((err) =>
+            } else if (sub.target === "user-specific") {
+              // Random times inside an absolute window. windowInterval is what the
+              // create route writes; window_from/window_to/number are the legacy
+              // field names, kept as a fallback for configs made before it.
+              const wi = sub.windowInterval || {};
+              const from = Date.parse(wi.from || sub.window_from);
+              const to = Date.parse(wi.to || sub.window_to);
+              const count = wi.number != null ? wi.number : sub.number;
+              const spacing = (wi.distance != null ? wi.distance : sub.distance) || 0;
+              if (!Number.isFinite(from) || !Number.isFinite(to) || from >= to || !count) return;
+              let nums;
+              try {
+                nums = getDatesInInterval(from, to, count, spacing);
+              } catch (err) {
+                console.error(`joinStudy one-time(user-specific) window error [config ${sub.id}, project ${project._id}]:`, err.message);
+                return;
+              }
+              await scheduleBatch(nums.map((ts) => ({ ...baseDoc, ...recipients, scheduledFor: new Date(ts) }))).catch((err) =>
                 console.error(`joinStudy one-time(user-specific) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
               );
             }

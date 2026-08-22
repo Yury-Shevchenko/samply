@@ -16,4 +16,37 @@ function plainConfigs(configs) {
   );
 }
 
-module.exports = { plainConfigs };
+// Does a config that fires at join time apply to the participant who just joined?
+//
+// Group targeting narrows "future participants" to the targeted groups — a
+// participant who joins into the "2 day delay" group must not also receive the
+// schedules built for the other nine groups. A config with no group targeting
+// applies to everyone who joins, which is what "future participants" means.
+// Participant lists are deliberately NOT consulted: they name people who were
+// already enrolled when the schedule was created, so they can never match a
+// joiner, and treating them as a filter would make "future participants"
+// unusable on any schedule that also targets named participants.
+function appliesToJoiner(cfg, group) {
+  // "All current groups" targets the grouped cohort, so an ungrouped joiner is out.
+  if (cfg.allCurrentGroups) return !!group;
+  if (Array.isArray(cfg.groups) && cfg.groups.length > 0) {
+    return !!group && cfg.groups.includes(group.id);
+  }
+  return true;
+}
+
+// Is this config delivered as ONE shared set of docs addressed to the group,
+// rather than a personal set per participant?
+//
+// Two families are: yoked designs (the create routes write
+// recipientGroupIds:[group] for them — that is what makes "all group members
+// receive notifications at exactly the same times" hold), and one-time fixed
+// calendar dates aimed at groups, which are group-addressed for the same reason.
+// Everything else is expanded per participant.
+function isGroupLevelConfig(cfg) {
+  if (cfg.yokedDesign) return true;
+  const groupTargeted = !!cfg.allCurrentGroups || (Array.isArray(cfg.groups) && cfg.groups.length > 0);
+  return groupTargeted && cfg.schedule === "one-time" && cfg.target === "fixed-times";
+}
+
+module.exports = { plainConfigs, appliesToJoiner, isGroupLevelConfig };

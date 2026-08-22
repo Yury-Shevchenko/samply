@@ -212,6 +212,9 @@ export async function POST(req: NextRequest) {
     schedule: "one-time",
     randomize: false,
     date: scheduledDates[0]?.toISOString(),
+    // Every date, not just the first: the join path reproduces the whole set for
+    // participants who arrive later (`date` is kept for older configs/readers).
+    dates: scheduledDates.map((d) => d.toISOString()),
     title,
     message,
     url: url || "",

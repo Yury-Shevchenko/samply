@@ -255,6 +255,33 @@ export function computeRandomWindowDocs(fields: RandomWindowDocFields): PendingN
   return docs;
 }
 
+// Draw `number` random times inside ONE absolute window, keeping them at least
+// `distance` ms apart. This is the shape used by "specific dates + random times
+// within a window": the bounds are concrete timestamps, not cron expressions, so
+// computeRandomWindowDocs (which expands `windowFrom` as a cron) cannot read
+// them — it throws on the ISO string, catches, and silently yields no docs.
+export interface AbsoluteWindowDocFields {
+  from: string | Date;
+  to: string | Date;
+  number: number;
+  distance?: number;
+  [key: string]: unknown;
+}
+
+export function computeAbsoluteWindowDocs(fields: AbsoluteWindowDocFields): PendingNotificationDoc[] {
+  const { from, to, number, distance, ...docFields } = fields;
+  const fromMs = new Date(from).getTime();
+  const toMs = new Date(to).getTime();
+  if (!Number.isFinite(fromMs) || !Number.isFinite(toMs) || fromMs >= toMs || !number) return [];
+  let timestamps: number[];
+  try {
+    timestamps = getDatesInInterval(fromMs, toMs, number, distance || 0);
+  } catch {
+    return [];
+  }
+  return timestamps.map((ts) => ({ ...docFields, scheduledFor: new Date(ts) }) as PendingNotificationDoc);
+}
+
 // Construct a timezone-aware Date from form field values.
 export function makeTzDate(
   params: { year: number; month: number; day: number; hour: number; minute: number; second?: number },

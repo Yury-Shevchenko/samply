@@ -51,6 +51,20 @@ async function hasEnrollmentNotification(projectId, notificationConfigId, userId
   return !!existing;
 }
 
+// Has this config ever produced docs addressed to this group? Yoked schedules —
+// and one-time fixed dates aimed at groups — are stored as a single shared set
+// addressed to the group, which notificationCron resolves to whoever is in the
+// group when it fires. A participant joining later therefore inherits them and
+// must not be given a personal copy. No status filter: a config that scheduled
+// at group level once is a group-level config for good.
+async function hasGroupNotifications(projectId, notificationConfigId, groupId) {
+  const existing = await PendingNotification.findOne(
+    { projectId, notificationConfigId, recipientGroupIds: groupId },
+    { _id: 1 }
+  );
+  return !!existing;
+}
+
 // Cancel all pending notifications for a specific notification config.
 // Called when a researcher deletes or recreates a notification.
 async function cancelByNotificationId(projectId, notificationConfigId) {
@@ -111,6 +125,7 @@ async function deleteByStatus(status, projectId) {
 module.exports = {
   scheduleBatch,
   hasEnrollmentNotification,
+  hasGroupNotifications,
   cancelByNotificationId,
   cancelByParticipantId,
   cancelByFinid,
