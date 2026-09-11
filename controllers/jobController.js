@@ -763,7 +763,7 @@ exports.createIntervalNotification = async (req, res) => {
             await Promise.all(
               users.map(async (user) => {
                 const timezone = tzMap.get(user.id) || req.body.timezone;
-                const dates = expandCronBetween(interval, int_start, int_end, timezone);
+                const dates = expandScheduleBetween(interval, int_start, int_end, timezone);
                 await scheduleBatchTracked(
                   dates.map((d) => ({
                     ...baseDoc,
@@ -778,7 +778,7 @@ exports.createIntervalNotification = async (req, res) => {
             );
           } else {
             const userIds = users.map((u) => u.id);
-            const dates = expandCronBetween(interval, int_start, int_end, req.body.timezone);
+            const dates = expandScheduleBetween(interval, int_start, int_end, req.body.timezone);
             await scheduleBatchTracked(
               dates.map((d) => ({
                 ...baseDoc,
@@ -792,7 +792,7 @@ exports.createIntervalNotification = async (req, res) => {
         }
 
         if (groups && groups.length) {
-          const dates = expandCronBetween(interval, int_start, int_end, req.body.timezone);
+          const dates = expandScheduleBetween(interval, int_start, int_end, req.body.timezone);
           await scheduleBatchTracked(
             dates.map((d) => ({
               ...baseDoc,
@@ -972,15 +972,9 @@ exports.createIndividualNotification = async (req, res) => {
               }
             }
 
-            let updatedInterval = interval;
-            if (updatedInterval && updatedInterval.includes("*/")) {
-              const p = updatedInterval.split(" ");
-              if (p[3] && p[3].includes("*/"))
-                p[3] = p[3].replace("*", new Date(groupStart).getDate());
-              updatedInterval = p.join(" ");
-            }
-
-            const dates = expandCronBetween(updatedInterval, groupStart, groupEnd, req.body.timezone);
+            // "every N days" steps N calendar days from the start (a "D/N"
+            // day-of-month cron collapsed to one send a month).
+            const dates = expandScheduleBetween(interval, groupStart, groupEnd, req.body.timezone);
             await scheduleBatchTracked(
               dates.map((d) => ({
                 ...baseDoc,
@@ -1040,15 +1034,7 @@ exports.createIndividualNotification = async (req, res) => {
               }
             }
 
-            let updatedInterval = interval;
-            if (updatedInterval && updatedInterval.includes("*/")) {
-              const p = updatedInterval.split(" ");
-              if (p[3] && p[3].includes("*/"))
-                p[3] = p[3].replace("*", new Date(userStart).getDate());
-              updatedInterval = p.join(" ");
-            }
-
-            const dates = expandCronBetween(updatedInterval, userStart, userEnd, timezone);
+            const dates = expandScheduleBetween(interval, userStart, userEnd, timezone);
             await scheduleBatchTracked(
               dates.map((d) => ({
                 ...baseDoc,
