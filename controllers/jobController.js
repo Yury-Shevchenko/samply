@@ -17,6 +17,7 @@ const webhookController = require("./webhookController");
 const consent = require("../handlers/consent");
 const { scheduleBatch, cancelByNotificationId, cancelByParticipantId, cancelByProjectId, deleteByNotificationId, hasEnrollmentNotification, hasGroupNotifications, BatchLimitError } = require("../services/notificationScheduler");
 const { scheduleForUser } = require("../services/scheduleForUser");
+const { expandScheduleBetween } = require("../services/scheduleExpand");
 const { plainConfigs, appliesToJoiner, isGroupLevelConfig } = require("../services/notificationConfigs");
 const { substitutePlaceholders } = require("../lib/placeholders");
 
@@ -1951,8 +1952,11 @@ exports.joinStudy = async (req, res) => {
                 console.error(`joinStudy repeat(random) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
               );
             } else {
-              const updatedInterval = patchStartDayCron(sub.interval, user_int_start, timezone);
-              const dates = expandCronBetween(updatedInterval, user_int_start, user_int_end, timezone);
+              // Same expander as the create routes: "every N days" must step N
+              // calendar days from this participant's start. The cron day-of-month
+              // "*/N" resets every month, so late joiners got as little as one
+              // send a month.
+              const dates = expandScheduleBetween(sub.interval, user_int_start, user_int_end, timezone);
               await scheduleBatch(dates.map((d) => ({ ...baseDoc, ...recipients, scheduledFor: new Date(d) }))).catch((err) =>
                 console.error(`joinStudy repeat(cron) schedule error [config ${sub.id}, project ${project._id}, participant ${req.body.id}]:`, err.message)
               );
