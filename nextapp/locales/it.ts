@@ -404,6 +404,7 @@ const it: DeepLoose<Messages> = {
     remindersHintPost:   'per le istruzioni di configurazione per ogni strumento di sondaggio.',
     remindersGetLabel:   'GET — reindirizzamento alla fine del sondaggio',
     remindersPostLabel:  'POST — webhook / lato server',
+    remindersQueryLabel: 'GET — reindirizzamento con parametro di query',
     secEvents:           'Design basato su eventi',
     toggleEvents:        'Abilita design basato su eventi',
     toggleEventsHint:    'Consenti ai partecipanti di avviare autonomamente una segnalazione dopo che si verifica un evento specifico. Un link permanente viene mostrato nell\'app dopo che si iscrivono allo studio.',

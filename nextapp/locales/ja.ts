@@ -387,6 +387,7 @@ const ja: DeepLoose<Messages> = {
     remindersHintPost:   "を参照して、調査ツールごとの設定手順を確認してください。",
     remindersGetLabel:   "GET — 調査終了時のリダイレクト",
     remindersPostLabel:  "POST — webhook / サーバーサイド",
+    remindersQueryLabel: "GET — クエリパラメーターでリダイレクト",
     secEvents:           "イベントベース設計",
     toggleEvents:        "イベントベース設計を有効化",
     toggleEventsHint:    "特定のイベントが発生した後、参加者が自律的にレポートを開始できるようにします。研究に参加した後、アプリに永続的なリンクが表示されます。",

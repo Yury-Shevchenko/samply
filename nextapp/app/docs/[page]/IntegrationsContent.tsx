@@ -90,7 +90,10 @@ export default function IntegrationsContent({ locale: _locale }: { locale: Local
           <strong>Register completion</strong> — redirect to Samply&apos;s completion endpoint{" "}
           <code>/studies/&lt;slug&gt;/done/&lt;message-id&gt;</code> at the end of the survey,
           which marks the send complete and cancels any pending{" "}
-          <a href="/docs/reminders">reminders</a>.
+          <a href="/docs/reminders">reminders</a>. If your tool can only append its own query
+          parameters to a fixed redirect URL, point it at{" "}
+          <code>/studies/&lt;slug&gt;/done?messageid=&lt;message-id&gt;</code> instead — Samply
+          accepts either form and ignores any extra parameters the tool adds.
         </li>
       </ol>
       <p>

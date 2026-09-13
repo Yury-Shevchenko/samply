@@ -81,7 +81,7 @@ export default fromStrings([
 
   "Abschlüsse werden nie erfasst",
   "Was passiert:",
-  "Samply weiß nur dann, dass eine Umfrage beendet wurde, wenn die Umfrage es mitteilt. Dafür braucht es zweierlei: `%MESSAGE_ID%` im Benachrichtigungs-Link und eine Weiterleitung am Ende Ihrer Umfrage zurück auf `/studies/<study-code>/done/<message-id>`, wobei die Message-ID mit der toolspezifischen Syntax zurückgegeben wird.",
+  "Samply weiß nur dann, dass eine Umfrage beendet wurde, wenn die Umfrage es mitteilt. Dafür braucht es zweierlei: `%MESSAGE_ID%` im Benachrichtigungs-Link und eine Weiterleitung am Ende Ihrer Umfrage zurück auf `/studies/<study-code>/done/<message-id>`, wobei die Message-ID mit der toolspezifischen Syntax zurückgegeben wird. Wenn Ihr Tool seine Parameter nur an eine feste Weiterleitungs-URL anhängen kann, verwenden Sie stattdessen `/studies/<study-code>/done?messageid=<message-id>` — Samply akzeptiert beide Formen.",
   "Was Sie sehen:",
   "Die Analytics-Seite warnt, wenn eine Studie Benachrichtigungen verschickt, aber überhaupt keine Abschlüsse erfasst hat. Dieser Hinweis erscheint während der Laufzeit, nicht danach.",
   "Ebenfalls wissenswert:",

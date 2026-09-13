@@ -404,6 +404,7 @@ const zh: DeepLoose<Messages> = {
     remindersHintPost:   '了解每种调查工具的设置说明。',
     remindersGetLabel:   'GET — 调查结束时重定向',
     remindersPostLabel:  'POST — Webhook / 服务器端',
+    remindersQueryLabel: 'GET — 使用查询参数重定向',
     secEvents:           '事件触发设计',
     toggleEvents:        '启用事件触发设计',
     toggleEventsHint:    '允许参与者在特定事件发生后自主发起报告。参与者加入研究后，应用中会显示永久链接。',

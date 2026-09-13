@@ -387,6 +387,7 @@ const es: DeepLoose<Messages> = {
     remindersHintPost:   "para instrucciones de configuración por herramienta de encuestas.",
     remindersGetLabel:   "GET — redirección al final de la encuesta",
     remindersPostLabel:  "POST — webhook / lado del servidor",
+    remindersQueryLabel: "GET — redirección con parámetro de consulta",
     secEvents:           "Diseño basado en eventos",
     toggleEvents:        "Activar diseño basado en eventos",
     toggleEventsHint:    "Permite a los participantes iniciar un reporte de forma autónoma después de que ocurra un evento específico. Se muestra un enlace permanente en la app después de que se unan al estudio.",

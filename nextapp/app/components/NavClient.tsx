@@ -258,7 +258,10 @@ export default function NavClient({
   const [menuOpen, setMenuOpen] = useState(false);
   const { t } = useT();
 
-  if (/^\/studies\/[^/]+\/done\//.test(path)) return null;
+  // Completion pages are shown to participants, not researchers, so the site
+  // nav is hidden. Both the canonical /done/<message-id> and the query-string
+  // form /done?messageid=… (which has nothing after "done" in the path).
+  if (/^\/studies\/[^/]+\/done(\/|$)/.test(path)) return null;
 
   const closeMenu = () => setMenuOpen(false);
 

@@ -387,6 +387,7 @@ const pl: DeepLoose<Messages> = {
     remindersHintPost:   "po instrukcje konfiguracji dla każdego narzędzia ankietowego.",
     remindersGetLabel:   "GET — przekierowanie na końcu ankiety",
     remindersPostLabel:  "POST — webhook / strona serwera",
+    remindersQueryLabel: "GET — przekierowanie z parametrem zapytania",
     secEvents:           "Projekt oparty na zdarzeniach",
     toggleEvents:        "Włącz projekt oparty na zdarzeniach",
     toggleEventsHint:    "Pozwala uczestnikom samodzielnie inicjować raport po wystąpieniu określonego zdarzenia. Stały link jest wyświetlany w aplikacji po dołączeniu do badania.",

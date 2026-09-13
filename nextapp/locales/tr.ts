@@ -387,6 +387,7 @@ const tr: DeepLoose<Messages> = {
     remindersHintPost:   "bölümüne bakın.",
     remindersGetLabel:   "GET — anket sonunda yönlendirme",
     remindersPostLabel:  "POST — webhook / sunucu tarafı",
+    remindersQueryLabel: "GET — sorgu parametresiyle yönlendirme",
     secEvents:           "Olay tabanlı tasarım",
     toggleEvents:        "Olay tabanlı tasarımı etkinleştir",
     toggleEventsHint:    "Belirli bir olay meydana geldikten sonra katılımcıların özerk olarak bir rapor başlatmasına olanak tanır. Çalışmaya katıldıktan sonra uygulamada kalıcı bir bağlantı görüntülenir.",

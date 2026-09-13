@@ -20,6 +20,7 @@ const { scheduleForUser } = require("../services/scheduleForUser");
 const { expandScheduleBetween } = require("../services/scheduleExpand");
 const { plainConfigs, appliesToJoiner, isGroupLevelConfig } = require("../services/notificationConfigs");
 const { substitutePlaceholders } = require("../lib/placeholders");
+const { messageIdFromParams } = require("../lib/completion");
 
 const MAX_PROJECT_PENDING = 50_000;
 
@@ -2474,9 +2475,21 @@ exports.registerCompletionWithGet = async (req, res) => {
 // given study + message id, 200 once completion is recorded. Idempotent: a
 // repeat POST for an already-completed send also returns 200.
 exports.registerCompletionWithPost = async (req, res) => {
+  // The id is a path segment on the canonical route; on the bare /done route it
+  // comes from the query string or the form body, which is the shape a relay
+  // built around a query-parameter tool produces.
+  const messageid =
+    req.params.messageid ||
+    messageIdFromParams(req.query) ||
+    messageIdFromParams(req.body);
+  if (!messageid) {
+    res.status(400).send();
+    return;
+  }
+
   const { project, result } = await registerCompletion({
     study: req.params.study,
-    messageid: req.params.messageid,
+    messageid,
   });
   if (!project || !result) {
     res.status(400).send();

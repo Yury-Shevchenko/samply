@@ -74,7 +74,7 @@ export default fromStrings([
 
   "I completamenti non vengono mai registrati",
   "Cosa succede:",
-  "Samply sa che un questionario è stato concluso solo se il questionario glielo dice. Servono due cose: `%MESSAGE_ID%` nel link della notifica e un reindirizzamento alla fine del questionario verso `/studies/<study-code>/done/<message-id>`, con l'id del messaggio restituito usando la sintassi propria del tuo strumento.",
+  "Samply sa che un questionario è stato concluso solo se il questionario glielo dice. Servono due cose: `%MESSAGE_ID%` nel link della notifica e un reindirizzamento alla fine del questionario verso `/studies/<study-code>/done/<message-id>`, con l'id del messaggio restituito usando la sintassi propria del tuo strumento. Se il tuo strumento può solo aggiungere i propri parametri a un URL di reindirizzamento fisso, usa invece `/studies/<study-code>/done?messageid=<message-id>` — Samply accetta entrambe le forme.",
   "Cosa vedi:",
   "la pagina delle analisi avvisa quando uno studio ha inviato notifiche ma non ha registrato alcun completamento. Quell'avviso compare durante la raccolta, non dopo.",
   "Da sapere inoltre:",

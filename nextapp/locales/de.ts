@@ -385,6 +385,7 @@ const de: DeepLoose<Messages> = {
     remindersHintPost:   "für Einrichtungsanweisungen pro Umfragetool.",
     remindersGetLabel:   "GET — Weiterleitung am Ende der Umfrage",
     remindersPostLabel:  "POST — Webhook / serverseitig",
+    remindersQueryLabel: "GET — Weiterleitung mit Query-Parameter",
     secEvents:           "Ereignisbasiertes Design",
     toggleEvents:        "Ereignisbasiertes Design aktivieren",
     toggleEventsHint:    "Teilnehmende können selbst einen Bericht starten, nachdem ein bestimmtes Ereignis eingetreten ist. Ein dauerhafter Link wird in der App angezeigt, nachdem sie der Studie beigetreten sind.",

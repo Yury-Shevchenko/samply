@@ -74,7 +74,7 @@ export default fromStrings([
 
   "As conclusões nunca são registadas",
   "O que acontece:",
-  "o Samply só sabe que um questionário terminou se o questionário lho disser. Isso exige duas coisas: `%MESSAGE_ID%` no link da notificação e um redirecionamento no final do seu questionário de volta para `/studies/<study-code>/done/<message-id>`, devolvendo o id da mensagem com a sintaxe própria da sua ferramenta.",
+  "o Samply só sabe que um questionário terminou se o questionário lho disser. Isso exige duas coisas: `%MESSAGE_ID%` no link da notificação e um redirecionamento no final do seu questionário de volta para `/studies/<study-code>/done/<message-id>`, devolvendo o id da mensagem com a sintaxe própria da sua ferramenta. Se a sua ferramenta só conseguir acrescentar os seus próprios parâmetros a uma URL de redirecionamento fixa, use em vez disso `/studies/<study-code>/done?messageid=<message-id>` — o Samply aceita as duas formas.",
   "O que vê:",
   "a página de análises avisa quando um estudo enviou notificações mas não registou qualquer conclusão. Esse aviso aparece durante a recolha, não depois.",
   "Também vale a pena saber:",

@@ -404,6 +404,7 @@ const ko: DeepLoose<Messages> = {
     remindersHintPost:   '에서 설문 도구별 설정 방법을 확인하세요.',
     remindersGetLabel:   'GET — 설문 종료 시 리디렉션',
     remindersPostLabel:  'POST — 웹훅 / 서버 측',
+    remindersQueryLabel: 'GET — 쿼리 매개변수로 리디렉션',
     secEvents:           '이벤트 기반 설계',
     toggleEvents:        '이벤트 기반 설계 활성화',
     toggleEventsHint:    '참가자가 특정 이벤트 발생 후 직접 보고를 시작할 수 있도록 합니다. 참가자가 연구에 가입하면 앱에 영구 링크가 표시됩니다.',

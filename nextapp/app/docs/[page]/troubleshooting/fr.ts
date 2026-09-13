@@ -74,7 +74,7 @@ export default fromStrings([
 
   "Les complétions ne sont jamais enregistrées",
   "Ce qui se passe :",
-  "Samply ne sait qu'un questionnaire est terminé que si le questionnaire le lui dit. Cela exige deux choses : `%MESSAGE_ID%` dans le lien de notification, et une redirection à la fin de votre questionnaire vers `/studies/<study-code>/done/<message-id>`, l'identifiant de message étant renvoyé avec la syntaxe propre à votre outil.",
+  "Samply ne sait qu'un questionnaire est terminé que si le questionnaire le lui dit. Cela exige deux choses : `%MESSAGE_ID%` dans le lien de notification, et une redirection à la fin de votre questionnaire vers `/studies/<study-code>/done/<message-id>`, l'identifiant de message étant renvoyé avec la syntaxe propre à votre outil. Si votre outil ne peut qu'ajouter ses propres paramètres à une URL de redirection fixe, utilisez plutôt `/studies/<study-code>/done?messageid=<message-id>` — Samply accepte les deux formes.",
   "Ce que vous voyez :",
   "la page d'analyse avertit lorsqu'une étude a envoyé des notifications sans enregistrer la moindre complétion. Cet avertissement apparaît pendant la collecte, pas après.",
   "À savoir également :",

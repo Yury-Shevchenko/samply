@@ -74,7 +74,7 @@ export default fromStrings([
 
   "Tamamlanmalar hiç kaydedilmiyor",
   "Ne oluyor:",
-  "Samply bir anketin bittiğini ancak anket kendisine söylerse bilir. Bunun için iki şey gerekir: bildirim bağlantısında `%MESSAGE_ID%` ve anketinizin sonunda `/studies/<study-code>/done/<message-id>` adresine geri yönlendirme; mesaj kimliği aracınızın kendi sözdizimiyle geri verilir.",
+  "Samply bir anketin bittiğini ancak anket kendisine söylerse bilir. Bunun için iki şey gerekir: bildirim bağlantısında `%MESSAGE_ID%` ve anketinizin sonunda `/studies/<study-code>/done/<message-id>` adresine geri yönlendirme; mesaj kimliği aracınızın kendi sözdizimiyle geri verilir. Aracınız kendi parametrelerini yalnızca sabit bir yönlendirme URL'sine ekleyebiliyorsa, bunun yerine `/studies/<study-code>/done?messageid=<message-id>` adresini kullanın — Samply her iki biçimi de kabul eder.",
   "Siz ne görürsünüz:",
   "analiz sayfası, bir çalışma bildirim gönderdiği hâlde hiç tamamlanma kaydetmediğinde uyarır. Bu uyarı toplama sırasında görünür, sonrasında değil.",
   "Ayrıca bilinmesi gereken:",

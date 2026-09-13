@@ -46,9 +46,15 @@ router.post(
 router.post("/save", catchErrors(resultController.saveIncrementalResults));
 
 // Survey-tool completion webhook (no auth — the message id is the shared
-// secret). The matching GET renders the Next.js confirmation page.
+// secret). The matching GET renders the Next.js confirmation page. The second
+// form takes the message id from the query string or body instead of the path,
+// for relays built around a tool that can only append its own variables.
 router.post(
   "/studies/:study/done/:messageid",
+  catchErrors(jobController.registerCompletionWithPost)
+);
+router.post(
+  "/studies/:study/done",
   catchErrors(jobController.registerCompletionWithPost)
 );
 

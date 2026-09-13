@@ -74,7 +74,7 @@ export default fromStrings([
 
   "完成情况从未被记录",
   "发生了什么：",
-  "只有问卷主动告知，Samply 才知道问卷已完成。这需要两样东西：通知链接中的 `%MESSAGE_ID%`，以及问卷结束时重定向回 `/studies/<study-code>/done/<message-id>`，其中消息 ID 使用您所用工具自身的语法回传。",
+  "只有问卷主动告知，Samply 才知道问卷已完成。这需要两样东西：通知链接中的 `%MESSAGE_ID%`，以及问卷结束时重定向回 `/studies/<study-code>/done/<message-id>`，其中消息 ID 使用您所用工具自身的语法回传。如果您的工具只能将自己的参数追加到固定的重定向 URL，请改用 `/studies/<study-code>/done?messageid=<message-id>`，Samply 接受两种形式。",
   "您会看到：",
   "当某项研究已发送通知却完全没有记录到任何完成时，分析页面会发出警告。该提示在数据收集期间出现，而不是结束之后。",
   "另外值得了解：",

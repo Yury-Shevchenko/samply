@@ -387,6 +387,7 @@ const ar: DeepLoose<Messages> = {
     remindersHintPost:   "للحصول على إرشادات التكوين لكل أداة استطلاع.",
     remindersGetLabel:   "GET — إعادة توجيه في نهاية الاستطلاع",
     remindersPostLabel:  "POST — webhook / جانب الخادم",
+    remindersQueryLabel: "GET — إعادة توجيه بمعامل استعلام",
     secEvents:           "التصميم القائم على الأحداث",
     toggleEvents:        "تفعيل التصميم القائم على الأحداث",
     toggleEventsHint:    "يسمح للمشاركين ببدء تقرير بشكل مستقل بعد وقوع حدث محدد. يُعرض رابط دائم في التطبيق بعد انضمامهم إلى الدراسة.",

@@ -74,7 +74,7 @@ export default fromStrings([
 
   "Voltooiingen worden nooit vastgelegd",
   "Wat er gebeurt:",
-  "Samply weet alleen dat een enquête is afgerond als de enquête dat meldt. Daarvoor zijn twee dingen nodig: `%MESSAGE_ID%` in de meldingslink en een doorverwijzing aan het einde van uw enquête terug naar `/studies/<study-code>/done/<message-id>`, waarbij de bericht-id met de eigen syntaxis van uw tool wordt teruggegeven.",
+  "Samply weet alleen dat een enquête is afgerond als de enquête dat meldt. Daarvoor zijn twee dingen nodig: `%MESSAGE_ID%` in de meldingslink en een doorverwijzing aan het einde van uw enquête terug naar `/studies/<study-code>/done/<message-id>`, waarbij de bericht-id met de eigen syntaxis van uw tool wordt teruggegeven. Als uw tool zijn parameters alleen aan een vaste omleidings-URL kan toevoegen, gebruik dan `/studies/<study-code>/done?messageid=<message-id>` — Samply accepteert beide vormen.",
   "Wat u ziet:",
   "de analysepagina waarschuwt wanneer een studie meldingen heeft verzonden maar in het geheel geen voltooiingen heeft vastgelegd. Die melding verschijnt tijdens de looptijd, niet erna.",
   "Ook goed om te weten:",

@@ -959,6 +959,14 @@ export default function SettingsClient({
           copyLabel={t("studySettings.copy")}
           copiedLabel={t("studySettings.copied")}
         />
+        {/* For tools whose end-of-survey redirect takes only a static URL and
+            appends the captured variables itself (SurveyMonkey, Nettskjema). */}
+        <CopyableUrl
+          label={t("studySettings.remindersQueryLabel")}
+          url={`${baseUrl}/studies/${project.slug}/done?messageid=%MESSAGE_ID%`}
+          copyLabel={t("studySettings.copy")}
+          copiedLabel={t("studySettings.copied")}
+        />
         <CopyableUrl
           label={t("studySettings.remindersPostLabel")}
           url={`${baseUrl}/studies/${project.slug}/done/:messageid`}

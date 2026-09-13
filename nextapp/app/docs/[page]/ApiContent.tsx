@@ -238,6 +238,8 @@ function ApiContentZh() {
       <EndpointGroup title='完成——无需身份验证'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='注册完成并显示确认页面（用作问卷结束重定向）。' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='静默注册完成（用作来自问卷工具的 webhook）。' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='同上，但 ID 放在查询字符串中——适用于将参数追加到静态重定向 URL 的工具。' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='同上，作为 webhook，ID 放在查询字符串或表单正文中。' />
       </EndpointGroup>
 
       <dl>
@@ -247,6 +249,12 @@ function ApiContentZh() {
         <dd>
           来自 <Code>%MESSAGE_ID%</Code> 占位符的消息 ID，通过您的问卷 URL 传递到问卷结束重定向或 webhook。
           完整设置演练请参阅 <a href='/docs/reminders'>提醒</a>。
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          上述路径形式的替代方案，适用于问卷结束重定向只接受静态 URL、并自行追加所捕获变量的
+          问卷工具（SurveyMonkey、Nettskjema）。Samply 也接受 <Code>message_id</Code>、{' '}
+          <Code>msgid</Code> 和 <Code>msg</Code>，不区分大小写，并忽略该工具追加的其他任何参数。
         </dd>
       </dl>
 
@@ -501,6 +509,8 @@ function ApiContentEn() {
       <EndpointGroup title='Completion — no auth required'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Register completion and show a confirmation page (use as end-of-survey redirect).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Register completion silently (use as a webhook from your survey tool).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='Same, with the id in the query string — for tools that append parameters to a static redirect URL.' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='Same as a webhook, with the id in the query string or form body.' />
       </EndpointGroup>
 
       <dl>
@@ -511,6 +521,14 @@ function ApiContentEn() {
           The message ID from the <Code>%MESSAGE_ID%</Code> placeholder, passed through
           your survey URL to the end-of-survey redirect or webhook. See{' '}
           <a href='/docs/reminders'>Reminders</a> for the full setup walkthrough.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          An alternative to the path form above, for survey tools whose end-of-survey
+          redirect takes only a static URL and appends the captured variables themselves
+          (SurveyMonkey, Nettskjema). Samply also accepts <Code>message_id</Code>,{' '}
+          <Code>msgid</Code> and <Code>msg</Code>, matched case-insensitively, and ignores
+          any other parameters the tool adds.
         </dd>
       </dl>
 
@@ -772,6 +790,8 @@ function ApiContentRu() {
       <EndpointGroup title='Завершение — аутентификация не требуется'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Зарегистрировать завершение и показать страницу подтверждения (используйте как перенаправление по окончании опроса).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Зарегистрировать завершение без вывода страницы (используйте как вебхук из вашего инструмента для опросов).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='То же, но с идентификатором в строке запроса — для инструментов, которые добавляют параметры к статическому URL перенаправления.' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='То же в виде вебхука, с идентификатором в строке запроса или в теле формы.' />
       </EndpointGroup>
 
       <dl>
@@ -782,6 +802,14 @@ function ApiContentRu() {
           Идентификатор сообщения из заполнителя <Code>%MESSAGE_ID%</Code>, переданный
           через URL опроса в перенаправление по завершении или вебхук. Полное руководство
           по настройке см. в разделе <a href='/docs/reminders'>Напоминания</a>.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Альтернатива форме с путём выше — для инструментов опроса, перенаправление которых
+          по окончании опроса принимает только статический URL и само добавляет захваченные
+          переменные (SurveyMonkey, Nettskjema). Samply также принимает{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> и <Code>msg</Code> без учёта регистра и
+          игнорирует любые другие параметры, добавленные инструментом.
         </dd>
       </dl>
 
@@ -1053,6 +1081,8 @@ function ApiContentNl() {
       <EndpointGroup title='Voltooiing — geen authenticatie vereist'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Voltooiing registreren en een bevestigingspagina tonen (gebruik als eindomleidingsadres van de enquête).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Voltooiing stilzwijgend registreren (gebruik als webhook van uw enquêtetool).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='Hetzelfde, met de id in de query-string — voor tools die parameters aan een statische omleidings-URL toevoegen.' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='Hetzelfde als webhook, met de id in de query-string of in de formulier-body.' />
       </EndpointGroup>
 
       <dl>
@@ -1064,6 +1094,14 @@ function ApiContentNl() {
           uw enquête-URL naar de eindomleidingsadres of webhook. Zie{' '}
           <a href='/docs/reminders'>Herinneringen</a> voor de volledige
           installatiehandleiding.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Een alternatief voor de padvorm hierboven, voor enquêtetools waarvan de omleiding
+          aan het einde van de enquête alleen een statische URL accepteert en die de
+          vastgelegde variabelen zelf toevoegen (SurveyMonkey, Nettskjema). Samply accepteert
+          ook <Code>message_id</Code>, <Code>msgid</Code> en <Code>msg</Code>, ongeacht
+          hoofdletters, en negeert alle andere parameters die de tool toevoegt.
         </dd>
       </dl>
 
@@ -1331,6 +1369,8 @@ function ApiContentDe() {
       <EndpointGroup title='Abschluss — keine Authentifizierung erforderlich'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Abschluss registrieren und eine Bestätigungsseite anzeigen (als End-of-Survey-Weiterleitung verwenden).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Abschluss stillschweigend registrieren (als webhook vom Umfrage-Tool verwenden).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='Dasselbe, mit der ID im Query-String — für Tools, die Parameter an eine statische Weiterleitungs-URL anhängen.' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='Dasselbe als webhook, mit der ID im Query-String oder im Formular-Body.' />
       </EndpointGroup>
 
       <dl>
@@ -1342,6 +1382,14 @@ function ApiContentDe() {
           Umfrage-URL zur End-of-Survey-Weiterleitung oder zum webhook weitergegeben wird.
           Siehe <a href='/docs/reminders'>Erinnerungen</a> für die vollständige
           Einrichtungsanleitung.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Eine Alternative zur Pfadform oben, für Umfrage-Tools, deren
+          End-of-Survey-Weiterleitung nur eine statische URL akzeptiert und die erfassten
+          Variablen selbst anhängt (SurveyMonkey, Nettskjema). Samply akzeptiert auch{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> und <Code>msg</Code>, unabhängig von
+          Groß- und Kleinschreibung, und ignoriert alle weiteren Parameter, die das Tool anhängt.
         </dd>
       </dl>
 
@@ -1598,6 +1646,8 @@ function ApiContentKo() {
       <EndpointGroup title='완료 — 인증 불필요'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='완료를 등록하고 확인 페이지를 표시합니다 (설문 종료 리디렉션으로 사용).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='완료를 자동으로 등록합니다 (설문 도구의 webhook으로 사용).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='동일하지만 ID를 쿼리 문자열로 전달합니다 (정적 리디렉션 URL에 매개변수를 덧붙이는 도구용).' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='동일한 webhook 방식으로, ID를 쿼리 문자열 또는 폼 본문으로 전달합니다.' />
       </EndpointGroup>
 
       <dl>
@@ -1608,6 +1658,13 @@ function ApiContentKo() {
           설문 URL을 통해 설문 종료 리디렉션 또는 webhook으로 전달되는{' '}
           <Code>%MESSAGE_ID%</Code> 자리 표시자의 메시지 ID. 전체 설정 안내는{' '}
           <a href='/docs/reminders'>알림</a>을 참조하십시오.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          위 경로 형식의 대안으로, 설문 종료 리디렉션에 정적 URL만 지정할 수 있고 수집한 변수를
+          스스로 덧붙이는 설문 도구(SurveyMonkey, Nettskjema)를 위한 것입니다. Samply는{' '}
+          <Code>message_id</Code>, <Code>msgid</Code>, <Code>msg</Code>도 대소문자를 구분하지 않고
+          받아들이며, 도구가 덧붙이는 그 밖의 매개변수는 무시합니다.
         </dd>
       </dl>
 
@@ -1867,6 +1924,8 @@ function ApiContentIt() {
       <EndpointGroup title='Completamento — nessuna autenticazione richiesta'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Registra il completamento e mostra una pagina di conferma (da usare come reindirizzamento di fine sondaggio).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Registra il completamento in modo silenzioso (da usare come webhook dallo strumento di indagine).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc="Lo stesso, con l'ID nella stringa di query — per strumenti che aggiungono i parametri a un URL di reindirizzamento statico." />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc="Lo stesso come webhook, con l'ID nella stringa di query o nel corpo del modulo." />
       </EndpointGroup>
 
       <dl>
@@ -1877,6 +1936,14 @@ function ApiContentIt() {
           L&apos;ID messaggio dal segnaposto <Code>%MESSAGE_ID%</Code>, passato tramite l&apos;URL del
           sondaggio al reindirizzamento di fine sondaggio o al webhook. Vedere{' '}
           <a href='/docs/reminders'>Promemoria</a> per la guida completa alla configurazione.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Un&apos;alternativa alla forma con percorso sopra, per gli strumenti di indagine il
+          cui reindirizzamento di fine sondaggio accetta solo un URL statico e che aggiungono
+          da sé le variabili raccolte (SurveyMonkey, Nettskjema). Samply accetta anche{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> e <Code>msg</Code>, senza distinzione
+          tra maiuscole e minuscole, e ignora qualsiasi altro parametro aggiunto dallo strumento.
         </dd>
       </dl>
 
@@ -2139,6 +2206,8 @@ function ApiContentFr() {
       <EndpointGroup title='Complétion — aucune authentification requise'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Enregistrer la complétion et afficher une page de confirmation (à utiliser comme redirection de fin de sondage).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Enregistrer la complétion silencieusement (à utiliser comme webhook depuis votre outil de sondage).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc="Identique, avec l'identifiant dans la chaîne de requête — pour les outils qui ajoutent les paramètres à une URL de redirection statique." />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc="Identique en webhook, avec l'identifiant dans la chaîne de requête ou dans le corps du formulaire." />
       </EndpointGroup>
 
       <dl>
@@ -2149,6 +2218,14 @@ function ApiContentFr() {
           L'identifiant de message provenant de la variable de substitution <Code>%MESSAGE_ID%</Code>,
           transmis via l'URL de votre sondage à la redirection de fin de sondage ou au webhook. Voir{' '}
           <a href='/docs/reminders'>Rappels</a> pour le guide de configuration complet.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Une alternative à la forme avec chemin ci-dessus, pour les outils de sondage dont la
+          redirection de fin de sondage n&apos;accepte qu&apos;une URL statique et qui ajoutent
+          eux-mêmes les variables capturées (SurveyMonkey, Nettskjema). Samply accepte également{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> et <Code>msg</Code>, sans distinction de
+          casse, et ignore tout autre paramètre ajouté par l&apos;outil.
         </dd>
       </dl>
 
@@ -2411,6 +2488,8 @@ function ApiContentEs() {
       <EndpointGroup title='Finalización — sin autenticación requerida'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Registrar la finalización y mostrar una página de confirmación (úselo como redirección al final de la encuesta).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Registrar la finalización silenciosamente (úselo como webhook desde su herramienta de encuesta).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='Lo mismo, con el identificador en la cadena de consulta — para herramientas que añaden los parámetros a una URL de redirección estática.' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='Lo mismo como webhook, con el identificador en la cadena de consulta o en el cuerpo del formulario.' />
       </EndpointGroup>
 
       <dl>
@@ -2421,6 +2500,14 @@ function ApiContentEs() {
           El identificador de mensaje proveniente del marcador de posición <Code>%MESSAGE_ID%</Code>,
           transmitido a través de la URL de su encuesta a la redirección de fin de encuesta o al webhook. Consulte{' '}
           <a href='/docs/reminders'>Recordatorios</a> para ver la guía de configuración completa.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Una alternativa a la forma con ruta anterior, para herramientas de encuesta cuya
+          redirección de fin de encuesta solo acepta una URL estática y que añaden ellas mismas
+          las variables capturadas (SurveyMonkey, Nettskjema). Samply también acepta{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> y <Code>msg</Code>, sin distinguir
+          mayúsculas de minúsculas, e ignora cualquier otro parámetro que añada la herramienta.
         </dd>
       </dl>
 
@@ -2682,6 +2769,8 @@ function ApiContentPt() {
       <EndpointGroup title='Conclusão — sem autenticação necessária'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='Registrar a conclusão e exibir uma página de confirmação (use como redirecionamento ao final da pesquisa).' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='Registrar a conclusão silenciosamente (use como webhook da sua ferramenta de pesquisa).' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='O mesmo, com o identificador na string de consulta — para ferramentas que acrescentam os parâmetros a uma URL de redirecionamento estática.' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='O mesmo como webhook, com o identificador na string de consulta ou no corpo do formulário.' />
       </EndpointGroup>
 
       <dl>
@@ -2692,6 +2781,14 @@ function ApiContentPt() {
           O identificador de mensagem proveniente do marcador de posição <Code>%MESSAGE_ID%</Code>,
           transmitido pela URL da sua pesquisa ao redirecionamento de fim de pesquisa ou ao webhook. Consulte{' '}
           <a href='/docs/reminders'>Lembretes</a> para ver o guia de configuração completo.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Uma alternativa à forma com caminho acima, para ferramentas de pesquisa cujo
+          redirecionamento de fim de pesquisa aceita apenas uma URL estática e que acrescentam
+          elas mesmas as variáveis capturadas (SurveyMonkey, Nettskjema). O Samply também aceita{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> e <Code>msg</Code>, sem distinguir
+          maiúsculas de minúsculas, e ignora quaisquer outros parâmetros que a ferramenta adicione.
         </dd>
       </dl>
 
@@ -2953,6 +3050,8 @@ function ApiContentJa() {
       <EndpointGroup title='完了 — 認証不要'>
         <Method verb='GET'  path='/studies/:code/done/:messageid' desc='完了を記録し、確認ページを表示します（調査の最後のリダイレクトとして使用）。' />
         <Method verb='POST' path='/studies/:code/done/:messageid' desc='完了をサイレントに記録します（調査ツールからのWebhookとして使用）。' />
+        <Method verb='GET'  path='/studies/:code/done?messageid=:messageid' desc='同じ処理で、識別子をクエリ文字列に入れます（静的なリダイレクト URL にパラメーターを追加するツール向け）。' />
+        <Method verb='POST' path='/studies/:code/done?messageid=:messageid' desc='同じ処理を webhook として、識別子をクエリ文字列またはフォーム本文に入れます。' />
       </EndpointGroup>
 
       <dl>
@@ -2963,6 +3062,13 @@ function ApiContentJa() {
           <Code>%MESSAGE_ID%</Code> プレースホルダーから取得したメッセージ識別子で、
           調査URLによって調査終了のリダイレクトまたはWebhookに渡されます。完全な設定ガイドについては{' '}
           <a href='/docs/reminders'>リマインダー</a> を参照してください。
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          上記のパス形式の代替で、調査終了のリダイレクトに静的な URL しか指定できず、取得した
+          変数を自分で追加する調査ツール（SurveyMonkey、Nettskjema）向けです。Samply は{' '}
+          <Code>message_id</Code>、<Code>msgid</Code>、<Code>msg</Code> も大文字小文字を区別せずに
+          受け付け、ツールが追加するその他のパラメーターは無視します。
         </dd>
       </dl>
 
@@ -3223,6 +3329,8 @@ function ApiContentTr() {
       <EndpointGroup title="Tamamlanma — kimlik doğrulama gerekmez">
         <Method verb="GET"  path="/studies/:code/done/:messageid" desc="Tamamlanmayı kaydeder ve bir onay sayfası gösterir (anketin son yönlendirmesi olarak kullanılır)." />
         <Method verb="POST" path="/studies/:code/done/:messageid" desc="Tamamlanmayı sessizce kaydeder (anket aracından bir webhook olarak kullanılır)." />
+        <Method verb="GET"  path="/studies/:code/done?messageid=:messageid" desc="Aynısı, kimlik sorgu dizesinde — parametreleri statik bir yönlendirme URL'sine ekleyen araçlar için." />
+        <Method verb="POST" path="/studies/:code/done?messageid=:messageid" desc="Aynısı webhook olarak, kimlik sorgu dizesinde veya form gövdesinde." />
       </EndpointGroup>
 
       <dl>
@@ -3234,6 +3342,14 @@ function ApiContentTr() {
           anket sonu yönlendirmesine veya webhook'a iletilen mesaj tanımlayıcısı. Tam
           yapılandırma kılavuzu için{' '}
           <a href="/docs/reminders">Hatırlatıcılar</a> sayfasına bakın.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Yukarıdaki yol biçimine bir alternatif; anket sonu yönlendirmesi yalnızca statik bir
+          URL kabul eden ve yakaladığı değişkenleri kendisi ekleyen anket araçları (SurveyMonkey,
+          Nettskjema) için. Samply <Code>message_id</Code>, <Code>msgid</Code> ve{' '}
+          <Code>msg</Code> adlarını da büyük/küçük harf ayrımı yapmadan kabul eder ve aracın
+          eklediği diğer parametreleri yok sayar.
         </dd>
       </dl>
 
@@ -3500,6 +3616,8 @@ function ApiContentPl() {
       <EndpointGroup title="Ukończenie — uwierzytelnianie nie jest wymagane">
         <Method verb="GET"  path="/studies/:code/done/:messageid" desc="Rejestruje ukończenie i wyświetla stronę potwierdzenia (używane jako końcowe przekierowanie ankiety)." />
         <Method verb="POST" path="/studies/:code/done/:messageid" desc="Rejestruje ukończenie po cichu (używane jako webhook z narzędzia ankietowego)." />
+        <Method verb="GET"  path="/studies/:code/done?messageid=:messageid" desc="To samo, z identyfikatorem w ciągu zapytania — dla narzędzi, które dodają parametry do statycznego adresu URL przekierowania." />
+        <Method verb="POST" path="/studies/:code/done?messageid=:messageid" desc="To samo jako webhook, z identyfikatorem w ciągu zapytania lub w treści formularza." />
       </EndpointGroup>
 
       <dl>
@@ -3511,6 +3629,14 @@ function ApiContentPl() {
           i przekazywany przez URL ankiety do przekierowania końca ankiety lub webhooka.
           Pełną instrukcję konfiguracji znajdziesz na stronie{' '}
           <a href="/docs/reminders">Przypomnienia</a>.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          Alternatywa dla formy ze ścieżką powyżej, dla narzędzi ankietowych, których
+          przekierowanie na końcu ankiety przyjmuje tylko statyczny adres URL i które same
+          dodają przechwycone zmienne (SurveyMonkey, Nettskjema). Samply przyjmuje także{' '}
+          <Code>message_id</Code>, <Code>msgid</Code> i <Code>msg</Code>, bez rozróżniania
+          wielkości liter, i ignoruje wszelkie inne parametry dodane przez narzędzie.
         </dd>
       </dl>
 
@@ -3773,6 +3899,8 @@ function ApiContentAr() {
       <EndpointGroup title="الإكمال — لا تلزم المصادقة">
         <Method verb="GET"  path="/studies/:code/done/:messageid" desc="يسجّل الإكمال ويعرض صفحة تأكيد (يُستخدم كإعادة توجيه في نهاية الاستطلاع)." />
         <Method verb="POST" path="/studies/:code/done/:messageid" desc="يسجّل الإكمال بصمت (يُستخدم كـ webhook من أداة الاستطلاع)." />
+        <Method verb="GET"  path="/studies/:code/done?messageid=:messageid" desc="نفس الشيء، مع المعرّف في سلسلة الاستعلام — للأدوات التي تُلحق المعاملات برابط إعادة توجيه ثابت." />
+        <Method verb="POST" path="/studies/:code/done?messageid=:messageid" desc="نفس الشيء كـ webhook، مع المعرّف في سلسلة الاستعلام أو في متن النموذج." />
       </EndpointGroup>
 
       <dl>
@@ -3784,6 +3912,13 @@ function ApiContentAr() {
           والمُمرَّر عبر رابط الاستطلاع إلى إعادة توجيه نهاية الاستطلاع أو الـ webhook.
           راجع التعليمات الكاملة للإعداد في صفحة{' '}
           <a href="/docs/reminders">التذكيرات</a>.
+        </dd>
+        <dt><Code>?messageid=</Code></dt>
+        <dd>
+          بديل لصيغة المسار أعلاه، وذلك لأدوات الاستطلاع التي لا تقبل إعادة توجيهها في نهاية
+          الاستطلاع سوى رابط ثابت وتُلحق المتغيّرات الملتقطة بنفسها (SurveyMonkey، Nettskjema).
+          يقبل Samply أيضًا <Code>message_id</Code> و<Code>msgid</Code> و<Code>msg</Code> دون
+          تمييز بين الأحرف الكبيرة والصغيرة، ويتجاهل أي معاملات أخرى تُضيفها الأداة.
         </dd>
       </dl>
 

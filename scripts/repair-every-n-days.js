@@ -227,7 +227,8 @@ async function main() {
     console.error("No database URI. Set DATABASE in the environment or pass --uri=...");
     process.exit(2);
   }
-  await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  // autoIndex off: a one-off script has no business (re)building prod indexes.
+  await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false });
   const db = mongoose.connection.db;
   console.log(`database ${db.databaseName} (from ${arg("uri") ? "--uri" : envSource})${APPLY ? "" : "  [DRY RUN]"}\n`);
 

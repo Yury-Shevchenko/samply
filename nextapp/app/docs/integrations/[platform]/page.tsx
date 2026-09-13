@@ -114,7 +114,9 @@ export default async function IntegrationPlatformPage({ params }: { params: Prom
                 authentication (the message id in the path is the shared secret). Samply replies{" "}
                 <Code>200</Code> on success or <Code>400</Code> if the id matches no response, and it records
                 the completion and cancels that send&apos;s pending reminders exactly like the redirect —
-                just without redirecting. Whether {entry.name} can issue that POST itself varies:
+                just without redirecting. The id may also be sent as a query parameter or form field
+                (<Code>{"/studies/<study-code>/done?messageid=<message-id>"}</Code>), which is usually
+                easier for a relay to assemble. Whether {entry.name} can issue that POST itself varies:
               </p>
               {entry.postMechanism && (
                 <Callout

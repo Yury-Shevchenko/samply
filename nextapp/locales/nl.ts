@@ -400,6 +400,7 @@ const nl: DeepLoose<Messages> = {
     remindersHintPost:   "voor installatie-instructies per enquêtetool.",
     remindersGetLabel:   "GET — omleiding aan einde van enquête",
     remindersPostLabel:  "POST — webhook / server-side",
+    remindersQueryLabel: "GET — omleiding met query-parameter",
     secEvents:           "Gebeurtenisgestuurd ontwerp",
     toggleEvents:        "Gebeurtenisgestuurd ontwerp inschakelen",
     toggleEventsHint:    "Laat deelnemers zelf een rapport starten nadat een specifieke gebeurtenis heeft plaatsgevonden. Een permanente link wordt in de app getoond nadat ze de studie hebben gevonden.",

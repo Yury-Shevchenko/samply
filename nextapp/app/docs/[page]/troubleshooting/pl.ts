@@ -74,7 +74,7 @@ export default fromStrings([
 
   "Ukończenia nigdy nie są rejestrowane",
   "Co się dzieje:",
-  "Samply wie, że ankieta została ukończona, tylko jeśli ankieta mu to powie. Wymaga to dwóch rzeczy: `%MESSAGE_ID%` w linku powiadomienia oraz przekierowania na końcu ankiety z powrotem na `/studies/<study-code>/done/<message-id>`, przy czym identyfikator wiadomości zwracany jest składnią właściwą dla twojego narzędzia.",
+  "Samply wie, że ankieta została ukończona, tylko jeśli ankieta mu to powie. Wymaga to dwóch rzeczy: `%MESSAGE_ID%` w linku powiadomienia oraz przekierowania na końcu ankiety z powrotem na `/studies/<study-code>/done/<message-id>`, przy czym identyfikator wiadomości zwracany jest składnią właściwą dla twojego narzędzia. Jeśli Twoje narzędzie potrafi tylko dodawać własne parametry do stałego adresu URL przekierowania, użyj zamiast tego `/studies/<study-code>/done?messageid=<message-id>` — Samply przyjmuje obie formy.",
   "Co widzisz:",
   "strona analityki ostrzega, gdy badanie wysłało powiadomienia, ale nie zarejestrowało żadnego ukończenia. To ostrzeżenie pojawia się w trakcie zbierania danych, a nie po nim.",
   "Warto też wiedzieć:",

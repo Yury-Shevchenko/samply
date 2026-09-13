@@ -548,6 +548,7 @@ const en = {
     remindersHintPost:   "for setup instructions per survey tool.",
     remindersGetLabel:   "GET — redirect at end of survey",
     remindersPostLabel:  "POST — webhook / server-side",
+    remindersQueryLabel: "GET — redirect with query parameter",
 
     /* ── Section 3: Event-contingent design ── */
     secEvents:           "Event-contingent design",
@@ -1102,9 +1103,11 @@ const en = {
   },
 
   // ─── Study completion page ───────────────────────────────────────────────────
-  // @page    /studies/[slug]/done/[messageId]
+  // @page    /studies/[slug]/done/[messageId] and /studies/[slug]/done
   // @context Shown to participants after completing a survey tap. May show an error
   //          if the link is invalid or already recorded. Keep copy brief and clear.
+  //          responseNotFound/canClose are also shown when a survey tool redirects
+  //          back without a usable message id in its query string.
   studyDone: {
     platformLabel:          "Samply Research Platform",
     linkInvalid:            "Link not valid.",

@@ -88,11 +88,22 @@ function isExpressPath(url, method, headers) {
   // handling it already has.
   if (p === "/.well-known/apple-app-site-association") return true;
   if (p === "/.well-known/assetlinks.json") return true;
-  // Survey-tool completion webhook: POST /studies/:slug/done/:messageid. The
-  // matching GET renders the Next.js confirmation page, so only the POST is
-  // handed to Express. External webhooks never carry a next-action header, and
-  // the Next.js done page has no Server Action, so no collision to guard.
-  if (method === "POST" && /^\/studies\/[^/]+\/done\/[^/]+\/?$/.test(p)) return true;
+  // Survey-tool completion webhook: POST /studies/:slug/done/:messageid, or
+  // POST /studies/:slug/done with the id as a query parameter for relays built
+  // around a tool that can only append its variables to a static URL. The
+  // matching GETs render the Next.js confirmation pages, so only POSTs are
+  // handed to Express.
+  //
+  // The bare /done form is also a Next.js page path, so a Server Action added
+  // there in future would POST to the same URL. External webhooks never carry a
+  // next-action header, so excluding those keeps that from colliding.
+  if (
+    method === "POST" &&
+    !(headers && headers["next-action"]) &&
+    /^\/studies\/[^/]+\/done(\/[^/]+)?\/?$/.test(p)
+  ) {
+    return true;
+  }
   // Auth/account backends the Next.js app POSTs to server-side (register,
   // password reset, email confirmation). The matching GET pages (reset/confirm
   // forms) live in Next.js, so only POSTs are routed to Express here.

@@ -152,7 +152,7 @@ const en: TroubleshootingPage = {
           kind: "card",
           title: "Completions are never recorded",
           paras: [
-            { label: "What happens:", text: "Samply only knows a survey was finished if the survey tells it. That requires two things: `%MESSAGE_ID%` in the notification link, and a redirect at the end of your survey back to `/studies/<study-code>/done/<message-id>`, with the message id echoed using your tool's own syntax." },
+            { label: "What happens:", text: "Samply only knows a survey was finished if the survey tells it. That requires two things: `%MESSAGE_ID%` in the notification link, and a redirect at the end of your survey back to `/studies/<study-code>/done/<message-id>`, with the message id echoed using your tool's own syntax. If your tool can only append its own query parameters to a fixed redirect URL, point it at `/studies/<study-code>/done?messageid=<message-id>` instead — Samply accepts either form." },
             { label: "What you see:", text: "the analytics page warns when a study has sent notifications but recorded no completions at all. That banner appears during the run, not after it." },
             { label: "Also worth knowing:", text: "some tools cannot redirect to an external URL at all, and some only on paid plans. The [compatibility table](/docs/integrations) lists which." },
           ],

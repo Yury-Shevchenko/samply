@@ -74,7 +74,7 @@ export default fromStrings([
 
   "Las finalizaciones nunca se registran",
   "Qué ocurre:",
-  "Samply solo sabe que una encuesta ha terminado si la encuesta se lo dice. Eso requiere dos cosas: `%MESSAGE_ID%` en el enlace de la notificación y una redirección al final de su encuesta de vuelta a `/studies/<study-code>/done/<message-id>`, devolviendo el id del mensaje con la sintaxis propia de su herramienta.",
+  "Samply solo sabe que una encuesta ha terminado si la encuesta se lo dice. Eso requiere dos cosas: `%MESSAGE_ID%` en el enlace de la notificación y una redirección al final de su encuesta de vuelta a `/studies/<study-code>/done/<message-id>`, devolviendo el id del mensaje con la sintaxis propia de su herramienta. Si tu herramienta solo puede añadir sus propios parámetros a una URL de redirección fija, usa en su lugar `/studies/<study-code>/done?messageid=<message-id>` — Samply acepta ambas formas.",
   "Qué ve usted:",
   "la página de analíticas avisa cuando un estudio ha enviado notificaciones pero no ha registrado ninguna finalización. Ese aviso aparece durante la recogida, no después.",
   "También conviene saber:",
