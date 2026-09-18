@@ -35,7 +35,20 @@ const ANDROID_PACKAGE = process.env.ANDROID_PACKAGE || "org.js.samply";
 // Paths the app should claim. Everything else on the domain stays in the
 // browser — notably the docs and the researcher dashboard, which have no
 // in-app equivalent.
-const CLAIMED_PATHS = ["/studies/*"];
+//
+// The survey-completion endpoint (/studies/<code>/done/<message-id>, and the
+// /done?messageid=… alias) must NOT be claimed, even though it sits under
+// /studies. Survey tools redirect participants there at the end of a survey; a
+// claimed link opens the app on its home screen instead of loading the page, so
+// the server never sees the request, the response is never marked completed and
+// reminders keep firing. Entries are matched in order and the first match wins,
+// so the exclusion has to come before the broad claim. Query strings are not
+// part of the matched path, which is why the alias is covered too.
+//
+// This only reaches iOS. Android's claim is the intent filter compiled into the
+// app (App/app.json), which the app handles by registering the completion
+// itself — see App/utils/completionLink.js.
+const CLAIMED_PATHS = ["NOT /studies/*/done*", "/studies/*"];
 
 router.get("/.well-known/apple-app-site-association", (req, res) => {
   const teamId = process.env.IOS_TEAM_ID;
