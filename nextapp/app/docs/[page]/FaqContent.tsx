@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Locale } from "@/lib/i18n";
 import { renderInline } from "../_shared/renderInline";
 import { getFaq, type Block } from "./faq/index.ts";
@@ -68,7 +69,7 @@ export default function FaqContent({ locale }: { locale: Locale }) {
       {page.intro.map((text, i) => <p key={`intro-${i}`}>{renderInline(text, `intro-${i}`)}</p>)}
 
       <section id="who-to-ask" style={{ scrollMarginTop: "8rem" }}>
-        <h2>{routing.heading}</h2>
+        <h2 style={{ marginTop: "3.6rem" }}>{routing.heading}</h2>
         <div
           style={{
             display: "grid", gap: "1.6rem", margin: "1.6rem 0",
@@ -83,16 +84,25 @@ export default function FaqContent({ locale }: { locale: Locale }) {
 
       {page.sections.map((section, s) => (
         <section key={`s-${s}`}>
-          <h2>{section.heading}</h2>
-          {section.questions.map((question) => (
-            <div key={question.id} id={question.id} style={{ scrollMarginTop: "8rem" }}>
-              <h3>
+          <h2 style={{ marginTop: "3.6rem" }}>{section.heading}</h2>
+          {/* No wrapper per question: the h3 must not be a first child, or the
+              docs-prose `h3:first-child` rule strips its spacing and divider. */}
+          {section.questions.map((question, q) => (
+            <Fragment key={question.id}>
+              <h3
+                id={question.id}
+                // The first question sits right under its section heading, so
+                // it gets no divider; the rest are separated like other pages.
+                style={q === 0
+                  ? { scrollMarginTop: "8rem", marginTop: "1.6rem", paddingTop: 0, borderTop: "none" }
+                  : { scrollMarginTop: "8rem" }}
+              >
                 <a href={`#${question.id}`} style={{ color: "inherit", textDecoration: "none" }}>
                   {question.q}
                 </a>
               </h3>
               {question.blocks.map((block, b) => renderBlock(block, `${question.id}-${b}`))}
-            </div>
+            </Fragment>
           ))}
         </section>
       ))}
