@@ -10,12 +10,13 @@ const NAV_GROUPS: { sectionKey: string; pages: string[] }[] = [
   { sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders", "integrations"] },
   { sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream"] },
   { sectionKey: "reference",             pages: ["glossary", "api", "changelog", "about"] },
+  { sectionKey: "forParticipants",       pages: ["faq"] },
 ];
 
 const PAGE_KEYS = [
   "home", "first-study", "invite", "types", "form", "personal", "queue",
   "placeholders", "groups", "reminders", "integrations", "event-contingent", "geofencing",
-  "stream", "glossary", "api", "changelog", "about",
+  "stream", "glossary", "api", "changelog", "about", "faq",
 ];
 
 export default function DocsMobileNav({ current }: { current: string }) {

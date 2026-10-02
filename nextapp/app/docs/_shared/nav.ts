@@ -13,6 +13,7 @@ export const SIDEBAR_PAGES = [
   "analytics",
   "troubleshooting",
   "glossary", "api", "changelog", "about", "collaborate",
+  "faq",
 ] as const;
 export const ALL_PAGES = [...SIDEBAR_PAGES, "legalnotice", "policy", "terms", "irb", "dpa"] as const;
 export type DocsPage = (typeof ALL_PAGES)[number];
@@ -39,6 +40,7 @@ export const NAV_LABELS: Record<DocsPage, string> = {
   changelog:           "Changelog",
   about:               "About Samply",
   collaborate:         "Collaborate",
+  faq:                 "Participant FAQ",
   legalnotice:         "Legal Notice",
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
@@ -68,6 +70,7 @@ export const PAGE_TITLES: Record<DocsPage, string> = {
   changelog:           "Changelog",
   about:               "History & motivation",
   collaborate:         "Collaborate with the Samply team",
+  faq:                 "Questions from study participants",
   legalnotice:         "Legal Notice",
   policy:              "Privacy Policy",
   terms:               "Terms & Conditions",
@@ -96,6 +99,7 @@ export const PAGE_META: Record<string, { eyebrow: string; lede: string; section:
   glossary:            { section: "Reference",             eyebrow: "the vocabulary",                                   lede: "Key terms used throughout Samply and this documentation." },
   api:          { section: "Reference",              eyebrow: "for the builders",                                  lede: "Samply exposes a REST API for programmatic study management and advanced integrations." },
   changelog:    { section: "Reference",              eyebrow: "what changed",                                      lede: "A running record of meaningful changes to the Samply platform." },
+  faq:          { section: "For participants",       eyebrow: "taking part in a study?",                           lede: "Answers to the questions participants ask most — and, for anything about a specific study, how to reach the researcher who runs it." },
   about:        { section: "Reference",              eyebrow: "where it came from",                                lede: "Why Samply was built, the problems it set out to solve, and how the platform has evolved since 2019." },
 };
 
@@ -105,6 +109,7 @@ export const NAV_GROUPS: { label: string; sectionKey: string; pages: (typeof SID
   { label: "Power features",         sectionKey: "powerFeatures",         pages: ["placeholders", "groups", "reminders", "integrations"] },
   { label: "Advanced features",      sectionKey: "advancedFeatures",      pages: ["event-contingent", "geofencing", "stream", "analytics"] },
   { label: "Reference",              sectionKey: "reference",             pages: ["troubleshooting", "glossary", "api", "changelog", "about", "collaborate"] },
+  { label: "For participants",       sectionKey: "forParticipants",       pages: ["faq"] },
 ];
 
 // Maps each docs page to its sidebar section key

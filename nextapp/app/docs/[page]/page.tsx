@@ -24,6 +24,7 @@ import DpaContent from "./DpaContent";
 import EventContingentContent from "./EventContingentContent";
 import GeofencingContent from "./GeofencingContent";
 import TroubleshootingContent from "./TroubleshootingContent";
+import FaqContent from "./FaqContent";
 import StreamContent from "./StreamContent";
 import AboutContent from "./AboutContent";
 import AnalyticsContent from "./AnalyticsContent";
@@ -143,6 +144,8 @@ export default async function DocsSubPage({ params }: { params: Promise<{ page: 
                   <AnalyticsContent locale={locale} />
                 ) : currentPage === "troubleshooting" ? (
                   <TroubleshootingContent locale={locale} />
+                ) : currentPage === "faq" ? (
+                  <FaqContent locale={locale} />
                 ) : currentPage === "changelog" ? (
                   <ChangelogContent locale={locale} />
                 ) : currentPage === "about" ? (

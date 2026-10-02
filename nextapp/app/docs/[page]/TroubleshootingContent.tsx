@@ -1,5 +1,5 @@
-import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
+import { renderInline } from "../_shared/renderInline";
 import { getTroubleshooting, type Block, type Para } from "./troubleshooting/index.ts";
 
 /**
@@ -25,52 +25,6 @@ import { getTroubleshooting, type Block, type Para } from "./troubleshooting/ind
  */
 
 const CAUSE: React.CSSProperties = { fontWeight: 600, color: "var(--ink)" };
-
-/**
- * Renders the small inline markup used by the content strings:
- * `**bold**`, `` `code` ``, `[label](href)`, `*italic*`.
- *
- * Written as a single tokenising pass rather than nested replaces so that a
- * translator cannot accidentally produce broken markup — an unmatched delimiter
- * renders as literal text instead of swallowing the rest of the sentence.
- */
-function renderInline(text: string, keyPrefix: string): React.ReactNode[] {
-  const TOKEN = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\))/g;
-  const out: React.ReactNode[] = [];
-
-  text.split(TOKEN).forEach((part, i) => {
-    if (!part) return;
-    const key = `${keyPrefix}-${i}`;
-
-    if (part.startsWith("**") && part.endsWith("**")) {
-      out.push(<strong key={key}>{part.slice(2, -2)}</strong>);
-      return;
-    }
-    if (part.startsWith("`") && part.endsWith("`")) {
-      out.push(<code key={key}>{part.slice(1, -1)}</code>);
-      return;
-    }
-    if (part.startsWith("*") && part.endsWith("*")) {
-      out.push(<em key={key}>{part.slice(1, -1)}</em>);
-      return;
-    }
-    const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(part);
-    if (link) {
-      const [, label, href] = link;
-      out.push(
-        href.startsWith("http") ? (
-          <a key={key} href={href} target="_blank" rel="noreferrer">{label}</a>
-        ) : (
-          <Link key={key} href={href}>{label}</Link>
-        ),
-      );
-      return;
-    }
-    out.push(part);
-  });
-
-  return out;
-}
 
 function CardPara({ para, k }: { para: Para; k: string }) {
   return (
