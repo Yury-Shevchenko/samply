@@ -1324,6 +1324,7 @@ const fr: DeepLoose<Messages> = {
     labelTo:             "→  À",
     numNotifications:    "# notifications",
     minGap:              "Intervalle min (min)",
+    windowHint:          "Samply divise chaque fenêtre en tranches égales — une par notification — et tire une heure aléatoire dans chacune, en respectant l’intervalle minimum. Les fenêtres distinctes sont tirées indépendamment : l’intervalle n’est pas garanti d’une fenêtre à l’autre. Pour une notification par partie de la journée avec un intervalle constant, utilisez une seule fenêtre.",
     labelRepeatEvery:    "Répéter toutes les",
     minuteSingular:      "minute",
     minutePlural:        "minutes",

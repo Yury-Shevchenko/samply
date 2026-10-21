@@ -1792,6 +1792,7 @@ const en = {
     labelTo:             "→  To",
     numNotifications:    "# notifications",
     minGap:              "Min gap (min)",
+    windowHint:          "Samply splits each window into equal slices — one per notification — and draws one random time in each, at least the min gap apart. Separate windows are drawn independently, so the gap is not enforced across them. For one notification per part of the day with a gap throughout, use a single window.",
     labelRepeatEvery:    "Repeat every",
     /** n = 1 → singular */
     minuteSingular:      "minute",

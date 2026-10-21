@@ -1337,6 +1337,7 @@ const de: DeepLoose<Messages> = {
     labelTo:             "→  Bis",
     numNotifications:    "# Benachrichtigungen",
     minGap:              "Min. Abstand (Min.)",
+    windowHint:          "Samply teilt jedes Zeitfenster in gleich große Abschnitte – einen pro Benachrichtigung – und zieht in jedem eine zufällige Zeit, mit mindestens dem Mindestabstand dazwischen. Mehrere Zeitfenster werden unabhängig voneinander gezogen, der Abstand gilt also nicht fensterübergreifend. Für eine Benachrichtigung pro Tagesabschnitt mit durchgehendem Abstand verwenden Sie ein einzelnes Zeitfenster.",
     labelRepeatEvery:    "Wiederholen alle",
     minuteSingular:      "Minute",
     minutePlural:        "Minuten",

@@ -1324,6 +1324,7 @@ const pl: DeepLoose<Messages> = {
     labelTo:             "→  Do",
     numNotifications:    "# powiadomień",
     minGap:              "Min. odstęp (min)",
+    windowHint:          "Samply dzieli każde okno na równe części — po jednej na powiadomienie — i losuje w każdej czas, zachowując minimalny odstęp. Osobne okna są losowane niezależnie, więc odstęp między nimi nie jest gwarantowany. Aby uzyskać jedno powiadomienie na każdą część dnia z odstępem przez cały dzień, użyj jednego okna.",
     labelRepeatEvery:    "Powtarzaj co",
     minuteSingular:      "minuta",
     minutePlural:        "minut",

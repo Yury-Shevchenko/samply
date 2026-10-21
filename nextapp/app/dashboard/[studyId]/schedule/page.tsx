@@ -6,6 +6,7 @@ import Hand from "@/app/components/ui/Hand";
 import { deleteNotificationAction } from "@/app/scheduled/actions";
 import { DeleteScheduleButton } from "@/app/scheduled/DeleteScheduleButton";
 import { getT } from "@/lib/i18n.server";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -51,7 +52,7 @@ function scheduleType(n: NotificationConfig): string {
   return "repeating";
 }
 
-function scheduleDescription(n: NotificationConfig): string {
+function scheduleDescription(n: NotificationConfig): React.ReactNode {
   const type = scheduleType(n);
   if (type === "enrollment") {
     const d = n.delay;
@@ -68,7 +69,7 @@ function scheduleDescription(n: NotificationConfig): string {
     const to = n.readable?.to ?? "—";
     return `${count}× random · ${from}–${to}`;
   }
-  if (type === "one-time") return n.date ? new Date(n.date).toLocaleString() : "scheduled once";
+  if (type === "one-time") return n.date ? <LocalDate value={n.date} timeZone={n.timezone} /> : "scheduled once";
   if (type === "personal") {
     const interval = n.readable?.interval ?? (n.distance != null ? `every ${Math.round(n.distance / 60000)}min` : null);
     const stopStr  = eventWindowStr(n.stop_event,  n.stop_next,  n.stop_after);

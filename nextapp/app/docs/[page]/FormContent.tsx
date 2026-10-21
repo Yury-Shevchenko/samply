@@ -218,6 +218,12 @@ function FormContentZh() {
         点击<strong>添加更多时间窗口</strong>以每天定义多个窗口
         （例如上午 08:00–11:00 和下午 14:00–17:00，每个各两次提示）。
       </p>
+      <p>
+        Samply 会将每个窗口平均分成若干段（每条通知一段），并在每段中随机抽取一个时间。因此，
+        09:00–21:00 的窗口设置 4 条通知时，09–12、12–15、15–18 和 18–21 各会有一次发送。最小间隔只作用于同一窗口内的通知：
+        不同窗口分别独立抽取，所以两个首尾相接的窗口可能产生仅相隔几分钟的发送（例如 11:55 和 12:05）。
+        如果您希望一天中每个时段各一条通知、且全天保持最小间隔，请使用覆盖整个时间范围的单个窗口，而不是多个相邻窗口。
+      </p>
 
       <h3>重复（高频）</h3>
       <p>
@@ -455,6 +461,15 @@ function FormContentEn() {
       <p>
         Click <strong>Add one more time window</strong> to define multiple windows per day
         (e.g., morning 08:00–11:00 and afternoon 14:00–17:00, two pings each).
+      </p>
+      <p>
+        Samply splits each window into equal slices, one per notification, and draws one random
+        time in each slice. A 09:00–21:00 window with 4 notifications therefore always gives one
+        send in each of 09–12, 12–15, 15–18 and 18–21. The minimum gap applies only between
+        notifications in the same window: separate windows are drawn independently, so two
+        back-to-back windows can produce sends minutes apart (e.g., 11:55 and 12:05). If you want
+        one notification per part of the day and a minimum gap across the whole day, use a single
+        window covering the full range instead of several adjacent windows.
       </p>
 
       <h3>Repeat (high-frequency)</h3>
@@ -712,6 +727,15 @@ function FormContentRu() {
       <p>
         Нажмите <strong>Добавить ещё одно временное окно</strong>, чтобы задать несколько
         окон в день (например, утром 08:00–11:00 и днём 14:00–17:00, по два сигнала в каждом).
+      </p>
+      <p>
+        Samply делит каждое окно на равные части — по одной на уведомление — и выбирает в каждой
+        части случайное время. Поэтому окно 09:00–21:00 с 4 уведомлениями всегда даёт по одной
+        отправке в каждом из интервалов 09–12, 12–15, 15–18 и 18–21. Минимальный интервал действует
+        только между уведомлениями одного окна: разные окна рассчитываются независимо, поэтому два
+        соседних окна могут дать отправки с разницей в несколько минут (например, 11:55 и 12:05).
+        Если вам нужно по одному уведомлению на каждую часть дня и минимальный интервал на протяжении
+        всего дня, используйте одно окно на весь диапазон вместо нескольких соседних.
       </p>
 
       <h3>Повтор (высокая частота)</h3>
@@ -973,6 +997,16 @@ function FormContentNl() {
         Klik op <strong>Nog een tijdvenster toevoegen</strong> om meerdere vensters per dag te
         definiëren (bijv. ochtend 08:00–11:00 en middag 14:00–17:00, elk twee meldingen).
       </p>
+      <p>
+        Samply verdeelt elk venster in gelijke delen — één per melding — en kiest in elk deel een
+        willekeurig tijdstip. Een venster van 09:00–21:00 met 4 meldingen geeft dus altijd één
+        verzending in elk van 09–12, 12–15, 15–18 en 18–21. Het minimale interval geldt alleen
+        tussen meldingen binnen hetzelfde venster: afzonderlijke vensters worden onafhankelijk
+        getrokken, dus twee aansluitende vensters kunnen verzendingen opleveren die maar enkele
+        minuten uit elkaar liggen (bijv. 11:55 en 12:05). Wilt u één melding per dagdeel én een
+        minimaal interval over de hele dag, gebruik dan één venster over het volledige bereik in
+        plaats van meerdere aansluitende vensters.
+      </p>
 
       <h3>Herhalen (hoge frequentie)</h3>
       <p>
@@ -1230,6 +1264,17 @@ function FormContentDe() {
       <p>
         Klicken Sie auf <strong>Weiteres Zeitfenster hinzufügen</strong>, um mehrere Fenster pro Tag
         zu definieren (z. B. morgens 08:00–11:00 und nachmittags 14:00–17:00, je zwei Benachrichtigungen).
+      </p>
+      <p>
+        Samply teilt jedes Zeitfenster in gleich große Abschnitte – einen pro Benachrichtigung – und
+        zieht in jedem Abschnitt eine zufällige Zeit. Ein Fenster von 09:00–21:00 mit 4
+        Benachrichtigungen ergibt daher immer genau einen Versand in jedem der Abschnitte 09–12,
+        12–15, 15–18 und 18–21. Der Mindestabstand gilt nur zwischen Benachrichtigungen desselben
+        Fensters: Mehrere Fenster werden unabhängig voneinander gezogen, sodass zwei direkt
+        aneinandergrenzende Fenster Versände im Abstand weniger Minuten erzeugen können (z. B. 11:55
+        und 12:05). Wenn Sie eine Benachrichtigung pro Tagesabschnitt und einen Mindestabstand über
+        den ganzen Tag möchten, verwenden Sie ein einzelnes Fenster über den gesamten Zeitraum statt
+        mehrerer aneinandergrenzender Fenster.
       </p>
 
       <h3>Wiederholen (hochfrequent)</h3>
@@ -1521,6 +1566,14 @@ function FormContentKo() {
       <p>
         <strong>시간 창 추가</strong>를 클릭하여 하루에 여러 창을 정의하십시오
         (예: 오전 08:00–11:00, 오후 14:00–17:00, 각 2회 알림).
+      </p>
+      <p>
+        Samply는 각 창을 알림 수만큼 같은 구간으로 나누고, 구간마다 무작위 시각을 하나씩 고릅니다.
+        따라서 09:00–21:00 창에 알림 4개를 설정하면 09–12, 12–15, 15–18, 18–21 구간에 항상 하나씩
+        발송됩니다. 최소 간격은 같은 창 안의 알림 사이에만 적용됩니다. 여러 창은 서로 독립적으로
+        추첨되므로, 맞닿은 두 창에서 몇 분 차이의 발송이 나올 수 있습니다(예: 11:55와 12:05).
+        하루의 각 시간대에 하나씩 보내면서 하루 전체에 최소 간격을 유지하려면, 인접한 여러 창 대신
+        전체 범위를 덮는 하나의 창을 사용하세요.
       </p>
 
       <h3>반복 (고빈도)</h3>
@@ -1881,6 +1934,16 @@ function FormContentFr() {
         plusieurs fenêtres par jour (ex. matin 08h00–11h00 et après-midi 14h00–17h00,
         deux notifications chacune).
       </p>
+      <p>
+        Samply divise chaque fenêtre en tranches égales — une par notification — et tire une heure
+        aléatoire dans chaque tranche. Une fenêtre 09h00–21h00 avec 4 notifications donne donc
+        toujours un envoi dans chacune des plages 09–12, 12–15, 15–18 et 18–21. L&apos;écart minimum
+        ne s&apos;applique qu&apos;entre les notifications d&apos;une même fenêtre : les fenêtres distinctes
+        sont tirées indépendamment, si bien que deux fenêtres contiguës peuvent produire des envois à
+        quelques minutes d&apos;intervalle (ex. 11h55 et 12h05). Pour une notification par partie de
+        la journée et un écart minimum sur toute la journée, utilisez une seule fenêtre couvrant
+        toute la plage plutôt que plusieurs fenêtres contiguës.
+      </p>
 
       <h3>Répéter (haute fréquence)</h3>
       <p>
@@ -2145,6 +2208,16 @@ function FormContentIt() {
       <p>
         Cliccare su <strong>Aggiungi un&apos;altra finestra temporale</strong> per definire più finestre
         al giorno (ad es. mattina 08:00–11:00 e pomeriggio 14:00–17:00, due notifiche ciascuna).
+      </p>
+      <p>
+        Samply divide ogni finestra in parti uguali — una per notifica — e sceglie un orario casuale
+        in ciascuna parte. Una finestra 09:00–21:00 con 4 notifiche produce quindi sempre un invio in
+        ciascuna delle fasce 09–12, 12–15, 15–18 e 18–21. L&apos;intervallo minimo vale solo tra le
+        notifiche della stessa finestra: finestre diverse vengono estratte in modo indipendente, quindi
+        due finestre adiacenti possono produrre invii a pochi minuti di distanza (ad es. 11:55 e
+        12:05). Se vuoi una notifica per fascia della giornata e un intervallo minimo su tutta la
+        giornata, usa una sola finestra che copra l&apos;intero intervallo invece di più finestre
+        adiacenti.
       </p>
 
       <h3>Ripeti (alta frequenza)</h3>
@@ -2411,6 +2484,16 @@ function FormContentEs() {
       <p>
         Haz clic en <strong>Añadir otra ventana horaria</strong> para definir múltiples ventanas
         por día (p. ej., mañana 08:00–11:00 y tarde 14:00–17:00, dos notificaciones cada una).
+      </p>
+      <p>
+        Samply divide cada ventana en tramos iguales —uno por notificación— y elige una hora
+        aleatoria en cada tramo. Por eso, una ventana de 09:00–21:00 con 4 notificaciones siempre da
+        un envío en cada uno de los tramos 09–12, 12–15, 15–18 y 18–21. El intervalo mínimo solo se
+        aplica entre notificaciones de la misma ventana: las ventanas distintas se sortean por
+        separado, así que dos ventanas contiguas pueden producir envíos con pocos minutos de
+        diferencia (p. ej., 11:55 y 12:05). Si quiere una notificación por franja del día y un
+        intervalo mínimo durante todo el día, use una sola ventana que cubra todo el rango en lugar
+        de varias ventanas contiguas.
       </p>
 
       <h3>Repetir (alta frecuencia)</h3>
@@ -2679,6 +2762,16 @@ function FormContentPt() {
         Clique em <strong>Adicionar outra janela de tempo</strong> para definir múltiplas
         janelas por dia (ex.: manhã 08:00–11:00 e tarde 14:00–17:00, duas notificações cada).
       </p>
+      <p>
+        O Samply divide cada janela em partes iguais — uma por notificação — e sorteia um horário
+        aleatório em cada parte. Assim, uma janela de 09:00–21:00 com 4 notificações dá sempre um
+        envio em cada um dos períodos 09–12, 12–15, 15–18 e 18–21. O intervalo mínimo só se aplica
+        entre notificações da mesma janela: janelas diferentes são sorteadas de forma independente,
+        por isso duas janelas contíguas podem gerar envios com poucos minutos de diferença (ex.:
+        11:55 e 12:05). Se quiser uma notificação por período do dia e um intervalo mínimo ao longo
+        de todo o dia, use uma única janela que cubra todo o intervalo em vez de várias janelas
+        contíguas.
+      </p>
 
       <h3>Repetir (alta frequência)</h3>
       <p>
@@ -2940,6 +3033,14 @@ function FormContentJa() {
         <strong>別の時間ウィンドウを追加</strong>をクリックして、1 日に複数のウィンドウを
         定義します（例: 朝 08:00–11:00 と午後 14:00–17:00、それぞれ 2 通の通知）。
       </p>
+      <p>
+        Samply は各ウィンドウを通知数と同じ数の等しい区間に分け、各区間で 1 つずつランダムな時刻を選びます。
+        そのため、09:00–21:00 のウィンドウに通知 4 件を設定すると、09–12、12–15、15–18、18–21 の各区間に必ず 1 件ずつ送信されます。
+        最小間隔が適用されるのは同じウィンドウ内の通知どうしだけです。複数のウィンドウはそれぞれ独立して抽選されるため、
+        隣接する 2 つのウィンドウから数分違いの送信が生じることがあります（例: 11:55 と 12:05）。
+        1 日の各時間帯に 1 件ずつ送り、かつ 1 日全体で最小間隔を保ちたい場合は、隣接する複数のウィンドウではなく、
+        全範囲をカバーする 1 つのウィンドウを使用してください。
+      </p>
 
       <h3>繰り返し（高頻度）</h3>
       <p>
@@ -3192,6 +3293,15 @@ function FormContentTr() {
       <p>
         Bir günde birden fazla pencere tanımlamak için <strong>Başka bir zaman penceresi ekle</strong>
         seçeneğine tıklayın (örn. sabah 08:00–11:00 ve öğleden sonra 14:00–17:00, her birinde 2 bildirim).
+      </p>
+      <p>
+        Samply her pencereyi eşit dilimlere böler — her bildirim için bir dilim — ve her dilimde
+        rastgele bir saat seçer. Bu nedenle 4 bildirimli 09:00–21:00 penceresi her zaman 09–12,
+        12–15, 15–18 ve 18–21 dilimlerinin her birinde bir gönderim üretir. Minimum boşluk yalnızca
+        aynı penceredeki bildirimler arasında uygulanır: ayrı pencereler birbirinden bağımsız
+        seçilir, bu yüzden art arda iki pencere birkaç dakika arayla gönderimler üretebilir (örn.
+        11:55 ve 12:05). Günün her bölümüne bir bildirim ve gün boyunca minimum boşluk istiyorsanız,
+        birden fazla bitişik pencere yerine tüm aralığı kapsayan tek bir pencere kullanın.
       </p>
 
       <h3>Tekrar (yüksek frekans)</h3>
@@ -3464,6 +3574,15 @@ function FormContentPl() {
       <p>
         Aby zdefiniować wiele okien w ciągu dnia, kliknij <strong>Dodaj kolejne okno czasowe</strong>
         (np. poranne 08:00–11:00 i popołudniowe 14:00–17:00, po 2 powiadomienia w każdym).
+      </p>
+      <p>
+        Samply dzieli każde okno na równe części — po jednej na powiadomienie — i losuje czas w
+        każdej części. Okno 09:00–21:00 z 4 powiadomieniami zawsze daje więc jedną wysyłkę w każdym
+        z przedziałów 09–12, 12–15, 15–18 i 18–21. Minimalny odstęp obowiązuje tylko między
+        powiadomieniami w tym samym oknie: osobne okna są losowane niezależnie, więc dwa sąsiednie
+        okna mogą dać wysyłki oddalone o kilka minut (np. 11:55 i 12:05). Jeśli chcesz jednego
+        powiadomienia na każdą część dnia i minimalnego odstępu przez cały dzień, użyj jednego okna
+        obejmującego cały zakres zamiast kilku sąsiednich okien.
       </p>
 
       <h3>Powtarzanie (wysoka częstotliwość)</h3>
@@ -3739,6 +3858,14 @@ function FormContentAr() {
       <p>
         لتحديد عدة نوافذ خلال اليوم، انقر على <strong>أضف نافذة زمنية أخرى</strong>
         (مثلاً صباحاً 08:00–11:00 وبعد الظهر 14:00–17:00، بإشعارين في كل نافذة).
+      </p>
+      <p>
+        يقسّم Samply كل نافذة إلى أجزاء متساوية — جزء لكل إشعار — ويختار وقتًا عشوائيًا في كل جزء.
+        لذلك تُنتج نافذة 09:00–21:00 بأربعة إشعارات دائمًا إرسالًا واحدًا في كل من الفترات 09–12 و12–15
+        و15–18 و18–21. تنطبق الفجوة الدنيا فقط بين إشعارات النافذة نفسها: تُسحب النوافذ المنفصلة بشكل
+        مستقل، لذا قد تُنتج نافذتان متتاليتان إرسالين لا يفصل بينهما سوى دقائق (مثلاً 11:55 و12:05).
+        إذا أردت إشعارًا واحدًا في كل فترة من اليوم مع فجوة دنيا طوال اليوم، فاستخدم نافذة واحدة تغطي
+        النطاق كاملًا بدلًا من عدة نوافذ متجاورة.
       </p>
 
       <h3>التكرار (تردد عالٍ)</h3>

@@ -4,6 +4,7 @@ import { fetchProjectById } from "@/lib/data/projects";
 import { fetchResultById } from "@/lib/data/results";
 import { deleteResultAction } from "./actions";
 import { DeleteResultForm } from "./DeleteResultForm";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 interface Props {
   params: Promise<{ studyId: string; resultId: string }>;
@@ -121,7 +122,7 @@ export default async function ResultDetailPage({ params }: Props) {
             </a>
           </MetaRow>
           <MetaRow label="Sent">
-            {new Date(result.created).toLocaleString()}
+            <LocalDate value={result.created} />
           </MetaRow>
           {result.data?.message && result.data.message !== title && (
             <MetaRow label="Message">{result.data.message}</MetaRow>
@@ -137,7 +138,7 @@ export default async function ResultDetailPage({ params }: Props) {
           )}
           {result.data?.expireAt && (
             <MetaRow label="Expires">
-              {new Date(result.data.expireAt).toLocaleString()}
+              <LocalDate value={result.data.expireAt} />
             </MetaRow>
           )}
           {result.messageId && (
@@ -181,7 +182,7 @@ export default async function ResultDetailPage({ params }: Props) {
                     <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: eventData && Object.keys(eventData).length > 0 ? "0.6rem" : 0 }}>
                       <StatusPill status={e.status} />
                       <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>
-                        {new Date(e.created).toLocaleString()}
+                        <LocalDate value={e.created} />
                       </span>
                     </div>
                     {eventData && Object.keys(eventData).length > 0 && (

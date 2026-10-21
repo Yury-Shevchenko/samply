@@ -1324,6 +1324,7 @@ const tr: DeepLoose<Messages> = {
     labelTo:             "→ Bitiş",
     numNotifications:    "# bildirim",
     minGap:              "Min boşluk (dk)",
+    windowHint:          "Samply her pencereyi eşit dilimlere böler — her bildirim için bir dilim — ve her dilimde, aralarında en az minimum boşluk olacak şekilde rastgele bir saat seçer. Ayrı pencereler birbirinden bağımsız seçilir, bu yüzden boşluk pencereler arasında garanti edilmez. Günün her bölümüne bir bildirim ve gün boyu korunan bir boşluk için tek bir pencere kullanın.",
     labelRepeatEvery:    "Her şu kadarda bir tekrarla",
     minuteSingular:      "dakika",
     minutePlural:        "dakika",

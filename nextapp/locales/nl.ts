@@ -1332,6 +1332,7 @@ const nl: DeepLoose<Messages> = {
     labelTo:             "→  Tot",
     numNotifications:    "# meldingen",
     minGap:              "Min. interval (min.)",
+    windowHint:          "Samply verdeelt elk venster in gelijke delen — één per melding — en kiest in elk deel een willekeurig tijdstip, met minstens het minimale interval ertussen. Afzonderlijke vensters worden onafhankelijk getrokken, dus het interval geldt niet over vensters heen. Wilt u één melding per dagdeel met overal een minimaal interval, gebruik dan één venster.",
     labelRepeatEvery:    "Herhaal elke",
     minuteSingular:      "minuut",
     minutePlural:        "minuten",

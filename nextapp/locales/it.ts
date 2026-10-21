@@ -1341,6 +1341,7 @@ const it: DeepLoose<Messages> = {
     labelTo:             '→  Alle',
     numNotifications:    '# notifiche',
     minGap:              'Intervallo minimo (min)',
+    windowHint:          "Samply divide ogni finestra in parti uguali — una per notifica — e sceglie un orario casuale in ciascuna, rispettando l'intervallo minimo. Finestre diverse vengono estratte in modo indipendente, quindi l'intervallo non è garantito tra una finestra e l'altra. Per una notifica per fascia della giornata con un intervallo costante, usa una sola finestra.",
     labelRepeatEvery:    'Ripeti ogni',
     minuteSingular:      'minuto',
     minutePlural:        'minuti',

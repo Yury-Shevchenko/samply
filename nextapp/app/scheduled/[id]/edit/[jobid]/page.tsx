@@ -4,6 +4,7 @@ import { fetchAgendaJobById } from "@/lib/data/scheduled";
 import { updateAgendaJobAction } from "@/app/scheduled/actions";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { getT } from "@/lib/i18n.server";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 export const metadata = { title: "Edit Job — Samply" };
 
@@ -63,7 +64,7 @@ export default async function EditJobPage({
             </tr>
             <tr>
               <td><strong>{t("scheduled.editJobLastRun")}</strong></td>
-              <td>{job.lastRunAt ? new Date(job.lastRunAt).toLocaleString() : "—"}</td>
+              <td><LocalDate value={job.lastRunAt} timeZone={job.data?.timezone} /></td>
             </tr>
           </tbody>
         </table>

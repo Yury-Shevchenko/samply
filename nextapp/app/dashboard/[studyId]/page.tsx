@@ -13,6 +13,7 @@ import mongoose from "mongoose";
 import { getT } from "@/lib/i18n.server";
 import { fetchStudyReadiness, fetchLatestTest } from "@/lib/data/readiness";
 import PreflightChecklist from "./PreflightChecklist";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 interface Props {
   params: Promise<{ studyId: string }>;
@@ -66,6 +67,16 @@ function scheduleType(n: { randomize?: boolean; date?: unknown; int_start?: unkn
   return "repeating";
 }
 
+// Schedule dates are calendar days in the schedule's own timezone, not the
+// server's. An unknown stored zone name would throw, so fall back to UTC.
+function scheduleDay(d: Date | string, timeZone: string | undefined, options: Intl.DateTimeFormatOptions): string {
+  try {
+    return new Date(d).toLocaleDateString("en-US", { ...options, timeZone });
+  } catch {
+    return new Date(d).toLocaleDateString("en-US", { ...options, timeZone: "UTC" });
+  }
+}
+
 function scheduleSubtitle(n: NotificationConfig): string {
   const parts: string[] = [];
 
@@ -76,26 +87,21 @@ function scheduleSubtitle(n: NotificationConfig): string {
     parts.push(n.readable.interval);
   }
   if (n.date && !n.int_start) {
-    parts.push(new Date(n.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }));
+    parts.push(scheduleDay(n.date, n.timezone, { month: "short", day: "numeric", year: "numeric" }));
   }
   if (n.number && n.distance) {
     parts.push(`${n.number}× per ${n.distance}h window`);
   }
   if (n.int_start && !n.readable?.from) {
-    parts.push(`from ${new Date(n.int_start).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`);
+    parts.push(`from ${scheduleDay(n.int_start, n.timezone, { month: "short", day: "numeric" })}`);
   }
   if (n.int_end && !n.readable?.to) {
-    parts.push(`until ${new Date(n.int_end).toLocaleDateString("en-US", { month: "short", day: "numeric" })}`);
+    parts.push(`until ${scheduleDay(n.int_end, n.timezone, { month: "short", day: "numeric" })}`);
   }
   if (n.reminders?.length) {
     parts.push(`${n.reminders.length} reminder${n.reminders.length > 1 ? "s" : ""}`);
   }
   return parts.join(" · ");
-}
-
-function fmtJoinDate(d?: Date): string {
-  if (!d) return "";
-  return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "2-digit" });
 }
 
 async function fetchNotifCounts(studyId: string, configIds: string[]): Promise<Map<string, { sent: number; pending: number }>> {
@@ -144,6 +150,8 @@ export default async function StudyOverviewPage({ params }: Props) {
 
   const toggleActive = toggleStudyActiveAction.bind(null, studyId);
   const { t } = await getT();
+  // The join date is a client component, so split the translated label around it.
+  const [joinedPre, joinedPost = ""] = t("studyOverview.joinedDate", { date: "\u0000" }).split("\u0000");
 
   // Localised schedule type badge label
   const typeLabel = (type: string) => {
@@ -379,7 +387,6 @@ export default async function StudyOverviewPage({ params }: Props) {
         ) : (
           <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflow: "hidden", boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.4rem 1.2rem rgba(60,40,20,.04)" }}>
             {activeParticipants.slice(0, 5).map((p, i) => {
-              const joinDate = fmtJoinDate(p.created);
               const code = p.username ?? (p.information?.code as string | undefined);
               return (
                 <a
@@ -408,9 +415,9 @@ export default async function StudyOverviewPage({ params }: Props) {
                       {p.group.name}
                     </span>
                   )}
-                  {joinDate && (
+                  {p.created && (
                     <span className="mob-hide" style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: "var(--ink-20)", flexShrink: 0 }}>
-                      {t("studyOverview.joinedDate", { date: joinDate })}
+                      {joinedPre}<LocalDate value={p.created} options={{ month: "short", day: "numeric", year: "2-digit" }} />{joinedPost}
                     </span>
                   )}
                 </a>

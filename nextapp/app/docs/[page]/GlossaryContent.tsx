@@ -108,7 +108,7 @@ const TERMS: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: 'A send-time mode in which Samply picks a random time between a From and a To time for each participant on each firing day, with a minimum gap between draws if multiple sends per window are requested. Chosen in Step 3 of the schedule form. Produces a randomized or personal-randomized schedule.',
+    definition: 'A send-time mode in which Samply picks a random time between a From and a To time for each participant on each firing day, with a minimum gap between draws if multiple sends per window are requested. Chosen in Step 3 of the schedule form. Produces a randomized or personal-randomized schedule. With several sends, the window is split into equal slices and one time is drawn in each; the gap is not enforced across separate windows.',
   },
   {
     term: 'Timestamp sent',
@@ -223,7 +223,7 @@ const TERMS_DE: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: 'Ein Versandzeitpunkt-Modus, bei dem Samply für jeden Teilnehmer an jedem Auslösetag eine zufällige Zeit zwischen einer Von- und einer Bis-Zeit auswählt, mit einem Mindestabstand zwischen den Zügen, wenn mehrere Sendungen pro Fenster angefordert werden. Wird in Schritt 3 des Zeitplanformulars gewählt. Erzeugt einen zufälligen oder persönlich-zufälligen Zeitplan.',
+    definition: 'Ein Versandzeitpunkt-Modus, bei dem Samply für jeden Teilnehmer an jedem Auslösetag eine zufällige Zeit zwischen einer Von- und einer Bis-Zeit auswählt, mit einem Mindestabstand zwischen den Zügen, wenn mehrere Sendungen pro Fenster angefordert werden. Wird in Schritt 3 des Zeitplanformulars gewählt. Erzeugt einen zufälligen oder persönlich-zufälligen Zeitplan. Bei mehreren Versänden wird das Fenster in gleich große Abschnitte geteilt und in jedem eine Zeit gezogen; zwischen getrennten Fenstern gilt der Mindestabstand nicht.',
   },
   {
     term: 'Timestamp sent',
@@ -338,7 +338,7 @@ const TERMS_NL: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: 'Een verzendmodus waarbij Samply voor elke deelnemer op elke triggerdatum een willekeurige tijd kiest tussen een Van- en een Tot-tijd, met een minimale tussenruimte tussen trekkingen als meerdere verzendingen per venster worden gevraagd. Gekozen in stap 3 van het schemaformulier. Produceert een willekeurig of persoonlijk-willekeurig schema.',
+    definition: 'Een verzendmodus waarbij Samply voor elke deelnemer op elke triggerdatum een willekeurige tijd kiest tussen een Van- en een Tot-tijd, met een minimale tussenruimte tussen trekkingen als meerdere verzendingen per venster worden gevraagd. Gekozen in stap 3 van het schemaformulier. Produceert een willekeurig of persoonlijk-willekeurig schema. Bij meerdere verzendingen wordt het venster in gelijke delen verdeeld en in elk deel één tijd getrokken; tussen afzonderlijke vensters geldt het minimale interval niet.',
   },
   {
     term: 'Timestamp sent',
@@ -453,7 +453,7 @@ const TERMS_RU: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: 'Режим времени отправки, при котором Samply выбирает случайное время между временем "От" и временем "До" для каждого участника в каждый день срабатывания, с минимальным промежутком между выборками, если запрошено несколько отправок в окне. Выбирается на шаге 3 формы расписания. Создаёт случайное или персонально-случайное расписание.',
+    definition: 'Режим времени отправки, при котором Samply выбирает случайное время между временем "От" и временем "До" для каждого участника в каждый день срабатывания, с минимальным промежутком между выборками, если запрошено несколько отправок в окне. Выбирается на шаге 3 формы расписания. Создаёт случайное или персонально-случайное расписание. При нескольких отправках окно делится на равные части, и в каждой выбирается одно время; между разными окнами минимальный интервал не соблюдается.',
   },
   {
     term: 'Timestamp sent',
@@ -568,7 +568,7 @@ const TERMS_ZH: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: '一种发送时间模式，Samply 在每个触发日为每位参与者在"从"到"至"时间之间选取一个随机时间，若请求在窗口内发送多次则在抽取之间设置最小间隔。在日程表单的第 3 步选择。生成随机或个人随机日程。',
+    definition: '一种发送时间模式，Samply 在每个触发日为每位参与者在"从"到"至"时间之间选取一个随机时间，若请求在窗口内发送多次则在抽取之间设置最小间隔。在日程表单的第 3 步选择。生成随机或个人随机日程。若有多次发送，窗口会被平均分段，每段抽取一个时间；不同窗口之间不保证最小间隔。',
   },
   {
     term: 'Timestamp sent',
@@ -795,7 +795,7 @@ const TERMS_KO: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: '창당 여러 발송이 요청된 경우 최소 간격을 두고 각 발송일에 각 참여자에 대해 시작 시간과 종료 시간 사이의 임의 시간을 Samply가 선택하는 발송 시간 모드입니다. 스케줄 양식의 3단계에서 선택합니다. 무작위 또는 개인 무작위 스케줄을 생성합니다.',
+    definition: '창당 여러 발송이 요청된 경우 최소 간격을 두고 각 발송일에 각 참여자에 대해 시작 시간과 종료 시간 사이의 임의 시간을 Samply가 선택하는 발송 시간 모드입니다. 스케줄 양식의 3단계에서 선택합니다. 무작위 또는 개인 무작위 스케줄을 생성합니다. 여러 번 발송하는 경우 창을 같은 구간으로 나누어 구간마다 하나의 시간을 고르며, 서로 다른 창 사이에는 최소 간격이 적용되지 않습니다.',
   },
   {
     term: 'Timestamp sent',
@@ -910,7 +910,7 @@ const TERMS_IT: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: 'Una modalità di orario di invio in cui Samply sceglie un orario casuale tra un orario Di e un orario A per ogni partecipante in ogni giorno di attivazione, con un intervallo minimo tra le estrazioni se vengono richiesti più invii per finestra. Scelto nel passaggio 3 del modulo dello schema. Produce uno schema randomizzato o personale-randomizzato.',
+    definition: 'Una modalità di orario di invio in cui Samply sceglie un orario casuale tra un orario Di e un orario A per ogni partecipante in ogni giorno di attivazione, con un intervallo minimo tra le estrazioni se vengono richiesti più invii per finestra. Scelto nel passaggio 3 del modulo dello schema. Produce uno schema randomizzato o personale-randomizzato. Con più invii, la finestra viene divisa in parti uguali e in ciascuna si estrae un orario; tra finestre diverse l\'intervallo minimo non viene applicato.',
   },
   {
     term: 'Timestamp sent',
@@ -1063,7 +1063,7 @@ const TERMS_FR: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: "Un mode d'heure d'envoi dans lequel Samply choisit une heure aléatoire entre une heure De et une heure À pour chaque participant à chaque jour de déclenchement, avec un écart minimum entre les tirages si plusieurs envois par fenêtre sont demandés. Choisi à l'étape 3 du formulaire de planning. Produit un planning aléatoire ou personnel-aléatoire.",
+    definition: "Un mode d'heure d'envoi dans lequel Samply choisit une heure aléatoire entre une heure De et une heure À pour chaque participant à chaque jour de déclenchement, avec un écart minimum entre les tirages si plusieurs envois par fenêtre sont demandés. Choisi à l'étape 3 du formulaire de planning. Produit un planning aléatoire ou personnel-aléatoire. Avec plusieurs envois, la fenêtre est divisée en tranches égales et une heure est tirée dans chacune ; l'écart minimum ne s'applique pas entre fenêtres distinctes.",
   },
   {
     term: 'Timestamp sent',
@@ -1197,7 +1197,7 @@ const TERMS_ES: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: "Un modo de hora de envío en el que Samply elige una hora aleatoria entre una hora De y una hora A para cada participante en cada día de disparo, con un intervalo mínimo entre extracciones si se solicitan varios envíos por ventana. Se elige en el paso 3 del formulario de calendario. Produce un calendario aleatorio o personal-aleatorio.",
+    definition: "Un modo de hora de envío en el que Samply elige una hora aleatoria entre una hora De y una hora A para cada participante en cada día de disparo, con un intervalo mínimo entre extracciones si se solicitan varios envíos por ventana. Se elige en el paso 3 del formulario de calendario. Produce un calendario aleatorio o personal-aleatorio. Con varios envíos, la ventana se divide en tramos iguales y se elige una hora en cada uno; entre ventanas distintas no se aplica el intervalo mínimo.",
   },
   {
     term: 'Timestamp sent',
@@ -1331,7 +1331,7 @@ const TERMS_PT: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: "Um modo de horário de envio em que o Samply escolhe um horário aleatório entre um horário De e um horário Até para cada participante em cada dia de disparo, com um intervalo mínimo entre extrações se forem solicitados vários envios por janela. Escolhido no passo 3 do formulário de calendário. Produz um calendário aleatório ou pessoal-aleatório.",
+    definition: "Um modo de horário de envio em que o Samply escolhe um horário aleatório entre um horário De e um horário Até para cada participante em cada dia de disparo, com um intervalo mínimo entre extrações se forem solicitados vários envios por janela. Escolhido no passo 3 do formulário de calendário. Produz um calendário aleatório ou pessoal-aleatório. Com vários envios, a janela é dividida em partes iguais e é sorteado um horário em cada uma; entre janelas diferentes o intervalo mínimo não se aplica.",
   },
   {
     term: 'Timestamp sent',
@@ -1465,7 +1465,7 @@ const TERMS_JA: { term: string; definition: string }[] = [
   },
   {
     term: 'Time window',
-    definition: '送信時刻モードの一つで、Samplyが各発火日に各参加者について「From」と「To」の時刻の間でランダムな時刻を選び、ウィンドウあたり複数の送信が要求された場合は抽選の間に最小間隔を設けます。スケジュールフォームのステップ3で選びます。ランダム化スケジュールまたは個人ランダム化スケジュールを生成します。',
+    definition: '送信時刻モードの一つで、Samplyが各発火日に各参加者について「From」と「To」の時刻の間でランダムな時刻を選び、ウィンドウあたり複数の送信が要求された場合は抽選の間に最小間隔を設けます。スケジュールフォームのステップ3で選びます。ランダム化スケジュールまたは個人ランダム化スケジュールを生成します。複数回送信する場合、ウィンドウは等しい区間に分けられ、各区間で 1 つずつ時刻が選ばれます。別々のウィンドウ間では最小間隔は適用されません。',
   },
   {
     term: 'Timestamp sent',
@@ -1599,7 +1599,7 @@ const TERMS_TR: { term: string; definition: string }[] = [
   },
   {
     term: "Time window",
-    definition: "Samply'nin her tetikleme gününde her katılımcı için bir Başlangıç ve Bitiş zamanı arasında rastgele bir zaman seçtiği bir gönderim zamanı modu; pencere başına birden fazla gönderim istendiğinde çekimler arasında minimum bir aralık bırakılır. Program formunun 3. adımında seçilir. Rastgele veya kişisel-rastgele bir program üretir.",
+    definition: "Samply'nin her tetikleme gününde her katılımcı için bir Başlangıç ve Bitiş zamanı arasında rastgele bir zaman seçtiği bir gönderim zamanı modu; pencere başına birden fazla gönderim istendiğinde çekimler arasında minimum bir aralık bırakılır. Program formunun 3. adımında seçilir. Rastgele veya kişisel-rastgele bir program üretir. Birden fazla gönderimde pencere eşit dilimlere bölünür ve her dilimde bir saat seçilir; ayrı pencereler arasında minimum boşluk uygulanmaz.",
   },
   {
     term: "Timestamp sent",
@@ -1733,7 +1733,7 @@ const TERMS_PL: { term: string; definition: string }[] = [
   },
   {
     term: "Time window",
-    definition: "Tryb czasu wysyłki, w którym Samply wybiera losowy czas pomiędzy godziną Start i End dla każdego uczestnika w każdym dniu wyzwalania; gdy wymagane jest wiele wysyłek na okno, między strzałami pozostaje minimalny odstęp. Wybierany w kroku 3 formularza harmonogramu. Generuje harmonogram losowy lub osobisty-losowy.",
+    definition: "Tryb czasu wysyłki, w którym Samply wybiera losowy czas pomiędzy godziną Start i End dla każdego uczestnika w każdym dniu wyzwalania; gdy wymagane jest wiele wysyłek na okno, między strzałami pozostaje minimalny odstęp. Wybierany w kroku 3 formularza harmonogramu. Generuje harmonogram losowy lub osobisty-losowy. Przy kilku wysyłkach okno jest dzielone na równe części, a w każdej losowany jest jeden czas; między osobnymi oknami minimalny odstęp nie obowiązuje.",
   },
   {
     term: "Timestamp sent",
@@ -1867,7 +1867,7 @@ const TERMS_AR: { term: string; definition: string }[] = [
   },
   {
     term: "Time window",
-    definition: "وضع وقت إرسال تختار فيه Samply وقتاً عشوائياً بين ساعة البدء والانتهاء لكل مشارك في كل يوم إطلاق؛ عندما يلزم إرسال متعدّد ضمن نافذة، تُترَك فجوة دنيا بين الإرساليات. يُختار في الخطوة 3 من نموذج الجدول. يُنتج جدولاً عشوائياً أو شخصياً-عشوائياً.",
+    definition: "وضع وقت إرسال تختار فيه Samply وقتاً عشوائياً بين ساعة البدء والانتهاء لكل مشارك في كل يوم إطلاق؛ عندما يلزم إرسال متعدّد ضمن نافذة، تُترَك فجوة دنيا بين الإرساليات. يُختار في الخطوة 3 من نموذج الجدول. يُنتج جدولاً عشوائياً أو شخصياً-عشوائياً. عند طلب عدة إرسالات، تُقسَّم النافذة إلى أجزاء متساوية ويُختار وقت واحد في كل جزء؛ ولا تُطبَّق الفجوة الدنيا بين النوافذ المنفصلة.",
   },
   {
     term: "Timestamp sent",

@@ -6,6 +6,7 @@ import Result from "@/lib/models/result";
 import Project from "@/lib/models/project";
 import mongoose from "mongoose";
 import { getT } from "@/lib/i18n.server";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 export const metadata = { title: "History — Samply" };
 
@@ -25,15 +26,6 @@ function statusLabel(events: Array<{ status: string }> | undefined, t: (k: strin
   if (statuses.has("completed")) return t("participant.history.statusCompleted");
   if (statuses.has("tapped")) return t("participant.history.statusTapped");
   return t("participant.history.statusSent");
-}
-
-function fmtDate(d?: Date): string {
-  if (!d) return "—";
-  try {
-    return new Date(d).toLocaleString();
-  } catch {
-    return "—";
-  }
 }
 
 export default async function ParticipantHistoryPage({
@@ -171,7 +163,7 @@ export default async function ParticipantHistoryPage({
                       alignItems: "center",
                     }}
                   >
-                    <div style={{ color: "var(--ink-60)" }}>{fmtDate(r.created)}</div>
+                    <div style={{ color: "var(--ink-60)" }}><LocalDate value={r.created} /></div>
                     <div style={{ color: "var(--ink)" }}>{projectName}</div>
                     <div style={{ color: "var(--ink)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{title}</div>
                     <div>

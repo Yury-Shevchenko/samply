@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { PendingActions } from "./PendingActions";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 import { useT } from "@/app/components/TranslationProvider";
 
 const STATUS_BG_COLOR: Record<string, { bg: string; color: string }> = {
@@ -32,29 +33,21 @@ const TD: React.CSSProperties = {
   whiteSpace: "nowrap",
 };
 
-function fmt(d?: string | null): string {
-  if (!d) return "—";
-  const date = new Date(d);
-  if (isNaN(date.getTime())) return "—";
-  return date.toLocaleString(undefined, {
-    month: "short", day: "numeric", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
-}
+const FMT_OPTIONS: Intl.DateTimeFormatOptions = {
+  month: "short", day: "numeric", year: "numeric",
+  hour: "2-digit", minute: "2-digit",
+};
 
-function fmtShort(d?: string | null): string {
-  if (!d) return "—";
-  const date = new Date(d);
-  if (isNaN(date.getTime())) return "—";
-  return date.toLocaleString(undefined, {
-    month: "short", day: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
-}
+const FMT_SHORT_OPTIONS: Intl.DateTimeFormatOptions = {
+  month: "short", day: "numeric",
+  hour: "2-digit", minute: "2-digit",
+};
 
 export interface PendingTableRow {
   id: string;
   scheduledFor: string | null;
+  // Timezone the schedule was computed in; the time is shown in it.
+  timezone?: string;
   status: string;
   title: string;
   isReminder: boolean;
@@ -225,7 +218,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                       style={{ cursor: "pointer", accentColor: "var(--coral)", width: "1rem", height: "1rem" }}
                     />
                   </td>
-                  <td style={TD} suppressHydrationWarning>{fmt(row.scheduledFor)}</td>
+                  <td style={TD}><LocalDate value={row.scheduledFor} options={FMT_OPTIONS} timeZone={row.timezone} /></td>
                   <td style={{ padding: "0.75rem 1rem" }}>
                     <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.7rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
                       {statusLabel}
@@ -327,8 +320,8 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                 </div>
 
                 {/* Date */}
-                <div suppressHydrationWarning style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", fontWeight: 600, color: "var(--ink)", marginBottom: "0.35rem" }}>
-                  {fmtShort(row.scheduledFor)}
+                <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", fontWeight: 600, color: "var(--ink)", marginBottom: "0.35rem" }}>
+                  <LocalDate value={row.scheduledFor} options={FMT_SHORT_OPTIONS} timeZone={row.timezone} />
                 </div>
 
                 {/* Title */}

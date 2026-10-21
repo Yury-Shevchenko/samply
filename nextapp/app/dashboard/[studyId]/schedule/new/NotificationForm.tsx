@@ -785,6 +785,9 @@ export default function NotificationForm({ projectId, participants, groups, pres
                 </div>
               </div>
             ))}
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", margin: 0, lineHeight: 1.6 }}>
+              {t("notificationForm.windowHint")}
+            </p>
             <AddLink label={t("notificationForm.addWindow")} onClick={() => setTimeWindows((p) => [...p, { hourStart: 9, minuteStart: 0, hourEnd: 21, minuteEnd: 0, distance: 2700000, number: 5 }])} />
           </div>
         )}

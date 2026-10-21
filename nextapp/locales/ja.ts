@@ -1324,6 +1324,7 @@ const ja: DeepLoose<Messages> = {
     labelTo:             "→ 終了",
     numNotifications:    "# 通知",
     minGap:              "最小間隔(分)",
+    windowHint:          "Samply は各ウィンドウを通知数と同じ数の等しい区間に分け、各区間で1つずつランダムな時刻を選びます（最小間隔は必ず守られます）。複数のウィンドウはそれぞれ独立して抽選されるため、ウィンドウをまたぐ間隔は保証されません。1日の各時間帯に1件ずつ、全体で間隔を保ちたい場合は、1つのウィンドウを使用してください。",
     labelRepeatEvery:    "繰り返し",
     minuteSingular:      "分",
     minutePlural:        "分",

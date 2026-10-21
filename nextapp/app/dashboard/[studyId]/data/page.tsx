@@ -231,7 +231,7 @@ export default async function DataPage({ params, searchParams }: Props) {
                       <div className="truncate">{r.data?.title ?? r.data?.message ?? "—"}</div>
                     </td>
                     <td style={{ padding: "1.1rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
-                      <LocalDate iso={String(r.created)} />
+                      <LocalDate value={String(r.created)} />
                     </td>
                     <td style={{ padding: "1.1rem 1.8rem" }}>
                       <span style={{

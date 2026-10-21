@@ -1341,6 +1341,7 @@ const ko: DeepLoose<Messages> = {
     labelTo:             '→  까지',
     numNotifications:    '# 알림 수',
     minGap:              '최소 간격 (분)',
+    windowHint:          "Samply는 각 창을 알림 수만큼 같은 구간으로 나누고 구간마다 무작위 시각을 하나씩 고르며, 알림 사이에는 최소 간격이 유지됩니다. 여러 창은 서로 독립적으로 추첨되므로 창 사이의 간격은 보장되지 않습니다. 하루의 각 시간대에 하나씩, 전체적으로 간격을 유지하려면 하나의 창을 사용하세요.",
     labelRepeatEvery:    '매',
     minuteSingular:      '분',
     minutePlural:        '분',

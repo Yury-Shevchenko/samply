@@ -1324,6 +1324,7 @@ const pt: DeepLoose<Messages> = {
     labelTo:             "→  Até",
     numNotifications:    "# notificações",
     minGap:              "Intervalo mín (min)",
+    windowHint:          "O Samply divide cada janela em partes iguais — uma por notificação — e sorteia um horário aleatório em cada uma, respeitando o intervalo mínimo. Janelas diferentes são sorteadas de forma independente, por isso o intervalo não é garantido entre elas. Para uma notificação por período do dia com intervalo constante, use uma única janela.",
     labelRepeatEvery:    "Repetir a cada",
     minuteSingular:      "minuto",
     minutePlural:        "minutos",

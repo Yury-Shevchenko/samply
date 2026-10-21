@@ -4,6 +4,7 @@ import { fetchProjectById } from "@/lib/data/projects";
 import { fetchParticipants, type MobileUser } from "@/lib/data/participants";
 import { ParticipantRow } from "./ParticipantRow";
 import { getT } from "@/lib/i18n.server";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 const PAGE_SIZE = 50;
 
@@ -195,7 +196,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
                       {p.token ? p.token.slice(0, 12) + "…" : <span style={{ color: "var(--coral)", fontWeight: 500 }} title={t("participants.noTokenTitle")}>{t("participants.noToken")}</span>}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
-                      {p.created ? new Date(p.created).toLocaleString(undefined, { year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "—"}
+                      <LocalDate value={p.created} options={{ year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }} />
                     </td>
                   </ParticipantRow>
                 ))}

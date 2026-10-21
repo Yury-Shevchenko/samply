@@ -5,6 +5,7 @@ import { fetchScheduledNotifications, type NotificationConfig } from "@/lib/data
 import ProjectSelector from "@/app/components/ProjectSelector";
 import { deleteAllNotificationsAction, deleteNotificationAction } from "./actions";
 import { DeleteScheduleButton } from "./DeleteScheduleButton";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 export const metadata = { title: "Scheduled Notifications — Samply" };
 
@@ -43,7 +44,7 @@ function scheduleType(n: NotificationConfig): string {
   return "fixed";
 }
 
-function scheduleDescription(n: NotificationConfig): string {
+function scheduleDescription(n: NotificationConfig): React.ReactNode {
   const type = scheduleType(n);
   if (type === "random") {
     const count = n.number ?? "?";
@@ -51,7 +52,7 @@ function scheduleDescription(n: NotificationConfig): string {
     const to = n.readable?.to ?? "—";
     return `${count}× random · ${from}–${to}`;
   }
-  if (type === "one-time") return n.date ? new Date(n.date).toLocaleString() : "scheduled once";
+  if (type === "one-time") return n.date ? <LocalDate value={n.date} timeZone={n.timezone} /> : "scheduled once";
   if (type === "event") {
     const interval = n.readable?.interval ?? (n.distance != null ? `every ${Math.round(n.distance / 60000)}min` : null);
     const stopStr  = eventWindowStr(n.stop_event,  n.stop_next,  n.stop_after);
@@ -64,14 +65,6 @@ function scheduleDescription(n: NotificationConfig): string {
   }
   if (type === "repeating") return n.readable?.interval ?? (n.distance ? `every ${Math.round(n.distance / 60000)}min` : "repeating");
   return "fixed schedule";
-}
-
-function fmt(date: Date | string | undefined) {
-  if (!date) return "";
-  return new Date(date).toLocaleString("en-US", {
-    month: "short", day: "numeric", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
 }
 
 function NotifRow({
@@ -117,7 +110,7 @@ function NotifRow({
         <div style={{ fontFamily: "var(--font-mono)", fontSize: "1.05rem", color: "var(--ink-40)" }}>
           {scheduleDescription(n)}
           {n.created && (
-            <span style={{ marginLeft: "1rem", opacity: 0.7 }}>· created {fmt(n.created)}</span>
+            <span style={{ marginLeft: "1rem", opacity: 0.7 }}>· created <LocalDate value={n.created} options={{ month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" }} /></span>
           )}
         </div>
       </div>

@@ -1341,6 +1341,7 @@ const zh: DeepLoose<Messages> = {
     labelTo:             '→  到',
     numNotifications:    '# 通知数',
     minGap:              '最小间隔（分钟）',
+    windowHint:          "Samply 会将每个窗口平均分成若干段（每条通知一段），并在每段中随机选取一个时间，相邻通知之间至少相隔最小间隔。不同窗口分别独立抽取，因此窗口之间不保证间隔。若希望一天中每个时段各一条通知且全程保持间隔，请使用单个窗口。",
     labelRepeatEvery:    '每隔',
     minuteSingular:      '分钟',
     minutePlural:        '分钟',

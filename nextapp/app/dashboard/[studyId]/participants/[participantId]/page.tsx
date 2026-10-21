@@ -10,6 +10,7 @@ import CodeEditor from "./CodeEditor";
 import { fetchPendingNotifications } from "@/lib/data/scheduled";
 import { recordAccess } from "@/lib/data/audit";
 import { getT } from "@/lib/i18n.server";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 
 interface Props {
   params: Promise<{ studyId: string; participantId: string }>;
@@ -174,7 +175,7 @@ export default async function ParticipantDetailPage({ params }: Props) {
             </MetaRow>
           )}
           <MetaRow label={t("participants.labelEnrolled")}>
-            {participant.created ? new Date(participant.created).toLocaleString() : "—"}
+            <LocalDate value={participant.created} />
           </MetaRow>
           {participant.token ? (
             <MetaRow label={t("participants.labelPushToken")}>
@@ -260,8 +261,8 @@ export default async function ParticipantDetailPage({ params }: Props) {
                 {upcoming.map((row, i) => (
                   <tr key={String(row._id)} style={{ borderBottom: i < upcoming.length - 1 ? "1px solid var(--ink-10)" : "none" }}
                     className="hover:bg-[var(--paper)] transition-colors">
-                    <td style={{ padding: "0.9rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }} suppressHydrationWarning>
-                      {new Date(row.scheduledFor).toLocaleString()}
+                    <td style={{ padding: "0.9rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
+                      <LocalDate value={row.scheduledFor} timeZone={row.timezone} />
                     </td>
                     <td style={{ padding: "0.9rem 1.6rem", fontSize: "1.2rem", color: "var(--ink-60)", maxWidth: 280 }}>
                       <div className="truncate">{row.title || row.message || "—"}</div>
@@ -318,8 +319,8 @@ export default async function ParticipantDetailPage({ params }: Props) {
                       <td style={{ padding: "0.9rem 1.6rem", fontSize: "1.2rem", color: "var(--ink-60)", maxWidth: 280 }}>
                         <div className="truncate">{r.data?.title ?? r.data?.message ?? "—"}</div>
                       </td>
-                      <td style={{ padding: "0.9rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }} suppressHydrationWarning>
-                        {new Date(r.created).toLocaleString()}
+                      <td style={{ padding: "0.9rem 1.6rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
+                        <LocalDate value={r.created} />
                       </td>
                       <td style={{ padding: "0.9rem 1.6rem" }}>
                         <StatusPill status={status} />

@@ -20,6 +20,7 @@ import {
 import { DeleteScheduleButton } from "../DeleteScheduleButton";
 import { PendingTable } from "../PendingTable";
 import { getT } from "@/lib/i18n.server";
+import { LocalDate } from "@/app/components/ui/LocalDate";
 import cronstrue from "cronstrue";
 
 interface Props {
@@ -36,14 +37,15 @@ interface Props {
 }
 
 
-function fmt(d?: Date | string | null) {
-  if (!d) return "—";
-  const date = new Date(d as string);
-  if (isNaN(date.getTime())) return "—";
-  return date.toLocaleString(undefined, {
-    month: "short", day: "numeric", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
+const FMT_OPTIONS: Intl.DateTimeFormatOptions = {
+  month: "short", day: "numeric", year: "numeric",
+  hour: "2-digit", minute: "2-digit",
+};
+
+// Schedule times render in the schedule's own timezone (labelled, local time
+// in the tooltip); without a timeZone they render in the viewer's timezone.
+function fmt(d?: Date | string | null, timeZone?: string) {
+  return <LocalDate value={d} options={FMT_OPTIONS} timeZone={timeZone} />;
 }
 
 // The Express backend stores event strategy as flat fields:
@@ -314,6 +316,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     return {
       id: pnId,
       scheduledFor: pn.scheduledFor ? String(pn.scheduledFor) : null,
+      timezone: pn.timezone ?? notification?.timezone,
       status: pn.status,
       title: pn.title || pn.message || "",
       isReminder: pn.isReminder ?? false,
@@ -325,17 +328,20 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
     };
   });
 
+  // The date is a client component, so split the translated sentence around it.
+  const [createdPre, createdPost = ""] = t("scheduled.created", { date: "\u0000" }).split("\u0000");
+
   const deleteScheduleAction = notification && canEdit
     ? deleteNotificationAction.bind(null, studyId, notificationId!, `/dashboard/${studyId}/schedule`)
     : null;
 
   const startDesc = notification
     ? (describeEvent(notification.start_event, notification.start_next, notification.start_after)
-        ?? (notification.int_start ? fmt(notification.int_start) : null))
+        ?? (notification.int_start ? fmt(notification.int_start, notification.timezone) : null))
     : null;
   const stopDesc = notification
     ? (describeEvent(notification.stop_event, notification.stop_next, notification.stop_after)
-        ?? (notification.int_end ? fmt(notification.int_end) : null))
+        ?? (notification.int_end ? fmt(notification.int_end, notification.timezone) : null))
     : null;
 
   return (
@@ -408,7 +414,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               </span>
               {notification.created && (
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "var(--ink-40)" }}>
-                  {t("scheduled.created", { date: fmt(notification.created) })}
+                  {createdPre}{fmt(notification.created)}{createdPost}
                 </span>
               )}
             </div>
@@ -440,7 +446,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
             )}
             {/* One-time */}
             {type_ === "one-time" && notification.date && (
-              <MetaRow label={t("scheduled.labelScheduledFor")}>{fmt(notification.date)}</MetaRow>
+              <MetaRow label={t("scheduled.labelScheduledFor")}>{fmt(notification.date, notification.timezone)}</MetaRow>
             )}
             {/* Enrollment */}
             {type_ === "enrollment" && (() => {
@@ -456,7 +462,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
               return <MetaRow label={t("scheduled.labelDelayAfterJoin")}>{t("scheduled.immediately")}</MetaRow>;
             })()}
             {notification.window_from && notification.window_to && (
-              <MetaRow label={t("scheduled.labelTimeWindow")}>{fmt(notification.window_from)} – {fmt(notification.window_to)}</MetaRow>
+              <MetaRow label={t("scheduled.labelTimeWindow")}>{fmt(notification.window_from, notification.timezone)} – {fmt(notification.window_to, notification.timezone)}</MetaRow>
             )}
             {/* Repeat */}
             {(() => {
@@ -568,8 +574,8 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
                           {JOB_TYPE_LABELS[job.name] ?? job.name}
                         </span>
                       </td>
-                      <td style={TD}>{fmt(job.nextRunAt)}</td>
-                      <td style={{ ...TD, color: "var(--ink-40)" }}>{fmt(job.lastRunAt)}</td>
+                      <td style={TD}>{fmt(job.nextRunAt, job.data.timezone ?? notification.timezone)}</td>
+                      <td style={{ ...TD, color: "var(--ink-40)" }}>{fmt(job.lastRunAt, job.data.timezone ?? notification.timezone)}</td>
                       <td style={{ ...TD, color: "var(--ink-40)" }}>{job.repeatInterval ?? "—"}</td>
                       <td style={TD}>
                         {job.data.userid
