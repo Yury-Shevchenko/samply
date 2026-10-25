@@ -1072,7 +1072,7 @@ const ru: DeepLoose<Messages> = {
     subLastDays:          "за {days} дней",
     subOpenedOf:          "{responded} из {sent} открыто",
     subSentOpened:        "отправлено → открыто",
-    subUniqueRespondents: "уникальных участников",
+    subUniqueRespondents: "уникальных респондентов",
     chartRateOverTime:    "Процент ответов за период",
     chartFunnel:          "Воронка доставки",
     chartResponseTime:    "Распределение времени ответа",

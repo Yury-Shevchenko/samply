@@ -1076,7 +1076,7 @@ const de: DeepLoose<Messages> = {
     subEntireStudy:       "gesamte Studie",
     subOpenedOf:          "{responded} von {sent} geöffnet",
     subSentOpened:        "gesendet → geöffnet",
-    subUniqueRespondents: "eindeutige Teilnehmende",
+    subUniqueRespondents: "verschiedene Antwortende",
     chartRateOverTime:    "Antwortrate über die Zeit",
     chartFunnel:          "Zustellungstrichter",
     chartResponseTime:    "Antwortzeitverteilung",

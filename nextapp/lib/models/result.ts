@@ -7,6 +7,10 @@ export interface IResult {
   batch?: string;
   messageId?: string;
   notificationConfigId?: string;
+  /** Shared by an original send and its reminders; see lib/occasions.ts. */
+  finid?: string;
+  /** A geofence trigger recorded without showing a notification; never a prompt. */
+  invisible?: boolean;
   created: Date;
   data?: {
     title?: string;

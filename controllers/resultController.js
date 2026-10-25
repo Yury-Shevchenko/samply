@@ -89,6 +89,8 @@ exports.updatelocation = async (req, res) => {
         created: Date.now(),
       },
     ],
+    // Only stored when true, so rows from older app versions stay unmarked.
+    invisible: req.body.invisible === true || undefined,
   });
   await result.save();
   res.status(200).json({ message: "OK" });

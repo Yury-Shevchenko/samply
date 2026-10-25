@@ -1,6 +1,7 @@
 import connectDB from "@/lib/db";
 import Result from "@/lib/models/result";
 import mongoose from "mongoose";
+import { groupByOccasion } from "@/lib/data/analytics";
 
 export interface StudyCompliance {
   projectId: string;
@@ -18,38 +19,25 @@ export async function fetchComplianceForProjects(
   const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
   const oids = projectIds.map((id) => new mongoose.Types.ObjectId(id));
 
-  // Both sides come from the Result collection so the denominator and numerator
-  // are always comparable. "sent" = every Result record in the window (one per
-  // notification delivered). "responded" = those that have a "tapped" event
-  // (participant opened the survey link).
-  const [sentAgg, respondedAgg] = await Promise.all([
-    Result.aggregate([
-      { $match: { project: { $in: oids }, created: { $gte: since } } },
-      { $group: { _id: "$project", count: { $sum: 1 } } },
-    ]),
-    Result.aggregate([
-      {
-        $match: {
-          project: { $in: oids },
-          created: { $gte: since },
-          "events.status": "tapped",
-        },
-      },
-      { $group: { _id: "$project", count: { $sum: 1 } } },
-    ]),
-  ]);
+  // One aggregation for both sides, so the denominator and numerator are always
+  // comparable. "sent" = sampling occasions in the window: an original send
+  // together with its reminders counts once, and rows that were never a prompt
+  // (survey-data saves) not at all (see groupByOccasion).
+  // "responded" = occasions with any responded event on any of their rows.
+  // Matches the Analytics page: the same statuses, test sends excluded.
+  const rows: { _id: mongoose.Types.ObjectId; sent: number; responded: number }[] =
+    await Result.aggregate([
+      { $match: { project: { $in: oids }, created: { $gte: since }, isTest: { $ne: true } } },
+      ...groupByOccasion(),
+      { $group: { _id: "$project", sent: { $sum: 1 }, responded: { $sum: "$responded" } } },
+    ]);
 
-  const sentMap = new Map<string, number>(
-    sentAgg.map((r: { _id: mongoose.Types.ObjectId; count: number }) => [String(r._id), r.count]),
-  );
-  const resultMap = new Map<string, number>(
-    respondedAgg.map((r: { _id: mongoose.Types.ObjectId; count: number }) => [String(r._id), r.count]),
-  );
+  const byProject = new Map(rows.map((r) => [String(r._id), r]));
 
   const out = new Map<string, StudyCompliance>();
   for (const id of projectIds) {
-    const sent = sentMap.get(id) ?? 0;
-    const responded = resultMap.get(id) ?? 0;
+    const sent = byProject.get(id)?.sent ?? 0;
+    const responded = byProject.get(id)?.responded ?? 0;
     const pct = sent > 0 ? Math.round((responded / sent) * 100) : responded > 0 ? 100 : 0;
     out.set(id, { projectId: id, sent, responded, pct });
   }

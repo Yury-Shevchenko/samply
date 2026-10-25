@@ -66,6 +66,22 @@ export const RESPONDED_STATUSES = ["tapped", "opened-in-app", "completed"];
 /** Statuses that mean the participant opened the link, for the delivery funnel. */
 const OPENED_STATUSES = ["tapped", "opened-in-app"];
 
+/**
+ * Statuses that mark a Result row as a prompt, i.e. something that belongs in
+ * a compliance denominator.
+ *
+ *  - `sent`             — every push send path writes it, failed sends included.
+ *  - `geofencing-event` — the app shows a local notification with its own
+ *                         messageId, and taps on it are recorded on this row.
+ *
+ * Rows from POST /save (survey data the app submits) carry no events at all
+ * and were counted as missed prompts, pulling compliance down. A geofence set
+ * to `invisible` also writes `geofencing-event` without showing anything;
+ * groupByOccasion excludes those by the row's `invisible` flag, which only app
+ * versions that report it set — older rows still count.
+ */
+const PROMPT_STATUSES = ["sent", "geofencing-event"];
+
 /** Aggregation expression: 1 when the document has any responded status, else 0. */
 const HAS_RESPONDED = {
   $cond: [
@@ -101,6 +117,81 @@ const FIRST_RESPONSE_AT = {
   },
 };
 
+/** Aggregation expression: 1 when the document has an `opened` status, else 0. */
+const HAS_OPENED = {
+  $cond: [
+    {
+      $gt: [
+        { $size: { $setIntersection: [{ $ifNull: ["$events.status", []] }, OPENED_STATUSES] } },
+        0,
+      ],
+    },
+    1,
+    0,
+  ],
+};
+
+/**
+ * Pipeline stages that collapse Result rows into sampling occasions.
+ *
+ * Each push is its own Result row, reminders included, so a participant who
+ * skipped the original and answered the reminder counted as one miss plus one
+ * response — 50% compliance for one completed survey. Researchers reported it
+ * as compliance looking lower than it was. An original send and the reminders
+ * it spawned share a `finid` (generated per participant per send, see
+ * services/notificationSender.js), so they are grouped on it; rows without
+ * one — sends with no reminders configured — stay an occasion of their own.
+ *
+ * Each output document has:
+ *  - `project`, `samplyid`, `notificationConfigId` — of the original send
+ *  - `created`     — when the original was sent; time-of-day and response
+ *                    latency are measured from the first prompt, not the reminder
+ *  - `lastCreated` — the latest send in the occasion
+ *  - `responded` / `opened` / `completed` — 1 if any row in the occasion has it
+ *  - `respondedAt` — earliest response across the occasion, or null
+ *
+ * `finid` is keyed together with project and participant as a guard; it is
+ * already unique per participant in every send path, legacy Agenda included.
+ *
+ * Only rows that put a prompt in front of the participant are counted — see
+ * PROMPT_STATUSES.
+ */
+export function groupByOccasion(): mongoose.PipelineStage[] {
+  return [
+    { $match: { "events.status": { $in: PROMPT_STATUSES }, invisible: { $ne: true } } },
+    // So $first picks the original: a reminder of a send that had no
+    // notificationConfigId is given a random one.
+    { $sort: { created: 1 } },
+    {
+      $group: {
+        _id: {
+          $cond: [
+            { $eq: [{ $ifNull: ["$finid", null] }, null] },
+            "$_id",
+            { project: "$project", samplyid: "$samplyid", finid: "$finid" },
+          ],
+        },
+        project: { $first: "$project" },
+        samplyid: { $first: "$samplyid" },
+        notificationConfigId: { $first: "$notificationConfigId" },
+        created: { $min: "$created" },
+        lastCreated: { $max: "$created" },
+        responded: { $max: HAS_RESPONDED },
+        opened: { $max: HAS_OPENED },
+        completed: { $max: { $cond: [{ $in: ["completed", { $ifNull: ["$events.status", []] }] }, 1, 0] } },
+        respondedAt: { $min: FIRST_RESPONSE_AT },
+      },
+    },
+  ];
+}
+
+/** Stages, after groupByOccasion, that keep responded occasions with their latency in `deltaMs`. */
+const RESPONSE_LATENCY = [
+  { $match: { responded: 1 } },
+  { $project: { deltaMs: { $subtract: ["$respondedAt", "$created"] } } },
+  { $match: { deltaMs: { $gte: 0 } } },
+];
+
 export interface AnalyticsOverview {
   totalSent: number;
   totalResponded: number;
@@ -117,19 +208,33 @@ export async function fetchAnalyticsOverview(
   const oid = new mongoose.Types.ObjectId(projectId);
   const window = createdFilter(days);
 
-  const [totalSent, totalResponded, activeParticipants, avgAgg] = await Promise.all([
-    Result.countDocuments({ project: oid, ...window }),
-    Result.countDocuments({ project: oid, ...window, "events.status": { $in: RESPONDED_STATUSES } }),
-    Result.distinct("samplyid", { project: oid, ...window }).then((a) => a.length),
+  const [[totals], activeParticipants, avgAgg] = await Promise.all([
     Result.aggregate([
-      { $match: { project: oid, ...window, "events.status": { $in: RESPONDED_STATUSES } } },
-      { $project: { respondedAt: FIRST_RESPONSE_AT, sentAt: "$created" } },
-      { $project: { deltaMs: { $subtract: ["$respondedAt", "$sentAt"] } } },
-      { $match: { deltaMs: { $gte: 0 } } },
+      { $match: { project: oid, ...window } },
+      ...groupByOccasion(),
+      { $group: { _id: null, sent: { $sum: 1 }, responded: { $sum: "$responded" } } },
+    ]),
+    // Participants who answered at least one prompt in the window — what the
+    // tile ("unique respondents") and the docs promise. This used to count
+    // anyone with any row, so participants who never responded, and rows that
+    // were never prompts, made a study look more engaged than it was.
+    Result.aggregate([
+      { $match: { project: oid, ...window } },
+      ...groupByOccasion(),
+      { $match: { responded: 1 } },
+      { $group: { _id: "$samplyid" } },
+      { $count: "n" },
+    ]).then((a) => a[0]?.n ?? 0),
+    Result.aggregate([
+      { $match: { project: oid, ...window } },
+      ...groupByOccasion(),
+      ...RESPONSE_LATENCY,
       { $group: { _id: null, avg: { $avg: "$deltaMs" } } },
     ]),
   ]);
 
+  const totalSent: number = totals?.sent ?? 0;
+  const totalResponded: number = totals?.responded ?? 0;
   const compliancePct = totalSent > 0 ? Math.round((totalResponded / totalSent) * 100) : 0;
   const avgResponseTimeMs = avgAgg[0]?.avg ?? null;
 
@@ -181,11 +286,12 @@ export async function fetchResponseTimeSeries(
     await Promise.all([
       Result.aggregate([
         { $match: { project: oid, ...createdFilter(days) } },
+        ...groupByOccasion(),
         {
           $group: {
             _id: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
             sent: { $sum: 1 },
-            responded: { $sum: HAS_RESPONDED },
+            responded: { $sum: "$responded" },
           },
         },
         { $sort: { _id: 1 } },
@@ -227,34 +333,21 @@ export async function fetchDeliveryFunnel(
   // would understate delivery dramatically. The honest funnel is Sent → Opened
   // → Completed; loss between Sent and Opened mixes delivery failure and
   // engagement failure, and the dashboard explains that explicitly.
+  //
+  // Counted per occasion: a reminder's tap lands on the reminder's row while
+  // its completion lands on the original's (the reminder reuses the original's
+  // URL, MESSAGE_ID included), so per-row counts could show more completed
+  // than opened. "Opened" covers both ways a participant can open the link:
+  // tapping the push, or opening it from the History screen after missing it.
   const [agg] = await Result.aggregate([
     { $match: { project: oid, ...createdFilter(days) } },
-    {
-      $project: {
-        hasSent: { $literal: 1 },
-        // "Opened" covers both ways a participant can open the link: tapping the
-        // push, or opening it from the History screen after missing the push.
-        hasTapped: {
-          $cond: [
-            {
-              $gt: [
-                { $size: { $setIntersection: [{ $ifNull: ["$events.status", []] }, OPENED_STATUSES] } },
-                0,
-              ],
-            },
-            1,
-            0,
-          ],
-        },
-        hasCompleted: { $cond: [{ $in: ["completed", { $ifNull: ["$events.status", []] }] }, 1, 0] },
-      },
-    },
+    ...groupByOccasion(),
     {
       $group: {
         _id: null,
-        sent: { $sum: "$hasSent" },
-        tapped: { $sum: "$hasTapped" },
-        completed: { $sum: "$hasCompleted" },
+        sent: { $sum: 1 },
+        tapped: { $sum: "$opened" },
+        completed: { $sum: "$completed" },
       },
     },
   ]);
@@ -296,10 +389,9 @@ export async function fetchResponseTimeDistribution(
   };
 
   const rows: { _id: number | string; count: number }[] = await Result.aggregate([
-    { $match: { project: oid, ...createdFilter(days), "events.status": { $in: RESPONDED_STATUSES } } },
-    { $project: { respondedAt: FIRST_RESPONSE_AT, sentAt: "$created" } },
-    { $project: { deltaMs: { $subtract: ["$respondedAt", "$sentAt"] } } },
-    { $match: { deltaMs: { $gte: 0 } } },
+    { $match: { project: oid, ...createdFilter(days) } },
+    ...groupByOccasion(),
+    ...RESPONSE_LATENCY,
     {
       $bucket: {
         groupBy: "$deltaMs",
@@ -332,6 +424,7 @@ export async function fetchHourlyPattern(
 
   const rows: { _id: number; totalSent: number; avgPct: number }[] = await Result.aggregate([
     { $match: { project: oid, ...createdFilter(days) } },
+    ...groupByOccasion(),
     {
       $group: {
         _id: {
@@ -339,7 +432,7 @@ export async function fetchHourlyPattern(
           day: { $dateToString: { format: "%Y-%m-%d", date: "$created" } },
         },
         sent: { $sum: 1 },
-        responded: { $sum: HAS_RESPONDED },
+        responded: { $sum: "$responded" },
       },
     },
     {
@@ -382,12 +475,13 @@ export async function fetchParticipantCompliance(
   const rows: { _id: string; sent: number; responded: number; lastActive: Date }[] =
     await Result.aggregate([
       { $match: { project: oid, ...createdFilter(days) } },
+      ...groupByOccasion(),
       {
         $group: {
           _id: "$samplyid",
           sent: { $sum: 1 },
-          responded: { $sum: HAS_RESPONDED },
-          lastActive: { $max: "$created" },
+          responded: { $sum: "$responded" },
+          lastActive: { $max: "$lastCreated" },
         },
       },
       { $sort: { responded: -1 } },
@@ -472,11 +566,12 @@ export async function fetchSchedulePerformance(
   // project but no notificationConfigId.
   const rows: { _id: string | null; sent: number; responded: number }[] = await Result.aggregate([
     { $match: { project: oid, ...createdFilter(days), "events.status": "sent" } },
+    ...groupByOccasion(),
     {
       $group: {
         _id: { $ifNull: ["$notificationConfigId", null] },
         sent: { $sum: 1 },
-        responded: { $sum: HAS_RESPONDED },
+        responded: { $sum: "$responded" },
       },
     },
     { $sort: { sent: -1 } },

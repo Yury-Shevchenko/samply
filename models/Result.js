@@ -40,6 +40,11 @@ const resultSchema = new mongoose.Schema({
   // the data export, so testing the setup cannot distort the numbers the
   // researcher later publishes.
   isTest: Boolean,
+  // A geofence trigger the app recorded without showing a notification (the
+  // location is set to "invisible"). Kept as data, but it was never a prompt, so
+  // compliance leaves it out. Only app versions that report the flag set it;
+  // older rows have no way to tell.
+  invisible: Boolean,
   // The append-only event log every compliance figure is derived from. `status`
   // is constrained to the documented vocabulary because an unconstrained string
   // is exactly how `opened-in-app` came to be written by the app and ignored by

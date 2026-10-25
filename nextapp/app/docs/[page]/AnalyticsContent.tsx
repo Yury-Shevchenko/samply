@@ -132,11 +132,23 @@ function AnalyticsContentEn() {
         Four headline numbers at the top of the page: <strong>Total sent</strong>{" "}
         in the selected window, <strong>response rate</strong>{" "}
         (responded ÷ sent), <strong>mean latency</strong> from prompt to first
-        tap, and <strong>active today</strong> (participants who responded at
-        least once). Below them, a daily-response-rate time series with a
-        7-day rolling mean. Use the day-range selector (1 / 7 / 14 / 30 / 90)
+        tap, and <strong>active participants</strong> (participants who
+        responded at least once in the selected window). Below them, a
+        daily-response-rate time series with a
+        7-day rolling mean. Use the day-range selector (All / 7d / 14d / 30d)
         in the page header to widen or narrow the window — every panel below
         respects that choice.
+      </p>
+      <p>
+        A notification and its reminders count as <strong>one prompt</strong>{" "}
+        in every panel: a participant who skips the original and answers a
+        reminder has answered one prompt, not missed one and answered another.
+        Latency is measured from the original send. The CSV export still has
+        one row per push; rows of the same prompt share an{" "}
+        <code>occasion_id</code> (the original&rsquo;s{" "}
+        <code>message_id</code>, which is also the MESSAGE_ID the
+        reminder&rsquo;s survey link carries), and <code>is_reminder</code>{" "}
+        marks the reminders.
       </p>
       <p>
         Treat this as the dashboard for the dashboard. If the headline rate is
@@ -401,7 +413,7 @@ function AnalyticsContentDe() {
           <Ref>Vachon et al., 2019; Sokolovsky et al., 2014.</Ref>{" "}
           Missing-not-at-random ist in ESM der Regelfall, nicht der Sonderfall.
         </dd>
-        <dt>Späte Antworten untergraben das „Momentane".</dt>
+        <dt>Späte Antworten untergraben das „Momentane&ldquo;.</dt>
         <dd>
           Eine Antwort, die vierzig Minuten nach dem Prompt eintrifft, ist
           eine andere Messung als eine, die innerhalb von zwei Minuten kommt.{" "}
@@ -416,12 +428,24 @@ function AnalyticsContentDe() {
         Vier Kennzahlen oben auf der Seite: <strong>Gesamt gesendet</strong>{" "}
         im gewählten Zeitfenster, <strong>Antwortrate</strong>{" "}
         (beantwortet ÷ gesendet), <strong>mittlere Latenz</strong> vom Prompt
-        bis zum ersten Tap und <strong>heute aktiv</strong> (Teilnehmende,
-        die mindestens einmal geantwortet haben). Darunter eine
+        bis zum ersten Tap und <strong>aktive Teilnehmende</strong>{" "}
+        (Teilnehmende, die im gewählten Zeitfenster mindestens einmal
+        geantwortet haben). Darunter eine
         Zeitreihe der täglichen Antwortrate mit einem rollenden
-        7-Tage-Mittelwert. Mit dem Tagesbereichs-Schalter (1 / 7 / 14 / 30 /
-        90) im Seitenkopf erweitern oder verkleinern Sie das Fenster — alle
+        7-Tage-Mittelwert. Mit dem Tagesbereichs-Schalter (Alle / 7T / 14T / 30T)
+        im Seitenkopf erweitern oder verkleinern Sie das Fenster — alle
         nachfolgenden Panels berücksichtigen diese Wahl.
+      </p>
+      <p>
+        Eine Benachrichtigung und ihre Erinnerungen zählen in allen Panels als{" "}
+        <strong>ein Prompt</strong>: Wer die ursprüngliche Benachrichtigung
+        überspringt und auf eine Erinnerung antwortet, hat einen Prompt
+        beantwortet – nicht einen verpasst und einen beantwortet. Die Latenz
+        wird ab dem ursprünglichen Versand gemessen. Der CSV-Export enthält
+        weiterhin eine Zeile pro Push; Zeilen desselben Prompts teilen sich
+        eine <code>occasion_id</code> (die <code>message_id</code> des
+        Originals, zugleich die MESSAGE_ID im Umfragelink der Erinnerung), und{" "}
+        <code>is_reminder</code> kennzeichnet die Erinnerungen.
       </p>
       <p>
         Verstehen Sie dies als das Dashboard für das Dashboard. Wenn die
@@ -452,8 +476,8 @@ function AnalyticsContentDe() {
         ESM-Tools selten.{" "}
         <Ref>Eisele et al., 2022; Vachon et al., 2019.</Ref>{" "}
         Sie trennt die Frage „Verliert mein Protokoll Personen im Lauf der
-        Zeit?" von der Frage „Hatte meine Kohorte überhaupt Zeit
-        abzuspringen?" — Fragen, die ein Kalendertag-Plot vermischt und
+        Zeit?&ldquo; von der Frage „Hatte meine Kohorte überhaupt Zeit
+        abzuspringen?&ldquo; — Fragen, die ein Kalendertag-Plot vermischt und
         daher falsch beantworten kann.
       </p>
       <p>
@@ -470,7 +494,7 @@ function AnalyticsContentDe() {
         Stufen ist in Coral hervorgehoben.
       </p>
       <p>
-        Sinn des Funnels ist, „Nicht-Antwort" in zwei Abhilfemaßnahmen zu
+        Sinn des Funnels ist, „Nicht-Antwort&ldquo; in zwei Abhilfemaßnahmen zu
         zerlegen, die häufig verwechselt werden:
       </p>
       <dl>
@@ -499,10 +523,10 @@ function AnalyticsContentDe() {
         </dd>
       </dl>
       <Callout>
-        <strong>Warum keine „Empfangen"-Stufe?</strong>{" "}
+        <strong>Warum keine „Empfangen&ldquo;-Stufe?</strong>{" "}
         Mobile Betriebssysteme legen Push-Zustellung nicht offen — sobald
         Samply die Nachricht an Apple oder Google übergibt, ist die
-        Zustellung selbst opak. Das einzige „empfangen"-Signal, das die
+        Zustellung selbst opak. Das einzige „empfangen&ldquo;-Signal, das die
         Samply-Research-App schreiben kann, ist, wenn die App zum Zeitpunkt
         des Eintreffens zufällig im Vordergrund offen ist — was im normalen
         Gebrauch selten vorkommt. Dies als Zustellstufe darzustellen würde
@@ -521,7 +545,7 @@ function AnalyticsContentDe() {
       </p>
       <p>
         Stone und Kolleg:innen argumentierten, dass eine ESM-Antwort das
-        „Momentane" in EMA nur dann trägt, wenn sie nahe genug am Prompt
+        „Momentane&ldquo; in EMA nur dann trägt, wenn sie nahe genug am Prompt
         eintrifft, sodass sich der Zustand der Person nicht maßgeblich
         verschoben hat.{" "}
         <Ref>Stone et al., 2003; Shiffman, Stone &amp; Hufford, 2008.</Ref>{" "}
@@ -719,12 +743,25 @@ function AnalyticsContentFr() {
         Quatre chiffres clés en haut de la page : <strong>Total envoyé</strong>{" "}
         dans la fenêtre sélectionnée, <strong>taux de réponse</strong>{" "}
         (répondus ÷ envoyés), <strong>latence moyenne</strong> du prompt au
-        premier tap, et <strong>actifs aujourd&rsquo;hui</strong>{" "}
-        (participant·es ayant répondu au moins une fois). En dessous, une
+        premier tap, et <strong>participants actifs</strong>{" "}
+        (participant·es ayant répondu au moins une fois dans la fenêtre
+        sélectionnée). En dessous, une
         série temporelle du taux de réponse quotidien avec une moyenne mobile
-        sur 7 jours. Utilisez le sélecteur de période (1 / 7 / 14 / 30 / 90)
+        sur 7 jours. Utilisez le sélecteur de période (Tout / 7j / 14j / 30j)
         dans l&rsquo;en-tête pour élargir ou rétrécir la fenêtre — tous les
         panneaux ci-dessous respectent ce choix.
+      </p>
+      <p>
+        Une notification et ses rappels comptent comme <strong>une seule
+        sollicitation</strong> dans tous les panneaux : un participant qui
+        ignore l&rsquo;original et répond à un rappel a répondu à une
+        sollicitation, et non manqué l&rsquo;une et répondu à l&rsquo;autre.
+        La latence est mesurée à partir de l&rsquo;envoi original.
+        L&rsquo;export CSV conserve une ligne par push ; les lignes
+        d&rsquo;une même sollicitation partagent un <code>occasion_id</code>{" "}
+        (le <code>message_id</code> de l&rsquo;original, qui est aussi le
+        MESSAGE_ID du lien d&rsquo;enquête du rappel), et{" "}
+        <code>is_reminder</code> signale les rappels.
       </p>
       <p>
         Considérez-le comme le tableau de bord du tableau de bord. Si le taux
@@ -1028,11 +1065,23 @@ function AnalyticsContentEs() {
         <strong>Total enviado</strong> en la ventana seleccionada,{" "}
         <strong>tasa de respuesta</strong> (respondidos ÷ enviados),{" "}
         <strong>latencia media</strong> del prompt al primer tap, y{" "}
-        <strong>activos hoy</strong> (participantes que han respondido al
-        menos una vez). Debajo, una serie temporal de la tasa de respuesta
-        diaria con una media móvil de 7 días. Use el selector de rango (1 /
-        7 / 14 / 30 / 90) en la cabecera para ampliar o reducir la ventana
+        <strong>participantes activos</strong> (participantes que han respondido
+        al menos una vez en la ventana seleccionada). Debajo, una serie temporal
+        de la tasa de respuesta
+        diaria con una media móvil de 7 días. Use el selector de rango (Todo / 7d / 14d / 30d)
+        en la cabecera para ampliar o reducir la ventana
         — todos los paneles siguientes respetan esa elección.
+      </p>
+      <p>
+        Una notificación y sus recordatorios cuentan como <strong>un solo
+        aviso</strong> en todos los paneles: un participante que omite el
+        original y responde a un recordatorio ha respondido a un aviso, no ha
+        perdido uno y respondido otro. La latencia se mide desde el envío
+        original. La exportación CSV sigue teniendo una fila por push; las
+        filas del mismo aviso comparten un <code>occasion_id</code> (el{" "}
+        <code>message_id</code> del original, que es también el MESSAGE_ID del
+        enlace de encuesta del recordatorio), y <code>is_reminder</code> marca
+        los recordatorios.
       </p>
       <p>
         Trátelo como el tablero del tablero. Si la tasa global es saludable
@@ -1326,12 +1375,25 @@ function AnalyticsContentIt() {
         <strong>Totale inviati</strong> nella finestra selezionata,{" "}
         <strong>tasso di risposta</strong> (risposti ÷ inviati),{" "}
         <strong>latenza media</strong> dal prompt al primo tap, e{" "}
-        <strong>attivi oggi</strong> (partecipanti che hanno risposto
-        almeno una volta). Sotto, una serie temporale del tasso di
+        <strong>partecipanti attivi</strong> (partecipanti che hanno risposto
+        almeno una volta nella finestra selezionata). Sotto, una serie temporale
+        del tasso di
         risposta giornaliero con media mobile a 7 giorni. Usa il selettore
-        di intervallo (1 / 7 / 14 / 30 / 90) nell&rsquo;intestazione per
+        di intervallo (Tutto / 7gg / 14gg / 30gg) nell&rsquo;intestazione per
         allargare o restringere la finestra — tutti i pannelli sottostanti
         rispettano questa scelta.
+      </p>
+      <p>
+        Una notifica e i suoi promemoria contano come <strong>un unico
+        prompt</strong> in tutti i pannelli: un partecipante che salta
+        l&rsquo;originale e risponde a un promemoria ha risposto a un prompt,
+        non ne ha perso uno e risposto a un altro. La latenza è misurata
+        dall&rsquo;invio originale. L&rsquo;export CSV ha ancora una riga per
+        push; le righe dello stesso prompt condividono un{" "}
+        <code>occasion_id</code> (il <code>message_id</code>{" "}
+        dell&rsquo;originale, che è anche il MESSAGE_ID del link al
+        questionario del promemoria), e <code>is_reminder</code> indica i
+        promemoria.
       </p>
       <p>
         Consideralo la dashboard della dashboard. Se il tasso principale è
@@ -1626,11 +1688,23 @@ function AnalyticsContentPt() {
         <strong>Total enviado</strong> na janela selecionada,{" "}
         <strong>taxa de resposta</strong> (respondidos ÷ enviados),{" "}
         <strong>latência média</strong> do prompt ao primeiro tap, e{" "}
-        <strong>ativos hoje</strong> (participantes que responderam pelo
-        menos uma vez). Abaixo, uma série temporal da taxa de resposta
-        diária com média móvel de 7 dias. Use o seletor de intervalo (1 /
-        7 / 14 / 30 / 90) no cabeçalho para ampliar ou estreitar a
+        <strong>participantes ativos</strong> (participantes que responderam
+        pelo menos uma vez na janela selecionada). Abaixo, uma série temporal da
+        taxa de resposta
+        diária com média móvel de 7 dias. Use o seletor de intervalo (Tudo / 7d / 14d / 30d)
+        no cabeçalho para ampliar ou estreitar a
         janela — todos os painéis abaixo respeitam essa escolha.
+      </p>
+      <p>
+        Uma notificação e os seus lembretes contam como <strong>um único
+        prompt</strong> em todos os painéis: um participante que ignora o
+        original e responde a um lembrete respondeu a um prompt, e não perdeu
+        um e respondeu a outro. A latência é medida a partir do envio
+        original. A exportação CSV continua a ter uma linha por push; as
+        linhas do mesmo prompt partilham um <code>occasion_id</code> (o{" "}
+        <code>message_id</code> do original, que é também o MESSAGE_ID do link
+        do questionário do lembrete), e <code>is_reminder</code> assinala os
+        lembretes.
       </p>
       <p>
         Trate isto como o dashboard do dashboard. Se a taxa principal
@@ -1925,12 +1999,24 @@ function AnalyticsContentNl() {
         <strong>Totaal verzonden</strong> in het gekozen venster,{" "}
         <strong>responspercentage</strong> (beantwoord ÷ verzonden),{" "}
         <strong>gemiddelde latentie</strong> van prompt tot eerste tap,
-        en <strong>vandaag actief</strong> (deelnemers die minstens één
-        keer hebben gereageerd). Daaronder een tijdreeks van het
+        en <strong>actieve deelnemers</strong> (deelnemers die in het gekozen
+        venster minstens één keer hebben gereageerd). Daaronder een tijdreeks
+        van het
         dagelijkse responspercentage met een 7-daags voortschrijdend
-        gemiddelde. Gebruik de bereikkiezer (1 / 7 / 14 / 30 / 90) in de
+        gemiddelde. Gebruik de bereikkiezer (Alles / 7d / 14d / 30d) in de
         paginakop om het venster te verbreden of te versmallen — alle
         onderstaande panelen respecteren deze keuze.
+      </p>
+      <p>
+        Een melding en haar herinneringen tellen in elk paneel als <strong>één
+        prompt</strong>: een deelnemer die het origineel overslaat en op een
+        herinnering reageert, heeft één prompt beantwoord — niet één gemist en
+        één beantwoord. De latentie wordt gemeten vanaf de oorspronkelijke
+        verzending. De CSV-export heeft nog steeds één rij per push; rijen van
+        dezelfde prompt delen een <code>occasion_id</code> (de{" "}
+        <code>message_id</code> van het origineel, tevens de MESSAGE_ID in de
+        enquêtelink van de herinnering), en <code>is_reminder</code> markeert
+        de herinneringen.
       </p>
       <p>
         Behandel dit als het dashboard voor het dashboard. Als het
@@ -2227,11 +2313,22 @@ function AnalyticsContentRu() {
         <strong>Всего отправлено</strong> в выбранном окне,{" "}
         <strong>уровень отклика</strong> (ответившие ÷ отправленные),{" "}
         <strong>средняя латентность</strong> от подсказки до первого
-        тапа, и <strong>активны сегодня</strong> (участники, ответившие
-        хотя бы раз). Ниже — временной ряд дневного уровня отклика со
-        скользящим средним за 7 дней. Используйте селектор диапазона (1
-        / 7 / 14 / 30 / 90) в заголовке страницы, чтобы расширить или
+        тапа, и <strong>активные участники</strong> (участники, ответившие хотя
+        бы раз в выбранном окне). Ниже — временной ряд дневного уровня отклика
+        со скользящим средним за 7 дней. Используйте селектор диапазона
+        (Все / 7д / 14д / 30д) в заголовке страницы, чтобы расширить или
         сузить окно — все панели ниже учитывают этот выбор.
+      </p>
+      <p>
+        Уведомление и его напоминания считаются <strong>одним
+        запросом</strong> во всех панелях: участник, пропустивший исходное
+        уведомление и ответивший на напоминание, ответил на один запрос, а не
+        пропустил один и ответил на другой. Задержка отсчитывается от исходной
+        отправки. В CSV-экспорте по-прежнему одна строка на каждый push;
+        строки одного запроса имеют общий <code>occasion_id</code>{" "}
+        (<code>message_id</code> исходного уведомления — он же MESSAGE_ID в
+        ссылке на опрос в напоминании), а <code>is_reminder</code> отмечает
+        напоминания.
       </p>
       <p>
         Воспринимайте это как панель для панели. Если базовый уровень
@@ -2524,12 +2621,23 @@ function AnalyticsContentPl() {
         <strong>Łącznie wysłane</strong> w wybranym oknie,{" "}
         <strong>wskaźnik odpowiedzi</strong> (odpowiedzieli ÷ wysłano),{" "}
         <strong>średnia latencja</strong> od podpowiedzi do pierwszego
-        tapnięcia, oraz <strong>aktywni dzisiaj</strong> (uczestnicy,
-        którzy odpowiedzieli przynajmniej raz). Poniżej szereg czasowy
+        tapnięcia, oraz <strong>aktywni uczestnicy</strong> (uczestnicy, którzy
+        odpowiedzieli przynajmniej raz w wybranym oknie). Poniżej szereg czasowy
         dziennego wskaźnika odpowiedzi z 7-dniową średnią kroczącą.
-        Użyj selektora zakresu (1 / 7 / 14 / 30 / 90) w nagłówku, aby
+        Użyj selektora zakresu (Wszystko / 7d / 14d / 30d) w nagłówku, aby
         rozszerzyć lub zawęzić okno — wszystkie panele poniżej szanują
         ten wybór.
+      </p>
+      <p>
+        Powiadomienie i jego przypomnienia liczą się we wszystkich panelach
+        jako <strong>jeden prompt</strong>: uczestnik, który pominie oryginał
+        i odpowie na przypomnienie, odpowiedział na jeden prompt — a nie
+        pominął jeden i odpowiedział na drugi. Opóźnienie liczone jest od
+        pierwotnej wysyłki. Eksport CSV nadal ma jeden wiersz na każdy push;
+        wiersze tego samego promptu mają wspólny <code>occasion_id</code>{" "}
+        (<code>message_id</code> oryginału, który jest też MESSAGE_ID w linku
+        do ankiety w przypomnieniu), a <code>is_reminder</code> oznacza
+        przypomnienia.
       </p>
       <p>
         Traktuj to jako panel dla panelu. Jeśli wskaźnik główny jest
@@ -2820,11 +2928,22 @@ function AnalyticsContentTr() {
         <strong>Toplam gönderilen</strong> seçili pencerede,{" "}
         <strong>yanıt oranı</strong> (yanıtlayan ÷ gönderilen),{" "}
         <strong>ortalama gecikme</strong> istemden ilk dokunuşa kadar ve{" "}
-        <strong>bugün aktif</strong> (en az bir kez yanıt vermiş
-        katılımcılar). Altta 7 günlük hareketli ortalamayla günlük
+        <strong>aktif katılımcılar</strong> (seçili pencerede en az bir kez
+        yanıt vermiş katılımcılar). Altta 7 günlük hareketli ortalamayla günlük
         yanıt oranı zaman serisi. Pencereyi genişletmek veya daraltmak
-        için sayfa başlığındaki gün seçicisini (1 / 7 / 14 / 30 / 90)
+        için sayfa başlığındaki gün seçicisini (Tümü / 7g / 14g / 30g)
         kullanın — alttaki tüm paneller bu seçime uyar.
+      </p>
+      <p>
+        Bir bildirim ve hatırlatıcıları tüm panellerde <strong>tek bir
+        istem</strong> olarak sayılır: orijinali atlayıp bir hatırlatıcıya
+        yanıt veren katılımcı bir istemi yanıtlamış olur; birini kaçırıp
+        diğerini yanıtlamış sayılmaz. Gecikme, orijinal gönderimden itibaren
+        ölçülür. CSV dışa aktarımında hâlâ her push için bir satır bulunur;
+        aynı isteme ait satırlar ortak bir <code>occasion_id</code> paylaşır
+        (orijinalin <code>message_id</code> değeri; hatırlatıcının anket
+        bağlantısındaki MESSAGE_ID de budur) ve <code>is_reminder</code>{" "}
+        hatırlatıcıları işaretler.
       </p>
       <p>
         Bunu panelin paneli olarak görün. Ana oran sağlıklı ve eğri
@@ -3085,7 +3204,10 @@ function AnalyticsContentZh() {
 
       <h2>面板 1 — 概览</h2>
       <p>
-        页面顶部的四个关键数字：所选窗口内的<strong>总发送数</strong>、<strong>响应率</strong>（已响应 ÷ 已发送）、从提示到首次点击的<strong>平均延迟</strong>，以及<strong>今日活跃</strong>（至少响应过一次的参与者）。下方是每日响应率的时间序列，附带 7 天滚动均值。使用页面头部的日范围选择器（1 / 7 / 14 / 30 / 90）放大或缩小窗口——下方所有面板都遵循此选择。
+        页面顶部的四个关键数字：所选窗口内的<strong>总发送数</strong>、<strong>响应率</strong>（已响应 ÷ 已发送）、从提示到首次点击的<strong>平均延迟</strong>，以及<strong>活跃参与者</strong>（在所选窗口内至少响应过一次的参与者）。下方是每日响应率的时间序列，附带 7 天滚动均值。使用页面头部的日范围选择器（全部 / 7天 / 14天 / 30天）放大或缩小窗口——下方所有面板都遵循此选择。
+      </p>
+      <p>
+        在所有面板中，一条通知及其提醒计为<strong>一次提示</strong>：参与者跳过原始通知、回复了提醒，算作回复了一次提示，而不是错过一次、回复一次。延迟从原始发送时间起算。CSV 导出仍为每次推送一行；同一提示的各行共享同一个 <code>occasion_id</code>（即原始通知的 <code>message_id</code>，也是提醒问卷链接中携带的 MESSAGE_ID），<code>is_reminder</code> 标记提醒行。
       </p>
       <p>
         将其视为「面板的面板」。如果总响应率健康且曲线平稳，通常无需深入。如果曲线下滑，后续面板会告诉你损失来自何处。
@@ -3255,7 +3377,10 @@ function AnalyticsContentKo() {
 
       <h2>패널 1 — 개요</h2>
       <p>
-        페이지 상단의 네 가지 핵심 수치: 선택한 창의 <strong>총 발송</strong>, <strong>응답률</strong>(응답 ÷ 발송), 프롬프트에서 첫 탭까지의 <strong>평균 지연</strong>, 그리고 <strong>오늘 활성</strong>(최소 한 번 이상 응답한 참가자). 그 아래에는 7일 이동 평균이 함께 표시되는 일별 응답률 시계열이 있습니다. 페이지 머리글의 기간 선택기(1 / 7 / 14 / 30 / 90)로 창을 넓히거나 좁힐 수 있으며, 아래 모든 패널이 이 선택을 따릅니다.
+        페이지 상단의 네 가지 핵심 수치: 선택한 창의 <strong>총 발송</strong>, <strong>응답률</strong>(응답 ÷ 발송), 프롬프트에서 첫 탭까지의 <strong>평균 지연</strong>, 그리고 <strong>활성 참가자</strong>(선택한 창에서 최소 한 번 이상 응답한 참가자). 그 아래에는 7일 이동 평균이 함께 표시되는 일별 응답률 시계열이 있습니다. 페이지 머리글의 기간 선택기(전체 / 7일 / 14일 / 30일)로 창을 넓히거나 좁힐 수 있으며, 아래 모든 패널이 이 선택을 따릅니다.
+      </p>
+      <p>
+        모든 패널에서 알림과 그 리마인더는 <strong>하나의 프롬프트</strong>로 집계됩니다. 참여자가 원래 알림을 건너뛰고 리마인더에 응답했다면, 하나를 놓치고 하나에 응답한 것이 아니라 하나의 프롬프트에 응답한 것입니다. 지연 시간은 원래 발송 시점부터 측정합니다. CSV 내보내기는 여전히 푸시 하나당 한 행이며, 같은 프롬프트의 행은 동일한 <code>occasion_id</code>(원래 알림의 <code>message_id</code>로, 리마인더 설문 링크에 담긴 MESSAGE_ID와 같습니다)를 공유하고 <code>is_reminder</code>는 리마인더 행을 표시합니다.
       </p>
       <p>
         이를 「대시보드를 위한 대시보드」로 보십시오. 주요 비율이 건강하고 곡선이 평탄하다면 더 깊이 파고들 필요가 없을 것입니다. 곡선이 하강한다면 다음 패널들이 손실이 어디서 오는지 알려줄 것입니다.
@@ -3425,7 +3550,10 @@ function AnalyticsContentJa() {
 
       <h2>パネル 1 — 概要</h2>
       <p>
-        ページ上部の 4 つの主要数値：選択ウィンドウ内の <strong>合計送信数</strong>、<strong>回答率</strong>（回答 ÷ 送信）、プロンプトから初回タップまでの <strong>平均遅延</strong>、そして <strong>本日アクティブ</strong>（少なくとも 1 回回答した参加者）。その下には 7 日移動平均付きの日次回答率の時系列。ページ見出しの期間セレクタ（1 / 7 / 14 / 30 / 90）でウィンドウを広げ・狭めることができ、以下のすべてのパネルがこの選択に従います。
+        ページ上部の 4 つの主要数値：選択ウィンドウ内の <strong>合計送信数</strong>、<strong>回答率</strong>（回答 ÷ 送信）、プロンプトから初回タップまでの <strong>平均遅延</strong>、そして <strong>アクティブな参加者</strong>（選択ウィンドウ内で少なくとも 1 回回答した参加者）。その下には 7 日移動平均付きの日次回答率の時系列。ページ見出しの期間セレクタ（すべて / 7d / 14d / 30d）でウィンドウを広げ・狭めることができ、以下のすべてのパネルがこの選択に従います。
+      </p>
+      <p>
+        すべてのパネルで、通知とそのリマインダーは<strong>1 回のプロンプト</strong>として数えられます。参加者が元の通知をスキップしてリマインダーに回答した場合、1 回見逃して 1 回回答したのではなく、1 回のプロンプトに回答したことになります。レイテンシは元の送信時刻から測定します。CSV エクスポートは引き続きプッシュ 1 件につき 1 行で、同じプロンプトの行は共通の <code>occasion_id</code>（元の通知の <code>message_id</code>。リマインダーのアンケートリンクに含まれる MESSAGE_ID と同じ）を持ち、<code>is_reminder</code> がリマインダー行を示します。
       </p>
       <p>
         これを「ダッシュボードのためのダッシュボード」と捉えてください。主要レートが健全で曲線が平坦であれば、深掘りはおそらく不要です。曲線が下降している場合、続くパネルがどこから損失が来ているかを教えてくれます。
@@ -3595,7 +3723,10 @@ function AnalyticsContentAr() {
 
       <h2>اللوحة 1 — نظرة عامة</h2>
       <p>
-        أربعة أرقام رئيسية أعلى الصفحة: <strong>إجمالي المُرسَل</strong> في النافذة المحددة، و<strong>معدّل الاستجابة</strong> (المُجيبون ÷ المُرسَل)، و<strong>متوسط الكُمون</strong> من المطالبة إلى أول نقرة، و<strong>النشطون اليوم</strong> (المشاركون الذين أجابوا مرة واحدة على الأقل). أسفلها سلسلة زمنية لمعدّل الاستجابة اليومي مع متوسط متحرك لـ 7 أيام. استخدم مُحدِّد المدى (1 / 7 / 14 / 30 / 90) في رأس الصفحة لتوسيع النافذة أو تضييقها — تتبع جميع اللوحات أدناه هذا الاختيار.
+        أربعة أرقام رئيسية أعلى الصفحة: <strong>إجمالي المُرسَل</strong> في النافذة المحددة، و<strong>معدّل الاستجابة</strong> (المُجيبون ÷ المُرسَل)، و<strong>متوسط الكُمون</strong> من المطالبة إلى أول نقرة، و<strong>المشاركون النشطون</strong> (المشاركون الذين أجابوا مرة واحدة على الأقل في النافذة المحددة). أسفلها سلسلة زمنية لمعدّل الاستجابة اليومي مع متوسط متحرك لـ 7 أيام. استخدم مُحدِّد المدى (الكل / 7ي / 14ي / 30ي) في رأس الصفحة لتوسيع النافذة أو تضييقها — تتبع جميع اللوحات أدناه هذا الاختيار.
+      </p>
+      <p>
+        يُحتسب الإشعار وتذكيراته <strong>مطالبةً واحدة</strong> في جميع اللوحات: المشارك الذي يتخطى الإشعار الأصلي ويجيب عن تذكير قد أجاب عن مطالبة واحدة، لا أنه فوّت واحدة وأجاب عن أخرى. يُقاس زمن الاستجابة من وقت الإرسال الأصلي. يظل ملف CSV المُصدَّر يحتوي على صف واحد لكل إشعار مدفوع؛ وتشترك صفوف المطالبة الواحدة في <code>occasion_id</code> نفسه (وهو <code>message_id</code> الخاص بالإشعار الأصلي، وهو أيضًا MESSAGE_ID الذي يحمله رابط الاستبيان في التذكير)، ويحدد <code>is_reminder</code> صفوف التذكيرات.
       </p>
       <p>
         تعامل مع هذه اللوحة على أنها لوحة اللوحات. إذا كان المعدّل الرئيسي سليمًا والمنحنى مستويًا، فلن تحتاج على الأرجح إلى التعمّق. إذا انحدر المنحنى، فإن اللوحات التالية ستخبرك من أين تأتي الخسارة.

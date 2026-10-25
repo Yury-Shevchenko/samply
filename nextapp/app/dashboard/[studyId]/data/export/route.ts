@@ -7,6 +7,7 @@ import Result from "@/lib/models/result";
 import Project from "@/lib/models/project";
 import mongoose from "mongoose";
 import type { IResult } from "@/lib/models/result";
+import { labelOccasions } from "@/lib/occasions";
 
 /**
  * Values a spreadsheet would execute rather than display. Excel, LibreOffice
@@ -88,12 +89,20 @@ export async function GET(
     "sent", "tapped", "opened_in_app", "deleted_by_user",
     "received_in_app", "geofencing_event", "completed",
     "message_id", "participant_code",
+    // Appended rather than placed beside message_id, so existing analysis
+    // scripts that read columns by position keep working.
+    "occasion_id", "is_reminder",
   ];
+
+  // A notification and its reminders are one sampling occasion; occasion_id is
+  // the original's message_id, which is also the MESSAGE_ID a reminder's
+  // survey link carries.
+  const occasions = labelOccasions(results);
 
   const extraKeys = new Set<string>();
   const rows: Record<string, unknown>[] = [];
 
-  for (const r of results) {
+  for (const [i, r] of results.entries()) {
     // Rows without a `data` sub-document used to be skipped outright, so the
     // export silently disagreed with the analytics counts. They are real
     // records — geofencing events, and now sends that failed before a payload
@@ -125,6 +134,8 @@ export async function GET(
       completed: eventTimes(r, "completed"),
       message_id: r.messageId ?? "",
       participant_code: participantMap.get(r.samplyid) ?? "",
+      occasion_id: occasions[i].occasionId,
+      is_reminder: occasions[i].isReminder ? 1 : 0,
       ...coords,
     });
   }
