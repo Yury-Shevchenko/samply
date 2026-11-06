@@ -154,10 +154,60 @@ function windowLabel(t: (k: string, v?: Record<string, string>) => string, days:
  * present stops being read. Each condition below cost at least one study in the
  * Summer 2026 cohort, and every one of them was discoverable on day one.
  */
-function HealthBanner({ health }: { health: StudyHealth }) {
+function HealthBanner({ health, studyId }: { health: StudyHealth; studyId: string }) {
   const { t } = useT();
-  if (!health || health.sent === 0) return null;
+  if (!health) return null;
 
+  const notices: { text: string; href?: string }[] = [];
+
+  // Checked before anything is sent: a participant without a push token is
+  // skipped by every send, so waiting for send-based signals hides it until
+  // the participant complains.
+  if (health.noTokenParticipants > 0) {
+    notices.push({
+      text: t("analytics.healthNoToken", { n: String(health.noTokenParticipants) }),
+      href: `/dashboard/${studyId}/participants?reach=notoken`,
+    });
+  }
+
+  if (health.sent > 0) {
+    notices.push(...sendNotices(health, t).map((text) => ({ text })));
+  }
+
+  if (notices.length === 0) return null;
+
+  return (
+    <div style={{
+      background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.25)",
+      borderRadius: "0.8rem", padding: "1.1rem 1.4rem",
+    }}>
+      <div style={{
+        fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".14em",
+        textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.6rem",
+      }}>
+        {t("analytics.healthTitle")}
+      </div>
+      <ul style={{ margin: 0, paddingLeft: "1.2rem", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
+        {notices.map((n, i) => (
+          <li key={i} style={{ fontSize: "1.2rem", lineHeight: 1.5, color: "var(--ink-60)" }}>
+            {n.text}
+            {n.href && (
+              <>
+                {" "}
+                <a href={n.href} style={{ color: "var(--coral)", textDecoration: "none" }} className="hover:opacity-70 transition-opacity">
+                  {t("analytics.healthViewParticipants")}
+                </a>
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Notices that only mean something once notifications have gone out. */
+function sendNotices(health: StudyHealth, t: (k: string, v?: Record<string, string>) => string): string[] {
   const notices: string[] = [];
 
   if (!health.completionConfigured) {
@@ -177,26 +227,7 @@ function HealthBanner({ health }: { health: StudyHealth }) {
     notices.push(t("analytics.healthDeliveryFailures", { n: String(health.deliveryFailures) }));
   }
 
-  if (notices.length === 0) return null;
-
-  return (
-    <div style={{
-      background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.25)",
-      borderRadius: "0.8rem", padding: "1.1rem 1.4rem",
-    }}>
-      <div style={{
-        fontFamily: "var(--font-mono)", fontSize: "1rem", letterSpacing: ".14em",
-        textTransform: "uppercase", color: "var(--coral)", marginBottom: "0.6rem",
-      }}>
-        {t("analytics.healthTitle")}
-      </div>
-      <ul style={{ margin: 0, paddingLeft: "1.2rem", display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-        {notices.map((n, i) => (
-          <li key={i} style={{ fontSize: "1.2rem", lineHeight: 1.5, color: "var(--ink-60)" }}>{n}</li>
-        ))}
-      </ul>
-    </div>
-  );
+  return notices;
 }
 
 function MetricsRow({ overview, days }: { overview: AnalyticsOverview; days: number }) {
@@ -649,7 +680,7 @@ export default function AnalyticsDashboard({ studyId, days: initialDays, initial
       </div>
 
       {/* Section 1: Metrics */}
-      <HealthBanner health={data.health} />
+      <HealthBanner health={data.health} studyId={studyId} />
 
       <MetricsRow overview={data.overview} days={days} />
 

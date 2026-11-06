@@ -51,6 +51,8 @@ export interface PendingTableRow {
   status: string;
   title: string;
   isReminder: boolean;
+  /** Who a processed row actually reached; absent on rows sent before this was recorded. */
+  delivery?: { recipients?: number; sent?: number; failed?: number; noToken?: number; deactivated?: number };
   recipientGroupIds: string[];
   recipientUserIds: string[];
   deleteAction: () => Promise<void>;
@@ -116,6 +118,25 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
     failed:     t("pendingTable.statusFailed"),
     cancelled:  t("pendingTable.statusCancelled"),
   };
+
+  // "sent" only says the queue processed the row. When some or all recipients
+  // were skipped — no push token, deactivated — say so, or the row reads as
+  // delivered while the participant got nothing.
+  function statusView(row: PendingTableRow): { label: string; colors: { bg: string; color: string }; title?: string } {
+    const base = { label: PN_STATUS_LABELS[row.status] ?? row.status, colors: STATUS_BG_COLOR[row.status] ?? STATUS_BG_COLOR.cancelled };
+    const d = row.delivery;
+    if (row.status !== "sent" || !d?.recipients) return base;
+    const sent = d.sent ?? 0;
+    if (sent >= d.recipients) return base;
+    const reasons = [
+      d.noToken ? t("pendingTable.deliveryNoToken", { n: String(d.noToken) }) : null,
+      d.deactivated ? t("pendingTable.deliveryDeactivated", { n: String(d.deactivated) }) : null,
+      d.failed ? t("pendingTable.deliveryFailed", { n: String(d.failed) }) : null,
+    ].filter(Boolean).join(" · ");
+    return sent === 0
+      ? { label: t("pendingTable.deliveryNone"), colors: STATUS_BG_COLOR.failed, title: reasons }
+      : { label: t("pendingTable.deliveryPartial", { sent: String(sent), total: String(d.recipients) }), colors: STATUS_BG_COLOR.pending, title: reasons };
+  }
 
   function toggleAll() {
     setSelected(allSelected ? new Set() : new Set(rows.map((r) => r.id)));
@@ -198,8 +219,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
           </thead>
           <tbody>
             {rows.map((row, i) => {
-              const colors = STATUS_BG_COLOR[row.status] ?? STATUS_BG_COLOR.cancelled;
-              const statusLabel = PN_STATUS_LABELS[row.status] ?? row.status;
+              const { label: statusLabel, colors, title: statusTitle } = statusView(row);
               const isSelected = selected.has(row.id);
               return (
                 <tr
@@ -220,7 +240,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                   </td>
                   <td style={TD}><LocalDate value={row.scheduledFor} options={FMT_OPTIONS} timeZone={row.timezone} /></td>
                   <td style={{ padding: "0.75rem 1rem" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.7rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
+                    <span title={statusTitle} style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".08em", textTransform: "uppercase", padding: "0.2rem 0.7rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
                       {statusLabel}
                     </span>
                   </td>
@@ -285,8 +305,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
 
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {rows.map((row) => {
-            const colors = STATUS_BG_COLOR[row.status] ?? STATUS_BG_COLOR.cancelled;
-            const statusLabel = PN_STATUS_LABELS[row.status] ?? row.status;
+            const { label: statusLabel, colors, title: statusTitle } = statusView(row);
             const isSelected = selected.has(row.id);
             return (
               <div
@@ -302,7 +321,7 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                 {/* Card header: status + checkbox */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.55rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                    <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase", padding: "0.15rem 0.65rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
+                    <span title={statusTitle} style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", fontWeight: 700, letterSpacing: ".1em", textTransform: "uppercase", padding: "0.15rem 0.65rem", borderRadius: "9999px", background: colors.bg, color: colors.color }}>
                       {statusLabel}
                     </span>
                     {row.isReminder && (
@@ -328,6 +347,13 @@ export function PendingTable({ rows, participantCodeById, groupNameById, bulkDel
                 {row.title && (
                   <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.95rem", color: "var(--ink-60)", marginBottom: "0.55rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {row.title}
+                  </div>
+                )}
+
+                {/* Why recipients were skipped — the desktop tooltip, spelled out */}
+                {statusTitle && (
+                  <div style={{ fontFamily: "var(--font-mono)", fontSize: "0.9rem", color: "var(--coral)", marginBottom: "0.55rem" }}>
+                    {statusTitle}
                   </div>
                 )}
 

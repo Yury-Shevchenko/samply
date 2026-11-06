@@ -320,6 +320,7 @@ export default async function ScheduledJobsPage({ params, searchParams }: Props)
       status: pn.status,
       title: pn.title || pn.message || "",
       isReminder: pn.isReminder ?? false,
+      delivery: pn.delivery,
       recipientGroupIds: (pn.recipientGroupIds ?? []) as string[],
       recipientUserIds: (pn.recipientUserIds ?? []) as string[],
       deleteAction: deletePendingNotificationAction.bind(null, studyId, pnId, rowNotifId, pnStatusParam),

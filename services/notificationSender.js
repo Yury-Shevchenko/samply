@@ -19,6 +19,11 @@ function makeRandomCodeForMessageID() {
 // Sends push notifications to the given list of resolved tokens.
 // Each token object: { id, token, username, group, deactivated }
 // Reminder PendingNotification docs are inserted at send time if reminders are configured.
+//
+// Resolves to delivery counts — { recipients, sent, failed, noToken, deactivated }
+// — so the caller can record what actually happened. A queued notification
+// whose every recipient was skipped used to be marked "sent" with nothing to
+// show for it, and researchers could not tell why a participant got nothing.
 async function sendMobileNotification({
   done = () => {},
   content,
@@ -34,15 +39,23 @@ async function sendMobileNotification({
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
 
+  const delivery = { recipients: tokens.length, sent: 0, failed: 0, noToken: 0, deactivated: 0 };
+
   const messages = await Promise.all(
     tokens.map(async (pushToken) => {
+      if (pushToken.deactivated) {
+        delivery.deactivated++;
+        return { error: "Participant is deactivated" };
+      }
+      // "miss" is what the app sends when a participant joins without allowing
+      // notifications; "User left the study" is a legacy leaver.
       if (
-        pushToken.deactivated ||
         !pushToken.token ||
         pushToken.token === "User left the study" ||
         pushToken.token === "miss" ||
         !Expo.isExpoPushToken(pushToken.token)
       ) {
+        delivery.noToken++;
         return { error: "Token is missing or it is invalid" };
       }
 
@@ -134,6 +147,10 @@ async function sendMobileNotification({
     chunks.map(async (chunk) => {
       try {
         const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+        for (const ticket of ticketChunk) {
+          if (ticket && ticket.status === "error") delivery.failed++;
+          else delivery.sent++;
+        }
         await Promise.all(
           ticketChunk.map((ticket, i) =>
             saveResult(
@@ -160,6 +177,7 @@ async function sendMobileNotification({
         // reminder rows had already been written and would still fire. Record
         // them as attempted-and-failed so the numbers stay honest.
         console.error("notificationSender: Expo error", error);
+        delivery.failed += chunk.length;
         await Promise.all(
           chunk.map((msg) =>
             saveResult(msg, { status: "error", message: error.message }, [
@@ -174,6 +192,7 @@ async function sendMobileNotification({
   );
 
   done();
+  return delivery;
 }
 
 module.exports = { sendMobileNotification };

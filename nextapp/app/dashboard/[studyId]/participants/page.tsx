@@ -5,6 +5,7 @@ import { fetchParticipants, type MobileUser } from "@/lib/data/participants";
 import { ParticipantRow } from "./ParticipantRow";
 import { getT } from "@/lib/i18n.server";
 import { LocalDate } from "@/app/components/ui/LocalDate";
+import { isPushToken } from "@/lib/pushToken";
 
 const PAGE_SIZE = 50;
 
@@ -13,7 +14,9 @@ type SortOrder = "asc" | "desc";
 
 interface Props {
   params: Promise<{ studyId: string }>;
-  searchParams: Promise<{ page?: string; sort?: string; order?: string }>;
+  // reach=notoken: only participants who cannot receive notifications — the
+  // study-health warnings link here.
+  searchParams: Promise<{ page?: string; sort?: string; order?: string; reach?: string }>;
 }
 
 function sortParticipants(list: MobileUser[], sort: SortBy, order: SortOrder): MobileUser[] {
@@ -37,16 +40,17 @@ function sortParticipants(list: MobileUser[], sort: SortBy, order: SortOrder): M
   });
 }
 
-function buildHref(studyId: string, page: number, sort: SortBy, order: SortOrder) {
+function buildHref(studyId: string, page: number, sort: SortBy, order: SortOrder, noTokenOnly = false) {
   const p = new URLSearchParams();
   if (page > 1) p.set("page", String(page));
   p.set("sort", sort);
   p.set("order", order);
+  if (noTokenOnly) p.set("reach", "notoken");
   return `/dashboard/${studyId}/participants?${p.toString()}`;
 }
 
 function SortTh({
-  studyId, page, col, label, currentSort, currentOrder,
+  studyId, page, col, label, currentSort, currentOrder, noTokenOnly,
 }: {
   studyId: string;
   page: number;
@@ -54,6 +58,7 @@ function SortTh({
   label: string;
   currentSort: SortBy;
   currentOrder: SortOrder;
+  noTokenOnly: boolean;
 }) {
   const isActive = currentSort === col;
   const nextOrder: SortOrder = isActive && currentOrder === "desc" ? "asc" : "desc";
@@ -61,7 +66,7 @@ function SortTh({
   return (
     <th style={{ padding: "1rem 1.8rem", textAlign: "left", fontFamily: "var(--font-mono)", fontSize: "0.95rem", fontWeight: 600, letterSpacing: ".16em", textTransform: "uppercase", whiteSpace: "nowrap" }}>
       <a
-        href={buildHref(studyId, 1, col, nextOrder)}
+        href={buildHref(studyId, 1, col, nextOrder, noTokenOnly)}
         style={{ color: isActive ? "var(--ink)" : "var(--ink-40)", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.3rem" }}
         className="hover:text-[var(--ink)] transition-colors"
       >
@@ -81,7 +86,8 @@ function StaticTh({ label }: { label: string }) {
 
 export default async function ParticipantsPage({ params, searchParams }: Props) {
   const { studyId } = await params;
-  const { page: pageParam, sort: sortParam, order: orderParam } = await searchParams;
+  const { page: pageParam, sort: sortParam, order: orderParam, reach } = await searchParams;
+  const noTokenOnly = reach === "notoken";
 
   const page = Math.max(1, parseInt(pageParam ?? "1", 10) || 1);
   const sort: SortBy = (["id", "group", "created", "username"] as SortBy[]).includes(sortParam as SortBy)
@@ -103,14 +109,15 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
   const allActive = participants.filter((p) => !p.deactivated);
   const allInactive = participants.filter((p) => p.deactivated);
 
-  const sortedActive = sortParticipants(allActive, sort, order);
+  const unreachable = allActive.filter((p) => !isPushToken(p.token));
+  const sortedActive = sortParticipants(noTokenOnly ? unreachable : allActive, sort, order);
   const sortedInactive = sortParticipants(allInactive, sort, order);
 
   const totalPages = Math.ceil(sortedActive.length / PAGE_SIZE);
   const activePage = sortedActive.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   function pageHref(p: number) {
-    return buildHref(studyId, p, sort, order);
+    return buildHref(studyId, p, sort, order, noTokenOnly);
   }
 
   return (
@@ -157,18 +164,29 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
         </div>
       </div>
 
+      {noTokenOnly && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1.2rem", flexWrap: "wrap", background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.25)", borderRadius: "0.8rem", padding: "1rem 1.4rem" }}>
+          <span style={{ fontSize: "1.3rem", color: "var(--ink-60)" }}>
+            {t("participants.filterNoToken", { n: unreachable.length })}
+          </span>
+          <a href={buildHref(studyId, 1, sort, order)} style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", textDecoration: "none" }} className="hover:opacity-70 transition-opacity">
+            {t("participants.filterShowAll")}
+          </a>
+        </div>
+      )}
+
       {/* Active table */}
-      {allActive.length > 0 ? (
+      {sortedActive.length > 0 ? (
         <>
           <div style={{ background: "var(--surface)", border: "1px solid var(--ink-10)", borderRadius: "0.8rem", overflowX: "auto", WebkitOverflowScrolling: "touch" as React.CSSProperties["WebkitOverflowScrolling"], boxShadow: "0 0.1rem 0 rgba(0,0,0,.03), 0 0.6rem 1.8rem rgba(60,40,20,.05)" }}>
             <table style={{ width: "100%", minWidth: "52rem", borderCollapse: "collapse" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--ink-10)", background: "var(--paper)" }}>
-                  <SortTh studyId={studyId} page={page} col="id"       label={t("participants.colId")}       currentSort={sort} currentOrder={order} />
-                  <SortTh studyId={studyId} page={page} col="username" label={t("participants.colCode")}     currentSort={sort} currentOrder={order} />
-                  <SortTh studyId={studyId} page={page} col="group"    label={t("participants.colGroup")}    currentSort={sort} currentOrder={order} />
+                  <SortTh studyId={studyId} page={page} col="id"       label={t("participants.colId")}       currentSort={sort} currentOrder={order} noTokenOnly={noTokenOnly} />
+                  <SortTh studyId={studyId} page={page} col="username" label={t("participants.colCode")}     currentSort={sort} currentOrder={order} noTokenOnly={noTokenOnly} />
+                  <SortTh studyId={studyId} page={page} col="group"    label={t("participants.colGroup")}    currentSort={sort} currentOrder={order} noTokenOnly={noTokenOnly} />
                   <StaticTh label={t("participants.colToken")} />
-                  <SortTh studyId={studyId} page={page} col="created"  label={t("participants.colEnrolled")} currentSort={sort} currentOrder={order} />
+                  <SortTh studyId={studyId} page={page} col="created"  label={t("participants.colEnrolled")} currentSort={sort} currentOrder={order} noTokenOnly={noTokenOnly} />
                 </tr>
               </thead>
               <tbody>
@@ -193,7 +211,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
                       ) : "—"}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-40)" }}>
-                      {p.token ? p.token.slice(0, 12) + "…" : <span style={{ color: "var(--coral)", fontWeight: 500 }} title={t("participants.noTokenTitle")}>{t("participants.noToken")}</span>}
+                      {isPushToken(p.token) ? p.token.slice(0, 12) + "…" : <span style={{ color: "var(--coral)", fontWeight: 500 }} title={t("participants.noTokenTitle")}>{t("participants.noToken")}</span>}
                     </td>
                     <td style={{ padding: "1.2rem 1.8rem", fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", whiteSpace: "nowrap" }}>
                       <LocalDate value={p.created} options={{ year: "numeric", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }} />
@@ -227,7 +245,7 @@ export default async function ParticipantsPage({ params, searchParams }: Props) 
             </div>
           )}
         </>
-      ) : (
+      ) : noTokenOnly ? null : (
         <div style={{ background: "var(--surface)", border: "1px dashed var(--ink-20)", borderRadius: "0.8rem", padding: "5.6rem 2.4rem", textAlign: "center" }}>
           <div style={{ fontFamily: "var(--font-hand)", fontSize: "2.2rem", color: "var(--coral)", marginBottom: "1rem" }}>{t("participants.emptyTitle")}</div>
           <p style={{ fontSize: "1.35rem", color: "var(--ink-60)", margin: "0 0 1.8rem", lineHeight: 1.6 }}>

@@ -17,8 +17,14 @@ const nanoid = customAlphabet(
 
 // Middleware: verifies that req.body.token is a known samplyId before
 // granting access to mobile-participant endpoints that have no session auth.
+// Each route names the participant's Samply ID differently, so this checks the
+// field its handler acts on. `id` comes first: /api/updatetoken sends the Samply
+// ID as `id` and an Expo push token as `token`, and reading `token` first
+// rejected every token update with a 401 — the app ignored the response, so a
+// participant with a new phone or reinstall could never be reached again.
+// /api/participantinfo sends only `id` and was rejected the same way.
 exports.requireParticipantToken = async (req, res, next) => {
-  const token = req.body.token || req.body.samplyid || req.body.userToken;
+  const token = req.body.id || req.body.samplyid || req.body.userToken || req.body.token;
   if (!token || typeof token !== "string") {
     return res.status(401).json({ message: "Unauthorized" });
   }

@@ -2,6 +2,7 @@ import connectDB from "@/lib/db";
 import Result from "@/lib/models/result";
 import Project from "@/lib/models/project";
 import mongoose from "mongoose";
+import { isPushToken } from "@/lib/pushToken";
 
 function sinceDate(days: number) {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
@@ -506,6 +507,12 @@ export interface StudyHealth {
   hasReminders: boolean;
   /** Participants whose push token Expo has reported as permanently dead. */
   deadTokens: number;
+  /**
+   * Active participants with no usable push token at all — most often they
+   * joined without allowing notifications. Every send skips them, so unlike the
+   * other signals this one shows up before anything has been sent.
+   */
+  noTokenParticipants: number;
   /** Sends the push service rejected outright. */
   deliveryFailures: number;
 }
@@ -529,7 +536,7 @@ export async function fetchStudyHealth(projectId: string): Promise<StudyHealth> 
     Result.countDocuments({ project: oid, isTest: { $ne: true }, "events.status": "delivery-failed" }),
     Project.findById(oid, { notifications: 1, mobileUsers: 1 }).lean() as Promise<{
       notifications?: Array<{ url?: string; reminders?: unknown[] }>;
-      mobileUsers?: Array<{ deactivated?: boolean }>;
+      mobileUsers?: Array<{ deactivated?: boolean; token?: string }>;
     } | null>,
   ]);
 
@@ -541,6 +548,7 @@ export async function fetchStudyHealth(projectId: string): Promise<StudyHealth> 
     completionConfigured: notifications.some((n) => (n.url ?? "").includes("%MESSAGE_ID%")),
     hasReminders: notifications.some((n) => (n.reminders?.length ?? 0) > 0),
     deadTokens: (project?.mobileUsers ?? []).filter((u) => u.deactivated).length,
+    noTokenParticipants: (project?.mobileUsers ?? []).filter((u) => !u.deactivated && !isPushToken(u.token)).length,
     deliveryFailures,
   };
 }

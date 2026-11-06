@@ -4,6 +4,7 @@ import { fetchProjectById } from "@/lib/data/projects";
 import { fetchParticipants } from "@/lib/data/participants";
 import { fetchScheduledNotifications, type NotificationConfig } from "@/lib/data/scheduled";
 import { fetchComplianceForProject } from "@/lib/data/compliance";
+import { isPushToken } from "@/lib/pushToken";
 import Hand from "@/app/components/ui/Hand";
 import SubmitButton from "@/app/components/ui/SubmitButton";
 import { toggleStudyActiveAction } from "./actions";
@@ -146,6 +147,9 @@ export default async function StudyOverviewPage({ params }: Props) {
     fetchLatestTest(studyId),
   ]);
   const activeParticipants = participants.filter((p) => !p.deactivated);
+  // Skipped by every send; shown here because nothing else surfaces it until
+  // the participant notices they are getting nothing.
+  const noTokenCount = activeParticipants.filter((p) => !isPushToken(p.token)).length;
   const isLow = compliance.sent > 0 && compliance.pct < 60;
 
   const toggleActive = toggleStudyActiveAction.bind(null, studyId);
@@ -256,6 +260,18 @@ export default async function StudyOverviewPage({ params }: Props) {
           </span>
         )}
       </div>
+
+      {/* Participants who cannot be reached */}
+      {noTokenCount > 0 && (
+        <section style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1.2rem", flexWrap: "wrap", background: "rgba(214,90,48,.06)", border: "1px solid rgba(214,90,48,.25)", borderRadius: "0.8rem", padding: "1.2rem 1.8rem" }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--coral)", letterSpacing: ".02em" }}>
+            {t("studyOverview.noTokenWarning", { n: noTokenCount })}
+          </span>
+          <a href={`/dashboard/${studyId}/participants?reach=notoken`} style={{ fontFamily: "var(--font-mono)", fontSize: "1.1rem", color: "var(--ink-60)", textDecoration: "none", whiteSpace: "nowrap" }} className="hover:opacity-70 transition-opacity">
+            {t("studyOverview.noTokenLink")}
+          </a>
+        </section>
+      )}
 
       {/* Compliance */}
       {compliance.sent > 0 && (

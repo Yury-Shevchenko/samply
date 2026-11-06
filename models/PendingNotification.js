@@ -54,6 +54,16 @@ const pendingNotificationSchema = new mongoose.Schema({
     default: false,
   },
   finid: String,
+  // Set when the queue processes the row. `sent` alone said nothing about who
+  // it reached: a participant without a push token is skipped, and the row
+  // still read "sent". Counts are of recipients resolved at send time.
+  delivery: {
+    recipients: Number,
+    sent: Number, // handed to the push service
+    failed: Number, // rejected by the push service
+    noToken: Number, // skipped: never allowed notifications, or left
+    deactivated: Number, // skipped: device reported unreachable
+  },
   created: {
     type: Date,
     default: Date.now,

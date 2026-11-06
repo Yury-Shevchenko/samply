@@ -340,6 +340,8 @@ const de: DeepLoose<Messages> = {
     reviewRequested:      "✓ Prüfung beantragt",
     publiclyListed:       "✓ Öffentlich gelistet",
     lowComplianceWarning: "▲ Unter 60 % — bitte kontaktieren Sie Ihre Teilnehmenden.",
+    noTokenWarning: "▲ {n} Teilnehmende können keine Benachrichtigungen empfangen — kein Push-Token.",
+    noTokenLink: "Teilnehmende anzeigen",
     schedulesLabel:       "Benachrichtigungspläne · {n}",
     viewQueue:            "Warteschlange →",
     viewAllSchedules:     "Alle anzeigen →",
@@ -479,7 +481,9 @@ const de: DeepLoose<Messages> = {
     colToken:          "Token",
     colEnrolled:       "Eingeschrieben",
     noToken:           "kein Token",
-    noTokenTitle:      "Kein Push-Token — Teilnehmende haben keine Benachrichtigungen erlaubt",
+    noTokenTitle: "Kein Push-Token — diese Person kann keine Benachrichtigungen empfangen. Bitten Sie sie, Benachrichtigungen für Samply zu erlauben und dann unter Mehr → Benachrichtigungs-Check auf „Gerät neu registrieren“ zu tippen.",
+    filterNoToken: "Teilnehmende, die keine Benachrichtigungen empfangen können (kein Push-Token): {n}",
+    filterShowAll: "Alle Teilnehmenden anzeigen",
     emptyTitle:        "noch keine Teilnehmenden",
     emptyBody:         "Teilen Sie Ihren Einladungslink, um zu beginnen.",
     getEnrollmentLink: "Einladungslink abrufen →",
@@ -1116,9 +1120,11 @@ const de: DeepLoose<Messages> = {
     /** {sent} = Anzahl gesendeter Benachrichtigungen */
     healthNoCompletions:  "{sent} Benachrichtigungen gesendet, aber es wurden keine Abschlüsse zurückgemeldet. Prüfen Sie die Weiterleitung am Ende Ihrer Umfrage.",
     /** {n} = Anzahl der Teilnehmenden */
-    healthDeadTokens:     "{n} Teilnehmende können keine Benachrichtigungen mehr empfangen — ihr Gerät nimmt keine mehr an, meist nach einer Neuinstallation der App oder einem Gerätewechsel. Bitten Sie sie, Samply zu öffnen und erneut beizutreten.",
+    healthDeadTokens: "{n} Teilnehmende können keine Benachrichtigungen mehr empfangen — ihr Gerät nimmt keine mehr an, meist nach einer Neuinstallation der App oder einem Gerätewechsel. Bitten Sie sie, in der Samply-App unter Mehr → Benachrichtigungs-Check auf „Gerät neu registrieren“ zu tippen.",
     /** {n} = Anzahl der Benachrichtigungen */
     healthDeliveryFailures: "{n} Benachrichtigung(en) wurden vom Push-Dienst abgelehnt und haben die Teilnehmenden nie erreicht.",
+    healthNoToken: "{n} Teilnehmende können keine Benachrichtigungen empfangen — sie haben kein Push-Token, meist weil Benachrichtigungen beim Beitritt nicht erlaubt waren. Bitten Sie sie, Benachrichtigungen für Samply zu erlauben und dann unter Mehr → Benachrichtigungs-Check auf „Gerät neu registrieren“ zu tippen.",
+    healthViewParticipants: "Teilnehmende anzeigen",
   },
 
   scheduled: {
@@ -1245,6 +1251,11 @@ const de: DeepLoose<Messages> = {
     clearSelection: "löschen ×",
     reminderBadge: "Erinnerung",
     recipientAll:  "alle",
+    deliveryNone: "nicht zugestellt",
+    deliveryPartial: "gesendet {sent}/{total}",
+    deliveryNoToken: "ohne Push-Token: {n}",
+    deliveryDeactivated: "deaktiviert: {n}",
+    deliveryFailed: "vom Push-Dienst abgelehnt: {n}",
     confirmDelete: "{n} Benachrichtigung{plural} unwiderruflich löschen?",
   },
 

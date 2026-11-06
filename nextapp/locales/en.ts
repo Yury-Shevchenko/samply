@@ -477,6 +477,8 @@ const en = {
     publiclyListed:  "✓ Publicly listed",
 
     lowComplianceWarning: "▲ Below 60% — consider checking in with participants.",
+    noTokenWarning: "▲ {n} participant(s) can't receive notifications — no push token.",
+    noTokenLink: "View participants",
 
     /** {n} = schedule count */
     schedulesLabel:   "notification schedules · {n}",
@@ -656,7 +658,9 @@ const en = {
     colToken:           "Token",
     colEnrolled:        "Enrolled",
     noToken:            "no token",
-    noTokenTitle:       "No push token — participant has not allowed notifications",
+    noTokenTitle: "No push token — this participant can't receive notifications. Ask them to allow notifications for Samply, then open More → Notification check and tap “Re-register this device”.",
+    filterNoToken: "Participants who can't receive notifications (no push token): {n}",
+    filterShowAll: "Show all participants",
     emptyTitle:         "no participants yet",
     emptyBody:          "Share your study enrollment link to get started.",
     getEnrollmentLink:  "Get enrollment link →",
@@ -1519,9 +1523,11 @@ const en = {
     /** {sent} = number of notifications sent */
     healthNoCompletions:  "{sent} notifications sent, but no completions have been reported back. Check the redirect at the end of your survey.",
     /** {n} = number of participants */
-    healthDeadTokens:     "{n} participant(s) can no longer receive notifications — their device stopped accepting them, usually after reinstalling the app or switching phones. Ask them to open Samply and rejoin.",
+    healthDeadTokens: "{n} participant(s) can no longer receive notifications — their device stopped accepting them, usually after reinstalling the app or switching phones. Ask them to open More → Notification check in the Samply app and tap “Re-register this device”.",
     /** {n} = number of notifications */
     healthDeliveryFailures: "{n} notification(s) were rejected by the push service and never reached the participant.",
+    healthNoToken: "{n} participant(s) can't receive notifications — they have no push token, usually because notifications weren't allowed when they joined. Ask them to allow notifications for Samply, then open More → Notification check and tap “Re-register this device”.",
+    healthViewParticipants: "View participants",
   },
 
   // ─── Scheduled notifications queue page ──────────────────────────────────────
@@ -1684,6 +1690,11 @@ const en = {
     clearSelection: "clear ×",
     reminderBadge: "reminder",
     recipientAll:  "all",
+    deliveryNone: "not delivered",
+    deliveryPartial: "sent {sent}/{total}",
+    deliveryNoToken: "no push token: {n}",
+    deliveryDeactivated: "deactivated: {n}",
+    deliveryFailed: "rejected by push service: {n}",
     confirmDelete: "Permanently delete {n} notification{plural}? This cannot be undone.",
   },
 

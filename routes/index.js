@@ -74,6 +74,7 @@ router.post("/api/updatestatus", resultController.updateStatus);
 router.post("/api/history", userController.requireParticipantToken, resultController.getHistory);
 router.post("/api/reset", userController.resetPassword);
 router.post("/api/updatetoken", userController.requireParticipantToken, jobController.updateTokenInStudy);
+router.post("/api/tokenstatus", userController.requireParticipantToken, jobController.getTokenStatus);
 router.post("/api/participantinfo", userController.requireParticipantToken, userController.getParticipantInfo);
 // Back-compat alias: app builds ≤1.9.10 call this path for the Settings
 // timezone card. Drop once those builds are no longer in the field.

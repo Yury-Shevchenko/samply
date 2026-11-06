@@ -2402,17 +2402,52 @@ exports.updateTokenInStudy = async (req, res) => {
         arrayFilters: [
           {
             "user.id": id,
-            // Still enrolled: has a real token. `null` means they left; the two
-            // string sentinels are legacy rows from before tokens were nulled.
-            "user.token": { $type: "string", $nin: ["User left the study", "miss"] },
+            // Still enrolled. `null` means they left, and "User left the study"
+            // is the legacy form of that. "miss" is NOT a leaver: the app still
+            // writes it when a participant joins without allowing notifications,
+            // and excluding it here meant granting permission later could never
+            // repair the enrolment.
+            "user.token": { $type: "string", $ne: "User left the study" },
           },
         ],
       }
     );
-    res.status(200).json({ message: "OK" });
+    // Report back what is still unreachable, so the app only records the token
+    // as synced once every enrolment actually has it.
+    res.status(200).json({ message: "OK", ...(await tokenStatusFor(id)) });
   } catch (e) {
     console.error("updateTokenInStudy error:", e);
     res.status(500).json({ message: "Error updating token" });
+  }
+};
+
+/**
+ * How many of a participant's study enrolments can be reached. `withoutToken`
+ * counts enrolments with no usable push token, or one Expo has reported dead
+ * (deactivated) — either way every send skips them, and re-registering fixes it.
+ */
+async function tokenStatusFor(samplyId) {
+  const projects = await Project.find(
+    { "mobileUsers.id": samplyId },
+    { "mobileUsers.$": 1 }
+  ).lean();
+  const enrolments = projects
+    .map((p) => (p.mobileUsers || [])[0])
+    .filter((u) => u && typeof u.token === "string" && u.token !== "User left the study");
+  return {
+    studies: enrolments.length,
+    withoutToken: enrolments.filter((u) => u.deactivated || !Expo.isExpoPushToken(u.token)).length,
+  };
+}
+
+// Read-only counterpart for the app's notification check, so it can show
+// whether the server can reach this participant rather than trusting local state.
+exports.getTokenStatus = async (req, res) => {
+  try {
+    res.status(200).json({ message: "OK", ...(await tokenStatusFor(req.body.id)) });
+  } catch (e) {
+    console.error("getTokenStatus error:", e);
+    res.status(500).json({ message: "Error reading token status" });
   }
 };
 

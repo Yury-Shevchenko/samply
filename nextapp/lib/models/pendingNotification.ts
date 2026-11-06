@@ -16,6 +16,8 @@ export interface IPendingNotification {
   useParticipantTimezone?: boolean;
   isReminder?: boolean;
   finid?: string;
+  /** Set when the queue processes the row; see Website/models/PendingNotification.js. */
+  delivery?: { recipients?: number; sent?: number; failed?: number; noToken?: number; deactivated?: number };
   created?: Date;
 }
 

@@ -64,7 +64,7 @@ async function processOneNotification() {
       reminders = notifConfig && notifConfig.reminders;
     }
 
-    await sendMobileNotification({
+    const delivery = await sendMobileNotification({
       content: {
         title: notification.title,
         message: notification.message,
@@ -82,7 +82,8 @@ async function processOneNotification() {
         project.settings && project.settings.enableActions,
     });
 
-    await notification.updateOne({ status: "sent" });
+    // "sent" means the queue processed it; `delivery` says who it reached.
+    await notification.updateOne({ status: "sent", delivery });
   } catch (err) {
     console.error(
       "notificationCron: failed to process notification",
