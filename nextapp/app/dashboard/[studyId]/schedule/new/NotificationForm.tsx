@@ -454,7 +454,9 @@ export default function NotificationForm({ projectId, participants, groups, pres
 
     const expireIn = expireType === "yes" ? ((expireDays * 24 * 60 + expireHours * 60 + expireMinutes) * 60000) : null;
     const reminderList = reminderType === "yes"
-      ? reminders.map((r) => ({ title: r.title, message: r.message, time: ((r.days * 24 * 60 + r.hours * 60 + r.minutes) * 60000) }))
+      // A blank reminder field reuses the ping's own text — the queue requires
+      // both, and the sender applies the same fallback (Website/lib/reminders.js).
+      ? reminders.map((r) => ({ title: r.title.trim() || title, message: r.message.trim() || message, time: ((r.days * 24 * 60 + r.hours * 60 + r.minutes) * 60000) }))
       : [];
 
     // Capture the researcher's original form inputs so the schedule can be

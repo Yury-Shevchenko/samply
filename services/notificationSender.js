@@ -5,6 +5,7 @@ const { Expo } = require("expo-server-sdk");
 const { customAlphabet } = require("nanoid");
 const uniqid = require("uniqid");
 const { substitutePlaceholders } = require("../lib/placeholders");
+const { resolveReminders } = require("../lib/reminders");
 
 const expo = new Expo();
 const nanoid = customAlphabet(
@@ -38,6 +39,8 @@ async function sendMobileNotification({
 }) {
   const { title, message, url, expireIn } = content;
   const timestampSent = Date.now();
+  // Blank reminder text falls back to this ping's — see lib/reminders.js.
+  reminders = resolveReminders(reminders, { title, message });
 
   const delivery = { recipients: tokens.length, sent: 0, failed: 0, noToken: 0, deactivated: 0 };
 
