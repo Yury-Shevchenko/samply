@@ -319,6 +319,23 @@ function PsychonomicsPosterBanner() {
       <div style={{ fontSize: "1.25rem", color: "var(--ink-60)", marginTop: "0.4rem", lineHeight: 1.5 }}>
         Poster Session II · Friday, November 20 · 12:00–1:30 PM · Pacific Ballroom (North Tower, First Level)
       </div>
+      <div style={{ display: "flex", gap: "1.6rem", flexWrap: "wrap", marginTop: "0.8rem", fontSize: "1.2rem" }}>
+        {[
+          { href: "https://www.psychonomic.org/general/custom.asp?page=2026annualmeeting", label: "Conference website ↗" },
+          { href: "https://www.psychonomic.org/page/2026Program", label: "Full program ↗" },
+        ].map(({ href, label }) => (
+          <a
+            key={href}
+            href={href}
+            target="_blank"
+            rel="noreferrer"
+            style={{ color: "var(--sage)", fontWeight: 500, textDecoration: "none" }}
+            className="hover:opacity-70 transition-opacity"
+          >
+            {label}
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
