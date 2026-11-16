@@ -276,6 +276,53 @@ function SmaatBanner({ t }: { t: ReturnType<typeof import("@/lib/i18n").createT>
   );
 }
 
+// Temporary announcement for the Psychonomics 2026 poster. English-only on
+// purpose (English-language conference, shown for a few days). Hides itself
+// once the session ends; the component can be deleted after that.
+const PSYCHONOMICS_POSTER_ENDS = new Date("2026-11-20T13:30:00-08:00"); // PST
+
+function posterAnnouncementExpired() {
+  return new Date() > PSYCHONOMICS_POSTER_ENDS;
+}
+
+function PsychonomicsPosterBanner() {
+  if (posterAnnouncementExpired()) return null;
+  return (
+    <div
+      style={{
+        background: "var(--sage-soft)",
+        border: "1px solid rgba(61,115,107,.28)",
+        borderRadius: "1rem",
+        padding: "1.6rem 2rem",
+        marginBottom: "3.2rem",
+        textAlign: "left",
+      }}
+    >
+      <div
+        style={{
+          fontFamily: "var(--font-mono)",
+          fontSize: "1rem",
+          letterSpacing: ".16em",
+          textTransform: "uppercase",
+          color: "var(--sage)",
+          marginBottom: "0.6rem",
+        }}
+      >
+        Psychonomics 2026 · San Diego
+      </div>
+      <div style={{ fontSize: "1.3rem", color: "var(--ink)", lineHeight: 1.5 }}>
+        Visit the Samply poster if you would like to talk about Samply or your study:{" "}
+        <span style={{ fontWeight: 600 }}>
+          From Pings to Pipelines: Samply as a Tool for Smartphone-Based Research
+        </span>
+      </div>
+      <div style={{ fontSize: "1.25rem", color: "var(--ink-60)", marginTop: "0.4rem", lineHeight: 1.5 }}>
+        Poster Session II · Friday, November 20 · 12:00–1:30 PM · Pacific Ballroom (North Tower, First Level)
+      </div>
+    </div>
+  );
+}
+
 function LowComplianceBanner({ studies, t }: { studies: string[]; t: ReturnType<typeof import("@/lib/i18n").createT> }) {
   if (studies.length === 0) return null;
   return (
@@ -447,6 +494,9 @@ export default async function DashboardPage() {
             </div>
           </div>
         )}
+
+        {/* Psychonomics 2026 poster announcement (auto-hides after Nov 20) */}
+        <PsychonomicsPosterBanner />
 
         {/* Low-compliance nudge */}
         <LowComplianceBanner studies={lowComplianceStudies} t={t} />
